@@ -104,6 +104,7 @@ dist/
 coverage/
 *.tsbuildinfo
 .vercel
+
 *.tsbuildinfo
 next-env.d.ts
 
