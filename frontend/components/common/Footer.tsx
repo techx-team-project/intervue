@@ -50,22 +50,8 @@ export default function Footer() {
           {/* Col 1 & 2: TopCV Info, Contact & Apps */}
           <div className="space-y-5 lg:col-span-2">
             <Link href="/" className="inline-block">
-              <img src="/intervue-logo.png" alt="InterVue Vietnam" className="h-10 w-auto object-contain" />
+              <img src="/intervue-logo.png" alt="InterVue Vietnam" className="h-14 w-auto object-contain md:h-16" />
             </Link>
-
-            {/* Badges */}
-            <div className="flex items-center gap-3">
-              <img
-                src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/footer/google_for_startup.png"
-                alt="Google for Startups"
-                className="h-8 w-auto object-contain"
-              />
-              <img
-                src="https://images.dmca.com/Badges/DMCA_badge_grn_60w.png?ID=8be40718-7da1-4b43-875a-3efb819100c9"
-                alt="DMCA Protected"
-                className="h-7 w-auto object-contain"
-              />
-            </div>
 
             {/* Contact Details */}
             <div className="space-y-2 text-[13.5px] text-[#4d5965]">
