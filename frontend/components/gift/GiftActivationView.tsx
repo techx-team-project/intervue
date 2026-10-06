@@ -205,19 +205,6 @@ export default function GiftActivationView() {
   return (
     <div id="main" className="min-h-screen bg-[#f1f2f6] pt-6 pb-16 antialiased sm:pt-8 md:pt-10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* Top Breadcrumb */}
-        <nav className="mb-6 flex items-center space-x-2 text-xs text-[#64748b] sm:text-sm">
-          <Link href="/" className="hover:text-[#00b14f]">
-            Trang chủ
-          </Link>
-          <span>/</span>
-          <Link href="/upgrade" className="hover:text-[#00b14f]">
-            Nâng cấp tài khoản
-          </Link>
-          <span>/</span>
-          <span className="font-semibold text-[#1e293b]">Kích hoạt quà tặng</span>
-        </nav>
-
         {/* 1. Main Activation Card (Matching TopCV .box-apply-coupon exactly) */}
         <div
           ref={formRef}
