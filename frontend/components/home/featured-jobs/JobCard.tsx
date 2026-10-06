@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Clock, Heart, MapPin, Zap } from 'lucide-react';
 
 import type { Job } from '@/types/home';
@@ -9,6 +10,16 @@ interface JobCardProps {
 }
 
 function JobLogo({ job }: { job: Job }) {
+  if (job.id === 2320413) {
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center rounded-xl bg-linear-to-br from-[#00b14f] to-[#047857] p-1 text-white shadow-xs">
+        <span className="text-[13px] leading-none font-black tracking-wider drop-shadow-xs">ADI</span>
+        <span className="mt-0.5 text-[6.5px] leading-none font-bold tracking-tighter text-emerald-100 uppercase">
+          AUTOMATION
+        </span>
+      </div>
+    );
+  }
   if (job.id === 1) {
     return (
       <div className="flex h-full w-full items-center justify-center rounded-xl bg-linear-to-br from-[#00b14f] to-[#047857] shadow-xs">
@@ -134,12 +145,14 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
 
           {/* Title & Company */}
           <div className="min-w-0 flex-1">
-            <h3
-              className="line-clamp-2 text-[15px] leading-[1.35] font-bold tracking-tight text-slate-900 transition-colors duration-200 group-hover:text-[#00b14f]"
-              title={job.title}
-            >
-              {job.title}
-            </h3>
+            <Link href={`/jobs/${job.id}`}>
+              <h3
+                className="line-clamp-2 text-[15px] leading-[1.35] font-bold tracking-tight text-slate-900 transition-colors duration-200 group-hover:text-[#00b14f]"
+                title={job.title}
+              >
+                {job.title}
+              </h3>
+            </Link>
 
             <div className="mt-1.5 flex items-center gap-1.5 truncate text-[12.5px] font-medium text-slate-500">
               {job.isPro && (
@@ -216,10 +229,13 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
             <span>{job.deadline}</span>
           </span>
 
-          <span className="inline-flex items-center gap-1 text-[12.5px] font-bold text-[#00b14f] transition-all group-hover:translate-x-1 group-hover:text-[#009643]">
+          <Link
+            href={`/jobs/${job.id}`}
+            className="inline-flex items-center gap-1 text-[12.5px] font-bold text-[#00b14f] transition-all group-hover:translate-x-1 group-hover:text-[#009643]"
+          >
             <span>Ứng tuyển ngay</span>
             <ArrowRight className="h-3.5 w-3.5" />
-          </span>
+          </Link>
         </div>
       </div>
     </div>
