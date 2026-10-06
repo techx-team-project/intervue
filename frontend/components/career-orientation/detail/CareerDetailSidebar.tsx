@@ -1,0 +1,127 @@
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { CareerArticle } from '@/types/career';
+import { ShieldCheck, FileText, Brain, Calculator, Bot, Clock, Sparkles } from 'lucide-react';
+
+interface CareerDetailSidebarProps {
+  article: CareerArticle;
+}
+
+export default function CareerDetailSidebar({ article }: CareerDetailSidebarProps) {
+  return (
+    <aside className="space-y-6">
+      {/* 1. Author Box */}
+      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+        <span className="mb-3 block text-[11px] font-bold tracking-wider text-[#7f878f] uppercase">
+          Tác giả bài viết
+        </span>
+        <div className="flex items-start gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={article.author.avatar}
+            alt={article.author.name}
+            className="h-12 w-12 shrink-0 rounded-full object-cover ring-2 ring-emerald-100"
+          />
+          <div>
+            <div className="flex items-center gap-1.5">
+              <h4 className="text-sm font-bold text-[#171717]">{article.author.name}</h4>
+              <ShieldCheck className="h-4 w-4 shrink-0 text-[#00b14f]" />
+            </div>
+            <p className="mt-0.5 text-xs font-semibold text-[#00b14f]">{article.author.role}</p>
+          </div>
+        </div>
+
+        {article.author.bio && (
+          <p className="mt-3 border-t border-gray-100 pt-3 text-xs leading-relaxed text-[#526475]">
+            {article.author.bio}
+          </p>
+        )}
+      </div>
+
+      {/* 2. Fast Career Tools */}
+      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+        <div className="mb-3 flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-[#00b14f]" />
+          <h4 className="text-sm font-bold text-[#171717]">Công cụ hỗ trợ ứng tuyển</h4>
+        </div>
+
+        <div className="space-y-2">
+          <Link
+            href="/candidate/profile"
+            className="group flex items-center gap-2.5 rounded-xl p-2.5 text-xs text-[#263a4d] transition hover:bg-[#f2fbf6] hover:text-[#00b14f]"
+          >
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-[#00b14f]">
+              <FileText className="h-3.5 w-3.5" />
+            </div>
+            <span className="font-semibold">Mẫu CV chuẩn hóa theo ngành</span>
+          </Link>
+
+          <Link
+            href="#self-growth"
+            className="group flex items-center gap-2.5 rounded-xl p-2.5 text-xs text-[#263a4d] transition hover:bg-[#f2fbf6] hover:text-[#00b14f]"
+          >
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+              <Brain className="h-3.5 w-3.5" />
+            </div>
+            <span className="font-semibold">Trắc nghiệm tính cách MBTI</span>
+          </Link>
+
+          <Link
+            href="#salary-calculator"
+            className="group flex items-center gap-2.5 rounded-xl p-2.5 text-xs text-[#263a4d] transition hover:bg-[#f2fbf6] hover:text-[#00b14f]"
+          >
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
+              <Calculator className="h-3.5 w-3.5" />
+            </div>
+            <span className="font-semibold">So sánh mức lương thị trường</span>
+          </Link>
+
+          <Link
+            href="/jobs"
+            className="group flex items-center gap-2.5 rounded-xl bg-[#f2fbf6] p-2.5 text-xs font-bold text-[#00b14f] transition hover:bg-emerald-100/70"
+          >
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#00b14f] text-white">
+              <Bot className="h-3.5 w-3.5" />
+            </div>
+            <span>Luyện phỏng vấn cùng InterVue AI</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* 3. Related Articles */}
+      {article.relatedArticles && article.relatedArticles.length > 0 && (
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
+          <h4 className="mb-3 text-sm font-bold text-[#171717]">Bài viết liên quan</h4>
+
+          <div className="space-y-4">
+            {article.relatedArticles.map((rel) => (
+              <Link key={rel.id} href={`/career-orientation/${rel.slug}`} className="group flex gap-3 transition">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={rel.coverImage}
+                  alt={rel.title}
+                  className="h-16 w-20 shrink-0 rounded-xl object-cover group-hover:opacity-90"
+                />
+                <div className="flex flex-col justify-between">
+                  <h5 className="line-clamp-2 text-xs leading-snug font-bold text-[#171717] transition-colors group-hover:text-[#00b14f]">
+                    {rel.title}
+                  </h5>
+                  <div className="mt-1 flex items-center gap-2 text-[10px] text-[#7f878f]">
+                    <span>{rel.publishedAt}</span>
+                    <span>•</span>
+                    <span className="flex items-center gap-0.5">
+                      <Clock className="h-2.5 w-2.5" />
+                      {rel.readTime}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </aside>
+  );
+}
