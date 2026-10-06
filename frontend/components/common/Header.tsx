@@ -250,7 +250,7 @@ export default function Header() {
               {activeDropdown === 'guide' && (
                 <div className="animate-in fade-in absolute top-15 left-0 z-50 w-75 space-y-1 rounded-2xl border border-[#e9eaec] bg-white p-3 shadow-2xl duration-150">
                   <Link
-                    href="#self-growth"
+                    href="/career-orientation"
                     className="block rounded-lg p-2 text-[14px] text-[#263a4d] hover:bg-[#f2fbf6] hover:text-[#00b14f]"
                   >
                     Định hướng nghề nghiệp
@@ -352,7 +352,7 @@ export default function Header() {
             Công cụ
           </Link>
           <Link
-            href="#self-growth"
+            href="/career-orientation"
             onClick={() => setMobileMenuOpen(false)}
             className="block py-2 text-[15px] font-semibold text-[#263a4d]"
           >
