@@ -140,13 +140,13 @@ export default function Header() {
                     </div>
                   </Link>
                   <Link
-                    href="#self-growth"
+                    href="/profile"
                     className="flex items-center gap-3 rounded-lg p-2 text-[#263a4d] transition-colors hover:bg-[#f2fbf6] hover:text-[#00b14f]"
                   >
                     <FileText className="h-4 w-4 text-[#00b14f]" />
                     <div>
-                      <div className="text-[14px] font-semibold">Quản lý CV</div>
-                      <div className="text-[12px] text-[#7f878f]">Xem và chỉnh sửa CV của bạn</div>
+                      <div className="text-[14px] font-semibold">Quản lý CV & Hồ sơ</div>
+                      <div className="text-[12px] text-[#7f878f]">Xem và chỉnh sửa hồ sơ ứng viên</div>
                     </div>
                   </Link>
                   <Link
