@@ -130,7 +130,7 @@ export default function Header() {
               {activeDropdown === 'cv' && (
                 <div className="animate-in fade-in absolute top-15 left-0 z-50 w-105 space-y-1 rounded-2xl border border-[#e9eaec] bg-white p-4.5 shadow-2xl duration-150">
                   <Link
-                    href="#self-growth"
+                    href="/cv-templates"
                     className="flex items-center gap-3 rounded-lg p-2 text-[#263a4d] transition-colors hover:bg-[#f2fbf6] hover:text-[#00b14f]"
                   >
                     <FilePlus className="h-4 w-4 text-[#00b14f]" />
@@ -150,7 +150,7 @@ export default function Header() {
                     </div>
                   </Link>
                   <Link
-                    href="#self-growth"
+                    href="/cv-templates"
                     className="flex items-center gap-3 rounded-lg p-2 text-[#263a4d] transition-colors hover:bg-[#f2fbf6] hover:text-[#00b14f]"
                   >
                     <Compass className="h-4 w-4 text-[#00b14f]" />
@@ -338,7 +338,7 @@ export default function Header() {
             Việc làm
           </Link>
           <Link
-            href="#self-growth"
+            href="/cv-templates"
             onClick={() => setMobileMenuOpen(false)}
             className="block py-2 text-[15px] font-semibold text-[#263a4d]"
           >
