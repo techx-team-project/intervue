@@ -293,20 +293,20 @@ export default function Header() {
         {/* Right Side: Action Buttons */}
         <div className="flex items-center gap-3">
           {/* Đăng ký (pill outline) */}
-          <button
-            type="button"
+          <Link
+            href="/register"
             className="cursor-pointer rounded-full border border-[#00b14f] bg-white px-5 py-2 text-[14px] font-semibold text-[#00b14f] shadow-2xs transition-all hover:bg-[#f2fbf6]"
           >
             Đăng ký
-          </button>
+          </Link>
 
           {/* Đăng nhập (pill solid green) */}
-          <button
-            type="button"
+          <Link
+            href="/login"
             className="cursor-pointer rounded-full bg-[#00b14f] px-5 py-2 text-[14px] font-semibold text-white shadow-xs transition-all hover:bg-[#009643]"
           >
             Đăng nhập
-          </button>
+          </Link>
 
           {/* Đăng tuyển & tìm hồ sơ (pill light gray) */}
           <button
@@ -366,12 +366,20 @@ export default function Header() {
             InterVue Pro
           </Link>
           <div className="flex flex-col gap-2 border-t border-[#e9eaec] pt-3">
-            <button className="w-full rounded-full border border-[#00b14f] py-2.5 text-sm font-semibold text-[#00b14f]">
+            <Link
+              href="/register"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full rounded-full border border-[#00b14f] py-2.5 text-center text-sm font-semibold text-[#00b14f]"
+            >
               Đăng ký
-            </button>
-            <button className="w-full rounded-full bg-[#00b14f] py-2.5 text-sm font-semibold text-white">
+            </Link>
+            <Link
+              href="/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full rounded-full bg-[#00b14f] py-2.5 text-center text-sm font-semibold text-white"
+            >
               Đăng nhập
-            </button>
+            </Link>
             <button className="w-full rounded-full bg-[#f4f5f5] py-2.5 text-sm font-medium text-[#263a4d]">
               Đăng tuyển & tìm hồ sơ
             </button>
