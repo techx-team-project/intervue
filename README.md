@@ -1,159 +1,247 @@
-# InterVue
+# InterVue — Setup Guide
 
-### Nền tảng Tuyển dụng Thông minh — Kết hợp Đánh giá Năng lực bằng AI và Sàng lọc Ứng viên Tự động
+## 1. Prerequisites
 
----
+Install the following tools and verify each one with its check command:
 
-## Giới thiệu
+| Tool | Required version | Check command | Notes |
+|---|---|---|---|
+| Git | Any | `git --version` | |
+| JDK | **25** | `java -version` | `JAVA_HOME` must point to JDK 25 (e.g. Eclipse Temurin 25) |
+| Node.js | **>= 20.9** | `node -v` | Comes with `npm` |
+| Docker Desktop | Latest, with Compose v2 | `docker compose version` | On Windows, enable WSL 2 |
 
-InterVue là nền tảng kết nối ứng viên và nhà tuyển dụng, trong đó quy trình sàng lọc được tự động hóa bằng AI theo hai hình thức linh hoạt: đánh giá năng lực qua bài test do AI sinh tự động, hoặc phân tích CV bằng AI. Nhà tuyển dụng toàn quyền lựa chọn hình thức sàng lọc phù hợp với từng vị trí tuyển dụng, đồng thời chỉ định số lượng ứng viên mong muốn; hệ thống tự động sàng lọc và trả về danh sách ứng viên phù hợp nhất kèm giải thích căn cứ xếp hạng. Đồng thời, hệ thống vận hành theo cơ chế hai chiều: không chỉ hỗ trợ nhà tuyển dụng tìm ứng viên, mà còn chủ động phân tích kết quả đánh giá của ứng viên để đề xuất ngược lại các vị trí tuyển dụng phù hợp và thông báo đến nhà tuyển dụng tương ứng.
+> You do **not** need to install Maven, MySQL or Redis. The project uses the Maven Wrapper (`mvnw`), and MySQL + Redis run in Docker.
 
----
+## 2. Setup Steps
 
-## Vấn đề cần giải quyết
+> Commands below are for **Git Bash / macOS / Linux**.
+> On **PowerShell**, replace `./mvnw` with `.\mvnw.cmd`, `cp` with `copy`, and wrap `-D...` arguments in quotes (see Step 6).
 
-Mô hình tuyển dụng trực tuyến phổ biến hiện nay tồn tại các hạn chế sau:
+### Step 1 — Clone the repository
 
-- **Thông tin bất đối xứng:** Nội dung CV do ứng viên tự khai, không có cơ chế kiểm chứng độc lập.
-- **Chi phí sàng lọc cao:** Nhà tuyển dụng phải xử lý thủ công số lượng lớn hồ sơ trước khi xác định ứng viên phù hợp.
-- **Thiếu tiêu chí sàng lọc linh hoạt:** Đa số nền tảng chỉ hỗ trợ một hình thức sàng lọc cố định, không cho phép nhà tuyển dụng tùy chỉnh theo tính chất từng vị trí.
-- **Kết nối một chiều:** Ứng viên phải chủ động tìm kiếm và ứng tuyển từng tin tuyển dụng; nhà tuyển dụng bỏ lỡ các ứng viên tiềm năng không chủ động ứng tuyển vào vị trí của mình.
+```bash
+git clone https://github.com/techx-team-project/intervue.git
+cd intervue
+```
 
-InterVue giải quyết các hạn chế trên bằng cách cung cấp cơ chế sàng lọc kép (test-based hoặc CV-based) do nhà tuyển dụng chủ động lựa chọn, kết hợp AI để tự động hóa toàn bộ quy trình đánh giá, xếp hạng, và chủ động gợi ý kết nối theo cả hai chiều.
+### Step 2 — Install Git hooks
 
----
+Run in the **project root**:
 
-## Tính năng chính
+```bash
+npm install
+```
 
-### Dành cho Nhà tuyển dụng
+This installs [Lefthook](https://github.com/evilmartians/lefthook) and registers a pre-commit hook that auto-formats Java (Spotless) and TS/JS (Prettier) files on every commit.
 
-**1. Cấu hình quy trình tuyển dụng theo từng tin tuyển dụng**
+### Step 3 — Create the `.env` file (root only)
 
-Khi đăng tin tuyển dụng, nhà tuyển dụng lựa chọn một trong hai hình thức sàng lọc:
+The `.env` file is used by **Docker Compose** to create the MySQL database and user. It lives in the **project root only**.
 
-- **Hình thức Test:** Hệ thống trích xuất yêu cầu kỹ năng từ nội dung tin tuyển dụng, tự động sinh bộ câu hỏi đánh giá tương ứng. Ứng viên thực hiện bài test dưới dạng văn bản hoặc giọng nói (giọng nói được chuyển đổi sang văn bản, cho phép chỉnh sửa trước khi nộp).
-- **Hình thức CV:** Ứng viên nộp CV; AI tự động phân tích (parse) nội dung CV và chấm điểm mức độ phù hợp so với yêu cầu công việc.
+```bash
+cp .env.example .env
+```
 
-**2. Khảo sát số lượng ứng viên mong muốn (Target Headcount)**
+Edit `.env` so it looks like this:
 
-Sau khi đăng tin tuyển dụng, hệ thống khảo sát nhà tuyển dụng về số lượng ứng viên cần tuyển (N). Thông số này là đầu vào trực tiếp cho thuật toán sàng lọc — quyết định số lượng ứng viên được đưa vào danh sách kết quả cuối cùng.
+```env
+MYSQL_ROOT_PASSWORD=<your-root-password>
+MYSQL_DATABASE=intervue_db
+MYSQL_USER=intervue
+MYSQL_PASSWORD=<your-db-password>
+```
 
-**3. AI quét và chấm điểm CV**
-
-Đối với hình thức CV, AI thực hiện trích xuất thông tin có cấu trúc từ CV (kỹ năng, kinh nghiệm, học vấn), đối chiếu với yêu cầu công việc, và chấm điểm mức độ phù hợp theo thang điểm chuẩn hóa.
-
-**4. Sàng lọc và xếp hạng Top N ứng viên**
-
-Dựa trên kết quả từ bài test hoặc điểm phân tích CV (tùy theo hình thức đã chọn), hệ thống sàng lọc và trả về đúng số lượng ứng viên (N) mà nhà tuyển dụng đã chỉ định, sắp xếp theo thứ tự phù hợp giảm dần.
-
-**5. Giải thích căn cứ xếp hạng (Explainable Ranking)**
-
-Mỗi ứng viên trong danh sách Top N đi kèm giải thích bằng ngôn ngữ tự nhiên về căn cứ xếp hạng — ví dụ: điểm mạnh cụ thể theo từng kỹ năng, mức độ khớp với yêu cầu công việc. Nhà tuyển dụng có cơ sở ra quyết định thay vì tiếp nhận kết quả dưới dạng không thể diễn giải.
-
-**6. Nhận đề xuất ứng viên chủ động từ hệ thống**
-
-Ngoài việc chủ động tìm kiếm, nhà tuyển dụng còn nhận được thông báo khi có ứng viên phù hợp với tin tuyển dụng đang mở, do hệ thống tự động phát hiện sau khi ứng viên hoàn thành bài test (chi tiết tại mục "Đề xuất công ty phù hợp" bên dưới). Thông tin liên hệ của ứng viên trong trường hợp này thuộc phạm vi tính năng có thu phí.
-
----
-
-### Dành cho Ứng viên
-
-**7. Thực hiện bài test đánh giá năng lực**
-
-Ứng viên thực hiện bài test do AI sinh tự động, trả lời dưới dạng văn bản hoặc giọng nói (chuyển đổi sang văn bản, có thể chỉnh sửa trước khi nộp). Kết quả được chấm điểm theo rubric cấu hình sẵn và tích lũy vào hồ sơ năng lực (Skill Passport).
-
-**8. Đề xuất công ty tuyển dụng phù hợp (Auto Job Matching)**
-
-Ngay sau khi ứng viên hoàn thành bài test, hệ thống tự động đối chiếu kết quả năng lực vừa đạt được với toàn bộ tin tuyển dụng đang mở trên nền tảng, từ đó:
-
-- Hiển thị cho ứng viên danh sách các công ty/vị trí đang tuyển dụng phù hợp với năng lực vừa được đánh giá, không yêu cầu ứng viên phải chủ động tìm kiếm.
-- Gửi thông báo đến nhà tuyển dụng tương ứng với nội dung: có ứng viên (hiển thị dưới dạng ẩn danh, ví dụ "Ứng viên #A047") đạt mức độ phù hợp cao với tin tuyển dụng đang đăng, kèm điểm phù hợp và giải thích căn cứ.
-
-Cơ chế này vận hành như một lớp gợi ý hai chiều, bổ sung song song với luồng tìm kiếm chủ động thông thường (ứng viên tìm việc, nhà tuyển dụng tìm ứng viên): ứng viên không cần chủ động tìm việc mọi lúc, và nhà tuyển dụng không bỏ lỡ ứng viên tiềm năng chưa từng nộp đơn vào vị trí của họ.
-
-**9. Hồ sơ năng lực tích lũy (Skill Passport)**
-
-Kết quả các lần đánh giá của ứng viên được lưu trữ và tích lũy theo từng kỹ năng, có thể tái sử dụng cho nhiều lượt ứng tuyển hoặc nhiều lượt được đề xuất khác nhau mà không cần thực hiện lại đánh giá từ đầu.
-
-**10. Xác thực danh tính điện tử (eKYC)**
-
-Ứng viên xác thực danh tính qua căn cước công dân kết hợp công nghệ phát hiện sự sống (liveness detection), đảm bảo nguyên tắc một danh tính tương ứng một tài khoản.
-
----
-
-## Cơ chế thu phí: Mở khóa thông tin ứng viên (Unlock Candidate)
-
-Đây là nguồn doanh thu chính của nền tảng, áp dụng thống nhất cho cả hai luồng: nhà tuyển dụng chủ động xem Top N ứng viên, và nhà tuyển dụng nhận được đề xuất ứng viên phù hợp từ hệ thống.
-
-**Nguyên tắc phân định miễn phí/thu phí:**
-
-| Nội dung | Chi phí |
+| Variable | Value |
 |---|---|
-| Xem điểm số, xếp hạng, giải thích căn cứ phù hợp (dưới dạng ẩn danh) | Miễn phí |
-| Nhận thông báo có ứng viên phù hợp với tin tuyển dụng | Miễn phí |
-| Xem thông tin liên hệ đầy đủ (số điện thoại, email, họ tên) | Thu phí (Credit) |
+| `MYSQL_DATABASE` | Keep `intervue_db` — this is the database name the backend uses in `application.yaml` |
+| `MYSQL_USER` | Must be `intervue` — this is the username the backend uses in `application.yaml` |
+| `MYSQL_ROOT_PASSWORD` | Any password you like (MySQL root account) |
+| `MYSQL_PASSWORD` | Any password you like. **Remember it** — you will put the same value in `application-local.yml` in Step 5 |
 
-**Cơ chế Credit:**
+> `.env` is git-ignored. Never commit it.
 
-- Nhà tuyển dụng mua gói tín dụng (Credit) bằng tiền thật qua cổng thanh toán.
-- Mỗi lượt mở khóa thông tin liên hệ của một ứng viên cụ thể tiêu tốn 1 Credit.
-- Việc mở khóa được ghi nhận vĩnh viễn theo cặp (Nhà tuyển dụng, Ứng viên) — không phát sinh chi phí cho các lần xem lại tiếp theo đối với cùng ứng viên đã mở khóa.
-- Ứng viên nhận được thông báo khi thông tin liên hệ của mình được một nhà tuyển dụng mở khóa, nhằm tăng tính minh bạch.
+### Step 4 — Start MySQL and Redis
 
----
+Open Docker Desktop first, then in the **project root**:
 
-## Đối tượng người dùng
+```bash
+docker compose up -d
+```
 
-| Vai trò | Mô tả |
+Wait until both containers are `healthy` (10–30 seconds on first run):
+
+```bash
+docker compose ps
+```
+
+Expected output:
+
+```
+NAME             IMAGE              STATUS              PORTS
+intervue-mysql   mysql:8.4          Up ... (healthy)    0.0.0.0:3306->3306/tcp
+intervue-redis   redis:7.4-alpine   Up ... (healthy)    0.0.0.0:6379->6379/tcp
+```
+
+| Service | Address | Credentials |
+|---|---|---|
+| MySQL | `localhost:3306` | Database, user and password from your `.env` |
+| Redis | `localhost:6379` | No password |
+
+Data is stored in the Docker volumes `mysql-data` and `redis-data`, so it survives container restarts.
+
+### Step 5 — Create `application-local.yml` for secrets
+
+The backend config is split into two files in `backend/src/main/resources/`:
+
+| File | Committed? | Contains |
+|---|---|---|
+| `application.yaml` | Yes | All the main config (datasource URL, username, JWT expiration, issuer...). **Do not put secrets here.** |
+| `application-local.yml` | **No** (git-ignored) | **Only the sensitive values**, which override the placeholders in `application.yaml` when the `local` profile is active |
+
+Every developer must create `application-local.yml` manually. Create the file at:
+
+```
+backend/src/main/resources/application-local.yml
+```
+
+with the following content:
+
+```yaml
+spring:
+  datasource:
+    password: <your-db-password>
+
+jwt:
+  secret: <your-base64-secret>
+```
+
+| Key | Value |
 |---|---|
-| Ứng viên (Candidate) | Thực hiện bài test hoặc nộp CV, nhận đề xuất công ty phù hợp, quản lý hồ sơ năng lực |
-| Nhà tuyển dụng (Recruiter) | Đăng tin tuyển dụng, cấu hình hình thức sàng lọc, chỉ định số lượng ứng viên cần, nhận đề xuất ứng viên phù hợp, mở khóa thông tin liên hệ |
-| Quản trị viên (Admin) | Giám sát vận hành hệ thống, xử lý khiếu nại, xác thực thông tin doanh nghiệp |
+| `spring.datasource.password` | Exactly the same as `MYSQL_PASSWORD` in the root `.env` (Step 3) |
+| `jwt.secret` | A **Base64-encoded** key of at least 32 bytes (256 bits), used to sign JWT tokens. Generate one with the command below |
+
+Generate a JWT secret:
+
+```bash
+# Git Bash / macOS / Linux
+openssl rand -base64 48
+```
+
+```powershell
+# PowerShell
+[Convert]::ToBase64String((1..48 | ForEach-Object { Get-Random -Maximum 256 }))
+```
+
+Copy the output and paste it as the value of `jwt.secret`.
+
+> Everything else (database URL, username, JWT expiration...) comes from `application.yaml` — do not copy it into `application-local.yml`. If you add a new secret to the project later, put a placeholder in `application.yaml` and the real value in `application-local.yml`.
+
+### Step 6 — Run the backend
+
+From the `backend/` folder, start the app with the `local` profile:
+
+```bash
+cd backend
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+```
+
+```powershell
+# PowerShell
+cd backend
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=local"
+```
+
+- The first run downloads Maven and all dependencies, which can take a few minutes.
+- On startup, **Flyway runs the migrations** in `src/main/resources/db/migration/` and creates all tables automatically. You do not need to create tables by hand.
+- The backend runs at **http://localhost:8080**.
+
+Verify it is running:
+
+```bash
+curl http://localhost:8080/ping
+# {"status":true,"message":"Pong!"}
+```
+
+Optionally, test the register API:
+
+```bash
+curl -i -X POST http://localhost:8080/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test User","email":"test@example.com","phone":"0912345678","password":"123456","confirmPassword":"123456"}'
+```
+
+A successful response returns an `accessToken` and the user in the body, plus a refresh token in the `Set-Cookie` header.
+
+#### Running from an IDE
+
+- **IntelliJ IDEA:** open `backend/` as a Maven project. Enable *Settings → Build, Execution, Deployment → Compiler → Annotation Processors → Enable annotation processing* (required for Lombok). Edit the run configuration for `IntervueApplication` and set *Active profiles* to `local`.
+- **VS Code:** install *Extension Pack for Java*. Run `IntervueApplication` with this in `.vscode/launch.json`:
+  ```json
+  {
+    "type": "java",
+    "name": "IntervueApplication (local)",
+    "request": "launch",
+    "mainClass": "com.techx.intervue.IntervueApplication",
+    "projectName": "intervue",
+    "env": { "SPRING_PROFILES_ACTIVE": "local" }
+  }
+  ```
+
+### Step 7 — Run the frontend
+
+Open a new terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend runs at **http://localhost:3000**.
+
+## 3. Daily Run (after the first setup)
+
+```bash
+docker compose up -d                                                  # project root
+cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local  # terminal 1
+cd frontend && npm run dev                                            # terminal 2
+```
+
+## 4. Useful Commands
+
+```bash
+# Docker (project root)
+docker compose stop                 # stop containers, keep data
+docker compose down                 # remove containers, keep data
+docker compose down -v              # remove containers AND delete all DB/Redis data
+
+# Open MySQL / Redis CLI
+docker exec -it intervue-mysql mysql -u intervue -p intervue_db
+docker exec -it intervue-redis redis-cli
+
+# Backend (backend/)
+./mvnw test                         # run tests
+./mvnw spotless:apply               # format Java code
+```
+
+## 5. Troubleshooting
+
+| Error | Cause | Fix |
+|---|---|---|
+| `Access denied for user 'intervue'@...` | Backend started without the `local` profile, **or** `spring.datasource.password` in `application-local.yml` does not match `MYSQL_PASSWORD` in `.env`, **or** `MYSQL_USER` in `.env` is not `intervue` | Run with `-Dspring-boot.run.profiles=local`, and check Step 3 and Step 5 values match |
+| `Access denied` even though all values match | The MySQL volume was created earlier with a different user/password (MySQL only reads `.env` on first start) | Reset the volume: `docker compose down -v` then `docker compose up -d` (deletes local data) |
+| `Communications link failure` / `Connection refused` on 3306 or 6379 | Docker is not running or containers are not healthy yet | Start Docker Desktop, run `docker compose ps` and wait for `healthy` |
+| `Bind for 0.0.0.0:3306 failed: port is already allocated` | Another MySQL (XAMPP, MySQL Server...) is using port 3306 | Stop the other MySQL, or change the port mapping in `docker-compose.yml` (e.g. `"3307:3306"`) and update the port in `spring.datasource.url` in `application.yaml` locally (do not commit it) |
+| `Port 8080 was already in use` | Another process is using port 8080 | Stop the process using port 8080 |
+| `Illegal base64 character` / `WeakKeyException` on startup | `jwt.secret` is not valid Base64 or is shorter than 256 bits | Generate a new secret with the command in Step 5 |
+| `invalid target release: 25` | `JAVA_HOME` points to an older JDK | Install JDK 25, update `JAVA_HOME`, reopen the terminal and check `java -version` |
+| `./mvnw: Permission denied` | Missing execute permission (macOS/Linux) | `chmod +x backend/mvnw` |
+| `/usr/bin/env: 'sh\r': No such file or directory` | `mvnw` was checked out with CRLF line endings | `git config core.autocrlf input`, then `git checkout -- backend/mvnw` |
+| `FlywayValidateException: Migration checksum mismatch` | An already-applied migration file was edited | Revert the edit and add a new migration file instead. On local only, you can reset with `docker compose down -v` |
+| Lombok `cannot find symbol` (getters/setters) in IDE | Annotation processing is disabled | Enable it (see *Running from an IDE*) |
+| Code is not auto-formatted on commit | Git hooks not installed | Run `npm install` in the project root |
 
 ---
 
-## Quy trình nghiệp vụ tổng quát
-
-### Luồng 1: Nhà tuyển dụng chủ động tìm ứng viên
-
-```
-Nhà tuyển dụng đăng tin tuyển dụng
-        ↓
-Chọn hình thức sàng lọc: Test hoặc CV
-        ↓
-Khai báo số lượng ứng viên mong muốn (N)
-        ↓
-┌─────────────────────┬─────────────────────┐
-│   Hình thức Test     │    Hình thức CV      │
-│ AI trích xuất kỹ năng│ Ứng viên nộp CV      │
-│ → sinh bộ câu hỏi    │ → AI parse nội dung  │
-│ → ứng viên làm bài   │ → chấm điểm phù hợp  │
-│ → AI chấm điểm       │   với yêu cầu        │
-└─────────────────────┴─────────────────────┘
-        ↓
-Hệ thống sàng lọc và xếp hạng ứng viên
-        ↓
-Trả về Top N ứng viên phù hợp nhất kèm giải thích căn cứ
-        ↓
-Nhà tuyển dụng trả Credit để mở khóa thông tin liên hệ
-```
-
-### Luồng 2: Hệ thống chủ động đề xuất (Auto Matching)
-
-```
-Ứng viên hoàn thành bài test đánh giá năng lực
-        ↓
-Kết quả được cộng vào Skill Passport
-        ↓
-Hệ thống đối chiếu năng lực với toàn bộ tin tuyển dụng đang mở
-        ↓
-┌─────────────────────────┬─────────────────────────┐
-│   Phía Ứng viên          │   Phía Nhà tuyển dụng    │
-│ Hiển thị danh sách công  │ Nhận thông báo: có ứng   │
-│ ty/vị trí phù hợp,       │ viên phù hợp với tin     │
-│ không cần tìm kiếm       │ tuyển dụng, kèm điểm     │
-│                          │ phù hợp và giải thích    │
-└─────────────────────────┴─────────────────────────┘
-        ↓
-Nhà tuyển dụng trả Credit để mở khóa thông tin liên hệ ứng viên
-```
+Feature specification: [docs/FEATURE_SPECIFICATION.md](./docs/FEATURE_SPECIFICATION.md)
