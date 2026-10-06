@@ -496,7 +496,7 @@ export default function UpgradeLandingView() {
               </div>
               <p className="mt-1 text-[13.5px] text-[#64748b]">
                 Nhập mã kích hoạt được tặng từ các chương trình hoặc đối tác để mở khóa VIP miễn phí.{' '}
-                <Link href="/qua-tang" className="font-semibold text-[#00b14f] hover:underline">
+                <Link href="/gifts" className="font-semibold text-[#00b14f] hover:underline">
                   Kích hoạt mã quà tặng TopCV &rarr;
                 </Link>
               </p>
