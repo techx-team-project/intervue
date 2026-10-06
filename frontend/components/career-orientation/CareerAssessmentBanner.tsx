@@ -196,7 +196,7 @@ export default function CareerAssessmentBanner() {
 
             <div className="flex flex-wrap items-center gap-3">
               <Link
-                href={`/career-orientation/${finalRecommendation.slug}`}
+                href={`/blog/dinh-huong-nghe-nghiep/${finalRecommendation.slug}`}
                 className="inline-flex items-center gap-2 rounded-xl bg-[#00b14f] px-5 py-2.5 text-sm font-bold text-white shadow-lg transition hover:bg-[#009b44] hover:shadow-emerald-500/20"
               >
                 <span>Xem cẩm nang & lộ trình ngành</span>

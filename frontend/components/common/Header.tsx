@@ -250,25 +250,31 @@ export default function Header() {
               {activeDropdown === 'guide' && (
                 <div className="animate-in fade-in absolute top-15 left-0 z-50 w-75 space-y-1 rounded-2xl border border-[#e9eaec] bg-white p-3 shadow-2xl duration-150">
                   <Link
-                    href="/career-orientation"
+                    href="/blog"
+                    className="block rounded-lg p-2 text-[14px] font-bold text-[#00b14f] hover:bg-[#f2fbf6]"
+                  >
+                    Tất cả cẩm nang nghề nghiệp
+                  </Link>
+                  <Link
+                    href="/blog/dinh-huong-nghe-nghiep"
                     className="block rounded-lg p-2 text-[14px] text-[#263a4d] hover:bg-[#f2fbf6] hover:text-[#00b14f]"
                   >
                     Định hướng nghề nghiệp
                   </Link>
                   <Link
-                    href="#self-growth"
+                    href="/blog/bi-kip-tim-viec"
                     className="block rounded-lg p-2 text-[14px] text-[#263a4d] hover:bg-[#f2fbf6] hover:text-[#00b14f]"
                   >
                     Bí quyết tìm việc
                   </Link>
                   <Link
-                    href="#self-growth"
+                    href="/blog/che-do-luong-thuong"
                     className="block rounded-lg p-2 text-[14px] text-[#263a4d] hover:bg-[#f2fbf6] hover:text-[#00b14f]"
                   >
                     Chế độ lương thưởng
                   </Link>
                   <Link
-                    href="#self-growth"
+                    href="/blog/kien-thuc-chuyen-nganh"
                     className="block rounded-lg p-2 text-[14px] text-[#263a4d] hover:bg-[#f2fbf6] hover:text-[#00b14f]"
                   >
                     Kiến thức chuyên ngành
@@ -352,7 +358,7 @@ export default function Header() {
             Công cụ
           </Link>
           <Link
-            href="/career-orientation"
+            href="/blog"
             onClick={() => setMobileMenuOpen(false)}
             className="block py-2 text-[15px] font-semibold text-[#263a4d]"
           >

@@ -35,7 +35,7 @@ export default function CareerSidebar({ trendingIndustries }: CareerSidebarProps
           {trendingIndustries.map((item, idx) => (
             <Link
               key={item.id}
-              href={`/career-orientation/${item.slug}`}
+              href={`/blog/kien-thuc-chuyen-nganh/${item.slug}`}
               className="group flex items-center justify-between rounded-xl border border-transparent p-2.5 transition hover:border-[#00b14f]/30 hover:bg-[#f2fbf6]"
             >
               <div className="flex items-center gap-3">
