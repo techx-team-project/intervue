@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Check, Sparkles, Minus, X, Copy, CheckCircle2, ChevronDown, ChevronUp, Gift, RefreshCw } from 'lucide-react';
 
 interface PlanInfo {
@@ -494,7 +495,10 @@ export default function UpgradeLandingView() {
                 <h3 className="text-[17px] font-bold text-[#1e293b]">Bạn có mã quà tặng hoặc voucher VIP?</h3>
               </div>
               <p className="mt-1 text-[13.5px] text-[#64748b]">
-                Nhập mã kích hoạt được tặng từ các chương trình hoặc đối tác để mở khóa VIP miễn phí.
+                Nhập mã kích hoạt được tặng từ các chương trình hoặc đối tác để mở khóa VIP miễn phí.{' '}
+                <Link href="/qua-tang" className="font-semibold text-[#00b14f] hover:underline">
+                  Kích hoạt mã quà tặng TopCV &rarr;
+                </Link>
               </p>
             </div>
 

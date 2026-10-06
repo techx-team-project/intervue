@@ -652,6 +652,13 @@ export default function Header() {
                         >
                           Gói dịch vụ đẩy Top hồ sơ
                         </Link>
+                        <Link
+                          href="/qua-tang"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="block rounded-lg px-2 py-1 text-[13px] text-[#475569] transition-colors hover:bg-emerald-50/60 hover:text-[#00b14f]"
+                        >
+                          Kích hoạt mã quà tặng
+                        </Link>
                       </div>
                     )}
                   </div>
