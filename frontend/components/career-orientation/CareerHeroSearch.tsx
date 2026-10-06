@@ -28,7 +28,7 @@ export default function CareerHeroSearch({
   onSelectTag,
 }: CareerHeroSearchProps) {
   return (
-    <div className="relative overflow-hidden border-b border-[#e9eaec] bg-gradient-to-b from-[#00b14f]/10 via-[#f4fbf7] to-white py-10 lg:py-14">
+    <div className="relative overflow-hidden border-b border-[#e9eaec] bg-linear-to-b from-[#00b14f]/10 via-[#f4fbf7] to-white py-10 lg:py-14">
       {/* Background ambient blurs */}
       <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#00b14f]/15 blur-3xl" />
       <div className="pointer-events-none absolute top-1/2 -right-20 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />

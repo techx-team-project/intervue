@@ -29,7 +29,7 @@ export default function CareerRoadmapTimeline({ stages }: CareerRoadmapTimelineP
         {stages.map((stage) => (
           <div key={stage.step} className="group relative">
             {/* Step marker bubble */}
-            <div className="absolute top-0 -left-[35px] flex h-8 w-8 items-center justify-center rounded-full border-4 border-white bg-[#00b14f] text-xs font-black text-white shadow-md transition-transform duration-300 group-hover:scale-110 sm:-left-[43px] sm:h-9 sm:w-9 sm:text-sm">
+            <div className="absolute top-0 -left-8.75 flex h-8 w-8 items-center justify-center rounded-full border-4 border-white bg-[#00b14f] text-xs font-black text-white shadow-md transition-transform duration-300 group-hover:scale-110 sm:-left-10.75 sm:h-9 sm:w-9 sm:text-sm">
               {stage.step}
             </div>
 

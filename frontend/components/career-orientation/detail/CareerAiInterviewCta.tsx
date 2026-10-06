@@ -6,7 +6,7 @@ import { Bot, Sparkles, ArrowRight, ShieldCheck, FileCheck } from 'lucide-react'
 
 export default function CareerAiInterviewCta() {
   return (
-    <div className="relative my-10 overflow-hidden rounded-3xl border border-[#00b14f]/30 bg-gradient-to-br from-[#052e16] via-[#0b4d29] to-[#042413] p-6 text-white shadow-xl sm:p-8">
+    <div className="relative my-10 overflow-hidden rounded-3xl border border-[#00b14f]/30 bg-linear-to-br from-[#052e16] via-[#0b4d29] to-[#042413] p-6 text-white shadow-xl sm:p-8">
       <div className="pointer-events-none absolute -top-12 -right-12 h-52 w-52 rounded-full bg-[#00b14f]/30 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-12 -left-12 h-52 w-52 rounded-full bg-emerald-400/20 blur-3xl" />
 
