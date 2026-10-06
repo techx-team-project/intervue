@@ -1,0 +1,78 @@
+import { Building, Calculator, Code2, Headphones, Landmark, Megaphone, TrendingUp, Users } from 'lucide-react';
+
+import type { JobCategory } from '@/types/home';
+
+export const JOB_CATEGORIES: JobCategory[] = [
+  {
+    id: 1,
+    name: 'Kinh doanh / Bán hàng',
+    count: '9.145',
+    icon: TrendingUp,
+    color: 'text-emerald-600',
+    bg: 'bg-emerald-50',
+    border: 'hover:border-emerald-500',
+  },
+  {
+    id: 2,
+    name: 'Marketing / PR / Quảng cáo',
+    count: '5.885',
+    icon: Megaphone,
+    color: 'text-rose-600',
+    bg: 'bg-rose-50',
+    border: 'hover:border-rose-500',
+  },
+  {
+    id: 3,
+    name: 'Chăm sóc khách hàng / Vận hành',
+    count: '1.412',
+    icon: Headphones,
+    color: 'text-blue-600',
+    bg: 'bg-blue-50',
+    border: 'hover:border-blue-500',
+  },
+  {
+    id: 4,
+    name: 'Nhân sự / Hành chính / Pháp chế',
+    count: '2.803',
+    icon: Users,
+    color: 'text-purple-600',
+    bg: 'bg-purple-50',
+    border: 'hover:border-purple-500',
+  },
+  {
+    id: 5,
+    name: 'Công nghệ Thông tin (IT)',
+    count: '1.737',
+    icon: Code2,
+    color: 'text-cyan-600',
+    bg: 'bg-cyan-50',
+    border: 'hover:border-cyan-500',
+  },
+  {
+    id: 6,
+    name: 'Tài chính / Ngân hàng / Bảo hiểm',
+    count: '993',
+    icon: Landmark,
+    color: 'text-amber-600',
+    bg: 'bg-amber-50',
+    border: 'hover:border-amber-500',
+  },
+  {
+    id: 7,
+    name: 'Bất động sản',
+    count: '367',
+    icon: Building,
+    color: 'text-orange-600',
+    bg: 'bg-orange-50',
+    border: 'hover:border-orange-500',
+  },
+  {
+    id: 8,
+    name: 'Kế toán / Kiểm toán',
+    count: '2.150',
+    icon: Calculator,
+    color: 'text-indigo-600',
+    bg: 'bg-indigo-50',
+    border: 'hover:border-indigo-500',
+  },
+];
