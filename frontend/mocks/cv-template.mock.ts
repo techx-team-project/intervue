@@ -555,9 +555,9 @@ export const CV_FAQS: CvFaqItem[] = [
       'Hoàn toàn phù hợp! Thậm chí các vị trí cấp cao như Quản lý, Giám đốc, Kỹ sư trưởng hay Chuyên gia tài chính tại các tập đoàn lớn (như mẫu Harvard) đều ưu tiên sử dụng thiết kế tối giản để dành trọn vẹn không gian trang giấy cho các dự án lớn, giá trị ngân sách và chỉ số tăng trưởng.',
   },
   {
-    question: 'Tôi có thể đổi màu sắc hoặc ngôn ngữ của mẫu CV được không?',
+    question: 'Tôi có thể chuyển đổi ngôn ngữ của mẫu CV được không?',
     answer:
-      'Có. Bạn có thể tự do lựa chọn 7 gam màu chủ đạo (Xanh ngọc, Navy, Tím, Cam, Đỏ, Xám than, Xanh mòng két) và chuyển đổi ngôn ngữ hiển thị (Tiếng Việt, Tiếng Anh) ngay trên trang chọn mẫu hoặc trong trình soạn thảo.',
+      'Có. Bạn có thể tự do chuyển đổi ngôn ngữ hiển thị (Tiếng Việt, Tiếng Anh) ngay trên trang chọn mẫu hoặc trong trình soạn thảo để phù hợp với yêu cầu của từng doanh nghiệp ứng tuyển.',
   },
   {
     question: 'Tải CV trên InterVue có mất phí không?',

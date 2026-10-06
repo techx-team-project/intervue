@@ -53,7 +53,7 @@ export interface CvTemplateItem {
   styleSlug: string;
   languages: ('Tiếng Việt' | 'Tiếng Anh' | 'Tiếng Nhật')[];
   industries: string[];
-  availableColors: CvTemplateColor[];
+  availableColors?: CvTemplateColor[];
   defaultColorHex: string;
   usesCount: string;
   rating: number;

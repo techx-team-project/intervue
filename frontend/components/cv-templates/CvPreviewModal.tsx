@@ -4,17 +4,15 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { CvTemplateItem } from '@/types/cv-template';
 import CvPaperPreview from './CvPaperPreview';
-import { X, ShieldCheck, Star, Check, Download, ArrowRight, ZoomIn, ZoomOut, Maximize2, FileCheck } from 'lucide-react';
+import { X, ShieldCheck, Star, Download, ArrowRight, ZoomIn, ZoomOut, Maximize2, FileCheck } from 'lucide-react';
 
 interface CvPreviewModalProps {
   template: CvTemplateItem | null;
-  initialColorHex: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function CvPreviewModal({ template, initialColorHex, isOpen, onClose }: CvPreviewModalProps) {
-  const [activeColor, setActiveColor] = useState<string>(initialColorHex);
+export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewModalProps) {
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const [isDownloaded, setIsDownloaded] = useState<boolean>(false);
 
@@ -83,7 +81,7 @@ export default function CvPreviewModal({ template, initialColorHex, isOpen, onCl
               className="origin-top shadow-2xl transition-transform duration-200"
               style={{ transform: `scale(${zoomLevel / 100})` }}
             >
-              <CvPaperPreview sampleData={template.sampleData} primaryColor={activeColor} isMini={false} />
+              <CvPaperPreview sampleData={template.sampleData} primaryColor={template.defaultColorHex} isMini={false} />
             </div>
           </div>
         </div>
@@ -102,34 +100,6 @@ export default function CvPreviewModal({ template, initialColorHex, isOpen, onCl
               </div>
               <h3 className="text-xl font-bold text-[#171717]">{template.title}</h3>
               <p className="mt-2 text-xs leading-relaxed text-[#526475]">{template.description}</p>
-            </div>
-
-            {/* Color Palette Switcher */}
-            <div>
-              <label className="mb-2.5 block text-xs font-bold tracking-wider text-[#263a4d] uppercase">
-                Chọn gam màu chủ đạo:
-              </label>
-              <div className="flex flex-wrap gap-2.5">
-                {template.availableColors.map((col) => {
-                  const isCurrent = activeColor.toLowerCase() === col.hex.toLowerCase();
-                  return (
-                    <button
-                      key={col.id}
-                      type="button"
-                      onClick={() => setActiveColor(col.hex)}
-                      title={col.name}
-                      className={`flex h-8 w-8 items-center justify-center rounded-full shadow-xs transition-all ${
-                        isCurrent
-                          ? 'scale-110 ring-3 ring-[#00b14f] ring-offset-2'
-                          : 'opacity-85 hover:scale-105 hover:opacity-100'
-                      }`}
-                      style={{ backgroundColor: col.hex }}
-                    >
-                      {isCurrent && <Check className="h-4 w-4 stroke-3 text-white" />}
-                    </button>
-                  );
-                })}
-              </div>
             </div>
 
             {/* ATS Score Card */}

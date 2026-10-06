@@ -1,19 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { CvTemplateItem } from '@/types/cv-template';
 import CvPaperPreview from './CvPaperPreview';
-import { Eye, Check, Star, ShieldCheck, Sparkles, ArrowRight } from 'lucide-react';
+import { Eye, Star, ShieldCheck, Sparkles, ArrowRight } from 'lucide-react';
 
 interface CvTemplateCardProps {
   template: CvTemplateItem;
-  onPreview: (template: CvTemplateItem, colorHex: string) => void;
-  onUseTemplate: (template: CvTemplateItem, colorHex: string) => void;
+  onPreview: (template: CvTemplateItem) => void;
+  onUseTemplate: (template: CvTemplateItem) => void;
 }
 
 export default function CvTemplateCard({ template, onPreview, onUseTemplate }: CvTemplateCardProps) {
-  const [selectedColor, setSelectedColor] = useState<string>(template.defaultColorHex);
-
   return (
     <div className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#00b14f]/60 hover:shadow-xl">
       <div>
@@ -21,7 +19,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
         <div className="relative overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-2">
           {/* Mini dynamic CV Paper preview */}
           <div className="transition-transform duration-500 group-hover:scale-102">
-            <CvPaperPreview sampleData={template.sampleData} primaryColor={selectedColor} isMini={true} />
+            <CvPaperPreview sampleData={template.sampleData} primaryColor={template.defaultColorHex} isMini={true} />
           </div>
 
           {/* Top floating badges */}
@@ -44,7 +42,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
           <div className="absolute inset-0 flex items-center justify-center gap-3 rounded-xl bg-black/40 p-4 opacity-0 backdrop-blur-xs transition-opacity duration-300 group-hover:opacity-100">
             <button
               type="button"
-              onClick={() => onPreview(template, selectedColor)}
+              onClick={() => onPreview(template)}
               className="flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-2 text-xs font-bold text-[#171717] shadow-lg transition hover:bg-gray-100"
             >
               <Eye className="h-3.5 w-3.5 text-[#00b14f]" />
@@ -53,7 +51,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
 
             <button
               type="button"
-              onClick={() => onUseTemplate(template, selectedColor)}
+              onClick={() => onUseTemplate(template)}
               className="flex items-center gap-1.5 rounded-xl bg-[#00b14f] px-4 py-2 text-xs font-bold text-white shadow-lg transition hover:bg-[#009b44]"
             >
               <span>Dùng mẫu</span>
@@ -62,34 +60,8 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
           </div>
         </div>
 
-        {/* Color Palette Selector Dots */}
-        <div className="mt-3.5 flex items-center justify-between border-b border-gray-100 pb-3">
-          <span className="text-[11px] font-semibold text-[#7f878f]">Màu chủ đạo:</span>
-          <div className="flex items-center gap-1.5">
-            {template.availableColors.map((col) => {
-              const isCurrent = selectedColor.toLowerCase() === col.hex.toLowerCase();
-              return (
-                <button
-                  key={col.id}
-                  type="button"
-                  title={col.name}
-                  onClick={() => setSelectedColor(col.hex)}
-                  className={`flex h-4.5 w-4.5 items-center justify-center rounded-full transition-transform ${
-                    isCurrent
-                      ? 'scale-110 ring-2 ring-[#00b14f] ring-offset-1'
-                      : 'opacity-80 hover:scale-110 hover:opacity-100'
-                  }`}
-                  style={{ backgroundColor: col.hex }}
-                >
-                  {isCurrent && <Check className="h-2.5 w-2.5 stroke-3 text-white" />}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Title and Meta */}
-        <div className="mt-3">
+        <div className="mt-4">
           <h3 className="line-clamp-1 text-sm font-bold text-[#171717] transition-colors group-hover:text-[#00b14f]">
             {template.title}
           </h3>
@@ -120,7 +92,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
 
         <button
           type="button"
-          onClick={() => onUseTemplate(template, selectedColor)}
+          onClick={() => onUseTemplate(template)}
           className="inline-flex items-center gap-1 text-xs font-bold text-[#00b14f] hover:underline"
         >
           <span>Dùng mẫu</span>

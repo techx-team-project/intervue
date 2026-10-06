@@ -35,11 +35,9 @@ export default function CvTemplatesView({
   const [previewState, setPreviewState] = useState<{
     isOpen: boolean;
     template: CvTemplateItem | null;
-    colorHex: string;
   }>({
     isOpen: false,
     template: null,
-    colorHex: '#00b14f',
   });
 
   // Filter templates
@@ -76,11 +74,10 @@ export default function CvTemplatesView({
     });
   }, [initialTemplates, selectedStyleSlug, selectedIndustrySlug, selectedLanguage, searchQuery, industries]);
 
-  const handleOpenPreview = (template: CvTemplateItem, colorHex: string) => {
+  const handleOpenPreview = (template: CvTemplateItem) => {
     setPreviewState({
       isOpen: true,
       template,
-      colorHex,
     });
   };
 
@@ -174,9 +171,8 @@ export default function CvTemplatesView({
 
       {/* 7. Full Preview Modal */}
       <CvPreviewModal
-        key={`${previewState.template?.id || 'modal'}-${previewState.colorHex}`}
+        key={previewState.template?.id || 'modal'}
         template={previewState.template}
-        initialColorHex={previewState.colorHex}
         isOpen={previewState.isOpen}
         onClose={handleClosePreview}
       />
