@@ -141,7 +141,7 @@ export default function CareerSidebar({ trendingIndustries }: CareerSidebarProps
       </div>
 
       {/* 3. Newsletter Subscription */}
-      <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-[#f2fbf6] to-white p-5 shadow-xs">
+      <div className="rounded-2xl border border-emerald-200 bg-linear-to-br from-[#f2fbf6] to-white p-5 shadow-xs">
         <div className="mb-2 flex items-center gap-2">
           <Mail className="h-5 w-5 text-[#00b14f]" />
           <h3 className="text-sm font-bold text-[#171717]">Nhận bản tin định hướng nghề nghiệp</h3>

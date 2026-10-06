@@ -65,7 +65,7 @@ const MARKETING_JOBS: MarketingJobPreview[] = [
 
 export default function CareerRelatedJobsWidget() {
   return (
-    <div className="my-10 rounded-3xl border border-emerald-200 bg-gradient-to-b from-[#f2fbf6] via-white to-white p-6 shadow-xs sm:p-8">
+    <div className="my-10 rounded-3xl border border-emerald-200 bg-linear-to-b from-[#f2fbf6] via-white to-white p-6 shadow-xs sm:p-8">
       <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <div>
           <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-[#00b14f]">

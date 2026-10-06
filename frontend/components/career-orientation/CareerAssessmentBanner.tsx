@@ -105,7 +105,7 @@ export default function CareerAssessmentBanner() {
   const finalRecommendation = QUIZ_STEPS[0].options[selectedAnswers[0] || 0];
 
   return (
-    <div className="relative my-8 overflow-hidden rounded-3xl border border-[#00b14f]/30 bg-gradient-to-br from-[#023319] via-[#0b4d29] to-[#042413] text-white shadow-xl">
+    <div className="relative my-8 overflow-hidden rounded-3xl border border-[#00b14f]/30 bg-linear-to-br from-[#023319] via-[#0b4d29] to-[#042413] text-white shadow-xl">
       {/* Decorative background glows */}
       <div className="pointer-events-none absolute -top-16 -right-16 h-64 w-64 rounded-full bg-[#00b14f]/30 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl" />
