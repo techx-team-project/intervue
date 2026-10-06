@@ -8,8 +8,8 @@ export default function AwardsEcosystemSection() {
     <div className="my-12 space-y-12">
       <EcosystemSection />
       <MobileAppSection />
-      <ImpressiveNumbersSection />
       <TestimonialsSection />
+      <ImpressiveNumbersSection />
     </div>
   );
 }
