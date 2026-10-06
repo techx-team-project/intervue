@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Building2, Users, MapPin, ExternalLink, Plus, Check, CheckCircle2, Briefcase } from 'lucide-react';
 import type { JobDetail } from '@/types/job';
 
@@ -28,9 +29,11 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
         </div>
 
         <div className="min-w-0 flex-1">
-          <h3 className="line-clamp-2 text-sm font-bold text-slate-900 transition-colors hover:text-[#00b14f]">
-            {company.name}
-          </h3>
+          <Link href={`/companies/${company.id || 224996}`}>
+            <h3 className="line-clamp-2 text-sm font-bold text-slate-900 transition-colors hover:text-[#00b14f]">
+              {company.name}
+            </h3>
+          </Link>
           <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
             <CheckCircle2 className="h-3.5 w-3.5 text-[#00b14f]" />
             <span>Doanh nghiệp xác thực</span>
@@ -98,15 +101,13 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
 
       {/* View Company Link */}
       <div className="mt-4 border-t border-slate-100 pt-3">
-        <a
-          href={company.website || '#'}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href={`/companies/${company.id || 224996}`}
           className="flex items-center justify-center gap-1.5 text-xs font-bold text-[#00b14f] hover:underline"
         >
           <span>Xem trang công ty</span>
           <ExternalLink className="h-3.5 w-3.5" />
-        </a>
+        </Link>
       </div>
     </div>
   );

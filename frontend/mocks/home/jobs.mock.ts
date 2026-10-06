@@ -15,6 +15,19 @@ export const FEATURED_JOBS: Job[] = [
     type: 'office',
   },
   {
+    id: 201,
+    title: 'Huấn Luyện Viên Pilates Thảm & Máy (Full-time / Part-time) - Thu Nhập 15 - 30 Triệu',
+    company: 'CÔNG TY TNHH MẸ GẤU PILATES',
+    highlightBadge: '🔥 Tuyển gấp',
+    isPro: true,
+    salary: '15 - 30 triệu',
+    location: 'Hà Nội',
+    deadline: 'Còn 18 ngày',
+    isUrgentDeadline: true,
+    tags: ['Huấn luyện viên', 'Pilates', 'Fitness'],
+    type: 'office',
+  },
+  {
     id: 1,
     title: 'Nhân Viên Kinh Doanh - Vận Hành Sàn Thương Mại Điện Tử - Thu Nhập Đến 18Tr',
     company: 'Công ty TNHH ZETACOM',
@@ -51,7 +64,7 @@ export const FEATURED_JOBS: Job[] = [
   {
     id: 4,
     title: 'Chuyên Viên Quản Lý Quan Hệ Khách Hàng Doanh Nghiệp (SME)',
-    company: 'Ngân Hàng TMCP Quân Đội (MB)',
+    company: 'Ngân Hàng TMCP Quân Đội (MB Bank)',
     isPro: true,
     highlightBadge: 'HOT',
     salary: '20 - 35 triệu',
@@ -63,7 +76,7 @@ export const FEATURED_JOBS: Job[] = [
   {
     id: 5,
     title: 'Senior Frontend Engineer (React.js / Next.js / TypeScript)',
-    company: 'FPT Software Toàn Cầu',
+    company: 'Công ty Cổ phần FPT Software',
     isPro: true,
     highlightBadge: '✨ Thưởng 50Tr',
     salary: '30 - 50 triệu',
