@@ -2,6 +2,19 @@ import type { Job } from '@/types/home';
 
 export const FEATURED_JOBS: Job[] = [
   {
+    id: 2320413,
+    title: 'Kế Toán Tổng Hợp - Lương Đến 20 Triệu',
+    company: 'CÔNG TY CỔ PHẦN THƯƠNG MẠI VÀ TỰ ĐỘNG HÓA ADI',
+    highlightBadge: '🔥 Tuyển gấp',
+    isPro: true,
+    salary: 'Tới 20 triệu',
+    location: 'Hà Nội',
+    deadline: 'Còn 15 ngày',
+    isUrgentDeadline: true,
+    tags: ['Kế toán tổng hợp', 'Báo cáo thuế', 'Excel'],
+    type: 'office',
+  },
+  {
     id: 1,
     title: 'Nhân Viên Kinh Doanh - Vận Hành Sàn Thương Mại Điện Tử - Thu Nhập Đến 18Tr',
     company: 'Công ty TNHH ZETACOM',
