@@ -130,29 +130,27 @@ export default function UpgradeLandingView() {
           KHỐI 2: BẢNG SO SÁNH 6 CỘT CHUẨN TOPCV (TRAU CHUỐT TỪNG CHI TIẾT)
           ========================================================================= */}
       <div className="w-full bg-white px-2 py-10 sm:px-4">
-        <div className="mx-auto max-w-[1360px] overflow-x-auto pb-4">
-          <div className="flex min-w-[1100px] items-start justify-center gap-1.5">
+        <div className="mx-auto max-w-340 overflow-x-auto pb-4">
+          <div className="flex min-w-275 items-start justify-center gap-1.5">
             {/* -------------------------------------------------------------
                 CỘT 1: HEADER (Loại tài khoản & Danh mục quyền lợi)
                 ------------------------------------------------------------- */}
-            <div className="w-[380px] shrink-0 overflow-hidden rounded-2xl border border-[#eef2f6] bg-white shadow-xs">
-              <div className="flex h-[88px] items-center border-b border-[#eee] bg-[#fafbfc] px-5 text-[17px] font-bold text-[#1e293b]">
+            <div className="w-95 shrink-0 overflow-hidden rounded-2xl border border-[#eef2f6] bg-white shadow-xs">
+              <div className="flex h-22 items-center border-b border-[#eee] bg-[#fafbfc] px-5 text-[17px] font-bold text-[#1e293b]">
                 Loại tài khoản
               </div>
               <ul className="divide-y divide-[#eee] text-[14px] text-[#333]">
-                <li className="flex h-[48px] items-center px-5 font-normal">Thời hạn sử dụng</li>
-                <li className="flex h-[48px] items-center px-5 font-normal">Số lượng CV</li>
-                <li className="flex h-[48px] items-center px-5 font-normal">Số lượng Cover Letter</li>
-                <li className="flex h-[48px] items-center px-5 font-normal">
-                  Thời gian chờ khi tải CV và Cover Letter
-                </li>
-                <li className="flex h-[48px] items-center px-5 font-normal">Ưu tiên đẩy Top hiển thị với NTD</li>
-                <li className="flex h-[48px] items-center px-5 font-normal">Biểu tượng xác minh tài khoản</li>
-                <li className="flex h-[48px] items-center px-5 font-normal">Sử dụng mẫu CV Cao Cấp</li>
-                <li className="flex h-[48px] items-center px-5 font-normal">Sử dụng mẫu Cover Letter Cao Cấp</li>
-                <li className="flex h-[48px] items-center px-5 font-normal">Ẩn biểu tượng ©intervue.vn</li>
-                <li className="flex h-[48px] items-center px-5 font-normal">Gói quà tặng từ đối tác Gitiho</li>
-                <li className="flex h-[48px] items-center bg-[#fafbfc]/50 px-5 text-[13px] text-[#555]">
+                <li className="flex h-12 items-center px-5 font-normal">Thời hạn sử dụng</li>
+                <li className="flex h-12 items-center px-5 font-normal">Số lượng CV</li>
+                <li className="flex h-12 items-center px-5 font-normal">Số lượng Cover Letter</li>
+                <li className="flex h-12 items-center px-5 font-normal">Thời gian chờ khi tải CV và Cover Letter</li>
+                <li className="flex h-12 items-center px-5 font-normal">Ưu tiên đẩy Top hiển thị với NTD</li>
+                <li className="flex h-12 items-center px-5 font-normal">Biểu tượng xác minh tài khoản</li>
+                <li className="flex h-12 items-center px-5 font-normal">Sử dụng mẫu CV Cao Cấp</li>
+                <li className="flex h-12 items-center px-5 font-normal">Sử dụng mẫu Cover Letter Cao Cấp</li>
+                <li className="flex h-12 items-center px-5 font-normal">Ẩn biểu tượng ©intervue.vn</li>
+                <li className="flex h-12 items-center px-5 font-normal">Gói quà tặng từ đối tác Gitiho</li>
+                <li className="flex h-12 items-center bg-[#fafbfc]/50 px-5 text-[13px] text-[#555]">
                   <span className="flex items-center gap-1.5 pl-4">
                     <Minus className="h-3.5 w-3.5 text-[#94a3b8]" />
                     Tài khoản PRO trị giá 299K.
@@ -166,7 +164,7 @@ export default function UpgradeLandingView() {
                     </a>
                   </span>
                 </li>
-                <li className="flex h-[48px] items-center bg-[#fafbfc]/50 px-5 text-[13px] text-[#555]">
+                <li className="flex h-12 items-center bg-[#fafbfc]/50 px-5 text-[13px] text-[#555]">
                   <span className="flex items-center gap-1.5 pl-4">
                     <Minus className="h-3.5 w-3.5 text-[#94a3b8]" />
                     Khoá học Tin học VP:
@@ -175,8 +173,8 @@ export default function UpgradeLandingView() {
                     <span className="font-bold text-[#00b14f]">Power Point</span>
                   </span>
                 </li>
-                {/* Special competition row (h-[80px]) */}
-                <li className="flex h-[80px] items-center justify-between border-y border-emerald-100 bg-[#f2fbf6] px-5 font-normal">
+                {/* Special competition row (h-20) */}
+                <li className="flex h-20 items-center justify-between border-y border-emerald-100 bg-[#f2fbf6] px-5 font-normal">
                   <span className="text-[14px] leading-snug text-[#1e293b]">
                     Thông tin mức độ cạnh tranh <br />
                     <span className="text-[12px] text-[#64748b]">(trên ứng dụng di động)</span>
@@ -188,7 +186,7 @@ export default function UpgradeLandingView() {
                 </li>
               </ul>
               {/* Bottom footer buffer */}
-              <div className="flex h-[120px] items-center border-t border-[#eee] bg-[#fafbfc] px-5 text-[13px] text-[#64748b]">
+              <div className="flex h-30 items-center border-t border-[#eee] bg-[#fafbfc] px-5 text-[13px] text-[#64748b]">
                 Chọn gói phù hợp với mục tiêu ứng tuyển
               </div>
             </div>
@@ -196,45 +194,45 @@ export default function UpgradeLandingView() {
             {/* -------------------------------------------------------------
                 CỘT 2: GÓI THƯỜNG (Miễn phí)
                 ------------------------------------------------------------- */}
-            <div className="w-[172px] shrink-0 overflow-hidden rounded-2xl border border-[#eef2f6] bg-white text-center shadow-xs transition-all hover:border-slate-300">
-              <div className="flex h-[88px] flex-col items-center justify-center border-b border-[#eee] bg-white px-2">
+            <div className="w-43 shrink-0 overflow-hidden rounded-2xl border border-[#eef2f6] bg-white text-center shadow-xs transition-all hover:border-slate-300">
+              <div className="flex h-22 flex-col items-center justify-center border-b border-[#eee] bg-white px-2">
                 <span className="text-[14px] text-[#64748b]">Thường</span>
                 <span className="mt-1 text-[17px] font-bold text-[#1e293b]">Miễn phí</span>
               </div>
               <ul className="divide-y divide-[#eee] text-[14px] text-[#333]">
-                <li className="flex h-[48px] items-center justify-center text-[#64748b]">Vĩnh viễn</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#1e293b]">6</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#1e293b]">6</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#1e293b]">5s</li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center text-[#64748b]">Vĩnh viễn</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#1e293b]">6</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#1e293b]">6</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#1e293b]">5s</li>
+                <li className="flex h-12 items-center justify-center">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center bg-[#fafbfc]/50">
+                <li className="flex h-12 items-center justify-center bg-[#fafbfc]/50">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center bg-[#fafbfc]/50">
+                <li className="flex h-12 items-center justify-center bg-[#fafbfc]/50">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[80px] items-center justify-center border-y border-emerald-100 bg-[#f2fbf6] px-2 text-[14px] text-[#475569]">
+                <li className="flex h-20 items-center justify-center border-y border-emerald-100 bg-[#f2fbf6] px-2 text-[14px] text-[#475569]">
                   3 việc làm
                 </li>
               </ul>
-              <div className="flex h-[120px] items-center justify-center border-t border-[#eee] p-4 text-[13px] text-[#94a3b8]">
+              <div className="flex h-30 items-center justify-center border-t border-[#eee] p-4 text-[13px] text-[#94a3b8]">
                 Gói mặc định
               </div>
             </div>
@@ -242,43 +240,43 @@ export default function UpgradeLandingView() {
             {/* -------------------------------------------------------------
                 CỘT 3: GÓI ĐÃ XÁC THỰC (Miễn phí)
                 ------------------------------------------------------------- */}
-            <div className="w-[172px] shrink-0 overflow-hidden rounded-2xl border border-[#eef2f6] bg-white text-center shadow-xs transition-all hover:border-slate-300">
-              <div className="flex h-[88px] flex-col items-center justify-center border-b border-[#eee] bg-white px-2">
+            <div className="w-43 shrink-0 overflow-hidden rounded-2xl border border-[#eef2f6] bg-white text-center shadow-xs transition-all hover:border-slate-300">
+              <div className="flex h-22 flex-col items-center justify-center border-b border-[#eee] bg-white px-2">
                 <span className="text-[14px] text-[#64748b]">Đã xác thực</span>
                 <span className="mt-1 text-[17px] font-bold text-[#1e293b]">Miễn phí</span>
               </div>
               <ul className="divide-y divide-[#eee] text-[14px] text-[#333]">
-                <li className="flex h-[48px] items-center justify-center text-[#64748b]">Vĩnh viễn</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#1e293b]">6</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#1e293b]">6</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#1e293b]">5s</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#00b14f]">1 lần/tuần</li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center text-[#64748b]">Vĩnh viễn</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#1e293b]">6</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#1e293b]">6</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#1e293b]">5s</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#00b14f]">1 lần/tuần</li>
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center bg-[#fafbfc]/50">
+                <li className="flex h-12 items-center justify-center bg-[#fafbfc]/50">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center bg-[#fafbfc]/50">
+                <li className="flex h-12 items-center justify-center bg-[#fafbfc]/50">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[80px] items-center justify-center border-y border-emerald-100 bg-[#f2fbf6] px-2 text-[14px] text-[#475569]">
+                <li className="flex h-20 items-center justify-center border-y border-emerald-100 bg-[#f2fbf6] px-2 text-[14px] text-[#475569]">
                   3 việc làm
                 </li>
               </ul>
-              <div className="flex h-[120px] items-center justify-center border-t border-[#eee] p-4 text-[13px] font-bold text-[#00b14f]">
+              <div className="flex h-30 items-center justify-center border-t border-[#eee] p-4 text-[13px] font-bold text-[#00b14f]">
                 Đang kích hoạt
               </div>
             </div>
@@ -286,8 +284,8 @@ export default function UpgradeLandingView() {
             {/* -------------------------------------------------------------
                 CỘT 4: GÓI PRO VIP (50,000 VNĐ - Nổi bật nhất)
                 ------------------------------------------------------------- */}
-            <div className="relative w-[185px] shrink-0 overflow-hidden rounded-2xl border-2 border-[#00b14f] bg-white text-center shadow-lg shadow-emerald-500/10">
-              <div className="flex h-[88px] flex-col items-center justify-center border-b border-[#eee] bg-emerald-50/40 px-2">
+            <div className="relative w-46.25 shrink-0 overflow-hidden rounded-2xl border-2 border-[#00b14f] bg-white text-center shadow-lg shadow-emerald-500/10">
+              <div className="flex h-22 flex-col items-center justify-center border-b border-[#eee] bg-emerald-50/40 px-2">
                 <span className="mb-0.5 text-[10.5px] font-bold tracking-wider text-[#00873c] uppercase">
                   ★ PHỔ BIẾN NHẤT
                 </span>
@@ -301,38 +299,38 @@ export default function UpgradeLandingView() {
               </div>
 
               <ul className="divide-y divide-[#eee] text-[14px] text-[#333]">
-                <li className="flex h-[48px] items-center justify-center font-medium text-[#1e293b]">1 tháng</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#00b14f]">12</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#00b14f]">12</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#00b14f]">3s</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#00b14f]">1 lần/ngày</li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center font-medium text-[#1e293b]">1 tháng</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#00b14f]">12</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#00b14f]">12</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#00b14f]">3s</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#00b14f]">1 lần/ngày</li>
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center bg-emerald-50/20">
+                <li className="flex h-12 items-center justify-center bg-emerald-50/20">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center bg-emerald-50/20">
+                <li className="flex h-12 items-center justify-center bg-emerald-50/20">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[80px] items-center justify-center border-y border-emerald-100 bg-[#f2fbf6] px-2 text-[14px] font-bold text-[#00b14f]">
+                <li className="flex h-20 items-center justify-center border-y border-emerald-100 bg-[#f2fbf6] px-2 text-[14px] font-bold text-[#00b14f]">
                   Không giới hạn việc làm
                 </li>
               </ul>
 
-              <div className="flex h-[120px] items-center justify-center border-t border-[#eee] bg-emerald-50/15 p-3.5">
+              <div className="flex h-30 items-center justify-center border-t border-[#eee] bg-emerald-50/15 p-3.5">
                 <button
                   type="button"
                   onClick={() => handleOpenUpgrade('pro')}
@@ -346,8 +344,8 @@ export default function UpgradeLandingView() {
             {/* -------------------------------------------------------------
                 CỘT 5: GÓI EDUCATION VIP (500,000 VNĐ)
                 ------------------------------------------------------------- */}
-            <div className="w-[172px] shrink-0 overflow-hidden rounded-2xl border border-[#eef2f6] bg-white text-center shadow-xs transition-all hover:border-slate-300">
-              <div className="flex h-[88px] flex-col items-center justify-center border-b border-[#eee] bg-white px-2">
+            <div className="w-43 shrink-0 overflow-hidden rounded-2xl border border-[#eef2f6] bg-white text-center shadow-xs transition-all hover:border-slate-300">
+              <div className="flex h-22 flex-col items-center justify-center border-b border-[#eee] bg-white px-2">
                 <div className="flex items-center gap-1.5">
                   <span className="text-[16px] font-bold text-[#00b14f]">Education</span>
                   <span className="rounded bg-[#00b14f] px-2 py-0.5 text-[11px] font-bold text-white">VIP</span>
@@ -355,39 +353,39 @@ export default function UpgradeLandingView() {
                 <span className="mt-1 text-[16px] font-bold text-[#1e293b]">500,000 VNĐ</span>
               </div>
               <ul className="divide-y divide-[#eee] text-[14px] text-[#333]">
-                <li className="flex h-[48px] items-center justify-center text-[#475569]">1 năm</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#1e293b]">12</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#1e293b]">12</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-[#1e293b]">3s</li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center text-[#475569]">1 năm</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#1e293b]">12</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#1e293b]">12</li>
+                <li className="flex h-12 items-center justify-center font-bold text-[#1e293b]">3s</li>
+                <li className="flex h-12 items-center justify-center">
                   <span className="h-0.5 w-4 rounded-full bg-[#dde5e8]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center bg-[#fafbfc]/50">
+                <li className="flex h-12 items-center justify-center bg-[#fafbfc]/50">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center bg-[#fafbfc]/50">
+                <li className="flex h-12 items-center justify-center bg-[#fafbfc]/50">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[80px] items-center justify-center border-y border-emerald-100 bg-[#f2fbf6] px-2 text-[14px] text-[#475569]">
+                <li className="flex h-20 items-center justify-center border-y border-emerald-100 bg-[#f2fbf6] px-2 text-[14px] text-[#475569]">
                   3 việc làm
                 </li>
               </ul>
-              <div className="flex h-[120px] flex-col items-center justify-center border-t border-[#eee] p-3 text-[12px] leading-tight text-[#64748b]">
+              <div className="flex h-30 flex-col items-center justify-center border-t border-[#eee] p-3 text-[12px] leading-tight text-[#64748b]">
                 <p>Nhận qua chương trình liên kết của InterVue & cơ sở đào tạo.</p>
                 <a href="#lien-he-dao-tao" className="mt-1 font-bold text-[#00b14f] hover:underline">
                   Tìm hiểu thêm
@@ -398,14 +396,14 @@ export default function UpgradeLandingView() {
             {/* -------------------------------------------------------------
                 CỘT 6: GÓI PREMIUM VIP (500,000 VNĐ - Cao cấp nhất)
                 ------------------------------------------------------------- */}
-            <div className="relative w-[185px] shrink-0 overflow-hidden rounded-2xl border-2 border-amber-400 bg-white text-center shadow-lg shadow-amber-500/10">
-              <div className="flex h-[88px] flex-col items-center justify-center border-b border-[#eee] bg-amber-50/30 px-2">
+            <div className="relative w-46.25 shrink-0 overflow-hidden rounded-2xl border-2 border-amber-400 bg-white text-center shadow-lg shadow-amber-500/10">
+              <div className="flex h-22 flex-col items-center justify-center border-b border-[#eee] bg-amber-50/30 px-2">
                 <span className="mb-0.5 text-[10.5px] font-bold tracking-wider text-amber-700 uppercase">
                   ★ CAO CẤP NHẤT
                 </span>
                 <div className="flex items-center gap-1.5">
                   <span className="text-[17px] font-bold text-amber-600">Premium</span>
-                  <span className="rounded bg-gradient-to-r from-amber-500 to-amber-600 px-2 py-0.5 text-[12px] font-bold text-white shadow-2xs">
+                  <span className="rounded bg-linear-to-r from-amber-500 to-amber-600 px-2 py-0.5 text-[12px] font-bold text-white shadow-2xs">
                     VIP
                   </span>
                 </div>
@@ -413,42 +411,42 @@ export default function UpgradeLandingView() {
               </div>
 
               <ul className="divide-y divide-[#eee] text-[14px] text-[#333]">
-                <li className="flex h-[48px] items-center justify-center font-medium text-[#1e293b]">1 năm</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-amber-600">20</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-amber-600">20</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-amber-600">1s</li>
-                <li className="flex h-[48px] items-center justify-center font-bold text-amber-600">1 lần/ngày</li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center font-medium text-[#1e293b]">1 năm</li>
+                <li className="flex h-12 items-center justify-center font-bold text-amber-600">20</li>
+                <li className="flex h-12 items-center justify-center font-bold text-amber-600">20</li>
+                <li className="flex h-12 items-center justify-center font-bold text-amber-600">1s</li>
+                <li className="flex h-12 items-center justify-center font-bold text-amber-600">1 lần/ngày</li>
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center">
+                <li className="flex h-12 items-center justify-center">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center bg-amber-50/20">
+                <li className="flex h-12 items-center justify-center bg-amber-50/20">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[48px] items-center justify-center bg-amber-50/20">
+                <li className="flex h-12 items-center justify-center bg-amber-50/20">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00b14f]" />
                 </li>
-                <li className="flex h-[80px] items-center justify-center border-y border-emerald-100 bg-[#f2fbf6] px-2 text-[14px] font-bold text-[#00b14f]">
+                <li className="flex h-20 items-center justify-center border-y border-emerald-100 bg-[#f2fbf6] px-2 text-[14px] font-bold text-[#00b14f]">
                   Không giới hạn việc làm
                 </li>
               </ul>
 
-              <div className="flex h-[120px] items-center justify-center border-t border-[#eee] bg-amber-50/15 p-3.5">
+              <div className="flex h-30 items-center justify-center border-t border-[#eee] bg-amber-50/15 p-3.5">
                 <button
                   type="button"
                   onClick={() => handleOpenUpgrade('premium')}
-                  className="w-full rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-3 text-[15px] font-bold text-white shadow-md shadow-amber-500/20 transition-all hover:from-amber-600 hover:to-amber-700"
+                  className="w-full rounded-xl bg-linear-to-r from-amber-500 to-amber-600 px-3 py-3 text-[15px] font-bold text-white shadow-md shadow-amber-500/20 transition-all hover:from-amber-600 hover:to-amber-700"
                 >
                   Nâng cấp Premium
                 </button>

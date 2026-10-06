@@ -10,7 +10,7 @@ interface CategoryPanelProps {
 
 export default function CategoryPanel({ categories, page, totalPages, onPrevPage, onNextPage }: CategoryPanelProps) {
   return (
-    <div className="flex h-[288px] flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-3.5 shadow-md md:col-span-3">
+    <div className="flex h-72 flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-3.5 shadow-md md:col-span-3">
       <div className="space-y-0.5">
         {categories.map((cat, idx) => (
           <div
