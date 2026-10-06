@@ -20,6 +20,18 @@ function JobLogo({ job }: { job: Job }) {
       </div>
     );
   }
+  if (job.id === 201) {
+    return (
+      <div className="flex h-full w-full items-center justify-center rounded-xl bg-white p-0.5 shadow-xs">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/company_logos/68463c85c449e1749433477.png"
+          alt="Mẹ Gấu Pilates"
+          className="h-full w-full object-contain"
+        />
+      </div>
+    );
+  }
   if (job.id === 1) {
     return (
       <div className="flex h-full w-full items-center justify-center rounded-xl bg-linear-to-br from-[#00b14f] to-[#047857] shadow-xs">

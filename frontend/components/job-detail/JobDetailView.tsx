@@ -8,7 +8,7 @@ import JobStickyNav from './JobStickyNav';
 import JobDescriptionSection from './JobDescriptionSection';
 import JobCompanySidebar from './JobCompanySidebar';
 import JobGeneralInfoSidebar from './JobGeneralInfoSidebar';
-import JobAiInterviewBanner from './JobAiInterviewBanner';
+// import JobAiInterviewBanner from './JobAiInterviewBanner';
 import JobRelatedSection from './JobRelatedSection';
 import JobApplyModal from './JobApplyModal';
 
@@ -51,7 +51,7 @@ export default function JobDetailView({ job, relatedJobs }: JobDetailViewProps) 
             <JobDescriptionSection job={job} onApply={() => setIsApplyOpen(true)} />
 
             {/* InterVue AI Mock Interview Feature Banner */}
-            <JobAiInterviewBanner jobTitle={job.title} />
+            {/* <JobAiInterviewBanner jobTitle={job.title} /> */}
 
             {/* Related Jobs Showcase */}
             <JobRelatedSection relatedJobs={relatedJobs} />

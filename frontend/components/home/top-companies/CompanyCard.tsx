@@ -1,5 +1,7 @@
-import { Briefcase, Building2, CheckCircle, Users } from 'lucide-react';
+'use client';
 
+import Link from 'next/link';
+import { Briefcase, Building2, CheckCircle, Users } from 'lucide-react';
 import type { Company } from '@/types/home';
 
 interface CompanyCardProps {
@@ -13,23 +15,33 @@ export default function CompanyCard({ company, isFollowed, onToggleFollow }: Com
     <div className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e9eaec] bg-white transition-all duration-300 hover:border-[#00b14f] hover:shadow-xl">
       <div>
         {/* Cover Image */}
-        <div className="relative h-28 w-full overflow-hidden bg-linear-to-r from-[#263a4d] to-[#1e293b]">
+        <Link
+          href={`/companies/${company.id}`}
+          className="relative block h-28 w-full overflow-hidden bg-linear-to-r from-[#263a4d] to-[#1e293b]"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={company.cover}
             alt={company.name}
             className="h-full w-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-105"
           />
-        </div>
+        </Link>
 
         {/* Logo Avatar & Content */}
         <div className="relative -mt-10 px-4 pb-4">
-          <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#e9eaec] bg-white p-1.5 shadow-md">
+          <Link
+            href={`/companies/${company.id}`}
+            className="mb-3 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#e9eaec] bg-white p-1.5 shadow-md transition-transform group-hover:scale-105"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={company.logo} alt={company.name} className="h-full w-full object-contain" />
-          </div>
+          </Link>
 
-          <h3 className="mb-1 line-clamp-2 cursor-pointer text-[14.5px] leading-tight font-bold text-[#263a4d] transition-colors group-hover:text-[#00b14f]">
-            {company.name}
-          </h3>
+          <Link href={`/companies/${company.id}`}>
+            <h3 className="mb-1 line-clamp-2 cursor-pointer text-[14.5px] leading-tight font-bold text-[#263a4d] transition-colors group-hover:text-[#00b14f]">
+              {company.name}
+            </h3>
+          </Link>
 
           <div className="mb-3 flex items-center gap-1 text-[12.5px] text-[#7f878f]">
             <Building2 className="h-3.5 w-3.5 text-[#939ca5]" />
@@ -38,10 +50,13 @@ export default function CompanyCard({ company, isFollowed, onToggleFollow }: Com
 
           {/* Stats: Jobs & Followers */}
           <div className="mb-3 flex items-center justify-between rounded-xl border border-[#f1f5f9] bg-[#f8fafc] p-2.5 text-[12.5px]">
-            <div className="flex items-center gap-1 font-bold text-[#00b14f]">
+            <Link
+              href={`/companies/${company.id}`}
+              className="flex items-center gap-1 font-bold text-[#00b14f] hover:underline"
+            >
               <Briefcase className="h-3.5 w-3.5" />
               <span>{company.openJobs} việc làm</span>
-            </div>
+            </Link>
             <div className="flex items-center gap-1 text-[#6f7882]">
               <Users className="h-3.5 w-3.5 text-[#939ca5]" />
               <span>{company.followers}</span>
