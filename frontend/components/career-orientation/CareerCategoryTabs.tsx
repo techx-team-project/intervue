@@ -27,8 +27,8 @@ export default function CareerCategoryTabs({
                 onClick={() => onSelectCategory(cat.id)}
                 className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all ${
                   isActive
-                    ? 'bg-[#00b14f] text-white shadow-sm shadow-[#00b14f]/20'
-                    : 'text-[#526475] hover:bg-[#f2fbf6] hover:text-[#00b14f]'
+                    ? 'bg-primary shadow-primary/20 text-white shadow-sm'
+                    : 'hover:bg-primary-light hover:text-primary text-[#526475]'
                 }`}
               >
                 <span>{cat.name}</span>

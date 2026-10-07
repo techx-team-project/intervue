@@ -13,7 +13,7 @@ export default function JobRelatedSection({ relatedJobs }: JobRelatedSectionProp
     <section id="job-related" className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
       <div className="flex items-center justify-between border-b border-slate-100 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-[#00b14f]">
+          <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
             <Sparkles className="h-4.5 w-4.5" />
           </div>
           <div>
@@ -22,10 +22,7 @@ export default function JobRelatedSection({ relatedJobs }: JobRelatedSectionProp
           </div>
         </div>
 
-        <Link
-          href="/#feature-jobs"
-          className="flex items-center gap-1 text-xs font-bold text-[#00b14f] hover:underline"
-        >
+        <Link href="/#feature-jobs" className="text-primary flex items-center gap-1 text-xs font-bold hover:underline">
           <span>Xem tất cả</span>
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
@@ -36,16 +33,16 @@ export default function JobRelatedSection({ relatedJobs }: JobRelatedSectionProp
           <Link
             key={job.id}
             href={`/jobs/${job.id}`}
-            className="group block rounded-xl border border-slate-200/80 bg-white p-4 transition-all duration-200 hover:-translate-y-1 hover:border-[#00b14f]/60 hover:shadow-md"
+            className="group hover:border-primary/60 block rounded-xl border border-slate-200/80 bg-white p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
           >
             <div className="flex items-start gap-3">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 p-1 group-hover:border-emerald-200">
-                <Building2 className="h-6 w-6 text-slate-400 group-hover:text-[#00b14f]" />
+                <Building2 className="group-hover:text-primary h-6 w-6 text-slate-400" />
               </div>
 
               <div className="min-w-0 flex-1">
                 <h3
-                  className="line-clamp-2 text-sm font-bold text-slate-800 transition-colors group-hover:text-[#00b14f]"
+                  className="group-hover:text-primary line-clamp-2 text-sm font-bold text-slate-800 transition-colors"
                   title={job.title}
                 >
                   {job.title}

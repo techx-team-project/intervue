@@ -97,13 +97,13 @@ export default function SuperiorToolsSection() {
         {/* 1. Header Bar: Tiêu đề + Tabs lọc danh mục */}
         <div className="mb-8 flex flex-col justify-between gap-6 border-b border-slate-100 pb-8 md:flex-row md:items-end">
           <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-emerald-50/80 px-3.5 py-1 text-[12px] font-bold text-[#00b14f]">
+            <div className="text-primary mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-emerald-50/80 px-3.5 py-1 text-[12px] font-bold">
               <Calculator className="h-3.5 w-3.5" />
               <span>BỘ TIỆN ÍCH DÀNH CHO NGƯỜI ĐI LÀM</span>
             </div>
 
             <h2 className="text-2xl font-black tracking-tight text-[#1e293b] sm:text-3xl md:text-4xl">
-              Công cụ <span className="text-[#00b14f]">vượt trội!</span>
+              Công cụ <span className="text-primary">vượt trội!</span>
             </h2>
 
             <p className="mt-2 text-[14px] text-[#64748b] sm:text-[15.5px]">
@@ -119,7 +119,7 @@ export default function SuperiorToolsSection() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`cursor-pointer rounded-full px-4 py-2 text-[13px] font-bold transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'bg-[#00b14f] text-white shadow-sm shadow-[#00b14f]/30'
+                    ? 'bg-primary shadow-primary/30 text-white shadow-sm'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                 }`}
               >
@@ -137,7 +137,7 @@ export default function SuperiorToolsSection() {
               href={tool.link}
               target="_blank"
               rel="noreferrer"
-              className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-[#fbfcfc] p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-[#00b14f] hover:bg-white hover:shadow-[0_12px_32px_rgba(0,177,79,0.12)]"
+              className="group hover:border-primary relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-[#fbfcfc] p-6 transition-all duration-300 hover:-translate-y-1.5 hover:bg-white hover:shadow-[0_12px_32px_rgba(0,177,79,0.12)]"
             >
               <div>
                 {/* Header card: Icon + Category Badge */}
@@ -159,7 +159,7 @@ export default function SuperiorToolsSection() {
                 </div>
 
                 {/* Tiêu đề & mô tả */}
-                <h3 className="text-[17px] font-bold text-[#1e293b] transition-colors group-hover:text-[#00b14f] sm:text-[18px]">
+                <h3 className="group-hover:text-primary text-[17px] font-bold text-[#1e293b] transition-colors sm:text-[18px]">
                   {tool.title}
                 </h3>
 
@@ -168,12 +168,12 @@ export default function SuperiorToolsSection() {
 
               {/* Action footer */}
               <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-3.5">
-                <span className="inline-flex items-center gap-1.5 text-[13px] font-bold text-[#00b14f] transition-all group-hover:translate-x-1">
+                <span className="text-primary inline-flex items-center gap-1.5 text-[13px] font-bold transition-all group-hover:translate-x-1">
                   <span>Trải nghiệm ngay</span>
                   <ArrowRight className="h-4 w-4" />
                 </span>
 
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-slate-400 transition-colors group-hover:bg-[#00b14f] group-hover:text-white">
+                <span className="group-hover:bg-primary flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-slate-400 transition-colors group-hover:text-white">
                   <ArrowRight className="h-3.5 w-3.5" />
                 </span>
               </div>

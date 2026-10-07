@@ -27,13 +27,13 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-tr from-[#00b14f] to-[#10b981] text-white shadow-md shadow-emerald-500/20">
+          <div className="from-primary flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-tr to-[#10b981] text-white shadow-md shadow-emerald-500/20">
             <Bot className="h-6 w-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-black text-[#263a4d] sm:text-xl">Chỉ số năng lực InterVue AI</h2>
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#00b14f] px-2.5 py-0.5 text-[11px] font-bold text-white shadow-2xs">
+              <h2 className="text-navy text-lg font-black sm:text-xl">Chỉ số năng lực InterVue AI</h2>
+              <span className="bg-primary inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold text-white shadow-2xs">
                 <Sparkles className="h-3 w-3" />
                 Verified
               </span>
@@ -48,9 +48,9 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
         <div className="flex items-center gap-3 self-start rounded-2xl border border-emerald-200 bg-white px-4 py-2.5 shadow-xs sm:self-auto">
           <div className="text-right">
             <div className="text-[11px] font-bold text-[#6f7882] uppercase">Điểm tổng kết</div>
-            <div className="text-[12px] font-bold text-[#00b14f]">Xếp hạng Top {aiScore.topRankPercentile}%</div>
+            <div className="text-primary text-[12px] font-bold">Xếp hạng Top {aiScore.topRankPercentile}%</div>
           </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-[#00b14f] to-[#047857] text-xl font-black text-white shadow-inner">
+          <div className="from-primary flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br to-[#047857] text-xl font-black text-white shadow-inner">
             {aiScore.overallScore}
           </div>
         </div>
@@ -62,10 +62,10 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
         <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-2xs backdrop-blur-xs">
           <div className="mb-2 flex items-center justify-between text-[#6f7882]">
             <span className="text-[12px] font-bold uppercase">Chuẩn ATS CV</span>
-            <FileSearch className="h-4 w-4 text-[#00b14f]" />
+            <FileSearch className="text-primary h-4 w-4" />
           </div>
-          <div className="text-2xl font-black text-[#263a4d]">{aiScore.atsReadiness}%</div>
-          <div className="mt-1 flex items-center gap-1 text-[11.5px] font-medium text-[#00b14f]">
+          <div className="text-navy text-2xl font-black">{aiScore.atsReadiness}%</div>
+          <div className="text-primary mt-1 flex items-center gap-1 text-[11.5px] font-medium">
             <CheckCircle2 className="h-3 w-3" /> Tương thích hoàn hảo
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
             <span className="text-[12px] font-bold uppercase">Cấu trúc STAR</span>
             <Zap className="h-4 w-4 text-amber-500" />
           </div>
-          <div className="text-2xl font-black text-[#263a4d]">{aiScore.starScore}/100</div>
+          <div className="text-navy text-2xl font-black">{aiScore.starScore}/100</div>
           <div className="mt-1 text-[11.5px] font-medium text-amber-600">Trả lời logic & đo lường</div>
         </div>
 
@@ -86,7 +86,7 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
             <span className="text-[12px] font-bold uppercase">Luyện phỏng vấn</span>
             <Flame className="h-4 w-4 text-rose-500" />
           </div>
-          <div className="text-2xl font-black text-[#263a4d]">{aiScore.mockInterviewCount} buổi</div>
+          <div className="text-navy text-2xl font-black">{aiScore.mockInterviewCount} buổi</div>
           <div className="mt-1 text-[11.5px] font-medium text-rose-600">Đã hoàn thành</div>
         </div>
 
@@ -96,7 +96,7 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
             <span className="text-[12px] font-bold uppercase">Điểm trung bình</span>
             <ShieldCheck className="h-4 w-4 text-blue-500" />
           </div>
-          <div className="text-2xl font-black text-[#263a4d]">{aiScore.averageInterviewScore}/10</div>
+          <div className="text-navy text-2xl font-black">{aiScore.averageInterviewScore}/10</div>
           <div className="mt-1 text-[11.5px] font-medium text-blue-600">Mức đánh giá Xuất sắc</div>
         </div>
       </div>
@@ -109,10 +109,10 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
             <Sparkles className="h-4 w-4" />
             <span>Điểm mạnh nổi bật được AI ghi nhận:</span>
           </div>
-          <ul className="space-y-1.5 text-[12.5px] text-[#263a4d]">
+          <ul className="text-navy space-y-1.5 text-[12.5px]">
             {aiScore.highlightStrengths.map((str, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#00b14f]" />
+                <CheckCircle2 className="text-primary mt-0.5 h-3.5 w-3.5 shrink-0" />
                 <span>{str}</span>
               </li>
             ))}
@@ -125,7 +125,7 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
             <Lightbulb className="h-4 w-4" />
             <span>Gợi ý hoàn thiện thêm để chinh phục mức lương cao:</span>
           </div>
-          <ul className="space-y-1.5 text-[12.5px] text-[#263a4d]">
+          <ul className="text-navy space-y-1.5 text-[12.5px]">
             {aiScore.suggestedImprovements.map((imp, idx) => (
               <li key={idx} className="flex items-start gap-2">
                 <HelpCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
@@ -143,7 +143,7 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
         </span>
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-xl bg-[#00b14f] px-4 py-2 text-[13px] font-semibold text-white shadow-xs transition-all hover:bg-[#009643]"
+          className="bg-primary hover:bg-primary-hover inline-flex items-center gap-2 rounded-xl px-4 py-2 text-[13px] font-semibold text-white shadow-xs transition-all"
         >
           <span>Luyện phỏng vấn AI ngay</span>
           <ArrowRight className="h-3.5 w-3.5" />

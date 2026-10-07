@@ -36,7 +36,7 @@ export default function Footer() {
               href={kw.link}
               target="_blank"
               rel="noreferrer"
-              className="transition-colors after:ml-2 after:text-[#e9eaec] after:content-['•'] last:after:content-none hover:text-[#00b14f]"
+              className="hover:text-primary transition-colors after:ml-2 after:text-[#e9eaec] after:content-['•'] last:after:content-none"
             >
               {kw.name}
             </a>
@@ -55,18 +55,18 @@ export default function Footer() {
 
             {/* Contact Details */}
             <div className="space-y-2 text-[13.5px] text-[#4d5965]">
-              <div className="text-[14.5px] font-bold text-[#263a4d]">Liên hệ hỗ trợ:</div>
+              <div className="text-navy text-[14.5px] font-bold">Liên hệ hỗ trợ:</div>
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 shrink-0 text-[#00b14f]" />
+                <Phone className="text-primary h-4 w-4 shrink-0" />
                 <span>Hotline:</span>
-                <a href="tel:1900068889" className="font-semibold text-[#263a4d] hover:text-[#00b14f]">
+                <a href="tel:1900068889" className="text-navy hover:text-primary font-semibold">
                   1900 068 889 (Nhánh 2)
                 </a>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 shrink-0 text-[#00b14f]" />
+                <Mail className="text-primary h-4 w-4 shrink-0" />
                 <span>Email:</span>
-                <a href="mailto:hotro@intervue.vn" className="text-[#263a4d] hover:text-[#00b14f]">
+                <a href="mailto:hotro@intervue.vn" className="text-navy hover:text-primary">
                   hotro@intervue.vn
                 </a>
               </div>
@@ -79,7 +79,7 @@ export default function Footer() {
                   href="https://zalo.me/946504486043251830"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1 font-medium text-[#00b14f] hover:underline"
+                  className="text-primary inline-flex items-center gap-1 font-medium hover:underline"
                 >
                   Kết nối ngay <ArrowRight className="h-3 w-3" />
                 </a>
@@ -88,7 +88,7 @@ export default function Footer() {
 
             {/* App Downloads & Social */}
             <div>
-              <div className="mb-2.5 text-[13px] font-bold text-[#263a4d]">Ứng dụng tải xuống:</div>
+              <div className="text-navy mb-2.5 text-[13px] font-bold">Ứng dụng tải xuống:</div>
               <div className="flex items-center gap-2.5">
                 <a
                   href="https://itunes.apple.com/us/app/topcv-t%E1%BA%A1o-cv-t%C3%ACm-vi%E1%BB%87c-l%C3%A0m/id1455928592?ls=1&mt=8"
@@ -113,7 +113,7 @@ export default function Footer() {
 
             {/* Social Links */}
             <div>
-              <div className="mb-2 text-[13px] font-bold text-[#263a4d]">Cộng đồng InterVue:</div>
+              <div className="text-navy mb-2 text-[13px] font-bold">Cộng đồng InterVue:</div>
               <div className="flex items-center gap-3">
                 <a
                   href="https://www.facebook.com/topcv.vn/"
@@ -169,10 +169,10 @@ export default function Footer() {
 
           {/* Col 3: Về InterVue */}
           <div className="space-y-3">
-            <h3 className="text-[15px] font-bold text-[#263a4d]">Về InterVue</h3>
+            <h3 className="text-navy text-[15px] font-bold">Về InterVue</h3>
             <ul className="space-y-2 text-[13.5px] text-[#6f7882]">
               <li>
-                <a href="https://topcv.com.vn/" target="_blank" rel="noreferrer" className="hover:text-[#00b14f]">
+                <a href="https://topcv.com.vn/" target="_blank" rel="noreferrer" className="hover:text-primary">
                   Giới thiệu
                 </a>
               </li>
@@ -181,7 +181,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/gioi-thieu#bao-chi"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Góc báo chí
                 </a>
@@ -191,7 +191,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/cong-ty/cong-ty-co-phan-topcv-viet-nam/105.html"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Tuyển dụng
                 </a>
@@ -201,13 +201,13 @@ export default function Footer() {
                   href="https://www.topcv.vn/gioi-thieu#lien-he"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Liên hệ
                 </a>
               </li>
               <li>
-                <a href="https://www.topcv.vn/faqs" target="_blank" rel="noreferrer" className="hover:text-[#00b14f]">
+                <a href="https://www.topcv.vn/faqs" target="_blank" rel="noreferrer" className="hover:text-primary">
                   Hỏi đáp
                 </a>
               </li>
@@ -216,7 +216,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/dieu-khoan-bao-mat"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Chính sách quyền riêng tư
                 </a>
@@ -226,27 +226,27 @@ export default function Footer() {
                   href="https://www.topcv.vn/terms-of-service"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Điều khoản dịch vụ
                 </a>
               </li>
             </ul>
 
-            <h3 className="pt-3 text-[15px] font-bold text-[#263a4d]">Đối tác</h3>
+            <h3 className="text-navy pt-3 text-[15px] font-bold">Đối tác</h3>
             <ul className="space-y-2 text-[13.5px] text-[#6f7882]">
               <li>
-                <a href="https://www.testcenter.vn/" target="_blank" rel="noreferrer" className="hover:text-[#00b14f]">
+                <a href="https://www.testcenter.vn/" target="_blank" rel="noreferrer" className="hover:text-primary">
                   TestCenter.vn
                 </a>
               </li>
               <li>
-                <a href="https://happytime.vn/" target="_blank" rel="noreferrer" className="hover:text-[#00b14f]">
+                <a href="https://happytime.vn/" target="_blank" rel="noreferrer" className="hover:text-primary">
                   HappyTime.vn
                 </a>
               </li>
               <li>
-                <a href="https://tophr.vn" target="_blank" rel="noreferrer" className="hover:text-[#00b14f]">
+                <a href="https://tophr.vn" target="_blank" rel="noreferrer" className="hover:text-primary">
                   TopHR
                 </a>
               </li>
@@ -255,14 +255,14 @@ export default function Footer() {
 
           {/* Col 4: Hồ sơ & Khám phá */}
           <div className="space-y-3">
-            <h3 className="text-[15px] font-bold text-[#263a4d]">Hồ sơ và CV</h3>
+            <h3 className="text-navy text-[15px] font-bold">Hồ sơ và CV</h3>
             <ul className="space-y-2 text-[13.5px] text-[#6f7882]">
               <li>
                 <a
                   href="https://www.topcv.vn/quan-ly-cv"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Quản lý CV của bạn
                 </a>
@@ -272,7 +272,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/viet-cv-the-nao-cho-chuan"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Hướng dẫn viết CV
                 </a>
@@ -282,7 +282,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/mau-cv-theo-vi-tri-cong-viec"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Thư viện CV theo ngành nghề
                 </a>
@@ -292,21 +292,21 @@ export default function Footer() {
                   href="https://www.topcv.vn/mau-cover-letter-thu-xin-viec"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Mẫu Cover Letter chuẩn
                 </a>
               </li>
             </ul>
 
-            <h3 className="pt-3 text-[15px] font-bold text-[#263a4d]">Khám phá công cụ</h3>
+            <h3 className="text-navy pt-3 text-[15px] font-bold">Khám phá công cụ</h3>
             <ul className="space-y-2 text-[13.5px] text-[#6f7882]">
               <li>
                 <a
                   href="https://www.topcv.vn/tinh-luong-gross-net"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Tính lương Gross - Net
                 </a>
@@ -316,7 +316,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/tinh-lai-kep"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Tính lãi suất kép
                 </a>
@@ -326,7 +326,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/lap-ke-hoach-tiet-kiem"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Lập kế hoạch tiết kiệm
                 </a>
@@ -336,7 +336,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/cong-cu-tinh-muc-huong-bao-hiem-that-nghiep"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Tính bảo hiểm thất nghiệp
                 </a>
@@ -346,7 +346,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/trac-nghiem-tinh-cach-mbti"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Trắc nghiệm MBTI
                 </a>
@@ -356,14 +356,14 @@ export default function Footer() {
 
           {/* Col 5: Xây dựng sự nghiệp */}
           <div className="space-y-3">
-            <h3 className="text-[15px] font-bold text-[#263a4d]">Xây dựng sự nghiệp</h3>
+            <h3 className="text-navy text-[15px] font-bold">Xây dựng sự nghiệp</h3>
             <ul className="space-y-2 text-[13.5px] text-[#6f7882]">
               <li>
                 <a
                   href="https://www.topcv.vn/viec-lam-tot-nhat"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Việc làm nổi bật
                 </a>
@@ -373,7 +373,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/viec-lam-luong-cao"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Việc làm lương cao
                 </a>
@@ -383,7 +383,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/viec-lam-quan-ly"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Việc làm quản lý
                 </a>
@@ -393,7 +393,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/viec-lam-it"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Việc làm IT
                 </a>
@@ -403,7 +403,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/viec-lam-senior"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Việc làm Senior
                 </a>
@@ -413,7 +413,7 @@ export default function Footer() {
                   href="https://www.topcv.vn/tim-viec-lam-ban-thoi-gian-t3"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-[#00b14f]"
+                  className="hover:text-primary"
                 >
                   Việc làm bán thời gian
                 </a>
@@ -422,7 +422,7 @@ export default function Footer() {
 
             <div className="pt-4">
               <div className="rounded-xl border border-[#e9eaec] bg-[#f8fafc] p-3.5">
-                <div className="mb-1 text-[12.5px] font-bold text-[#263a4d]">Nhà tuyển dụng?</div>
+                <div className="text-navy mb-1 text-[12.5px] font-bold">Nhà tuyển dụng?</div>
                 <div className="mb-2.5 text-[12px] text-[#6f7882]">
                   Đăng tin tuyển dụng và tìm hồ sơ ứng viên nhanh chóng.
                 </div>
@@ -430,7 +430,7 @@ export default function Footer() {
                   href="https://www.topcv.vn"
                   target="_blank"
                   rel="noreferrer"
-                  className="block rounded-lg bg-[#00b14f] py-1.5 text-center text-[12.5px] font-semibold text-white transition-colors hover:bg-[#009643]"
+                  className="bg-primary hover:bg-primary-hover block rounded-lg py-1.5 text-center text-[12.5px] font-semibold text-white transition-colors"
                 >
                   Đăng tin ngay
                 </a>
@@ -446,26 +446,25 @@ export default function Footer() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
               <div className="flex items-start gap-2">
-                <FileCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#00b14f]" />
+                <FileCheck className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                 <span>
-                  Giấy phép hoạt động dịch vụ việc làm số:{' '}
-                  <strong className="text-[#263a4d]">44/2024/SLĐTBXH-GP</strong>
+                  Giấy phép hoạt động dịch vụ việc làm số: <strong className="text-navy">44/2024/SLĐTBXH-GP</strong>
                 </span>
               </div>
               <div className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#00b14f]" />
+                <MapPin className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                 <span>
                   Trụ sở HN:{' '}
-                  <strong className="text-[#263a4d]">
+                  <strong className="text-navy">
                     Tòa FS - GoldSeason số 47 Nguyễn Tuân, Phường Thanh Xuân, TP. Hà Nội
                   </strong>
                 </span>
               </div>
               <div className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#00b14f]" />
+                <MapPin className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                 <span>
                   Chi nhánh HCM:{' '}
-                  <strong className="text-[#263a4d]">
+                  <strong className="text-navy">
                     Tòa nhà Dali, 24C Phan Đăng Lưu, Phường Gia Định, TP. Hồ Chí Minh
                   </strong>
                 </span>
@@ -474,7 +473,7 @@ export default function Footer() {
 
             <div className="flex flex-col justify-between md:items-end">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-[#00b14f]" />
+                <ShieldCheck className="text-primary h-4 w-4" />
                 <span>Bản quyền thuộc Công ty Cổ phần InterVue Việt Nam</span>
               </div>
               <p className="mt-2 font-medium text-[#4d5965] md:mt-0">

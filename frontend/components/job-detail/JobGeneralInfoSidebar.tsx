@@ -68,7 +68,7 @@ export default function JobGeneralInfoSidebar({ job }: JobGeneralInfoSidebarProp
       {/* 2. NGÀNH NGHỀ & TỪ KHÓA LIÊN QUAN */}
       <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs">
         <h3 className="flex items-center gap-1.5 border-b border-slate-100 pb-3 text-sm font-bold text-slate-900">
-          <Tag className="h-4 w-4 text-[#00b14f]" />
+          <Tag className="text-primary h-4 w-4" />
           <span>Ngành nghề & Lĩnh vực</span>
         </h3>
 
@@ -76,7 +76,7 @@ export default function JobGeneralInfoSidebar({ job }: JobGeneralInfoSidebarProp
           {job.tags.map((tag, idx) => (
             <span
               key={idx}
-              className="cursor-pointer rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-700 transition-all hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-[#00b14f]"
+              className="hover:text-primary cursor-pointer rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-700 transition-all hover:border-emerald-300 hover:bg-emerald-50/50"
             >
               {tag}
             </span>
@@ -103,7 +103,7 @@ export default function JobGeneralInfoSidebar({ job }: JobGeneralInfoSidebarProp
       {/* 3. CAM KẾT TUYỂN DỤNG MINH BẠCH */}
       <div className="rounded-2xl border border-emerald-100 bg-linear-to-br from-emerald-50/70 to-teal-50/30 p-4 text-xs text-slate-700">
         <div className="mb-1 flex items-center gap-2 font-bold text-emerald-900">
-          <ShieldCheck className="h-4 w-4 text-[#00b14f]" />
+          <ShieldCheck className="text-primary h-4 w-4" />
           <span>Cam kết minh bạch InterVue</span>
         </div>
         <p className="text-[11.5px] leading-relaxed text-slate-600">

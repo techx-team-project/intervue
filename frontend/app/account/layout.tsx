@@ -6,7 +6,7 @@ import AccountBreadcrumbs from '@/components/account/AccountBreadcrumbs';
 
 export default function AccountLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-[#f4f5f5] text-[#263a4d] antialiased">
+    <div className="text-navy flex min-h-screen flex-col bg-[#f4f5f5] antialiased">
       {/* 1. Global Navigation Header */}
       <Header />
 

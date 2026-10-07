@@ -1,6 +1,6 @@
 'use client';
 
-import { Award, Calendar, GraduationCap, School } from 'lucide-react';
+import { Award, Calendar, GraduationCap } from 'lucide-react';
 import type { Education } from '@/types/candidate';
 
 interface CandidateEducationSectionProps {
@@ -19,11 +19,11 @@ export default function CandidateEducationSection({
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+          <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50">
             <GraduationCap className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-[#263a4d] sm:text-xl">Học vấn & Bằng cấp</h2>
+            <h2 className="text-navy text-lg font-bold sm:text-xl">Học vấn & Bằng cấp</h2>
             <p className="text-[12.5px] text-[#6f7882]">Trường đào tạo và các thành tích học thuật</p>
           </div>
         </div>
@@ -32,7 +32,7 @@ export default function CandidateEducationSection({
           <button
             type="button"
             onClick={onAddEducation}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold text-[#00b14f] transition-all hover:border-[#00b14f] hover:bg-[#f2fbf6]"
+            className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition-all"
           >
             <span>+ Thêm học vấn</span>
           </button>
@@ -48,17 +48,17 @@ export default function CandidateEducationSection({
             <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-start">
               <div>
                 <h3 className="text-[16px] font-bold text-[#1e293b]">{edu.school}</h3>
-                <div className="text-[14px] font-semibold text-[#00b14f]">{edu.degree}</div>
+                <div className="text-primary text-[14px] font-semibold">{edu.degree}</div>
                 <div className="text-[13px] text-[#64748b]">Chuyên ngành: {edu.major}</div>
                 {edu.gpa && (
                   <div className="mt-1 text-[13px] font-medium text-[#334155]">
-                    Điểm trung bình (GPA): <strong className="text-[#00b14f]">{edu.gpa}</strong>
+                    Điểm trung bình (GPA): <strong className="text-primary">{edu.gpa}</strong>
                   </div>
                 )}
               </div>
 
               <div className="flex items-center gap-1.5 self-start rounded-lg bg-white px-2.5 py-1 text-[12px] font-medium text-[#64748b] shadow-2xs">
-                <Calendar className="h-3.5 w-3.5 text-[#00b14f]" />
+                <Calendar className="text-primary h-3.5 w-3.5" />
                 <span>
                   {edu.startDate} - {edu.endDate}
                 </span>

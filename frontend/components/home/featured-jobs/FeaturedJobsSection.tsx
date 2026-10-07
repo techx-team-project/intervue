@@ -2,9 +2,7 @@
 
 import { useState } from 'react';
 import { ArrowRight, Filter, Lightbulb, X } from 'lucide-react';
-
 import { FEATURED_JOBS } from '@/mocks/home/jobs.mock';
-
 import JobCard from './JobCard';
 
 const LOCATION_FILTERS = [
@@ -14,6 +12,26 @@ const LOCATION_FILTERS = [
   { id: 'danang', label: 'Đà Nẵng' },
   { id: 'high_salary', label: 'Lương cao' },
 ];
+
+/** Checks if a job has high salary (>= 20 million VND or equivalent) */
+function isHighSalaryJob(salary: string): boolean {
+  if (!salary || salary === 'Thoả thuận') return false;
+
+  // Extract digits representing millions (e.g., '15 - 30 triệu', 'Tới 20 triệu', '25 - 40 Tr')
+  const match = salary.match(/(\d+)(?:\s*[-–]\s*(\d+))?\s*(?:triệu|tr)/i);
+  if (match) {
+    const maxVal = match[2] ? parseInt(match[2], 10) : parseInt(match[1], 10);
+    return maxVal >= 20;
+  }
+
+  // Check USD if any ($1,000+)
+  const usdMatch = salary.match(/\$?\s*([\d,.]+)/);
+  if (salary.includes('$') && usdMatch) {
+    return parseFloat(usdMatch[1].replace(',', '')) >= 1000;
+  }
+
+  return false;
+}
 
 export default function FeaturedJobsSection() {
   const [jobType, setJobType] = useState<'office' | 'general_labor'>('office');
@@ -30,32 +48,29 @@ export default function FeaturedJobsSection() {
     if (activeFilter === 'hanoi') return job.location.includes('Hà Nội');
     if (activeFilter === 'hcm') return job.location.includes('Hồ Chí Minh') || job.location.includes('TP. HCM');
     if (activeFilter === 'danang') return job.location.includes('Đà Nẵng');
-    if (activeFilter === 'high_salary')
-      return (
-        job.salary.includes('28') || job.salary.includes('35') || job.salary.includes('50') || job.salary.includes('40')
-      );
+    if (activeFilter === 'high_salary') return isHighSalaryJob(job.salary);
     return true;
   });
 
   return (
     <section id="feature-jobs" className="container-topcv my-10">
-      {/* 1. Box Header: Title, Job Type Switcher, View All & Arrows (Giữ nguyên bố cục gốc TopCV) */}
+      {/* 1. Box Header: Title, Job Type Switcher, View All & Arrows */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
         {/* Title & Tabs */}
         <div className="flex flex-wrap items-center gap-4">
-          <h2 className="text-[22px] font-black tracking-tight text-[#1e293b] uppercase sm:text-[25px] md:text-[28px]">
-            Việc làm <span className="text-[#00b14f]">nổi bật</span>
+          <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl">
+            Việc làm <span className="text-primary">nổi bật</span>
           </h2>
 
-          {/* 2 nút lọc dạng viên thuốc độc lập (không đưa vào khung) */}
+          {/* 2 nút lọc dạng viên thuốc độc lập */}
           <div className="flex items-center gap-2 sm:gap-2.5">
             <button
               type="button"
               onClick={() => setJobType('office')}
-              className={`cursor-pointer rounded-full px-5 py-2 text-[13.5px] font-extrabold transition-all duration-200 active:scale-95 ${
+              className={`cursor-pointer rounded-full px-5 py-2 text-sm font-extrabold transition-all duration-200 active:scale-95 ${
                 jobType === 'office'
-                  ? 'bg-[#00b14f] text-white shadow-sm shadow-[#00b14f]/30 hover:bg-[#00c957]'
-                  : 'bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:text-[#1e293b]'
+                  ? 'bg-primary text-white shadow-xs hover:bg-emerald-600'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
               }`}
             >
               Việc văn phòng
@@ -63,10 +78,10 @@ export default function FeaturedJobsSection() {
             <button
               type="button"
               onClick={() => setJobType('general_labor')}
-              className={`cursor-pointer rounded-full px-5 py-2 text-[13.5px] font-extrabold transition-all duration-200 active:scale-95 ${
+              className={`cursor-pointer rounded-full px-5 py-2 text-sm font-extrabold transition-all duration-200 active:scale-95 ${
                 jobType === 'general_labor'
-                  ? 'bg-[#00b14f] text-white shadow-sm shadow-[#00b14f]/30 hover:bg-[#00c957]'
-                  : 'bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:text-[#1e293b]'
+                  ? 'bg-primary text-white shadow-xs hover:bg-emerald-600'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
               }`}
             >
               Việc phổ thông
@@ -74,13 +89,13 @@ export default function FeaturedJobsSection() {
           </div>
         </div>
 
-        {/* Nút Xem tất cả màu xanh neon cứng cáp, nổi bật */}
+        {/* Nút Xem tất cả */}
         <div className="flex items-center">
           <a
             href="https://www.topcv.vn/viec-lam-tot-nhat"
             target="_blank"
             rel="noreferrer"
-            className="group inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#00b14f] px-4.5 py-2 text-[13.5px] font-extrabold text-white shadow-sm shadow-[#00b14f]/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#00c957] hover:shadow-md hover:shadow-[#00b14f]/40 active:translate-y-0 active:scale-95 sm:px-5 sm:py-2.5"
+            className="group bg-primary inline-flex cursor-pointer items-center gap-2 rounded-xl px-4.5 py-2 text-sm font-extrabold text-white shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-600 sm:px-5 sm:py-2.5"
           >
             <span>Xem tất cả</span>
             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -88,10 +103,10 @@ export default function FeaturedJobsSection() {
         </div>
       </div>
 
-      {/* 2. Sub Filter Buttons Bar (Giữ nguyên bố cục thanh lọc gốc) */}
+      {/* 2. Sub Filter Buttons Bar */}
       <div className="mb-4 flex scrollbar-none items-center gap-2 overflow-x-auto pb-2">
-        <span className="mr-1 flex shrink-0 items-center gap-1.5 text-[13px] font-medium text-[#64748b]">
-          <Filter className="h-3.5 w-3.5 text-[#00b14f]" />
+        <span className="mr-1 flex shrink-0 items-center gap-1.5 text-xs font-medium text-slate-500">
+          <Filter className="text-primary h-3.5 w-3.5" />
           Lọc theo:
         </span>
         {LOCATION_FILTERS.map((item) => (
@@ -99,10 +114,10 @@ export default function FeaturedJobsSection() {
             key={item.id}
             type="button"
             onClick={() => setActiveFilter(item.id)}
-            className={`shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-[13px] transition-all ${
+            className={`shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-xs transition-all ${
               activeFilter === item.id
-                ? 'bg-[#00b14f] font-bold text-white shadow-sm shadow-[#00b14f]/25'
-                : 'border border-[#e2e8f0] bg-white font-medium text-[#475569] shadow-2xs hover:border-[#00b14f]/50 hover:bg-[#f0fdf4] hover:text-[#00b14f]'
+                ? 'bg-primary font-bold text-white shadow-xs'
+                : 'hover:text-primary border border-slate-200 bg-white font-medium text-slate-600 shadow-2xs hover:border-emerald-300 hover:bg-emerald-50/50'
             }`}
           >
             {item.label}
@@ -110,11 +125,11 @@ export default function FeaturedJobsSection() {
         ))}
       </div>
 
-      {/* 3. Quick Guide Tip Banner (Giữ nguyên banner gợi ý gốc) */}
+      {/* 3. Quick Guide Tip Banner */}
       {showTip && (
-        <div className="mb-5 flex items-center justify-between rounded-xl border border-[#a7f3d0] bg-linear-to-r from-[#ecfdf5] via-[#f0fdf4] to-[#f8fafc] px-4 py-2.5 text-[13px] text-[#047857] shadow-2xs">
+        <div className="mb-5 flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/60 px-4 py-2.5 text-xs text-emerald-800 shadow-2xs">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#00b14f]/15 text-[#00b14f]">
+            <div className="text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100">
               <Lightbulb className="h-3.5 w-3.5" />
             </div>
             <span>
@@ -125,7 +140,7 @@ export default function FeaturedJobsSection() {
           <button
             type="button"
             onClick={() => setShowTip(false)}
-            className="cursor-pointer rounded-md p-1 text-[#94a3b8] transition-colors hover:text-[#475569]"
+            className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-600"
             title="Đóng gợi ý"
           >
             <X className="h-4 w-4" />
@@ -133,7 +148,7 @@ export default function FeaturedJobsSection() {
         </div>
       )}
 
-      {/* 4. Beautiful, WOW & Professional Job Cards Grid */}
+      {/* 4. Beautiful & Professional Job Cards Grid */}
       <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
         {filteredJobs.map((job) => (
           <JobCard key={job.id} job={job} isSaved={savedJobs.includes(job.id)} onToggleSave={toggleSaveJob} />

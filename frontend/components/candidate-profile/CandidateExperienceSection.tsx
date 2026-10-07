@@ -19,11 +19,11 @@ export default function CandidateExperienceSection({
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+          <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50">
             <Briefcase className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-[#263a4d] sm:text-xl">Kinh nghiệm làm việc</h2>
+            <h2 className="text-navy text-lg font-bold sm:text-xl">Kinh nghiệm làm việc</h2>
             <p className="text-[12.5px] text-[#6f7882]">Hành trình sự nghiệp và các dấu ấn nổi bật</p>
           </div>
         </div>
@@ -32,7 +32,7 @@ export default function CandidateExperienceSection({
           <button
             type="button"
             onClick={onAddExperience}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold text-[#00b14f] transition-all hover:border-[#00b14f] hover:bg-[#f2fbf6]"
+            className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition-all"
           >
             <Plus className="h-4 w-4" />
             <span>Thêm kinh nghiệm</span>
@@ -47,7 +47,7 @@ export default function CandidateExperienceSection({
             {/* Timeline Bullet */}
             <div
               className={`absolute top-7 left-4 flex h-5 w-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white shadow-2xs sm:left-5 ${
-                exp.isCurrent ? 'bg-[#00b14f] ring-4 ring-emerald-100' : 'bg-[#94a3b8]'
+                exp.isCurrent ? 'bg-primary ring-4 ring-emerald-100' : 'bg-[#94a3b8]'
               }`}
             >
               {exp.isCurrent && <span className="h-1.5 w-1.5 rounded-full bg-white"></span>}
@@ -66,7 +66,7 @@ export default function CandidateExperienceSection({
                     )}
                   </div>
                   <div className="mt-1 flex flex-wrap items-center gap-3 text-[13.5px] text-[#475569]">
-                    <span className="flex items-center gap-1 font-semibold text-[#00b14f]">
+                    <span className="text-primary flex items-center gap-1 font-semibold">
                       <Building2 className="h-3.5 w-3.5" />
                       {exp.company}
                     </span>
@@ -79,7 +79,7 @@ export default function CandidateExperienceSection({
                 </div>
 
                 <div className="flex items-center gap-1.5 self-start rounded-lg bg-white px-2.5 py-1 text-[12px] font-medium text-[#64748b] shadow-2xs">
-                  <Calendar className="h-3.5 w-3.5 text-[#00b14f]" />
+                  <Calendar className="text-primary h-3.5 w-3.5" />
                   <span>
                     {exp.startDate} - {exp.endDate}
                   </span>
@@ -92,13 +92,13 @@ export default function CandidateExperienceSection({
               {/* Quantified Achievements */}
               {exp.achievements.length > 0 && (
                 <div className="mt-3.5 space-y-1.5 rounded-xl border border-[#f1f5f9] bg-white p-3.5">
-                  <div className="text-[12px] font-bold tracking-wider text-[#00b14f] uppercase">
+                  <div className="text-primary text-[12px] font-bold tracking-wider uppercase">
                     Thành tựu chính & Đóng góp tiêu biểu:
                   </div>
                   <ul className="space-y-1.5 text-[13px] text-[#334155]">
                     {exp.achievements.map((ach, idx) => (
                       <li key={idx} className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#00b14f]" />
+                        <CheckCircle2 className="text-primary mt-0.5 h-3.5 w-3.5 shrink-0" />
                         <span>{ach}</span>
                       </li>
                     ))}

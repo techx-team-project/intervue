@@ -49,7 +49,7 @@ export default function AuthPageView({ initialMode = 'login' }: AuthPageViewProp
       fallback={
         <AuthLayout mode={initialMode} onModeChange={() => {}}>
           <div className="flex h-64 items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#00b14f] border-t-transparent" />
+            <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent" />
           </div>
         </AuthLayout>
       }

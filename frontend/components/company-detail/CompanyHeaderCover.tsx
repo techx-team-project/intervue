@@ -37,7 +37,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
         <div className="absolute top-4 right-4 flex items-center gap-2">
           {company.isVerified && (
             <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-slate-900/70 px-3 py-1 text-xs font-semibold text-emerald-300 backdrop-blur-md">
-              <CheckCircle2 className="h-3.5 w-3.5 text-[#00b14f]" />
+              <CheckCircle2 className="text-primary h-3.5 w-3.5" />
               <span>Doanh nghiệp xác thực</span>
             </span>
           )}
@@ -72,7 +72,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
                     href={company.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[#00b14f] hover:underline"
+                    className="text-primary inline-flex items-center gap-1 hover:underline"
                   >
                     <Globe className="h-3.5 w-3.5" />
                     <span>{company.website.replace('https://', '')}</span>
@@ -106,8 +106,8 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
               onClick={() => setIsFollowing((prev) => !prev)}
               className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold transition-all ${
                 isFollowing
-                  ? 'border border-emerald-300 bg-emerald-50 text-[#00b14f]'
-                  : 'bg-[#00b14f] text-white shadow-xs hover:bg-[#009643]'
+                  ? 'text-primary border border-emerald-300 bg-emerald-50'
+                  : 'bg-primary hover:bg-primary-hover text-white shadow-xs'
               }`}
             >
               {isFollowing ? (
@@ -150,7 +150,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
             onClick={() => onTabChange('overview')}
             className={`cursor-pointer border-b-2 px-3 py-3 text-[13.5px] font-bold transition-all ${
               activeTab === 'overview'
-                ? 'border-[#00b14f] text-[#00b14f]'
+                ? 'border-primary text-primary'
                 : 'border-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -162,7 +162,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
             onClick={() => onTabChange('jobs')}
             className={`flex cursor-pointer items-center gap-1.5 border-b-2 px-3 py-3 text-[13.5px] font-bold transition-all ${
               activeTab === 'jobs'
-                ? 'border-[#00b14f] text-[#00b14f]'
+                ? 'border-primary text-primary'
                 : 'border-transparent text-slate-600 hover:text-slate-900'
             }`}
           >

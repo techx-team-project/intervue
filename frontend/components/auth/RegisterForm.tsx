@@ -1,9 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import SocialAuthButtons from './SocialAuthButtons';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import { registerSchema, RegisterFormData } from '@/schemas/auth.schema';
 
 interface RegisterFormProps {
   onSwitchMode: (mode: 'login' | 'register' | 'forgot-password') => void;
@@ -12,46 +15,47 @@ interface RegisterFormProps {
 
 export default function RegisterForm({ onSwitchMode, onSuccess }: RegisterFormProps) {
   const router = useRouter();
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [formData, setFormData] = useState<RegisterFormData>({
+    fullName: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: '',
+    agreedTerms: true,
+  });
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof RegisterFormData, string>>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreedTerms, setAgreedTerms] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const handleChange = (field: keyof RegisterFormData, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (fieldErrors[field]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+    if (errorMsg) setErrorMsg('');
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
-    if (!fullName.trim()) {
-      setErrorMsg('Vui lòng nhập họ và tên của bạn.');
-      return;
-    }
-    if (!email.trim() || !email.includes('@')) {
-      setErrorMsg('Vui lòng nhập địa chỉ email hợp lệ.');
-      return;
-    }
-    if (!phone.trim()) {
-      setErrorMsg('Vui lòng nhập số điện thoại.');
-      return;
-    }
-    if (!password || password.length < 6) {
-      setErrorMsg('Mật khẩu phải có tối thiểu 6 ký tự.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setErrorMsg('Mật khẩu nhập lại không khớp.');
-      return;
-    }
-    if (!agreedTerms) {
-      setErrorMsg('Vui lòng đồng ý với Điều khoản dịch vụ và Chính sách bảo mật.');
+    // Zod Schema Validation
+    const validationResult = registerSchema.safeParse(formData);
+    if (!validationResult.success) {
+      const errors: Partial<Record<keyof RegisterFormData, string>> = {};
+      for (const issue of validationResult.error.issues) {
+        const fieldName = issue.path[0] as keyof RegisterFormData;
+        if (!errors[fieldName]) {
+          errors[fieldName] = issue.message;
+        }
+      }
+      setFieldErrors(errors);
       return;
     }
 
+    setFieldErrors({});
     setIsLoading(true);
 
     setTimeout(() => {
@@ -72,161 +76,134 @@ export default function RegisterForm({ onSwitchMode, onSuccess }: RegisterFormPr
       {/* 2. Divider */}
       <div className="relative my-5 flex items-center justify-center">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-dashed border-[#e2e8f0]" />
+          <div className="w-full border-t border-dashed border-slate-200" />
         </div>
-        <span className="relative bg-white px-3 text-[12px] text-[#8c94a0] italic">Hoặc đăng ký bằng email</span>
+        <span className="relative bg-white px-3 text-xs text-slate-400 italic">Hoặc đăng ký bằng email</span>
       </div>
 
-      {/* Error Alert */}
+      {/* General Error Alert */}
       {errorMsg && (
-        <div className="mb-4 rounded-lg bg-red-50 p-2.5 text-center text-[13px] font-medium text-red-600">
+        <div className="mb-4 rounded-lg border border-rose-200 bg-rose-50 p-2.5 text-center text-xs font-medium text-rose-600">
           {errorMsg}
         </div>
       )}
 
       {/* 3. Register Form */}
       <form onSubmit={handleSubmit} className="space-y-3.5">
-        {/* Họ và tên */}
-        <div>
-          <label htmlFor="register-fullname" className="mb-1.5 block text-[13.5px] font-bold text-[#263a4d]">
-            Họ và tên
-          </label>
-          <input
-            id="register-fullname"
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="Nhập họ và tên"
-            autoComplete="name"
-            className="w-full rounded-md border border-[#dcdfe4] bg-white px-3.5 py-2.5 text-[14px] text-[#263a4d] placeholder-[#9ca3af] transition-colors focus:border-[#00b14f] focus:ring-1 focus:ring-[#00b14f] focus:outline-none"
-          />
-        </div>
+        <Input
+          label="Họ và tên"
+          type="text"
+          value={formData.fullName}
+          onChange={(e) => handleChange('fullName', e.target.value)}
+          placeholder="Nhập họ và tên của bạn"
+          autoComplete="name"
+          error={fieldErrors.fullName}
+        />
 
-        {/* Email */}
-        <div>
-          <label htmlFor="register-email" className="mb-1.5 block text-[13.5px] font-bold text-[#263a4d]">
-            Email
-          </label>
-          <input
-            id="register-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Nhập email"
-            autoComplete="email"
-            className="w-full rounded-md border border-[#dcdfe4] bg-white px-3.5 py-2.5 text-[14px] text-[#263a4d] placeholder-[#9ca3af] transition-colors focus:border-[#00b14f] focus:ring-1 focus:ring-[#00b14f] focus:outline-none"
-          />
-        </div>
+        <Input
+          label="Email"
+          type="email"
+          value={formData.email}
+          onChange={(e) => handleChange('email', e.target.value)}
+          placeholder="Nhập email của bạn"
+          autoComplete="email"
+          error={fieldErrors.email}
+        />
 
-        {/* Số điện thoại */}
-        <div>
-          <label htmlFor="register-phone" className="mb-1.5 block text-[13.5px] font-bold text-[#263a4d]">
-            Số điện thoại
-          </label>
-          <input
-            id="register-phone"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Nhập số điện thoại"
-            autoComplete="tel"
-            className="w-full rounded-md border border-[#dcdfe4] bg-white px-3.5 py-2.5 text-[14px] text-[#263a4d] placeholder-[#9ca3af] transition-colors focus:border-[#00b14f] focus:ring-1 focus:ring-[#00b14f] focus:outline-none"
-          />
-        </div>
+        <Input
+          label="Số điện thoại"
+          type="tel"
+          value={formData.phone}
+          onChange={(e) => handleChange('phone', e.target.value)}
+          placeholder="Nhập số điện thoại (VD: 0912345678)"
+          autoComplete="tel"
+          error={fieldErrors.phone}
+        />
 
-        {/* Password */}
-        <div>
-          <label htmlFor="register-password" className="mb-1.5 block text-[13.5px] font-bold text-[#263a4d]">
-            Password
-          </label>
-          <div className="relative">
-            <input
-              id="register-password"
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Nhập mật khẩu"
-              autoComplete="new-password"
-              className="w-full rounded-md border border-[#dcdfe4] bg-white px-3.5 py-2.5 pr-10 text-[14px] text-[#263a4d] placeholder-[#9ca3af] transition-colors focus:border-[#00b14f] focus:ring-1 focus:ring-[#00b14f] focus:outline-none"
-            />
+        <Input
+          label="Mật khẩu"
+          type={showPassword ? 'text' : 'password'}
+          value={formData.password}
+          onChange={(e) => handleChange('password', e.target.value)}
+          placeholder="Tối thiểu 6 ký tự"
+          autoComplete="new-password"
+          error={fieldErrors.password}
+          rightElement={
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-              className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-[#9ca3af] transition-colors hover:text-[#64748b]"
+              className="cursor-pointer p-1 text-slate-400 hover:text-slate-600"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
-          </div>
-        </div>
+          }
+        />
 
-        {/* Nhập lại Password */}
-        <div>
-          <label htmlFor="register-confirm-password" className="mb-1.5 block text-[13.5px] font-bold text-[#263a4d]">
-            Nhập lại Password
-          </label>
-          <div className="relative">
-            <input
-              id="register-confirm-password"
-              type={showConfirmPassword ? 'text' : 'password'}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Nhập lại mật khẩu"
-              autoComplete="new-password"
-              className="w-full rounded-md border border-[#dcdfe4] bg-white px-3.5 py-2.5 pr-10 text-[14px] text-[#263a4d] placeholder-[#9ca3af] transition-colors focus:border-[#00b14f] focus:ring-1 focus:ring-[#00b14f] focus:outline-none"
-            />
+        <Input
+          label="Xác nhận mật khẩu"
+          type={showConfirmPassword ? 'text' : 'password'}
+          value={formData.confirmPassword}
+          onChange={(e) => handleChange('confirmPassword', e.target.value)}
+          placeholder="Nhập lại mật khẩu"
+          autoComplete="new-password"
+          error={fieldErrors.confirmPassword}
+          rightElement={
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               aria-label={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-              className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-[#9ca3af] transition-colors hover:text-[#64748b]"
+              className="cursor-pointer p-1 text-slate-400 hover:text-slate-600"
             >
               {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
-          </div>
-        </div>
+          }
+        />
 
-        {/* Agreement Checkbox */}
-        <div className="pt-1">
-          <label className="flex cursor-pointer items-start gap-2 text-[12px] leading-snug text-[#64748b]">
+        {/* Terms agreement checkbox */}
+        <div>
+          <label className="flex cursor-pointer items-start gap-2.5 text-xs text-slate-600 select-none">
             <input
               type="checkbox"
-              checked={agreedTerms}
-              onChange={(e) => setAgreedTerms(e.target.checked)}
-              className="mt-0.5 h-4 w-4 rounded accent-[#00b14f]"
+              checked={formData.agreedTerms}
+              onChange={(e) => handleChange('agreedTerms', e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
             />
             <span>
-              Tôi đã đọc và đồng ý với{' '}
-              <span className="font-semibold text-[#00b14f] hover:underline">Điều khoản dịch vụ</span> và{' '}
-              <span className="font-semibold text-[#00b14f] hover:underline">Chính sách bảo mật</span> của InterVue.
+              Tôi đồng ý với{' '}
+              <a href="#" className="font-semibold text-emerald-600 hover:underline">
+                Điều khoản dịch vụ
+              </a>{' '}
+              và{' '}
+              <a href="#" className="font-semibold text-emerald-600 hover:underline">
+                Chính sách bảo mật
+              </a>{' '}
+              của InterVue.
             </span>
           </label>
+          {fieldErrors.agreedTerms && (
+            <p className="mt-1 text-xs font-medium text-rose-500">{fieldErrors.agreedTerms}</p>
+          )}
         </div>
 
-        {/* 4. Submit Button */}
-        <button
+        {/* Submit Button */}
+        <Button
           type="submit"
-          disabled={isLoading}
-          className="mt-2 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-full bg-[#00b14f] py-3 text-[14.5px] font-bold text-white shadow-xs transition-colors hover:bg-[#009643] active:scale-[0.99] disabled:opacity-70"
+          isLoading={isLoading}
+          className="mt-2 w-full rounded-xl py-3 text-sm font-bold"
+          rightIcon={<ArrowRight className="h-4 w-4 stroke-[2.5]" />}
         >
-          {isLoading ? (
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-          ) : (
-            <>
-              <span>Đăng ký</span>
-              <ArrowRight className="h-4 w-4 stroke-[2.5]" />
-            </>
-          )}
-        </button>
+          Đăng ký tài khoản
+        </Button>
       </form>
 
-      {/* 5. Switch to Login Link */}
-      <div className="mt-4 text-center text-[13.5px] text-[#263a4d]">
+      {/* Switch to Login Link */}
+      <div className="mt-4 text-center text-sm text-slate-700">
         <span>Bạn đã có tài khoản? </span>
         <button
           type="button"
           onClick={() => onSwitchMode('login')}
-          className="cursor-pointer font-bold text-[#00b14f] hover:underline"
+          className="cursor-pointer font-bold text-emerald-600 hover:underline"
         >
           Đăng nhập ngay
         </button>

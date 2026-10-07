@@ -167,12 +167,12 @@ export default function TestimonialsSection() {
     <section id="customer-testimonials" className="container-topcv">
       {/* Header Bar */}
       <div className="relative mb-8 text-center">
-        <div className="mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-emerald-200/80 bg-emerald-50/80 px-3.5 py-1 text-[12px] font-bold text-[#00b14f]">
+        <div className="text-primary mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-emerald-200/80 bg-emerald-50/80 px-3.5 py-1 text-[12px] font-bold">
           <MessageSquareHeart className="h-3.5 w-3.5" />
           <span>ĐÁNH GIÁ TỪ NGƯỜI DÙNG</span>
         </div>
-        <h2 className="text-2xl font-black tracking-tight text-[#263a4d] md:text-3xl">
-          Khách hàng <span className="text-[#00b14f]">nói gì về chúng tôi?</span>
+        <h2 className="text-navy text-2xl font-black tracking-tight md:text-3xl">
+          Khách hàng <span className="text-primary">nói gì về chúng tôi?</span>
         </h2>
         <p className="mt-1 text-[14px] text-[#6f7882] sm:text-[15px]">
           Hơn 300,000+ ứng viên và doanh nghiệp đã bứt phá sự nghiệp và tuyển dụng thành công cùng InterVue.
@@ -184,7 +184,7 @@ export default function TestimonialsSection() {
             type="button"
             onClick={handlePrev}
             aria-label="Previous testimonial"
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[#e9eaec] bg-white text-[#263a4d] transition-all hover:border-[#00b14f] hover:bg-[#e6f7ee] hover:text-[#00b14f]"
+            className="text-navy hover:border-primary hover:bg-primary-tag hover:text-primary flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[#e9eaec] bg-white transition-all"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -192,7 +192,7 @@ export default function TestimonialsSection() {
             type="button"
             onClick={handleNext}
             aria-label="Next testimonial"
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[#e9eaec] bg-white text-[#263a4d] transition-all hover:border-[#00b14f] hover:bg-[#e6f7ee] hover:text-[#00b14f]"
+            className="text-navy hover:border-primary hover:bg-primary-tag hover:text-primary flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[#e9eaec] bg-white transition-all"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
@@ -215,7 +215,7 @@ export default function TestimonialsSection() {
         >
           {TESTIMONIALS.map((item) => (
             <div key={item.id} className="shrink-0 px-2.5" style={{ width: `${100 / cardsPerView}%` }}>
-              <div className="group flex h-full flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#00b14f]">
+              <div className="group hover:border-primary flex h-full flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all duration-300 hover:-translate-y-1">
                 {/* Top: Stars, Tag & Quote Icon */}
                 <div>
                   <div className="mb-4 flex items-center justify-between">
@@ -224,7 +224,7 @@ export default function TestimonialsSection() {
                         <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
                       ))}
                     </div>
-                    <Quote className="h-7 w-7 text-emerald-200 transition-colors group-hover:text-[#00b14f]" />
+                    <Quote className="group-hover:text-primary h-7 w-7 text-emerald-200 transition-colors" />
                   </div>
 
                   <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -232,13 +232,13 @@ export default function TestimonialsSection() {
                       {item.tag}
                     </span>
                     <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100/60 px-2 py-0.5 text-[11px] font-semibold text-[#00873c]">
-                      <Sparkles className="h-3 w-3 text-[#00b14f]" />
+                      <Sparkles className="text-primary h-3 w-3" />
                       {item.result}
                     </span>
                   </div>
 
                   {/* Content */}
-                  <p className="line-clamp-4 text-[13.5px] leading-relaxed text-[#4d5965] transition-colors group-hover:text-[#263a4d]">
+                  <p className="group-hover:text-navy line-clamp-4 text-[13.5px] leading-relaxed text-[#4d5965] transition-colors">
                     “{item.content}”
                   </p>
                 </div>
@@ -253,11 +253,11 @@ export default function TestimonialsSection() {
                     />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
-                        <h3 className="truncate text-[14.5px] font-bold text-[#263a4d]">{item.name}</h3>
-                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-[#00b14f]" />
+                        <h3 className="text-navy truncate text-[14.5px] font-bold">{item.name}</h3>
+                        <CheckCircle2 className="text-primary h-3.5 w-3.5 shrink-0" />
                       </div>
                       <p className="truncate text-[12px] font-medium text-[#6f7882]">
-                        {item.role} • <span className="font-semibold text-[#00b14f]">{item.company}</span>
+                        {item.role} • <span className="text-primary font-semibold">{item.company}</span>
                       </p>
                     </div>
                   </div>
@@ -277,7 +277,7 @@ export default function TestimonialsSection() {
             onClick={() => setCurrentIndex(idx)}
             aria-label={`Go to slide ${idx + 1}`}
             className={`h-2 rounded-full transition-all duration-300 ${
-              currentIndex === idx ? 'w-8 bg-[#00b14f]' : 'w-2 bg-[#d1d5db] hover:bg-[#9ca3af]'
+              currentIndex === idx ? 'bg-primary w-8' : 'w-2 bg-[#d1d5db] hover:bg-[#9ca3af]'
             }`}
           />
         ))}

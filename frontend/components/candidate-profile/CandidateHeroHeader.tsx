@@ -17,6 +17,7 @@ import {
   UserCheck,
 } from 'lucide-react';
 import type { CandidateProfile } from '@/types/candidate';
+import Button from '@/components/ui/Button';
 
 const GithubIcon = ({ className = 'h-4 w-4' }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -60,18 +61,19 @@ export default function CandidateHeroHeader({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-8">
+    <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
       {/* 1. Main Header Profile Info */}
       <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         {/* Avatar & Key Identification */}
         <div className="flex min-w-0 flex-1 flex-col gap-5 sm:flex-row sm:items-center">
           {/* Avatar with ring & verified check */}
           <div className="relative shrink-0">
-            <div className="h-24 w-24 overflow-hidden rounded-2xl border-2 border-[#e9eaec] bg-white shadow-sm ring-2 ring-[#00b14f]/20 sm:h-28 sm:w-28">
+            <div className="h-24 w-24 overflow-hidden rounded-2xl border-2 border-slate-200 bg-white shadow-sm ring-2 ring-emerald-500/20 sm:h-28 sm:w-28">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={candidate.avatar} alt={candidate.fullName} className="h-full w-full object-cover" />
             </div>
             <div
-              className="absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#00b14f] text-white shadow-xs"
+              className="bg-primary absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white text-white shadow-xs"
               title="Hồ sơ đã được InterVue xác thực"
             >
               <CheckCircle2 className="h-4 w-4" />
@@ -80,19 +82,19 @@ export default function CandidateHeroHeader({
 
           {/* Candidate Title & Details */}
           <div className="min-w-0 space-y-1">
-            <h1 className="text-2xl font-black tracking-tight text-[#263a4d] sm:text-3xl">{candidate.fullName}</h1>
+            <h1 className="text-2xl font-black tracking-tight text-slate-800 sm:text-3xl">{candidate.fullName}</h1>
 
-            <p className="text-[15px] font-semibold text-[#00b14f] sm:text-[16px]">{candidate.title}</p>
+            <p className="text-primary text-base font-semibold">{candidate.title}</p>
 
-            <div className="flex flex-wrap items-center gap-2 pt-0.5 text-[13px] text-[#6f7882]">
+            <div className="flex flex-wrap items-center gap-2 pt-0.5 text-xs text-slate-500">
               <span className="flex items-center gap-1">
-                <Briefcase className="h-3.5 w-3.5 text-[#00b14f]" />
+                <Briefcase className="text-primary h-3.5 w-3.5" />
                 {candidate.experiences[0]?.role} @{' '}
-                <strong className="text-[#263a4d]">{candidate.experiences[0]?.company}</strong>
+                <strong className="text-slate-800">{candidate.experiences[0]?.company}</strong>
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <MapPin className="h-3.5 w-3.5 text-[#00b14f]" />
+                <MapPin className="text-primary h-3.5 w-3.5" />
                 {candidate.location}
               </span>
             </div>
@@ -104,83 +106,87 @@ export default function CandidateHeroHeader({
           {isOwner ? (
             <>
               {onEdit && (
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={onEdit}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-4 py-2 text-[13.5px] font-semibold text-[#263a4d] shadow-2xs transition-all hover:border-[#00b14f] hover:bg-[#f2fbf6] hover:text-[#00b14f]"
+                  leftIcon={<Edit3 className="h-4 w-4" />}
                 >
-                  <Edit3 className="h-4 w-4" />
-                  <span>Chỉnh sửa hồ sơ</span>
-                </button>
+                  Chỉnh sửa hồ sơ
+                </Button>
               )}
             </>
           ) : (
             <>
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                size="sm"
                 onClick={
                   onContact || (() => alert(`Đã gửi yêu cầu kết nối & mời phỏng vấn đến ${candidate.fullName}!`))
                 }
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[#00b14f] px-3.5 py-2 text-[13.5px] font-semibold text-white shadow-xs transition-all hover:bg-[#009643]"
+                leftIcon={<Send className="h-4 w-4" />}
               >
-                <Send className="h-4 w-4" />
-                <span>Mời phỏng vấn</span>
-              </button>
-              <button
+                Mời phỏng vấn
+              </Button>
+              <Button
                 type="button"
+                variant="outline"
+                size="sm"
                 onClick={onBookmark || (() => alert(`Đã lưu hồ sơ của ${candidate.fullName} vào danh sách theo dõi!`))}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-2 text-[13.5px] font-semibold text-[#263a4d] shadow-2xs transition-all hover:border-[#00b14f] hover:text-[#00b14f]"
+                leftIcon={<Bookmark className="h-4 w-4" />}
               >
-                <Bookmark className="h-4 w-4" />
-                <span>Lưu hồ sơ</span>
-              </button>
+                Lưu hồ sơ
+              </Button>
             </>
           )}
 
           {onShare && (
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
               onClick={onShare}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-2 text-[13.5px] font-semibold text-[#263a4d] shadow-2xs transition-all hover:border-[#00b14f] hover:bg-[#f2fbf6] hover:text-[#00b14f]"
+              leftIcon={<Share2 className="h-4 w-4" />}
             >
-              <Share2 className="h-4 w-4" />
-              <span>Chia sẻ</span>
-            </button>
+              Chia sẻ
+            </Button>
           )}
         </div>
       </div>
 
       {/* 3. Info Pills & Social Media Strip */}
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[#f4f5f5] pt-4">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-4">
         {/* Contact Pills */}
-        <div className="flex flex-wrap items-center gap-3 text-[13px] text-[#4d5965]">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600">
           <a
             href={`mailto:${candidate.email}`}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#f8fafc] px-3 py-1.5 transition-colors hover:bg-[#e6f7ee] hover:text-[#00b14f]"
+            className="hover:text-primary inline-flex items-center gap-1.5 rounded-lg bg-slate-50 px-3 py-1.5 transition-colors hover:bg-emerald-50"
           >
-            <Mail className="h-3.5 w-3.5 text-[#00b14f]" />
+            <Mail className="text-primary h-3.5 w-3.5" />
             <span>{candidate.email}</span>
           </a>
 
           <button
             type="button"
             onClick={handleCopyPhone}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#f8fafc] px-3 py-1.5 transition-colors hover:bg-[#e6f7ee] hover:text-[#00b14f]"
+            className="hover:text-primary inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-slate-50 px-3 py-1.5 transition-colors hover:bg-emerald-50"
             title="Nhấn để sao chép số điện thoại"
           >
-            <Phone className="h-3.5 w-3.5 text-[#00b14f]" />
+            <Phone className="text-primary h-3.5 w-3.5" />
             <span>{candidate.phone}</span>
-            <Copy className="h-3 w-3 text-[#94a3b8]" />
-            {copiedPhone && <span className="text-[11px] font-bold text-[#00b14f]">Đã sao chép!</span>}
+            <Copy className="h-3 w-3 text-slate-400" />
+            {copiedPhone && <span className="text-primary text-xs font-bold">Đã sao chép!</span>}
           </button>
 
-          <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#f8fafc] px-3 py-1.5">
-            <Calendar className="h-3.5 w-3.5 text-[#00b14f]" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-50 px-3 py-1.5">
+            <Calendar className="text-primary h-3.5 w-3.5" />
             <span>Năm sinh: {candidate.birthYear}</span>
           </span>
 
-          <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#f8fafc] px-3 py-1.5">
-            <UserCheck className="h-3.5 w-3.5 text-[#00b14f]" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-50 px-3 py-1.5">
+            <UserCheck className="text-primary h-3.5 w-3.5" />
             <span>Giới tính: {candidate.gender}</span>
           </span>
         </div>
@@ -192,7 +198,7 @@ export default function CandidateHeroHeader({
               href={candidate.links.github}
               target="_blank"
               rel="noreferrer"
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#e9eaec] bg-white text-[#263a4d] transition-all hover:border-[#00b14f] hover:bg-[#f2fbf6] hover:text-[#00b14f]"
+              className="hover:text-primary flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-800 transition-all hover:border-emerald-500 hover:bg-emerald-50/50"
               title="GitHub Profile"
             >
               <GithubIcon className="h-4 w-4" />
@@ -204,7 +210,7 @@ export default function CandidateHeroHeader({
               href={candidate.links.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#e9eaec] bg-white text-[#0077b5] transition-all hover:border-[#0077b5] hover:bg-[#0077b5]/5"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-[#0077b5] transition-all hover:border-[#0077b5] hover:bg-[#0077b5]/5"
               title="LinkedIn Profile"
             >
               <LinkedinIcon className="h-4 w-4" />
@@ -216,7 +222,7 @@ export default function CandidateHeroHeader({
               href={candidate.links.portfolio}
               target="_blank"
               rel="noreferrer"
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#e9eaec] bg-white text-[#00b14f] transition-all hover:border-[#00b14f] hover:bg-[#f2fbf6]"
+              className="text-primary flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white transition-all hover:border-emerald-500 hover:bg-emerald-50/50"
               title="Portfolio Website"
             >
               <Globe className="h-4 w-4" />

@@ -80,7 +80,7 @@ export default function HeroSection() {
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="Vị trí tuyển dụng, tên công ty"
-              className="w-full bg-transparent text-[15px] text-[#263a4d] placeholder-[#7f878f] focus:outline-none"
+              className="text-navy w-full bg-transparent text-[15px] placeholder-[#7f878f] focus:outline-none"
             />
           </div>
 
@@ -92,7 +92,7 @@ export default function HeroSection() {
             <button
               type="button"
               onClick={() => setIsCityOpen(!isCityOpen)}
-              className="flex cursor-pointer items-center gap-2.5 px-6 py-2.5 text-[15px] text-[#263a4d] transition-colors hover:text-[#00b14f]"
+              className="text-navy hover:text-primary flex cursor-pointer items-center gap-2.5 px-6 py-2.5 text-[15px] transition-colors"
             >
               <MapPin className="h-4 w-4 text-[#7f878f]" />
               <span className="max-w-37.5 truncate font-medium">{selectedCity}</span>
@@ -110,8 +110,8 @@ export default function HeroSection() {
                       setSelectedCity(city);
                       setIsCityOpen(false);
                     }}
-                    className={`w-full px-4 py-2 text-left text-[14px] transition-colors hover:bg-[#f2fbf6] hover:text-[#00b14f] ${
-                      selectedCity === city ? 'bg-[#e6f7ee] font-semibold text-[#00b14f]' : 'text-[#263a4d]'
+                    className={`hover:bg-primary-light hover:text-primary w-full px-4 py-2 text-left text-[14px] transition-colors ${
+                      selectedCity === city ? 'bg-primary-tag text-primary font-semibold' : 'text-navy'
                     }`}
                   >
                     {city}
@@ -124,7 +124,7 @@ export default function HeroSection() {
           {/* Green Search Button */}
           <button
             type="button"
-            className="mr-1 flex shrink-0 cursor-pointer items-center gap-2 rounded-full bg-[#00b14f] px-8 py-3 text-[15px] font-semibold text-white shadow-md transition-all hover:bg-[#009643]"
+            className="bg-primary hover:bg-primary-hover mr-1 flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-8 py-3 text-[15px] font-semibold text-white shadow-md transition-all"
           >
             <Search className="h-4 w-4" />
             <span>Tìm kiếm</span>

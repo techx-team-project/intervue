@@ -58,7 +58,7 @@ export default function CareerTableOfContents({ items }: CareerTableOfContentsPr
         onClick={() => setIsOpenMobile(!isOpenMobile)}
       >
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-[#00b14f]">
+          <div className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
             <ListFilter className="h-4 w-4" />
           </div>
           <h3 className="text-sm font-bold text-[#171717] sm:text-base">Mục lục bài viết</h3>
@@ -86,7 +86,7 @@ export default function CareerTableOfContents({ items }: CareerTableOfContentsPr
                   item.level === 2 ? 'pl-6' : ''
                 } ${
                   isActive
-                    ? 'border-l-3 border-[#00b14f] bg-[#f2fbf6] font-semibold text-[#00b14f]'
+                    ? 'border-primary bg-primary-light text-primary border-l-3 font-semibold'
                     : 'text-[#526475] hover:bg-gray-50 hover:text-[#171717]'
                 }`}
               >

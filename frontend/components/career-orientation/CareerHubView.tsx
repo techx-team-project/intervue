@@ -112,7 +112,7 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
         <div className="pt-6">
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-[#00b14f]">
+              <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
                 <BookOpen className="h-5 w-5" />
               </div>
               <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">Danh sách bài viết định hướng</h2>
@@ -152,7 +152,7 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
                             onClick={() => setCurrentPage(pageNum)}
                             className={`h-9 w-9 rounded-xl text-xs font-bold transition ${
                               currentPage === pageNum
-                                ? 'bg-[#00b14f] text-white shadow-xs'
+                                ? 'bg-primary text-white shadow-xs'
                                 : 'border border-gray-200 bg-white text-[#526475] hover:bg-gray-50'
                             }`}
                           >
@@ -186,7 +186,7 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
                       setSelectedTag(null);
                       setActiveCategoryId('all');
                     }}
-                    className="mt-4 rounded-xl bg-[#00b14f] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#009b44]"
+                    className="bg-primary mt-4 rounded-xl px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#009b44]"
                   >
                     Xóa bộ lọc
                   </button>

@@ -30,12 +30,12 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
 
         <div className="min-w-0 flex-1">
           <Link href={`/companies/${company.id || 224996}`}>
-            <h3 className="line-clamp-2 text-sm font-bold text-slate-900 transition-colors hover:text-[#00b14f]">
+            <h3 className="hover:text-primary line-clamp-2 text-sm font-bold text-slate-900 transition-colors">
               {company.name}
             </h3>
           </Link>
           <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
-            <CheckCircle2 className="h-3.5 w-3.5 text-[#00b14f]" />
+            <CheckCircle2 className="text-primary h-3.5 w-3.5" />
             <span>Doanh nghiệp xác thực</span>
           </div>
         </div>
@@ -48,8 +48,8 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
           onClick={() => setIsFollowing((prev) => !prev)}
           className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border py-2 text-xs font-bold transition-all ${
             isFollowing
-              ? 'border-emerald-200 bg-emerald-50 text-[#00b14f]'
-              : 'border-slate-200 bg-slate-50/70 text-slate-700 hover:border-emerald-300 hover:bg-emerald-50/40 hover:text-[#00b14f]'
+              ? 'text-primary border-emerald-200 bg-emerald-50'
+              : 'hover:text-primary border-slate-200 bg-slate-50/70 text-slate-700 hover:border-emerald-300 hover:bg-emerald-50/40'
           }`}
         >
           {isFollowing ? (
@@ -103,7 +103,7 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
       <div className="mt-4 border-t border-slate-100 pt-3">
         <Link
           href={`/companies/${company.id || 224996}`}
-          className="flex items-center justify-center gap-1.5 text-xs font-bold text-[#00b14f] hover:underline"
+          className="text-primary flex items-center justify-center gap-1.5 text-xs font-bold hover:underline"
         >
           <span>Xem trang công ty</span>
           <ExternalLink className="h-3.5 w-3.5" />

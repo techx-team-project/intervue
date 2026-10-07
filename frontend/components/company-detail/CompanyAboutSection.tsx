@@ -20,7 +20,7 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
       {/* 1. GIỚI THIỆU CÔNG TY */}
       <section className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
         <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-[#00b14f]">
+          <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
             <Building className="h-4.5 w-4.5" />
           </div>
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Giới thiệu công ty</h2>
@@ -43,7 +43,7 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
                 className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-4 transition-all hover:border-emerald-200 hover:bg-emerald-50/30"
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-emerald-200 bg-white text-[#00b14f] shadow-2xs">
+                  <div className="text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-emerald-200 bg-white shadow-2xs">
                     <IconComp className="h-4 w-4" />
                   </div>
                   <h3 className="text-[13.5px] font-bold text-slate-800">{item.title}</h3>
@@ -59,7 +59,7 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
       {company.branches && company.branches.length > 0 && (
         <section className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
           <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-[#00b14f]">
+            <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
               <MapPin className="h-4.5 w-4.5" />
             </div>
             <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Hệ thống chi nhánh & văn phòng</h2>
@@ -72,7 +72,7 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
                 className="rounded-xl border border-emerald-200/80 bg-linear-to-br from-emerald-50/50 to-teal-50/20 p-4"
               >
                 <div className="flex items-center gap-2">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#00b14f] text-xs font-bold text-white">
+                  <span className="bg-primary flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white">
                     {idx + 1}
                   </span>
                   <h3 className="text-sm font-bold text-slate-900">{branch.name}</h3>
@@ -95,7 +95,7 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
       {/* 3. PHÚC LỢI KHI LÀM VIỆC TẠI MẸ GẤU PILATES */}
       <section className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
         <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-[#00b14f]">
+          <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
             <Sparkles className="h-4.5 w-4.5" />
           </div>
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Quyền lợi & Đãi ngộ nhân sự</h2>
@@ -104,8 +104,8 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
         <div className="mt-5 space-y-3">
           {company.benefits.map((benefit, idx) => (
             <div key={idx} className="flex items-start gap-3">
-              <div className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-[#00b14f]">
-                <div className="h-1.5 w-1.5 rounded-full bg-[#00b14f]" />
+              <div className="text-primary mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-100">
+                <div className="bg-primary h-1.5 w-1.5 rounded-full" />
               </div>
               <p className="text-[14px] leading-relaxed text-slate-700">{benefit}</p>
             </div>

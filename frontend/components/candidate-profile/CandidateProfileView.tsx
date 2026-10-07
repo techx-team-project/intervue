@@ -1,23 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import {
-  Award,
-  BookOpen,
-  Briefcase,
-  ChevronRight,
-  Cpu,
-  Eye,
-  FileText,
-  FolderGit2,
-  GraduationCap,
-  Home,
-  MessageSquare,
-  ShieldCheck,
-  Sparkles,
-  User,
-} from 'lucide-react';
+import { Award, Briefcase, Eye, FolderGit2, ShieldCheck, Sparkles } from 'lucide-react';
 import type { CandidateProfile } from '@/types/candidate';
 import CandidateHeroHeader from './CandidateHeroHeader';
 import CandidateAiScoreCard from './CandidateAiScoreCard';
@@ -32,6 +16,7 @@ import CandidateAttachedCvSidebar from './CandidateAttachedCvSidebar';
 import CandidateActivityStatsSidebar from './CandidateActivityStatsSidebar';
 import CandidateEditModal from './CandidateEditModal';
 import CandidateShareModal from './CandidateShareModal';
+import Breadcrumb from '@/components/ui/Breadcrumb';
 
 interface CandidateProfileViewProps {
   initialCandidate: CandidateProfile;
@@ -109,46 +94,37 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f5f5] pb-20">
+    <div className="min-h-screen bg-slate-50 pb-20">
       {/* 1. Breadcrumb Bar */}
-      <div className="border-b border-[#e9eaec] bg-white">
+      <div className="border-b border-slate-200 bg-white">
         <div className="container-topcv py-3">
-          <nav className="flex items-center gap-2 text-[13px] text-[#6f7882]">
-            <Link href="/" className="flex items-center gap-1 hover:text-[#00b14f]">
-              <Home className="h-3.5 w-3.5" />
-              <span>Trang chủ</span>
-            </Link>
-            <ChevronRight className="h-3.5 w-3.5 text-[#cbd5e1]" />
-            <span>Ứng viên</span>
-            <ChevronRight className="h-3.5 w-3.5 text-[#cbd5e1]" />
-            <span className="font-semibold text-[#263a4d]">{candidate.fullName}</span>
-          </nav>
+          <Breadcrumb items={[{ label: 'Ứng viên' }, { label: candidate.fullName }]} showHome className="text-xs" />
         </div>
       </div>
 
       <div className="container-topcv pt-5">
         {/* Facebook-style View Mode Switcher Banner */}
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#e2e8f0] bg-white p-3.5 shadow-2xs sm:px-4.5">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-2xs sm:px-4.5">
           <div className="flex items-center gap-3">
             <span
               className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white ${
-                isOwner ? 'bg-[#00b14f]' : 'bg-[#2563eb]'
+                isOwner ? 'bg-primary' : 'bg-blue-600'
               }`}
             >
               {isOwner ? <ShieldCheck className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[12px] font-medium text-[#64748b]">Chế độ xem:</span>
+                <span className="text-xs font-medium text-slate-500">Chế độ xem:</span>
                 <span
-                  className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${
-                    isOwner ? 'bg-emerald-50 text-[#00873c]' : 'bg-blue-50 text-blue-700'
+                  className={`rounded-md px-2 py-0.5 text-xs font-bold ${
+                    isOwner ? 'bg-emerald-50 text-emerald-700' : 'bg-blue-50 text-blue-700'
                   }`}
                 >
                   {isOwner ? 'Chủ sở hữu hồ sơ (Bạn)' : 'Khách / Nhà tuyển dụng xem'}
                 </span>
               </div>
-              <p className="text-[12.5px] text-[#475569]">
+              <p className="text-xs text-slate-600">
                 {isOwner
                   ? 'Bạn có toàn quyền chỉnh sửa thông tin, thêm kinh nghiệm, quản lý CV và xem số liệu phân tích riêng tư.'
                   : 'Chế độ khách: Chỉ hiển thị nội dung công khai, các nút chỉnh sửa & quyền quản lý đã được ẩn hoàn toàn.'}
@@ -159,15 +135,15 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
           <button
             type="button"
             onClick={handleToggleMode}
-            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-[12.5px] font-bold shadow-2xs transition-all ${
+            className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold shadow-2xs transition-all ${
               isOwner
-                ? 'border border-[#cbd5e1] bg-[#f8fafc] text-[#334155] hover:border-[#2563eb] hover:bg-blue-50 hover:text-[#2563eb]'
-                : 'border border-[#00b14f] bg-emerald-50 text-[#00873c] hover:bg-[#00b14f] hover:text-white'
+                ? 'border border-slate-300 bg-slate-50 text-slate-700 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600'
+                : 'border-primary hover:bg-primary border bg-emerald-50 text-emerald-700 hover:text-white'
             }`}
           >
             {isOwner ? (
               <>
-                <Eye className="h-4 w-4 text-[#2563eb]" />
+                <Eye className="h-4 w-4 text-blue-600" />
                 <span>Xem với tư cách Khách</span>
               </>
             ) : (
@@ -190,7 +166,7 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
         />
 
         {/* 3. Section Navigation Tabs */}
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-b border-[#e2e8f0] pb-2">
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-2">
           <div className="flex flex-wrap items-center gap-2">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -200,18 +176,18 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[14px] font-bold whitespace-nowrap transition-all ${
+                  className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold whitespace-nowrap transition-all ${
                     isActive
-                      ? 'bg-white text-[#00b14f] shadow-xs ring-1 ring-[#e2e8f0]'
-                      : 'text-[#64748b] hover:bg-white/60 hover:text-[#263a4d]'
+                      ? 'text-primary bg-white shadow-xs ring-1 ring-slate-200'
+                      : 'text-slate-500 hover:bg-white/60 hover:text-slate-800'
                   }`}
                 >
-                  <Icon className={`h-4 w-4 ${isActive ? 'text-[#00b14f]' : 'text-[#64748b]'}`} />
+                  <Icon className={`h-4 w-4 ${isActive ? 'text-primary' : 'text-slate-500'}`} />
                   <span>{tab.label}</span>
                   {tab.highlight ? (
                     <span
-                      className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${
-                        isActive ? 'bg-[#00b14f] text-white' : 'bg-emerald-100 text-[#00873c]'
+                      className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                        isActive ? 'bg-primary text-white' : 'bg-emerald-100 text-emerald-800'
                       }`}
                     >
                       {tab.highlight}
@@ -219,8 +195,8 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
                   ) : (
                     tab.badge && (
                       <span
-                        className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-                          isActive ? 'bg-emerald-50 text-[#00b14f]' : 'bg-[#f1f5f9] text-[#64748b]'
+                        className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                          isActive ? 'text-primary bg-emerald-50' : 'bg-slate-100 text-slate-500'
                         }`}
                       >
                         {tab.badge}
@@ -232,8 +208,8 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
             })}
           </div>
 
-          <div className="hidden text-[13px] text-[#64748b] lg:block">
-            Cập nhật lần cuối: <strong className="text-[#263a4d]">Hôm nay, 15:30</strong>
+          <div className="hidden text-xs text-slate-500 lg:block">
+            Cập nhật lần cuối: <strong className="text-slate-800">Hôm nay, 15:30</strong>
           </div>
         </div>
 

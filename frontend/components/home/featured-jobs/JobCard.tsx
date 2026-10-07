@@ -12,7 +12,7 @@ interface JobCardProps {
 function JobLogo({ job }: { job: Job }) {
   if (job.id === 2320413) {
     return (
-      <div className="flex h-full w-full flex-col items-center justify-center rounded-xl bg-linear-to-br from-[#00b14f] to-[#047857] p-1 text-white shadow-xs">
+      <div className="from-primary flex h-full w-full flex-col items-center justify-center rounded-xl bg-linear-to-br to-[#047857] p-1 text-white shadow-xs">
         <span className="text-[13px] leading-none font-black tracking-wider drop-shadow-xs">ADI</span>
         <span className="mt-0.5 text-[6.5px] leading-none font-bold tracking-tighter text-emerald-100 uppercase">
           AUTOMATION
@@ -34,7 +34,7 @@ function JobLogo({ job }: { job: Job }) {
   }
   if (job.id === 1) {
     return (
-      <div className="flex h-full w-full items-center justify-center rounded-xl bg-linear-to-br from-[#00b14f] to-[#047857] shadow-xs">
+      <div className="from-primary flex h-full w-full items-center justify-center rounded-xl bg-linear-to-br to-[#047857] shadow-xs">
         <svg viewBox="0 0 24 24" className="h-7 w-7 fill-none stroke-current stroke-2 text-white">
           <path
             d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
@@ -134,7 +134,7 @@ function JobLogo({ job }: { job: Job }) {
     );
   }
   return (
-    <div className="flex h-full w-full items-center justify-center rounded-xl bg-[#f0fdf4] text-[#00b14f]">
+    <div className="text-primary flex h-full w-full items-center justify-center rounded-xl bg-[#f0fdf4]">
       <Zap className="h-6 w-6" />
     </div>
   );
@@ -142,16 +142,16 @@ function JobLogo({ job }: { job: Job }) {
 
 export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
   return (
-    <div className="group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 transition-all duration-300 hover:-translate-y-1.5 hover:border-[#00b14f]/70 hover:shadow-[0_16px_32px_-8px_rgba(0,177,79,0.12),0_4px_12px_-2px_rgba(0,0,0,0.04)] sm:p-5">
+    <div className="group hover:border-primary/70 relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_32px_-8px_rgba(0,177,79,0.12),0_4px_12px_-2px_rgba(0,0,0,0.04)] sm:p-5">
       {/* Top Accent Gradient Line on Hover */}
-      <div className="absolute inset-x-0 top-0 h-[2.5px] rounded-t-2xl bg-linear-to-r from-[#00b14f] via-[#10b981] to-[#047857] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="from-primary absolute inset-x-0 top-0 h-[2.5px] rounded-t-2xl bg-linear-to-r via-[#10b981] to-[#047857] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
       {/* Upper Section: Logo, Title, Company, Heart & Tags */}
       <div>
         {/* Header Row */}
         <div className="flex items-start gap-3.5">
           {/* Company Logo Squircle with Micro-interaction */}
-          <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-slate-100 bg-linear-to-b from-white to-slate-50 p-1.5 shadow-2xs transition-all duration-300 group-hover:scale-105 group-hover:border-[#00b14f]/30 group-hover:shadow-sm">
+          <div className="group-hover:border-primary/30 relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-slate-100 bg-linear-to-b from-white to-slate-50 p-1.5 shadow-2xs transition-all duration-300 group-hover:scale-105 group-hover:shadow-sm">
             <JobLogo job={job} />
           </div>
 
@@ -159,7 +159,7 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
           <div className="min-w-0 flex-1">
             <Link href={`/jobs/${job.id}`}>
               <h3
-                className="line-clamp-2 text-[15px] leading-[1.35] font-bold tracking-tight text-slate-900 transition-colors duration-200 group-hover:text-[#00b14f]"
+                className="group-hover:text-primary line-clamp-2 text-[15px] leading-[1.35] font-bold tracking-tight text-slate-900 transition-colors duration-200"
                 title={job.title}
               >
                 {job.title}
@@ -174,7 +174,7 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
               )}
               <span className="truncate transition-colors group-hover:text-slate-700">{job.company}</span>
               <span title="Nhà tuyển dụng xác thực">
-                <CheckCircle2 className="h-3.5 w-3.5 shrink-0 fill-[#00b14f]/15 text-[#00b14f]" />
+                <CheckCircle2 className="fill-primary/15 text-primary h-3.5 w-3.5 shrink-0" />
               </span>
             </div>
           </div>
@@ -188,12 +188,12 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
             }}
             className={`ml-1 flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 ${
               isSaved
-                ? 'scale-105 border-[#00b14f] bg-[#ecfdf5] text-[#00b14f] shadow-xs'
-                : 'border-slate-200 bg-slate-50/60 text-slate-400 hover:scale-110 hover:border-[#00b14f] hover:bg-[#ecfdf5] hover:text-[#00b14f] active:scale-95'
+                ? 'border-primary text-primary scale-105 bg-[#ecfdf5] shadow-xs'
+                : 'hover:border-primary hover:text-primary border-slate-200 bg-slate-50/60 text-slate-400 hover:scale-110 hover:bg-[#ecfdf5] active:scale-95'
             }`}
             title={isSaved ? 'Bỏ lưu việc làm' : 'Lưu việc làm này'}
           >
-            <Heart className={`h-4 w-4 transition-transform duration-200 ${isSaved ? 'fill-[#00b14f]' : ''}`} />
+            <Heart className={`h-4 w-4 transition-transform duration-200 ${isSaved ? 'fill-primary' : ''}`} />
           </button>
         </div>
 
@@ -207,7 +207,7 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
           {job.tags.map((tag, idx) => (
             <span
               key={idx}
-              className="rounded-md border border-slate-200/50 bg-slate-100/80 px-2.5 py-1 text-[11.5px] font-medium text-slate-600 transition-all hover:border-[#00b14f]/30 hover:bg-[#e8f5e9] hover:text-[#00b14f]"
+              className="hover:border-primary/30 hover:text-primary rounded-md border border-slate-200/50 bg-slate-100/80 px-2.5 py-1 text-[11.5px] font-medium text-slate-600 transition-all hover:bg-[#e8f5e9]"
             >
               {tag}
             </span>
@@ -219,7 +219,7 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
       <div className="mt-3.5 border-t border-slate-100 pt-3.5">
         {/* Badges Row: Salary & Location */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex shrink-0 items-center rounded-lg border border-[#a7f3d0]/80 bg-linear-to-r from-[#e8fbf0] to-[#f0fdf4] px-3 py-1.5 text-[13px] font-extrabold text-[#00873c] shadow-2xs transition-all group-hover:border-[#00b14f]/50">
+          <span className="group-hover:border-primary/50 inline-flex shrink-0 items-center rounded-lg border border-[#a7f3d0]/80 bg-linear-to-r from-[#e8fbf0] to-[#f0fdf4] px-3 py-1.5 text-[13px] font-extrabold text-[#00873c] shadow-2xs transition-all">
             {job.salary}
           </span>
           <span className="inline-flex max-w-36.25 shrink-0 items-center gap-1 truncate rounded-lg border border-slate-200/60 bg-slate-50 px-2.5 py-1.5 text-[12px] font-medium text-slate-600 transition-colors hover:bg-slate-100">
@@ -243,7 +243,7 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
 
           <Link
             href={`/jobs/${job.id}`}
-            className="inline-flex items-center gap-1 text-[12.5px] font-bold text-[#00b14f] transition-all group-hover:translate-x-1 group-hover:text-[#009643]"
+            className="text-primary group-hover:text-primary-hover inline-flex items-center gap-1 text-[12.5px] font-bold transition-all group-hover:translate-x-1"
           >
             <span>Ứng tuyển ngay</span>
             <ArrowRight className="h-3.5 w-3.5" />

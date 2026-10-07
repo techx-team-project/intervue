@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { Check, CheckCircle2, Copy, Download, Info, QrCode, ShieldAlert, ShieldCheck, Smartphone } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, CheckCircle2, Copy, Download, ShieldCheck, Smartphone } from 'lucide-react';
+import Button from '@/components/ui/Button';
+import Badge from '@/components/ui/Badge';
 
 const SECRET_KEY = 'IV26-9A8F-4C21-7890';
 const BACKUP_CODES = [
@@ -75,36 +77,30 @@ export default function AccountTwoFactorView() {
   return (
     <div className="space-y-6">
       {/* 1. Header Box */}
-      <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <Smartphone className="h-5 w-5 text-[#00b14f]" />
-              <h1 className="text-xl font-black text-[#263a4d] sm:text-2xl">Xác thực 2 bước (2FA)</h1>
+              <Smartphone className="text-primary h-5 w-5" />
+              <h1 className="text-xl font-black text-slate-800 sm:text-2xl">Xác thực 2 bước (2FA)</h1>
             </div>
-            <p className="mt-1 text-[13.5px] text-[#64748b]">
+            <p className="mt-1 text-sm text-slate-500">
               Thêm một lớp bảo vệ vững chắc ngoài mật khẩu, ngăn chặn xâm nhập trái phép kể cả khi mật khẩu bị lộ.
             </p>
           </div>
 
           <div className="flex items-center gap-2.5">
-            <span
-              className={`rounded-full px-3 py-1 text-[12px] font-bold ${
-                isEnabled
-                  ? 'border border-emerald-200 bg-emerald-50 text-[#00873c]'
-                  : 'border border-amber-200 bg-amber-50 text-amber-800'
-              }`}
-            >
+            <Badge variant={isEnabled ? 'success' : 'warning'} size="md">
               {isEnabled ? '● Đang kích hoạt' : '○ Chưa kích hoạt'}
-            </span>
+            </Badge>
           </div>
         </div>
       </div>
 
       {/* Success Notification */}
       {successMsg && (
-        <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-[13.5px] font-semibold text-[#00873c]">
-          <CheckCircle2 className="h-5 w-5 shrink-0 text-[#00b14f]" />
+        <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800">
+          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -114,12 +110,12 @@ export default function AccountTwoFactorView() {
         <div className="space-y-6">
           <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-6 sm:p-8">
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#00b14f] text-white shadow-md">
+              <div className="bg-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white shadow-md">
                 <ShieldCheck className="h-7 w-7" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-[#1e293b]">Tài khoản của bạn đã được bảo vệ bằng 2FA</h3>
-                <p className="mt-1 text-[13.5px] text-[#64748b]">
+                <h3 className="text-lg font-bold text-slate-900">Tài khoản của bạn đã được bảo vệ bằng 2FA</h3>
+                <p className="mt-1 text-sm text-slate-600">
                   Phương thức chính: Ứng dụng xác thực (Google / Microsoft Authenticator). Khi đăng nhập trên thiết bị
                   mới, hệ thống sẽ yêu cầu mã xác nhận từ điện thoại của bạn.
                 </p>
@@ -127,7 +123,7 @@ export default function AccountTwoFactorView() {
                   <button
                     type="button"
                     onClick={handleDisable2FA}
-                    className="cursor-pointer text-[13px] font-bold text-rose-600 hover:underline"
+                    className="cursor-pointer text-xs font-bold text-rose-600 hover:underline"
                   >
                     Tắt xác thực 2 bước
                   </button>
@@ -137,38 +133,42 @@ export default function AccountTwoFactorView() {
           </div>
 
           {/* Backup Codes Section */}
-          <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-8">
-            <div className="flex items-center justify-between">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h3 className="text-[16px] font-bold text-[#263a4d]">Mã khôi phục dự phòng (Backup Codes)</h3>
-                <p className="text-[13px] text-[#64748b]">
+                <h3 className="text-base font-bold text-slate-800">Mã khôi phục dự phòng (Backup Codes)</h3>
+                <p className="text-xs text-slate-500">
                   Lưu trữ các mã này ở nơi an toàn. Mỗi mã chỉ sử dụng được 1 lần khi bạn không thể truy cập điện thoại.
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={handleCopyBackupCodes}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#e2e8f0] px-3 py-1.5 text-[12.5px] font-semibold text-[#475569] transition-colors hover:bg-[#f8fafc]"
+                  leftIcon={
+                    isCopiedBackup ? <Check className="text-primary h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />
+                  }
                 >
-                  {isCopiedBackup ? <Check className="h-3.5 w-3.5 text-[#00b14f]" /> : <Copy className="h-3.5 w-3.5" />}
-                  <span>{isCopiedBackup ? 'Đã sao chép' : 'Sao chép'}</span>
-                </button>
-                <button
+                  {isCopiedBackup ? 'Đã sao chép' : 'Sao chép'}
+                </Button>
+                <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={handleDownloadBackupCodes}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#e2e8f0] px-3 py-1.5 text-[12.5px] font-semibold text-[#475569] transition-colors hover:bg-[#f8fafc]"
+                  leftIcon={<Download className="h-3.5 w-3.5" />}
                 >
-                  <Download className="h-3.5 w-3.5" />
-                  <span>Tải .txt</span>
-                </button>
+                  Tải .txt
+                </Button>
               </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-2.5 rounded-xl border border-[#f1f5f9] bg-[#f8fafc] p-4 font-mono text-[13px] font-bold text-[#334155] sm:grid-cols-4">
+            <div className="mt-4 grid grid-cols-2 gap-2.5 rounded-xl border border-slate-100 bg-slate-50 p-4 font-mono text-xs font-bold text-slate-700 sm:grid-cols-4">
               {BACKUP_CODES.map((code, idx) => (
-                <div key={idx} className="rounded-md bg-white p-2 text-center shadow-2xs">
+                <div key={idx} className="rounded-md border border-slate-200/60 bg-white p-2 text-center shadow-2xs">
                   {code}
                 </div>
               ))}
@@ -177,47 +177,47 @@ export default function AccountTwoFactorView() {
         </div>
       ) : (
         /* State: 2FA is NOT ENABLED (Setup Walkthrough) */
-        <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-8">
-          <h2 className="text-[16px] font-bold text-[#263a4d]">Kích hoạt xác thực qua Authenticator App</h2>
-          <p className="mt-1 text-[13.5px] text-[#64748b]">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
+          <h2 className="text-base font-bold text-slate-800">Kích hoạt xác thực qua Authenticator App</h2>
+          <p className="mt-1 text-sm text-slate-500">
             Sử dụng Google Authenticator, Microsoft Authenticator hoặc 1Password trên điện thoại của bạn.
           </p>
 
           <div className="mt-6 space-y-6">
             {/* Step 1 */}
             <div className="flex items-start gap-4">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#00b14f] text-xs font-bold text-white">
+              <div className="bg-primary flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
                 1
               </div>
               <div className="flex-1">
-                <div className="text-[14px] font-bold text-[#263a4d]">Mở ứng dụng Authenticator và quét mã QR</div>
+                <div className="text-sm font-bold text-slate-800">Mở ứng dụng Authenticator và quét mã QR</div>
                 <div className="mt-4 flex flex-col gap-6 sm:flex-row sm:items-center">
                   {/* Clean Mock QR Code SVG */}
-                  <div className="flex h-44 w-44 shrink-0 items-center justify-center rounded-2xl border border-[#e2e8f0] bg-white p-3 shadow-xs">
+                  <div className="flex h-44 w-44 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white p-3 shadow-xs">
                     <svg viewBox="0 0 100 100" className="h-full w-full">
                       {/* Corner 1 */}
-                      <rect x="5" y="5" width="26" height="26" fill="#263a4d" rx="4" />
+                      <rect x="5" y="5" width="26" height="26" fill="#1e293b" rx="4" />
                       <rect x="9" y="9" width="18" height="18" fill="white" rx="2" />
                       <rect x="13" y="13" width="10" height="10" fill="#00b14f" rx="1" />
                       {/* Corner 2 */}
-                      <rect x="69" y="5" width="26" height="26" fill="#263a4d" rx="4" />
+                      <rect x="69" y="5" width="26" height="26" fill="#1e293b" rx="4" />
                       <rect x="73" y="9" width="18" height="18" fill="white" rx="2" />
                       <rect x="77" y="13" width="10" height="10" fill="#00b14f" rx="1" />
                       {/* Corner 3 */}
-                      <rect x="5" y="69" width="26" height="26" fill="#263a4d" rx="4" />
+                      <rect x="5" y="69" width="26" height="26" fill="#1e293b" rx="4" />
                       <rect x="9" y="73" width="18" height="18" fill="white" rx="2" />
                       <rect x="13" y="77" width="10" height="10" fill="#00b14f" rx="1" />
                       {/* Inner Random Matrix Bits */}
-                      <rect x="38" y="10" width="8" height="8" fill="#263a4d" />
+                      <rect x="38" y="10" width="8" height="8" fill="#1e293b" />
                       <rect x="52" y="14" width="8" height="8" fill="#00b14f" />
                       <rect x="38" y="38" width="12" height="12" fill="#00b14f" />
-                      <rect x="55" y="38" width="8" height="12" fill="#263a4d" />
-                      <rect x="10" y="38" width="8" height="8" fill="#263a4d" />
+                      <rect x="55" y="38" width="8" height="12" fill="#1e293b" />
+                      <rect x="10" y="38" width="8" height="8" fill="#1e293b" />
                       <rect x="22" y="44" width="8" height="8" fill="#00b14f" />
-                      <rect x="38" y="60" width="8" height="8" fill="#263a4d" />
+                      <rect x="38" y="60" width="8" height="8" fill="#1e293b" />
                       <rect x="52" y="66" width="12" height="8" fill="#00b14f" />
-                      <rect x="68" y="48" width="8" height="8" fill="#263a4d" />
-                      <rect x="80" y="60" width="12" height="12" fill="#263a4d" />
+                      <rect x="68" y="48" width="8" height="8" fill="#1e293b" />
+                      <rect x="80" y="60" width="12" height="12" fill="#1e293b" />
                       <rect x="68" y="78" width="8" height="8" fill="#00b14f" />
                       <rect x="82" y="38" width="8" height="8" fill="#00b14f" />
                     </svg>
@@ -225,21 +225,24 @@ export default function AccountTwoFactorView() {
 
                   {/* Manual Secret Key */}
                   <div className="space-y-2">
-                    <span className="text-[13px] text-[#64748b]">
+                    <span className="text-xs text-slate-500">
                       Nếu không quét được mã, bạn có thể nhập khóa thiết lập thủ công:
                     </span>
                     <div className="flex items-center gap-2">
-                      <div className="rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-3.5 py-2 font-mono text-[14px] font-bold text-[#263a4d]">
+                      <div className="rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 font-mono text-sm font-bold text-slate-800">
                         {SECRET_KEY}
                       </div>
-                      <button
+                      <Button
                         type="button"
+                        variant="outline"
+                        size="sm"
                         onClick={handleCopyKey}
-                        className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-[#e2e8f0] bg-white px-3 py-2 text-[13px] font-semibold text-[#475569] transition-colors hover:bg-[#f8fafc]"
+                        leftIcon={
+                          isCopiedKey ? <Check className="text-primary h-4 w-4" /> : <Copy className="h-4 w-4" />
+                        }
                       >
-                        {isCopiedKey ? <Check className="h-4 w-4 text-[#00b14f]" /> : <Copy className="h-4 w-4" />}
-                        <span>{isCopiedKey ? 'Đã chép' : 'Sao chép'}</span>
-                      </button>
+                        {isCopiedKey ? 'Đã chép' : 'Sao chép'}
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -248,16 +251,14 @@ export default function AccountTwoFactorView() {
 
             {/* Step 2 */}
             <div className="flex items-start gap-4">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#00b14f] text-xs font-bold text-white">
+              <div className="bg-primary flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
                 2
               </div>
               <div className="flex-1">
-                <div className="text-[14px] font-bold text-[#263a4d]">Nhập mã 6 chữ số từ ứng dụng để hoàn tất</div>
+                <div className="text-sm font-bold text-slate-800">Nhập mã 6 chữ số từ ứng dụng để hoàn tất</div>
 
                 {errorMsg && (
-                  <div className="mt-3 rounded-lg bg-rose-50 p-2.5 text-[13px] font-semibold text-rose-600">
-                    {errorMsg}
-                  </div>
+                  <div className="mt-3 rounded-lg bg-rose-50 p-2.5 text-xs font-semibold text-rose-600">{errorMsg}</div>
                 )}
 
                 <form onSubmit={handleVerifyAndEnable} className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -267,20 +268,12 @@ export default function AccountTwoFactorView() {
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
                     placeholder="000000"
-                    className="w-44 rounded-xl border border-[#dcdfe4] bg-white px-4 py-2.5 text-center font-mono text-lg font-bold tracking-widest text-[#263a4d] placeholder-[#9ca3af] transition-colors focus:border-[#00b14f] focus:ring-1 focus:ring-[#00b14f] focus:outline-none"
+                    className="focus:border-primary focus:ring-primary w-44 rounded-xl border border-slate-300 bg-white px-4 py-2 text-center font-mono text-lg font-bold tracking-widest text-slate-800 placeholder-slate-400 transition-colors focus:ring-1 focus:outline-none"
                   />
 
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="flex cursor-pointer items-center justify-center gap-2 rounded-full bg-[#00b14f] px-6 py-2.5 text-[14px] font-bold text-white shadow-xs transition-colors hover:bg-[#009643] disabled:opacity-60"
-                  >
-                    {isLoading ? (
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                    ) : (
-                      <span>Xác minh & Kích hoạt 2FA</span>
-                    )}
-                  </button>
+                  <Button type="submit" variant="primary" size="md" isLoading={isLoading}>
+                    Xác minh & Kích hoạt 2FA
+                  </Button>
                 </form>
               </div>
             </div>

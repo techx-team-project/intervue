@@ -13,7 +13,7 @@ export default function JobAiInterviewBanner({ jobTitle }: JobAiInterviewBannerP
   return (
     <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-linear-to-br from-slate-900 via-[#132d22] to-slate-900 p-6 text-white shadow-lg sm:p-7">
       {/* Decorative background glow */}
-      <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-[#00b14f]/25 blur-3xl" />
+      <div className="bg-primary/25 pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full blur-3xl" />
       <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-teal-500/20 blur-3xl" />
 
       <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -53,7 +53,7 @@ export default function JobAiInterviewBanner({ jobTitle }: JobAiInterviewBannerP
           <button
             type="button"
             onClick={() => setStarted(true)}
-            className="flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#00b14f] px-6 py-3.5 text-[14.5px] font-extrabold text-white shadow-md shadow-[#00b14f]/40 transition-all hover:bg-[#00c957] hover:shadow-lg active:scale-95"
+            className="bg-primary shadow-primary/40 flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-[14.5px] font-extrabold text-white shadow-md transition-all hover:bg-[#00c957] hover:shadow-lg active:scale-95"
           >
             <Bot className="h-5 w-5" />
             <span>{started ? 'Đang mở phòng AI...' : 'Luyện phỏng vấn ngay'}</span>

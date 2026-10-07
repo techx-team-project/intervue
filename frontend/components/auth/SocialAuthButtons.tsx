@@ -50,7 +50,7 @@ export default function SocialAuthButtons({ mode = 'login' }: SocialAuthButtonsP
       <button
         type="button"
         onClick={() => handleSocialAuth('Google')}
-        className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold text-[#263a4d] transition-all hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
+        className="text-navy flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold transition-all hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
       >
         <GoogleIcon />
         <span>{googleText}</span>
@@ -61,7 +61,7 @@ export default function SocialAuthButtons({ mode = 'login' }: SocialAuthButtonsP
         <button
           type="button"
           onClick={() => handleSocialAuth('Facebook')}
-          className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold text-[#263a4d] transition-all hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
+          className="text-navy flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold transition-all hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
         >
           <FacebookIcon />
           <span>Facebook</span>
@@ -70,7 +70,7 @@ export default function SocialAuthButtons({ mode = 'login' }: SocialAuthButtonsP
         <button
           type="button"
           onClick={() => handleSocialAuth('LinkedIn')}
-          className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold text-[#263a4d] transition-all hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
+          className="text-navy flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold transition-all hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
         >
           <LinkedinIcon />
           <span>Linkedin</span>

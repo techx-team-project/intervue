@@ -11,7 +11,7 @@ interface CareerArticleCardProps {
 
 export default function CareerArticleCard({ article }: CareerArticleCardProps) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#00b14f]/50 hover:shadow-xl">
+    <article className="group hover:border-primary/50 flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Cover Image */}
       <Link
         href={`/career-orientation/${article.slug}`}
@@ -24,7 +24,7 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
-          <span className="rounded-full bg-[#00b14f] px-2.5 py-0.5 text-xs font-semibold text-white shadow-sm">
+          <span className="bg-primary rounded-full px-2.5 py-0.5 text-xs font-semibold text-white shadow-sm">
             {article.category}
           </span>
         </div>
@@ -35,7 +35,7 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
         <div>
           {/* Metadata */}
           <div className="mb-2.5 flex items-center gap-2 text-xs text-[#7f878f]">
-            <span className="font-medium text-[#263a4d]">{article.publishedAt}</span>
+            <span className="text-navy font-medium">{article.publishedAt}</span>
             <span>•</span>
             <span className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
@@ -50,7 +50,7 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
 
           {/* Title */}
           <Link href={`/career-orientation/${article.slug}`}>
-            <h3 className="line-clamp-2 text-base leading-snug font-bold text-[#171717] transition-colors group-hover:text-[#00b14f]">
+            <h3 className="group-hover:text-primary line-clamp-2 text-base leading-snug font-bold text-[#171717] transition-colors">
               {article.title}
             </h3>
           </Link>
@@ -73,12 +73,12 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={article.author.avatar} alt={article.author.name} className="h-6 w-6 rounded-full object-cover" />
-            <span className="line-clamp-1 text-xs font-medium text-[#263a4d]">{article.author.name}</span>
+            <span className="text-navy line-clamp-1 text-xs font-medium">{article.author.name}</span>
           </div>
 
           <Link
             href={`/career-orientation/${article.slug}`}
-            className="inline-flex items-center gap-1 text-xs font-semibold text-[#00b14f] hover:underline"
+            className="text-primary inline-flex items-center gap-1 text-xs font-semibold hover:underline"
           >
             <span>Chi tiết</span>
             <ArrowUpRight className="h-3.5 w-3.5" />

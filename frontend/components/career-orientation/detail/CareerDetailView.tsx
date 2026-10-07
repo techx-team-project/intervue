@@ -29,10 +29,10 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
           <div className="max-w-4xl">
             {/* Category badge */}
             <div className="mb-4 flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-[#00b14f] px-3.5 py-1 text-xs font-bold text-white shadow-xs">
+              <span className="bg-primary rounded-full px-3.5 py-1 text-xs font-bold text-white shadow-xs">
                 {article.category}
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-[#00b14f]">
+              <span className="text-primary inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold">
                 <Sparkles className="h-3 w-3" />
                 Cập nhật chuẩn 2026
               </span>
@@ -52,7 +52,7 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
                   alt={article.author.name}
                   className="h-7 w-7 rounded-full object-cover ring-2 ring-emerald-50"
                 />
-                <span className="font-semibold text-[#263a4d]">{article.author.name}</span>
+                <span className="text-navy font-semibold">{article.author.name}</span>
               </div>
               <span>•</span>
               <span className="flex items-center gap-1">
@@ -72,7 +72,7 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
             </div>
 
             {/* Excerpt callout */}
-            <div className="mt-6 rounded-2xl border-l-4 border-[#00b14f] bg-[#f2fbf6] p-4 text-xs leading-relaxed text-[#263a4d] italic sm:p-5 sm:text-sm">
+            <div className="border-primary bg-primary-light text-navy mt-6 rounded-2xl border-l-4 p-4 text-xs leading-relaxed italic sm:p-5 sm:text-sm">
               &ldquo;{article.excerpt}&rdquo;
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
                 </h2>
 
                 {section.leadText && (
-                  <p className="text-sm leading-relaxed font-medium text-[#263a4d] sm:text-base">{section.leadText}</p>
+                  <p className="text-navy text-sm leading-relaxed font-medium sm:text-base">{section.leadText}</p>
                 )}
 
                 {section.paragraphs.map((p, pIdx) => (
@@ -117,7 +117,7 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
                   <div className="my-4 space-y-2 rounded-2xl border border-emerald-200/80 bg-emerald-50/70 p-4 sm:p-5">
                     {section.highlights.map((h, hIdx) => (
                       <div key={hIdx} className="flex items-start gap-2.5 text-xs text-[#065f46] sm:text-sm">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#00b14f]" />
+                        <CheckCircle2 className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                         <span className="leading-relaxed font-medium">{h}</span>
                       </div>
                     ))}
@@ -167,15 +167,13 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
 
             {/* Tags Box */}
             <div className="border-t border-gray-100 pt-6">
-              <span className="mb-3 block text-xs font-bold tracking-wider text-[#263a4d] uppercase">
-                Chủ đề liên quan:
-              </span>
+              <span className="text-navy mb-3 block text-xs font-bold tracking-wider uppercase">Chủ đề liên quan:</span>
               <div className="flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
                   <Link
                     key={tag}
                     href={`/career-orientation?tag=${encodeURIComponent(tag)}`}
-                    className="rounded-lg bg-gray-100 px-3 py-1 text-xs font-medium text-[#526475] transition hover:bg-[#f2fbf6] hover:text-[#00b14f]"
+                    className="hover:bg-primary-light hover:text-primary rounded-lg bg-gray-100 px-3 py-1 text-xs font-medium text-[#526475] transition"
                   >
                     #{tag}
                   </Link>

@@ -10,7 +10,7 @@ import TopCompaniesSection from '@/components/home/top-companies/TopCompaniesSec
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#f4f5f5] selection:bg-[#00b14f] selection:text-white">
+    <div className="selection:bg-primary flex min-h-screen flex-col bg-[#f4f5f5] selection:text-white">
       {/* 1. Sticky Navigation Header */}
       <Header />
 

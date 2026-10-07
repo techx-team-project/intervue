@@ -78,7 +78,7 @@ export default function AccountSidebar() {
             <button
               type="button"
               title="Cập nhật ảnh đại diện"
-              className="absolute -right-0.5 -bottom-0.5 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[#00b14f] text-white shadow-sm ring-2 ring-white transition-transform hover:scale-110 hover:bg-[#009643]"
+              className="bg-primary hover:bg-primary-hover absolute -right-0.5 -bottom-0.5 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-white shadow-sm ring-2 ring-white transition-transform hover:scale-110"
             >
               <Camera className="h-3.5 w-3.5" />
             </button>
@@ -87,7 +87,7 @@ export default function AccountSidebar() {
           {/* User info */}
           <div className="min-w-0 flex-1">
             <p className="text-[12px] text-[#64748b]">Chào bạn trở lại,</p>
-            <h3 className="truncate text-[16px] font-bold text-[#263a4d]">An Lâm Hoàng</h3>
+            <h3 className="text-navy truncate text-[16px] font-bold">An Lâm Hoàng</h3>
             <div className="mt-1">
               <span className="inline-block rounded bg-[#526477] px-2 py-0.5 text-[10.5px] font-semibold text-white">
                 Tài khoản đã xác thực
@@ -95,9 +95,9 @@ export default function AccountSidebar() {
             </div>
             <Link
               href="/upgrade"
-              className="mt-1.5 inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#f1f5f9] px-2.5 py-0.5 text-[11px] font-semibold text-[#263a4d] transition-colors hover:bg-slate-200"
+              className="text-navy mt-1.5 inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#f1f5f9] px-2.5 py-0.5 text-[11px] font-semibold transition-colors hover:bg-slate-200"
             >
-              <ArrowUpCircle className="h-3.5 w-3.5 text-[#00b14f]" />
+              <ArrowUpCircle className="text-primary h-3.5 w-3.5" />
               <span>Nâng cấp tài khoản</span>
             </Link>
           </div>
@@ -107,7 +107,7 @@ export default function AccountSidebar() {
         <div className="mt-4 border-t border-[#f1f5f9] pt-3.5">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-1">
-              <span className="text-[13px] font-bold text-[#263a4d]">Gợi ý việc làm</span>
+              <span className="text-navy text-[13px] font-bold">Gợi ý việc làm</span>
               <button
                 type="button"
                 title="Bật tính năng nhận thông báo cơ hội việc làm phù hợp"
@@ -122,8 +122,8 @@ export default function AccountSidebar() {
               onClick={() => setIsSuggestJob(!isSuggestJob)}
               className={`cursor-pointer rounded-full border px-3 py-1 text-[11.5px] font-bold transition-all ${
                 isSuggestJob
-                  ? 'border-[#00b14f] bg-emerald-50 text-[#00873c]'
-                  : 'border-[#00b14f] text-[#00b14f] hover:bg-emerald-50'
+                  ? 'border-primary bg-emerald-50 text-[#00873c]'
+                  : 'border-primary text-primary hover:bg-emerald-50'
               }`}
             >
               {isSuggestJob ? 'Đang bật' : 'Bật gợi ý'}
@@ -145,7 +145,7 @@ export default function AccountSidebar() {
               aria-checked={isJobSeeking}
               onClick={() => setIsJobSeeking(!isJobSeeking)}
               className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
-                isJobSeeking ? 'bg-[#00b14f]' : 'bg-slate-300'
+                isJobSeeking ? 'bg-primary' : 'bg-slate-300'
               }`}
             >
               <span
@@ -162,15 +162,15 @@ export default function AccountSidebar() {
               <div className="flex items-start gap-1.5">
                 <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 stroke-2 text-slate-400" />
                 <span>
-                  Nhà tuyển dụng (NTD) có thể <strong className="font-semibold text-[#263a4d]">tìm thấy</strong> và mang
-                  đến cho bạn những cơ hội hấp dẫn (Xem thêm tại phần Cho phép NTD tìm kiếm bên dưới).
+                  Nhà tuyển dụng (NTD) có thể <strong className="text-navy font-semibold">tìm thấy</strong> và mang đến
+                  cho bạn những cơ hội hấp dẫn (Xem thêm tại phần Cho phép NTD tìm kiếm bên dưới).
                 </span>
               </div>
               <div className="flex items-start gap-1.5">
                 <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 stroke-2 text-slate-400" />
                 <span>
-                  Hồ sơ của bạn sẽ <strong className="font-semibold text-[#263a4d]">hiển thị nổi bật</strong> trên kết
-                  quả tìm kiếm của Nhà tuyển dụng.
+                  Hồ sơ của bạn sẽ <strong className="text-navy font-semibold">hiển thị nổi bật</strong> trên kết quả
+                  tìm kiếm của Nhà tuyển dụng.
                 </span>
               </div>
             </div>
@@ -179,14 +179,14 @@ export default function AccountSidebar() {
 
         {/* 3. Cho phép NTD tìm kiếm hồ sơ */}
         <div className="mt-4 border-t border-[#f1f5f9] pt-3.5">
-          <h4 className="text-[13.5px] font-bold text-[#263a4d]">Cho phép NTD tìm kiếm hồ sơ</h4>
+          <h4 className="text-navy text-[13.5px] font-bold">Cho phép NTD tìm kiếm hồ sơ</h4>
           <p className="mt-1 text-[11.5px] leading-relaxed text-[#64748b]">
             Bạn chưa có CV nào trên hệ thống. Tạo CV ngay để bắt đầu nhận lời mời kết nối từ các Nhà tuyển dụng uy tín.
           </p>
 
           <Link
             href="/profile"
-            className="mt-2.5 inline-flex items-center justify-center rounded-full border border-[#00b14f] bg-white px-3.5 py-1 text-[12px] font-bold text-[#00b14f] transition-all hover:bg-emerald-50 active:scale-[0.98]"
+            className="border-primary text-primary mt-2.5 inline-flex items-center justify-center rounded-full border bg-white px-3.5 py-1 text-[12px] font-bold transition-all hover:bg-emerald-50 active:scale-[0.98]"
           >
             Tạo CV ngay
           </Link>
@@ -201,7 +201,7 @@ export default function AccountSidebar() {
             <button
               type="button"
               onClick={() => setShowMoreInfo(!showMoreInfo)}
-              className="mt-1.5 flex cursor-pointer items-center gap-1 font-semibold text-[#263a4d] hover:text-[#00b14f]"
+              className="text-navy hover:text-primary mt-1.5 flex cursor-pointer items-center gap-1 font-semibold"
             >
               <span>Tìm hiểu thêm</span>
               {showMoreInfo ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
@@ -234,12 +234,12 @@ export default function AccountSidebar() {
                 href={item.href}
                 className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[13px] font-medium transition-all ${
                   isActive
-                    ? 'border border-[#00b14f]/30 bg-emerald-50/70 font-bold text-[#00873c]'
-                    : 'text-[#475569] hover:bg-[#f8fafc] hover:text-[#263a4d]'
+                    ? 'border-primary/30 border bg-emerald-50/70 font-bold text-[#00873c]'
+                    : 'hover:text-navy text-[#475569] hover:bg-[#f8fafc]'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`h-4.5 w-4.5 shrink-0 ${isActive ? 'text-[#00b14f]' : 'text-[#64748b]'}`} />
+                  <Icon className={`h-4.5 w-4.5 shrink-0 ${isActive ? 'text-primary' : 'text-[#64748b]'}`} />
                   <span>{item.label}</span>
                 </div>
               </Link>
@@ -252,7 +252,7 @@ export default function AccountSidebar() {
         {/* Quick Link to Recruiter Profile */}
         <Link
           href="/profile"
-          className="flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[13px] font-medium text-[#475569] transition-all hover:bg-emerald-50/50 hover:text-[#00b14f]"
+          className="hover:text-primary flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[13px] font-medium text-[#475569] transition-all hover:bg-emerald-50/50"
         >
           <div className="flex items-center gap-3">
             <User className="h-4.5 w-4.5 shrink-0 text-[#64748b]" />
@@ -274,7 +274,7 @@ export default function AccountSidebar() {
       {/* =========================================================================
           KHỐI 3: BANNER TẢI APP INTERVUE QR CODE (ĐỒNG BỘ THEO MẪU TOPCV)
           ========================================================================= */}
-      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-[#0c2e24] via-[#103a2e] to-[#00b14f] p-4 text-white shadow-xs">
+      <div className="to-primary relative overflow-hidden rounded-2xl bg-linear-to-br from-[#0c2e24] via-[#103a2e] p-4 text-white shadow-xs">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0 flex-1">
             {/* InterVue Brand */}

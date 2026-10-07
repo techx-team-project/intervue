@@ -44,7 +44,7 @@ export default function AuthLayout({ mode, children }: AuthLayoutProps) {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f4f6f8] text-[#263a4d] antialiased">
+    <div className="text-navy flex min-h-screen flex-col bg-[#f4f6f8] antialiased">
       {/* 1. Global Navigation Header */}
       <Header />
 
@@ -54,8 +54,8 @@ export default function AuthLayout({ mode, children }: AuthLayoutProps) {
         <LeftChevronPattern />
 
         {/* Subtle Ambient Radial Gradients & Micro-dot Matrix */}
-        <div className="pointer-events-none absolute -top-20 -right-20 h-96 w-96 rounded-full bg-[#00b14f]/5 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 -left-20 h-96 w-96 rounded-full bg-[#00b14f]/5 blur-3xl" />
+        <div className="bg-primary/5 pointer-events-none absolute -top-20 -right-20 h-96 w-96 rounded-full blur-3xl" />
+        <div className="bg-primary/5 pointer-events-none absolute -bottom-20 -left-20 h-96 w-96 rounded-full blur-3xl" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] bg-size-[24px_24px] opacity-50" />
 
         {/* Floating Toast Notification */}
@@ -85,7 +85,7 @@ export default function AuthLayout({ mode, children }: AuthLayoutProps) {
           {/* Top Logo & Title */}
           <header className="mb-6 text-center">
             <InterVueLogo />
-            <h1 className="mt-3 text-[16px] font-bold text-[#263a4d]">{getTitle()}</h1>
+            <h1 className="text-navy mt-3 text-[16px] font-bold">{getTitle()}</h1>
           </header>
 
           {/* Form Slot (Login / Register / Forgot Password) */}
@@ -94,8 +94,8 @@ export default function AuthLayout({ mode, children }: AuthLayoutProps) {
           {/* Bottom Help Desk Box */}
           <footer className="mt-6 rounded-xl border border-[#f1f5f9] bg-[#f8fafc] px-4 py-2.5 text-center text-[12px] leading-relaxed text-[#64748b]">
             Bạn gặp khó khăn khi tạo tài khoản? Vui lòng gọi tới số{' '}
-            <span className="font-bold text-[#00b14f]">1900 068 889</span> |{' '}
-            <span className="font-bold text-[#00b14f]">Nhánh 2</span> (giờ hành chính).
+            <span className="text-primary font-bold">1900 068 889</span> |{' '}
+            <span className="text-primary font-bold">Nhánh 2</span> (giờ hành chính).
           </footer>
         </div>
       </main>
