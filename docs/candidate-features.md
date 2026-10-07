@@ -385,7 +385,7 @@ Lưu job để xem lại sau.
 | **Đã xem** | Hệ thống | Khi nhà tuyển dụng mở hồ sơ lần đầu |
 | **Đang xem xét** | Nhà tuyển dụng | |
 | **Phỏng vấn** | Nhà tuyển dụng | Đi kèm lịch phỏng vấn |
-| **Đạt** | Nhà tuyển dụng | Trạng thái kết thúc |
+| **Đã tuyển** | Nhà tuyển dụng | Ứng viên nhận việc. Trạng thái kết thúc |
 | **Không đạt** | Nhà tuyển dụng | Trạng thái kết thúc |
 | **Đã rút** | Ứng viên | Trạng thái kết thúc |
 | **Tin đã đóng** | Hệ thống | Tin đóng khi hồ sơ chưa có kết quả |
