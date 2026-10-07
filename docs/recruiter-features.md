@@ -188,6 +188,8 @@ Mỗi NTD được duyệt riêng và **không thấy** chiến dịch, tin, h�
 - Địa điểm làm việc: một hoặc nhiều; chọn địa chỉ trụ sở hoặc nhập địa chỉ khác.
 - Mức lương (mục 8.2).
 - Kinh nghiệm yêu cầu; mô tả công việc; yêu cầu ứng viên; quyền lợi.
+- Hạn nộp hồ sơ: chọn ngày và giờ cụ thể theo mong muốn
+- Thời gian hiển thị: chọn ngày và giờ cụ thể theo mong muốn (cần giới hạn tối đa)
 - Hạn nộp hồ sơ.
 - Hình thức nộp hồ sơ (mục 8.3).
 
@@ -230,7 +232,7 @@ Tin "Thỏa thuận" không dùng tiêu chí lương khi gợi ý job và feedba
 
 ### 8.3. Hình thức nộp hồ sơ và câu hỏi sàng lọc
 - **Chỉ nộp CV**, hoặc **Nộp CV + trả lời câu hỏi sàng lọc**.
-- Tối đa **10 câu**: Có/Không, trắc nghiệm, tự luận ngắn.
+- Tối thiểu **5 câu** và tối đa **30 câu**: Có/Không, trắc nghiệm, tự luận ngắn.
 - NTD nhập **thời gian dự kiến** để hiển thị cho ứng viên.
 - Câu Có/Không và trắc nghiệm có thể đặt **đáp án mong muốn** → hồ sơ không khớp được **gắn cờ "Không đáp ứng"**, không tự loại.
 - Sửa câu hỏi khi đã có người nộp: hồ sơ cũ giữ câu hỏi tại thời điểm trả lời.
@@ -360,7 +362,7 @@ Sau khi chiến dịch đóng **12 tháng**, tự ẩn CV và thông tin liên h
 | Ứng viên **đã ứng tuyển** vào tin của NTD | Miễn phí |
 | Ứng viên **chưa ứng tuyển** (Tìm ứng viên, CV đề xuất) | Tốn **Credit**, gửi dưới dạng **lời mời** |
 
-- Tối đa **1 lời mời / ứng viên / 30 ngày**; ứng viên từ chối thì 30 ngày sau mới mời lại.
+- Tối đa **1 lời mời / ứng viên / 15 ngày**; ứng viên từ chối thì 15 ngày sau mới mời lại.
 - Ứng viên **chấp nhận** lời mời thì cuộc trò chuyện mới mở và thông tin liên hệ mới hiển thị.
 - **[Đề xuất]** Ứng viên từ chối hoặc không phản hồi trong 7 ngày: hoàn Credit.
 
@@ -388,7 +390,6 @@ Sau khi chiến dịch đóng **12 tháng**, tự ẩn CV và thông tin liên h
 
 ### 14.3. Mua dịch vụ
 - **Thêm vào giỏ** hoặc **Mua ngay**.
-- **Báo giá dịch vụ:** NTD gửi yêu cầu báo giá → hàng chờ Admin.
 - Thanh toán chuyển khoản qua **SePay** (luồng giống tài liệu Ứng viên, mục 5.19).
 - Cảnh báo cố định đầu trang: *"Nhằm tránh rủi ro mạo danh và lừa đảo, InterVue chỉ nhận thanh toán qua mã QR trên hệ thống. Không chuyển khoản vào bất kỳ tài khoản cá nhân nào."*
 - **Yêu cầu xuất hóa đơn VAT:** gửi kèm thông tin xuất hóa đơn; Admin xử lý thủ công.
