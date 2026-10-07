@@ -14,36 +14,28 @@ export function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProps) {
       <Link
         href="#feature-jobs"
         onClick={onClose}
-        className="block py-2 text-sm font-semibold text-slate-800 hover:text-emerald-600"
+        className="text-navy hover:text-primary block py-2 text-sm font-semibold"
       >
         Việc làm
       </Link>
       <Link
-        href="#self-growth"
+        href="/cv-templates"
         onClick={onClose}
-        className="block py-2 text-sm font-semibold text-slate-800 hover:text-emerald-600"
+        className="text-navy hover:text-primary block py-2 text-sm font-semibold"
       >
         Tạo CV
       </Link>
       <Link
         href="#superior-tool"
         onClick={onClose}
-        className="block py-2 text-sm font-semibold text-slate-800 hover:text-emerald-600"
+        className="text-navy hover:text-primary block py-2 text-sm font-semibold"
       >
         Công cụ
       </Link>
-      <Link
-        href="/career-orientation"
-        onClick={onClose}
-        className="block py-2 text-sm font-semibold text-slate-800 hover:text-emerald-600"
-      >
+      <Link href="/blog" onClick={onClose} className="text-navy hover:text-primary block py-2 text-sm font-semibold">
         Cẩm nang nghề nghiệp
       </Link>
-      <Link
-        href="/upgrade"
-        onClick={onClose}
-        className="block py-2 text-sm font-semibold text-slate-800 hover:text-emerald-600"
-      >
+      <Link href="/upgrade" onClick={onClose} className="text-navy hover:text-primary block py-2 text-sm font-semibold">
         Nâng cấp VIP
       </Link>
 
@@ -51,14 +43,14 @@ export function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProps) {
         <Link
           href="/register"
           onClick={onClose}
-          className="w-full rounded-xl border border-emerald-600 py-2.5 text-center text-sm font-semibold text-emerald-600 transition-colors hover:bg-emerald-50"
+          className="border-primary text-primary hover:bg-primary-light w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-colors"
         >
           Đăng ký
         </Link>
         <Link
           href="/login"
           onClick={onClose}
-          className="w-full rounded-xl bg-emerald-600 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+          className="bg-primary hover:bg-primary-hover w-full rounded-xl py-2.5 text-center text-sm font-semibold text-white transition-colors"
         >
           Đăng nhập
         </Link>

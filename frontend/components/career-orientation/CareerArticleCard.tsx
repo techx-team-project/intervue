@@ -10,13 +10,12 @@ interface CareerArticleCardProps {
 }
 
 export default function CareerArticleCard({ article }: CareerArticleCardProps) {
+  const articleUrl = `/blog/${article.categorySlug || 'dinh-huong-nghe-nghiep'}/${article.slug}`;
+
   return (
     <article className="group hover:border-primary/50 flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Cover Image */}
-      <Link
-        href={`/career-orientation/${article.slug}`}
-        className="relative block aspect-video w-full overflow-hidden bg-gray-100"
-      >
+      <Link href={articleUrl} className="relative block aspect-video w-full overflow-hidden bg-gray-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={article.coverImage}
@@ -49,7 +48,7 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
           </div>
 
           {/* Title */}
-          <Link href={`/career-orientation/${article.slug}`}>
+          <Link href={articleUrl}>
             <h3 className="group-hover:text-primary line-clamp-2 text-base leading-snug font-bold text-[#171717] transition-colors">
               {article.title}
             </h3>
@@ -77,7 +76,7 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
           </div>
 
           <Link
-            href={`/career-orientation/${article.slug}`}
+            href={articleUrl}
             className="text-primary inline-flex items-center gap-1 text-xs font-semibold hover:underline"
           >
             <span>Chi tiết</span>
