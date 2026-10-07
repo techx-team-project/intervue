@@ -28,26 +28,26 @@ export default function CareerHeroSearch({
   onSelectTag,
 }: CareerHeroSearchProps) {
   return (
-    <div className="relative overflow-hidden border-b border-[#e9eaec] bg-linear-to-b from-[#00b14f]/10 via-[#f4fbf7] to-white py-10 lg:py-14">
+    <div className="from-primary/10 relative overflow-hidden border-b border-[#e9eaec] bg-linear-to-b via-[#f4fbf7] to-white py-10 lg:py-14">
       {/* Background ambient blurs */}
-      <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#00b14f]/15 blur-3xl" />
+      <div className="bg-primary/15 pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full blur-3xl" />
       <div className="pointer-events-none absolute top-1/2 -right-20 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-4 flex items-center gap-1.5 text-xs text-[#7f878f]">
-          <Link href="/" className="transition-colors hover:text-[#00b14f]">
+          <Link href="/" className="hover:text-primary transition-colors">
             Trang chủ
           </Link>
           <ChevronRight className="h-3 w-3" />
-          <span className="font-medium text-[#263a4d]">Cẩm nang nghề nghiệp</span>
+          <span className="text-navy font-medium">Cẩm nang nghề nghiệp</span>
           <ChevronRight className="h-3 w-3" />
-          <span className="font-semibold text-[#00b14f]">Định hướng nghề nghiệp</span>
+          <span className="text-primary font-semibold">Định hướng nghề nghiệp</span>
         </nav>
 
         {/* Hero Title & Description */}
         <div className="max-w-3xl">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#00b14f]/10 px-3.5 py-1 text-xs font-semibold text-[#00b14f]">
+          <div className="bg-primary/10 text-primary mb-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-semibold">
             <Compass className="h-3.5 w-3.5" />
             <span>Cẩm Nang & Lộ Trình Sự Nghiệp Toàn Diện</span>
           </div>
@@ -70,7 +70,7 @@ export default function CareerHeroSearch({
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Tìm kiếm bài viết, chuyên ngành, mức lương, kỹ năng nghề nghiệp..."
-              className="w-full rounded-2xl border border-[#d1d5db] bg-white py-3.5 pr-10 pl-12 text-sm text-[#171717] shadow-sm transition placeholder:text-[#9ca3af] focus:border-[#00b14f] focus:ring-2 focus:ring-[#00b14f]/20 focus:outline-none"
+              className="focus:border-primary focus:ring-primary/20 w-full rounded-2xl border border-[#d1d5db] bg-white py-3.5 pr-10 pl-12 text-sm text-[#171717] shadow-sm transition placeholder:text-[#9ca3af] focus:ring-2 focus:outline-none"
             />
             {searchQuery && (
               <button
@@ -86,7 +86,7 @@ export default function CareerHeroSearch({
           {/* Trending tags */}
           <div className="mt-3.5 flex flex-wrap items-center gap-2 text-xs">
             <span className="flex items-center gap-1 font-medium text-[#7f878f]">
-              <TrendingUp className="h-3.5 w-3.5 text-[#00b14f]" />
+              <TrendingUp className="text-primary h-3.5 w-3.5" />
               Xu hướng:
             </span>
             {TRENDING_TAGS.map((tag) => {
@@ -98,8 +98,8 @@ export default function CareerHeroSearch({
                   onClick={() => onSelectTag(isSelected ? null : tag)}
                   className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
                     isSelected
-                      ? 'bg-[#00b14f] text-white shadow-sm'
-                      : 'border border-[#e5e7eb] bg-white text-[#4b5563] hover:border-[#00b14f] hover:text-[#00b14f]'
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'hover:border-primary hover:text-primary border border-[#e5e7eb] bg-white text-[#4b5563]'
                   }`}
                 >
                   {tag}

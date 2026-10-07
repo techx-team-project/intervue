@@ -15,10 +15,10 @@ export default function CategoryPanel({ categories, page, totalPages, onPrevPage
         {categories.map((cat, idx) => (
           <div
             key={idx}
-            className="group flex cursor-pointer items-center justify-between rounded-xl px-2.5 py-2 transition-colors hover:bg-[#f2fbf6]"
+            className="group hover:bg-primary-light flex cursor-pointer items-center justify-between rounded-xl px-2.5 py-2 transition-colors"
           >
-            <span className="truncate text-[13.5px] font-medium text-[#263a4d] group-hover:text-[#00b14f]">{cat}</span>
-            <ChevronRight className="h-4 w-4 shrink-0 text-[#94a3b8] group-hover:text-[#00b14f]" />
+            <span className="text-navy group-hover:text-primary truncate text-[13.5px] font-medium">{cat}</span>
+            <ChevronRight className="group-hover:text-primary h-4 w-4 shrink-0 text-[#94a3b8]" />
           </div>
         ))}
       </div>
@@ -32,14 +32,14 @@ export default function CategoryPanel({ categories, page, totalPages, onPrevPage
           <button
             type="button"
             onClick={onPrevPage}
-            className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white text-[#263a4d] transition-colors hover:border-[#00b14f] hover:text-[#00b14f]"
+            className="text-navy hover:border-primary hover:text-primary flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white transition-colors"
           >
             <ChevronLeft className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
             onClick={onNextPage}
-            className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white text-[#263a4d] transition-colors hover:border-[#00b14f] hover:text-[#00b14f]"
+            className="text-navy hover:border-primary hover:text-primary flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white transition-colors"
           >
             <ChevronRight className="h-3.5 w-3.5" />
           </button>

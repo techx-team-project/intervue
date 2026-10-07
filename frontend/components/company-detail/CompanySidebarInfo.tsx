@@ -61,7 +61,7 @@ export default function CompanySidebarInfo({ company }: CompanySidebarInfoProps)
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-0.5 block truncate text-[13px] font-bold text-[#00b14f] hover:underline"
+                    className="text-primary mt-0.5 block truncate text-[13px] font-bold hover:underline"
                   >
                     {item.value}
                   </a>
@@ -77,7 +77,7 @@ export default function CompanySidebarInfo({ company }: CompanySidebarInfoProps)
       {/* Verification note */}
       <div className="mt-5 rounded-xl border border-emerald-100 bg-linear-to-br from-emerald-50/70 to-teal-50/30 p-3.5 text-xs text-slate-700">
         <div className="mb-1 flex items-center gap-1.5 font-bold text-emerald-900">
-          <ShieldCheck className="h-4 w-4 text-[#00b14f]" />
+          <ShieldCheck className="text-primary h-4 w-4" />
           <span>Hồ sơ doanh nghiệp minh bạch</span>
         </div>
         <p className="text-[11px] leading-relaxed text-slate-600">

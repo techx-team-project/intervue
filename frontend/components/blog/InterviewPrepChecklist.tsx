@@ -127,7 +127,7 @@ export default function InterviewPrepChecklist() {
           </div>
           <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-blue-950/40">
             <div
-              className="h-full bg-linear-to-r from-emerald-400 to-[#00b14f] transition-all duration-500"
+              className="to-primary h-full bg-linear-to-r from-emerald-400 transition-all duration-500"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -151,7 +151,7 @@ export default function InterviewPrepChecklist() {
               >
                 <div className="mt-0.5 shrink-0">
                   {isChecked ? (
-                    <CheckCircle className="h-5 w-5 text-[#00b14f]" />
+                    <CheckCircle className="text-primary h-5 w-5" />
                   ) : (
                     <Square className="h-5 w-5 text-gray-300 group-hover:text-blue-500" />
                   )}

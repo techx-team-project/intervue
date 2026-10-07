@@ -3,16 +3,16 @@ import { Smartphone } from 'lucide-react';
 export default function MobileAppSection() {
   return (
     <section id="mobile-app-intro" className="container-topcv">
-      <div className="flex flex-col items-center justify-between gap-8 rounded-3xl bg-linear-to-r from-[#212f3f] to-[#1e293b] p-8 text-white shadow-xl md:p-12 lg:flex-row">
+      <div className="from-dark flex flex-col items-center justify-between gap-8 rounded-3xl bg-linear-to-r to-[#1e293b] p-8 text-white shadow-xl md:p-12 lg:flex-row">
         <div className="max-w-xl">
-          <div className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-[#00b14f] px-3 py-1 text-[12px] font-bold text-white">
+          <div className="bg-primary mb-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-bold text-white">
             <Smartphone className="h-3.5 w-3.5" />
             INTERVUE APP
           </div>
           <h2 className="mb-3 text-2xl leading-tight font-extrabold md:text-3xl">
             Kiến tạo sự nghiệp của riêng bạn với ứng dụng InterVue
           </h2>
-          <div className="mb-2 text-lg font-bold text-[#00b14f]">“Tất cả trong một”</div>
+          <div className="text-primary mb-2 text-lg font-bold">“Tất cả trong một”</div>
           <p className="mb-6 text-[15px] leading-relaxed text-[#b3b8bd]">
             Trải nghiệm tạo CV, tìm việc làm, nộp hồ sơ trực tiếp, nhận thông báo phỏng vấn tức thì và theo dõi lộ trình
             nghề nghiệp - chỉ với một ứng dụng duy nhất.

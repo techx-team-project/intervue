@@ -1,6 +1,6 @@
 'use client';
 
-import { Award, CheckCircle2, ExternalLink, Globe2, Languages } from 'lucide-react';
+import { Award, ExternalLink, Globe2, Languages } from 'lucide-react';
 import type { CandidateLanguage, Certification } from '@/types/candidate';
 
 interface CandidateCertificationsSectionProps {
@@ -26,7 +26,7 @@ export default function CandidateCertificationsSection({
               <Award className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-[#263a4d]">Chứng chỉ quốc tế</h2>
+              <h2 className="text-navy text-lg font-bold">Chứng chỉ quốc tế</h2>
               <p className="text-[12px] text-[#6f7882]">Chứng chỉ chuyên môn đã được xác thực</p>
             </div>
           </div>
@@ -35,7 +35,7 @@ export default function CandidateCertificationsSection({
             <button
               type="button"
               onClick={onAddCertification}
-              className="inline-flex items-center gap-1 rounded-lg border border-[#e9eaec] bg-white px-2.5 py-1 text-[12px] font-semibold text-[#00b14f] hover:border-[#00b14f]"
+              className="text-primary hover:border-primary inline-flex items-center gap-1 rounded-lg border border-[#e9eaec] bg-white px-2.5 py-1 text-[12px] font-semibold"
             >
               <span>+ Thêm</span>
             </button>
@@ -50,7 +50,7 @@ export default function CandidateCertificationsSection({
             >
               <div>
                 <h3 className="text-[14px] font-bold text-[#1e293b]">{cert.name}</h3>
-                <div className="text-[12.5px] font-medium text-[#00b14f]">{cert.issuer}</div>
+                <div className="text-primary text-[12.5px] font-medium">{cert.issuer}</div>
                 <div className="mt-1 text-[11.5px] text-[#64748b]">Thời hạn: {cert.issueDate}</div>
                 {cert.credentialId && (
                   <div className="mt-0.5 text-[11px] text-[#94a3b8]">Mã CC: {cert.credentialId}</div>
@@ -62,7 +62,7 @@ export default function CandidateCertificationsSection({
                   href={cert.credentialUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#e2e8f0] bg-white text-[#64748b] transition-colors hover:border-[#00b14f] hover:text-[#00b14f]"
+                  className="hover:border-primary hover:text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#e2e8f0] bg-white text-[#64748b] transition-colors"
                   title="Xác thực chứng chỉ"
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
@@ -80,7 +80,7 @@ export default function CandidateCertificationsSection({
             <Languages className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-[#263a4d]">Trình độ ngoại ngữ</h2>
+            <h2 className="text-navy text-lg font-bold">Trình độ ngoại ngữ</h2>
             <p className="text-[12px] text-[#6f7882]">Khả năng giao tiếp & làm việc thực tế</p>
           </div>
         </div>
@@ -92,7 +92,7 @@ export default function CandidateCertificationsSection({
               className="flex items-center justify-between rounded-2xl border border-[#f1f5f9] bg-[#fbfcfd] p-4 transition-all hover:border-[#cbd5e1] hover:bg-white"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#e2e8f0] bg-white text-[#00b14f]">
+                <div className="text-primary flex h-10 w-10 items-center justify-center rounded-xl border border-[#e2e8f0] bg-white">
                   <Globe2 className="h-5 w-5" />
                 </div>
                 <div>

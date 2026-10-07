@@ -44,8 +44,8 @@ export default function CvFilterBar({
                   onClick={() => onSelectStyle(style.slug)}
                   className={`flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
                     isActive
-                      ? 'bg-[#00b14f] text-white shadow-xs'
-                      : 'text-[#526475] hover:bg-[#f2fbf6] hover:text-[#00b14f]'
+                      ? 'bg-primary text-white shadow-xs'
+                      : 'hover:bg-primary-light hover:text-primary text-[#526475]'
                   }`}
                 >
                   <span>{style.name}</span>
@@ -69,7 +69,7 @@ export default function CvFilterBar({
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Tìm theo tên mẫu, ngành nghề..."
-              className="w-full rounded-xl border border-gray-200 bg-gray-50/60 py-2 pr-8 pl-9.5 text-xs text-[#171717] placeholder:text-[#9ca3af] focus:border-[#00b14f] focus:bg-white focus:ring-1 focus:ring-[#00b14f] focus:outline-hidden"
+              className="focus:border-primary focus:ring-primary w-full rounded-xl border border-gray-200 bg-gray-50/60 py-2 pr-8 pl-9.5 text-xs text-[#171717] placeholder:text-[#9ca3af] focus:bg-white focus:ring-1 focus:outline-hidden"
             />
             {searchQuery && (
               <button
@@ -87,13 +87,13 @@ export default function CvFilterBar({
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-2 text-xs">
           <div className="flex flex-wrap items-center gap-2">
             <span className="flex items-center gap-1 font-semibold text-[#7f878f]">
-              <Filter className="h-3.5 w-3.5 text-[#00b14f]" />
+              <Filter className="text-primary h-3.5 w-3.5" />
               Ngành nghề:
             </span>
             <select
               value={selectedIndustrySlug}
               onChange={(e) => onSelectIndustry(e.target.value)}
-              className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 font-medium text-[#263a4d] focus:border-[#00b14f] focus:outline-hidden"
+              className="text-navy focus:border-primary rounded-lg border border-gray-200 bg-white px-3 py-1.5 font-medium focus:outline-hidden"
             >
               {industries.map((ind) => (
                 <option key={ind.id} value={ind.slug}>
@@ -119,7 +119,7 @@ export default function CvFilterBar({
                     type="button"
                     onClick={() => onSelectLanguage(lang)}
                     className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
-                      isSelected ? 'bg-white font-bold text-[#00b14f] shadow-xs' : 'text-[#526475] hover:text-[#171717]'
+                      isSelected ? 'text-primary bg-white font-bold shadow-xs' : 'text-[#526475] hover:text-[#171717]'
                     }`}
                   >
                     {label}

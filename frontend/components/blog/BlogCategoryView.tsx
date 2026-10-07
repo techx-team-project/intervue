@@ -181,7 +181,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                   </div>
                   <div className="mt-3 flex items-center justify-between text-xs">
                     <span className="text-gray-500">Mức lương phổ biến:</span>
-                    <span className="font-bold text-[#00b14f]">{domain.salary}</span>
+                    <span className="text-primary font-bold">{domain.salary}</span>
                   </div>
                   <div className="mt-2.5 flex flex-wrap gap-1">
                     {domain.skills.map((skill, sIdx) => (
@@ -212,8 +212,8 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                   onClick={() => handleSubFilterClick(sub)}
                   className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
                     isActive
-                      ? 'bg-[#00b14f] text-white shadow-xs'
-                      : 'border border-gray-200 bg-white text-[#475569] hover:border-[#00b14f] hover:text-[#00b14f]'
+                      ? 'bg-primary text-white shadow-xs'
+                      : 'hover:border-primary hover:text-primary border border-gray-200 bg-white text-[#475569]'
                   }`}
                 >
                   {sub}
@@ -229,7 +229,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
           <div className="lg:col-span-8">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-[#00b14f]">
+                <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
                   <BookOpen className="h-5 w-5" />
                 </div>
                 <h2 className="text-xl font-bold text-[#171717]">Danh sách bài viết ({filteredArticles.length})</h2>
@@ -262,7 +262,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                         onClick={() => setCurrentPage(i + 1)}
                         className={`h-8 w-8 rounded-lg text-xs font-bold transition ${
                           currentPage === i + 1
-                            ? 'bg-[#00b14f] text-white'
+                            ? 'bg-primary text-white'
                             : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
                         }`}
                       >
@@ -292,7 +292,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                     setSelectedSubFilter('Tất cả');
                     setSelectedTag(null);
                   }}
-                  className="mt-4 rounded-xl bg-[#00b14f] px-4 py-2 text-xs font-bold text-white transition hover:bg-emerald-600"
+                  className="bg-primary mt-4 rounded-xl px-4 py-2 text-xs font-bold text-white transition hover:bg-emerald-600"
                 >
                   Xóa tất cả bộ lọc
                 </button>

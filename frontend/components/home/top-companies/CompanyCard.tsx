@@ -12,12 +12,12 @@ interface CompanyCardProps {
 
 export default function CompanyCard({ company, isFollowed, onToggleFollow }: CompanyCardProps) {
   return (
-    <div className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e9eaec] bg-white transition-all duration-300 hover:border-[#00b14f] hover:shadow-xl">
+    <div className="group hover:border-primary flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e9eaec] bg-white transition-all duration-300 hover:shadow-xl">
       <div>
         {/* Cover Image */}
         <Link
           href={`/companies/${company.id}`}
-          className="relative block h-28 w-full overflow-hidden bg-linear-to-r from-[#263a4d] to-[#1e293b]"
+          className="from-navy relative block h-28 w-full overflow-hidden bg-linear-to-r to-[#1e293b]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -38,7 +38,7 @@ export default function CompanyCard({ company, isFollowed, onToggleFollow }: Com
           </Link>
 
           <Link href={`/companies/${company.id}`}>
-            <h3 className="mb-1 line-clamp-2 cursor-pointer text-[14.5px] leading-tight font-bold text-[#263a4d] transition-colors group-hover:text-[#00b14f]">
+            <h3 className="text-navy group-hover:text-primary mb-1 line-clamp-2 cursor-pointer text-[14.5px] leading-tight font-bold transition-colors">
               {company.name}
             </h3>
           </Link>
@@ -52,7 +52,7 @@ export default function CompanyCard({ company, isFollowed, onToggleFollow }: Com
           <div className="mb-3 flex items-center justify-between rounded-xl border border-[#f1f5f9] bg-[#f8fafc] p-2.5 text-[12.5px]">
             <Link
               href={`/companies/${company.id}`}
-              className="flex items-center gap-1 font-bold text-[#00b14f] hover:underline"
+              className="text-primary flex items-center gap-1 font-bold hover:underline"
             >
               <Briefcase className="h-3.5 w-3.5" />
               <span>{company.openJobs} việc làm</span>
@@ -72,8 +72,8 @@ export default function CompanyCard({ company, isFollowed, onToggleFollow }: Com
           onClick={() => onToggleFollow(company.id)}
           className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl py-2 text-[13.5px] font-semibold transition-all ${
             isFollowed
-              ? 'border border-[#00b14f] bg-[#e6f7ee] text-[#00b14f]'
-              : 'border border-[#e9eaec] bg-white text-[#263a4d] hover:border-[#00b14f] hover:bg-[#f2fbf6] hover:text-[#00b14f]'
+              ? 'border-primary bg-primary-tag text-primary border'
+              : 'text-navy hover:border-primary hover:bg-primary-light hover:text-primary border border-[#e9eaec] bg-white'
           }`}
         >
           {isFollowed ? (

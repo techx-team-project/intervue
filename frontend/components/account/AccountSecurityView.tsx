@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -16,6 +16,8 @@ import {
   ShieldCheck,
   Smartphone,
 } from 'lucide-react';
+import Button from '@/components/ui/Button';
+import Badge from '@/components/ui/Badge';
 
 interface SessionItem {
   id: string;
@@ -79,76 +81,75 @@ export default function AccountSecurityView() {
     <div className="space-y-6">
       {/* Toast Notice */}
       {notice && (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-[13.5px] font-semibold text-[#00873c]">
-          <CheckCircle2 className="h-4 w-4 shrink-0 text-[#00b14f]" />
+        <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+          <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
           <span>{notice}</span>
         </div>
       )}
 
       {/* 1. Header & Security Action Checklist */}
-      <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-7">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-7">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-[#00b14f]" />
-              <h1 className="text-xl font-black text-[#263a4d] sm:text-2xl">Bảo mật tài khoản</h1>
+              <ShieldCheck className="text-primary h-5 w-5" />
+              <h1 className="text-xl font-black text-slate-800 sm:text-2xl">Bảo mật tài khoản</h1>
             </div>
-            <p className="mt-1 text-[13.5px] text-[#64748b]">
+            <p className="mt-1 text-sm text-slate-500">
               Quản lý các biện pháp bảo vệ, thông tin đăng nhập và phiên hoạt động của bạn.
             </p>
           </div>
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/70 px-3.5 py-1.5 text-[12.5px] font-bold text-[#00873c]">
-            <CheckCircle2 className="h-4 w-4 text-[#00b14f]" />
+          <Badge variant="success" size="md">
+            <CheckCircle2 className="text-primary h-3.5 w-3.5" />
             <span>Đã hoàn thành 3/4 việc bảo mật</span>
-          </div>
+          </Badge>
         </div>
 
-        {/* Security Checklist (2 cột tinh gọn, không gạch ngang) */}
-        {/* Security Checklist (Không nền card, ô tích + chữ tinh gọn) */}
-        <div className="mt-5 grid grid-cols-1 gap-x-8 gap-y-3.5 border-t border-[#f1f5f9] pt-5 sm:grid-cols-2">
+        {/* Security Checklist */}
+        <div className="mt-5 grid grid-cols-1 gap-x-8 gap-y-3.5 border-t border-slate-100 pt-5 sm:grid-cols-2">
           {/* Task 1: Email Verification */}
           <div className="flex items-center justify-between gap-3 py-1">
             <div className="flex min-w-0 items-center gap-2.5">
-              <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#00b14f] text-white">
+              <div className="bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-white">
                 <Check className="h-3.5 w-3.5 stroke-3" />
               </div>
               <div className="min-w-0">
-                <div className="truncate text-[13.5px] font-semibold text-[#263a4d]">Xác minh Email chính</div>
-                <div className="truncate text-[12px] text-[#64748b]">nam.nguyen@techx.dev</div>
+                <div className="truncate text-sm font-semibold text-slate-800">Xác minh Email chính</div>
+                <div className="truncate text-xs text-slate-500">nam.nguyen@techx.dev</div>
               </div>
             </div>
-            <span className="shrink-0 text-[11.5px] font-semibold text-[#00873c]">Đã hoàn tất</span>
+            <span className="shrink-0 text-xs font-semibold text-emerald-700">Đã hoàn tất</span>
           </div>
 
           {/* Task 2: Phone Number Linked */}
           <div className="flex items-center justify-between gap-3 py-1">
             <div className="flex min-w-0 items-center gap-2.5">
-              <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#00b14f] text-white">
+              <div className="bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-white">
                 <Check className="h-3.5 w-3.5 stroke-3" />
               </div>
               <div className="min-w-0">
-                <div className="truncate text-[13.5px] font-semibold text-[#263a4d]">Số điện thoại khôi phục</div>
-                <div className="truncate text-[12px] text-[#64748b]">0988 ••• 321</div>
+                <div className="truncate text-sm font-semibold text-slate-800">Số điện thoại khôi phục</div>
+                <div className="truncate text-xs text-slate-500">0988 ••• 321</div>
               </div>
             </div>
-            <span className="shrink-0 text-[11.5px] font-semibold text-[#00873c]">Đã hoàn tất</span>
+            <span className="shrink-0 text-xs font-semibold text-emerald-700">Đã hoàn tất</span>
           </div>
 
           {/* Task 3: Strong Password */}
           <div className="flex items-center justify-between gap-3 py-1">
             <div className="flex min-w-0 items-center gap-2.5">
-              <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#00b14f] text-white">
+              <div className="bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-white">
                 <Check className="h-3.5 w-3.5 stroke-3" />
               </div>
               <div className="min-w-0">
-                <div className="truncate text-[13.5px] font-semibold text-[#263a4d]">Mật khẩu mạnh an toàn</div>
-                <div className="truncate text-[12px] text-[#64748b]">Đã tạo mật khẩu bảo vệ cao</div>
+                <div className="truncate text-sm font-semibold text-slate-800">Mật khẩu mạnh an toàn</div>
+                <div className="truncate text-xs text-slate-500">Đã tạo mật khẩu bảo vệ cao</div>
               </div>
             </div>
             <Link
               href="/account/password"
-              className="shrink-0 text-[11.5px] font-semibold text-[#64748b] hover:text-[#00b14f] hover:underline"
+              className="hover:text-primary shrink-0 text-xs font-semibold text-slate-500 hover:underline"
             >
               Đổi mật khẩu
             </Link>
@@ -157,17 +158,15 @@ export default function AccountSecurityView() {
           {/* Task 4: Two-Factor Authentication (2FA) - UNCHECKED */}
           <div className="flex items-center justify-between gap-3 py-1">
             <div className="flex min-w-0 items-center gap-2.5">
-              <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-[#cbd5e1] bg-white">
-                {/* Unchecked box */}
-              </div>
+              <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-slate-300 bg-white" />
               <div className="min-w-0">
-                <div className="truncate text-[13.5px] font-bold text-[#263a4d]">Xác thực 2 bước (2FA)</div>
-                <div className="truncate text-[12px] text-[#64748b]">Qua Authenticator App</div>
+                <div className="truncate text-sm font-bold text-slate-800">Xác thực 2 bước (2FA)</div>
+                <div className="truncate text-xs text-slate-500">Qua Authenticator App</div>
               </div>
             </div>
             <Link
               href="/account/two-factor"
-              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#00b14f] px-2.5 py-1 text-[11.5px] font-bold text-white shadow-2xs transition-all hover:bg-[#009643]"
+              className="bg-primary inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold text-white shadow-2xs transition-all hover:bg-emerald-700"
             >
               <span>Kích hoạt</span>
               <ArrowRight className="h-3 w-3" />
@@ -177,46 +176,46 @@ export default function AccountSecurityView() {
       </div>
 
       {/* 2. Security Checklist Items */}
-      <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs">
-        <h2 className="text-[16px] font-bold text-[#263a4d]">Thiết lập bảo vệ trọng yếu</h2>
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
+        <h2 className="text-base font-bold text-slate-800">Thiết lập bảo vệ trọng yếu</h2>
 
-        <div className="mt-4 divide-y divide-[#f1f5f9]">
+        <div className="mt-4 divide-y divide-slate-100">
           {/* Email */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-start gap-3.5">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+              <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
                 <Mail className="h-5 w-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[14px] font-bold text-[#263a4d]">Email tài khoản</span>
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10.5px] font-bold text-[#00873c]">
+                  <span className="text-sm font-bold text-slate-800">Email tài khoản</span>
+                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800">
                     Đã xác minh
                   </span>
                 </div>
-                <div className="text-[13px] text-[#64748b]">nam.nguyen@techx.dev</div>
+                <div className="text-xs text-slate-500">nam.nguyen@techx.dev</div>
               </div>
             </div>
-            <span className="text-[13px] font-semibold text-[#94a3b8]">Mặc định</span>
+            <span className="text-xs font-semibold text-slate-400">Mặc định</span>
           </div>
 
           {/* Phone */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-start gap-3.5">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+              <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
                 <Phone className="h-5 w-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[14px] font-bold text-[#263a4d]">Số điện thoại khôi phục</span>
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10.5px] font-bold text-[#00873c]">
+                  <span className="text-sm font-bold text-slate-800">Số điện thoại khôi phục</span>
+                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800">
                     Đã xác minh
                   </span>
                 </div>
-                <div className="text-[13px] text-[#64748b]">0988 ••• 321</div>
+                <div className="text-xs text-slate-500">0988 ••• 321</div>
               </div>
             </div>
-            <button type="button" className="cursor-pointer text-[13px] font-semibold text-[#00b14f] hover:underline">
+            <button type="button" className="text-primary cursor-pointer text-xs font-semibold hover:underline">
               Thay đổi
             </button>
           </div>
@@ -228,13 +227,13 @@ export default function AccountSecurityView() {
                 <KeyRound className="h-5 w-5" />
               </div>
               <div>
-                <div className="text-[14px] font-bold text-[#263a4d]">Mật khẩu đăng nhập</div>
-                <div className="text-[13px] text-[#64748b]">Lần đổi gần nhất: 45 ngày trước (Mức độ an toàn cao)</div>
+                <div className="text-sm font-bold text-slate-800">Mật khẩu đăng nhập</div>
+                <div className="text-xs text-slate-500">Lần đổi gần nhất: 45 ngày trước (Mức độ an toàn cao)</div>
               </div>
             </div>
             <Link
               href="/account/password"
-              className="inline-flex items-center gap-1 text-[13px] font-bold text-[#00b14f] hover:underline"
+              className="text-primary inline-flex items-center gap-1 text-xs font-bold hover:underline"
             >
               <span>Đổi mật khẩu</span>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -249,19 +248,19 @@ export default function AccountSecurityView() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[14px] font-bold text-[#263a4d]">Xác thực 2 bước (2FA)</span>
-                  <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10.5px] font-bold text-amber-800">
+                  <span className="text-sm font-bold text-slate-800">Xác thực 2 bước (2FA)</span>
+                  <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">
                     Chưa kích hoạt
                   </span>
                 </div>
-                <div className="text-[13px] text-[#64748b]">
+                <div className="text-xs text-slate-500">
                   Yêu cầu mã 6 số từ Google/Microsoft Authenticator khi đăng nhập
                 </div>
               </div>
             </div>
             <Link
               href="/account/two-factor"
-              className="rounded-full bg-[#00b14f] px-4 py-1.5 text-[13px] font-bold text-white shadow-2xs transition-all hover:bg-[#009643]"
+              className="bg-primary rounded-full px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition-all hover:bg-emerald-700"
             >
               Kích hoạt ngay
             </Link>
@@ -270,24 +269,26 @@ export default function AccountSecurityView() {
       </div>
 
       {/* 3. Active Sessions Management */}
-      <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-[16px] font-bold text-[#263a4d]">Phiên đăng nhập & Thiết bị đang hoạt động</h2>
-            <p className="text-[13px] text-[#64748b]">
+            <h2 className="text-base font-bold text-slate-800">Phiên đăng nhập & Thiết bị đang hoạt động</h2>
+            <p className="text-xs text-slate-500">
               Theo dõi và thu hồi quyền truy cập từ các thiết bị bạn không nhận diện được.
             </p>
           </div>
 
           {sessions.length > 1 && (
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
               onClick={handleRevokeOtherSessions}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3.5 py-1.5 text-[12.5px] font-bold text-rose-700 transition-colors hover:bg-rose-100"
+              leftIcon={<LogOut className="h-3.5 w-3.5" />}
+              className="border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 hover:text-rose-800"
             >
-              <LogOut className="h-3.5 w-3.5" />
-              <span>Đăng xuất thiết bị khác</span>
-            </button>
+              Đăng xuất thiết bị khác
+            </Button>
           )}
         </div>
 
@@ -298,13 +299,13 @@ export default function AccountSecurityView() {
               className={`flex items-center justify-between rounded-xl border p-4 transition-all ${
                 session.isCurrent
                   ? 'border-emerald-200 bg-emerald-50/40'
-                  : 'border-[#f1f5f9] bg-[#f8fafc] hover:bg-white'
+                  : 'border-slate-100 bg-slate-50 hover:bg-white'
               }`}
             >
               <div className="flex items-center gap-3.5">
                 <div
                   className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
-                    session.isCurrent ? 'bg-[#00b14f]/15 text-[#00b14f]' : 'bg-[#e2e8f0] text-[#64748b]'
+                    session.isCurrent ? 'text-primary bg-emerald-100' : 'bg-slate-200 text-slate-500'
                   }`}
                 >
                   {session.type === 'desktop' ? <Laptop className="h-5 w-5" /> : <Smartphone className="h-5 w-5" />}
@@ -312,23 +313,23 @@ export default function AccountSecurityView() {
 
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[14px] font-bold text-[#263a4d]">
+                    <span className="text-sm font-bold text-slate-800">
                       {session.device} • {session.browser}
                     </span>
                     {session.isCurrent && (
-                      <span className="rounded-full bg-[#00b14f] px-2 py-0.5 text-[10px] font-black text-white">
+                      <span className="bg-primary rounded-full px-2 py-0.5 text-[10px] font-black text-white">
                         Thiết bị này
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-3 text-[12.5px] text-[#64748b]">
+                  <div className="flex items-center gap-3 text-xs text-slate-500">
                     <span className="flex items-center gap-1">
-                      <Globe className="h-3.5 w-3.5 text-[#94a3b8]" />
+                      <Globe className="h-3.5 w-3.5 text-slate-400" />
                       {session.location}
                     </span>
                     <span>•</span>
                     <span className="flex items-center gap-1">
-                      <Clock className="h-3.5 w-3.5 text-[#94a3b8]" />
+                      <Clock className="h-3.5 w-3.5 text-slate-400" />
                       {session.lastActive}
                     </span>
                   </div>
@@ -339,7 +340,7 @@ export default function AccountSecurityView() {
                 <button
                   type="button"
                   onClick={() => handleRevokeSession(session.id)}
-                  className="cursor-pointer text-[12.5px] font-bold text-rose-600 hover:underline"
+                  className="cursor-pointer text-xs font-bold text-rose-600 hover:underline"
                 >
                   Đăng xuất
                 </button>
@@ -350,16 +351,16 @@ export default function AccountSecurityView() {
       </div>
 
       {/* 4. Security Alerts Preferences */}
-      <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs">
-        <h2 className="text-[16px] font-bold text-[#263a4d]">Cảnh báo an ninh & Thông báo</h2>
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
+        <h2 className="text-base font-bold text-slate-800">Cảnh báo an ninh & Thông báo</h2>
 
         <div className="mt-4 space-y-4">
           <label className="flex cursor-pointer items-start justify-between gap-4">
             <div>
-              <div className="text-[14px] font-bold text-[#263a4d]">
+              <div className="text-sm font-bold text-slate-800">
                 Gửi email khi phát hiện thiết bị hoặc vị trí đăng nhập mới
               </div>
-              <div className="text-[12.5px] text-[#64748b]">
+              <div className="text-xs text-slate-500">
                 Hệ thống sẽ gửi cảnh báo tức thời tới nam.nguyen@techx.dev kèm địa chỉ IP và vị trí.
               </div>
             </div>
@@ -367,18 +368,18 @@ export default function AccountSecurityView() {
               type="checkbox"
               checked={loginAlerts}
               onChange={(e) => setLoginAlerts(e.target.checked)}
-              className="mt-1 h-5 w-5 rounded accent-[#00b14f]"
+              className="mt-1 h-5 w-5 rounded accent-emerald-600"
             />
           </label>
 
-          <div className="border-t border-[#f1f5f9]" />
+          <div className="border-t border-slate-100" />
 
           <label className="flex cursor-pointer items-start justify-between gap-4">
             <div>
-              <div className="text-[14px] font-bold text-[#263a4d]">
+              <div className="text-sm font-bold text-slate-800">
                 Gửi mã xác nhận bảo mật khi có thay đổi mật khẩu hoặc 2FA
               </div>
-              <div className="text-[12.5px] text-[#64748b]">
+              <div className="text-xs text-slate-500">
                 Bắt buộc xác thực OTP trước khi cho phép thay đổi các thiết lập cốt lõi của tài khoản.
               </div>
             </div>
@@ -386,7 +387,7 @@ export default function AccountSecurityView() {
               type="checkbox"
               checked={emailAlerts}
               onChange={(e) => setEmailAlerts(e.target.checked)}
-              className="mt-1 h-5 w-5 rounded accent-[#00b14f]"
+              className="mt-1 h-5 w-5 rounded accent-emerald-600"
             />
           </label>
         </div>

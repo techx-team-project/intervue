@@ -105,9 +105,9 @@ export default function CareerAssessmentBanner() {
   const finalRecommendation = QUIZ_STEPS[0].options[selectedAnswers[0] || 0];
 
   return (
-    <div className="relative my-8 overflow-hidden rounded-3xl border border-[#00b14f]/30 bg-linear-to-br from-[#023319] via-[#0b4d29] to-[#042413] text-white shadow-xl">
+    <div className="border-primary/30 relative my-8 overflow-hidden rounded-3xl border bg-linear-to-br from-[#023319] via-[#0b4d29] to-[#042413] text-white shadow-xl">
       {/* Decorative background glows */}
-      <div className="pointer-events-none absolute -top-16 -right-16 h-64 w-64 rounded-full bg-[#00b14f]/30 blur-3xl" />
+      <div className="bg-primary/30 pointer-events-none absolute -top-16 -right-16 h-64 w-64 rounded-full blur-3xl" />
       <div className="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl" />
 
       <div className="relative p-6 sm:p-8 lg:p-10">
@@ -132,7 +132,7 @@ export default function CareerAssessmentBanner() {
                 <div
                   key={step.id}
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    isCompleted || idx <= currentStep ? 'w-8 bg-[#00b14f]' : 'w-4 bg-white/20'
+                    isCompleted || idx <= currentStep ? 'bg-primary w-8' : 'w-4 bg-white/20'
                   }`}
                 />
               ))}
@@ -151,13 +151,13 @@ export default function CareerAssessmentBanner() {
                   key={idx}
                   type="button"
                   onClick={() => handleSelectOption(idx)}
-                  className="group flex flex-col rounded-2xl border border-white/15 bg-white/10 p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-[#00b14f] hover:bg-white/20"
+                  className="group hover:border-primary flex flex-col rounded-2xl border border-white/15 bg-white/10 p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <span className="text-sm font-bold text-white transition-colors group-hover:text-emerald-300">
                       {opt.label}
                     </span>
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/30 text-white group-hover:border-[#00b14f] group-hover:bg-[#00b14f]">
+                    <span className="group-hover:border-primary group-hover:bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/30 text-white">
                       <ArrowRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
                     </span>
                   </div>
@@ -182,7 +182,7 @@ export default function CareerAssessmentBanner() {
           /* Completion Result */
           <div className="rounded-2xl border border-emerald-400/30 bg-white/10 p-6 backdrop-blur-xs">
             <div className="mb-3 flex items-center gap-3 text-emerald-300">
-              <CheckCircle2 className="h-6 w-6 text-[#00b14f]" />
+              <CheckCircle2 className="text-primary h-6 w-6" />
               <span className="text-sm font-semibold tracking-wider uppercase">Kết quả định hướng dành cho bạn</span>
             </div>
 
@@ -197,7 +197,7 @@ export default function CareerAssessmentBanner() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href={`/blog/dinh-huong-nghe-nghiep/${finalRecommendation.slug}`}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#00b14f] px-5 py-2.5 text-sm font-bold text-white shadow-lg transition hover:bg-[#009b44] hover:shadow-emerald-500/20"
+                className="bg-primary inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-lg transition hover:bg-[#009b44] hover:shadow-emerald-500/20"
               >
                 <span>Xem cẩm nang & lộ trình ngành</span>
                 <ArrowRight className="h-4 w-4" />

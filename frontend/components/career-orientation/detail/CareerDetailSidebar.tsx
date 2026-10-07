@@ -27,9 +27,9 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
           <div>
             <div className="flex items-center gap-1.5">
               <h4 className="text-sm font-bold text-[#171717]">{article.author.name}</h4>
-              <ShieldCheck className="h-4 w-4 shrink-0 text-[#00b14f]" />
+              <ShieldCheck className="text-primary h-4 w-4 shrink-0" />
             </div>
-            <p className="mt-0.5 text-xs font-semibold text-[#00b14f]">{article.author.role}</p>
+            <p className="text-primary mt-0.5 text-xs font-semibold">{article.author.role}</p>
           </div>
         </div>
 
@@ -43,16 +43,16 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
       {/* 2. Fast Career Tools */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
         <div className="mb-3 flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-[#00b14f]" />
+          <Sparkles className="text-primary h-4 w-4" />
           <h4 className="text-sm font-bold text-[#171717]">Công cụ hỗ trợ ứng tuyển</h4>
         </div>
 
         <div className="space-y-2">
           <Link
             href="/candidate/profile"
-            className="group flex items-center gap-2.5 rounded-xl p-2.5 text-xs text-[#263a4d] transition hover:bg-[#f2fbf6] hover:text-[#00b14f]"
+            className="group text-navy hover:bg-primary-light hover:text-primary flex items-center gap-2.5 rounded-xl p-2.5 text-xs transition"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-[#00b14f]">
+            <div className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
               <FileText className="h-3.5 w-3.5" />
             </div>
             <span className="font-semibold">Mẫu CV chuẩn hóa theo ngành</span>
@@ -60,7 +60,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
 
           <Link
             href="#self-growth"
-            className="group flex items-center gap-2.5 rounded-xl p-2.5 text-xs text-[#263a4d] transition hover:bg-[#f2fbf6] hover:text-[#00b14f]"
+            className="group text-navy hover:bg-primary-light hover:text-primary flex items-center gap-2.5 rounded-xl p-2.5 text-xs transition"
           >
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
               <Brain className="h-3.5 w-3.5" />
@@ -70,7 +70,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
 
           <Link
             href="#salary-calculator"
-            className="group flex items-center gap-2.5 rounded-xl p-2.5 text-xs text-[#263a4d] transition hover:bg-[#f2fbf6] hover:text-[#00b14f]"
+            className="group text-navy hover:bg-primary-light hover:text-primary flex items-center gap-2.5 rounded-xl p-2.5 text-xs transition"
           >
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
               <Calculator className="h-3.5 w-3.5" />
@@ -80,9 +80,9 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
 
           <Link
             href="/jobs"
-            className="group flex items-center gap-2.5 rounded-xl bg-[#f2fbf6] p-2.5 text-xs font-bold text-[#00b14f] transition hover:bg-emerald-100/70"
+            className="group bg-primary-light text-primary flex items-center gap-2.5 rounded-xl p-2.5 text-xs font-bold transition hover:bg-emerald-100/70"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#00b14f] text-white">
+            <div className="bg-primary flex h-7 w-7 items-center justify-center rounded-lg text-white">
               <Bot className="h-3.5 w-3.5" />
             </div>
             <span>Luyện phỏng vấn cùng InterVue AI</span>
@@ -105,7 +105,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
                   className="h-16 w-20 shrink-0 rounded-xl object-cover group-hover:opacity-90"
                 />
                 <div className="flex flex-col justify-between">
-                  <h5 className="line-clamp-2 text-xs leading-snug font-bold text-[#171717] transition-colors group-hover:text-[#00b14f]">
+                  <h5 className="group-hover:text-primary line-clamp-2 text-xs leading-snug font-bold text-[#171717] transition-colors">
                     {rel.title}
                   </h5>
                   <div className="mt-1 flex items-center gap-2 text-[10px] text-[#7f878f]">

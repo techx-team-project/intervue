@@ -16,7 +16,7 @@ export default function CvBenefitsSection() {
     <section className="border-t border-gray-200 bg-linear-to-b from-[#f8faf9] to-white py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-12 max-w-2xl text-center">
-          <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-semibold text-[#00b14f]">
+          <div className="text-primary mb-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-semibold">
             <Sparkles className="h-3.5 w-3.5" />
             <span>Ưu Điểm Vượt Trội Của Mẫu CV Đơn Giản</span>
           </div>
@@ -35,10 +35,10 @@ export default function CvBenefitsSection() {
             return (
               <div
                 key={idx}
-                className="flex flex-col justify-between rounded-3xl border border-gray-200 bg-white p-6 shadow-xs transition duration-300 hover:-translate-y-1 hover:border-[#00b14f]/50 hover:shadow-xl"
+                className="hover:border-primary/50 flex flex-col justify-between rounded-3xl border border-gray-200 bg-white p-6 shadow-xs transition duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div>
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-[#00b14f]">
+                  <div className="text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100">
                     <IconComponent className="h-6 w-6" />
                   </div>
                   <h3 className="mb-2 text-base leading-snug font-bold text-[#171717]">{b.title}</h3>

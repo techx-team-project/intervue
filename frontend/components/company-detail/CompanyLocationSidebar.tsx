@@ -11,7 +11,7 @@ export default function CompanyLocationSidebar({ address, mapEmbedUrl }: Company
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs">
       <h3 className="flex items-center gap-1.5 border-b border-slate-100 pb-3 text-sm font-bold text-slate-900">
-        <MapPin className="h-4 w-4 text-[#00b14f]" />
+        <MapPin className="text-primary h-4 w-4" />
         <span>Địa điểm công ty</span>
       </h3>
 

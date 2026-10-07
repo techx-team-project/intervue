@@ -5,7 +5,7 @@ export default function PressSection() {
     <section id="newspapers-talk-about-intervue" className="container-topcv">
       <div className="rounded-3xl border border-[#e9eaec] bg-white p-8 shadow-xs">
         <div className="mb-6 text-center">
-          <h2 className="text-xl font-bold text-[#263a4d] md:text-2xl">Báo chí nói về InterVue</h2>
+          <h2 className="text-navy text-xl font-bold md:text-2xl">Báo chí nói về InterVue</h2>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-8 opacity-85 transition-opacity hover:opacity-100 md:gap-12">

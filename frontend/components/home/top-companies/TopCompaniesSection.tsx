@@ -25,7 +25,7 @@ export default function TopCompaniesSection() {
         {/* Header Title */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="flex items-center gap-2.5 text-xl font-bold text-[#263a4d] md:text-2xl">
+            <h2 className="text-navy flex items-center gap-2.5 text-xl font-bold md:text-2xl">
               <span>Thương hiệu lớn tiêu biểu</span>
               <span className="rounded bg-linear-to-r from-amber-500 to-amber-600 px-2 py-0.5 text-[12px] font-bold text-white shadow-xs">
                 PRO COMPANY
@@ -39,13 +39,13 @@ export default function TopCompaniesSection() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-[#f4f5f5] text-[#263a4d] transition-colors hover:bg-[#e6f7ee] hover:text-[#00b14f]"
+              className="text-navy hover:bg-primary-tag hover:text-primary flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-[#f4f5f5] transition-colors"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
               type="button"
-              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-[#f4f5f5] text-[#263a4d] transition-colors hover:bg-[#e6f7ee] hover:text-[#00b14f]"
+              className="text-navy hover:bg-primary-tag hover:text-primary flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-[#f4f5f5] transition-colors"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -61,8 +61,8 @@ export default function TopCompaniesSection() {
               onClick={() => setSelectedField(field.id)}
               className={`shrink-0 cursor-pointer rounded-xl px-4 py-2 text-[13.5px] font-semibold transition-all ${
                 selectedField === field.id
-                  ? 'bg-[#263a4d] text-white shadow-xs'
-                  : 'border border-[#e9eaec] bg-[#f8fafc] text-[#6f7882] hover:bg-[#f2fbf6] hover:text-[#00b14f]'
+                  ? 'bg-navy text-white shadow-xs'
+                  : 'hover:bg-primary-light hover:text-primary border border-[#e9eaec] bg-[#f8fafc] text-[#6f7882]'
               }`}
             >
               {field.name}
@@ -94,7 +94,7 @@ export default function TopCompaniesSection() {
             href="https://www.topcv.vn/pro"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#212f3f] px-5 py-2.5 text-[14px] font-semibold text-white shadow-xs transition-colors hover:bg-[#263a4d]"
+            className="bg-dark hover:bg-navy inline-flex cursor-pointer items-center gap-2 rounded-xl px-5 py-2.5 text-[14px] font-semibold text-white shadow-xs transition-colors"
           >
             <span>Khám phá InterVue Pro</span>
             <span className="rounded bg-linear-to-r from-amber-500 to-amber-600 px-1.5 py-0.5 text-[10px] font-bold text-white">

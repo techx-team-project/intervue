@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { BlogArticle } from '@/types/blog';
 import { Clock, Eye, ArrowUpRight } from 'lucide-react';
+import Badge from '@/components/ui/Badge';
 
 interface BlogArticleCardProps {
   article: BlogArticle;
@@ -13,7 +14,7 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
   const articleUrl = `/blog/${article.categorySlug}/${article.slug}`;
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#00b14f]/50 hover:shadow-xl">
+    <article className="group hover:border-primary/50 flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Cover Image */}
       <Link href={articleUrl} className="relative block aspect-video w-full overflow-hidden bg-gray-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -23,9 +24,9 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
-          <span className="rounded-full bg-[#00b14f] px-2.5 py-0.5 text-xs font-semibold text-white shadow-sm">
+          <Badge variant="success" size="sm" className="bg-primary border-transparent text-white">
             {article.category}
-          </span>
+          </Badge>
         </div>
       </Link>
 
@@ -34,7 +35,7 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
         <div>
           {/* Metadata */}
           <div className="mb-2.5 flex items-center gap-2 text-xs text-[#7f878f]">
-            <span className="font-medium text-[#263a4d]">{article.publishedAt}</span>
+            <span className="text-navy font-medium">{article.publishedAt}</span>
             <span>•</span>
             <span className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
@@ -48,7 +49,7 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
           </div>
 
           {/* Title */}
-          <h3 className="line-clamp-2 text-base font-bold text-[#171717] transition-colors group-hover:text-[#00b14f]">
+          <h3 className="group-hover:text-primary line-clamp-2 text-base font-bold text-[#171717] transition-colors">
             <Link href={articleUrl}>{article.title}</Link>
           </h3>
 
@@ -66,12 +67,12 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
                 alt={article.author.name}
                 className="h-6 w-6 rounded-full object-cover"
               />
-              <span className="line-clamp-1 text-xs font-medium text-[#263a4d]">{article.author.name}</span>
+              <span className="text-navy line-clamp-1 text-xs font-medium">{article.author.name}</span>
             </div>
 
             <Link
               href={articleUrl}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-[#00b14f] transition-transform group-hover:translate-x-0.5"
+              className="text-primary inline-flex items-center gap-1 text-xs font-semibold transition-transform group-hover:translate-x-0.5"
             >
               <span>Đọc tiếp</span>
               <ArrowUpRight className="h-3.5 w-3.5" />

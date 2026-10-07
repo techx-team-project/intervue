@@ -135,7 +135,7 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
               {/* Ikigai Career test banner */}
               <div className="relative overflow-hidden rounded-3xl border border-emerald-200 bg-linear-to-r from-emerald-500/10 via-teal-500/10 to-transparent p-6 shadow-xs">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#00b14f] text-white shadow-md">
+                  <div className="bg-primary flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-md">
                     <Compass className="h-6 w-6" />
                   </div>
                   <div>
@@ -152,7 +152,7 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                 <div className="mt-4">
                   <Link
                     href="/blog/dinh-huong-nghe-nghiep"
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#00b14f] px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-600"
+                    className="bg-primary inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-600"
                   >
                     <span>Làm bài trắc nghiệm</span>
                     <ArrowRight className="h-3.5 w-3.5" />
@@ -167,7 +167,7 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
         <div className="pt-6">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-[#00b14f]">
+              <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
                 <BookOpen className="h-5 w-5" />
               </div>
               <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">
@@ -182,8 +182,8 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                 onClick={() => handleSelectCategory('all')}
                 className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
                   activeCategoryId === 'all'
-                    ? 'bg-[#00b14f] text-white shadow-xs'
-                    : 'border border-gray-200 bg-white text-gray-600 hover:border-[#00b14f]'
+                    ? 'bg-primary text-white shadow-xs'
+                    : 'hover:border-primary border border-gray-200 bg-white text-gray-600'
                 }`}
               >
                 Tất cả
@@ -195,8 +195,8 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                   onClick={() => handleSelectCategory(c.id)}
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
                     activeCategoryId === c.id
-                      ? 'bg-[#00b14f] text-white shadow-xs'
-                      : 'border border-gray-200 bg-white text-gray-600 hover:border-[#00b14f]'
+                      ? 'bg-primary text-white shadow-xs'
+                      : 'hover:border-primary border border-gray-200 bg-white text-gray-600'
                   }`}
                 >
                   {c.name}
@@ -234,7 +234,7 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                           onClick={() => setCurrentPage(i + 1)}
                           className={`h-8 w-8 rounded-lg text-xs font-bold transition ${
                             currentPage === i + 1
-                              ? 'bg-[#00b14f] text-white'
+                              ? 'bg-primary text-white'
                               : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
                           }`}
                         >
@@ -264,7 +264,7 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                       setActiveCategoryId('all');
                       setSelectedTag(null);
                     }}
-                    className="mt-4 rounded-xl bg-[#00b14f] px-4 py-2 text-xs font-bold text-white transition hover:bg-emerald-600"
+                    className="bg-primary mt-4 rounded-xl px-4 py-2 text-xs font-bold text-white transition hover:bg-emerald-600"
                   >
                     Xóa tất cả bộ lọc
                   </button>

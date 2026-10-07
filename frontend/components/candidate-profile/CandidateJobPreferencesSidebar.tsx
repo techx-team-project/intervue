@@ -1,6 +1,6 @@
 'use client';
 
-import { Banknote, Briefcase, Building, Compass, Edit3, MapPin, Sparkles } from 'lucide-react';
+import { Banknote, Briefcase, Building, Compass, Edit3, MapPin } from 'lucide-react';
 import type { JobPreferences } from '@/types/candidate';
 
 interface CandidateJobPreferencesSidebarProps {
@@ -18,17 +18,17 @@ export default function CandidateJobPreferencesSidebar({
     <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs">
       <div className="mb-5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+          <div className="text-primary flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50">
             <Compass className="h-4 w-4" />
           </div>
-          <h2 className="text-[15.5px] font-bold text-[#263a4d]">Kỳ vọng công việc</h2>
+          <h2 className="text-navy text-[15.5px] font-bold">Kỳ vọng công việc</h2>
         </div>
 
         {isOwner && onEdit && (
           <button
             type="button"
             onClick={onEdit}
-            className="flex items-center gap-1 text-[12px] font-semibold text-[#00b14f] hover:underline"
+            className="text-primary flex items-center gap-1 text-[12px] font-semibold hover:underline"
           >
             <Edit3 className="h-3 w-3" />
             Cập nhật
@@ -39,7 +39,7 @@ export default function CandidateJobPreferencesSidebar({
       <div className="space-y-4 text-[13px]">
         {/* Desired Role */}
         <div className="flex items-start gap-3">
-          <Briefcase className="mt-0.5 h-4 w-4 shrink-0 text-[#00b14f]" />
+          <Briefcase className="text-primary mt-0.5 h-4 w-4 shrink-0" />
           <div>
             <div className="text-[11.5px] font-medium text-[#64748b]">Vị trí mong muốn:</div>
             <div className="font-semibold text-[#1e293b]">{preferences.desiredRole}</div>
@@ -48,16 +48,16 @@ export default function CandidateJobPreferencesSidebar({
 
         {/* Expected Salary */}
         <div className="flex items-start gap-3">
-          <Banknote className="mt-0.5 h-4 w-4 shrink-0 text-[#00b14f]" />
+          <Banknote className="text-primary mt-0.5 h-4 w-4 shrink-0" />
           <div>
             <div className="text-[11.5px] font-medium text-[#64748b]">Mức lương kỳ vọng:</div>
-            <div className="font-bold text-[#00b14f]">{preferences.desiredSalary}</div>
+            <div className="text-primary font-bold">{preferences.desiredSalary}</div>
           </div>
         </div>
 
         {/* Work Mode & Type */}
         <div className="flex items-start gap-3">
-          <Building className="mt-0.5 h-4 w-4 shrink-0 text-[#00b14f]" />
+          <Building className="text-primary mt-0.5 h-4 w-4 shrink-0" />
           <div>
             <div className="text-[11.5px] font-medium text-[#64748b]">Hình thức & Cấp bậc:</div>
             <div className="font-semibold text-[#1e293b]">
@@ -68,7 +68,7 @@ export default function CandidateJobPreferencesSidebar({
 
         {/* Locations */}
         <div className="flex items-start gap-3">
-          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#00b14f]" />
+          <MapPin className="text-primary mt-0.5 h-4 w-4 shrink-0" />
           <div>
             <div className="text-[11.5px] font-medium text-[#64748b]">Địa điểm làm việc:</div>
             <div className="flex flex-wrap gap-1.5 pt-1">

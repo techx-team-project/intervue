@@ -74,10 +74,10 @@ export default function BlogCategoryShowcase() {
       <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-[#00b14f]">
+            <span className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
               <Sparkles className="h-4 w-4" />
             </span>
-            <span className="text-xs font-bold tracking-wider text-[#00b14f] uppercase">4 Trụ Cột Tri Thức</span>
+            <span className="text-primary text-xs font-bold tracking-wider uppercase">4 Trụ Cột Tri Thức</span>
           </div>
           <h2 className="mt-1 text-2xl font-bold tracking-tight text-[#0f172a] sm:text-3xl">
             Chuyên mục Cẩm nang Nghề nghiệp
@@ -106,15 +106,13 @@ export default function BlogCategoryShowcase() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-black/5 transition-transform duration-300 group-hover:scale-110">
                   {cat.icon}
                 </div>
-                <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600 transition group-hover:bg-[#00b14f] group-hover:text-white">
+                <span className="group-hover:bg-primary rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600 transition group-hover:text-white">
                   {cat.articleCount} bài viết
                 </span>
               </div>
 
               {/* Title & Description */}
-              <h3 className="mt-5 text-lg font-bold text-[#0f172a] transition group-hover:text-[#00b14f]">
-                {cat.name}
-              </h3>
+              <h3 className="group-hover:text-primary mt-5 text-lg font-bold text-[#0f172a] transition">{cat.name}</h3>
               <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-gray-600">{cat.shortDesc}</p>
 
               {/* Tags */}
@@ -131,7 +129,7 @@ export default function BlogCategoryShowcase() {
             </div>
 
             {/* Bottom Call to Action */}
-            <div className="relative mt-6 flex items-center gap-1 text-xs font-bold text-[#00b14f] transition-all duration-200 group-hover:translate-x-1">
+            <div className="text-primary relative mt-6 flex items-center gap-1 text-xs font-bold transition-all duration-200 group-hover:translate-x-1">
               <span>Khám phá chuyên mục</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </div>

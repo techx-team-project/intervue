@@ -72,7 +72,7 @@ export default function JobStickyNav({ job, onApply }: JobStickyNavProps) {
                 onClick={() => scrollToSection(tab.id)}
                 className={`shrink-0 cursor-pointer rounded-lg px-3.5 py-1.5 text-[13.5px] font-bold transition-all ${
                   isActive
-                    ? 'bg-emerald-50 text-[#00b14f] shadow-2xs'
+                    ? 'text-primary bg-emerald-50 shadow-2xs'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
@@ -93,7 +93,7 @@ export default function JobStickyNav({ job, onApply }: JobStickyNavProps) {
             <button
               type="button"
               onClick={onApply}
-              className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#00b14f] px-4 py-1.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#009643] active:scale-95"
+              className="bg-primary hover:bg-primary-hover flex cursor-pointer items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-bold text-white shadow-xs transition-all active:scale-95"
             >
               <Send className="h-3.5 w-3.5" />
               <span>Ứng tuyển ngay</span>

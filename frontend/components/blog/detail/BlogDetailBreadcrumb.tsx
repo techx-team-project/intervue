@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { BlogArticle } from '@/types/blog';
-import { ChevronRight, Bookmark, Check, Copy } from 'lucide-react';
+import { Bookmark, Check, Copy } from 'lucide-react';
+import Breadcrumb, { BreadcrumbItem } from '@/components/ui/Breadcrumb';
+import Button from '@/components/ui/Button';
 
 interface BlogDetailBreadcrumbProps {
   article: BlogArticle;
@@ -21,62 +22,41 @@ export default function BlogDetailBreadcrumb({ article }: BlogDetailBreadcrumbPr
     }
   };
 
+  const breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Cẩm nang nghề nghiệp', href: '/blog' },
+    { label: article.category, href: `/blog/${article.categorySlug}` },
+    { label: article.title },
+  ];
+
   return (
-    <div className="border-b border-gray-200 bg-white py-4">
+    <div className="border-b border-gray-200 bg-white py-3.5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          {/* Breadcrumb links */}
-          <nav className="flex flex-wrap items-center gap-1.5 text-xs text-[#7f878f]">
-            <Link href="/" className="transition-colors hover:text-[#00b14f]">
-              Trang chủ
-            </Link>
-            <ChevronRight className="h-3 w-3 shrink-0" />
-            <Link href="/blog" className="transition-colors hover:text-[#00b14f]">
-              Cẩm nang nghề nghiệp
-            </Link>
-            <ChevronRight className="h-3 w-3 shrink-0" />
-            <Link
-              href={`/blog/${article.categorySlug}`}
-              className="font-medium text-[#263a4d] transition-colors hover:text-[#00b14f]"
-            >
-              {article.category}
-            </Link>
-            <ChevronRight className="h-3 w-3 shrink-0" />
-            <span className="line-clamp-1 max-w-xs font-semibold text-[#00b14f] sm:max-w-md">{article.title}</span>
-          </nav>
+          <Breadcrumb items={breadcrumbItems} className="text-xs" />
 
           {/* Social share & actions */}
           <div className="flex items-center gap-2">
-            <button
+            <Button
               type="button"
+              variant="secondary"
+              size="sm"
               onClick={handleCopyLink}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-[#526475] transition hover:border-[#00b14f] hover:text-[#00b14f]"
+              leftIcon={copied ? <Check className="text-primary h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              className="text-xs"
             >
-              {copied ? (
-                <>
-                  <Check className="h-3.5 w-3.5 text-[#00b14f]" />
-                  <span className="font-semibold text-[#00b14f]">Đã sao chép link</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3.5 w-3.5" />
-                  <span>Sao chép link</span>
-                </>
-              )}
-            </button>
+              {copied ? 'Đã sao chép link' : 'Sao chép link'}
+            </Button>
 
-            <button
+            <Button
               type="button"
+              variant={bookmarked ? 'outline' : 'secondary'}
+              size="sm"
               onClick={() => setBookmarked(!bookmarked)}
-              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
-                bookmarked
-                  ? 'border-[#00b14f] bg-emerald-50 text-[#00b14f]'
-                  : 'border-gray-200 text-[#526475] hover:border-[#00b14f] hover:text-[#00b14f]'
-              }`}
+              leftIcon={<Bookmark className="h-3.5 w-3.5" />}
+              className="text-xs"
             >
-              <Bookmark className="h-3.5 w-3.5" />
-              <span>{bookmarked ? 'Đã lưu' : 'Lưu bài viết'}</span>
-            </button>
+              {bookmarked ? 'Đã lưu' : 'Lưu bài viết'}
+            </Button>
           </div>
         </div>
       </div>

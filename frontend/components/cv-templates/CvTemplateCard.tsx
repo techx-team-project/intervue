@@ -4,6 +4,7 @@ import React from 'react';
 import { CvTemplateItem } from '@/types/cv-template';
 import CvPaperPreview from './CvPaperPreview';
 import { Eye, Star, ShieldCheck, Sparkles, ArrowRight } from 'lucide-react';
+import Badge from '@/components/ui/Badge';
 
 interface CvTemplateCardProps {
   template: CvTemplateItem;
@@ -13,7 +14,7 @@ interface CvTemplateCardProps {
 
 export default function CvTemplateCard({ template, onPreview, onUseTemplate }: CvTemplateCardProps) {
   return (
-    <div className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#00b14f]/60 hover:shadow-xl">
+    <div className="group hover:border-primary/60 flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div>
         {/* Top Preview Canvas Container */}
         <div className="relative overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-2">
@@ -25,16 +26,16 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
           {/* Top floating badges */}
           <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
             {template.isHot && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-orange-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
+              <Badge variant="warning" size="sm" className="border-transparent bg-orange-500 text-white">
                 <Sparkles className="h-2.5 w-2.5" />
                 Hot
-              </span>
+              </Badge>
             )}
             {template.isAtsOptimized && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#00b14f] px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
+              <Badge variant="success" size="sm" className="bg-primary border-transparent text-white">
                 <ShieldCheck className="h-2.5 w-2.5" />
                 Chuẩn ATS
-              </span>
+              </Badge>
             )}
           </div>
 
@@ -45,14 +46,14 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
               onClick={() => onPreview(template)}
               className="flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-2 text-xs font-bold text-[#171717] shadow-lg transition hover:bg-gray-100"
             >
-              <Eye className="h-3.5 w-3.5 text-[#00b14f]" />
+              <Eye className="text-primary h-3.5 w-3.5" />
               <span>Xem trước</span>
             </button>
 
             <button
               type="button"
               onClick={() => onUseTemplate(template)}
-              className="flex items-center gap-1.5 rounded-xl bg-[#00b14f] px-4 py-2 text-xs font-bold text-white shadow-lg transition hover:bg-[#009b44]"
+              className="bg-primary flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-lg transition hover:bg-[#009b44]"
             >
               <span>Dùng mẫu</span>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -62,14 +63,14 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
 
         {/* Title and Meta */}
         <div className="mt-4">
-          <h3 className="line-clamp-1 text-sm font-bold text-[#171717] transition-colors group-hover:text-[#00b14f]">
+          <h3 className="group-hover:text-primary line-clamp-1 text-sm font-bold text-[#171717] transition-colors">
             {template.title}
           </h3>
 
           <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[#526475]">{template.description}</p>
 
           <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-[11px]">
-            <span className="rounded bg-emerald-50 px-2 py-0.5 font-semibold text-[#00b14f]">{template.style}</span>
+            <span className="text-primary rounded bg-emerald-50 px-2 py-0.5 font-semibold">{template.style}</span>
             {template.languages.map((lang, lIdx) => (
               <span key={lIdx} className="rounded bg-gray-100 px-2 py-0.5 text-gray-600">
                 {lang}
@@ -93,7 +94,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
         <button
           type="button"
           onClick={() => onUseTemplate(template)}
-          className="inline-flex items-center gap-1 text-xs font-bold text-[#00b14f] hover:underline"
+          className="text-primary inline-flex items-center gap-1 text-xs font-bold hover:underline"
         >
           <span>Dùng mẫu</span>
           <ArrowRight className="h-3 w-3" />

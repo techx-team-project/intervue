@@ -14,7 +14,7 @@ export default function CareerSpecializationsGrid({ specializations }: CareerSpe
   return (
     <div className="my-8">
       <div className="mb-6 flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-[#00b14f]">
+        <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
           <Layers className="h-5 w-5" />
         </div>
         <div>
@@ -31,12 +31,12 @@ export default function CareerSpecializationsGrid({ specializations }: CareerSpe
         {specializations.map((spec, idx) => (
           <div
             key={idx}
-            className="flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-5 shadow-xs transition duration-200 hover:border-[#00b14f]/50 hover:shadow-md sm:p-6"
+            className="hover:border-primary/50 flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-5 shadow-xs transition duration-200 hover:shadow-md sm:p-6"
           >
             <div>
               <div className="mb-2 flex items-center justify-between gap-2">
                 <h4 className="text-base font-bold text-[#171717]">{spec.title}</h4>
-                <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-[#00b14f]">
+                <span className="text-primary rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-bold">
                   {spec.avgSalary}
                 </span>
               </div>
@@ -45,16 +45,16 @@ export default function CareerSpecializationsGrid({ specializations }: CareerSpe
 
               {/* Skills */}
               <div className="mb-3">
-                <span className="mb-1.5 block text-[11px] font-bold tracking-wider text-[#263a4d] uppercase">
+                <span className="text-navy mb-1.5 block text-[11px] font-bold tracking-wider uppercase">
                   Kỹ năng cốt lõi:
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {spec.keySkills.map((skill, sIdx) => (
                     <span
                       key={sIdx}
-                      className="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-0.5 text-xs text-[#263a4d]"
+                      className="text-navy inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-0.5 text-xs"
                     >
-                      <Check className="h-3 w-3 text-[#00b14f]" />
+                      <Check className="text-primary h-3 w-3" />
                       {skill}
                     </span>
                   ))}
@@ -63,14 +63,14 @@ export default function CareerSpecializationsGrid({ specializations }: CareerSpe
 
               {/* Tools */}
               <div>
-                <span className="mb-1.5 block text-[11px] font-bold tracking-wider text-[#263a4d] uppercase">
+                <span className="text-navy mb-1.5 block text-[11px] font-bold tracking-wider uppercase">
                   Công cụ thường dùng:
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {spec.tools.map((tool, tIdx) => (
                     <span
                       key={tIdx}
-                      className="rounded-md border border-emerald-200/50 bg-emerald-50/60 px-2 py-0.5 text-[11px] font-medium text-[#00b14f]"
+                      className="text-primary rounded-md border border-emerald-200/50 bg-emerald-50/60 px-2 py-0.5 text-[11px] font-medium"
                     >
                       {tool}
                     </span>

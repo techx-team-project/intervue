@@ -28,19 +28,19 @@ export default function AccountOverviewView() {
       <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-7">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-linear-to-tr from-[#00b14f] to-[#00d660] text-2xl font-black text-white shadow-md shadow-[#00b14f]/25">
+            <div className="from-primary shadow-primary/25 relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-linear-to-tr to-[#00d660] text-2xl font-black text-white shadow-md">
               <span>AL</span>
               <span className="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full bg-white ring-2 ring-white">
-                <CheckCircle2 className="h-4 w-4 text-[#00b14f]" />
+                <CheckCircle2 className="text-primary h-4 w-4" />
               </span>
             </div>
 
             <div>
               <p className="text-[13px] font-medium text-[#64748b]">Chào bạn trở lại,</p>
-              <h1 className="text-xl font-black text-[#263a4d] sm:text-2xl">An Lâm Hoàng</h1>
+              <h1 className="text-navy text-xl font-black sm:text-2xl">An Lâm Hoàng</h1>
               <div className="mt-1 flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11.5px] font-bold text-[#00873c]">
-                  <UserCheck className="h-3.5 w-3.5 text-[#00b14f]" />
+                  <UserCheck className="text-primary h-3.5 w-3.5" />
                   <span>Tài khoản đã xác thực</span>
                 </span>
                 <span className="text-[12px] text-[#94a3b8]">•</span>
@@ -51,7 +51,7 @@ export default function AccountOverviewView() {
 
           <Link
             href="/profile"
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-[#00b14f] bg-white px-5 py-2 text-[13.5px] font-bold text-[#00b14f] shadow-2xs transition-all hover:bg-emerald-50 active:scale-[0.99]"
+            className="border-primary text-primary inline-flex items-center justify-center gap-2 rounded-full border bg-white px-5 py-2 text-[13.5px] font-bold shadow-2xs transition-all hover:bg-emerald-50 active:scale-[0.99]"
           >
             <span>Xem Profile của bạn</span>
             <ArrowRight className="h-4 w-4" />
@@ -67,11 +67,11 @@ export default function AccountOverviewView() {
           {/* Gợi ý việc làm */}
           <div className="flex items-center justify-between border-b border-[#f1f5f9] pb-5">
             <div className="flex items-start gap-3.5">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+              <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
                 <Sparkles className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-[15px] font-bold text-[#263a4d]">Gợi ý việc làm</h3>
+                <h3 className="text-navy text-[15px] font-bold">Gợi ý việc làm</h3>
                 <p className="mt-0.5 text-[13px] text-[#64748b]">
                   Nhận các công việc phù hợp với kỹ năng và mức lương kỳ vọng của bạn qua thông báo.
                 </p>
@@ -85,8 +85,8 @@ export default function AccountOverviewView() {
                 onChange={(e) => setIsJobRecommendation(e.target.checked)}
                 className="peer sr-only"
               />
-              <div className="peer h-6 w-11 rounded-full bg-[#cbd5e1] peer-checked:bg-[#00b14f] peer-focus:outline-none after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full" />
-              <span className="ml-3 hidden text-[13px] font-semibold text-[#263a4d] sm:inline">
+              <div className="peer peer-checked:bg-primary h-6 w-11 rounded-full bg-[#cbd5e1] peer-focus:outline-none after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full" />
+              <span className="text-navy ml-3 hidden text-[13px] font-semibold sm:inline">
                 {isJobRecommendation ? 'Bật gợi ý' : 'Tắt gợi ý'}
               </span>
             </label>
@@ -98,14 +98,14 @@ export default function AccountOverviewView() {
               <div className="flex items-start gap-3.5">
                 <div
                   className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${
-                    isJobSeeking ? 'bg-emerald-50 text-[#00b14f]' : 'bg-gray-100 text-[#64748b]'
+                    isJobSeeking ? 'text-primary bg-emerald-50' : 'bg-gray-100 text-[#64748b]'
                   }`}
                 >
                   <Briefcase className="h-5 w-5" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-[15px] font-bold text-[#263a4d]">Trạng thái tìm việc</h3>
+                    <h3 className="text-navy text-[15px] font-bold">Trạng thái tìm việc</h3>
                     <span
                       className={`rounded-full px-2.5 py-0.5 text-[11.5px] font-bold ${
                         isJobSeeking ? 'bg-emerald-100 text-[#00873c]' : 'bg-gray-100 text-[#64748b]'
@@ -127,23 +127,23 @@ export default function AccountOverviewView() {
                   onChange={(e) => setIsJobSeeking(e.target.checked)}
                   className="peer sr-only"
                 />
-                <div className="peer h-6 w-11 rounded-full bg-[#cbd5e1] peer-checked:bg-[#00b14f] peer-focus:outline-none after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full" />
+                <div className="peer peer-checked:bg-primary h-6 w-11 rounded-full bg-[#cbd5e1] peer-focus:outline-none after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full" />
               </label>
             </div>
 
             {/* Hộp giải thích chi tiết khi bật tìm việc */}
-            <div className="mt-4 rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 text-[13px] leading-relaxed text-[#263a4d]">
+            <div className="text-navy mt-4 rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 text-[13px] leading-relaxed">
               <div className="font-bold text-[#00873c]">Khi bật tìm việc:</div>
               <ul className="mt-2 space-y-1.5 text-[#475569]">
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-[#00b14f]">•</span>
+                  <span className="text-primary font-bold">•</span>
                   <span>
                     Nhà tuyển dụng (NTD) có thể tìm thấy và mang đến cho bạn những cơ hội hấp dẫn (Xem thêm tại phần{' '}
                     <strong>Cho phép NTD tìm kiếm bên dưới</strong>).
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-[#00b14f]">•</span>
+                  <span className="text-primary font-bold">•</span>
                   <span>Hồ sơ của bạn sẽ hiển thị nổi bật trên kết quả tìm kiếm của Nhà tuyển dụng.</span>
                 </li>
               </ul>
@@ -162,11 +162,11 @@ export default function AccountOverviewView() {
               <Search className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-[16px] font-bold text-[#263a4d]">Cho phép NTD tìm kiếm hồ sơ</h2>
+              <h2 className="text-navy text-[16px] font-bold">Cho phép NTD tìm kiếm hồ sơ</h2>
               <p className="mt-1 text-[13px] text-[#64748b]">
                 Khi bạn cho phép Nhà tuyển dụng (NTD) tìm kiếm hồ sơ, các NTD uy tín có thể tiếp cận thông tin kinh
                 nghiệm làm việc, học vấn, kỹ năng... trên CV của bạn.{' '}
-                <Link href="/profile" className="font-semibold text-[#00b14f] hover:underline">
+                <Link href="/profile" className="text-primary font-semibold hover:underline">
                   Tìm hiểu thêm
                 </Link>
               </p>
@@ -180,7 +180,7 @@ export default function AccountOverviewView() {
               onChange={(e) => setAllowRecruiterSearch(e.target.checked)}
               className="peer sr-only"
             />
-            <div className="peer h-6 w-11 rounded-full bg-[#cbd5e1] peer-checked:bg-[#00b14f] peer-focus:outline-none after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full" />
+            <div className="peer peer-checked:bg-primary h-6 w-11 rounded-full bg-[#cbd5e1] peer-focus:outline-none after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full" />
           </label>
         </div>
 
@@ -190,7 +190,7 @@ export default function AccountOverviewView() {
             <div className="flex items-start gap-3">
               <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
               <div>
-                <p className="text-[13.5px] font-bold text-[#263a4d]">Bạn chưa có CV nào trên hệ thống</p>
+                <p className="text-navy text-[13.5px] font-bold">Bạn chưa có CV nào trên hệ thống</p>
                 <p className="mt-0.5 text-[12.5px] text-[#64748b]">
                   Tạo CV ngay để bắt đầu nhận lời mời kết nối từ các Nhà tuyển dụng uy tín.
                 </p>
@@ -199,7 +199,7 @@ export default function AccountOverviewView() {
 
             <Link
               href="/profile"
-              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#00b14f] px-5 py-2 text-[13px] font-bold text-white shadow-xs transition-colors hover:bg-[#009643]"
+              className="bg-primary hover:bg-primary-hover inline-flex shrink-0 items-center gap-2 rounded-full px-5 py-2 text-[13px] font-bold text-white shadow-xs transition-colors"
             >
               <FilePlus className="h-4 w-4" />
               <span>Tạo CV ngay</span>
@@ -215,8 +215,8 @@ export default function AccountOverviewView() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-xl">
             <div className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-[#00b14f]" />
-              <h2 className="text-[16px] font-bold text-[#263a4d]">
+              <TrendingUp className="text-primary h-5 w-5" />
+              <h2 className="text-navy text-[16px] font-bold">
                 CV của bạn đã đủ tốt? Bao nhiêu NTD đang quan tâm tới Hồ sơ của bạn?
               </h2>
             </div>
@@ -228,7 +228,7 @@ export default function AccountOverviewView() {
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <Link
                 href="/profile"
-                className="inline-flex items-center gap-1.5 text-[13px] font-bold text-[#00b14f] hover:underline"
+                className="text-primary inline-flex items-center gap-1.5 text-[13px] font-bold hover:underline"
               >
                 <span>Tối ưu hóa điểm chuẩn ATS</span>
                 <ChevronRight className="h-3.5 w-3.5" />
@@ -236,7 +236,7 @@ export default function AccountOverviewView() {
               <span className="text-[#cbd5e1]">•</span>
               <Link
                 href="/profile"
-                className="inline-flex items-center gap-1.5 text-[13px] font-bold text-[#00b14f] hover:underline"
+                className="text-primary inline-flex items-center gap-1.5 text-[13px] font-bold hover:underline"
               >
                 <span>Luyện phỏng vấn giả lập AI (STAR)</span>
                 <ChevronRight className="h-3.5 w-3.5" />
@@ -248,7 +248,7 @@ export default function AccountOverviewView() {
           <div className="flex items-center justify-center rounded-2xl border border-[#e2e8f0] bg-[#f8fafc] p-6 text-center lg:min-w-50">
             <div>
               <div className="flex items-baseline justify-center gap-1.5">
-                <span className="text-4xl font-black text-[#263a4d] sm:text-5xl">0</span>
+                <span className="text-navy text-4xl font-black sm:text-5xl">0</span>
                 <span className="text-base font-bold text-[#64748b]">lượt</span>
               </div>
               <p className="mt-1 text-[12px] font-medium text-[#94a3b8]">Lượt xem trong 30 ngày qua</p>

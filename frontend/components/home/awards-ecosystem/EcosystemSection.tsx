@@ -5,7 +5,7 @@ export default function EcosystemSection() {
   return (
     <section id="intervue-ecosystem" className="container-topcv">
       <div className="mb-8 text-center">
-        <h2 className="text-2xl font-bold text-[#263a4d] md:text-3xl">Hệ sinh thái công nghệ nhân sự của InterVue</h2>
+        <h2 className="text-navy text-2xl font-bold md:text-3xl">Hệ sinh thái công nghệ nhân sự của InterVue</h2>
         <p className="mt-1 text-[14.5px] text-[#6f7882]">
           Giải pháp toàn diện từ tuyển dụng, đánh giá năng lực đến quản trị và trải nghiệm nhân viên
         </p>
@@ -15,20 +15,20 @@ export default function EcosystemSection() {
         {/* InterVue */}
         <Link
           href="/"
-          className="group flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:border-[#00b14f] hover:shadow-lg"
+          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:shadow-lg"
         >
           <div>
             <div className="mb-4 flex h-10 items-center">
               <img src="/intervue-logo.png" alt="InterVue.vn" className="h-8 w-auto object-contain" />
             </div>
-            <h3 className="mb-2 text-base font-bold text-[#263a4d] transition-colors group-hover:text-[#00b14f]">
+            <h3 className="text-navy group-hover:text-primary mb-2 text-base font-bold transition-colors">
               InterVue.vn
             </h3>
             <p className="text-[13px] leading-relaxed text-[#6f7882]">
               Nền tảng công nghệ tuyển dụng thông minh hàng đầu Việt Nam, kết nối ứng viên và nhà tuyển dụng hiệu quả.
             </p>
           </div>
-          <div className="mt-4 flex items-center gap-1 border-t border-[#f4f5f5] pt-3 text-[13px] font-semibold text-[#00b14f]">
+          <div className="text-primary mt-4 flex items-center gap-1 border-t border-[#f4f5f5] pt-3 text-[13px] font-semibold">
             Khám phá <ArrowRight className="h-3.5 w-3.5" />
           </div>
         </Link>
@@ -38,7 +38,7 @@ export default function EcosystemSection() {
           href="https://happytime.vn/"
           target="_blank"
           rel="noreferrer"
-          className="group flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:border-[#00b14f] hover:shadow-lg"
+          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:shadow-lg"
         >
           <div>
             <div className="mb-4 flex h-10 items-center">
@@ -48,14 +48,14 @@ export default function EcosystemSection() {
                 className="h-8 w-auto object-contain"
               />
             </div>
-            <h3 className="mb-2 text-base font-bold text-[#263a4d] transition-colors group-hover:text-[#00b14f]">
+            <h3 className="text-navy group-hover:text-primary mb-2 text-base font-bold transition-colors">
               HappyTime.vn
             </h3>
             <p className="text-[13px] leading-relaxed text-[#6f7882]">
               Nền tảng quản lý chấm công online & gia tăng trải nghiệm nhân viên, giải thưởng Sao Khuê 2022.
             </p>
           </div>
-          <div className="mt-4 flex items-center gap-1 border-t border-[#f4f5f5] pt-3 text-[13px] font-semibold text-[#00b14f]">
+          <div className="text-primary mt-4 flex items-center gap-1 border-t border-[#f4f5f5] pt-3 text-[13px] font-semibold">
             Khám phá <ArrowRight className="h-3.5 w-3.5" />
           </div>
         </a>
@@ -65,7 +65,7 @@ export default function EcosystemSection() {
           href="https://www.testcenter.vn/"
           target="_blank"
           rel="noreferrer"
-          className="group flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:border-[#00b14f] hover:shadow-lg"
+          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:shadow-lg"
         >
           <div>
             <div className="mb-4 flex h-10 items-center">
@@ -75,14 +75,14 @@ export default function EcosystemSection() {
                 className="h-8 w-auto object-contain"
               />
             </div>
-            <h3 className="mb-2 text-base font-bold text-[#263a4d] transition-colors group-hover:text-[#00b14f]">
+            <h3 className="text-navy group-hover:text-primary mb-2 text-base font-bold transition-colors">
               TestCenter.vn
             </h3>
             <p className="text-[13px] leading-relaxed text-[#6f7882]">
               Nền tảng thiết lập đề thi và đánh giá năng lực nhân sự toàn diện hàng đầu cho doanh nghiệp.
             </p>
           </div>
-          <div className="mt-4 flex items-center gap-1 border-t border-[#f4f5f5] pt-3 text-[13px] font-semibold text-[#00b14f]">
+          <div className="text-primary mt-4 flex items-center gap-1 border-t border-[#f4f5f5] pt-3 text-[13px] font-semibold">
             Khám phá <ArrowRight className="h-3.5 w-3.5" />
           </div>
         </a>
@@ -92,7 +92,7 @@ export default function EcosystemSection() {
           href="https://www.shiring.ai/"
           target="_blank"
           rel="noreferrer"
-          className="group flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:border-[#00b14f] hover:shadow-lg"
+          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:shadow-lg"
         >
           <div>
             <div className="mb-4 flex h-10 items-center">
@@ -102,14 +102,14 @@ export default function EcosystemSection() {
                 className="h-8 w-auto object-contain"
               />
             </div>
-            <h3 className="mb-2 text-base font-bold text-[#263a4d] transition-colors group-hover:text-[#00b14f]">
+            <h3 className="text-navy group-hover:text-primary mb-2 text-base font-bold transition-colors">
               SHiring.ai
             </h3>
             <p className="text-[13px] leading-relaxed text-[#6f7882]">
               Hệ thống quản trị tuyển dụng tinh gọn (ATS) ứng dụng AI hàng đầu giúp tối ưu 50% thời gian tuyển dụng.
             </p>
           </div>
-          <div className="mt-4 flex items-center gap-1 border-t border-[#f4f5f5] pt-3 text-[13px] font-semibold text-[#00b14f]">
+          <div className="text-primary mt-4 flex items-center gap-1 border-t border-[#f4f5f5] pt-3 text-[13px] font-semibold">
             Khám phá <ArrowRight className="h-3.5 w-3.5" />
           </div>
         </a>

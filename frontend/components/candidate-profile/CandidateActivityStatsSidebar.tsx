@@ -34,10 +34,10 @@ export default function CandidateActivityStatsSidebar({
       <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+            <div className="text-primary flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50">
               <MessageSquare className="h-4 w-4" />
             </div>
-            <h2 className="text-[15.5px] font-bold text-[#263a4d]">Kết nối & Tuyển dụng</h2>
+            <h2 className="text-navy text-[15.5px] font-bold">Kết nối & Tuyển dụng</h2>
           </div>
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-[#00873c]">
             <Sparkles className="h-3 w-3" /> Đang sẵn sàng
@@ -52,7 +52,7 @@ export default function CandidateActivityStatsSidebar({
           <button
             type="button"
             onClick={onContact || (() => alert(`Đã mở hộp thoại gửi tin nhắn tuyển dụng tới ${candidateName}!`))}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#00b14f] py-2.5 text-[13px] font-bold text-white shadow-xs transition-all hover:bg-[#009643]"
+            className="bg-primary hover:bg-primary-hover flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white shadow-xs transition-all"
           >
             <Send className="h-4 w-4" />
             <span>Gửi lời mời phỏng vấn ngay</span>
@@ -61,7 +61,7 @@ export default function CandidateActivityStatsSidebar({
           <button
             type="button"
             onClick={onBookmark || (() => alert(`Đã lưu hồ sơ của ${candidateName} vào danh sách theo dõi!`))}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] py-2 text-[13px] font-semibold text-[#263a4d] transition-all hover:border-[#00b14f] hover:bg-white hover:text-[#00b14f]"
+            className="text-navy hover:border-primary hover:text-primary flex w-full items-center justify-center gap-2 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] py-2 text-[13px] font-semibold transition-all hover:bg-white"
           >
             <Bookmark className="h-4 w-4" />
             <span>Lưu hồ sơ theo dõi</span>
@@ -69,7 +69,7 @@ export default function CandidateActivityStatsSidebar({
         </div>
 
         <div className="mt-4 flex items-center gap-1.5 border-t border-[#f1f5f9] pt-3 text-[11.5px] text-[#64748b]">
-          <Clock className="h-3.5 w-3.5 text-[#00b14f]" />
+          <Clock className="text-primary h-3.5 w-3.5" />
           <span>
             Ứng viên phản hồi trong vòng <strong>2 giờ</strong> làm việc
           </span>
@@ -82,12 +82,12 @@ export default function CandidateActivityStatsSidebar({
     <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+          <div className="text-primary flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50">
             <Activity className="h-4 w-4" />
           </div>
-          <h2 className="text-[15.5px] font-bold text-[#263a4d]">Hoạt động tuần này</h2>
+          <h2 className="text-navy text-[15.5px] font-bold">Hoạt động tuần này</h2>
         </div>
-        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#00b14f]">
+        <span className="text-primary inline-flex items-center gap-1 text-[11px] font-bold">
           <TrendingUp className="h-3 w-3" /> +28%
         </span>
       </div>
@@ -95,7 +95,7 @@ export default function CandidateActivityStatsSidebar({
       <div className="grid grid-cols-2 gap-3 text-center">
         {/* Metric 1 */}
         <div className="rounded-2xl border border-[#f1f5f9] bg-[#f8fafc] p-3.5">
-          <div className="flex items-center justify-center text-[#00b14f]">
+          <div className="text-primary flex items-center justify-center">
             <Eye className="h-4 w-4" />
           </div>
           <div className="mt-1 text-xl font-black text-[#1e293b]">{stats.profileViewsThisWeek}</div>
