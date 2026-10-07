@@ -72,14 +72,12 @@ export default function BlogCategoryTabs({ currentCategorySlug }: BlogCategoryTa
                 href={tab.href}
                 className={`group flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 sm:text-sm ${
                   isActive
-                    ? 'bg-[#00b14f] text-white shadow-md shadow-emerald-500/20'
+                    ? 'bg-primary text-white shadow-md shadow-emerald-500/20'
                     : 'bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:text-[#0f172a]'
                 }`}
               >
                 <span
-                  className={`transition-colors ${
-                    isActive ? 'text-white' : 'text-[#64748b] group-hover:text-[#00b14f]'
-                  }`}
+                  className={`transition-colors ${isActive ? 'text-white' : 'group-hover:text-primary text-[#64748b]'}`}
                 >
                   {tab.icon}
                 </span>

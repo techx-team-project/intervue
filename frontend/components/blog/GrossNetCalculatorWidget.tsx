@@ -74,7 +74,7 @@ export default function GrossNetCalculatorWidget() {
       <div className="bg-linear-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] p-6 text-white sm:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-[#00b14f] ring-1 ring-emerald-500/40">
+            <div className="text-primary flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 ring-1 ring-emerald-500/40">
               <Calculator className="h-6 w-6" />
             </div>
             <div>
@@ -96,9 +96,7 @@ export default function GrossNetCalculatorWidget() {
               type="button"
               onClick={() => setCalculationMode('grossToNet')}
               className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold transition ${
-                calculationMode === 'grossToNet'
-                  ? 'bg-[#00b14f] text-white shadow-md'
-                  : 'text-gray-300 hover:text-white'
+                calculationMode === 'grossToNet' ? 'bg-primary text-white shadow-md' : 'text-gray-300 hover:text-white'
               }`}
             >
               <ArrowRightLeft className="h-3.5 w-3.5" />
@@ -108,9 +106,7 @@ export default function GrossNetCalculatorWidget() {
               type="button"
               onClick={() => setCalculationMode('netToGross')}
               className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold transition ${
-                calculationMode === 'netToGross'
-                  ? 'bg-[#00b14f] text-white shadow-md'
-                  : 'text-gray-300 hover:text-white'
+                calculationMode === 'netToGross' ? 'bg-primary text-white shadow-md' : 'text-gray-300 hover:text-white'
               }`}
             >
               <ArrowRightLeft className="h-3.5 w-3.5" />
@@ -136,7 +132,7 @@ export default function GrossNetCalculatorWidget() {
                 value={numericSalary ? new Intl.NumberFormat('vi-VN').format(numericSalary) : ''}
                 onChange={handleSalaryChange}
                 placeholder="Ví dụ: 25.000.000"
-                className="w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-3.5 pr-14 text-lg font-bold text-[#0f172a] transition focus:border-[#00b14f] focus:ring-4 focus:ring-emerald-500/10 focus:outline-none"
+                className="focus:border-primary w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-3.5 pr-14 text-lg font-bold text-[#0f172a] transition focus:ring-4 focus:ring-emerald-500/10 focus:outline-none"
               />
               <span className="absolute top-1/2 right-4 -translate-y-1/2 text-sm font-bold text-gray-400">VNĐ</span>
             </div>
@@ -151,7 +147,7 @@ export default function GrossNetCalculatorWidget() {
                   onClick={() => handleQuickSalary(amount)}
                   className={`rounded-lg px-2.5 py-1 font-medium transition ${
                     numericSalary === amount
-                      ? 'bg-emerald-100 font-semibold text-[#00b14f]'
+                      ? 'text-primary bg-emerald-100 font-semibold'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
@@ -170,7 +166,7 @@ export default function GrossNetCalculatorWidget() {
               <select
                 value={dependents}
                 onChange={(e) => setDependents(parseInt(e.target.value, 10))}
-                className="w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-3.5 text-base font-semibold text-[#0f172a] transition focus:border-[#00b14f] focus:ring-4 focus:ring-emerald-500/10 focus:outline-none"
+                className="focus:border-primary w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-3.5 text-base font-semibold text-[#0f172a] transition focus:ring-4 focus:ring-emerald-500/10 focus:outline-none"
               >
                 <option value={0}>0 người (0 đ)</option>
                 <option value={1}>1 người (4.4 triệu)</option>
@@ -191,7 +187,7 @@ export default function GrossNetCalculatorWidget() {
             <select
               value={region}
               onChange={(e) => setRegion(parseInt(e.target.value, 10))}
-              className="w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-3.5 text-base font-semibold text-[#0f172a] transition focus:border-[#00b14f] focus:ring-4 focus:ring-emerald-500/10 focus:outline-none"
+              className="focus:border-primary w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-3.5 text-base font-semibold text-[#0f172a] transition focus:ring-4 focus:ring-emerald-500/10 focus:outline-none"
             >
               <option value={1}>Vùng I (Hà Nội, TP.HCM, ĐN...)</option>
               <option value={2}>Vùng II (Đô thị loại 2)</option>
@@ -208,11 +204,11 @@ export default function GrossNetCalculatorWidget() {
           <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-500/30 bg-emerald-50/50 p-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold tracking-wider text-emerald-800 uppercase">Lương Net thực nhận</span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#00b14f] text-white">
+              <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-xl text-white">
                 <Coins className="h-4 w-4" />
               </div>
             </div>
-            <div className="mt-2 text-2xl font-black text-[#00b14f] sm:text-3xl">
+            <div className="text-primary mt-2 text-2xl font-black sm:text-3xl">
               {formatCurrencyVND(result.netSalary)}
             </div>
             <p className="mt-1 text-xs text-emerald-700">Số tiền đổ về tài khoản ngân hàng</p>
@@ -349,7 +345,7 @@ export default function GrossNetCalculatorWidget() {
             {/* 7. Lương Net thực nhận */}
             <div className="flex items-center justify-between bg-emerald-500/10 px-6 py-4">
               <span className="text-base font-bold text-emerald-950">7. LƯƠNG NET THỰC NHẬN</span>
-              <span className="text-xl font-black text-[#00b14f]">{formatCurrencyVND(result.netSalary)}</span>
+              <span className="text-primary text-xl font-black">{formatCurrencyVND(result.netSalary)}</span>
             </div>
 
             {/* 8. Chi phí doanh nghiệp phải trả */}
@@ -378,7 +374,7 @@ export default function GrossNetCalculatorWidget() {
             className="flex w-full items-center justify-between rounded-2xl border border-gray-200 bg-gray-50/50 px-5 py-3.5 text-left text-xs font-semibold text-[#475569] transition hover:bg-gray-100"
           >
             <span className="flex items-center gap-2">
-              <Info className="h-4 w-4 text-[#00b14f]" />
+              <Info className="text-primary h-4 w-4" />
               Tìm hiểu căn cứ pháp lý & quy định tính lương năm 2026
             </span>
             {showFormulaDetails ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -387,21 +383,21 @@ export default function GrossNetCalculatorWidget() {
           {showFormulaDetails && (
             <div className="mt-3 space-y-3 rounded-2xl border border-emerald-100 bg-emerald-50/30 p-5 text-xs text-[#334155]">
               <div className="flex items-start gap-2">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-[#00b14f]" />
+                <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
                 <p>
                   <strong>Mức lương cơ sở & Trần bảo hiểm:</strong> Mức đóng BHXH và BHYT tối đa bằng 20 lần mức lương
                   cơ sở (hiện hành 2.340.000đ x 20 = 46.800.000đ/tháng).
                 </p>
               </div>
               <div className="flex items-start gap-2">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-[#00b14f]" />
+                <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
                 <p>
                   <strong>Trần Bảo hiểm thất nghiệp (BHTN):</strong> Tối đa bằng 20 lần mức lương tối thiểu vùng (Vùng 1
                   tối đa 99.200.000đ/tháng).
                 </p>
               </div>
               <div className="flex items-start gap-2">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-[#00b14f]" />
+                <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
                 <p>
                   <strong>Mức giảm trừ gia cảnh:</strong> Người nộp thuế được giảm trừ 11.000.000đ/tháng cho bản thân và
                   4.400.000đ/tháng cho mỗi người phụ thuộc có đăng ký MST người phụ thuộc hợp lệ.

@@ -98,7 +98,7 @@ export default function BlogHeroSearch({
               </span>
             ) : (
               <>
-                Phát triển sự nghiệp cùng <span className="text-[#00b14f]">InterVue</span>
+                Phát triển sự nghiệp cùng <span className="text-primary">InterVue</span>
               </>
             )}
           </h1>
@@ -123,7 +123,7 @@ export default function BlogHeroSearch({
                     ? `Tìm kiếm bài viết trong "${categoryMeta.name}"...`
                     : 'Tìm kiếm bí quyết viết CV, tính lương, câu hỏi phỏng vấn, ngành nghề...'
                 }
-                className="w-full rounded-2xl border-2 border-white/15 bg-white/10 py-4 pr-12 pl-12 text-sm text-white placeholder-gray-400 backdrop-blur-md transition focus:border-[#00b14f] focus:bg-white/20 focus:outline-none sm:text-base"
+                className="focus:border-primary w-full rounded-2xl border-2 border-white/15 bg-white/10 py-4 pr-12 pl-12 text-sm text-white placeholder-gray-400 backdrop-blur-md transition focus:bg-white/20 focus:outline-none sm:text-base"
               />
               {searchQuery && (
                 <button
@@ -151,7 +151,7 @@ export default function BlogHeroSearch({
                     onClick={() => onSelectTag(isSelected ? null : tag)}
                     className={`rounded-full px-3 py-1 font-medium transition ${
                       isSelected
-                        ? 'bg-[#00b14f] text-white shadow-sm'
+                        ? 'bg-primary text-white shadow-sm'
                         : 'bg-white/10 text-gray-300 ring-1 ring-white/10 hover:bg-white/20 hover:text-white'
                     }`}
                   >

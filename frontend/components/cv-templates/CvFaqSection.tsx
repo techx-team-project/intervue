@@ -15,7 +15,7 @@ export default function CvFaqSection() {
     <section className="border-t border-gray-200 bg-white py-14">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
-          <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-semibold text-[#00b14f]">
+          <div className="text-primary mb-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-semibold">
             <HelpCircle className="h-3.5 w-3.5" />
             <span>Giải Đáp Thắc Mắc</span>
           </div>
@@ -30,12 +30,12 @@ export default function CvFaqSection() {
             return (
               <div
                 key={idx}
-                className="overflow-hidden rounded-2xl border border-gray-200 bg-white transition duration-200 hover:border-[#00b14f]/50"
+                className="hover:border-primary/50 overflow-hidden rounded-2xl border border-gray-200 bg-white transition duration-200"
               >
                 <button
                   type="button"
                   onClick={() => toggleFaq(idx)}
-                  className="flex w-full items-center justify-between p-5 text-left text-sm font-bold text-[#171717] transition hover:text-[#00b14f] sm:text-base"
+                  className="hover:text-primary flex w-full items-center justify-between p-5 text-left text-sm font-bold text-[#171717] transition sm:text-base"
                 >
                   <span className="pr-4">{faq.question}</span>
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-600">

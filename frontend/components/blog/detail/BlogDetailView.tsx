@@ -31,11 +31,11 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <Link
                 href={`/blog/${article.categorySlug}`}
-                className="rounded-full bg-[#00b14f] px-3.5 py-1 text-xs font-bold text-white shadow-xs transition hover:bg-emerald-600"
+                className="bg-primary rounded-full px-3.5 py-1 text-xs font-bold text-white shadow-xs transition hover:bg-emerald-600"
               >
                 {article.category}
               </Link>
-              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-[#00b14f]">
+              <span className="text-primary inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold">
                 <Sparkles className="h-3 w-3" />
                 Cập nhật chuẩn 2026
               </span>
@@ -55,7 +55,7 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
                   alt={article.author.name}
                   className="h-7 w-7 rounded-full object-cover ring-2 ring-emerald-50"
                 />
-                <span className="font-semibold text-[#263a4d]">{article.author.name}</span>
+                <span className="text-navy font-semibold">{article.author.name}</span>
               </div>
               <span>•</span>
               <span className="flex items-center gap-1">
@@ -75,7 +75,7 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
             </div>
 
             {/* Excerpt */}
-            <p className="mt-5 rounded-2xl border-l-4 border-[#00b14f] bg-gray-50/70 p-4 text-sm leading-relaxed text-[#526475] italic sm:text-base">
+            <p className="border-primary mt-5 rounded-2xl border-l-4 bg-gray-50/70 p-4 text-sm leading-relaxed text-[#526475] italic sm:text-base">
               &ldquo;{article.excerpt}&rdquo;
             </p>
           </div>
@@ -98,7 +98,7 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
                   {section.title}
                 </h2>
 
-                {section.leadText && <p className="leading-relaxed font-medium text-[#263a4d]">{section.leadText}</p>}
+                {section.leadText && <p className="text-navy leading-relaxed font-medium">{section.leadText}</p>}
 
                 <div className="space-y-3.5 text-sm leading-relaxed text-[#374151]">
                   {section.paragraphs.map((p, pIdx) => (
@@ -108,12 +108,12 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
 
                 {/* Highlights Callout Box */}
                 {section.highlights && section.highlights.length > 0 && (
-                  <div className="rounded-2xl border border-emerald-100 bg-[#f2fbf6] p-4 text-xs text-[#263a4d] sm:text-sm">
-                    <div className="mb-2 font-bold text-[#00b14f]">Điểm cốt lõi cần nhớ:</div>
+                  <div className="bg-primary-light text-navy rounded-2xl border border-emerald-100 p-4 text-xs sm:text-sm">
+                    <div className="text-primary mb-2 font-bold">Điểm cốt lõi cần nhớ:</div>
                     <ul className="space-y-1.5">
                       {section.highlights.map((h, hIdx) => (
                         <li key={hIdx} className="flex items-start gap-2">
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#00b14f]" />
+                          <CheckCircle2 className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                           <span>{h}</span>
                         </li>
                       ))}
@@ -162,15 +162,13 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
 
             {/* Tags Box */}
             <div className="border-t border-gray-100 pt-6">
-              <span className="mb-3 block text-xs font-bold tracking-wider text-[#263a4d] uppercase">
-                Chủ đề liên quan:
-              </span>
+              <span className="text-navy mb-3 block text-xs font-bold tracking-wider uppercase">Chủ đề liên quan:</span>
               <div className="flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
                   <Link
                     key={tag}
                     href={`/blog/${article.categorySlug}?tag=${encodeURIComponent(tag)}`}
-                    className="rounded-lg bg-gray-100 px-3 py-1 text-xs font-medium text-[#526475] transition hover:bg-[#f2fbf6] hover:text-[#00b14f]"
+                    className="hover:bg-primary-light hover:text-primary rounded-lg bg-gray-100 px-3 py-1 text-xs font-medium text-[#526475] transition"
                   >
                     #{tag}
                   </Link>

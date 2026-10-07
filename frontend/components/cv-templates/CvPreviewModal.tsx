@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { CvTemplateItem } from '@/types/cv-template';
 import CvPaperPreview from './CvPaperPreview';
+import Badge from '@/components/ui/Badge';
 import { X, ShieldCheck, Star, Download, ArrowRight, ZoomIn, ZoomOut, Maximize2, FileCheck } from 'lucide-react';
 
 interface CvPreviewModalProps {
@@ -16,6 +17,29 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const [isDownloaded, setIsDownloaded] = useState<boolean>(false);
 
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, handleKeyDown]);
+
   if (!isOpen || !template) return null;
 
   const handleDownloadMock = () => {
@@ -24,12 +48,20 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
   };
 
   return (
-    <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm duration-200 sm:p-6">
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm duration-200 sm:p-6"
+    >
       <div className="relative flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl lg:flex-row">
         {/* Close Button Top Right */}
         <button
           type="button"
           onClick={onClose}
+          aria-label="Đóng xem trước"
           className="absolute top-4 right-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition hover:bg-gray-200 hover:text-black"
         >
           <X className="h-5 w-5" />
@@ -41,9 +73,9 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
           <div className="flex items-center justify-between border-b border-gray-200 bg-white/80 px-6 py-3 text-xs text-[#526475]">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-[#171717]">{template.title}</span>
-              <span className="rounded bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-[#00b14f]">
+              <Badge variant="success" size="sm">
                 {template.style}
-              </span>
+              </Badge>
             </div>
 
             <div className="flex items-center gap-2">
@@ -106,10 +138,10 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
             <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-5 w-5 text-[#00b14f]" />
+                  <ShieldCheck className="text-primary h-5 w-5" />
                   <span className="text-xs font-bold text-[#171717]">Đánh giá chuẩn ATS</span>
                 </div>
-                <span className="text-sm font-black text-[#00b14f]">98 / 100</span>
+                <span className="text-primary text-sm font-black">98 / 100</span>
               </div>
               <p className="mt-2 text-[11px] leading-relaxed text-[#065f46]">
                 Mẫu CV này được định dạng phân cấp tiêu đề chuẩn, tỷ lệ khoảng trắng cân đối, tối ưu trích xuất dữ liệu
@@ -119,12 +151,12 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
 
             {/* Recommended for */}
             <div>
-              <label className="mb-2 block text-xs font-bold tracking-wider text-[#263a4d] uppercase">
+              <label className="text-navy mb-2 block text-xs font-bold tracking-wider uppercase">
                 Phù hợp nhất với:
               </label>
               <div className="flex flex-wrap gap-1.5">
                 {template.recommendedFor.map((rec, idx) => (
-                  <span key={idx} className="rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-medium text-[#263a4d]">
+                  <span key={idx} className="text-navy rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-medium">
                     {rec}
                   </span>
                 ))}
@@ -136,7 +168,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
           <div className="mt-6 space-y-3 border-t border-gray-100 pt-6">
             <Link
               href="/candidate/profile"
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#00b14f] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#00b14f]/25 transition hover:bg-[#009b44]"
+              className="bg-primary shadow-primary/25 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-[#009b44]"
             >
               <span>Dùng mẫu này để tạo CV</span>
               <ArrowRight className="h-4 w-4" />
@@ -145,12 +177,12 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
             <button
               type="button"
               onClick={handleDownloadMock}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white py-3 text-xs font-bold text-[#263a4d] transition hover:bg-gray-50"
+              className="text-navy flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white py-3 text-xs font-bold transition hover:bg-gray-50"
             >
               {isDownloaded ? (
                 <>
-                  <FileCheck className="h-4 w-4 text-[#00b14f]" />
-                  <span className="text-[#00b14f]">Đã tải file PDF mẫu thành công!</span>
+                  <FileCheck className="text-primary h-4 w-4" />
+                  <span className="text-primary">Đã tải file PDF mẫu thành công!</span>
                 </>
               ) : (
                 <>
