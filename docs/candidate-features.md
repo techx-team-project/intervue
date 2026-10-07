@@ -1,8 +1,21 @@
 # InterVue — Đặc tả chức năng: Ứng viên (Candidate)
 
-**Phiên bản 1.0 · 06/10/2026**
+**Phiên bản 1.1 · 07/10/2026**
 
-Một tài khoản (một email) dùng chung cho cả vai trò Ứng viên và Nhà tuyển dụng. Tài liệu này chỉ mô tả chức năng của vai trò Ứng viên.
+Tài khoản Ứng viên và tài khoản Nhà tuyển dụng là **hai tài khoản tách biệt**. Cùng một email được phép đăng ký ở cả hai cổng, nhưng mỗi cổng đăng ký, đăng nhập và quản lý thông tin riêng (mật khẩu, profile, xác thực, gói dịch vụ, lịch sử giao dịch). Tài liệu này chỉ mô tả chức năng của tài khoản Ứng viên.
+
+Chỉ **doanh nghiệp** và **hộ kinh doanh** được đăng tin tuyển dụng trên InterVue; không có nhà tuyển dụng cá nhân.
+
+**Thuật ngữ:**
+- **Job:** công việc mà doanh nghiệp cần tuyển người.
+- **Tin tuyển dụng:** bài đăng giới thiệu một job.
+- **Mọi job đều có lương.** Không có job không lương.
+
+**Danh mục dùng chung với phía Nhà tuyển dụng** (để gợi ý, tìm kiếm và đối chiếu khớp nhau):
+- **Vị trí chuyên môn:** danh mục vị trí IT chuẩn hóa (Backend, Frontend, Fullstack, Mobile, DevOps, QA/Tester, Data, AI/ML, …).
+- **Cấp bậc:** Thực tập sinh, Fresher, Junior, Middle, Senior, Lead, Manager.
+- **Kỹ năng:** danh mục kỹ năng chuẩn hóa.
+- **Địa điểm:** danh mục đơn vị hành chính mới, hai cấp **Tỉnh/Thành phố → Phường/Xã**.
 
 ---
 
@@ -12,9 +25,9 @@ Một tài khoản (một email) dùng chung cho cả vai trò Ứng viên và N
 Tìm theo vị trí tuyển dụng hoặc tên công ty, kèm địa điểm.
 
 ### 1.2. Xem chi tiết tin tuyển dụng
-Xem nội dung tin. Các nút "Kiểm tra độ phù hợp", "Luyện phỏng vấn cho tin này", "Lưu tin", "Ứng tuyển" yêu cầu đăng nhập.
+Xem nội dung tin. Các nút "Kiểm tra độ phù hợp", "Luyện phỏng vấn cho tin này", "Lưu job", "Ứng tuyển" yêu cầu đăng nhập.
 
-### 1.3. Việc làm gần bạn
+### 1.3. Job gần bạn
 - Hiển thị tin tuyển dụng theo khoảng cách, trên bản đồ.
 - Dùng vị trí hiện tại (khi người dùng cho phép truy cập định vị) hoặc địa chỉ người dùng nhập.
 - Bán kính: 5 / 10 / 20 / 50 km, mặc định **10 km**.
@@ -71,7 +84,7 @@ Câu hỏi thường gặp (FAQ), Blog.
 - Hệ thống lấy email từ tài khoản mạng xã hội. Nếu mạng xã hội không trả về email, hệ thống báo lỗi và hướng dẫn dùng phương thức khác.
 - Lần đầu xác thực thành công, hệ thống hiển thị bảng Chính sách & Điều khoản và xác nhận đủ 16 tuổi. Người dùng chỉ vào được hệ thống sau khi bấm **Đồng ý**.
 - Hệ thống gửi mật khẩu mặc định (sinh ngẫu nhiên, tuân theo quy tắc mật khẩu) về email của người dùng. Người dùng có thể đổi mật khẩu khi cần.
-- **Email trùng với tài khoản đã có:** tự động liên kết mạng xã hội vào tài khoản đó, không cần nhập mật khẩu, với điều kiện:
+- **Email trùng với tài khoản ứng viên đã có:** tự động liên kết mạng xã hội vào tài khoản đó, không cần nhập mật khẩu, với điều kiện:
   - Mạng xã hội xác nhận email **đã được xác minh**.
   - Hệ thống gửi email thông báo: *"Tài khoản của bạn vừa được liên kết với [tên mạng xã hội]."*
 
@@ -80,7 +93,7 @@ Câu hỏi thường gặp (FAQ), Blog.
 - Có ít nhất 1 chữ thường, 1 chữ hoa, 1 chữ số và 1 ký tự đặc biệt.
 - Không được trùng với địa chỉ email.
 
-**Kiểm tra email:** email là duy nhất trong hệ thống.
+**Kiểm tra email:** email là duy nhất trong các **tài khoản ứng viên**. Email đã dùng cho tài khoản nhà tuyển dụng vẫn đăng ký được tài khoản ứng viên, và hai tài khoản hoạt động độc lập.
 
 ---
 
@@ -120,7 +133,7 @@ Hướng dẫn người dùng mới qua các bước:
 1. Upload CV.
 2. AI điền profile từ CV, người dùng xem lại và xác nhận.
 3. Xác nhận vị trí mong muốn.
-4. Bật thông báo việc làm (Job alert).
+4. Bật Job alert.
 
 Cho phép bỏ qua từng bước và quay lại sau.
 
@@ -129,7 +142,7 @@ Cho phép bỏ qua từng bước và quay lại sau.
 **Tổng quan:**
 - Số hồ sơ theo từng trạng thái.
 - Lịch phỏng vấn sắp tới.
-- Gợi ý việc làm mới.
+- Gợi ý job mới.
 - Số lượt feedback CV còn lại trong ngày.
 - % hoàn thiện profile, kèm gợi ý phần còn thiếu.
 
@@ -181,12 +194,12 @@ Thêm nhiều trường, mỗi trường gồm: tên trường, bằng cấp, ch
 - **Chứng chỉ:** ứng viên upload ảnh chứng chỉ, trong đó bao gồm: đơn vị cấp, ngày cấp, mã chứng chỉ, link xác thực online.
 
 #### Kỳ vọng công việc
-- Vị trí mong muốn (**bắt buộc**).
-- Cấp bậc mong muốn.
+- Vị trí mong muốn (**bắt buộc**), chọn từ danh mục vị trí chuẩn hóa.
+- Cấp bậc mong muốn: Thực tập sinh / Fresher / Junior / Middle / Senior / Lead / Manager.
 - Mức lương mong muốn: khoảng từ – đến, hoặc thỏa thuận.
 - Hình thức làm việc: On-site / Hybrid / Remote / Linh hoạt.
 - Loại hợp đồng: Toàn thời gian / Bán thời gian / Thực tập.
-- Địa điểm mong muốn (chọn nhiều).
+- Địa điểm mong muốn (chọn nhiều, theo danh mục Tỉnh/Thành phố).
 - Ngành nghề quan tâm (chọn nhiều).
 
 #### AI cập nhật profile từ CV
@@ -216,16 +229,16 @@ Thêm nhiều trường, mỗi trường gồm: tên trường, bằng cấp, ch
 - CV không công khai. Chỉ ứng viên và nhà tuyển dụng của tin đã nộp mới xem, tải được.
 - *Chưa làm tính năng tạo/chỉnh sửa CV trên hệ thống; làm upload và quản lý CV trước.*
 
-### 5.5. Lưu tin
-Lưu tin tuyển dụng để xem lại sau.
+### 5.5. Lưu job
+Lưu job để xem lại sau.
 
-### 5.6. Gợi ý việc làm bằng AI
+### 5.6. Gợi ý job bằng AI
 - Gợi ý tin tuyển dụng dựa trên profile (vị trí mong muốn, kỹ năng, kinh nghiệm, địa điểm) và CV.
 - Mỗi gợi ý kèm **lý do phù hợp**, ví dụ: *"Khớp 4/5 kỹ năng yêu cầu: Laravel, MySQL, REST API, Git."*
 - Hiển thị trên trang chủ và Dashboard sau khi đăng nhập.
 - Profile còn trống: hiển thị tin mới nhất, kèm nhắc hoàn thiện profile.
 
-### 5.7. Thông báo việc làm (Job alert)
+### 5.7. Job alert
 - Ứng viên tạo thông báo theo **vị trí và địa điểm**.
 - Chọn tần suất nhận: hằng ngày hoặc hằng tuần.
 - Email gửi qua **worker (queue)**.
@@ -251,7 +264,7 @@ Lưu tin tuyển dụng để xem lại sau.
 | Tất cả các điểm đánh giá (đọc CCCD, khớp khuôn mặt, liveness) **≥ 80%** | Tự động duyệt |
 | Có điểm trong khoảng **> 50% và < 80%** | Chuyển Admin duyệt |
 | Có bất kỳ điểm nào **≤ 50%** | Tự động từ chối, hiển thị lý do |
-| Số CCCD đã gắn với tài khoản khác | Chuyển Admin xử lý, không tự động duyệt |
+| Số CCCD đã gắn với tài khoản ứng viên khác | Chuyển Admin xử lý, không tự động duyệt |
 | Ngày sinh trên CCCD cho thấy **dưới 16 tuổi** | Tự động từ chối, hiển thị lý do |
 
 - Duyệt thành công → tài khoản chuyển sang trạng thái **Đã xác thực**.
@@ -309,7 +322,7 @@ Lưu tin tuyển dụng để xem lại sau.
 *Cấp độ 2 — Đánh giá theo vị trí mong muốn* (gồm toàn bộ cấp độ 1, cộng thêm)
 - Kỹ năng thường cần cho vị trí: đã có bằng chứng / còn thiếu.
 - Phần liên quan nhất đến vị trí có được trình bày nổi bật không.
-- Cách mô tả có tương xứng với cấp độ kinh nghiệm đang nhắm (Intern, Fresher, Junior, …).
+- Cách mô tả có tương xứng với cấp bậc đang nhắm (Thực tập sinh, Fresher, Junior, Middle, Senior, Lead, Manager).
 
 *Cấp độ 3 — Kiểm tra độ phù hợp với tin* (gồm toàn bộ cấp độ 1, cộng thêm)
 - Đối chiếu từng yêu cầu của tin: CV đáp ứng / chưa có bằng chứng.
@@ -359,15 +372,9 @@ Lưu tin tuyển dụng để xem lại sau.
 - **Tự động lưu nháp**. Nháp được giữ đến khi nộp hoặc khi tin hết hạn.
 - Xem lại toàn bộ câu trả lời trước khi nộp.
 
-**Cover Letter (không bắt buộc):**
-- Ô nhập Cover Letter trong form nộp hồ sơ, có nút **"Tạo bằng AI"**.
-- AI viết bản nháp dựa trên yêu cầu của tin và CV đã chọn, nêu các điểm khớp giữa hai bên.
-- AI chỉ dùng thông tin có trong CV, không thêm kinh nghiệm/kỹ năng không có thật.
-- Ứng viên xem lại và chỉnh sửa trước khi gửi; không gửi tự động.
-
 **Quy tắc:**
 - Mỗi tin chỉ có một hồ sơ đang hoạt động của mỗi ứng viên.
-- Không được ứng tuyển vào tin do chính mình đăng.
+- Không được ứng tuyển vào tin của doanh nghiệp mà **email tài khoản ứng viên trùng với email tài khoản nhà tuyển dụng** đã đăng tin đó.
 - Rút hồ sơ xong vẫn được nộp lại. Khi nộp lại, **giữ nguyên câu trả lời câu hỏi sàng lọc của lần nộp đầu tiên**; ứng viên chỉ được đổi CV.
 
 **Trạng thái hồ sơ ứng tuyển:**
@@ -418,8 +425,8 @@ Lưu tin tuyển dụng để xem lại sau.
 | Tin nhắn mới, lời mời chat | ✓ | | |
 | Phản hồi báo cáo vi phạm / yêu cầu hỗ trợ | ✓ | ✓ | |
 | Yêu cầu xóa tài khoản, khôi phục tài khoản | | ✓ | |
-| Thông báo việc làm (Job alert) | | ✓ | ✓ |
-| Gợi ý việc làm | ✓ | | ✓ |
+| Job alert | | ✓ | ✓ |
+| Gợi ý job | ✓ | | ✓ |
 | Công ty đang theo dõi đăng tin mới | ✓ | | ✓ |
 
 **Cài đặt thông báo:** thông báo bảo mật, giao dịch và trạng thái hồ sơ luôn bật. Người dùng được tắt các loại có đánh dấu ở cột "Tắt được".
@@ -427,7 +434,7 @@ Lưu tin tuyển dụng để xem lại sau.
 ### 5.17. An toàn
 
 **Báo cáo vi phạm:**
-- Lý do: tin giả, yêu cầu nộp tiền, mô tả/thù lao sai sự thật, nội dung không phù hợp, khác.
+- Lý do: tin giả, yêu cầu nộp tiền, mô tả/mức lương sai sự thật, nội dung không phù hợp, khác.
 - Kèm mô tả và ảnh minh chứng (không bắt buộc).
 - Người báo cáo theo dõi được kết quả xử lý.
 
@@ -486,9 +493,9 @@ Tài khoản có hai thuộc tính độc lập.
 ### 5.20. Thông báo và đồng ý xử lý dữ liệu
 
 Áp dụng trước khi sử dụng:
-- Các chức năng AI: đọc CV, feedback CV, phỏng vấn tự động, gợi ý việc làm, tạo Cover Letter.
+- Các chức năng AI: đọc CV, feedback CV, phỏng vấn tự động, gợi ý job, tạo Cover Letter.
 - eKYC (gửi CCCD và dữ liệu khuôn mặt sang FPT.AI).
-- Việc làm gần bạn (truy cập vị trí).
+- Job gần bạn (truy cập vị trí).
 
 Nội dung chi tiết: *(Đang cập nhật)*.
 
@@ -498,27 +505,40 @@ Nội dung chi tiết: *(Đang cập nhật)*.
 
 **Xóa tài khoản:**
 
+Xóa tài khoản ứng viên **không ảnh hưởng** đến tài khoản nhà tuyển dụng dùng cùng email (nếu có).
+
 *Bước 1 — Yêu cầu xóa*
-- Hệ thống hiển thị các ảnh hưởng: tin tuyển dụng đang mở (nếu có vai trò nhà tuyển dụng), hồ sơ đang chờ xử lý, gói còn hạn.
+- Hệ thống hiển thị các ảnh hưởng: hồ sơ ứng tuyển đang chờ xử lý, lịch phỏng vấn sắp tới, gói và lượt còn hạn.
 - Người dùng xác nhận bằng **mã gửi về email**.
 
 *Chặn xóa tạm thời* khi còn:
 - Giao dịch đang xử lý.
 - Yêu cầu hoàn tiền hoặc khiếu nại đang mở.
-- Khoản phí chưa thanh toán.
-- Tin tuyển dụng đang bị báo cáo vi phạm / lừa đảo chưa xử lý xong.
 
-*Cảnh báo, không chặn* khi còn gói Pro/Premium hoặc tin trả phí chưa hết hạn: người dùng sẽ mất phần còn lại.
+*Cảnh báo, không chặn* khi còn gói Pro/Premium/Education hoặc lượt đã mua chưa dùng hết: người dùng sẽ mất phần còn lại.
 
 *Bước 2 — 7 ngày chờ*
-- Profile bị ẩn.
-- Tất cả tin tuyển dụng (nếu có) tạm dừng nhận hồ sơ và bị ẩn khỏi tìm kiếm.
-- Đăng nhập lại trong 7 ngày → tài khoản được khôi phục. Tin tuyển dụng giữ trạng thái tạm dừng; người dùng tự mở lại.
+- Profile bị ẩn; không xuất hiện trong Tìm ứng viên.
+- Đăng nhập lại trong 7 ngày → tài khoản được khôi phục.
 
 *Bước 3 — Hết 7 ngày*
 - Xóa: tài khoản, KYC, thông tin cá nhân, profile, CV, toàn bộ hồ sơ đã nộp, chat.
-- Đóng và xóa toàn bộ tin tuyển dụng (nếu có), kèm CV và câu trả lời của ứng viên đã nộp vào các tin đó. Ứng viên liên quan nhận thông báo: *"Tin tuyển dụng đã đóng do nhà tuyển dụng ngừng hoạt động."*
+- Nhà tuyển dụng của các tin đã nộp thấy hồ sơ ở trạng thái **"Ứng viên đã xóa tài khoản"**, không còn xem được CV và thông tin liên hệ.
 - **Giữ lại:** chứng từ giao dịch (hóa đơn, thanh toán) theo quy định pháp luật về kế toán và thuế; hồ sơ xử lý vi phạm.
+
+### 5.22. Thiết kế Cover Letter
+
+Công cụ riêng để ứng viên tạo và quản lý Cover Letter (thư xin việc). **Cover Letter không nộp kèm hồ sơ ứng tuyển** trên InterVue.
+
+- Tạo Cover Letter mới, có nút **"Tạo bằng AI"**: AI viết bản nháp dựa trên CV ứng viên chọn, và một tin tuyển dụng nếu ứng viên chọn thêm.
+- Chỉnh sửa nội dung, lưu nhiều Cover Letter, đặt tên, xóa.
+- Mẫu trình bày: *(Đang cập nhật)*.
+- Tải về file PDF.
+- Giới hạn số Cover Letter và lượt dùng AI theo gói: *(Đang cập nhật)*.
+
+**Nguyên tắc:**
+- AI chỉ dùng thông tin có trong CV, không thêm kinh nghiệm/kỹ năng không có thật.
+- Ứng viên xem lại và chỉnh sửa trước khi lưu.
 
 ---
 
@@ -545,14 +565,15 @@ Nội dung chi tiết: *(Đang cập nhật)*.
 
 | Chức năng ứng viên | Cần phía | Nội dung cần có |
 |---|---|---|
-| Ứng tuyển, câu hỏi sàng lọc (5.13) | Recruiter | Chọn hình thức nộp hồ sơ, tạo câu hỏi sàng lọc (tối đa 5 câu) khi tạo tin |
+| Ứng tuyển, câu hỏi sàng lọc (5.13) | Recruiter | Chọn hình thức nộp hồ sơ, tạo câu hỏi sàng lọc khi tạo tin |
+| Chặn tự ứng tuyển vào tin của mình (5.13) | Recruiter | Email tài khoản nhà tuyển dụng đăng tin |
 | Trạng thái hồ sơ, Đã xem (5.13) | Recruiter | Mở hồ sơ, chuyển trạng thái hồ sơ |
 | Lịch phỏng vấn (5.14) | Recruiter | Tạo, sửa lịch phỏng vấn |
 | Lời mời chat (5.15), Chặn doanh nghiệp (5.17), Lượt xuất hiện trong tìm kiếm (5.2) | Recruiter | Tính năng **Tìm ứng viên** |
 | Lượt lưu hồ sơ (5.2) | Recruiter | Chức năng **lưu hồ sơ ứng viên** |
-| Việc làm gần bạn (1.3) | Recruiter | Địa chỉ làm việc của tin tuyển dụng |
+| Job gần bạn (1.3) | Recruiter | Địa chỉ làm việc của tin tuyển dụng |
 | Trang công ty, Công ty nổi bật (1.4, 1.5) | Recruiter, Admin | Thông tin doanh nghiệp; xác minh doanh nghiệp; tiêu chí chọn công ty nổi bật |
-| Danh mục kỹ năng chuẩn hóa (5.3) | Admin | Quản lý danh mục kỹ năng |
+| Danh mục dùng chung (đầu tài liệu, 5.3) | Admin | Quản lý danh mục vị trí, cấp bậc, kỹ năng; cập nhật danh mục đơn vị hành chính |
 | eKYC (5.9) | Admin | Duyệt eKYC, xét duyệt thủ công sau 5 lần, xử lý CCCD trùng |
 | Báo cáo vi phạm (5.17) | Admin | Tiếp nhận, xử lý báo cáo |
 | Thanh toán (5.19) | Admin | Hoàn tiền thủ công |
@@ -567,5 +588,6 @@ Nội dung chi tiết: *(Đang cập nhật)*.
 - Gói Education: các cách xác minh khác, hạn kích hoạt mã.
 - Giá feedback CV cấp độ 3 và các gói lượt.
 - Phỏng vấn tự động: giới hạn và phí.
+- Thiết kế Cover Letter: mẫu trình bày, giới hạn theo gói.
 - Feedback CV: giới hạn cho các gói ngoài gói Thường.
 - Nội dung thông báo và đồng ý xử lý dữ liệu.
