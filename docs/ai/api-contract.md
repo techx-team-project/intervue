@@ -25,11 +25,15 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 
 | Status | Method & path | Auth | Request | Response `data` |
 |---|---|---|---|---|
-| ✅ | `POST /auth/register` | public | `RegisterRequest` | `{ accessToken, user }` + refresh cookie |
-| ⬜ | `POST /auth/login` | public | `{ email, password }` | `{ accessToken, user }` + cookie |
-| ⬜ | `POST /auth/refresh` | cookie | – | `{ accessToken }` (rotates cookie) |
-| ⬜ | `POST /auth/logout` | user | – | – |
-| ⬜ | `GET /users/me` | user | – | `UserResource` |
+| ✅ | `POST /auth/register` | public | `{ name, email, password, confirmPassword, acceptTerms, confirmAge }` | `{ accessToken, user }` + refresh cookie; sends verification email |
+| ✅ | `POST /auth/login` | public | `{ email, password }` | `{ accessToken, user }` + cookie. Failure: `INVALID_CREDENTIALS` with `error.meta.captchaRequired` |
+| ✅ | `POST /auth/refresh` | cookie | – | `{ accessToken, user }` (rotates cookie) |
+| ✅ | `POST /auth/logout` | user | – | – (clears cookie, blacklists access token) |
+| ✅ | `POST /auth/verify-email` | public | `{ token }` | – (link valid 24h, single use) |
+| ✅ | `POST /auth/resend-verification` | user | – | – (60s cooldown, 3 per 15 min by email and IP) |
+| ✅ | `POST /auth/forgot-password` | public | `{ email }` | – (same message whether or not the email exists; 60s cooldown, 3 per 15 min by email and IP) |
+| ✅ | `POST /auth/reset-password` | public | `{ token, password, confirmPassword }` | – (link valid 15 min, single use; logs out all devices) |
+| ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, roles, createdAt }` |
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 
@@ -37,7 +41,10 @@ Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 
 | Code | HTTP | Meaning |
 |---|---|---|
-| `VALIDATION_FAILED` | 400 | See `fieldErrors` |
+| `VALIDATION_FAILED` | 400 | See `error.details[{ field, message }]` |
+| `INVALID_CREDENTIALS` | 401 | Wrong email or password; `error.meta.captchaRequired` is true after 3 failures |
+| `INVALID_OR_EXPIRED_TOKEN` | 400 | Verification or reset link is invalid, expired or already used |
+| `EMAIL_ALREADY_VERIFIED` | 409 | |
 | `UNAUTHENTICATED` | 401 | Missing/expired token → frontend tries refresh once |
 | `FORBIDDEN` | 403 | Role/ownership failure |
 | `NOT_FOUND` | 404 | |

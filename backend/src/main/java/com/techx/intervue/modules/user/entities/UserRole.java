@@ -25,7 +25,7 @@ import lombok.Setter;
 @Builder
 @Table(name = "user_roles")
 public class UserRole {
-    @EmbeddedId private UserRoleId id = new UserRoleId();
+    @EmbeddedId @Builder.Default private UserRoleId id = new UserRoleId();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
@@ -39,7 +39,7 @@ public class UserRole {
     @JoinColumn(name = "granted_by")
     private User grantedBy;
 
-    private Instant grantedAt = Instant.now();
+    @Builder.Default private Instant grantedAt = Instant.now();
 
     private Instant expiresAt;
 

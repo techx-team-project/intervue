@@ -18,7 +18,8 @@ public class Role {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RoleType name = RoleType.USER;
+    @Builder.Default
+    private RoleType name = RoleType.CANDIDATE;
 
     private String description;
 

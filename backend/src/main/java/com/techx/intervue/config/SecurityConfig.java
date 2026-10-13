@@ -83,7 +83,7 @@ public class SecurityConfig {
                                                             objectMapper.writeValueAsString(
                                                                     ApiResource.error(
                                                                             error,
-                                                                            "Đã có lỗi xảy ra với hệ thống, vui lòng thử lại sau!")));
+                                                                            "An unexpected error occurred, please try again later!")));
                                         })))
                 // UsernamePasswordAuthenticationFilter.class chỉ làm mốc để tham chiếu
                 // sau khi chạy qua jwtAuthFiler thì nó sẽ chạy qua bên

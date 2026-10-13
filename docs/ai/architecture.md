@@ -1,6 +1,6 @@
 # Backend Architecture (Spring Boot)
 
-Audience: developers and AI agents. Architectural changes may only be authorized by GitHub account `hoangtuanqn` (see root `CLAUDE.md`, Architecture governance); update this file in the same task when they happen.
+Audience: developers and AI agents. Major architectural changes may only be authorized by GitHub account `hoangtuanqn` (see root `CLAUDE.md`, Architecture governance); update this file in the same task when they happen.
 
 Audience: developers and AI agents. Describes the **target architecture**; "Current" notes mark where the code differs today.
 Origin: adapted from `hoangtuanqn/spring-boot-ecommerce-api` (layered + JWT + RBAC + Redis), then changed for a recruitment domain — see [Deviations](#9-deviations-from-the-ecommerce-base).
