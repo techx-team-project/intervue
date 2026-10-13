@@ -29,6 +29,10 @@
       "Bash(git reset --hard:*)",
       "Bash(docker compose down -v:*)",
       "Bash(rm -rf:*)"
+    ],
+    "ask": [
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   },
   "hooks": {
@@ -39,6 +43,15 @@
           {
             "type": "command",
             "command": "node .claude/hooks/guard.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/architecture-guard.js"
           }
         ]
       }
