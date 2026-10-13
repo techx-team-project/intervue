@@ -115,3 +115,10 @@ next-env.d.ts
 *.bak
 *.swp
 *.orig
+
+# AI local overrides
+CLAUDE.local.md
+.claude/settings.local.json
+
+# CodeGraph local index
+.codegraph/
