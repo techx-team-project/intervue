@@ -6,6 +6,8 @@ description: Add or change one REST endpoint end-to-end in the Spring Boot backe
 
 Build one endpoint following InterVue conventions. Templates are in `templates/` (placeholders `${module}`, `${Entity}`, `${Action}`, `${kebab-plural}`).
 
+Write no comments in generated code unless the logic is genuinely complex (then one short single-line English comment).
+
 ## Steps
 
 1. **Clarify**: HTTP method + path (`/api/v1/<kebab-plural>`), who may call it, input/output, business rules, error cases. Check `docs/ai/domain-glossary.md` for terms and `FUNCTION_REQUIRMENT.md` for the requirement. Ask if unclear.

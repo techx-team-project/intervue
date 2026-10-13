@@ -15,5 +15,5 @@ Process:
    - **Architecture:** layering, entity leakage, cross-module access, migration naming/safety, `ApiResource` envelope.
    - **Frontend:** unnecessary `'use client'`, `any`, missing loading/empty/error states, direct `fetch`, token in localStorage, accessibility.
    - **Tests:** happy path, validation, 401/403/ownership covered?
-   - **Style:** only what formatters don't catch (naming, dead code, comments).
+   - **Style:** only what formatters don't catch (naming, dead code, unnecessary or multi-line comments, which must be removed).
 4. Output findings grouped as **Blocker / Should fix / Nit**, each with `file:line`, the problem and a concrete fix. State "No blockers" explicitly when true. No praise, no restating the diff.
