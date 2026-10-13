@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronDown, TrendingUp } from 'lucide-react';
+import { MarketMascot } from './MarketMascot';
 
 interface RecentJob {
   id: number;
@@ -72,6 +73,7 @@ const CATEGORY_BARS = [
 export default function MarketDashboardSection() {
   const [selectedDropdown, setSelectedDropdown] = useState('Ngành nghề');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [hoveredStat, setHoveredStat] = useState<number | null>(null);
 
   return (
     <section
@@ -113,43 +115,69 @@ export default function MarketDashboardSection() {
         </div>
 
         {/* 2. Hàng trên: Mascot bên trái + 3 Cột số liệu lớn */}
-        <div className="relative z-10 mb-6 grid grid-cols-1 items-center gap-4 sm:grid-cols-12">
-          {/* Mascot Robot đứng trên bục */}
-          <div className="flex items-center justify-center sm:col-span-4 sm:justify-start lg:col-span-3">
-            <div className="relative flex h-32 w-32 items-center justify-center sm:h-36 sm:w-36">
-              <div className="absolute inset-0 scale-95 rounded-full bg-[#00e668]/20 blur-xl" />
-              <img
-                src="/intervue-bot.png"
-                alt="InterVue Mascot"
-                className="relative z-10 h-full w-full object-contain drop-shadow-[0_12px_20px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:scale-105"
-              />
-            </div>
+        <div className="relative z-10 mb-6 grid grid-cols-1 items-center gap-6 sm:grid-cols-12">
+          {/* Mascot Robot tương tác trên bục Hologram căn giữa cột */}
+          <div className="flex items-center justify-center sm:col-span-5 lg:col-span-4">
+            <MarketMascot hoveredStat={hoveredStat} />
           </div>
 
-          {/* 3 Cột số liệu thống kê chuẩn xác */}
-          <div className="grid grid-cols-1 gap-4 sm:col-span-8 sm:grid-cols-3 lg:col-span-9">
+          {/* 3 Cột số liệu thống kê chuẩn xác, liên kết phản hồi với Mascot */}
+          <div className="grid grid-cols-1 gap-3.5 sm:col-span-7 sm:grid-cols-3 lg:col-span-8">
             {/* Stat 1 */}
-            <div>
-              <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white sm:text-[34px] lg:text-[38px]">
-                3.994
+            <div
+              onMouseEnter={() => setHoveredStat(1)}
+              onMouseLeave={() => setHoveredStat(null)}
+              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 backdrop-blur-xs transition-all duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
+            >
+              <div className="flex items-center justify-between">
+                <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white transition-colors group-hover:text-[#00e668] sm:text-[34px] lg:text-[38px]">
+                  3.994
+                </div>
+                <span className="rounded-full bg-[#00e668]/15 px-2 py-0.5 text-[11px] font-bold text-[#00e668] transition-transform duration-200 group-hover:scale-105">
+                  +24h
+                </span>
               </div>
-              <div className="mt-0.5 text-[13px] font-medium text-emerald-100/80">Việc làm mới 24h gần nhất</div>
+              <div className="mt-1 text-[13px] font-medium text-emerald-100/80 transition-colors group-hover:text-white">
+                Việc làm mới 24h gần nhất
+              </div>
             </div>
 
             {/* Stat 2 */}
-            <div>
-              <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white sm:text-[34px] lg:text-[38px]">
-                45.351
+            <div
+              onMouseEnter={() => setHoveredStat(2)}
+              onMouseLeave={() => setHoveredStat(null)}
+              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 backdrop-blur-xs transition-all duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
+            >
+              <div className="flex items-center justify-between">
+                <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white transition-colors group-hover:text-[#00e668] sm:text-[34px] lg:text-[38px]">
+                  45.351
+                </div>
+                <span className="rounded-full bg-teal-400/15 px-2 py-0.5 text-[11px] font-bold text-teal-300 transition-transform duration-200 group-hover:scale-105">
+                  Toàn quốc
+                </span>
               </div>
-              <div className="mt-0.5 text-[13px] font-medium text-emerald-100/80">Việc làm đang tuyển</div>
+              <div className="mt-1 text-[13px] font-medium text-emerald-100/80 transition-colors group-hover:text-white">
+                Việc làm đang tuyển
+              </div>
             </div>
 
             {/* Stat 3 */}
-            <div>
-              <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white sm:text-[34px] lg:text-[38px]">
-                16.435
+            <div
+              onMouseEnter={() => setHoveredStat(3)}
+              onMouseLeave={() => setHoveredStat(null)}
+              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 backdrop-blur-xs transition-all duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
+            >
+              <div className="flex items-center justify-between">
+                <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white transition-colors group-hover:text-[#00e668] sm:text-[34px] lg:text-[38px]">
+                  16.435
+                </div>
+                <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[11px] font-bold text-emerald-300 transition-transform duration-200 group-hover:scale-105">
+                  Doanh nghiệp
+                </span>
               </div>
-              <div className="mt-0.5 text-[13px] font-medium text-emerald-100/80">Công ty đang tuyển</div>
+              <div className="mt-1 text-[13px] font-medium text-emerald-100/80 transition-colors group-hover:text-white">
+                Công ty đang tuyển
+              </div>
             </div>
           </div>
         </div>
