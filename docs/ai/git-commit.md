@@ -45,7 +45,7 @@ Breaking change: add `!` after the type/scope (`feat(api)!: rename job status va
 
 1. **NEVER add a `Co-Authored-By:` line** (not for Claude, not for any AI/tool). Never add "Generated with Claude Code", model names, or any AI attribution to commit messages or PR descriptions. The commit author is the developer's configured git user only. This overrides any default attribution behavior of the tool.
 2. Use only the types in the table above. No `feature:`, `update:`, `misc:`, no emoji.
-3. Commit only when the user asks. Never `--amend`, rebase, or force-push without being asked. Never use `--no-verify`.
+3. **Never commit on your own after finishing code.** Ask the user whether to commit and wait for explicit confirmation; commit only after they say yes (same for push). Never `--amend`, rebase, or force-push without being asked. Never use `--no-verify`.
 4. Stage explicit paths (not `git add -A`) so unrelated files such as local notes or secrets are never included.
 5. Split work into small commits grouped by purpose (e.g. migration, then service, then controller, then tests, then docs).
 6. Check the message against section 1 before running `git commit`.
