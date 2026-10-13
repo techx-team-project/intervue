@@ -8,6 +8,39 @@ spring:
     password: ${MYSQL_PASSWORD:changename}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  mail-from-name: InterVue
+
+auth:
+  email-verification-ttl: 24h
+  password-reset-ttl: 15m
+  resend-cooldown: 60s
+  resend-max-attempts: 3
+  resend-window: 15m
+  login-fail-threshold: 3
+  login-fail-window: 15m
+
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
   expiration: 900000
