@@ -68,6 +68,14 @@ This is a large, complex project. Follow these rules strictly:
 - Whenever `hoangtuanqn` makes an architectural change, update this file and the related docs (`docs/ai/*`, nested `CLAUDE.md`) in the same task to reflect the new architecture.
 - Never update this documentation on behalf of anyone else.
 
+## CodeGraph (optional, local)
+
+CodeGraph tells you how the existing code is structured (symbols, call paths). It does not replace this file: `CLAUDE.md` and `docs/ai/*` define how code must be written and who may change the architecture.
+
+- Each developer builds the index on their own machine: `codegraph init` in the repo root. `.codegraph/` is git-ignored; never commit it.
+- Only use it when `.codegraph/` exists. If it does not, do not run `codegraph init` yourself; indexing is the user's decision.
+- Use it to locate and understand code before editing; all rules in this file still apply to what you write.
+
 ## Shared tooling (`.claude/`)
 
 | Item | Use |
