@@ -27,13 +27,15 @@ Architecture lives in `architecture.md`; frontend structure in `frontend-guide.m
 | Error codes | stable `UPPER_SNAKE` strings | `EMAIL_ALREADY_USED` |
 
 Rules:
+- Type fields, parameters and return types with interfaces (`List`, `Map`, service interfaces), not implementations.
+- No placeholders, TODOs or dead code; remove duplication with abstract base classes or generics.
 - Constructor injection via `@RequiredArgsConstructor`; never field `@Autowired`.
 - Lombok allowed: `@Getter`, `@Builder`, `@RequiredArgsConstructor`, `@Slf4j`. Not `@Data` on entities.
 - `@Transactional` on service methods only; `readOnly = true` for reads. Associations `LAZY`.
 - Lists are paginated (`Pageable`, max size 100). Dynamic filters via `Specification`, never string concat.
 - Time = `Instant` (UTC). Money = amount + currency (`BigDecimal`/integer minor units), never `double`.
 - Throw `AppException(ErrorCode.X)`; don't return error bodies from controllers manually.
-- Tests: `<Class>Test`; Mockito for services, `@WebMvcTest` for controllers, Testcontainers (MySQL, Redis) for integration. Each endpoint: happy path, validation, 401, 403, ownership (IDOR).
+- Tests: write only when explicitly asked. When asked: `<Class>Test`; Mockito for services, `@WebMvcTest` for controllers, Testcontainers (MySQL, Redis) for integration. Each endpoint: happy path, validation, 401, 403, ownership (IDOR).
 
 ## 3. Frontend (TypeScript)
 

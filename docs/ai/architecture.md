@@ -1,5 +1,7 @@
 # Backend Architecture (Spring Boot)
 
+Audience: developers and AI agents. Architectural changes may only be authorized by GitHub account `hoangtuanqn` (see root `CLAUDE.md`, Architecture governance); update this file in the same task when they happen.
+
 Audience: developers and AI agents. Describes the **target architecture**; "Current" notes mark where the code differs today.
 Origin: adapted from `hoangtuanqn/spring-boot-ecommerce-api` (layered + JWT + RBAC + Redis), then changed for a recruitment domain — see [Deviations](#9-deviations-from-the-ecommerce-base).
 
@@ -136,8 +138,9 @@ Rules: namespace every key, always set TTL, never cache per-user PII under share
 - **File storage:** CVs, avatars, identity documents behind a `StorageService` interface (local disk in dev, S3-compatible in prod). Store only keys in DB; serve via short-lived signed URLs; validate type and size; virus-scan hook for CVs; identity docs in a private bucket.
 - **Email:** `MailService` interface, templates, async, retry.
 - **CORS:** explicit allowed origins from config (frontend URL), `allowCredentials=true` for the refresh cookie.
-- **Testing:** unit tests for services (Mockito); slice tests `@DataJpaTest`, `@WebMvcTest`; integration tests with **Testcontainers** (MySQL, Redis) — not H2, to match Flyway/MySQL behavior. Name `<Class>Test`; arrange/act/assert; every new endpoint tests happy path + validation + authz (401/403/IDOR).
+- **Testing:** write tests only when the user explicitly asks. When asked: unit tests for services (Mockito); slice tests `@DataJpaTest`, `@WebMvcTest`; integration tests with **Testcontainers** (MySQL, Redis) — not H2, to match Flyway/MySQL behavior. Name `<Class>Test`; arrange/act/assert; every new endpoint tests happy path + validation + authz (401/403/IDOR).
 - **Comments:** none by default; code must be self-explanatory through naming and small methods. Only for genuinely complex, non-obvious or abstract logic, add one short single-line English `//` comment above it explaining *why*. No Javadoc on every method, no multi-line or step-by-step comments. See `conventions.md`.
+- **Types and reuse:** declare fields, parameters and return types with interfaces (`List`, `Map`, service interfaces). Extract repeated logic into abstract base classes or generics (e.g. a generic base service/controller/mapper) after checking existing code.
 - **Code style:** Spotless (Google Java Format AOSP). Prefer Java `record` for Requests/Resources/events. Lombok allowed: `@Getter`, `@Builder`, `@RequiredArgsConstructor`, `@Slf4j`; **avoid `@Data`/`@EqualsAndHashCode` on entities**.
 
 ## 9. AI module design
@@ -173,5 +176,5 @@ AI is an *assistant*; humans decide.
 4. `ServiceInterface` + `Service` (rules, ownership, `@Transactional`).
 5. Controller extends `BaseController`; path `/api/v1/...`; `@PreAuthorize`; `@Valid`.
 6. Add `ErrorCode`s; update `SecurityConfig` only if public.
-7. Tests: service unit + controller slice (+ authz cases).
+7. Tests: only if the user explicitly asks.
 8. `./mvnw spotless:apply && ./mvnw test`; update `docs/ai/api-contract.md`.
