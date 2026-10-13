@@ -82,6 +82,7 @@ page.tsx (Server)  ──fetch (server)──▶ API         public, SEO pages (
 - Mobile-first; breakpoints `sm md lg xl`. Min touch target 40px. Don't build desktop-only layouts.
 - Accessibility: semantic elements, labels for inputs, `aria-*` for modal/menus, visible focus, alt text, color contrast AA.
 - Copy is Vietnamese; centralize repeated strings in `constants/`. Dates/money formatted with `Intl` (`vi-VN`, VND) in `utils/`.
+- No comments by default; one short single-line English comment only for genuinely complex logic.
 - Prefer composition: small components (<150 lines), props typed with an explicit `Props` type, no prop drilling beyond 2 levels (use context or composition).
 
 ## 6. Component template

@@ -4,8 +4,10 @@ Architecture lives in `architecture.md`; frontend structure in `frontend-guide.m
 
 ## 1. General
 
-- Code, identifiers, comments, commit messages, PR text: **English**. UI copy: Vietnamese.
-- Comments explain *why*, not *what*. No commented-out code. No TODO without an owner/issue.
+- Code, identifiers, commit messages, PR text: **English**. UI copy: Vietnamese.
+- **Code comments: default is none.** Name things well so the code explains itself. No Javadoc/JSDoc on every method, no section banners, no comments that restate the code, no commented-out code, no TODO without an owner/issue.
+- Allowed exception: when logic is genuinely complex, non-obvious or abstract (tricky algorithm, workaround, security/business reason), add **one short single-line English comment** (`//`) just above it saying *why*. Never multi-line blocks, never several comments in a row.
+- Don't write comments just to explain what you did or to narrate steps; that is noise and reads as AI-generated.
 - Formatting is automated (Lefthook pre-commit): Spotless (Java), Prettier (TS/JS/JSON/CSS). Don't hand-format.
 - `.editorconfig` is authoritative for whitespace/line endings.
 
@@ -59,7 +61,7 @@ Rules:
 
 ## 5. Git
 
-- Branches: `feature/<name>`, `fix/<name>`, `docs/<name>`, `refactor/<name>` → PR into `dev`; `dev` → `main` for release.
-- Conventional Commits: `feat: add job search filters`; imperative, ≤ 72 chars subject, body explains why.
+- Commit and branch rules live in `git-commit.md` (format `type(scope): description`, branch `type/scope-description`). **Never add `Co-Authored-By` or other AI attribution.**
+- Flow: branch from `dev` → PR into `dev` → `dev` into `main` for release.
 - One concern per PR; PR description lists what changed, how to test, and screenshots for UI.
 - Never commit `.env`, `application-local.yml`, `CLAUDE.local.md`, build output.

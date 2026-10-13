@@ -137,6 +137,7 @@ Rules: namespace every key, always set TTL, never cache per-user PII under share
 - **Email:** `MailService` interface, templates, async, retry.
 - **CORS:** explicit allowed origins from config (frontend URL), `allowCredentials=true` for the refresh cookie.
 - **Testing:** unit tests for services (Mockito); slice tests `@DataJpaTest`, `@WebMvcTest`; integration tests with **Testcontainers** (MySQL, Redis) — not H2, to match Flyway/MySQL behavior. Name `<Class>Test`; arrange/act/assert; every new endpoint tests happy path + validation + authz (401/403/IDOR).
+- **Comments:** none by default; code must be self-explanatory through naming and small methods. Only for genuinely complex, non-obvious or abstract logic, add one short single-line English `//` comment above it explaining *why*. No Javadoc on every method, no multi-line or step-by-step comments. See `conventions.md`.
 - **Code style:** Spotless (Google Java Format AOSP). Prefer Java `record` for Requests/Resources/events. Lombok allowed: `@Getter`, `@Builder`, `@RequiredArgsConstructor`, `@Slf4j`; **avoid `@Data`/`@EqualsAndHashCode` on entities**.
 
 ## 9. AI module design
