@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Bell, ChevronDown, Menu, MessageSquare, X } from 'lucide-react';
+import { Bell, ChevronDown, Menu, MessageSquare, X, Bot } from 'lucide-react';
 import JobsDropdown from './header/JobsDropdown';
 import CvDropdown from './header/CvDropdown';
 import ToolsDropdown from './header/ToolsDropdown';
@@ -125,6 +125,18 @@ export default function Header() {
               className="flex items-center gap-1 rounded-md px-2 py-1 font-bold text-amber-700 transition-colors hover:text-amber-800"
             >
               <span>Nâng cấp VIP</span>
+            </Link>
+
+            {/* 6. AI Mascot Playground */}
+            <Link
+              href="/mascot"
+              className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-black text-emerald-700 transition-all hover:scale-105 hover:bg-emerald-100"
+            >
+              <Bot className="h-3.5 w-3.5 text-emerald-600" />
+              <span>AI Mascot</span>
+              <span className="py-0.2 rounded-full bg-emerald-600 px-1.5 text-[9px] font-bold text-white uppercase">
+                New
+              </span>
             </Link>
           </nav>
         </div>
