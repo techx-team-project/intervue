@@ -1,6 +1,6 @@
 ---
 name: test-writer
-description: Writes unit and integration tests for the backend (JUnit 5, Mockito, Testcontainers). Use after implementing a feature or to raise coverage.
+description: Writes unit and integration tests for the backend (JUnit 5, Mockito, Testcontainers). Use only when the user explicitly asks for tests.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: inherit
 ---

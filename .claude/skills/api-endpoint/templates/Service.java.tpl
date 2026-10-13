@@ -10,7 +10,8 @@ public class ${Entity}Service implements ${Entity}ServiceInterface {
     @Override
     @Transactional
     public ${Entity}Resource create(${Action}${Entity}Request request, Long currentUserId) {
-        throw new UnsupportedOperationException("TODO");
+        ${Entity} entity = ${Entity}.builder().ownerId(currentUserId).title(request.title()).build();
+        return ${Entity}Resource.from(repository.save(entity));
     }
 
     @Override

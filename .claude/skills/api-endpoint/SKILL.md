@@ -1,6 +1,6 @@
 ---
 name: api-endpoint
-description: Add or change one REST endpoint end-to-end in the Spring Boot backend (request, resource, service, controller, security, tests, contract doc). Use when asked to build an API endpoint.
+description: Add or change one REST endpoint end-to-end in the Spring Boot backend (request, resource, service, controller, security, contract doc). Use when asked to build an API endpoint.
 ---
 # api-endpoint
 
@@ -16,7 +16,7 @@ Write no comments in generated code unless the logic is genuinely complex (then 
 4. **Resource**: `templates/Resource.java.tpl` (no entities, no sensitive fields).
 5. **Service**: add the method to `*ServiceInterface`, implement in `impl/` with `templates/Service.java.tpl`. Business rules, ownership check and `@Transactional` live here. Throw `AppException(ErrorCode.X)`.
 6. **Controller**: `templates/Controller.java.tpl`. Extends `BaseController`, `@Valid`, `@PreAuthorize`, returns `ok()` / `created()`.
-7. **Tests**: delegate to the `test-writer` agent (happy path, validation, 401, 403, ownership).
+7. **Tests**: skip unless the user explicitly asked; then delegate to the `test-writer` agent.
 8. **Contract**: add or update the row in `docs/ai/api-contract.md`, plus any new error codes.
 9. **Verify**: `cd backend && ./mvnw spotless:apply && ./mvnw test`, then run the `code-reviewer` agent.
 
