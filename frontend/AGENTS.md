@@ -22,7 +22,8 @@ Full guide: **`../docs/ai/frontend-guide.md`** (structure, data flow, UI rules).
 5. **No `any`.** Types for API data mirror `docs/ai/api-contract.md`. Validate forms and external data with Zod.
 6. **Route segments are English kebab-case** (`/account/upgrade`, not `/tai-khoan/nang-cap`). UI copy is Vietnamese.
 7. **Never hard-code API URLs or secrets.** Use `NEXT_PUBLIC_API_URL`; secrets stay server-side without the `NEXT_PUBLIC_` prefix.
-8. Every screen handles **loading, empty, error** states and works at mobile width.
+8. **No comments by default.** Only for genuinely complex logic: one short single-line English comment explaining why. No JSDoc on every component, no section banners.
+9. Every screen handles **loading, empty, error** states and works at mobile width.
 
 ## Naming
 

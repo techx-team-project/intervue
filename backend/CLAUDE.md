@@ -19,6 +19,7 @@ Base package `com.techx.intervue`. Architecture and conventions are imported fro
 - No entities in controllers; no `@Transactional` on controllers; no external/AI calls inside a transaction.
 - No tokens, passwords, CV text or other PII in logs (use `traceId` from MDC).
 - No unpaged `findAll()` on large tables.
+- No comments by default; only one short single-line English comment for genuinely complex logic. No Javadoc on every method.
 - No silent `catch`; no `@Data` / `@EqualsAndHashCode` on entities.
 
 ## Commands
