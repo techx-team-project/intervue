@@ -1,25 +1,24 @@
 package com.techx.intervue.modules.user.services.impl;
 
 import com.techx.intervue.config.AuthConfig;
+import com.techx.intervue.exceptions.AppException;
+import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.helpers.TokenHashUtil;
 import com.techx.intervue.modules.user.entities.RefreshToken;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
-import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface;
-import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 public class RefreshTokenService implements RefreshTokenServiceInterface {
-    private JwtServiceInterface jwtService;
     private RefreshTokenRepository repository;
     private AuthConfig authConfig;
     private TokenHashUtil utils;
@@ -48,13 +47,12 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
     }
 
     @Override
-    @Transactional
+    @Transactional(noRollbackFor = AppException.class)
     public RefreshResult rotateToken(String rawToken) {
         RefreshToken existing =
                 repository
                         .findByTokenHashForUpdate(utils.hash(rawToken))
-                        .orElseThrow(
-                                () -> new BadCredentialsException("Refresh token không hợp lệ!"));
+                        .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
         this.checkIsRevoked(existing);
         this.checkExpiryDate(existing);
         existing.setRevoked(true);
@@ -65,13 +63,12 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
     }
 
     @Override
-    @Transactional
+    @Transactional(noRollbackFor = AppException.class)
     public void revokeToken(String rawToken) {
         RefreshToken existing =
                 repository
                         .findByTokenHash(utils.hash(rawToken))
-                        .orElseThrow(
-                                () -> new BadCredentialsException("Refresh token không hợp lệ."));
+                        .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
         this.checkIsRevoked(existing);
         this.checkExpiryDate(existing);
         existing.setRevoked(true);
@@ -84,13 +81,13 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
             repository.revokeAllRefreshTokenByUser(entity.getUserId());
             log.error(
                     "Phát hiện token bị đánh cắp, đã tiến hành revoke tất cả token của người dùng.");
-            throw new BadCredentialsException("Refresh token không hợp lệ.");
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
     }
 
     private void checkExpiryDate(RefreshToken entity) {
         if (entity.getExpiryDate().isBefore(Instant.now())) {
-            throw new BadCredentialsException("Refresh token không hợp lệ.");
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
     }
 }
