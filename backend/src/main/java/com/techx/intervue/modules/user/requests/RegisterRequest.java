@@ -1,19 +1,20 @@
 package com.techx.intervue.modules.user.requests;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record RegisterRequest(
-        @NotBlank(message = "Name is required!") String name,
-        @NotBlank(message = "Email is required!") @Email(message = "Email invalid!") String email,
-        @NotBlank(message = "Phone is required!")
-                @Pattern(regexp = "^(0[3|5|7|8|9])+([0-9]{8})$", message = "Phone number invalid!")
-                String phone,
-        @NotBlank(message = "Password is required!")
-                @Size(min = 6, message = "Minimum of 6 characters!")
-                String password,
-        @NotBlank(message = "Confirm password is required!")
-                @Size(min = 6, message = "Minimum of 6 characters!")
-                String confirmPassword) {}
+        @NotBlank(message = "Full name is required!")
+                @Size(max = 50, message = "Full name must be at most 50 characters!")
+                String name,
+        @NotBlank(message = "Email is required!")
+                @Email(message = "Email is invalid!")
+                @Size(max = 100, message = "Email must be at most 100 characters!")
+                String email,
+        @NotBlank(message = "Password is required!") @StrongPassword String password,
+        @NotBlank(message = "Please confirm your password!") String confirmPassword,
+        @AssertTrue(message = "You must accept the Privacy Policy & Terms!") boolean acceptTerms,
+        @AssertTrue(message = "You must confirm that you are at least 16 years old!")
+                boolean confirmAge) {}

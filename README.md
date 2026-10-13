@@ -1,6 +1,91 @@
-# InterVue — Setup Guide
+# InterVue
 
-## 1. Prerequisites
+**AI-assisted IT recruitment platform**, modeled after TopCV's job-posting and application flow.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Troubleshooting](#troubleshooting)
+- [Documentation](#documentation)
+
+## Overview
+
+### What is InterVue
+
+InterVue connects IT job seekers with companies hiring for IT roles, with AI assisting recruiters in screening candidates. The platform centers on **posting jobs, receiving applications, evaluating candidates, and making hiring decisions**.
+
+### Who uses it
+
+| Role | Users | Purpose |
+|---|---|---|
+| **Candidate** | Job seekers / interns in IT | Find jobs, submit applications, showcase skills, track results |
+| **Recruiter** | HR staff / company representatives | Post jobs, review and evaluate applications, select candidates |
+| **Admin** | Platform operators | Manage accounts, identity verification, moderate listings and reports |
+
+A single account (one email) can hold both the Candidate and Recruiter roles. A company is the entity a Recruiter represents — it is not a separate role.
+
+### How it works
+
+1. **Post a job** — Recruiter describes the role and requirements.
+2. **Apply** — Candidate finds a matching job and submits a CV, optionally with screening questions.
+3. **Screen** — Recruiter reviews applications with AI assistance; candidates may complete an assessment.
+4. **Engage & decide** — Recruiter interviews or discusses further, then decides.
+5. **Resolve** — Both sides confirm a hire, or the process ends (rejected, withdrawn, or no agreement).
+
+Candidates must complete identity verification (eKYC) before they can apply. Companies are verified before they can post jobs.
+
+### AI assistance
+
+| For | Capability |
+|---|---|
+| Recruiters | Match resumes against job requirements, summarize relevant experience, flag what to ask |
+| Candidates | CV feedback & scoring, mock interview practice, job recommendations, AI-assisted cover letters, profile auto-fill from CV |
+| Everyone | RAG-based chatbot for platform usage questions |
+
+AI assists evaluation — **recruiters make the final hiring decision**. AI never auto-accepts or auto-rejects a candidate, and users are informed whenever their data is processed by AI.
+
+### Platforms
+
+Web and a Flutter mobile app, sharing the same account, listing, and application data.
+
+- **Web** — reading/comparing resumes, managing listings, platform operations.
+- **Mobile** — searching jobs, tracking applications, notifications, quick actions.
+
+## Tech Stack
+
+### Backend
+
+| | |
+|---|---|
+| Language | Java 25 |
+| Framework | Spring Boot 4.1.1 (Web, Data JPA, Security, Validation) |
+| Database | MySQL 8.4, schema managed with Flyway migrations |
+| Cache / Rate limiting | Redis 7.4, Bucket4j |
+| Auth | JWT (jjwt) |
+| Build | Maven, via Maven Wrapper (`mvnw`) |
+| Code style | Spotless (Google Java Format, AOSP) |
+
+### Frontend
+
+| | |
+|---|---|
+| Framework | Next.js 16 (App Router), React 19 |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS 4 |
+| Linting / Formatting | ESLint 9, Prettier 3 |
+
+### Infrastructure & Tooling
+
+| | |
+|---|---|
+| Containers | Docker Compose (MySQL, Redis) |
+| Git hooks | Lefthook — auto-formats Java (Spotless) and TS/JS (Prettier) on commit |
+
+## Getting Started
+
+### Prerequisites
 
 Install the following tools and verify each one with its check command:
 
@@ -13,19 +98,19 @@ Install the following tools and verify each one with its check command:
 
 > You do **not** need to install Maven, MySQL or Redis. The project uses the Maven Wrapper (`mvnw`), and MySQL + Redis run in Docker.
 
-## 2. Setup Steps
+### Setup Steps
 
 > Commands below are for **Git Bash / macOS / Linux**.
 > On **PowerShell**, replace `./mvnw` with `.\mvnw.cmd`, `cp` with `copy`, and wrap `-D...` arguments in quotes (see Step 6).
 
-### Step 1 — Clone the repository
+#### Step 1 — Clone the repository
 
 ```bash
 git clone https://github.com/techx-team-project/intervue.git
 cd intervue
 ```
 
-### Step 2 — Install Git hooks
+#### Step 2 — Install Git hooks
 
 Run in the **project root**:
 
@@ -35,7 +120,7 @@ npm install
 
 This installs [Lefthook](https://github.com/evilmartians/lefthook) and registers a pre-commit hook that auto-formats Java (Spotless) and TS/JS (Prettier) files on every commit.
 
-### Step 3 — Create the `.env` file (root only)
+#### Step 3 — Create the `.env` file (root only)
 
 The `.env` file is used by **Docker Compose** to create the MySQL database and user. It lives in the **project root only**.
 
@@ -61,7 +146,7 @@ MYSQL_PASSWORD=<your-db-password>
 
 > `.env` is git-ignored. Never commit it.
 
-### Step 4 — Start MySQL and Redis
+#### Step 4 — Start MySQL and Redis
 
 Open Docker Desktop first, then in the **project root**:
 
@@ -90,7 +175,7 @@ intervue-redis   redis:7.4-alpine   Up ... (healthy)    0.0.0.0:6379->6379/tcp
 
 Data is stored in the Docker volumes `mysql-data` and `redis-data`, so it survives container restarts.
 
-### Step 5 — Create `application-local.yml` for secrets
+#### Step 5 — Create `application-local.yml` for secrets
 
 The backend config is split into two files in `backend/src/main/resources/`:
 
@@ -137,7 +222,7 @@ Copy the output and paste it as the value of `jwt.secret`.
 
 > Everything else (database URL, username, JWT expiration...) comes from `application.yaml` — do not copy it into `application-local.yml`. If you add a new secret to the project later, put a placeholder in `application.yaml` and the real value in `application-local.yml`.
 
-### Step 6 — Run the backend
+#### Step 6 — Run the backend
 
 From the `backend/` folder, start the app with the `local` profile:
 
@@ -173,7 +258,7 @@ curl -i -X POST http://localhost:8080/api/v1/auth/register \
 
 A successful response returns an `accessToken` and the user in the body, plus a refresh token in the `Set-Cookie` header.
 
-#### Running from an IDE
+##### Running from an IDE
 
 - **IntelliJ IDEA:** open `backend/` as a Maven project. Enable *Settings → Build, Execution, Deployment → Compiler → Annotation Processors → Enable annotation processing* (required for Lombok). Edit the run configuration for `IntervueApplication` and set *Active profiles* to `local`.
 - **VS Code:** install *Extension Pack for Java*. Run `IntervueApplication` with this in `.vscode/launch.json`:
@@ -188,7 +273,7 @@ A successful response returns an `accessToken` and the user in the body, plus a 
   }
   ```
 
-### Step 7 — Run the frontend
+#### Step 7 — Run the frontend
 
 Open a new terminal:
 
@@ -200,7 +285,7 @@ npm run dev
 
 The frontend runs at **http://localhost:3000**.
 
-## 3. Daily Run (after the first setup)
+### Daily Run
 
 ```bash
 docker compose up -d                                                  # project root
@@ -208,7 +293,7 @@ cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local  # termina
 cd frontend && npm run dev                                            # terminal 2
 ```
 
-## 4. Useful Commands
+### Useful Commands
 
 ```bash
 # Docker (project root)
@@ -225,7 +310,7 @@ docker exec -it intervue-redis redis-cli
 ./mvnw spotless:apply               # format Java code
 ```
 
-## 5. Troubleshooting
+## Troubleshooting
 
 | Error | Cause | Fix |
 |---|---|---|
@@ -242,6 +327,7 @@ docker exec -it intervue-redis redis-cli
 | Lombok `cannot find symbol` (getters/setters) in IDE | Annotation processing is disabled | Enable it (see *Running from an IDE*) |
 | Code is not auto-formatted on commit | Git hooks not installed | Run `npm install` in the project root |
 
----
+## Documentation
 
-Feature specification: [docs/FEATURE_SPECIFICATION.md](./docs/FEATURE_SPECIFICATION.md)
+- [Product Overview](./docs/product-overview.md) — product scope, roles, and process flow
+- [Candidate Feature Spec](./docs/candidate-features.md) — full functional spec for the Candidate role

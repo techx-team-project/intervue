@@ -1,86 +1,72 @@
 package com.techx.intervue.modules.user.services.impl;
 
-import com.techx.intervue.config.AuthConfig;
+import com.techx.intervue.exceptions.AppException;
+import com.techx.intervue.exceptions.ErrorCode;
+import com.techx.intervue.modules.helpers.EmailHelper;
+import com.techx.intervue.modules.user.entities.Role;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.events.EmailVerificationRequestedEvent;
+import com.techx.intervue.modules.user.mappers.UserMapper;
+import com.techx.intervue.modules.user.repositories.RoleRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.RegisterRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.UserResource;
-import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
+import com.techx.intervue.modules.user.services.interfaces.AuthSessionServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.services.impl.BaseService;
-import java.time.Duration;
-import java.util.Set;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
+import java.time.Instant;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@AllArgsConstructor
-@Slf4j
+@RequiredArgsConstructor
 public class UserService extends BaseService implements UserServiceInterface {
 
-    private final UserSessionCache userSessionCache;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final RefreshTokenService refreshTokenService;
-    private final AuthConfig authConfig;
+    private final AuthSessionServiceInterface authSessionService;
+    private final ApplicationEventPublisher eventPublisher;
+    private final UserMapper userMapper;
 
     @Override
-    // @Transactional
-    public AuthResult register(RegisterRequest request, String ip) {
-        // String key = "limit:register:" + ip;
-        // Object cache = redis.opsForValue().get(key);
-        // Long countReg = cache != null ? ((Number) cache).longValue() : 0;
-
-        // if (countReg >= 2) {
-        // throw new BadCredentialsException("Đã vượt quá giới hạn đăng ký trong
-        // ngày!");
-        // }
-        String email = request.email();
-        String phone = request.phone();
+    @Transactional
+    public AuthResult register(RegisterRequest request) {
+        String email = EmailHelper.normalize(request.email());
+        PasswordPolicy.verify(request.password(), request.confirmPassword(), email);
         if (userRepository.existsByEmail(email)) {
-            throw new BadCredentialsException("Email này đã tồn tại trong hệ thống!");
+            throw new AppException(ErrorCode.EMAIL_ALREADY_USED);
         }
-        if (userRepository.existsByPhone(phone)) {
-            throw new BadCredentialsException("Số điện thoại này đã tồn tại trong hệ thống!");
-        }
-        if (!request.password().equals(request.confirmPassword())) {
-            throw new BadCredentialsException("Nhập lại mật khẩu không chính xác!");
-        }
-        String password = passwordEncoder.encode(request.password());
+
+        Role candidateRole =
+                roleRepository
+                        .findByName(RoleType.CANDIDATE)
+                        .orElseThrow(() -> new IllegalStateException("CANDIDATE role is missing"));
         User user =
-                userRepository.save(
-                        User.builder()
-                                .name(request.name())
-                                .email(email)
-                                .password(password)
-                                .phone(phone)
-                                .build());
-        String accessToken = jwtService.generateToken(user.getId());
-
-        Duration ttl = Duration.ofMillis(authConfig.getExpirationTime());
-        userSessionCache.set(user.getId(), user.getEmail(), Set.of(RoleType.USER), ttl);
-
-        IssuedToken refreshToken = refreshTokenService.issueRefreshToken(user.getId());
-        UserResource userResource =
-                UserResource.builder()
-                        .id(user.getId())
+                User.builder()
+                        .name(request.name().trim())
                         .email(email)
-                        .name(user.getName())
-                        .phone(user.getPhone())
+                        .password(passwordEncoder.encode(request.password()))
+                        .termsAcceptedAt(Instant.now())
                         .build();
+        user.addRole(candidateRole);
+        User saved = userRepository.save(user);
 
-        // eventPublisher.publishEvent(
-        // new UserRegisteredEvent(this, email, user.getName()));
-        // countReg = redis.opsForValue().increment(key);
-        // if (countReg == 1) {
-        // redis.expire(key, Duration.ofHours(24));
-        // }
-        return new AuthResult(accessToken, refreshToken.rawToken(), userResource);
+        eventPublisher.publishEvent(
+                new EmailVerificationRequestedEvent(
+                        saved.getId(), saved.getEmail(), saved.getName()));
+        return authSessionService.open(saved);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserResource getMe(Long userId) {
+        User user = findOrThrow(userRepository.findByIdWithRoles(userId), "User not found");
+        return userMapper.toResource(user);
     }
 }

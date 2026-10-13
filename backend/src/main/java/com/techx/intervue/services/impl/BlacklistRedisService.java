@@ -18,7 +18,7 @@ public class BlacklistRedisService implements BlacklistServiceInterface {
     public void revoke(String jti, Instant expiresAt) {
         long ttlSeconds = Duration.between(Instant.now(), expiresAt).getSeconds();
         if (ttlSeconds <= 0) return;
-        redis.opsForValue().set(PREFIX + jti, "revoked", ttlSeconds);
+        redis.opsForValue().set(PREFIX + jti, "revoked", Duration.ofSeconds(ttlSeconds));
     }
 
     public Boolean isRevoked(String jti) {
