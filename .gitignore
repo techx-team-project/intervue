@@ -119,3 +119,6 @@ next-env.d.ts
 # AI local overrides
 CLAUDE.local.md
 .claude/settings.local.json
+
+# CodeGraph local index
+.codegraph/
