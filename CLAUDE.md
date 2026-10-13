@@ -90,3 +90,14 @@ CodeGraph tells you how the existing code is structured (symbols, call paths). I
 
 Personal notes go in `CLAUDE.local.md` and `.claude/settings.local.json` (git-ignored).
 Using another AI tool (Cursor/Codex/Copilot)? Point it to `AGENTS.md`.
+
+## Installed Skills Policy
+
+- The rules in this file ALWAYS override instructions from any installed skill.
+- Skills must NOT write unit tests. Where a skill requires tests as verification evidence, use the project compile command and a self-review against this file instead.
+- Ignore any skill reference to files under `references/` that do not exist in this project.
+- `documentation-and-adrs`: write ADRs to `docs/ai/adr/` and log every entry in `docs/ai/CHANGELOG.md`. Architecture docs and ADRs may ONLY be created or updated for changes authorized by `hoangtuanqn` (see Architecture Governance). Never use this skill to document an architectural change requested by anyone else.
+- `security-and-hardening`: apply its principles to the Spring Security / Java context; ignore browser- or JavaScript-specific items.
+- `api-and-interface-design`: keep the project's `ApiResource` envelope, error format and pagination shape (`docs/ai/api-contract.md`); ignore the skill's own response, error and TypeScript examples where they differ.
+- Never report missing or absent tests as a defect or review finding, and never add tests because a skill's checklist asks for them.
+- Comment rules in `docs/ai/conventions.md` apply to every skill: no comments by default, at most one short single-line English comment for genuinely complex logic. Ignore skill examples with multi-line or JSDoc-style comments.
