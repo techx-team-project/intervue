@@ -122,3 +122,6 @@ CLAUDE.local.md
 
 # CodeGraph local index
 .codegraph/
+
+# Personal member workspace
+workspace/
