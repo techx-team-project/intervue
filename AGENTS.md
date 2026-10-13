@@ -17,6 +17,7 @@ AI-assisted IT recruitment platform. Roles: Candidate, Recruiter, Admin (one acc
 | Backend architecture | `docs/ai/architecture.md` |
 | Conventions (both sides) | `docs/ai/conventions.md` |
 | Domain terms | `docs/ai/domain-glossary.md` |
+| Commit & branch rules | `docs/ai/git-commit.md` |
 | Frontend | `docs/ai/frontend-guide.md`, `frontend/AGENTS.md` |
 | API contract | `docs/ai/api-contract.md` |
 | Module-specific rules | `CLAUDE.md` inside the module folder (e.g. `backend/src/main/java/com/techx/intervue/modules/user/CLAUDE.md`) |
@@ -27,8 +28,8 @@ AI-assisted IT recruitment platform. Roles: Candidate, Recruiter, Admin (one acc
 2. Never commit/print secrets; never run destructive commands without approval.
 3. Verify (build, lint, tests) before saying "done"; report real output.
 4. Don't invent requirements — see `FUNCTION_REQUIRMENT.md`, `docs/`.
-5. English for code/comments/commits; Vietnamese for UI copy.
-6. Conventional Commits; PRs target `dev`; commit only when asked.
+5. English for code and commits; Vietnamese for UI copy. No comments unless the code is truly hard to follow (one short English line).
+6. Commits and branches follow `docs/ai/git-commit.md`; PRs target `dev`; commit only when asked. Never add `Co-Authored-By` or AI attribution.
 
 ## Commands
 

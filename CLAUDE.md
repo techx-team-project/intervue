@@ -20,6 +20,7 @@ Nested `CLAUDE.md` files (`backend/`, `frontend/`, `backend/.../modules/<module>
 @docs/ai/architecture.md
 @docs/ai/conventions.md
 @docs/ai/domain-glossary.md
+@docs/ai/git-commit.md
 
 Load on demand (not imported): `docs/ai/frontend-guide.md` (frontend work), `docs/ai/api-contract.md` (any API change).
 
@@ -36,14 +37,14 @@ PowerShell: use `.\mvnw.cmd`. Git Bash: `./mvnw`.
 
 ## Working agreement
 
-1. Read the code around your change first; match its style, naming and comment density.
+1. Read the code around your change first; match its style and naming. Do not add comments (see Code comments in `docs/ai/conventions.md`).
 2. Smallest correct change. No drive-by refactors; no new dependency without asking.
 3. Never print or commit secrets (`.env`, `application-local.yml`). Never run destructive commands (`git reset --hard`, force-push, `docker compose down -v`, drop tables) without explicit approval.
 4. Verify before claiming done: run build/lint/test and report real output; say so if you could not run something.
 5. Ambiguous behavior → check `FUNCTION_REQUIRMENT.md` / `docs/`, then ask. Don't invent requirements.
 6. Features touching DB + API + UI: use plan mode, share the plan, then implement.
-7. Code, comments, commits in English. UI copy in Vietnamese.
-8. Only commit/push when asked. Branches: `feature/*`, `fix/*`, `docs/*`, `refactor/*` → PR into `dev` → `main`. Conventional Commits.
+7. Code and commits in English. UI copy in Vietnamese. Write no comments unless the code is truly hard to follow; then a single short English line.
+8. Only commit/push when asked. Follow `docs/ai/git-commit.md` exactly: `type(scope): description`, branches `type/scope-description`, PR into `dev`. **Never add `Co-Authored-By` or any AI attribution to commits or PRs.**
 
 ## Shared tooling (`.claude/`)
 
