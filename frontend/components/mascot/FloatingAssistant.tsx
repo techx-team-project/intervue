@@ -55,6 +55,7 @@ const PERIODIC_GREETINGS: Array<{ state: RobotHeadState; msg: string }> = [
 
 export function FloatingAssistant() {
   const pathname = usePathname();
+  const isHidden = pathname === '/mascot' || pathname.startsWith('/recruiter');
   const [showBubble, setShowBubble] = useState(false);
   const [isAutoGreeting, setIsAutoGreeting] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -105,7 +106,7 @@ export function FloatingAssistant() {
   }, [showBubble, clearAutoDismiss]);
 
   React.useEffect(() => {
-    if (pathname === '/mascot') return;
+    if (isHidden) return;
 
     const initialGreetingTimeout = setTimeout(() => {
       setShowBubble((currentShow) => {
@@ -142,9 +143,9 @@ export function FloatingAssistant() {
       }
       clearAutoDismiss();
     };
-  }, [pathname, startAutoDismiss, clearAutoDismiss]);
+  }, [isHidden, startAutoDismiss, clearAutoDismiss]);
 
-  if (pathname === '/mascot') {
+  if (isHidden) {
     return null;
   }
 
