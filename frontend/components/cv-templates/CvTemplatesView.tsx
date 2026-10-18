@@ -31,7 +31,6 @@ export default function CvTemplatesView({
   const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  // Preview Modal state
   const [previewState, setPreviewState] = useState<{
     isOpen: boolean;
     template: CvTemplateItem | null;
@@ -40,15 +39,12 @@ export default function CvTemplatesView({
     template: null,
   });
 
-  // Filter templates
   const filteredTemplates = useMemo(() => {
     return initialTemplates.filter((item) => {
-      // Style filter
       if (selectedStyleSlug !== 'all' && item.styleSlug !== selectedStyleSlug) {
         return false;
       }
 
-      // Industry filter
       if (selectedIndustrySlug !== 'all') {
         const indObj = industries.find((i) => i.slug === selectedIndustrySlug);
         if (indObj && !item.industries.includes(indObj.name)) {
@@ -56,12 +52,10 @@ export default function CvTemplatesView({
         }
       }
 
-      // Language filter
       if (selectedLanguage !== 'all' && !item.languages.includes(selectedLanguage as 'Tiếng Việt' | 'Tiếng Anh')) {
         return false;
       }
 
-      // Search query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const matchTitle = item.title.toLowerCase().includes(q);
@@ -89,16 +83,13 @@ export default function CvTemplatesView({
   };
 
   const handleUseTemplate = () => {
-    // Navigate to profile or builder
     router.push('/candidate/profile');
   };
 
   return (
     <div className="min-h-screen bg-[#f8faf9]">
-      {/* 1. Hero Banner */}
       <CvHeroBanner />
 
-      {/* 2. Filter Bar */}
       <CvFilterBar
         styles={styles}
         industries={industries}
@@ -112,7 +103,6 @@ export default function CvTemplatesView({
         onSearchChange={setSearchQuery}
       />
 
-      {/* 3. Main Gallery Grid */}
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -160,16 +150,12 @@ export default function CvTemplatesView({
         )}
       </div>
 
-      {/* 4. Steps Guide */}
       <CvStepGuideSection />
 
-      {/* 5. Benefits */}
       <CvBenefitsSection />
 
-      {/* 6. FAQ Accordion */}
       <CvFaqSection />
 
-      {/* 7. Full Preview Modal */}
       <CvPreviewModal
         key={previewState.template?.id || 'modal'}
         template={previewState.template}

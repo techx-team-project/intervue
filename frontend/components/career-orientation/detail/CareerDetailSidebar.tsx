@@ -12,7 +12,6 @@ interface CareerDetailSidebarProps {
 export default function CareerDetailSidebar({ article }: CareerDetailSidebarProps) {
   return (
     <aside className="space-y-6">
-      {/* 1. Author Box */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
         <span className="mb-3 block text-[11px] font-bold tracking-wider text-[#7f878f] uppercase">
           Tác giả bài viết
@@ -40,7 +39,6 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
         )}
       </div>
 
-      {/* 2. Fast Career Tools */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
         <div className="mb-3 flex items-center gap-2">
           <Sparkles className="text-primary h-4 w-4" />
@@ -90,7 +88,6 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
         </div>
       </div>
 
-      {/* 3. Related Articles */}
       {article.relatedArticles && article.relatedArticles.length > 0 && (
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
           <h4 className="mb-3 text-sm font-bold text-[#171717]">Bài viết liên quan</h4>

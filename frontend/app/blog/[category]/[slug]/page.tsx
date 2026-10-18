@@ -46,7 +46,6 @@ export default async function BlogArticleDetailPage({ params }: BlogArticleDetai
     notFound();
   }
 
-  // Canonical category redirection if user accessed via mismatched category
   if (article.categorySlug && article.categorySlug !== category) {
     redirect(`/blog/${article.categorySlug}/${article.slug}`);
   }

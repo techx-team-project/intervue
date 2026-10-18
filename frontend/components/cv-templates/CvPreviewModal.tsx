@@ -57,7 +57,6 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
       className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm duration-200 sm:p-6"
     >
       <div className="relative flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl lg:flex-row">
-        {/* Close Button Top Right */}
         <button
           type="button"
           onClick={onClose}
@@ -67,9 +66,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
           <X className="h-5 w-5" />
         </button>
 
-        {/* Left Side: A4 Canvas View with Zoom Controls */}
         <div className="flex flex-1 flex-col overflow-hidden border-b border-gray-200 bg-[#f0f2f5] lg:border-r lg:border-b-0">
-          {/* Zoom controls bar */}
           <div className="flex items-center justify-between border-b border-gray-200 bg-white/80 px-6 py-3 text-xs text-[#526475]">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-[#171717]">{template.title}</span>
@@ -107,7 +104,6 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
             </div>
           </div>
 
-          {/* Scrollable Paper Container */}
           <div className="flex flex-1 items-start justify-center overflow-y-auto p-6 sm:p-8">
             <div
               className="origin-top shadow-2xl transition-transform duration-200"
@@ -118,7 +114,6 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
           </div>
         </div>
 
-        {/* Right Side: Options, ATS Analysis & Action Panel */}
         <div className="flex w-full flex-col justify-between overflow-y-auto bg-white p-6 sm:p-8 lg:w-96">
           <div className="space-y-6">
             <div>
@@ -134,7 +129,6 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
               <p className="mt-2 text-xs leading-relaxed text-[#526475]">{template.description}</p>
             </div>
 
-            {/* ATS Score Card */}
             <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -149,7 +143,6 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
               </p>
             </div>
 
-            {/* Recommended for */}
             <div>
               <label className="text-navy mb-2 block text-xs font-bold tracking-wider uppercase">
                 Phù hợp nhất với:
@@ -164,7 +157,6 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
             </div>
           </div>
 
-          {/* Action CTAs */}
           <div className="mt-6 space-y-3 border-t border-gray-100 pt-6">
             <Link
               href="/candidate/profile"

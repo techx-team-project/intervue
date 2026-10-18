@@ -28,15 +28,12 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f4f5f5]">
-      {/* 1. Global Navigation Header */}
       <Header />
 
-      {/* 2. Job Detail Page View */}
       <main className="flex-1">
         <JobDetailView job={job} relatedJobs={MOCK_RELATED_JOBS} />
       </main>
 
-      {/* 3. Global Footer */}
       <Footer />
     </div>
   );

@@ -37,7 +37,6 @@ const PERK_ICONS: Record<string, React.ElementType> = {
 export default function JobDescriptionSection({ job, onApply }: JobDescriptionSectionProps) {
   return (
     <div className="space-y-6">
-      {/* 1. MÔ TẢ CÔNG VIỆC */}
       <section id="job-description" className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
         <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
           <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
@@ -58,7 +57,6 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
         </div>
       </section>
 
-      {/* 2. YÊU CẦU ỨNG VIÊN */}
       <section id="job-requirements" className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
         <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
           <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
@@ -67,7 +65,6 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Yêu cầu ứng viên</h2>
         </div>
 
-        {/* Skill tags */}
         <div className="mt-5">
           <div className="mb-2.5 text-xs font-bold tracking-wider text-slate-500 uppercase">
             Kỹ năng & Chuyên môn ưu tiên
@@ -84,7 +81,6 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
           </div>
         </div>
 
-        {/* Requirements list */}
         <div className="mt-5 space-y-3">
           {job.requirements.map((item, index) => (
             <div key={index} className="flex items-start gap-3">
@@ -95,7 +91,6 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
         </div>
       </section>
 
-      {/* 3. QUYỀN LỢI ỨNG VIÊN */}
       <section id="job-benefits" className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
         <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
           <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
@@ -104,7 +99,6 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Quyền lợi ứng viên</h2>
         </div>
 
-        {/* Highlight Perks Grid */}
         {job.perks && job.perks.length > 0 && (
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {job.perks.map((perk, index) => {
@@ -125,7 +119,6 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
           </div>
         )}
 
-        {/* Benefits list */}
         <div className="mt-5 space-y-3">
           {job.benefits.map((item, index) => (
             <div key={index} className="flex items-start gap-3">
@@ -138,7 +131,6 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
         </div>
       </section>
 
-      {/* 4. ĐỊA ĐIỂM VÀ THỜI GIAN LÀM VIỆC */}
       <section id="job-location" className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
         <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
           <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
@@ -148,7 +140,6 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
         </div>
 
         <div className="mt-5 space-y-4">
-          {/* Địa điểm */}
           <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
             <div className="flex items-start gap-3">
               <MapPin className="text-primary mt-0.5 h-5 w-5 shrink-0" />
@@ -172,7 +163,6 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
             </div>
           </div>
 
-          {/* Thời gian làm việc */}
           <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
             <div className="flex items-start gap-3">
               <Clock className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
@@ -186,7 +176,6 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
         </div>
       </section>
 
-      {/* 5. CÁCH THỨC ỨNG TUYỂN & HẠN NỘP */}
       <section className="rounded-2xl border border-emerald-200 bg-linear-to-br from-emerald-50/60 via-white to-teal-50/30 p-5 shadow-xs sm:p-7">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -217,7 +206,6 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
           </button>
         </div>
 
-        {/* Safety & Anti-Fraud Notice (TopCV feature) */}
         <div className="mt-6 rounded-xl border border-amber-200/80 bg-amber-50/60 p-4 text-xs text-amber-900">
           <div className="flex items-start gap-2.5">
             <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />

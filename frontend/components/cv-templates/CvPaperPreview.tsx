@@ -14,7 +14,6 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
   if (isMini) {
     return (
       <div className="relative aspect-[1/1.414] w-full overflow-hidden rounded-xl border border-gray-200 bg-white p-3.5 text-[8px] leading-tight text-gray-700 shadow-inner select-none">
-        {/* Top Header bar with dynamic color */}
         <div className="mb-2.5 rounded-lg p-2 text-white" style={{ backgroundColor: primaryColor }}>
           <div className="flex items-center gap-2">
             <div className="h-6 w-6 shrink-0 overflow-hidden rounded-full border border-white/40 bg-white/20">
@@ -28,11 +27,8 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
           </div>
         </div>
 
-        {/* Mini Two-column mockup */}
         <div className="grid grid-cols-12 gap-2">
-          {/* Main 8 cols */}
           <div className="col-span-8 space-y-2">
-            {/* Summary */}
             <div>
               <div
                 className="border-b pb-0.5 text-[8px] font-bold"
@@ -43,7 +39,6 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
               <p className="mt-1 line-clamp-2 text-[7px] text-gray-600">{sampleData.summary}</p>
             </div>
 
-            {/* Experience */}
             <div>
               <div
                 className="border-b pb-0.5 text-[8px] font-bold"
@@ -72,7 +67,6 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
               ))}
             </div>
 
-            {/* Education */}
             <div>
               <div
                 className="border-b pb-0.5 text-[8px] font-bold"
@@ -89,9 +83,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
             </div>
           </div>
 
-          {/* Side 4 cols */}
           <div className="col-span-4 space-y-2 border-l border-gray-100 pl-1.5">
-            {/* Contact */}
             <div>
               <div
                 className="border-b pb-0.5 text-[7.5px] font-bold"
@@ -105,7 +97,6 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
               </div>
             </div>
 
-            {/* Skills */}
             <div>
               <div
                 className="border-b pb-0.5 text-[7.5px] font-bold"
@@ -131,10 +122,8 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
     );
   }
 
-  // Full detailed A4 Paper View
   return (
     <div className="aspect-[1/1.414] w-full max-w-2xl overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 text-xs leading-relaxed text-gray-800 shadow-2xl sm:p-10 sm:text-sm">
-      {/* Header Profile with dynamic Theme Color */}
       <div className="mb-6 rounded-2xl p-6 text-white shadow-md sm:p-7" style={{ backgroundColor: primaryColor }}>
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-4">
@@ -167,11 +156,8 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
         </div>
       </div>
 
-      {/* Main Two-column Content */}
       <div className="grid grid-cols-12 gap-6">
-        {/* Main Column (8 cols) */}
         <div className="col-span-12 space-y-6 sm:col-span-8">
-          {/* Summary */}
           <div>
             <h3
               className="flex items-center gap-1.5 border-b-2 pb-1 text-xs font-bold tracking-wider uppercase sm:text-sm"
@@ -183,7 +169,6 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
             <p className="mt-2 text-justify text-xs text-gray-600">{sampleData.summary}</p>
           </div>
 
-          {/* Experience */}
           <div>
             <h3
               className="flex items-center gap-1.5 border-b-2 pb-1 text-xs font-bold tracking-wider uppercase sm:text-sm"
@@ -218,7 +203,6 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
             </div>
           </div>
 
-          {/* Education */}
           <div>
             <h3
               className="flex items-center gap-1.5 border-b-2 pb-1 text-xs font-bold tracking-wider uppercase sm:text-sm"
@@ -242,9 +226,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
           </div>
         </div>
 
-        {/* Sidebar Column (4 cols) */}
         <div className="col-span-12 space-y-6 border-gray-100 sm:col-span-4 sm:border-l sm:pl-5">
-          {/* Skills */}
           <div>
             <h3
               className="flex items-center gap-1.5 border-b-2 pb-1 text-xs font-bold tracking-wider uppercase"
@@ -266,7 +248,6 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
             </div>
           </div>
 
-          {/* Languages */}
           {sampleData.languages && (
             <div>
               <h3
@@ -283,7 +264,6 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
             </div>
           )}
 
-          {/* Certifications */}
           {sampleData.certifications && (
             <div>
               <h3

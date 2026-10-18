@@ -16,7 +16,6 @@ export default function CandidateEducationSection({
 }: CandidateEducationSectionProps) {
   return (
     <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-8">
-      {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50">

@@ -37,19 +37,14 @@ export default function UpgradeLandingView() {
 
   return (
     <div className="min-h-screen bg-white text-slate-800 antialiased">
-      {/* 1. Header Banner */}
       <UpgradeHero />
 
-      {/* 2. Bảng so sánh quyền lợi (Data-Driven Matrix) */}
       <PricingComparisonTable features={UPGRADE_FEATURES} plans={PRICING_PLANS} onSelectPlan={handleSelectPlan} />
 
-      {/* 3. Khối mã ưu đãi / Voucher */}
       <VoucherSection />
 
-      {/* 4. Câu hỏi thường gặp */}
       <PricingFaqSection faqs={UPGRADE_FAQS} />
 
-      {/* 5. Modal Thanh toán qua VietQR */}
       <PaymentQrModal order={selectedOrder} isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );

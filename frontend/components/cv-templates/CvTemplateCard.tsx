@@ -16,14 +16,11 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
   return (
     <div className="group hover:border-primary/60 flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div>
-        {/* Top Preview Canvas Container */}
         <div className="relative overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-2">
-          {/* Mini dynamic CV Paper preview */}
           <div className="transition-transform duration-500 group-hover:scale-102">
             <CvPaperPreview sampleData={template.sampleData} primaryColor={template.defaultColorHex} isMini={true} />
           </div>
 
-          {/* Top floating badges */}
           <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
             {template.isHot && (
               <Badge variant="warning" size="sm" className="border-transparent bg-orange-500 text-white">
@@ -39,7 +36,6 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
             )}
           </div>
 
-          {/* Hover Action Overlay */}
           <div className="absolute inset-0 flex items-center justify-center gap-3 rounded-xl bg-black/40 p-4 opacity-0 backdrop-blur-xs transition-opacity duration-300 group-hover:opacity-100">
             <button
               type="button"
@@ -61,7 +57,6 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
           </div>
         </div>
 
-        {/* Title and Meta */}
         <div className="mt-4">
           <h3 className="group-hover:text-primary line-clamp-1 text-sm font-bold text-[#171717] transition-colors">
             {template.title}
@@ -80,7 +75,6 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
         </div>
       </div>
 
-      {/* Card Footer: Uses count & CTA buttons */}
       <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
         <div className="flex items-center gap-2 text-[11px] text-[#7f878f]">
           <span className="flex items-center gap-0.5 font-bold text-amber-500">

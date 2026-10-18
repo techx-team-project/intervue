@@ -24,16 +24,13 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
 
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm">
-      {/* 1. Cover Banner Image */}
       <div className="relative h-48 w-full overflow-hidden bg-slate-900 sm:h-64 lg:h-72">
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
           style={{ backgroundImage: `url(${company.cover})` }}
         />
-        {/* Soft emerald dark overlay */}
         <div className="absolute inset-0 bg-linear-to-t from-slate-950/85 via-slate-900/40 to-transparent" />
 
-        {/* Top Badges / Tagline */}
         <div className="absolute top-4 right-4 flex items-center gap-2">
           {company.isVerified && (
             <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-slate-900/70 px-3 py-1 text-xs font-semibold text-emerald-300 backdrop-blur-md">
@@ -44,18 +41,14 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
         </div>
       </div>
 
-      {/* 2. Company Info Row */}
       <div className="relative px-5 pt-0 pb-5 sm:px-7">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          {/* Logo + Titles */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-            {/* Logo squircle overlapping cover */}
             <div className="relative -mt-16 flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-white p-2 shadow-md sm:-mt-20 sm:h-32 sm:w-32">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={company.logo} alt={company.name} className="h-full w-full object-contain" />
             </div>
 
-            {/* Name & Tagline */}
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{company.name}</h1>
@@ -65,7 +58,6 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
                 <p className="mt-1 text-xs text-slate-500 italic sm:text-[13px]">&ldquo;{company.tagline}&rdquo;</p>
               )}
 
-              {/* Badges metadata row */}
               <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-600">
                 {company.website && (
                   <a
@@ -98,9 +90,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
             </div>
           </div>
 
-          {/* Action buttons */}
           <div className="flex items-center gap-2.5 pt-2 sm:pt-0">
-            {/* Follow button */}
             <button
               type="button"
               onClick={() => setIsFollowing((prev) => !prev)}
@@ -123,7 +113,6 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
               )}
             </button>
 
-            {/* Share button */}
             <button
               type="button"
               onClick={handleShare}
@@ -142,7 +131,6 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
         </div>
       </div>
 
-      {/* 3. Navigation Tabs Bar */}
       <div className="border-t border-slate-200 bg-slate-50/70 px-5 sm:px-7">
         <div className="flex items-center gap-2">
           <button

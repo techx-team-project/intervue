@@ -74,7 +74,6 @@ export default function CandidateAttachedCvSidebar({
               )}
             </div>
 
-            {/* ATS Score & Action Buttons */}
             <div className="mt-3 flex items-center justify-between border-t border-[#f1f5f9] pt-2 text-[12px]">
               <div className="flex items-center gap-1 font-semibold text-[#00873c]">
                 <Sparkles className="text-primary h-3 w-3" />
@@ -104,7 +103,6 @@ export default function CandidateAttachedCvSidebar({
         ))}
       </div>
 
-      {/* Upload New CV Box (Only for Owner) */}
       {isOwner && (
         <button
           type="button"

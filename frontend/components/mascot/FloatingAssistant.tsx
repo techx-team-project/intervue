@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { X, FileText, Briefcase, MessageSquareCode, Sparkles } from 'lucide-react';
 import { DynamicRobotHead, type RobotHeadShape, type RobotHeadState } from './MascotCore';
 
-// Cấu hình cố định thương hiệu InterVue AI: Dáng Rectangle & Màu Electric Neon Mint
 const FIXED_SHAPE: RobotHeadShape = 'rectangle';
 const FIXED_COLOR = '#064e3b';
 const FIXED_TRIM_COLOR = '#10b981';
@@ -31,7 +30,6 @@ const CUTE_REACTIONS: Array<{ state: RobotHeadState; msg: string }> = [
   },
 ];
 
-// Danh sách các câu chào định kỳ vui nhộn giúp tương tác tự nhiên với người dùng
 const PERIODIC_GREETINGS: Array<{ state: RobotHeadState; msg: string }> = [
   {
     state: 'happy',
@@ -68,7 +66,6 @@ export function FloatingAssistant() {
   const autoDismissTimerRef = React.useRef<NodeJS.Timeout | null>(null);
   const greetingIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
 
-  // Hủy bộ đếm thời gian tự ẩn nếu có
   const clearAutoDismiss = React.useCallback(() => {
     if (autoDismissTimerRef.current) {
       clearTimeout(autoDismissTimerRef.current);
@@ -76,7 +73,6 @@ export function FloatingAssistant() {
     }
   }, []);
 
-  // Bắt đầu đếm ngược tự động ẩn lời chào định kỳ nếu người dùng không tương tác
   const startAutoDismiss = React.useCallback(
     (delayMs = 6500) => {
       clearAutoDismiss();
@@ -89,7 +85,6 @@ export function FloatingAssistant() {
     [clearAutoDismiss],
   );
 
-  // Đóng khung chat khi nhấp chuột ra ngoài màn hình
   React.useEffect(() => {
     if (!showBubble) return;
 
@@ -108,11 +103,9 @@ export function FloatingAssistant() {
     };
   }, [showBubble, clearAutoDismiss]);
 
-  // Hiệu ứng tương tác: Lâu lâu Mascot sẽ tự động hiện 1 câu xin chào vui nhộn
   React.useEffect(() => {
     if (pathname === '/mascot') return;
 
-    // Lần đầu chào sau 4.5s khi vào web
     const initialGreetingTimeout = setTimeout(() => {
       setShowBubble((currentShow) => {
         if (!currentShow) {
@@ -127,7 +120,6 @@ export function FloatingAssistant() {
       });
     }, 4500);
 
-    // Sau đó cứ mỗi 20s sẽ nhắc chào một lần nếu người dùng chưa mở khung chat
     greetingIntervalRef.current = setInterval(() => {
       setShowBubble((currentShow) => {
         if (!currentShow) {
@@ -151,7 +143,6 @@ export function FloatingAssistant() {
     };
   }, [pathname, startAutoDismiss, clearAutoDismiss]);
 
-  // Ẩn mascot nổi khi đang ở trang Playground (/mascot) để tránh trùng lặp 2 robot trên 1 màn hình
   if (pathname === '/mascot') {
     return null;
   }
@@ -167,7 +158,6 @@ export function FloatingAssistant() {
   const handleRobotClick = () => {
     clearAutoDismiss();
     setIsAutoGreeting(false);
-    // Hoạt động như công tắc (toggle switch): click để hiện, click lần nữa để ẩn
     setShowBubble((prev) => {
       const next = !prev;
       if (next) {
@@ -187,7 +177,6 @@ export function FloatingAssistant() {
       className="pointer-events-auto fixed right-4 bottom-4 z-50 select-none sm:right-6 sm:bottom-6"
     >
       <div className="relative">
-        {/* BONG BÓNG LỜI THOẠI & MENU NỔI TUYỆT ĐỐI PHÍA TRÊN ROBOT (KHÔNG LÀM DỊCH CHUYỂN ROBOT) */}
         {showBubble && (
           <div
             onMouseEnter={() => {
@@ -202,7 +191,6 @@ export function FloatingAssistant() {
             }}
             className="animate-in fade-in slide-in-from-bottom-2 absolute right-0 bottom-full mb-3 w-72 rounded-3xl border border-emerald-100 bg-white/95 p-3.5 shadow-2xl shadow-slate-900/15 backdrop-blur-md transition-all sm:w-80 sm:p-4"
           >
-            {/* Header của bong bóng thoại */}
             <div className="mb-2 flex items-center justify-between border-b border-slate-100 pb-1.5">
               <div className="flex items-center gap-1.5">
                 <span className="relative flex h-2 w-2">
@@ -230,12 +218,10 @@ export function FloatingAssistant() {
               </button>
             </div>
 
-            {/* Lời thoại động của Robot */}
             <p className="mb-3 text-[11.5px] leading-relaxed font-medium text-slate-700 sm:text-xs">
               &ldquo;{currentMessage}&rdquo;
             </p>
 
-            {/* Các nút bấm tác vụ nhanh */}
             <div className="flex flex-wrap gap-1.5">
               <Link
                 href="/cv-templates"
@@ -280,12 +266,10 @@ export function FloatingAssistant() {
               </Link>
             </div>
 
-            {/* Mũi tên chỉ xuống thẳng đầu chú Mascot */}
             <div className="absolute right-12 -bottom-2 h-0 w-0 border-x-8 border-t-8 border-x-transparent border-t-white drop-shadow-xs" />
           </div>
         )}
 
-        {/* CHÍNH CHÚ MASCOT CANVAS ĐỨNG CỐ ĐỊNH TẠI GÓC (TỐC ĐỘ 2.5X, ĐÃ XÓA TOÀN BỘ BÓNG MỜ) */}
         <div
           onClick={handleRobotClick}
           className="relative cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"

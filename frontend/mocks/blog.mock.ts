@@ -90,9 +90,7 @@ export const BLOG_CATEGORIES: BlogCategoryMeta[] = [
   },
 ];
 
-// Additional rich articles for Bí quyết tìm việc, Chế độ hưởng lương, Kiến thức chuyên ngành, and Định hướng nghề nghiệp
 export const ADDITIONAL_BLOG_ARTICLES: BlogArticle[] = [
-  // --- BÍ QUYẾT TÌM VIỆC (bi-kip-tim-viec) ---
   {
     id: 'art-cv-ats-2026',
     slug: 'bi-quyet-viet-cv-chuan-ats-chinh-phuc-nha-tuyen-dung-2026',
@@ -369,7 +367,6 @@ export const ADDITIONAL_BLOG_ARTICLES: BlogArticle[] = [
     ],
   },
 
-  // --- CHẾ ĐỘ HƯỞNG LƯƠNG (che-do-luong-thuong) ---
   {
     id: 'art-gross-net-guide-2026',
     slug: 'cach-tinh-luong-gross-sang-net-chuan-quy-dinh-moi-2026',
@@ -641,7 +638,6 @@ export const ADDITIONAL_BLOG_ARTICLES: BlogArticle[] = [
     ],
   },
 
-  // --- KIẾN THỨC CHUYÊN NGÀNH (kien-thuc-chuyen-nganh) ---
   {
     id: 'art-it-landscape-2026',
     slug: 'nganh-cong-nghe-thong-tin-it-la-gi-lo-trinh-developer',
@@ -816,7 +812,6 @@ export const ADDITIONAL_BLOG_ARTICLES: BlogArticle[] = [
     ],
   },
 
-  // --- ĐỊNH HƯỚNG NGHỀ NGHIỆP (dinh-huong-nghe-nghiep) ---
   {
     id: 'art-sales-career-roadmap',
     slug: 'dinh-huong-nghe-nghiep-nganh-kinh-doanh-sales',
@@ -931,10 +926,8 @@ export const ADDITIONAL_BLOG_ARTICLES: BlogArticle[] = [
   },
 ];
 
-// Combine all articles into a master list
 export const ALL_BLOG_ARTICLES: BlogArticle[] = [...CAREER_ARTICLES, ...ADDITIONAL_BLOG_ARTICLES];
 
-// Helper functions for Blog
 export function getAllBlogArticles(): BlogArticle[] {
   return ALL_BLOG_ARTICLES;
 }

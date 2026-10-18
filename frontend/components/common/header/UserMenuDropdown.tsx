@@ -3,6 +3,9 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Award, Briefcase, ChevronDown, ChevronUp, FileText, LogOut, ShieldCheck } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { useLogout } from '@/hooks/useLogout';
+import { ROUTES } from '@/constants/routes';
 
 interface UserMenuDropdownProps {
   onClose: () => void;
@@ -11,6 +14,8 @@ interface UserMenuDropdownProps {
 }
 
 export function UserMenuDropdown({ onClose, onMouseEnter, onMouseLeave }: UserMenuDropdownProps) {
+  const { user } = useAuth();
+  const logout = useLogout();
   const [userAccordions, setUserAccordions] = useState<Record<string, boolean>>({
     jobs: true,
     cv: true,
@@ -32,27 +37,26 @@ export function UserMenuDropdown({ onClose, onMouseEnter, onMouseLeave }: UserMe
       onMouseLeave={onMouseLeave}
       onClick={(e) => e.stopPropagation()}
     >
-      {/* 1. Header: Avatar & Info */}
       <Link
         href="/account"
         onClick={onClose}
         className="-mx-1 flex items-center gap-3 rounded-xl border-b border-slate-100 px-2 pb-3 transition-colors hover:bg-slate-50"
       >
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-linear-to-tr from-emerald-500 to-emerald-600 text-lg font-black text-white shadow-md ring-2 ring-emerald-100">
-          A
+          {user?.name.charAt(0).toUpperCase()}
         </div>
         <div className="min-w-0 flex-1">
-          <h4 className="truncate text-sm font-bold text-slate-800">An Lâm Hoàng</h4>
-          <p className="mt-0.5 text-xs font-medium text-slate-500">Tài khoản đã xác thực</p>
+          <h4 className="truncate text-sm font-bold text-slate-800">{user?.name}</h4>
+          <p className="mt-0.5 text-xs font-medium text-slate-500">
+            {user?.emailVerified ? 'Verified account' : 'Email not verified'}
+          </p>
           <p className="mt-0.5 truncate text-xs text-slate-400">
-            ID 11311666 <span className="mx-1 text-slate-300">|</span> lamhoangan612@gmail.com
+            ID {user?.id} <span className="mx-1 text-slate-300">|</span> {user?.email}
           </p>
         </div>
       </Link>
 
-      {/* 2. Menu Accordion Groups */}
       <div className="mt-1.5 divide-y divide-slate-100">
-        {/* Group 1: Quản lý tìm việc */}
         <div className="py-1">
           <button
             type="button"
@@ -99,7 +103,6 @@ export function UserMenuDropdown({ onClose, onMouseEnter, onMouseLeave }: UserMe
           )}
         </div>
 
-        {/* Group 2: Quản lý CV */}
         <div className="py-1">
           <button
             type="button"
@@ -122,14 +125,14 @@ export function UserMenuDropdown({ onClose, onMouseEnter, onMouseLeave }: UserMe
           {userAccordions.cv && (
             <div className="mt-0.5 space-y-0.5 pr-1 pl-8">
               <Link
-                href="/profile"
+                href={ROUTES.CANDIDATE_PROFILE}
                 onClick={onClose}
                 className="block rounded-lg px-2 py-1 text-xs text-slate-600 transition-colors hover:bg-emerald-50/60 hover:text-emerald-600"
               >
                 CV của tôi
               </Link>
               <Link
-                href="/profile"
+                href={ROUTES.CANDIDATE_PROFILE}
                 onClick={onClose}
                 className="block rounded-lg px-2 py-1 text-xs text-slate-600 transition-colors hover:bg-emerald-50/60 hover:text-emerald-600"
               >
@@ -139,7 +142,6 @@ export function UserMenuDropdown({ onClose, onMouseEnter, onMouseLeave }: UserMe
           )}
         </div>
 
-        {/* Group 3: Cài đặt & Bảo mật */}
         <div className="py-1">
           <button
             type="button"
@@ -186,7 +188,6 @@ export function UserMenuDropdown({ onClose, onMouseEnter, onMouseLeave }: UserMe
           )}
         </div>
 
-        {/* Group 4: Nâng cấp tài khoản */}
         <div className="py-1">
           <button
             type="button"
@@ -227,16 +228,16 @@ export function UserMenuDropdown({ onClose, onMouseEnter, onMouseLeave }: UserMe
         </div>
       </div>
 
-      {/* 3. Footer: Đăng xuất button */}
       <div className="mt-3 border-t border-slate-100 pt-3">
-        <Link
-          href="/login"
-          onClick={onClose}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-100 py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-200"
+        <button
+          type="button"
+          disabled={logout.isPending}
+          onClick={() => logout.mutate()}
+          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-slate-100 py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <LogOut className="h-4 w-4 text-slate-500" />
-          <span>Đăng xuất</span>
-        </Link>
+          <span>Sign out</span>
+        </button>
       </div>
     </div>
   );

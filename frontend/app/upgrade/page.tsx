@@ -12,15 +12,12 @@ export const metadata: Metadata = {
 export default function UpgradePage() {
   return (
     <div className="flex min-h-screen flex-col bg-white antialiased">
-      {/* 1. Global Navigation Header */}
       <Header />
 
-      {/* 2. Standalone VIP Upgrade Landing (No Account Sidebar) */}
       <main className="flex-1 bg-white">
         <UpgradeLandingView />
       </main>
 
-      {/* 3. Global Footer */}
       <Footer />
     </div>
   );

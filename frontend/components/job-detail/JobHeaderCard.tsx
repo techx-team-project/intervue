@@ -38,13 +38,10 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm transition-all sm:p-7">
-      {/* Top Emerald Gradient Accent Bar */}
       <div className="from-primary absolute inset-x-0 top-0 h-1.5 bg-linear-to-r via-emerald-500 to-emerald-700" />
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-        {/* Left: Logo + Info */}
         <div className="flex items-start gap-4 sm:gap-5">
-          {/* Company Logo Squircle */}
           <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-xs sm:h-24 sm:w-24">
             {job.company.logo ? (
               /* eslint-disable-next-line @next/next/no-img-element */
@@ -54,7 +51,6 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
             )}
           </div>
 
-          {/* Title & Company Info */}
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               {job.isPro && (
@@ -73,11 +69,9 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
               {job.title}
             </h1>
 
-            {/* Company Name with Verified Employer Badge */}
             <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-600">
               <span className="hover:text-primary font-semibold text-slate-700">{job.company.name}</span>
 
-              {/* Verified badge with interactive tooltip */}
               <div className="relative inline-block">
                 <button
                   type="button"
@@ -109,9 +103,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
               </div>
             </div>
 
-            {/* Key Highlight Badges Grid */}
             <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
-              {/* Mức lương */}
               <div className="rounded-xl border border-emerald-200/90 bg-linear-to-br from-emerald-50/70 to-teal-50/40 p-2.5 sm:p-3">
                 <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-800">
                   <Banknote className="text-primary h-3.5 w-3.5" />
@@ -120,7 +112,6 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
                 <div className="mt-1 text-sm font-black text-emerald-700 sm:text-base">{job.salary.display}</div>
               </div>
 
-              {/* Địa điểm */}
               <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 sm:p-3">
                 <div className="flex items-center gap-1.5 text-[11.5px] font-medium text-slate-500">
                   <MapPin className="h-3.5 w-3.5 text-slate-600" />
@@ -131,7 +122,6 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
                 </div>
               </div>
 
-              {/* Kinh nghiệm */}
               <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 sm:p-3">
                 <div className="flex items-center gap-1.5 text-[11.5px] font-medium text-slate-500">
                   <Briefcase className="h-3.5 w-3.5 text-slate-600" />
@@ -140,7 +130,6 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
                 <div className="mt-1 text-[14px] font-bold text-slate-800 sm:text-[15px]">{job.experience}</div>
               </div>
 
-              {/* Hạn nộp */}
               <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 sm:p-3">
                 <div className="flex items-center gap-1.5 text-[11.5px] font-medium text-slate-500">
                   <Clock className="h-3.5 w-3.5 text-slate-600" />
@@ -154,9 +143,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
           </div>
         </div>
 
-        {/* Right: Actions Bar */}
         <div className="flex flex-col gap-3 lg:w-64 lg:shrink-0">
-          {/* Main Apply Button */}
           <button
             type="button"
             onClick={onApply}
@@ -167,9 +154,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
             <Sparkles className="h-4 w-4 text-emerald-200" />
           </button>
 
-          {/* Secondary Action Row: Lưu tin & Chia sẻ */}
           <div className="flex items-center gap-2.5">
-            {/* Lưu tin button */}
             <button
               type="button"
               onClick={onToggleSave}
@@ -183,7 +168,6 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
               <span>{isSaved ? 'Đã lưu' : 'Lưu tin'}</span>
             </button>
 
-            {/* Chia sẻ button */}
             <button
               type="button"
               onClick={handleShare}
@@ -200,7 +184,6 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
             </button>
           </div>
 
-          {/* InterVue ATS Match Score Widget */}
           <div className="rounded-xl border border-emerald-100 bg-emerald-50/50 p-2.5 text-xs">
             <div className="flex items-center justify-between text-slate-700">
               <span className="flex items-center gap-1 font-semibold text-emerald-800">

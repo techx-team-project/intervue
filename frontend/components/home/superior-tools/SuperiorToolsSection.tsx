@@ -94,7 +94,6 @@ export default function SuperiorToolsSection() {
   return (
     <section id="superior-tool" className="container-topcv my-14 font-sans">
       <div className="rounded-4xl border border-slate-200/90 bg-white p-6 shadow-[0_10px_35px_rgba(0,0,0,0.03)] sm:p-10 lg:p-12">
-        {/* 1. Header Bar: Tiêu đề + Tabs lọc danh mục */}
         <div className="mb-8 flex flex-col justify-between gap-6 border-b border-slate-100 pb-8 md:flex-row md:items-end">
           <div>
             <div className="text-primary mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-emerald-50/80 px-3.5 py-1 text-[12px] font-bold">
@@ -111,7 +110,6 @@ export default function SuperiorToolsSection() {
             </p>
           </div>
 
-          {/* Tab Filter Pills */}
           <div className="flex flex-wrap items-center gap-2">
             {CATEGORIES.map((tab) => (
               <button
@@ -129,7 +127,6 @@ export default function SuperiorToolsSection() {
           </div>
         </div>
 
-        {/* 2. Grid 6 thẻ công cụ cao cấp (3 cột đối xứng, phong cách Fintech Hub) */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filteredTools.map((tool) => (
             <a
@@ -140,7 +137,6 @@ export default function SuperiorToolsSection() {
               className="group hover:border-primary relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-[#fbfcfc] p-6 transition-all duration-300 hover:-translate-y-1.5 hover:bg-white hover:shadow-[0_12px_32px_rgba(0,177,79,0.12)]"
             >
               <div>
-                {/* Header card: Icon + Category Badge */}
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-emerald-100 bg-white p-2.5 shadow-2xs transition-transform duration-300 group-hover:scale-105">
                     <img src={tool.icon} alt={tool.title} className="h-full w-full object-contain" />
@@ -158,7 +154,6 @@ export default function SuperiorToolsSection() {
                   </div>
                 </div>
 
-                {/* Tiêu đề & mô tả */}
                 <h3 className="group-hover:text-primary text-[17px] font-bold text-[#1e293b] transition-colors sm:text-[18px]">
                   {tool.title}
                 </h3>
@@ -166,7 +161,6 @@ export default function SuperiorToolsSection() {
                 <p className="mt-2 line-clamp-2 text-[13.5px] leading-relaxed text-[#64748b]">{tool.desc}</p>
               </div>
 
-              {/* Action footer */}
               <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-3.5">
                 <span className="text-primary inline-flex items-center gap-1.5 text-[13px] font-bold transition-all group-hover:translate-x-1">
                   <span>Trải nghiệm ngay</span>

@@ -31,10 +31,8 @@ export default function CareerDetailBreadcrumb({ article }: CareerDetailBreadcru
     <div className="border-b border-slate-200 bg-white py-4">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          {/* Breadcrumb links */}
           <Breadcrumb items={items} showHome className="text-xs" />
 
-          {/* Social share & actions */}
           <div className="flex items-center gap-2">
             <button
               type="button"

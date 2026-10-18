@@ -43,7 +43,6 @@ export default function CareerSpecializationsGrid({ specializations }: CareerSpe
 
               <p className="mb-4 text-xs leading-relaxed text-[#526475] sm:text-sm">{spec.description}</p>
 
-              {/* Skills */}
               <div className="mb-3">
                 <span className="text-navy mb-1.5 block text-[11px] font-bold tracking-wider uppercase">
                   Kỹ năng cốt lõi:
@@ -61,7 +60,6 @@ export default function CareerSpecializationsGrid({ specializations }: CareerSpe
                 </div>
               </div>
 
-              {/* Tools */}
               <div>
                 <span className="text-navy mb-1.5 block text-[11px] font-bold tracking-wider uppercase">
                   Công cụ thường dùng:

@@ -17,7 +17,6 @@ export default function CandidateSkillsSection({ skills, isOwner = true, onEditS
 
   return (
     <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-8">
-      {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -41,7 +40,6 @@ export default function CandidateSkillsSection({ skills, isOwner = true, onEditS
           )}
         </div>
 
-        {/* Filter Tabs - Straight unbroken row */}
         <div className="mt-4 flex scrollbar-none items-center overflow-x-auto pb-1">
           <div className="inline-flex items-center gap-1 rounded-xl border border-[#e2e8f0]/80 bg-[#f8fafc] p-1">
             <button
@@ -93,7 +91,6 @@ export default function CandidateSkillsSection({ skills, isOwner = true, onEditS
         </div>
       </div>
 
-      {/* Skills Grid */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {filteredSkills.map((sk, idx) => (
           <div

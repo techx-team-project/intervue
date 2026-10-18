@@ -26,7 +26,6 @@ export default function CandidateProjectsSection({
 }: CandidateProjectsSectionProps) {
   return (
     <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-8">
-      {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50">
@@ -49,7 +48,6 @@ export default function CandidateProjectsSection({
         )}
       </div>
 
-      {/* Projects Grid */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {projects.map((proj) => (
           <div
@@ -57,7 +55,6 @@ export default function CandidateProjectsSection({
             className="hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-[#fbfcfd] p-5 transition-all hover:bg-white hover:shadow-md"
           >
             <div>
-              {/* Top: Name & Links */}
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <h3 className="text-[16px] font-bold text-[#1e293b]">{proj.name}</h3>
@@ -90,10 +87,8 @@ export default function CandidateProjectsSection({
                 </div>
               </div>
 
-              {/* Description */}
               <p className="mt-3 text-[13px] leading-relaxed text-[#475569]">{proj.description}</p>
 
-              {/* Highlights */}
               {proj.highlights.length > 0 && (
                 <div className="mt-3 space-y-1 rounded-xl border border-[#f1f5f9] bg-white p-3">
                   {proj.highlights.map((h, i) => (
@@ -106,7 +101,6 @@ export default function CandidateProjectsSection({
               )}
             </div>
 
-            {/* Tech Stack */}
             <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-[#f1f5f9] pt-3">
               {proj.technologies.map((t, i) => (
                 <span

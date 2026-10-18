@@ -9,7 +9,7 @@ interface CareerSalaryInteractiveProps {
 }
 
 export default function CareerSalaryInteractive({ salaryTiers }: CareerSalaryInteractiveProps) {
-  const [activeTierIndex, setActiveTierIndex] = useState(1); // Default Fresher
+  const [activeTierIndex, setActiveTierIndex] = useState(1);
 
   if (!salaryTiers || salaryTiers.length === 0) return null;
 
@@ -30,7 +30,6 @@ export default function CareerSalaryInteractive({ salaryTiers }: CareerSalaryInt
         </div>
       </div>
 
-      {/* Seniority tabs selector */}
       <div className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-2">
         {salaryTiers.map((tier, idx) => {
           const isSelected = activeTierIndex === idx;
@@ -51,7 +50,6 @@ export default function CareerSalaryInteractive({ salaryTiers }: CareerSalaryInt
         })}
       </div>
 
-      {/* Selected Tier Spotlight Card */}
       <div className="mt-5 rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
         <div className="flex flex-col justify-between gap-4 border-b border-gray-100 pb-5 md:flex-row md:items-center">
           <div>

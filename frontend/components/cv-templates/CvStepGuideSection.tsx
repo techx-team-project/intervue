@@ -31,7 +31,6 @@ export default function CvStepGuideSection() {
                 key={step.step}
                 className="hover:border-primary/50 relative flex flex-col items-center rounded-3xl border border-gray-100 bg-[#f8faf9] p-6 text-center transition duration-300 hover:shadow-lg"
               >
-                {/* Step badge */}
                 <div className="bg-primary absolute -top-4 flex h-8 w-8 items-center justify-center rounded-full text-xs font-black text-white shadow-md">
                   {step.step}
                 </div>

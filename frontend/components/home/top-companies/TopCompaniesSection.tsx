@@ -22,7 +22,6 @@ export default function TopCompaniesSection() {
   return (
     <section id="top-companies" className="container-topcv my-12">
       <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs md:p-8">
-        {/* Header Title */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="text-navy flex items-center gap-2.5 text-xl font-bold md:text-2xl">
@@ -52,7 +51,6 @@ export default function TopCompaniesSection() {
           </div>
         </div>
 
-        {/* Industry Filter Tabs */}
         <div className="mb-6 flex scrollbar-none items-center gap-2 overflow-x-auto pb-3">
           {COMPANY_FIELDS.map((field) => (
             <button
@@ -70,7 +68,6 @@ export default function TopCompaniesSection() {
           ))}
         </div>
 
-        {/* Company Cards Grid (4 Columns) */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {filteredCompanies.map((company) => (
             <CompanyCard
@@ -82,7 +79,6 @@ export default function TopCompaniesSection() {
           ))}
         </div>
 
-        {/* Bottom Banner Pro CTA */}
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-[#f4f5f5] pt-6">
           <div className="flex items-center gap-3">
             <span className="text-[14.5px] text-[#6f7882]">

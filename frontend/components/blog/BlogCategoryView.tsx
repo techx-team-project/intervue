@@ -19,7 +19,6 @@ interface BlogCategoryViewProps {
 
 const ITEMS_PER_PAGE = 6;
 
-// Domain highlight cards for kien-thuc-chuyen-nganh
 const DOMAIN_HIGHLIGHTS = [
   {
     name: 'Công nghệ thông tin / AI',
@@ -71,10 +70,8 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filtered articles
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
-      // Sub-filter check
       if (selectedSubFilter !== 'Tất cả') {
         const matchesTag = article.tags.some((t) => t.toLowerCase() === selectedSubFilter.toLowerCase());
         const matchesTitle = article.title.toLowerCase().includes(selectedSubFilter.toLowerCase());
@@ -82,14 +79,12 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
         if (!matchesTag && !matchesTitle && !matchesExcerpt) return false;
       }
 
-      // Tag filter
       if (selectedTag) {
         const matchesTag = article.tags.some((t) => t.toLowerCase() === selectedTag.toLowerCase());
         const matchesTitle = article.title.toLowerCase().includes(selectedTag.toLowerCase());
         if (!matchesTag && !matchesTitle) return false;
       }
 
-      // Search query
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const matchesTitle = article.title.toLowerCase().includes(query);
@@ -102,7 +97,6 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
     });
   }, [articles, selectedSubFilter, selectedTag, searchQuery]);
 
-  // Pagination
   const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE);
   const paginatedArticles = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -116,7 +110,6 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
 
   return (
     <div className="min-h-screen bg-[#f8faf9]">
-      {/* 1. Hero Search customized for category */}
       <BlogHeroSearch
         searchQuery={searchQuery}
         onSearchChange={(q) => {
@@ -131,11 +124,9 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
         categoryMeta={categoryMeta}
       />
 
-      {/* 2. Category Tabs */}
       <BlogCategoryTabs currentCategorySlug={categoryMeta.slug} />
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* 3. Specialized Interactive Category Widgets */}
         {categoryMeta.slug === 'che-do-luong-thuong' && (
           <div className="mb-12">
             <GrossNetCalculatorWidget />
@@ -199,7 +190,6 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
           </div>
         )}
 
-        {/* 4. Sub-Filter Pills */}
         {categoryMeta.subFilters && categoryMeta.subFilters.length > 0 && (
           <div className="mb-6 flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold text-gray-500">Chủ đề con:</span>
@@ -223,9 +213,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
           </div>
         )}
 
-        {/* 5. Main Content Grid & Sidebar */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          {/* Left: Articles list */}
           <div className="lg:col-span-8">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -244,7 +232,6 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                   ))}
                 </div>
 
-                {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="mt-10 flex items-center justify-center gap-2">
                     <button
@@ -300,7 +287,6 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
             )}
           </div>
 
-          {/* Right: Sidebar */}
           <div className="lg:col-span-4">
             <BlogSidebar
               popularArticles={allArticles}

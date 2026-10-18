@@ -17,7 +17,6 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
       id="job-company"
       className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs transition-all"
     >
-      {/* Company Header */}
       <div className="flex items-start gap-3.5">
         <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-2xs">
           {company.logo ? (
@@ -41,7 +40,6 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
         </div>
       </div>
 
-      {/* Follow Button */}
       <div className="mt-4">
         <button
           type="button"
@@ -66,12 +64,9 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
         </button>
       </div>
 
-      {/* Divider */}
       <div className="my-4 border-t border-slate-100" />
 
-      {/* Info List */}
       <div className="space-y-3 text-xs text-slate-600">
-        {/* Quy mô */}
         <div className="flex items-start gap-2.5">
           <Users className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
           <div>
@@ -80,7 +75,6 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
           </div>
         </div>
 
-        {/* Lĩnh vực */}
         <div className="flex items-start gap-2.5">
           <Briefcase className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
           <div>
@@ -89,7 +83,6 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
           </div>
         </div>
 
-        {/* Địa điểm */}
         <div className="flex items-start gap-2.5">
           <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
           <div>
@@ -99,7 +92,6 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
         </div>
       </div>
 
-      {/* View Company Link */}
       <div className="mt-4 border-t border-slate-100 pt-3">
         <Link
           href={`/companies/${company.id || 224996}`}

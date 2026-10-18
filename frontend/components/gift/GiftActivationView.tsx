@@ -23,7 +23,6 @@ export default function GiftActivationView() {
   return (
     <div id="main" className="min-h-screen bg-slate-100 pt-6 pb-16 antialiased sm:pt-8 md:pt-10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* 1. Form Kích hoạt mã */}
         <GiftActivationForm
           formRef={formRef}
           packageType={packageType}
@@ -33,10 +32,8 @@ export default function GiftActivationView() {
           onApplySuccess={() => {}}
         />
 
-        {/* 2. Danh sách mã ưu đãi khả dụng */}
         <AvailableVouchersSection vouchers={AVAILABLE_VOUCHERS} onUseVoucher={handleUseVoucher} />
 
-        {/* 3. Câu hỏi thường gặp */}
         <GiftFaqSection faqs={GIFT_FAQS} />
       </div>
     </div>

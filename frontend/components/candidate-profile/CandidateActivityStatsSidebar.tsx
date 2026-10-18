@@ -93,7 +93,6 @@ export default function CandidateActivityStatsSidebar({
       </div>
 
       <div className="grid grid-cols-2 gap-3 text-center">
-        {/* Metric 1 */}
         <div className="rounded-2xl border border-[#f1f5f9] bg-[#f8fafc] p-3.5">
           <div className="text-primary flex items-center justify-center">
             <Eye className="h-4 w-4" />
@@ -102,7 +101,6 @@ export default function CandidateActivityStatsSidebar({
           <div className="text-[11px] font-medium text-[#64748b]">Lượt xem hồ sơ</div>
         </div>
 
-        {/* Metric 2 */}
         <div className="rounded-2xl border border-[#f1f5f9] bg-[#f8fafc] p-3.5">
           <div className="flex items-center justify-center text-blue-600">
             <Users className="h-4 w-4" />
@@ -111,7 +109,6 @@ export default function CandidateActivityStatsSidebar({
           <div className="text-[11px] font-medium text-[#64748b]">Lượt tìm thấy</div>
         </div>
 
-        {/* Metric 3 */}
         <div className="rounded-2xl border border-[#f1f5f9] bg-[#f8fafc] p-3.5">
           <div className="flex items-center justify-center text-amber-500">
             <MailCheck className="h-4 w-4" />
@@ -120,7 +117,6 @@ export default function CandidateActivityStatsSidebar({
           <div className="text-[11px] font-medium text-[#64748b]">Lời mời phỏng vấn</div>
         </div>
 
-        {/* Metric 4 */}
         <div className="rounded-2xl border border-[#f1f5f9] bg-[#f8fafc] p-3.5">
           <div className="flex items-center justify-center text-purple-600">
             <Bookmark className="h-4 w-4" />
