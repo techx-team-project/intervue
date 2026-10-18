@@ -1,55 +1,89 @@
 import { z } from 'zod';
 
+const email = z
+  .string()
+  .min(1, 'Please enter your email.')
+  .max(100, 'Email must be at most 100 characters.')
+  .pipe(z.email('Email address is invalid.'));
+
+const strongPassword = z
+  .string()
+  .min(1, 'Please enter your password.')
+  .min(8, 'Password must be at least 8 characters.')
+  .max(72, 'Password must be at most 72 characters.')
+  .regex(/[a-z]/, 'Password must include a lowercase letter.')
+  .regex(/[A-Z]/, 'Password must include an uppercase letter.')
+  .regex(/[0-9]/, 'Password must include a digit.')
+  .regex(/[^A-Za-z0-9]/, 'Password must include a special character (!@#$).');
+
 export const loginSchema = z.object({
-  email: z.string().min(1, 'Vui lòng nhập email.').email('Địa chỉ email không đúng định dạng.'),
-  password: z.string().min(1, 'Vui lòng nhập mật khẩu.').min(6, 'Mật khẩu phải có tối thiểu 6 ký tự.'),
+  email,
+  password: z.string().min(1, 'Please enter your password.').max(72, 'Password must be at most 72 characters.'),
 });
 
 export const registerSchema = z
   .object({
-    fullName: z.string().min(1, 'Vui lòng nhập họ và tên của bạn.').min(2, 'Họ và tên tối thiểu 2 ký tự.'),
-    email: z.string().min(1, 'Vui lòng nhập email.').email('Địa chỉ email không hợp lệ.'),
-    phone: z
+    name: z
       .string()
-      .min(1, 'Vui lòng nhập số điện thoại.')
-      .regex(/^(0|\+84)[3|5|7|8|9][0-9]{8}$/, 'Số điện thoại không đúng định dạng.'),
-    password: z.string().min(1, 'Vui lòng nhập mật khẩu.').min(6, 'Mật khẩu phải có tối thiểu 6 ký tự.'),
-    confirmPassword: z.string().min(1, 'Vui lòng xác nhận lại mật khẩu.'),
-    agreedTerms: z.boolean().refine((val) => val === true, {
-      message: 'Vui lòng đồng ý với Điều khoản dịch vụ và Chính sách bảo mật.',
+      .trim()
+      .min(2, 'Full name must be at least 2 characters.')
+      .max(50, 'Full name must be at most 50 characters.'),
+    email,
+    password: strongPassword,
+    confirmPassword: z.string().min(1, 'Please confirm your password.'),
+    acceptTerms: z.boolean().refine((value) => value, {
+      message: 'Please accept the Terms of Service and Privacy Policy.',
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Mật khẩu nhập lại không khớp.',
+    message: 'Passwords do not match.',
+    path: ['confirmPassword'],
+  })
+  .refine((data) => data.password.toLowerCase() !== data.email.toLowerCase(), {
+    message: 'Password must not be the same as the email.',
+    path: ['password'],
+  });
+
+export const forgotPasswordSchema = z.object({ email });
+
+export const resetPasswordSchema = z
+  .object({
+    password: strongPassword,
+    confirmPassword: z.string().min(1, 'Please confirm your password.'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match.',
     path: ['confirmPassword'],
   });
 
-export const forgotPasswordSchema = z.object({
-  email: z.string().min(1, 'Vui lòng nhập địa chỉ email.').email('Địa chỉ email không đúng định dạng.'),
-});
-
 export const changePasswordSchema = z
   .object({
-    currentPassword: z.string().min(1, 'Vui lòng nhập mật khẩu hiện tại.'),
+    currentPassword: z.string().min(1, 'Please enter your current password.'),
     newPassword: z
       .string()
-      .min(8, 'Mật khẩu mới phải có ít nhất 8 ký tự.')
-      .regex(/[A-Z]/, 'Mật khẩu phải chứa ít nhất 1 chữ in hoa.')
-      .regex(/[0-9]/, 'Mật khẩu phải chứa ít nhất 1 chữ số.')
-      .regex(/[^A-Za-z0-9]/, 'Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt (!@#$).'),
-    confirmPassword: z.string().min(1, 'Vui lòng xác nhận mật khẩu mới.'),
+      .min(8, 'New password must be at least 8 characters.')
+      .regex(/[A-Z]/, 'Password must include an uppercase letter.')
+      .regex(/[0-9]/, 'Password must include a digit.')
+      .regex(/[^A-Za-z0-9]/, 'Password must include a special character (!@#$).'),
+    confirmPassword: z.string().min(1, 'Please confirm your new password.'),
     logoutOtherDevices: z.boolean().default(true),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Mật khẩu xác nhận không khớp với mật khẩu mới.',
+    message: 'Confirmation does not match the new password.',
     path: ['confirmPassword'],
   })
   .refine((data) => data.currentPassword !== data.newPassword, {
-    message: 'Mật khẩu mới không được trùng với mật khẩu hiện tại.',
+    message: 'New password must differ from the current password.',
     path: ['newPassword'],
   });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+
+export type LoginPayload = LoginFormData;
+export type RegisterPayload = RegisterFormData;
+export type ForgotPasswordPayload = ForgotPasswordFormData;
+export type ResetPasswordPayload = ResetPasswordFormData & { token: string };
