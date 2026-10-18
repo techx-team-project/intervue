@@ -57,6 +57,6 @@ public class AuthMailListener {
     }
 
     private String describe(Duration ttl) {
-        return ttl.toHours() >= 1 ? ttl.toHours() + " giờ" : ttl.toMinutes() + " phút";
+        return ttl.toHours() >= 1 ? ttl.toHours() + " hour" : ttl.toMinutes() + " minute";
     }
 }
