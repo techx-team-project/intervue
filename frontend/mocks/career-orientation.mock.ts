@@ -765,7 +765,6 @@ export const CAREER_ARTICLES: CareerArticle[] = [
   },
 ];
 
-// Helper functions
 export function getAllCareerArticles(): CareerArticle[] {
   return CAREER_ARTICLES;
 }

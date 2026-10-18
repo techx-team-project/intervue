@@ -41,22 +41,22 @@ export interface GrossNetCalculationResult {
   grossSalary: number;
   netSalary: number;
   insurance: {
-    social: number; // 8%
-    health: number; // 1.5%
-    unemployment: number; // 1%
-    total: number; // 10.5%
+    social: number;
+    health: number;
+    unemployment: number;
+    total: number;
   };
   employerCost: {
-    social: number; // 17.5%
-    health: number; // 3%
-    unemployment: number; // 1%
-    occupationalAccident: number; // 0.5%
+    social: number;
+    health: number;
+    unemployment: number;
+    occupationalAccident: number;
     total: number;
     totalEmployerCost: number;
   };
   deductions: {
-    personal: number; // 11,000,000
-    dependents: number; // dependents * 4,400,000
+    personal: number;
+    dependents: number;
     total: number;
   };
   taxableIncome: number;

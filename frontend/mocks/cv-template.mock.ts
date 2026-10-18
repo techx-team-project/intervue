@@ -566,7 +566,6 @@ export const CV_FAQS: CvFaqItem[] = [
   },
 ];
 
-// Helper functions
 export function getAllCvTemplates(): CvTemplateItem[] {
   return CV_TEMPLATES;
 }

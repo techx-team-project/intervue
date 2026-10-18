@@ -12,7 +12,7 @@ export interface WorkExperience {
   companyLogo?: string;
   location: string;
   startDate: string;
-  endDate: string; // or 'Hiện tại'
+  endDate: string;
   isCurrent: boolean;
   description: string;
   achievements: string[];
@@ -80,14 +80,14 @@ export interface JobPreferences {
 }
 
 export interface AiProfileScore {
-  overallScore: number; // 0 - 100
-  atsReadiness: number; // 0 - 100
-  starScore: number; // 0 - 100
+  overallScore: number;
+  atsReadiness: number;
+  starScore: number;
   mockInterviewCount: number;
-  averageInterviewScore: number; // e.g. 9.2
+  averageInterviewScore: number;
   highlightStrengths: string[];
   suggestedImprovements: string[];
-  topRankPercentile: number; // e.g. top 5%
+  topRankPercentile: number;
 }
 
 export interface CandidateProfile {
