@@ -20,14 +20,11 @@ interface BlogDetailViewProps {
 export default function BlogDetailView({ article }: BlogDetailViewProps) {
   return (
     <div className="min-h-screen bg-[#f8faf9]">
-      {/* 1. Breadcrumb & Actions Bar */}
       <BlogDetailBreadcrumb article={article} />
 
-      {/* 2. Article Header Hero */}
       <div className="border-b border-gray-200 bg-white py-8 lg:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
-            {/* Category badge */}
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <Link
                 href={`/blog/${article.categorySlug}`}
@@ -41,16 +38,16 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
               </span>
             </div>
 
-            {/* Title */}
             <h1 className="text-2xl leading-tight font-extrabold tracking-tight text-[#171717] sm:text-3xl lg:text-4xl">
               {article.title}
             </h1>
 
-            {/* Meta */}
             <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-[#7f878f]">
               <div className="flex items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={article.author.avatar}
                   alt={article.author.name}
                   className="h-7 w-7 rounded-full object-cover ring-2 ring-emerald-50"
@@ -74,7 +71,6 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
               </span>
             </div>
 
-            {/* Excerpt */}
             <p className="border-primary mt-5 rounded-2xl border-l-4 bg-gray-50/70 p-4 text-sm leading-relaxed text-[#526475] italic sm:text-base">
               &ldquo;{article.excerpt}&rdquo;
             </p>
@@ -82,15 +78,12 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
         </div>
       </div>
 
-      {/* 3. Main Article Body + Table of Contents + Sidebar */}
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          {/* Left Column: Sticky Table of Contents (3 cols on lg) */}
           <div className="lg:col-span-3">
             <CareerTableOfContents items={article.tableOfContents} />
           </div>
 
-          {/* Center Column: Article Sections & Rich Components (6 cols on lg) */}
           <article className="space-y-10 lg:col-span-6">
             {article.sections.map((section) => (
               <section key={section.id} id={section.id} className="scroll-mt-28 space-y-4">
@@ -106,7 +99,6 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
                   ))}
                 </div>
 
-                {/* Highlights Callout Box */}
                 {section.highlights && section.highlights.length > 0 && (
                   <div className="bg-primary-light text-navy rounded-2xl border border-emerald-100 p-4 text-xs sm:text-sm">
                     <div className="text-primary mb-2 font-bold">Điểm cốt lõi cần nhớ:</div>
@@ -121,7 +113,6 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
                   </div>
                 )}
 
-                {/* Subsections */}
                 {section.subsections && section.subsections.length > 0 && (
                   <div className="mt-4 space-y-4 pl-2">
                     {section.subsections.map((sub, sIdx) => (
@@ -137,30 +128,24 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
                   </div>
                 )}
 
-                {/* Embed Specializations Grid under Section 3 if available */}
                 {section.id === 'nganh-marketing-gom-nhung-chuyen-nganh-nao' && article.specializations && (
                   <CareerSpecializationsGrid specializations={article.specializations} />
                 )}
 
-                {/* Embed Interactive Salary under Section 6 */}
                 {section.id === 'muc-luong-nganh-marketing' && article.salaryTiers && (
                   <CareerSalaryInteractive salaryTiers={article.salaryTiers} />
                 )}
 
-                {/* Embed Roadmap Timeline under Section 7 */}
                 {section.id === 'lo-trinh-thang-tien-nganh-marketing' && article.careerRoadmap && (
                   <CareerRoadmapTimeline stages={article.careerRoadmap} />
                 )}
 
-                {/* Embed AI Interview CTA under Section 8 */}
                 {section.id === 'nhung-to-chat-ky-nang-can-co' && <CareerAiInterviewCta />}
 
-                {/* Embed Live Marketing Jobs under Section 10 */}
                 {section.id === 'tim-viec-lam-nganh-marketing-o-dau' && <CareerRelatedJobsWidget />}
               </section>
             ))}
 
-            {/* Tags Box */}
             <div className="border-t border-gray-100 pt-6">
               <span className="text-navy mb-3 block text-xs font-bold tracking-wider uppercase">Chủ đề liên quan:</span>
               <div className="flex flex-wrap gap-2">
@@ -177,7 +162,6 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
             </div>
           </article>
 
-          {/* Right Column: Author, Quick tools, Related (3 cols on lg) */}
           <div className="lg:col-span-3">
             <BlogDetailSidebar article={article} />
           </div>

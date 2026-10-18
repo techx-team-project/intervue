@@ -52,7 +52,7 @@ export default function CandidateActivityStatsSidebar({
           <button
             type="button"
             onClick={onContact || (() => alert(`Đã mở hộp thoại gửi tin nhắn tuyển dụng tới ${candidateName}!`))}
-            className="bg-primary hover:bg-primary-hover flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white shadow-xs transition-all"
+            className="bg-primary hover:bg-primary-hover flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white shadow-xs transition"
           >
             <Send className="h-4 w-4" />
             <span>Gửi lời mời phỏng vấn ngay</span>
@@ -61,7 +61,7 @@ export default function CandidateActivityStatsSidebar({
           <button
             type="button"
             onClick={onBookmark || (() => alert(`Đã lưu hồ sơ của ${candidateName} vào danh sách theo dõi!`))}
-            className="text-navy hover:border-primary hover:text-primary flex w-full items-center justify-center gap-2 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] py-2 text-[13px] font-semibold transition-all hover:bg-white"
+            className="text-navy hover:border-primary hover:text-primary flex w-full items-center justify-center gap-2 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] py-2 text-[13px] font-semibold transition hover:bg-white"
           >
             <Bookmark className="h-4 w-4" />
             <span>Lưu hồ sơ theo dõi</span>
@@ -93,7 +93,6 @@ export default function CandidateActivityStatsSidebar({
       </div>
 
       <div className="grid grid-cols-2 gap-3 text-center">
-        {/* Metric 1 */}
         <div className="rounded-2xl border border-[#f1f5f9] bg-[#f8fafc] p-3.5">
           <div className="text-primary flex items-center justify-center">
             <Eye className="h-4 w-4" />
@@ -102,7 +101,6 @@ export default function CandidateActivityStatsSidebar({
           <div className="text-[11px] font-medium text-[#64748b]">Lượt xem hồ sơ</div>
         </div>
 
-        {/* Metric 2 */}
         <div className="rounded-2xl border border-[#f1f5f9] bg-[#f8fafc] p-3.5">
           <div className="flex items-center justify-center text-blue-600">
             <Users className="h-4 w-4" />
@@ -111,7 +109,6 @@ export default function CandidateActivityStatsSidebar({
           <div className="text-[11px] font-medium text-[#64748b]">Lượt tìm thấy</div>
         </div>
 
-        {/* Metric 3 */}
         <div className="rounded-2xl border border-[#f1f5f9] bg-[#f8fafc] p-3.5">
           <div className="flex items-center justify-center text-amber-500">
             <MailCheck className="h-4 w-4" />
@@ -120,7 +117,6 @@ export default function CandidateActivityStatsSidebar({
           <div className="text-[11px] font-medium text-[#64748b]">Lời mời phỏng vấn</div>
         </div>
 
-        {/* Metric 4 */}
         <div className="rounded-2xl border border-[#f1f5f9] bg-[#f8fafc] p-3.5">
           <div className="flex items-center justify-center text-purple-600">
             <Bookmark className="h-4 w-4" />

@@ -179,7 +179,6 @@ export const MOCK_RELATED_JOBS: RelatedJob[] = [
   },
 ];
 
-// Helper to create fully consistent JobDetail from company profile
 function buildJobFromCompany(
   jobId: number,
   companyId: number,
@@ -258,7 +257,6 @@ function buildJobFromCompany(
 }
 
 const JOBS_REGISTRY: Record<number, JobDetail> = {
-  // ADI Automation Jobs
   2320413: TOPCV_JOB_2320413,
   2320414: buildJobFromCompany(2320414, 237340, {
     title: 'Kỹ Sư Thiết Kế Hệ Thống Tự Động Hóa PLC / SCADA - Thu Nhập Đến 28 Triệu',
@@ -297,7 +295,6 @@ const JOBS_REGISTRY: Record<number, JobDetail> = {
     ],
   }),
 
-  // Mẹ Gấu Pilates Jobs (224996)
   201: buildJobFromCompany(201, 224996, {
     title: 'Huấn Luyện Viên Pilates Thảm & Máy (Full-time / Part-time) - Thu Nhập 15 - 30 Triệu',
     salary: '15 - 30 triệu',
@@ -388,7 +385,6 @@ const JOBS_REGISTRY: Record<number, JobDetail> = {
     ],
   }),
 
-  // Viettel Jobs (ID 1)
   101: buildJobFromCompany(101, 1, {
     title: 'Senior Cloud & DevOps Infrastructure Architect (Viettel Cloud)',
     salary: '35 - 55 triệu',
@@ -419,7 +415,6 @@ const JOBS_REGISTRY: Record<number, JobDetail> = {
     requirements: ['Có chứng chỉ bảo mật quốc tế (CEH, OSCP, CompTIA Security+) là lợi thế lớn.'],
   }),
 
-  // MB Bank Jobs (ID 2)
   4: buildJobFromCompany(4, 2, {
     title: 'Chuyên Viên Quản Lý Quan Hệ Khách Hàng Doanh Nghiệp (SME)',
     salary: '20 - 35 triệu',
@@ -451,7 +446,6 @@ const JOBS_REGISTRY: Record<number, JobDetail> = {
     requirements: ['Có kinh nghiệm thẩm định tín dụng cá nhân từ 2 năm trở lên.'],
   }),
 
-  // FPT Software Jobs (ID 3)
   5: buildJobFromCompany(5, 3, {
     title: 'Senior Frontend Engineer (React.js / Next.js / TypeScript)',
     salary: '30 - 50 triệu',
@@ -486,7 +480,6 @@ const JOBS_REGISTRY: Record<number, JobDetail> = {
     requirements: ['Hơn 5 năm kinh nghiệm backend Java / Spring Boot và kiến trúc Microservices trên Cloud.'],
   }),
 
-  // Techcombank Job (ID 4)
   401: buildJobFromCompany(401, 4, {
     title: 'Data Engineer & Big Data Platform Specialist',
     salary: '30 - 50 triệu',
@@ -502,7 +495,6 @@ const JOBS_REGISTRY: Record<number, JobDetail> = {
     requirements: ['Thành thạo Python/Scala, SQL tối ưu truy vấn và kinh nghiệm làm việc với Big Data Stack.'],
   }),
 
-  // VNG Job (ID 5)
   501: buildJobFromCompany(501, 5, {
     title: 'Game Server Developer (C++ / Go / Distributed Systems)',
     salary: '25 - 45 triệu',
@@ -518,7 +510,6 @@ const JOBS_REGISTRY: Record<number, JobDetail> = {
     requirements: ['Thành thạo C++ hoặc Go, hiểu biết sâu về Socket, TCP/UDP và thuật toán phân tán.'],
   }),
 
-  // Shopee Job (ID 6)
   601: buildJobFromCompany(601, 6, {
     title: 'Business Development & Category Management Lead',
     salary: '22 - 38 triệu',
@@ -534,7 +525,6 @@ const JOBS_REGISTRY: Record<number, JobDetail> = {
     requirements: ['Kinh nghiệm 2-4 năm trong ngành E-commerce, Bán lẻ hoặc Quản trị thương hiệu.'],
   }),
 
-  // Masan Job (ID 7)
   701: buildJobFromCompany(701, 7, {
     title: 'Brand Manager - Ngành Hàng Gia Vị & Nước Giải Khát Masan Consumer',
     salary: '25 - 40 triệu',
@@ -550,7 +540,6 @@ const JOBS_REGISTRY: Record<number, JobDetail> = {
     requirements: ['Kinh nghiệm Brand Manager trong ngành FMCG hoặc hàng tiêu dùng nhanh tối thiểu 3 năm.'],
   }),
 
-  // VPBank Job (ID 8)
   801: buildJobFromCompany(801, 8, {
     title: 'Chuyên Viên Tư Vấn Tài Chính Cá Nhân Cao Cấp (Priority RM)',
     salary: '18 - 35 triệu',
@@ -574,7 +563,6 @@ export function getJobDetailById(id: string | number): JobDetail {
     return JOBS_REGISTRY[numericId];
   }
 
-  // Fallback template for any other ID
   return {
     ...TOPCV_JOB_2320413,
     id: numericId || 2320413,

@@ -45,7 +45,6 @@ export const MOCK_CANDIDATE_PROFILE: CandidateProfile = {
     industries: ['Công nghệ thông tin', 'Fintech', 'AI / EdTech', 'Thương mại điện tử'],
   },
   skills: [
-    // Core Tech
     { name: 'TypeScript / JavaScript', level: 'Chuyên gia', years: 6, category: 'core' },
     { name: 'React & Next.js 15', level: 'Chuyên gia', years: 5, category: 'core' },
     { name: 'Node.js & Express / NestJS', level: 'Thành thạo', years: 5, category: 'core' },
@@ -55,18 +54,15 @@ export const MOCK_CANDIDATE_PROFILE: CandidateProfile = {
     { name: 'Docker & Kubernetes', level: 'Khá', years: 3, category: 'core' },
     { name: 'Tailwind CSS & Design Systems', level: 'Chuyên gia', years: 5, category: 'core' },
 
-    // AI & Data
     { name: 'OpenAI API & Anthropic Claude', level: 'Thành thạo', years: 2, category: 'ai' },
     { name: 'LangChain & LlamaIndex', level: 'Khá', years: 2, category: 'ai' },
     { name: 'Vector DB (Pinecone, Qdrant)', level: 'Khá', years: 2, category: 'ai' },
     { name: 'RAG Architecture Implementation', level: 'Thành thạo', years: 2, category: 'ai' },
 
-    // Tools & DevOps
     { name: 'Git & GitHub Actions CI/CD', level: 'Chuyên gia', years: 6, category: 'tool' },
     { name: 'AWS (S3, EC2, CloudFront, RDS)', level: 'Thành thạo', years: 4, category: 'tool' },
     { name: 'Kafka & RabbitMQ', level: 'Khá', years: 3, category: 'tool' },
 
-    // Soft Skills
     { name: 'Lãnh đạo kỹ thuật (Tech Lead)', level: 'Thành thạo', years: 3, category: 'soft' },
     { name: 'Quản lý dự án Agile / Scrum', level: 'Thành thạo', years: 4, category: 'soft' },
     { name: 'Giao tiếp & Phản biện kỹ thuật', level: 'Chuyên gia', years: 6, category: 'soft' },

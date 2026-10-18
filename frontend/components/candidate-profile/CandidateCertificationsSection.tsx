@@ -18,7 +18,6 @@ export default function CandidateCertificationsSection({
 }: CandidateCertificationsSectionProps) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      {/* 1. Chứng chỉ */}
       <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-7">
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -46,7 +45,7 @@ export default function CandidateCertificationsSection({
           {certifications.map((cert) => (
             <div
               key={cert.id}
-              className="flex items-start justify-between gap-3 rounded-2xl border border-[#f1f5f9] bg-[#fbfcfd] p-4 transition-all hover:border-[#cbd5e1] hover:bg-white"
+              className="flex items-start justify-between gap-3 rounded-2xl border border-[#f1f5f9] bg-[#fbfcfd] p-4 transition hover:border-[#cbd5e1] hover:bg-white"
             >
               <div>
                 <h3 className="text-[14px] font-bold text-[#1e293b]">{cert.name}</h3>
@@ -73,7 +72,6 @@ export default function CandidateCertificationsSection({
         </div>
       </div>
 
-      {/* 2. Ngoại ngữ */}
       <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-7">
         <div className="mb-5 flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -89,7 +87,7 @@ export default function CandidateCertificationsSection({
           {languages.map((lang, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between rounded-2xl border border-[#f1f5f9] bg-[#fbfcfd] p-4 transition-all hover:border-[#cbd5e1] hover:bg-white"
+              className="flex items-center justify-between rounded-2xl border border-[#f1f5f9] bg-[#fbfcfd] p-4 transition hover:border-[#cbd5e1] hover:bg-white"
             >
               <div className="flex items-center gap-3">
                 <div className="text-primary flex h-10 w-10 items-center justify-center rounded-xl border border-[#e2e8f0] bg-white">

@@ -55,8 +55,7 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
       description={`${job.title} - ${job.company.name}`}
     >
       {isSubmitted ? (
-        /* SUCCESS STATE */
-        <div className="animate-in zoom-in-95 space-y-4 py-6 text-center duration-200">
+        <div className="space-y-4 py-6 text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
             <CheckCircle2 className="h-10 w-10" />
           </div>
@@ -87,9 +86,7 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
           </div>
         </div>
       ) : (
-        /* FORM STATE */
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* ATS Match banner */}
           <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-linear-to-r from-emerald-50 to-teal-50 px-4 py-2.5 text-xs">
             <div className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-emerald-600" />
@@ -100,17 +97,15 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
             </span>
           </div>
 
-          {/* Choose CV */}
           <div>
             <label className="mb-2 block text-xs font-bold tracking-wider text-slate-700 uppercase">
               Chọn CV ứng tuyển <span className="text-rose-500">*</span>
             </label>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {/* CV đã có */}
               <div
                 onClick={() => setSelectedCv('profile')}
-                className={`cursor-pointer rounded-xl border p-3.5 transition-all ${
+                className={`cursor-pointer rounded-xl border p-3.5 transition ${
                   selectedCv === 'profile'
                     ? 'border-emerald-600 bg-emerald-50/50 shadow-xs'
                     : 'border-slate-200 hover:border-slate-300'
@@ -126,10 +121,9 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
                 <p className="mt-1.5 text-xs text-slate-500">Cập nhật 2 ngày trước • Chuẩn ATS 92 điểm</p>
               </div>
 
-              {/* Tải CV mới */}
               <div
                 onClick={() => setSelectedCv('upload')}
-                className={`cursor-pointer rounded-xl border p-3.5 transition-all ${
+                className={`cursor-pointer rounded-xl border p-3.5 transition ${
                   selectedCv === 'upload'
                     ? 'border-emerald-600 bg-emerald-50/50 shadow-xs'
                     : 'border-dashed border-slate-300 hover:border-slate-400'
@@ -147,7 +141,6 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
             </div>
           </div>
 
-          {/* Candidate Info Grid */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div>
               <label className="mb-1 block text-xs font-bold text-slate-700">
@@ -189,7 +182,6 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
             </div>
           </div>
 
-          {/* Cover letter with AI Generator */}
           <div>
             <div className="mb-1.5 flex items-center justify-between">
               <label className="text-xs font-bold text-slate-700">Thư giới thiệu (Cover Letter)</label>
@@ -214,13 +206,11 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
             />
           </div>
 
-          {/* Terms notice */}
           <div className="text-xs leading-relaxed text-slate-500">
             Bằng việc nhấn &quot;Nộp hồ sơ ứng tuyển&quot;, bạn đồng ý với Điều khoản dịch vụ và Chính sách quyền riêng
             tư của InterVue.
           </div>
 
-          {/* Action Buttons */}
           <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-3">
             <Button variant="secondary" size="sm" onClick={handleResetAndClose}>
               Hủy bỏ

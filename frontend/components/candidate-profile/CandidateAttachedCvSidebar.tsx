@@ -40,7 +40,7 @@ export default function CandidateAttachedCvSidebar({
         {resumes.map((cv) => (
           <div
             key={cv.id}
-            className={`rounded-2xl border p-3.5 transition-all ${
+            className={`rounded-2xl border p-3.5 transition ${
               cv.isDefault
                 ? 'border-primary ring-primary/30 bg-emerald-50/30 ring-1'
                 : 'border-[#f1f5f9] bg-[#fbfcfd] hover:border-[#cbd5e1]'
@@ -74,7 +74,6 @@ export default function CandidateAttachedCvSidebar({
               )}
             </div>
 
-            {/* ATS Score & Action Buttons */}
             <div className="mt-3 flex items-center justify-between border-t border-[#f1f5f9] pt-2 text-[12px]">
               <div className="flex items-center gap-1 font-semibold text-[#00873c]">
                 <Sparkles className="text-primary h-3 w-3" />
@@ -104,12 +103,11 @@ export default function CandidateAttachedCvSidebar({
         ))}
       </div>
 
-      {/* Upload New CV Box (Only for Owner) */}
       {isOwner && (
         <button
           type="button"
           onClick={() => alert('Vui lòng chọn file PDF CV từ máy tính của bạn')}
-          className="hover:border-primary hover:bg-primary-light mt-4 flex w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#e2e8f0] bg-[#f8fafc] p-4 text-center transition-all"
+          className="hover:border-primary hover:bg-primary-light mt-4 flex w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#e2e8f0] bg-[#f8fafc] p-4 text-center transition"
         >
           <UploadCloud className="text-primary h-6 w-6" />
           <span className="text-navy mt-1 text-[12.5px] font-bold">Tải lên CV mới</span>

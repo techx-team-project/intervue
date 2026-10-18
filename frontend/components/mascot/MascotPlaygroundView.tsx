@@ -23,7 +23,6 @@ import {
 } from 'lucide-react';
 import { DynamicRobotHead, type RobotHeadShape, type RobotHeadState } from './MascotCore';
 
-// 9 States data với icon và màu nhận diện phong phú
 interface StateInfo {
   state: RobotHeadState;
   title: string;
@@ -118,14 +117,12 @@ const ALL_STATES: StateInfo[] = [
   },
 ];
 
-// Cấu hình cố định: Dáng Rectangle & Màu Electric Neon Mint
 const FIXED_SHAPE: RobotHeadShape = 'rectangle';
-const FIXED_COLOR = '#064e3b'; // Xanh lục bảo đậm
-const FIXED_TRIM_COLOR = '#10b981'; // Viền neon mint
-const FIXED_SCREEN_COLOR = '#a7f3d0'; // LED mint sáng dịu
+const FIXED_COLOR = '#064e3b';
+const FIXED_TRIM_COLOR = '#10b981';
+const FIXED_SCREEN_COLOR = '#a7f3d0';
 
 export default function MascotPlaygroundView() {
-  // Trạng thái điều khiển của con Robot DUY NHẤT trên toàn màn hình
   const [selectedState, setSelectedState] = useState<RobotHeadState>('idle');
   const [size, setSize] = useState<number>(240);
   const [speed, setSpeed] = useState<number>(1);
@@ -134,7 +131,6 @@ export default function MascotPlaygroundView() {
   const [interactive, setInteractive] = useState<boolean>(true);
   const [paused, setPaused] = useState<boolean>(false);
 
-  // Live FPS Counter: Đo trực tiếp vào DOM ref để KHÔNG gây re-render component
   const fpsRef = useRef<HTMLSpanElement>(null);
   const msRef = useRef<HTMLSpanElement>(null);
   const frameCount = useRef(0);
@@ -147,7 +143,6 @@ export default function MascotPlaygroundView() {
       frameCount.current++;
       const elapsed = now - lastTime.current;
       if (elapsed >= 350) {
-        // Giới hạn trong khoảng tối thiểu 60 FPS - tối đa 120 FPS
         const rawFps = Math.round((frameCount.current * 1000) / elapsed);
         const lockedFps = Math.min(120, Math.max(60, rawFps));
         if (fpsRef.current) {
@@ -169,7 +164,6 @@ export default function MascotPlaygroundView() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] pb-20 text-slate-800">
-      {/* KHÔNG DÙNG NỀN RIÊNG: TITLE ĐỒNG BỘ TRỰC TIẾP TRÊN NỀN TRANG */}
       <div className="mx-auto max-w-7xl space-y-6 px-4 pt-10 sm:pt-4">
         <div className="text-center">
           <h1 className="mt-3.5 text-2xl font-black tracking-tight text-slate-900 sm:text-4xl">
@@ -181,13 +175,11 @@ export default function MascotPlaygroundView() {
           </p>
         </div>
 
-        {/* 2. STUDIO WORKSPACE CHÍNH */}
         <div className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-xl shadow-slate-200/40">
-          {/* TOP BAR: STUDIO HUD & LIVE FRAMERATE */}
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-slate-50/60 px-6 py-3.5">
             <div className="flex items-center gap-2.5">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
               </span>
               <span className="text-xs font-black tracking-wider text-slate-800 uppercase">
@@ -196,9 +188,7 @@ export default function MascotPlaygroundView() {
             </div>
           </div>
 
-          {/* MAIN 3-COLUMN STUDIO LAYOUT */}
           <div className="grid grid-cols-1 gap-0 divide-y divide-slate-100 lg:grid-cols-12 lg:divide-x lg:divide-y-0">
-            {/* CỘT TRÁI (col-span-3): BÀNG ĐIỀU KHIỂN 9 CẢM XÚC (MOOD PAD) */}
             <div className="flex flex-col justify-between space-y-4 bg-slate-50/40 p-4 sm:p-5 lg:col-span-3">
               <div>
                 <div className="mb-3 flex items-center justify-between">
@@ -210,7 +200,6 @@ export default function MascotPlaygroundView() {
                   </span>
                 </div>
 
-                {/* 3x3 Compact Mood Pad: Rất gọn gàng, đẹp mắt và dễ bấm */}
                 <div className="grid grid-cols-3 gap-2">
                   {ALL_STATES.map((item) => {
                     const Icon = item.icon;
@@ -220,14 +209,14 @@ export default function MascotPlaygroundView() {
                         key={item.state}
                         type="button"
                         onClick={() => setSelectedState(item.state)}
-                        className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border p-2.5 text-center transition-all ${
+                        className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border p-2.5 text-center transition ${
                           isActive
                             ? 'scale-[1.03] border-slate-900 bg-slate-900 text-white shadow-md ring-2 shadow-slate-900/20 ring-emerald-400'
                             : 'border-slate-200/80 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-100/80'
                         }`}
                       >
                         <div
-                          className={`mb-1.5 rounded-xl p-1.5 transition-transform group-hover:scale-110 ${
+                          className={`mb-1.5 rounded-xl p-1.5 transition-transform ${
                             isActive ? 'bg-white/10 text-emerald-400' : 'bg-slate-100 ' + item.accentColor
                           }`}
                         >
@@ -249,11 +238,10 @@ export default function MascotPlaygroundView() {
                 </div>
               </div>
 
-              {/* Màn hình OLED giả lập hiển thị hiệu ứng LED */}
               <div className="rounded-2xl border border-slate-800 bg-slate-900 p-3.5 text-white shadow-md">
                 <div className="mb-1.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                     <span className="font-mono text-[10px] font-bold tracking-wider text-emerald-400 uppercase">
                       Màn hình LED
                     </span>
@@ -266,19 +254,16 @@ export default function MascotPlaygroundView() {
               </div>
             </div>
 
-            {/* CỘT GIỮA (col-span-6): SÂN KHẤU MASCOT TRUNG TÂM KHỔNG LỒ */}
             <div className="flex min-h-145 flex-col items-center justify-between bg-linear-to-b from-white via-emerald-50/15 to-slate-50/30 p-6 sm:p-8 lg:col-span-6">
               <div className="flex w-full items-center justify-between text-xs text-slate-500">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100/80 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
-                  <span className="h-1.5 w-1.5 animate-ping rounded-full bg-emerald-600" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
                   Bạn Nhỏ AI InterVue
                 </span>
                 <span className="text-[11px] text-slate-400 italic">Rê chuột hoặc bấm vào đầu Bot nha!</span>
               </div>
 
-              {/* SÂN KHẤU CỦA ROBOT VỚI VÒNG HÀO QUANG KỸ THUẬT */}
               <div className="relative my-auto flex w-full flex-col items-center justify-center py-6">
-                {/* Tech Stage Concentric Rings */}
                 <div className="pointer-events-none absolute h-96 w-96 rounded-full border border-emerald-500/10" />
                 <div className="pointer-events-none absolute h-80 w-80 rounded-full border border-dashed border-emerald-500/15" />
                 <div
@@ -290,9 +275,8 @@ export default function MascotPlaygroundView() {
                   }}
                 />
 
-                {/* CON ROBOT DUY NHẤT TRÊN TOÀN BỘ TRANG WEB (CÁCH LY TẦNG ĐỒ HỌA GPU) */}
                 <div
-                  className="relative z-10 cursor-pointer overflow-visible transition-transform duration-200 hover:scale-105 active:scale-95"
+                  className="relative z-10 cursor-pointer overflow-visible transition-transform duration-200 active:scale-95"
                   style={{
                     transform: 'translate3d(0, 0, 0)',
                     backfaceVisibility: 'hidden',
@@ -315,7 +299,6 @@ export default function MascotPlaygroundView() {
                   />
                 </div>
 
-                {/* Nút hành động nổi tương tác */}
                 <div className="mt-4 flex items-center gap-2">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white px-3.5 py-1 text-[11px] font-bold text-slate-700 shadow-2xs">
                     <RotateCw className="h-3 w-3 text-emerald-600" />
@@ -324,8 +307,7 @@ export default function MascotPlaygroundView() {
                 </div>
               </div>
 
-              {/* Lời thoại động phản ứng trực tiếp */}
-              <div className="w-full max-w-md rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-sm backdrop-blur-xs">
+              <div className="w-full max-w-md rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-sm">
                 <div className="flex items-start gap-3">
                   <div className="rounded-xl border border-emerald-200/50 bg-emerald-50 p-2 text-emerald-700">
                     <Bot className="h-4 w-4" />
@@ -345,13 +327,11 @@ export default function MascotPlaygroundView() {
               </div>
             </div>
 
-            {/* CỘT PHẢI (col-span-3): STUDIO CONTROLS & APPLE-STYLE TOGGLE SWITCHES */}
             <div className="space-y-4 bg-slate-50/40 p-4 sm:p-5 lg:col-span-3">
               <span className="block text-[11px] font-black tracking-wider text-slate-700 uppercase">
                 2. Vóc Dáng & Phụ Kiện
               </span>
 
-              {/* Segmented Control 1: Kích thước vóc dáng */}
               <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs">
                 <div className="mb-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
@@ -367,7 +347,7 @@ export default function MascotPlaygroundView() {
                   <button
                     type="button"
                     onClick={() => setSize(160)}
-                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition-all ${
+                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition ${
                       size === 160
                         ? 'border border-slate-200/50 bg-white font-bold text-slate-900 shadow-xs'
                         : 'text-slate-500 hover:text-slate-800'
@@ -379,7 +359,7 @@ export default function MascotPlaygroundView() {
                   <button
                     type="button"
                     onClick={() => setSize(240)}
-                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition-all ${
+                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition ${
                       size === 240
                         ? 'bg-slate-900 font-bold text-white shadow-xs'
                         : 'text-slate-500 hover:text-slate-800'
@@ -391,7 +371,6 @@ export default function MascotPlaygroundView() {
                 </div>
               </div>
 
-              {/* Segmented Control 2: Tốc độ phản ứng */}
               <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs">
                 <div className="mb-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
@@ -407,7 +386,7 @@ export default function MascotPlaygroundView() {
                   <button
                     type="button"
                     onClick={() => setSpeed(1)}
-                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition-all ${
+                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition ${
                       speed === 1
                         ? 'border border-slate-200/50 bg-white font-bold text-slate-900 shadow-xs'
                         : 'text-slate-500 hover:text-slate-800'
@@ -418,7 +397,7 @@ export default function MascotPlaygroundView() {
                   <button
                     type="button"
                     onClick={() => setSpeed(1.7)}
-                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition-all ${
+                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition ${
                       speed === 1.7
                         ? 'bg-slate-900 font-bold text-white shadow-xs'
                         : 'text-slate-500 hover:text-slate-800'
@@ -429,13 +408,11 @@ export default function MascotPlaygroundView() {
                 </div>
               </div>
 
-              {/* Modern iOS-Style Toggle Switches: Đẹp mắt, sạch sẽ và mượt mà */}
               <div className="space-y-1 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs">
                 <div className="mb-2 text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">
                   Tùy Chọn Phụ Kiện & Hiệu Ứng
                 </div>
 
-                {/* Switch 1: Cần Ăng-ten */}
                 <button
                   type="button"
                   onClick={() => setAntenna(!antenna)}
@@ -454,7 +431,6 @@ export default function MascotPlaygroundView() {
                       </div>
                     </div>
                   </div>
-                  {/* Animated Switch Pill */}
                   <div
                     className={`flex h-5.5 w-10 items-center rounded-full p-0.5 transition-colors duration-200 ${antenna ? 'bg-emerald-500' : 'bg-slate-300'}`}
                   >
@@ -464,7 +440,6 @@ export default function MascotPlaygroundView() {
                   </div>
                 </button>
 
-                {/* Switch 2: Bóng sàn 3D */}
                 <button
                   type="button"
                   onClick={() => setFloorShadow(!floorShadow)}
@@ -492,7 +467,6 @@ export default function MascotPlaygroundView() {
                   </div>
                 </button>
 
-                {/* Switch 3: Mắt dõi theo chuột */}
                 <button
                   type="button"
                   onClick={() => setInteractive(!interactive)}
@@ -520,7 +494,6 @@ export default function MascotPlaygroundView() {
                   </div>
                 </button>
 
-                {/* Switch 4: Đóng băng hình (Pause) */}
                 <button
                   type="button"
                   onClick={() => setPaused(!paused)}

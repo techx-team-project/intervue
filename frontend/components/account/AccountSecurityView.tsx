@@ -79,7 +79,6 @@ export default function AccountSecurityView() {
 
   return (
     <div className="space-y-6">
-      {/* Toast Notice */}
       {notice && (
         <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
           <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
@@ -87,7 +86,6 @@ export default function AccountSecurityView() {
         </div>
       )}
 
-      {/* 1. Header & Security Action Checklist */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-7">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -106,9 +104,7 @@ export default function AccountSecurityView() {
           </Badge>
         </div>
 
-        {/* Security Checklist */}
         <div className="mt-5 grid grid-cols-1 gap-x-8 gap-y-3.5 border-t border-slate-100 pt-5 sm:grid-cols-2">
-          {/* Task 1: Email Verification */}
           <div className="flex items-center justify-between gap-3 py-1">
             <div className="flex min-w-0 items-center gap-2.5">
               <div className="bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-white">
@@ -122,7 +118,6 @@ export default function AccountSecurityView() {
             <span className="shrink-0 text-xs font-semibold text-emerald-700">Đã hoàn tất</span>
           </div>
 
-          {/* Task 2: Phone Number Linked */}
           <div className="flex items-center justify-between gap-3 py-1">
             <div className="flex min-w-0 items-center gap-2.5">
               <div className="bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-white">
@@ -136,7 +131,6 @@ export default function AccountSecurityView() {
             <span className="shrink-0 text-xs font-semibold text-emerald-700">Đã hoàn tất</span>
           </div>
 
-          {/* Task 3: Strong Password */}
           <div className="flex items-center justify-between gap-3 py-1">
             <div className="flex min-w-0 items-center gap-2.5">
               <div className="bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-white">
@@ -155,7 +149,6 @@ export default function AccountSecurityView() {
             </Link>
           </div>
 
-          {/* Task 4: Two-Factor Authentication (2FA) - UNCHECKED */}
           <div className="flex items-center justify-between gap-3 py-1">
             <div className="flex min-w-0 items-center gap-2.5">
               <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-slate-300 bg-white" />
@@ -166,7 +159,7 @@ export default function AccountSecurityView() {
             </div>
             <Link
               href="/account/two-factor"
-              className="bg-primary inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold text-white shadow-2xs transition-all hover:bg-emerald-700"
+              className="bg-primary inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold text-white shadow-2xs transition hover:bg-emerald-700"
             >
               <span>Kích hoạt</span>
               <ArrowRight className="h-3 w-3" />
@@ -175,12 +168,10 @@ export default function AccountSecurityView() {
         </div>
       </div>
 
-      {/* 2. Security Checklist Items */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
         <h2 className="text-base font-bold text-slate-800">Thiết lập bảo vệ trọng yếu</h2>
 
         <div className="mt-4 divide-y divide-slate-100">
-          {/* Email */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-start gap-3.5">
               <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
@@ -199,7 +190,6 @@ export default function AccountSecurityView() {
             <span className="text-xs font-semibold text-slate-400">Mặc định</span>
           </div>
 
-          {/* Phone */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-start gap-3.5">
               <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
@@ -220,7 +210,6 @@ export default function AccountSecurityView() {
             </button>
           </div>
 
-          {/* Password */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-start gap-3.5">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -240,7 +229,6 @@ export default function AccountSecurityView() {
             </Link>
           </div>
 
-          {/* 2FA */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-start gap-3.5">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
@@ -260,7 +248,7 @@ export default function AccountSecurityView() {
             </div>
             <Link
               href="/account/two-factor"
-              className="bg-primary rounded-full px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition-all hover:bg-emerald-700"
+              className="bg-primary rounded-full px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition hover:bg-emerald-700"
             >
               Kích hoạt ngay
             </Link>
@@ -268,7 +256,6 @@ export default function AccountSecurityView() {
         </div>
       </div>
 
-      {/* 3. Active Sessions Management */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -296,7 +283,7 @@ export default function AccountSecurityView() {
           {sessions.map((session) => (
             <div
               key={session.id}
-              className={`flex items-center justify-between rounded-xl border p-4 transition-all ${
+              className={`flex items-center justify-between rounded-xl border p-4 transition ${
                 session.isCurrent
                   ? 'border-emerald-200 bg-emerald-50/40'
                   : 'border-slate-100 bg-slate-50 hover:bg-white'
@@ -350,7 +337,6 @@ export default function AccountSecurityView() {
         </div>
       </div>
 
-      {/* 4. Security Alerts Preferences */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
         <h2 className="text-base font-bold text-slate-800">Cảnh báo an ninh & Thông báo</h2>
 

@@ -37,7 +37,6 @@ export default function CandidateJobPreferencesSidebar({
       </div>
 
       <div className="space-y-4 text-[13px]">
-        {/* Desired Role */}
         <div className="flex items-start gap-3">
           <Briefcase className="text-primary mt-0.5 h-4 w-4 shrink-0" />
           <div>
@@ -46,7 +45,6 @@ export default function CandidateJobPreferencesSidebar({
           </div>
         </div>
 
-        {/* Expected Salary */}
         <div className="flex items-start gap-3">
           <Banknote className="text-primary mt-0.5 h-4 w-4 shrink-0" />
           <div>
@@ -55,7 +53,6 @@ export default function CandidateJobPreferencesSidebar({
           </div>
         </div>
 
-        {/* Work Mode & Type */}
         <div className="flex items-start gap-3">
           <Building className="text-primary mt-0.5 h-4 w-4 shrink-0" />
           <div>
@@ -66,7 +63,6 @@ export default function CandidateJobPreferencesSidebar({
           </div>
         </div>
 
-        {/* Locations */}
         <div className="flex items-start gap-3">
           <MapPin className="text-primary mt-0.5 h-4 w-4 shrink-0" />
           <div>
@@ -81,7 +77,6 @@ export default function CandidateJobPreferencesSidebar({
           </div>
         </div>
 
-        {/* Industries */}
         <div className="border-t border-[#f1f5f9] pt-3">
           <div className="mb-1.5 text-[11.5px] font-medium text-[#64748b]">Lĩnh vực quan tâm:</div>
           <div className="flex flex-wrap gap-1.5">

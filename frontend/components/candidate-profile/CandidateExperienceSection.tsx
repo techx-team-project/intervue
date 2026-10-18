@@ -16,7 +16,6 @@ export default function CandidateExperienceSection({
 }: CandidateExperienceSectionProps) {
   return (
     <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-8">
-      {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50">
@@ -32,7 +31,7 @@ export default function CandidateExperienceSection({
           <button
             type="button"
             onClick={onAddExperience}
-            className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition-all"
+            className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition"
           >
             <Plus className="h-4 w-4" />
             <span>Thêm kinh nghiệm</span>
@@ -40,11 +39,9 @@ export default function CandidateExperienceSection({
         )}
       </div>
 
-      {/* Timeline List */}
       <div className="-before:translate-x-1/2 relative space-y-8 before:absolute before:top-7 before:bottom-8 before:left-4 before:w-0.5 before:bg-[#e2e8f0] sm:before:left-5">
         {experiences.map((exp) => (
           <div key={exp.id} className="relative pl-10 sm:pl-12">
-            {/* Timeline Bullet */}
             <div
               className={`absolute top-7 left-4 flex h-5 w-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white shadow-2xs sm:left-5 ${
                 exp.isCurrent ? 'bg-primary ring-4 ring-emerald-100' : 'bg-[#94a3b8]'
@@ -53,8 +50,7 @@ export default function CandidateExperienceSection({
               {exp.isCurrent && <span className="h-1.5 w-1.5 rounded-full bg-white"></span>}
             </div>
 
-            {/* Experience Card */}
-            <div className="rounded-2xl border border-[#f1f5f9] bg-[#fbfcfd] p-5 transition-all hover:border-[#cbd5e1] hover:bg-white hover:shadow-sm">
+            <div className="rounded-2xl border border-[#f1f5f9] bg-[#fbfcfd] p-5 transition hover:border-[#cbd5e1] hover:bg-white hover:shadow-sm">
               <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-start">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -86,10 +82,8 @@ export default function CandidateExperienceSection({
                 </div>
               </div>
 
-              {/* Responsibilities */}
               <p className="mt-3 text-[13.5px] leading-relaxed text-[#334155]">{exp.description}</p>
 
-              {/* Quantified Achievements */}
               {exp.achievements.length > 0 && (
                 <div className="mt-3.5 space-y-1.5 rounded-xl border border-[#f1f5f9] bg-white p-3.5">
                   <div className="text-primary text-[12px] font-bold tracking-wider uppercase">
@@ -106,7 +100,6 @@ export default function CandidateExperienceSection({
                 </div>
               )}
 
-              {/* Tech Stack Pills */}
               {exp.skills.length > 0 && (
                 <div className="mt-3.5 flex flex-wrap items-center gap-1.5 border-t border-[#f1f5f9] pt-2">
                   <span className="text-[11.5px] font-medium text-[#64748b]">Công nghệ:</span>

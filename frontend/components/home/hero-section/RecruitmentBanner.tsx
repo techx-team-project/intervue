@@ -1,18 +1,25 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { ArrowRight, Award, ChevronLeft, ChevronRight, Clock, ShieldCheck } from 'lucide-react';
 
-interface RecruitmentBannerProps {
-  current: number;
-  onPrev: () => void;
-  onNext: () => void;
-  onSelect: (index: number) => void;
-}
+const BANNER_COUNT = 2;
 
-export default function RecruitmentBanner({ current, onPrev, onNext, onSelect }: RecruitmentBannerProps) {
+export default function RecruitmentBanner() {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrent((prev) => (prev + 1) % BANNER_COUNT), 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const onPrev = () => setCurrent((prev) => (prev - 1 + BANNER_COUNT) % BANNER_COUNT);
+  const onNext = () => setCurrent((prev) => (prev + 1) % BANNER_COUNT);
+  const onSelect = setCurrent;
+
   return (
     <div className="group relative flex h-72 flex-col justify-between overflow-hidden rounded-2xl border border-[#e9eaec] bg-white shadow-md md:col-span-6">
-      {/* Banner Carousel Container */}
       <div className="relative h-full w-full overflow-hidden">
-        {/* SLIDE 1: Tuyển dụng Nhân tài Công nghệ & AI InterVue */}
         <div
           className={`absolute inset-0 transition-opacity duration-700 ${
             current === 0 ? 'pointer-events-auto z-10 opacity-100' : 'pointer-events-none z-0 opacity-0'
@@ -23,11 +30,10 @@ export default function RecruitmentBanner({ current, onPrev, onNext, onSelect }:
             alt="InterVue - Hires Smarter. Faster."
             className="h-full w-full object-cover object-center"
           />
-          {/* Clean elegant CTA button bottom right */}
           <div className="absolute right-3 bottom-3 z-20">
             <a
               href="#feature-jobs"
-              className="bg-primary hover:bg-primary-hover flex cursor-pointer items-center gap-1.5 rounded-full px-4 py-2 text-[12.5px] font-bold text-white shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-primary hover:bg-primary-hover flex cursor-pointer items-center gap-1.5 rounded-full px-4 py-2 text-[12.5px] font-bold text-white shadow-lg transition duration-200"
             >
               <span>Khám phá ngay</span>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -35,7 +41,6 @@ export default function RecruitmentBanner({ current, onPrev, onNext, onSelect }:
           </div>
         </div>
 
-        {/* SLIDE 2: Kiếm thêm thu nhập & Cơ hội nghề nghiệp */}
         <div
           className={`absolute inset-0 transition-opacity duration-700 ${
             current === 1 ? 'pointer-events-auto z-10 opacity-100' : 'pointer-events-none z-0 opacity-0'
@@ -71,7 +76,7 @@ export default function RecruitmentBanner({ current, onPrev, onNext, onSelect }:
               <div>
                 <a
                   href="#feature-jobs"
-                  className="bg-primary hover:bg-primary-hover inline-flex cursor-pointer items-center gap-1.5 rounded-full px-5 py-2 text-[13px] font-bold text-white shadow-md transition-all"
+                  className="bg-primary hover:bg-primary-hover inline-flex cursor-pointer items-center gap-1.5 rounded-full px-5 py-2 text-[13px] font-bold text-white shadow-md transition"
                 >
                   <span>Khám phá ngay</span>
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -82,11 +87,10 @@ export default function RecruitmentBanner({ current, onPrev, onNext, onSelect }:
         </div>
       </div>
 
-      {/* Slider Navigation Arrows */}
       <button
         type="button"
         onClick={onPrev}
-        className="text-navy absolute top-1/2 left-2.5 z-20 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white/90 shadow-md transition-all hover:bg-white"
+        className="text-navy absolute top-1/2 left-2.5 z-20 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white/90 shadow-md transition hover:bg-white"
         title="Banner trước"
       >
         <ChevronLeft className="h-4 w-4" />
@@ -94,20 +98,19 @@ export default function RecruitmentBanner({ current, onPrev, onNext, onSelect }:
       <button
         type="button"
         onClick={onNext}
-        className="text-navy absolute top-1/2 right-2.5 z-20 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white/90 shadow-md transition-all hover:bg-white"
+        className="text-navy absolute top-1/2 right-2.5 z-20 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white/90 shadow-md transition hover:bg-white"
         title="Banner tiếp theo"
       >
         <ChevronRight className="h-4 w-4" />
       </button>
 
-      {/* Indicator Dots (2 dots) */}
       <div className="absolute bottom-2.5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5">
         {[0, 1].map((idx) => (
           <button
             key={idx}
             type="button"
             onClick={() => onSelect(idx)}
-            className={`cursor-pointer transition-all ${
+            className={`cursor-pointer transition ${
               current === idx
                 ? 'bg-primary h-1.5 w-5 rounded-full'
                 : 'h-1.5 w-1.5 rounded-full border border-black/10 bg-white/80 hover:bg-white'

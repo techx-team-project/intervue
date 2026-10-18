@@ -32,7 +32,6 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
     'experience',
   );
 
-  // Sync mode with URL search param on load (e.g. /profile?view=guest)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const view = params.get('view');
@@ -95,7 +94,6 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
-      {/* 1. Breadcrumb Bar */}
       <div className="border-b border-slate-200 bg-white">
         <div className="container-topcv py-3">
           <Breadcrumb items={[{ label: 'Ứng viên' }, { label: candidate.fullName }]} showHome className="text-xs" />
@@ -103,7 +101,6 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
       </div>
 
       <div className="container-topcv pt-5">
-        {/* Facebook-style View Mode Switcher Banner */}
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-2xs sm:px-4.5">
           <div className="flex items-center gap-3">
             <span
@@ -135,7 +132,7 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
           <button
             type="button"
             onClick={handleToggleMode}
-            className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold shadow-2xs transition-all ${
+            className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold shadow-2xs transition ${
               isOwner
                 ? 'border border-slate-300 bg-slate-50 text-slate-700 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600'
                 : 'border-primary hover:bg-primary border bg-emerald-50 text-emerald-700 hover:text-white'
@@ -155,7 +152,6 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
           </button>
         </div>
 
-        {/* 2. Candidate Hero Header */}
         <CandidateHeroHeader
           candidate={candidate}
           isOwner={isOwner}
@@ -165,7 +161,6 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
           onBookmark={() => alert(`Đã lưu hồ sơ của ${candidate.fullName} vào danh sách ứng viên tiềm năng!`)}
         />
 
-        {/* 3. Section Navigation Tabs */}
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-2">
           <div className="flex flex-wrap items-center gap-2">
             {tabs.map((tab) => {
@@ -176,7 +171,7 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold whitespace-nowrap transition-all ${
+                  className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold whitespace-nowrap transition ${
                     isActive
                       ? 'text-primary bg-white shadow-xs ring-1 ring-slate-200'
                       : 'text-slate-500 hover:bg-white/60 hover:text-slate-800'
@@ -213,11 +208,8 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
           </div>
         </div>
 
-        {/* 4. Main Body: 12 Cols Grid (8 cols Left Tab Content, 4 cols Right Sidebar) */}
         <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
-          {/* LEFT COLUMN: 8 Cols Active Tab View */}
           <div className="space-y-6 lg:col-span-8">
-            {/* TAB 1: Kinh nghiệm & Học vấn */}
             {activeTab === 'experience' && (
               <div className="space-y-6">
                 <CandidateAboutSection bio={candidate.bio} isOwner={isOwner} onEdit={() => setIsEditOpen(true)} />
@@ -234,7 +226,6 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
               </div>
             )}
 
-            {/* TAB 2: Kỹ năng & Dự án */}
             {activeTab === 'skills_projects' && (
               <div className="space-y-6">
                 <CandidateSkillsSection
@@ -250,14 +241,12 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
               </div>
             )}
 
-            {/* TAB 3: Đánh giá InterVue AI */}
             {activeTab === 'ai_assessment' && (
               <div className="space-y-6">
                 <CandidateAiScoreCard aiScore={candidate.aiScore} />
               </div>
             )}
 
-            {/* TAB 4: Chứng chỉ & Ngoại ngữ */}
             {activeTab === 'certifications' && (
               <div className="space-y-6">
                 <CandidateCertificationsSection
@@ -270,19 +259,15 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
             )}
           </div>
 
-          {/* RIGHT COLUMN: 4 Cols Sidebar */}
           <div className="space-y-6 lg:col-span-4">
-            {/* Job Preferences & Salary */}
             <CandidateJobPreferencesSidebar
               preferences={candidate.preferences}
               isOwner={isOwner}
               onEdit={() => setIsEditOpen(true)}
             />
 
-            {/* Attached Resumes */}
             <CandidateAttachedCvSidebar resumes={candidate.resumes} isOwner={isOwner} />
 
-            {/* Weekly Activity Stats (Owner) or Recruiter Connect (Guest) */}
             <CandidateActivityStatsSidebar
               stats={candidate.stats}
               isOwner={isOwner}
@@ -294,7 +279,6 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
         </div>
       </div>
 
-      {/* Edit Profile Modal */}
       <CandidateEditModal
         candidate={candidate}
         isOpen={isEditOpen}
@@ -302,7 +286,6 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
         onSave={handleSaveProfile}
       />
 
-      {/* Share Profile Modal */}
       <CandidateShareModal fullName={candidate.fullName} isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
     </div>
   );

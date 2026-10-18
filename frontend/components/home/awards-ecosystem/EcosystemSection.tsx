@@ -12,14 +12,19 @@ export default function EcosystemSection() {
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {/* InterVue */}
         <Link
           href="/"
-          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:shadow-lg"
+          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition hover:shadow-lg"
         >
           <div>
             <div className="mb-4 flex h-10 items-center">
-              <img src="/intervue-logo.png" alt="InterVue.vn" className="h-8 w-auto object-contain" />
+              <img
+                loading="lazy"
+                decoding="async"
+                src="/intervue-logo.png"
+                alt="InterVue.vn"
+                className="h-8 w-auto object-contain"
+              />
             </div>
             <h3 className="text-navy group-hover:text-primary mb-2 text-base font-bold transition-colors">
               InterVue.vn
@@ -33,16 +38,17 @@ export default function EcosystemSection() {
           </div>
         </Link>
 
-        {/* HappyTime */}
         <a
           href="https://happytime.vn/"
           target="_blank"
           rel="noreferrer"
-          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:shadow-lg"
+          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition hover:shadow-lg"
         >
           <div>
             <div className="mb-4 flex h-10 items-center">
               <img
+                loading="lazy"
+                decoding="async"
                 src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/footer/happy_time.png"
                 alt="HappyTime.vn"
                 className="h-8 w-auto object-contain"
@@ -60,16 +66,17 @@ export default function EcosystemSection() {
           </div>
         </a>
 
-        {/* TestCenter */}
         <a
           href="https://www.testcenter.vn/"
           target="_blank"
           rel="noreferrer"
-          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:shadow-lg"
+          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition hover:shadow-lg"
         >
           <div>
             <div className="mb-4 flex h-10 items-center">
               <img
+                loading="lazy"
+                decoding="async"
                 src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/footer/testcenter.png"
                 alt="TestCenter.vn"
                 className="h-8 w-auto object-contain"
@@ -87,16 +94,17 @@ export default function EcosystemSection() {
           </div>
         </a>
 
-        {/* SHiring */}
         <a
           href="https://www.shiring.ai/"
           target="_blank"
           rel="noreferrer"
-          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:shadow-lg"
+          className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition hover:shadow-lg"
         >
           <div>
             <div className="mb-4 flex h-10 items-center">
               <img
+                loading="lazy"
+                decoding="async"
                 src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/footer/SHiring.png"
                 alt="SHiring.ai"
                 className="h-8 w-auto object-contain"

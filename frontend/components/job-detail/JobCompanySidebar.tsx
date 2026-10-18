@@ -15,14 +15,19 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
   return (
     <div
       id="job-company"
-      className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs transition-all"
+      className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs transition"
     >
-      {/* Company Header */}
       <div className="flex items-start gap-3.5">
         <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-2xs">
           {company.logo ? (
             /* eslint-disable-next-line @next/next/no-img-element */
-            <img src={company.logo} alt={company.name} className="h-full w-full object-contain" />
+            <img
+              loading="lazy"
+              decoding="async"
+              src={company.logo}
+              alt={company.name}
+              className="h-full w-full object-contain"
+            />
           ) : (
             <Building2 className="h-8 w-8 text-slate-400" />
           )}
@@ -41,12 +46,11 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
         </div>
       </div>
 
-      {/* Follow Button */}
       <div className="mt-4">
         <button
           type="button"
           onClick={() => setIsFollowing((prev) => !prev)}
-          className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border py-2 text-xs font-bold transition-all ${
+          className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border py-2 text-xs font-bold transition ${
             isFollowing
               ? 'text-primary border-emerald-200 bg-emerald-50'
               : 'hover:text-primary border-slate-200 bg-slate-50/70 text-slate-700 hover:border-emerald-300 hover:bg-emerald-50/40'
@@ -66,12 +70,9 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
         </button>
       </div>
 
-      {/* Divider */}
       <div className="my-4 border-t border-slate-100" />
 
-      {/* Info List */}
       <div className="space-y-3 text-xs text-slate-600">
-        {/* Quy mô */}
         <div className="flex items-start gap-2.5">
           <Users className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
           <div>
@@ -80,7 +81,6 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
           </div>
         </div>
 
-        {/* Lĩnh vực */}
         <div className="flex items-start gap-2.5">
           <Briefcase className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
           <div>
@@ -89,7 +89,6 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
           </div>
         </div>
 
-        {/* Địa điểm */}
         <div className="flex items-start gap-2.5">
           <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
           <div>
@@ -99,7 +98,6 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
         </div>
       </div>
 
-      {/* View Company Link */}
       <div className="mt-4 border-t border-slate-100 pt-3">
         <Link
           href={`/companies/${company.id || 224996}`}

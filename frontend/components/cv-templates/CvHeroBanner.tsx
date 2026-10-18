@@ -7,12 +7,10 @@ import { ChevronRight, FileCheck, ShieldCheck, Sparkles, DownloadCloud } from 'l
 export default function CvHeroBanner() {
   return (
     <div className="from-primary/10 relative overflow-hidden border-b border-gray-200 bg-linear-to-b via-[#f4fbf7] to-white py-10 lg:py-14">
-      {/* Background ambient blurs */}
       <div className="bg-primary/15 pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full blur-3xl" />
       <div className="pointer-events-none absolute top-1/2 -right-20 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
         <nav className="mb-4 flex items-center gap-1.5 text-xs text-[#7f878f]">
           <Link href="/" className="hover:text-primary transition-colors">
             Trang chủ
@@ -25,7 +23,6 @@ export default function CvHeroBanner() {
           <span className="text-primary font-semibold">Mẫu CV xin việc tiếng Việt Đơn giản chuẩn 2026</span>
         </nav>
 
-        {/* Hero Content */}
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
           <div className="max-w-3xl lg:col-span-8">
             <div className="bg-primary/10 text-primary mb-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-semibold">
@@ -43,7 +40,6 @@ export default function CvHeroBanner() {
               tượng tới nhà tuyển dụng.
             </p>
 
-            {/* Badges row */}
             <div className="text-navy mt-6 flex flex-wrap items-center gap-4 text-xs font-semibold">
               <div className="flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2 shadow-xs">
                 <ShieldCheck className="text-primary h-4 w-4" />
@@ -60,7 +56,6 @@ export default function CvHeroBanner() {
             </div>
           </div>
 
-          {/* Right Banner Showcase Visual */}
           <div className="hidden justify-end lg:col-span-4 lg:flex">
             <div className="relative max-w-sm rounded-3xl border border-emerald-200/80 bg-white/80 p-6 shadow-xl backdrop-blur-md">
               <div className="mb-4 flex items-center gap-3 border-b border-gray-100 pb-4">

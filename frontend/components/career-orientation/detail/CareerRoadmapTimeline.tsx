@@ -28,13 +28,11 @@ export default function CareerRoadmapTimeline({ stages }: CareerRoadmapTimelineP
       <div className="border-primary/30 relative ml-4 space-y-8 border-l-2 pl-6 sm:ml-6 sm:pl-8">
         {stages.map((stage) => (
           <div key={stage.step} className="group relative">
-            {/* Step marker bubble */}
-            <div className="bg-primary absolute top-0 -left-8.75 flex h-8 w-8 items-center justify-center rounded-full border-4 border-white text-xs font-black text-white shadow-md transition-transform duration-300 group-hover:scale-110 sm:-left-10.75 sm:h-9 sm:w-9 sm:text-sm">
+            <div className="bg-primary absolute top-0 -left-8.75 flex h-8 w-8 items-center justify-center rounded-full border-4 border-white text-xs font-black text-white shadow-md transition-transform duration-300 sm:-left-10.75 sm:h-9 sm:w-9 sm:text-sm">
               {stage.step}
             </div>
 
-            {/* Stage card */}
-            <div className="hover:border-primary/50 rounded-2xl border border-gray-200 bg-white p-5 shadow-xs transition-all duration-300 hover:shadow-lg sm:p-6">
+            <div className="hover:border-primary/50 rounded-2xl border border-gray-200 bg-white p-5 shadow-xs transition duration-300 hover:shadow-lg sm:p-6">
               <div className="flex flex-col justify-between gap-2 border-b border-gray-100 pb-3 sm:flex-row sm:items-center">
                 <h4 className="text-base font-bold text-[#171717] sm:text-lg">{stage.title}</h4>
 
@@ -49,7 +47,6 @@ export default function CareerRoadmapTimeline({ stages }: CareerRoadmapTimelineP
                 </div>
               </div>
 
-              {/* Responsibilities & Skills */}
               <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                   <h5 className="text-navy mb-2 flex items-center gap-1 text-xs font-semibold tracking-wider uppercase">

@@ -23,15 +23,9 @@ $RECYCLE.BIN/
 
 # ---------------------------------------------------------------------
 # VS Code
-# Chỉ ignore phần cấu hình mang tính cá nhân/máy cục bộ.
-# Các file cấu hình dùng chung cho cả team (settings/extensions/launch/tasks)
-# nên được commit để mọi máy có setup giống nhau, tránh xung đột.
+# Cấu hình VS Code là của từng máy, không commit.
 # ---------------------------------------------------------------------
-.vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
-!.vscode/launch.json
-!.vscode/tasks.json
+.vscode/
 .history/
 *.code-workspace
 
@@ -122,3 +116,6 @@ CLAUDE.local.md
 
 # CodeGraph local index
 .codegraph/
+
+# Personal member workspace
+workspace/

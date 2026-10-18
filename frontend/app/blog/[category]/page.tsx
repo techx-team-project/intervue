@@ -15,7 +15,6 @@ interface BlogCategoryPageProps {
   params: Promise<{ category: string }>;
 }
 
-// Canonical slug mappings for aliases
 const SLUG_ALIASES: Record<string, BlogCategorySlug> = {
   'huong-nghiep': 'dinh-huong-nghe-nghiep',
   'bi-quyet-tim-viec': 'bi-kip-tim-viec',
@@ -53,7 +52,6 @@ export async function generateStaticParams() {
 export default async function BlogCategoryPage({ params }: BlogCategoryPageProps) {
   const { category } = await params;
 
-  // Handle aliases with redirect
   if (SLUG_ALIASES[category]) {
     redirect(`/blog/${SLUG_ALIASES[category]}`);
   }

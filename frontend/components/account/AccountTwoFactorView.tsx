@@ -76,7 +76,6 @@ export default function AccountTwoFactorView() {
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Box */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -97,7 +96,6 @@ export default function AccountTwoFactorView() {
         </div>
       </div>
 
-      {/* Success Notification */}
       {successMsg && (
         <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800">
           <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
@@ -105,7 +103,6 @@ export default function AccountTwoFactorView() {
         </div>
       )}
 
-      {/* State: 2FA is Currently ENABLED */}
       {isEnabled ? (
         <div className="space-y-6">
           <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-6 sm:p-8">
@@ -132,7 +129,6 @@ export default function AccountTwoFactorView() {
             </div>
           </div>
 
-          {/* Backup Codes Section */}
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -176,7 +172,6 @@ export default function AccountTwoFactorView() {
           </div>
         </div>
       ) : (
-        /* State: 2FA is NOT ENABLED (Setup Walkthrough) */
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
           <h2 className="text-base font-bold text-slate-800">Kích hoạt xác thực qua Authenticator App</h2>
           <p className="mt-1 text-sm text-slate-500">
@@ -184,7 +179,6 @@ export default function AccountTwoFactorView() {
           </p>
 
           <div className="mt-6 space-y-6">
-            {/* Step 1 */}
             <div className="flex items-start gap-4">
               <div className="bg-primary flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
                 1
@@ -192,22 +186,17 @@ export default function AccountTwoFactorView() {
               <div className="flex-1">
                 <div className="text-sm font-bold text-slate-800">Mở ứng dụng Authenticator và quét mã QR</div>
                 <div className="mt-4 flex flex-col gap-6 sm:flex-row sm:items-center">
-                  {/* Clean Mock QR Code SVG */}
                   <div className="flex h-44 w-44 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white p-3 shadow-xs">
                     <svg viewBox="0 0 100 100" className="h-full w-full">
-                      {/* Corner 1 */}
                       <rect x="5" y="5" width="26" height="26" fill="#1e293b" rx="4" />
                       <rect x="9" y="9" width="18" height="18" fill="white" rx="2" />
                       <rect x="13" y="13" width="10" height="10" fill="#00b14f" rx="1" />
-                      {/* Corner 2 */}
                       <rect x="69" y="5" width="26" height="26" fill="#1e293b" rx="4" />
                       <rect x="73" y="9" width="18" height="18" fill="white" rx="2" />
                       <rect x="77" y="13" width="10" height="10" fill="#00b14f" rx="1" />
-                      {/* Corner 3 */}
                       <rect x="5" y="69" width="26" height="26" fill="#1e293b" rx="4" />
                       <rect x="9" y="73" width="18" height="18" fill="white" rx="2" />
                       <rect x="13" y="77" width="10" height="10" fill="#00b14f" rx="1" />
-                      {/* Inner Random Matrix Bits */}
                       <rect x="38" y="10" width="8" height="8" fill="#1e293b" />
                       <rect x="52" y="14" width="8" height="8" fill="#00b14f" />
                       <rect x="38" y="38" width="12" height="12" fill="#00b14f" />
@@ -223,7 +212,6 @@ export default function AccountTwoFactorView() {
                     </svg>
                   </div>
 
-                  {/* Manual Secret Key */}
                   <div className="space-y-2">
                     <span className="text-xs text-slate-500">
                       Nếu không quét được mã, bạn có thể nhập khóa thiết lập thủ công:
@@ -249,7 +237,6 @@ export default function AccountTwoFactorView() {
               </div>
             </div>
 
-            {/* Step 2 */}
             <div className="flex items-start gap-4">
               <div className="bg-primary flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
                 2

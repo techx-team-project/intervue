@@ -16,7 +16,6 @@ export default function CandidateEducationSection({
 }: CandidateEducationSectionProps) {
   return (
     <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-8">
-      {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50">
@@ -32,7 +31,7 @@ export default function CandidateEducationSection({
           <button
             type="button"
             onClick={onAddEducation}
-            className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition-all"
+            className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition"
           >
             <span>+ Thêm học vấn</span>
           </button>
@@ -43,7 +42,7 @@ export default function CandidateEducationSection({
         {educations.map((edu) => (
           <div
             key={edu.id}
-            className="rounded-2xl border border-[#f1f5f9] bg-[#fbfcfd] p-5 transition-all hover:border-[#cbd5e1] hover:bg-white"
+            className="rounded-2xl border border-[#f1f5f9] bg-[#fbfcfd] p-5 transition hover:border-[#cbd5e1] hover:bg-white"
           >
             <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-start">
               <div>

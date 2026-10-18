@@ -16,29 +16,17 @@ export type RecruitmentStage =
   | 'sleeping';
 
 export interface RecruitmentMascotProps {
-  /** Giai đoạn trong quy trình tuyển dụng / phỏng vấn */
   stage?: RecruitmentStage;
-  /** Lời thoại tùy biến. Nếu không truyền sẽ lấy câu thoại mặc định của stage */
   message?: string;
-  /** Kích thước robot (pixel). Mặc định 120px */
   size?: number;
-  /** Hình dáng đầu robot: 'circle' | 'rectangle' | 'square' | 'hexagon' */
   shape?: RobotHeadShape;
-  /** Bố cục: ngang (robot bên cạnh thoại) hoặc dọc (robot bên trên thoại) */
   orientation?: 'horizontal' | 'vertical';
-  /** Màu vỏ robot (mặc định InterVue Navy: #263a4d) */
   color?: string;
-  /** Màu viền tai và ăng-ten (mặc định Emerald: #34d399) */
   trimColor?: string;
-  /** Màu màn hình LED (mặc định Soft Mint: #ecfdf5) */
   screenColor?: string;
-  /** Có tương tác dõi theo chuột và click nhảy xoay hay không */
   interactive?: boolean;
-  /** Hiện bóng sàn dưới chân robot */
   floorShadow?: boolean;
-  /** Hiện ăng-ten trên đỉnh đầu robot */
   antenna?: boolean;
-  /** ClassName bổ sung cho container */
   className?: string;
 }
 
@@ -107,7 +95,6 @@ export function RecruitmentMascot({
         orientation === 'vertical' ? 'flex-col items-center text-center' : 'items-center'
       } gap-4 overflow-visible ${className}`}
     >
-      {/* Robot Canvas wrapper (overflow-visible để tránh cắt ăng-ten khi nhảy) */}
       <div className="shrink-0 overflow-visible">
         <DynamicRobotHead
           shape={shape}
@@ -122,11 +109,9 @@ export function RecruitmentMascot({
         />
       </div>
 
-      {/* Bong bóng lời thoại (Speech bubble) */}
-      <div className="relative max-w-sm rounded-2xl border border-emerald-100 bg-white/95 p-4 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-xs transition-all">
+      <div className="relative max-w-sm rounded-2xl border border-emerald-100 bg-white/95 p-4 text-xs font-medium text-slate-700 shadow-sm transition">
         <p className="leading-relaxed">{message || current.defaultMsg}</p>
 
-        {/* Mũi tên chỉ về phía robot */}
         {orientation === 'horizontal' ? (
           <div className="absolute top-1/2 -left-2 -translate-y-1/2 border-y-8 border-r-8 border-y-transparent border-r-white drop-shadow-xs" />
         ) : (

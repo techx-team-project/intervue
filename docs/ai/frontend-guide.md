@@ -69,8 +69,9 @@ page.tsx (Server)  ──fetch (server)──▶ API         public, SEO pages (
 
 ## 4. Auth & authorization (UI)
 
-- Access token in memory (store); refresh via HttpOnly cookie → session survives reload by calling `/auth/refresh` on app start (AuthProvider).
-- **Route protection** in `proxy.ts` (Next 16) using the refresh cookie presence for redirects of `(candidate)`, `(recruiter)`, `(admin)`; real enforcement is the backend. Never trust UI checks for security.
+- Access token in memory (`store/auth.store.ts`, Zustand, never persisted); refresh via HttpOnly cookie → session survives reload by calling `/auth/refresh` on app start (`providers/AuthProvider.tsx`). `apiRequest/http.ts` refreshes once (single-flight) on HTTP 401 and retries.
+- Guards: `<RequireAuth roles={[...]}>` in route-group layouts (`(candidate)`, `account`), `<GuestRedirect />` on login/register/forgot-password, `useAuth()` for state. Post-login target comes from the `redirect` query param via `utils/redirect.ts` (same-origin paths only).
+- **Route protection** in `proxy.ts` (Next 16) using the refresh cookie presence for redirects of `/candidate/*` and `/account/*` (add `(recruiter)`, `(admin)` matchers when those areas exist); real enforcement is the backend. The cookie is only visible to the proxy when frontend and API share a registrable domain (always true on localhost). Never trust UI checks for security.
 - Roles come from `GET /users/me`: `CANDIDATE | RECRUITER | ADMIN`; a user may have several → provide a role switcher in the header. Use a `<RequireRole roles={[...]}>` wrapper or `useAuth().hasRole()`.
 - Gating UX: not verified (eKYC) → disable "Apply" with an explanatory CTA to verification, based on `IDENTITY_NOT_VERIFIED`.
 

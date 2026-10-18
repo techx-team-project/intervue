@@ -39,29 +39,27 @@ const LinkedinIcon = () => (
 
 export default function SocialAuthButtons({ mode = 'login' }: SocialAuthButtonsProps) {
   const handleSocialAuth = (provider: string) => {
-    alert(`Đang kết nối xác thực tài khoản qua ${provider}...`);
+    alert(`Connecting with ${provider}...`);
   };
 
-  const googleText = mode === 'register' ? 'Đăng ký bằng Google' : 'Đăng nhập bằng Google';
+  const googleText = mode === 'register' ? 'Sign up with Google' : 'Sign in with Google';
 
   return (
     <div className="space-y-3">
-      {/* 1. Google Button (Full width pill) */}
       <button
         type="button"
         onClick={() => handleSocialAuth('Google')}
-        className="text-navy flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold transition-all hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
+        className="text-navy flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold transition hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
       >
         <GoogleIcon />
         <span>{googleText}</span>
       </button>
 
-      {/* 2. Facebook & Linkedin Buttons (Row with 2 pills) */}
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={() => handleSocialAuth('Facebook')}
-          className="text-navy flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold transition-all hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
+          className="text-navy flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold transition hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
         >
           <FacebookIcon />
           <span>Facebook</span>
@@ -70,7 +68,7 @@ export default function SocialAuthButtons({ mode = 'login' }: SocialAuthButtonsP
         <button
           type="button"
           onClick={() => handleSocialAuth('LinkedIn')}
-          className="text-navy flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold transition-all hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
+          className="text-navy flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold transition hover:border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.99]"
         >
           <LinkedinIcon />
           <span>Linkedin</span>

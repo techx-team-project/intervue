@@ -15,7 +15,7 @@ interface PaymentQrModalProps {
 }
 
 export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: PaymentQrModalProps) {
-  const [countdown, setCountdown] = useState(900); // 15 mins
+  const [countdown, setCountdown] = useState(900);
   const [copiedCode, setCopiedCode] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -68,7 +68,7 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
       description="Quét mã VietQR chuyển khoản nhanh 24/7 để tự động kích hoạt tài khoản"
     >
       {isSuccess ? (
-        <div className="animate-in zoom-in-95 space-y-4 py-6 text-center duration-200">
+        <div className="space-y-4 py-6 text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
             <CheckCircle2 className="h-10 w-10" />
           </div>
@@ -89,7 +89,6 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
         </div>
       ) : (
         <div className="space-y-5">
-          {/* Thông tin đơn hàng & Timer */}
           <div className="flex items-center justify-between rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
             <div>
               <p className="text-sm font-medium text-emerald-800">Gói đăng ký</p>
@@ -105,12 +104,12 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
             </div>
           </div>
 
-          {/* QR Code & Hướng dẫn */}
           <div className="grid grid-cols-1 items-center gap-5 sm:grid-cols-2">
-            {/* Cột Trái: Ảnh QR Code */}
             <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
               <div className="relative flex h-48 w-48 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 p-2">
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=247_MBBANK_INTERVUE_${order.orderCode}_${order.priceValue}`}
                   alt="VietQR Code"
                   className="h-full w-full object-contain"
@@ -121,7 +120,6 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
               </p>
             </div>
 
-            {/* Cột Phải: Thông tin chuyển khoản */}
             <div className="space-y-3 text-sm">
               <div>
                 <span className="block text-xs text-slate-500">Ngân hàng thụ hưởng</span>
@@ -155,7 +153,6 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
             </div>
           </div>
 
-          {/* Action buttons */}
           <div className="pt-2">
             <Button onClick={handleConfirmPayment} isLoading={isProcessing} className="w-full py-3 text-base">
               Tôi đã chuyển khoản thành công

@@ -12,7 +12,6 @@ interface ChecklistItem {
 }
 
 const CHECKLIST_ITEMS: ChecklistItem[] = [
-  // Before
   {
     id: 'res-company',
     stage: 'before',
@@ -37,7 +36,6 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
     label: 'Chuẩn bị 3 - 5 câu hỏi thông minh hỏi lại nhà tuyển dụng',
     desc: 'Hỏi về mục tiêu 3 tháng đầu, thách thức của team hoặc văn hóa làm việc.',
   },
-  // Day of
   {
     id: 'day-clothes',
     stage: 'day_of',
@@ -50,7 +48,6 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
     label: 'Có mặt sớm trước giờ hẹn 10 - 15 phút',
     desc: 'Tránh kẹt xe, có thời gian thư giãn hít thở sâu và chỉnh trang lại.',
   },
-  // During
   {
     id: 'dur-eye',
     stage: 'during',
@@ -63,7 +60,6 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
     label: 'Thành thật và tích cực trong mọi câu trả lời',
     desc: 'Không nói dối kinh nghiệm, không nói xấu sếp hoặc công ty cũ.',
   },
-  // After
   {
     id: 'aft-thanks',
     stage: 'after',
@@ -89,7 +85,6 @@ export default function InterviewPrepChecklist() {
 
   return (
     <div className="overflow-hidden rounded-3xl border border-[#e5e7eb] bg-white shadow-xl">
-      {/* Header */}
       <div className="bg-linear-to-r from-blue-700 via-indigo-700 to-blue-900 p-6 text-white sm:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -112,14 +107,13 @@ export default function InterviewPrepChecklist() {
           <button
             type="button"
             onClick={handleReset}
-            className="inline-flex items-center gap-1.5 self-start rounded-xl bg-white/10 px-3 py-2 text-xs font-semibold text-white backdrop-blur-xs transition hover:bg-white/20 sm:self-center"
+            className="inline-flex items-center gap-1.5 self-start rounded-xl bg-white/10 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/20 sm:self-center"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             Làm lại checklist
           </button>
         </div>
 
-        {/* Progress Bar */}
         <div className="mt-6">
           <div className="flex justify-between text-xs font-medium text-blue-100">
             <span>Mức độ sẵn sàng</span>
@@ -134,7 +128,6 @@ export default function InterviewPrepChecklist() {
         </div>
       </div>
 
-      {/* Checklist Sections */}
       <div className="p-6 sm:p-8">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {CHECKLIST_ITEMS.map((item) => {
@@ -143,7 +136,7 @@ export default function InterviewPrepChecklist() {
               <div
                 key={item.id}
                 onClick={() => toggleItem(item.id)}
-                className={`group flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition-all duration-200 ${
+                className={`group flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition duration-200 ${
                   isChecked
                     ? 'border-emerald-200 bg-emerald-50/50 shadow-xs'
                     : 'border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50/20'
@@ -171,7 +164,6 @@ export default function InterviewPrepChecklist() {
           })}
         </div>
 
-        {/* Quick Bottom Tool Callouts */}
         <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border border-blue-100 bg-blue-50/40 p-4 sm:flex-row sm:p-5">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white">

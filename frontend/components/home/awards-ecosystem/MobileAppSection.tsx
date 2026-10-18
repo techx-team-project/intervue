@@ -18,10 +18,11 @@ export default function MobileAppSection() {
             nghề nghiệp - chỉ với một ứng dụng duy nhất.
           </p>
 
-          {/* QR and Download buttons */}
           <div className="flex flex-wrap items-center gap-5">
             <div className="shrink-0 rounded-xl bg-white p-2 shadow-md">
               <img
+                loading="lazy"
+                decoding="async"
                 src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/welcome/mobile-app/qr_code_app_black.png"
                 alt="QR Code InterVue App"
                 className="h-24 w-24 object-contain"
@@ -38,6 +39,8 @@ export default function MobileAppSection() {
                   className="block transition-opacity hover:opacity-90"
                 >
                   <img
+                    loading="lazy"
+                    decoding="async"
                     src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/welcome/mobile-app/appstore_black.png"
                     alt="Tải App Store"
                     className="h-10 w-auto"
@@ -50,6 +53,8 @@ export default function MobileAppSection() {
                   className="block transition-opacity hover:opacity-90"
                 >
                   <img
+                    loading="lazy"
+                    decoding="async"
                     src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/welcome/mobile-app/googleplay_black.png"
                     alt="Tải Google Play"
                     className="h-10 w-auto"
@@ -62,6 +67,8 @@ export default function MobileAppSection() {
 
         <div className="flex w-full shrink-0 items-center justify-center lg:w-105">
           <img
+            loading="lazy"
+            decoding="async"
             src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/welcome/section-header/toppy-hr-tech.png"
             alt="InterVue Mobile App Mascot"
             className="max-h-75 w-auto object-contain drop-shadow-2xl"

@@ -24,7 +24,6 @@ export default function AccountPasswordView() {
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Password criteria verification
   const newPass = formData.newPassword;
   const hasMinLength = newPass.length >= 8;
   const hasUppercase = /[A-Z]/.test(newPass);
@@ -57,7 +56,6 @@ export default function AccountPasswordView() {
     setErrorMsg('');
     setSuccessMsg('');
 
-    // Zod validation
     const validationResult = changePasswordSchema.safeParse(formData);
     if (!validationResult.success) {
       const errors: Partial<Record<keyof ChangePasswordFormData, string>> = {};
@@ -99,7 +97,6 @@ export default function AccountPasswordView() {
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Box */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
         <div className="flex items-center gap-2">
           <KeyRound className="text-primary h-5 w-5" />
@@ -111,7 +108,6 @@ export default function AccountPasswordView() {
         </p>
       </div>
 
-      {/* Success Notification */}
       {successMsg && (
         <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800">
           <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
@@ -119,7 +115,6 @@ export default function AccountPasswordView() {
         </div>
       )}
 
-      {/* Error Notification */}
       {errorMsg && (
         <div className="flex items-center gap-2.5 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-700">
           <AlertCircle className="h-5 w-5 shrink-0 text-rose-600" />
@@ -127,10 +122,8 @@ export default function AccountPasswordView() {
         </div>
       )}
 
-      {/* 2. Password Form */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Mật khẩu hiện tại */}
           <div>
             <div className="mb-1 flex items-center justify-between">
               <span className="text-sm font-bold text-slate-800">Mật khẩu hiện tại</span>
@@ -158,7 +151,6 @@ export default function AccountPasswordView() {
             />
           </div>
 
-          {/* Mật khẩu mới */}
           <div>
             <Input
               id="new-password"
@@ -180,7 +172,6 @@ export default function AccountPasswordView() {
               }
             />
 
-            {/* Password Strength Meter */}
             {newPass && (
               <div className="mt-2.5 space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
@@ -188,16 +179,12 @@ export default function AccountPasswordView() {
                   <span className={`font-bold ${strength.color}`}>{strength.text}</span>
                 </div>
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
-                  <div
-                    className={`h-full transition-all duration-300 ${strength.bar}`}
-                    style={{ width: strength.width }}
-                  />
+                  <div className={`h-full transition duration-300 ${strength.bar}`} style={{ width: strength.width }} />
                 </div>
               </div>
             )}
           </div>
 
-          {/* Xác nhận mật khẩu mới */}
           <div>
             <Input
               id="confirm-password"
@@ -220,7 +207,6 @@ export default function AccountPasswordView() {
             />
           </div>
 
-          {/* Password Safety Criteria Checklist */}
           <div className="rounded-xl border border-slate-100 bg-slate-50 p-4 text-xs">
             <div className="font-bold text-slate-800">Tiêu chuẩn mật khẩu an toàn:</div>
             <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -282,7 +268,6 @@ export default function AccountPasswordView() {
             </div>
           </div>
 
-          {/* Logout other devices checkbox */}
           <label className="flex cursor-pointer items-start gap-2.5 text-xs text-slate-600">
             <input
               type="checkbox"
@@ -293,7 +278,6 @@ export default function AccountPasswordView() {
             <span>Đăng xuất khỏi tất cả các thiết bị khác sau khi đổi mật khẩu thành công.</span>
           </label>
 
-          {/* Action Buttons */}
           <div className="flex items-center gap-3 pt-2">
             <Button
               type="submit"

@@ -12,12 +12,13 @@ interface BlogDetailSidebarProps {
 export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
   return (
     <aside className="sticky top-24 space-y-6">
-      {/* 1. Author Card */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
         <h4 className="text-xs font-bold tracking-wider text-[#7f878f] uppercase">Tác giả bài viết</h4>
         <div className="mt-3 flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
+            loading="lazy"
+            decoding="async"
             src={article.author.avatar}
             alt={article.author.name}
             className="h-12 w-12 rounded-full object-cover ring-2 ring-emerald-100"
@@ -30,7 +31,6 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
         {article.author.bio && <p className="mt-3 text-xs leading-relaxed text-[#526475]">{article.author.bio}</p>}
       </div>
 
-      {/* 2. Quick Career Tools */}
       <div className="rounded-2xl border border-emerald-100 bg-linear-to-b from-emerald-50/50 to-white p-5 shadow-xs">
         <div className="mb-3 flex items-center gap-2">
           <div className="bg-primary flex h-6 w-6 items-center justify-center rounded-lg text-white">
@@ -82,7 +82,6 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
         </div>
       </div>
 
-      {/* 3. Related Articles */}
       {article.relatedArticles && article.relatedArticles.length > 0 && (
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
           <h4 className="mb-3 text-sm font-bold text-[#171717]">Bài viết liên quan</h4>
@@ -96,6 +95,8 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={rel.coverImage}
                   alt={rel.title}
                   className="h-16 w-20 shrink-0 rounded-xl object-cover group-hover:opacity-90"

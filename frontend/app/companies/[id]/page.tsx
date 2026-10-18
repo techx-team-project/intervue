@@ -28,15 +28,12 @@ export default async function CompanyDetailPage({ params }: CompanyDetailPagePro
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f4f5f5]">
-      {/* 1. Global Navigation Header */}
       <Header />
 
-      {/* 2. Main Company Detail View */}
       <main className="flex-1">
         <CompanyDetailView company={company} />
       </main>
 
-      {/* 3. Global Footer */}
       <Footer />
     </div>
   );

@@ -12,15 +12,12 @@ export const metadata: Metadata = {
 export default function MascotPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#f8fafc]">
-      {/* Header InterVue */}
       <Header />
 
-      {/* Main Interactive Playground */}
       <main className="flex-1">
         <MascotPlaygroundView />
       </main>
 
-      {/* Footer InterVue */}
       <Footer />
     </div>
   );

@@ -74,16 +74,11 @@ export default function CareerGrowthSection() {
       id="self-growth"
       className="relative my-14 w-full overflow-hidden border-y border-[#00ff87]/20 bg-[#01180d] py-16 font-sans shadow-[0_20px_60px_rgba(0,0,0,0.6)] sm:py-20"
     >
-      {/* 1. NỀN XANH ĐẬM NEON & HIỆU ỨNG ÁNH SÁNG AMBIENT */}
       <div className="pointer-events-none absolute inset-0 z-0">
-        {/* Glow neon trung tâm */}
         <div className="absolute top-1/2 left-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#00ff87]/15 blur-[130px]" />
-        {/* Glow neon góc trên trái */}
         <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-[#00e676]/15 blur-[100px]" />
-        {/* Glow neon góc dưới phải */}
         <div className="absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-[#00f2fe]/10 blur-[100px]" />
 
-        {/* Lớp lưới công nghệ neon chấm tròn mờ ảo */}
         <div
           className="absolute inset-0 opacity-15"
           style={{
@@ -96,7 +91,6 @@ export default function CareerGrowthSection() {
       </div>
 
       <div className="container-topcv relative z-10">
-        {/* 2. TIÊU ĐỀ NỔI BẬT CĂN GIỮA */}
         <div className="mb-12 text-center sm:mb-16">
           <div className="mb-3.5 inline-flex items-center gap-2 rounded-full border border-[#00ff87]/40 bg-[#00ff87]/10 px-4 py-1 text-[12px] font-bold text-[#00ff87] shadow-[0_0_15px_rgba(0,255,135,0.25)] backdrop-blur-md">
             <Sparkles className="h-3.5 w-3.5 text-[#00ff87]" />
@@ -117,9 +111,7 @@ export default function CareerGrowthSection() {
           </p>
         </div>
 
-        {/* 3. BỐ CỤC 3 CỘT: 3 CARD TRÁI - ẢNH NHÂN VẬT & AI TRUNG TÂM - 3 CARD PHẢI */}
         <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-8">
-          {/* CỘT TRÁI: 3 thẻ tính năng (Card giữa lệch ra ngoài tạo layout thụt lùi) */}
           <div className="flex flex-col gap-4.5 lg:col-span-4">
             {LEFT_TOOLS.map((tool, idx) => (
               <a
@@ -127,24 +119,28 @@ export default function CareerGrowthSection() {
                 href={tool.href}
                 target={tool.isExternal ? '_blank' : undefined}
                 rel={tool.isExternal ? 'noreferrer' : undefined}
-                className={`group relative flex items-center gap-4 rounded-2xl border border-emerald-500/25 bg-[#032616]/80 p-4.5 shadow-[0_10px_25px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-300 hover:border-[#00ff87] hover:bg-[#053720]/95 hover:shadow-[0_0_25px_rgba(0,255,135,0.3)] ${
+                className={`group relative flex items-center gap-4 rounded-2xl border border-emerald-500/25 bg-[#032616]/95 p-4.5 shadow-[0_10px_25px_rgba(0,0,0,0.35)] transition duration-300 hover:border-[#00ff87] hover:bg-[#053720]/95 hover:shadow-[0_0_25px_rgba(0,255,135,0.3)] ${
                   idx === 1
                     ? 'lg:-translate-x-8 hover:lg:-translate-x-9 xl:-translate-x-10'
                     : 'lg:translate-x-2 hover:lg:translate-x-1'
-                } hover:-translate-y-1`}
+                } `}
               >
-                {/* 3D Icon Box */}
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 p-2 shadow-inner transition-transform duration-300 group-hover:scale-105 group-hover:border-[#00ff87]/50">
-                  <img src={tool.icon} alt={tool.title} className="h-full w-full object-contain drop-shadow-sm" />
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 p-2 shadow-inner transition-transform duration-300 group-hover:border-[#00ff87]/50">
+                  <img
+                    loading="lazy"
+                    decoding="async"
+                    src={tool.icon}
+                    alt={tool.title}
+                    className="h-full w-full object-contain drop-shadow-sm"
+                  />
                 </div>
 
-                {/* Nội dung chi tiết */}
                 <div className="min-w-0 flex-1">
                   <h3 className="text-[15.5px] font-bold text-white transition-colors group-hover:text-[#00ff87] sm:text-[16.5px]">
                     {tool.title}
                   </h3>
                   <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-emerald-100/70">{tool.desc}</p>
-                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#00ff87] transition-all group-hover:translate-x-1">
+                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#00ff87] transition group-hover:translate-x-1">
                     <span>{tool.ctaText}</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </div>
@@ -153,20 +149,19 @@ export default function CareerGrowthSection() {
             ))}
           </div>
 
-          {/* CỘT GIỮA: ẢNH MINH HỌA ỨNG VIÊN & TRỢ LÝ AI TRUNG TÂM */}
           <div className="relative flex items-center justify-center py-4 lg:col-span-4">
-            {/* Vòng hào quang Neon phía sau nhân vật */}
             <div className="pointer-events-none absolute h-72 w-72 rounded-full bg-[#00ff87]/25 blur-3xl sm:h-88 sm:w-88" />
             <div className="pointer-events-none absolute -bottom-4 h-12 w-52 rounded-[100%] bg-[#00ff87]/40 blur-xl" />
 
             <img
+              loading="lazy"
+              decoding="async"
               src="/personal-brand-center.png"
               alt="InterVue Personal Branding"
-              className="relative z-10 max-h-95 w-auto object-contain drop-shadow-[0_15px_35px_rgba(0,255,135,0.3)] transition-transform duration-500 hover:scale-105 sm:max-h-110"
+              className="relative z-10 max-h-95 w-auto object-contain drop-shadow-[0_15px_35px_rgba(0,255,135,0.3)] transition-transform duration-500 sm:max-h-110"
             />
           </div>
 
-          {/* CỘT PHẢI: 3 thẻ tính năng (Card giữa lệch ra ngoài tạo layout thụt lùi) */}
           <div className="flex flex-col gap-4.5 lg:col-span-4">
             {RIGHT_TOOLS.map((tool, idx) => (
               <a
@@ -174,24 +169,28 @@ export default function CareerGrowthSection() {
                 href={tool.href}
                 target={tool.isExternal ? '_blank' : undefined}
                 rel={tool.isExternal ? 'noreferrer' : undefined}
-                className={`group relative flex items-center gap-4 rounded-2xl border border-emerald-500/25 bg-[#032616]/80 p-4.5 shadow-[0_10px_25px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-300 hover:border-[#00ff87] hover:bg-[#053720]/95 hover:shadow-[0_0_25px_rgba(0,255,135,0.3)] ${
+                className={`group relative flex items-center gap-4 rounded-2xl border border-emerald-500/25 bg-[#032616]/95 p-4.5 shadow-[0_10px_25px_rgba(0,0,0,0.35)] transition duration-300 hover:border-[#00ff87] hover:bg-[#053720]/95 hover:shadow-[0_0_25px_rgba(0,255,135,0.3)] ${
                   idx === 1
                     ? 'lg:translate-x-8 hover:lg:translate-x-9 xl:translate-x-10'
                     : 'lg:-translate-x-2 hover:lg:-translate-x-1'
-                } hover:-translate-y-1`}
+                } `}
               >
-                {/* 3D Icon Box */}
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 p-2 shadow-inner transition-transform duration-300 group-hover:scale-105 group-hover:border-[#00ff87]/50">
-                  <img src={tool.icon} alt={tool.title} className="h-full w-full object-contain drop-shadow-sm" />
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 p-2 shadow-inner transition-transform duration-300 group-hover:border-[#00ff87]/50">
+                  <img
+                    loading="lazy"
+                    decoding="async"
+                    src={tool.icon}
+                    alt={tool.title}
+                    className="h-full w-full object-contain drop-shadow-sm"
+                  />
                 </div>
 
-                {/* Nội dung chi tiết */}
                 <div className="min-w-0 flex-1">
                   <h3 className="text-[15.5px] font-bold text-white transition-colors group-hover:text-[#00ff87] sm:text-[16.5px]">
                     {tool.title}
                   </h3>
                   <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-emerald-100/70">{tool.desc}</p>
-                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#00ff87] transition-all group-hover:translate-x-1">
+                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#00ff87] transition group-hover:translate-x-1">
                     <span>{tool.ctaText}</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </div>

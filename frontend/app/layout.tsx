@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { FloatingAssistant } from '@/components/mascot';
+import AppProviders from '@/providers/AppProviders';
 
 const inter = Inter({
   subsets: ['latin', 'vietnamese'],
@@ -22,8 +23,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="vi" className={inter.variable}>
       <body className="text-navy min-h-screen bg-[#f4f5f5] antialiased">
-        {children}
-        <FloatingAssistant />
+        <AppProviders>
+          {children}
+          <FloatingAssistant />
+        </AppProviders>
       </body>
     </html>
   );

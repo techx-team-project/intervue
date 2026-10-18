@@ -17,7 +17,6 @@ export default function CandidateSkillsSection({ skills, isOwner = true, onEditS
 
   return (
     <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-8">
-      {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -34,20 +33,19 @@ export default function CandidateSkillsSection({ skills, isOwner = true, onEditS
             <button
               type="button"
               onClick={onEditSkills}
-              className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition-all"
+              className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition"
             >
               <span>+ Chỉnh sửa kỹ năng</span>
             </button>
           )}
         </div>
 
-        {/* Filter Tabs - Straight unbroken row */}
         <div className="mt-4 flex scrollbar-none items-center overflow-x-auto pb-1">
           <div className="inline-flex items-center gap-1 rounded-xl border border-[#e2e8f0]/80 bg-[#f8fafc] p-1">
             <button
               type="button"
               onClick={() => setActiveTab('all')}
-              className={`rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition-all ${
+              className={`rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition ${
                 activeTab === 'all' ? 'text-primary bg-white font-bold shadow-2xs' : 'hover:text-navy text-[#64748b]'
               }`}
             >
@@ -56,7 +54,7 @@ export default function CandidateSkillsSection({ skills, isOwner = true, onEditS
             <button
               type="button"
               onClick={() => setActiveTab('core')}
-              className={`rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition-all ${
+              className={`rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition ${
                 activeTab === 'core' ? 'text-primary bg-white font-bold shadow-2xs' : 'hover:text-navy text-[#64748b]'
               }`}
             >
@@ -65,7 +63,7 @@ export default function CandidateSkillsSection({ skills, isOwner = true, onEditS
             <button
               type="button"
               onClick={() => setActiveTab('ai')}
-              className={`rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition-all ${
+              className={`rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition ${
                 activeTab === 'ai' ? 'text-primary bg-white font-bold shadow-2xs' : 'hover:text-navy text-[#64748b]'
               }`}
             >
@@ -74,7 +72,7 @@ export default function CandidateSkillsSection({ skills, isOwner = true, onEditS
             <button
               type="button"
               onClick={() => setActiveTab('tool')}
-              className={`rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition-all ${
+              className={`rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition ${
                 activeTab === 'tool' ? 'text-primary bg-white font-bold shadow-2xs' : 'hover:text-navy text-[#64748b]'
               }`}
             >
@@ -83,7 +81,7 @@ export default function CandidateSkillsSection({ skills, isOwner = true, onEditS
             <button
               type="button"
               onClick={() => setActiveTab('soft')}
-              className={`rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition-all ${
+              className={`rounded-lg px-3.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition ${
                 activeTab === 'soft' ? 'text-primary bg-white font-bold shadow-2xs' : 'hover:text-navy text-[#64748b]'
               }`}
             >
@@ -93,12 +91,11 @@ export default function CandidateSkillsSection({ skills, isOwner = true, onEditS
         </div>
       </div>
 
-      {/* Skills Grid */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {filteredSkills.map((sk, idx) => (
           <div
             key={idx}
-            className="group hover:border-primary flex min-h-19 flex-col justify-between rounded-xl border border-[#e9eaec] bg-[#fbfcfd] p-3.5 transition-all duration-150 hover:bg-white hover:shadow-2xs"
+            className="group hover:border-primary flex min-h-19 flex-col justify-between rounded-xl border border-[#e9eaec] bg-[#fbfcfd] p-3.5 transition duration-150 hover:bg-white hover:shadow-2xs"
           >
             <div className="group-hover:text-primary text-[13.5px] leading-snug font-semibold text-[#1e293b] transition-colors">
               {sk.name}

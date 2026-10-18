@@ -62,15 +62,18 @@ export default function CandidateHeroHeader({
 
   return (
     <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
-      {/* 1. Main Header Profile Info */}
       <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        {/* Avatar & Key Identification */}
         <div className="flex min-w-0 flex-1 flex-col gap-5 sm:flex-row sm:items-center">
-          {/* Avatar with ring & verified check */}
           <div className="relative shrink-0">
             <div className="h-24 w-24 overflow-hidden rounded-2xl border-2 border-slate-200 bg-white shadow-sm ring-2 ring-emerald-500/20 sm:h-28 sm:w-28">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={candidate.avatar} alt={candidate.fullName} className="h-full w-full object-cover" />
+              <img
+                loading="lazy"
+                decoding="async"
+                src={candidate.avatar}
+                alt={candidate.fullName}
+                className="h-full w-full object-cover"
+              />
             </div>
             <div
               className="bg-primary absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white text-white shadow-xs"
@@ -80,7 +83,6 @@ export default function CandidateHeroHeader({
             </div>
           </div>
 
-          {/* Candidate Title & Details */}
           <div className="min-w-0 space-y-1">
             <h1 className="text-2xl font-black tracking-tight text-slate-800 sm:text-3xl">{candidate.fullName}</h1>
 
@@ -101,7 +103,6 @@ export default function CandidateHeroHeader({
           </div>
         </div>
 
-        {/* Action Buttons - Always on a single row */}
         <div className="flex shrink-0 items-center gap-2">
           {isOwner ? (
             <>
@@ -156,9 +157,7 @@ export default function CandidateHeroHeader({
         </div>
       </div>
 
-      {/* 3. Info Pills & Social Media Strip */}
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-4">
-        {/* Contact Pills */}
         <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600">
           <a
             href={`mailto:${candidate.email}`}
@@ -191,14 +190,13 @@ export default function CandidateHeroHeader({
           </span>
         </div>
 
-        {/* Social Links */}
         <div className="flex items-center gap-2">
           {candidate.links.github && (
             <a
               href={candidate.links.github}
               target="_blank"
               rel="noreferrer"
-              className="hover:text-primary flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-800 transition-all hover:border-emerald-500 hover:bg-emerald-50/50"
+              className="hover:text-primary flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-800 transition hover:border-emerald-500 hover:bg-emerald-50/50"
               title="GitHub Profile"
             >
               <GithubIcon className="h-4 w-4" />
@@ -210,7 +208,7 @@ export default function CandidateHeroHeader({
               href={candidate.links.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-[#0077b5] transition-all hover:border-[#0077b5] hover:bg-[#0077b5]/5"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-[#0077b5] transition hover:border-[#0077b5] hover:bg-[#0077b5]/5"
               title="LinkedIn Profile"
             >
               <LinkedinIcon className="h-4 w-4" />
@@ -222,7 +220,7 @@ export default function CandidateHeroHeader({
               href={candidate.links.portfolio}
               target="_blank"
               rel="noreferrer"
-              className="text-primary flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white transition-all hover:border-emerald-500 hover:bg-emerald-50/50"
+              className="text-primary flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white transition hover:border-emerald-500 hover:bg-emerald-50/50"
               title="Portfolio Website"
             >
               <Globe className="h-4 w-4" />

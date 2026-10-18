@@ -22,7 +22,6 @@ export default function CareerSidebar({ trendingIndustries }: CareerSidebarProps
 
   return (
     <aside className="space-y-6">
-      {/* 1. Trending Industries with Salary */}
       <div className="rounded-2xl border border-[#e5e7eb] bg-white p-5 shadow-xs">
         <div className="mb-4 flex items-center gap-2">
           <div className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
@@ -62,7 +61,6 @@ export default function CareerSidebar({ trendingIndustries }: CareerSidebarProps
         </div>
       </div>
 
-      {/* 2. InterVue Career Tools */}
       <div className="rounded-2xl border border-[#e5e7eb] bg-white p-5 shadow-xs">
         <h3 className="mb-1 text-base font-bold text-[#171717]">Bộ công cụ phát triển sự nghiệp</h3>
         <p className="mb-4 text-xs text-[#7f878f]">Trang bị hành trang chuẩn bị phỏng vấn và thăng tiến</p>
@@ -140,7 +138,6 @@ export default function CareerSidebar({ trendingIndustries }: CareerSidebarProps
         </div>
       </div>
 
-      {/* 3. Newsletter Subscription */}
       <div className="from-primary-light rounded-2xl border border-emerald-200 bg-linear-to-br to-white p-5 shadow-xs">
         <div className="mb-2 flex items-center gap-2">
           <Mail className="text-primary h-5 w-5" />

@@ -97,6 +97,8 @@ export default function CareerRelatedJobsWidget() {
               <div className="flex items-start gap-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={job.companyLogo}
                   alt={job.companyName}
                   className="h-12 w-12 shrink-0 rounded-xl border border-gray-100 bg-white object-contain p-1"

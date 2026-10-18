@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useInView } from '@/hooks/useInView';
 import { ChevronLeft, ChevronRight, Star, Quote, CheckCircle2, MessageSquareHeart, Sparkles } from 'lucide-react';
 
 interface Testimonial {
@@ -109,6 +110,7 @@ export default function TestimonialsSection() {
   const [cardsPerView, setCardsPerView] = useState(3);
   const [isPaused, setIsPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
+  const { ref, inView } = useInView<HTMLElement>();
 
   useEffect(() => {
     const handleResize = () => {
@@ -128,16 +130,15 @@ export default function TestimonialsSection() {
 
   const maxIndex = Math.max(0, TESTIMONIALS.length - cardsPerView);
 
-  // Auto-play sliding interval
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || !inView) return;
 
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
     }, 3800);
 
     return () => clearInterval(timer);
-  }, [isPaused, maxIndex]);
+  }, [isPaused, inView, maxIndex]);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
@@ -147,7 +148,6 @@ export default function TestimonialsSection() {
     setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
   };
 
-  // Touch gesture support
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   };
@@ -164,8 +164,7 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section id="customer-testimonials" className="container-topcv">
-      {/* Header Bar */}
+    <section ref={ref} id="customer-testimonials" className="container-topcv">
       <div className="relative mb-8 text-center">
         <div className="text-primary mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-emerald-200/80 bg-emerald-50/80 px-3.5 py-1 text-[12px] font-bold">
           <MessageSquareHeart className="h-3.5 w-3.5" />
@@ -178,13 +177,12 @@ export default function TestimonialsSection() {
           Hơn 300,000+ ứng viên và doanh nghiệp đã bứt phá sự nghiệp và tuyển dụng thành công cùng InterVue.
         </p>
 
-        {/* Navigation Controls */}
         <div className="mt-4 flex items-center justify-center gap-2 sm:absolute sm:right-0 sm:bottom-0 sm:mt-0">
           <button
             type="button"
             onClick={handlePrev}
             aria-label="Previous testimonial"
-            className="text-navy hover:border-primary hover:bg-primary-tag hover:text-primary flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[#e9eaec] bg-white transition-all"
+            className="text-navy hover:border-primary hover:bg-primary-tag hover:text-primary flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[#e9eaec] bg-white transition"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -192,14 +190,13 @@ export default function TestimonialsSection() {
             type="button"
             onClick={handleNext}
             aria-label="Next testimonial"
-            className="text-navy hover:border-primary hover:bg-primary-tag hover:text-primary flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[#e9eaec] bg-white transition-all"
+            className="text-navy hover:border-primary hover:bg-primary-tag hover:text-primary flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[#e9eaec] bg-white transition"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
         </div>
       </div>
 
-      {/* Carousel Slider Window */}
       <div
         className="relative overflow-hidden py-3.5"
         onMouseEnter={() => setIsPaused(true)}
@@ -215,8 +212,7 @@ export default function TestimonialsSection() {
         >
           {TESTIMONIALS.map((item) => (
             <div key={item.id} className="shrink-0 px-2.5" style={{ width: `${100 / cardsPerView}%` }}>
-              <div className="group hover:border-primary flex h-full flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all duration-300 hover:-translate-y-1">
-                {/* Top: Stars, Tag & Quote Icon */}
+              <div className="group hover:border-primary flex h-full flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition duration-300">
                 <div>
                   <div className="mb-4 flex items-center justify-between">
                     <div className="flex items-center gap-1">
@@ -237,16 +233,16 @@ export default function TestimonialsSection() {
                     </span>
                   </div>
 
-                  {/* Content */}
                   <p className="group-hover:text-navy line-clamp-4 text-[13.5px] leading-relaxed text-[#4d5965] transition-colors">
                     “{item.content}”
                   </p>
                 </div>
 
-                {/* Bottom: User Info & Verification */}
                 <div className="mt-5 border-t border-[#f4f5f5] pt-4">
                   <div className="flex items-center gap-3">
                     <img
+                      loading="lazy"
+                      decoding="async"
                       src={item.avatar}
                       alt={item.name}
                       className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-emerald-400/30"
@@ -268,7 +264,6 @@ export default function TestimonialsSection() {
         </div>
       </div>
 
-      {/* Indicator Dots */}
       <div className="mt-6 flex items-center justify-center gap-2">
         {Array.from({ length: maxIndex + 1 }).map((_, idx) => (
           <button
@@ -276,7 +271,7 @@ export default function TestimonialsSection() {
             type="button"
             onClick={() => setCurrentIndex(idx)}
             aria-label={`Go to slide ${idx + 1}`}
-            className={`h-2 rounded-full transition-all duration-300 ${
+            className={`h-2 rounded-full transition duration-300 ${
               currentIndex === idx ? 'bg-primary w-8' : 'w-2 bg-[#d1d5db] hover:bg-[#9ca3af]'
             }`}
           />

@@ -24,15 +24,12 @@ export const metadata: Metadata = {
 export default function ProfilePage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#f4f5f5]">
-      {/* 1. Global Navigation Header */}
       <Header />
 
-      {/* 2. Candidate Profile Main Content */}
       <main className="flex-1">
         <CandidateProfileView initialCandidate={MOCK_CANDIDATE_PROFILE} />
       </main>
 
-      {/* 3. Global Footer */}
       <Footer />
     </div>
   );

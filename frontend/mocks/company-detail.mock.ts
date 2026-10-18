@@ -756,7 +756,6 @@ export interface SimilarCompanyItem {
 export function getSimilarCompanies(currentCompanyId: string | number): SimilarCompanyItem[] {
   const numericId = Number(currentCompanyId);
 
-  // Pool of all verified companies
   const allCompanies: SimilarCompanyItem[] = [
     {
       id: 224996,
@@ -840,7 +839,6 @@ export function getSimilarCompanies(currentCompanyId: string | number): SimilarC
     },
   ];
 
-  // Exclude current company and pick top 3
   return allCompanies.filter((c) => c.id !== numericId).slice(0, 3);
 }
 
@@ -852,6 +850,5 @@ export function getCompanyDetailById(id: string | number): CompanyDetail {
     return COMPANY_DETAILS_MAP[numericId];
   }
 
-  // Fallback to Mẹ Gấu Pilates if unknown
   return COMPANY_ME_GAU_PILATES;
 }

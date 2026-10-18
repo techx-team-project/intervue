@@ -23,10 +23,16 @@ export default function AwardsSection() {
             href={award.link}
             target="_blank"
             rel="noreferrer"
-            className="group hover:border-primary flex flex-col items-center justify-between rounded-2xl border border-[#e9eaec] bg-white p-5 text-center transition-all hover:shadow-md"
+            className="group hover:border-primary flex flex-col items-center justify-between rounded-2xl border border-[#e9eaec] bg-white p-5 text-center transition hover:shadow-md"
           >
-            <div className="mb-4 flex h-24 w-24 items-center justify-center p-2 transition-transform group-hover:scale-105">
-              <img src={award.img} alt={award.title} className="max-h-full max-w-full object-contain" />
+            <div className="mb-4 flex h-24 w-24 items-center justify-center p-2 transition-transform">
+              <img
+                loading="lazy"
+                decoding="async"
+                src={award.img}
+                alt={award.title}
+                className="max-h-full max-w-full object-contain"
+              />
             </div>
             <div>
               <h3 className="text-navy group-hover:text-primary mb-2 line-clamp-2 text-[13.5px] leading-snug font-semibold transition-colors">

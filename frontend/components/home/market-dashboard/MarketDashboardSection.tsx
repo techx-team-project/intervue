@@ -80,32 +80,28 @@ export default function MarketDashboardSection() {
       id="market-dashboard"
       className="relative my-10 w-full overflow-hidden border-y border-emerald-500/20 bg-[#002414] py-10 shadow-2xl sm:py-12"
     >
-      {/* ẢNH NỀN THỰC TẾ CAO CẤP (Realistic Deep Emerald Mesh Texture) */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <img
+          loading="lazy"
+          decoding="async"
           src="/market-bg.jpg"
           alt="Market Dashboard Background"
           className="h-full w-full object-cover object-center opacity-65"
         />
-        {/* Lớp phủ chuyển sắc nhẹ giữ độ tương phản cao cho chữ & biểu đồ */}
         <div className="absolute inset-0 bg-linear-to-r from-[#00381f]/85 via-[#004225]/70 to-[#002f1a]/85" />
       </div>
 
-      {/* Background ambient lighting */}
       <div className="pointer-events-none absolute -top-32 right-1/4 h-96 w-96 rounded-full bg-[#00e668]/15 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 left-1/3 h-96 w-96 rounded-full bg-[#00e668]/15 blur-3xl" />
 
-      {/* Nội dung bên trong căn giữa theo container chuẩn */}
       <div className="container-topcv relative z-10">
-        {/* 1. Header Bar: Tiêu đề + Ngày tháng + Icon 3D góc phải */}
         <div className="relative z-10 mb-6 flex items-center justify-between border-b border-white/10 pb-4">
           <div className="flex flex-wrap items-center gap-2.5">
             <h2 className="text-[20px] font-bold text-white sm:text-[25px]">Thị trường việc làm hôm nay</h2>
             <span className="text-[20px] font-bold text-[#00e668] sm:text-[25px]">23/09/2026</span>
           </div>
 
-          {/* Biểu tượng 3D Analytics góc trên phải như mẫu */}
-          <div className="hidden h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 shadow-sm backdrop-blur-xs sm:flex">
+          <div className="hidden h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 shadow-sm sm:flex">
             <div className="relative flex h-5 w-5 items-end justify-center gap-0.5">
               <span className="h-2 w-1 rounded-xs bg-[#00e668]" />
               <span className="h-4 w-1 rounded-xs bg-teal-300" />
@@ -114,26 +110,22 @@ export default function MarketDashboardSection() {
           </div>
         </div>
 
-        {/* 2. Hàng trên: Mascot bên trái + 3 Cột số liệu lớn */}
         <div className="relative z-10 mb-6 grid grid-cols-1 items-center gap-6 sm:grid-cols-12">
-          {/* Mascot Robot tương tác trên bục Hologram căn giữa cột */}
           <div className="flex items-center justify-center sm:col-span-5 lg:col-span-4">
             <MarketMascot hoveredStat={hoveredStat} />
           </div>
 
-          {/* 3 Cột số liệu thống kê chuẩn xác, liên kết phản hồi với Mascot */}
           <div className="grid grid-cols-1 gap-3.5 sm:col-span-7 sm:grid-cols-3 lg:col-span-8">
-            {/* Stat 1 */}
             <div
               onMouseEnter={() => setHoveredStat(1)}
               onMouseLeave={() => setHoveredStat(null)}
-              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 backdrop-blur-xs transition-all duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
+              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 transition duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
             >
               <div className="flex items-center justify-between">
                 <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white transition-colors group-hover:text-[#00e668] sm:text-[34px] lg:text-[38px]">
                   3.994
                 </div>
-                <span className="rounded-full bg-[#00e668]/15 px-2 py-0.5 text-[11px] font-bold text-[#00e668] transition-transform duration-200 group-hover:scale-105">
+                <span className="rounded-full bg-[#00e668]/15 px-2 py-0.5 text-[11px] font-bold text-[#00e668] transition-transform duration-200">
                   +24h
                 </span>
               </div>
@@ -142,17 +134,16 @@ export default function MarketDashboardSection() {
               </div>
             </div>
 
-            {/* Stat 2 */}
             <div
               onMouseEnter={() => setHoveredStat(2)}
               onMouseLeave={() => setHoveredStat(null)}
-              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 backdrop-blur-xs transition-all duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
+              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 transition duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
             >
               <div className="flex items-center justify-between">
                 <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white transition-colors group-hover:text-[#00e668] sm:text-[34px] lg:text-[38px]">
                   45.351
                 </div>
-                <span className="rounded-full bg-teal-400/15 px-2 py-0.5 text-[11px] font-bold text-teal-300 transition-transform duration-200 group-hover:scale-105">
+                <span className="rounded-full bg-teal-400/15 px-2 py-0.5 text-[11px] font-bold text-teal-300 transition-transform duration-200">
                   Toàn quốc
                 </span>
               </div>
@@ -161,17 +152,16 @@ export default function MarketDashboardSection() {
               </div>
             </div>
 
-            {/* Stat 3 */}
             <div
               onMouseEnter={() => setHoveredStat(3)}
               onMouseLeave={() => setHoveredStat(null)}
-              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 backdrop-blur-xs transition-all duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
+              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 transition duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
             >
               <div className="flex items-center justify-between">
                 <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white transition-colors group-hover:text-[#00e668] sm:text-[34px] lg:text-[38px]">
                   16.435
                 </div>
-                <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[11px] font-bold text-emerald-300 transition-transform duration-200 group-hover:scale-105">
+                <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[11px] font-bold text-emerald-300 transition-transform duration-200">
                   Doanh nghiệp
                 </span>
               </div>
@@ -182,9 +172,7 @@ export default function MarketDashboardSection() {
           </div>
         </div>
 
-        {/* 3. Hàng dưới: 3 Khối nội dung song song (Việc làm mới nhất + Biểu đồ đường + Biểu đồ cột) */}
         <div className="relative z-10 grid grid-cols-1 gap-4 lg:grid-cols-3">
-          {/* CỘT 1: VIỆC LÀM MỚI NHẤT */}
           <div className="flex flex-col justify-between">
             <div>
               <div className="mb-3.5 flex items-center justify-between">
@@ -204,7 +192,6 @@ export default function MarketDashboardSection() {
                     key={job.id}
                     className="flex cursor-pointer items-start gap-3 rounded-xl p-2 transition-colors hover:bg-white/5"
                   >
-                    {/* Logo công ty dạng ô vuông trắng có thương hiệu */}
                     <div
                       className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-xs"
                       style={{ border: `1.5px solid ${job.logoColor}20` }}
@@ -230,10 +217,8 @@ export default function MarketDashboardSection() {
             </div>
           </div>
 
-          {/* CỘT 2: TĂNG TRƯỞNG CƠ HỘI VIỆC LÀM (Line Chart với trục Y, lưới và Tooltip ghim) */}
           <div className="flex flex-col justify-between rounded-xl border border-white/5 bg-[#003820] p-4">
             <div>
-              {/* Header Box */}
               <div className="mb-3 flex items-center gap-2">
                 <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#00e668] text-[#003820]">
                   <TrendingUp className="h-3 w-3 stroke-3" />
@@ -241,9 +226,7 @@ export default function MarketDashboardSection() {
                 <span className="text-[13.5px] font-bold text-white">Tăng trưởng cơ hội việc làm</span>
               </div>
 
-              {/* Chart Container */}
               <div className="relative mt-2 flex">
-                {/* Trục Y số liệu chuẩn: 50.000 -> 42.000 */}
                 <div className="flex h-36 flex-col justify-between pr-2 text-[10px] font-semibold text-white/50 select-none">
                   <span>50.000</span>
                   <span>49.000</span>
@@ -256,10 +239,8 @@ export default function MarketDashboardSection() {
                   <span>42.000</span>
                 </div>
 
-                {/* SVG Area with dashed horizontal grid lines */}
                 <div className="relative h-36 flex-1">
                   <svg className="h-full w-full overflow-visible" viewBox="0 0 200 130" preserveAspectRatio="none">
-                    {/* Horizontal dashed lines */}
                     {[0, 16.25, 32.5, 48.75, 65, 81.25, 97.5, 113.75, 130].map((y, idx) => (
                       <line
                         key={idx}
@@ -273,7 +254,6 @@ export default function MarketDashboardSection() {
                       />
                     ))}
 
-                    {/* Green Line Chart matching exact reference zig-zag wave */}
                     <polyline
                       fill="none"
                       stroke="#00e668"
@@ -295,7 +275,6 @@ export default function MarketDashboardSection() {
                     />
                   </svg>
 
-                  {/* Tooltip ghim chính xác như mẫu hình 2 */}
                   <div className="pointer-events-none absolute top-8 left-10 -translate-x-1/2 rounded-md border border-white/10 bg-[#1c2434] px-2.5 py-1 text-center shadow-lg">
                     <div className="text-[9.5px] font-medium text-white/70">29/08/2026</div>
                     <div className="text-[11px] font-black text-white">47.143 việc làm</div>
@@ -303,7 +282,6 @@ export default function MarketDashboardSection() {
                 </div>
               </div>
 
-              {/* Trục X ngày tháng xoay chéo 45 độ như ảnh thực tế */}
               <div className="mt-3.5 ml-8 flex justify-between pr-2 text-[10px] font-medium text-white/60">
                 <span className="origin-top-left -rotate-45 transform">24/08</span>
                 <span className="origin-top-left -rotate-45 transform">30/08</span>
@@ -315,10 +293,8 @@ export default function MarketDashboardSection() {
             </div>
           </div>
 
-          {/* CỘT 3: NHU CẦU TUYỂN DỤNG THEO (Bar Chart phân loại ngành nghề) */}
           <div className="flex flex-col justify-between rounded-xl border border-white/5 bg-[#003820] p-4">
             <div>
-              {/* Header Box + Dropdown Ngành nghề */}
               <div className="mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#00e668] text-[#003820]">
@@ -357,9 +333,7 @@ export default function MarketDashboardSection() {
                 </div>
               </div>
 
-              {/* Bar Chart Container */}
               <div className="relative mt-2 flex">
-                {/* Trục Y: 12.000 -> 0 */}
                 <div className="flex h-36 flex-col justify-between pr-2 text-[10px] font-semibold text-white/50 select-none">
                   <span>12.000</span>
                   <span>10.800</span>
@@ -374,26 +348,21 @@ export default function MarketDashboardSection() {
                   <span>0</span>
                 </div>
 
-                {/* 5 Cột Bar Chart với đường lưới nét đứt ngang */}
                 <div className="relative flex h-36 flex-1 items-end justify-between px-3">
-                  {/* Grid Lines */}
                   <div className="pointer-events-none absolute inset-0 flex flex-col justify-between">
                     {[...Array(11)].map((_, i) => (
                       <div key={i} className="w-full border-b border-dashed border-white/10" />
                     ))}
                   </div>
 
-                  {/* 5 Bars với màu sắc chuẩn theo mẫu */}
                   {CATEGORY_BARS.map((bar, idx) => (
                     <div key={idx} className="group relative z-10 flex h-full w-6 flex-col items-center justify-end">
-                      {/* Tooltip khi hover vào từng cột */}
                       <div className="pointer-events-none absolute -top-7 rounded bg-black/80 px-1.5 py-0.5 text-[9px] font-bold whitespace-nowrap text-white opacity-0 shadow-xs transition-opacity group-hover:opacity-100">
                         {bar.count}
                       </div>
 
-                      {/* Thanh cột */}
                       <div
-                        className="w-full rounded-t-xs transition-all duration-300"
+                        className="w-full rounded-t-xs transition duration-300"
                         style={{
                           height: `${bar.heightPercent}%`,
                           backgroundColor: bar.color,
@@ -404,7 +373,6 @@ export default function MarketDashboardSection() {
                 </div>
               </div>
 
-              {/* Chú thích màu sắc (Legend) bên dưới y như mẫu */}
               <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-1 text-[10px] text-white/80">
                 {CATEGORY_BARS.map((bar, idx) => (
                   <div key={idx} className="flex items-center gap-1.5 truncate">

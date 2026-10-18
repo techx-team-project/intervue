@@ -11,34 +11,24 @@ import TopCompaniesSection from '@/components/home/top-companies/TopCompaniesSec
 export default function Home() {
   return (
     <div className="selection:bg-primary flex min-h-screen flex-col bg-[#f4f5f5] selection:text-white">
-      {/* 1. Sticky Navigation Header */}
       <Header />
 
-      {/* 2. Main Body Content */}
       <main className="flex-1 pb-12">
-        {/* Hero Section: Dark Green background + Title + Search Pill + Left Categories + Right Banner */}
         <HeroSection />
 
-        {/* Featured Jobs Section (Việc làm nổi bật - matches user screenshot) */}
         <FeaturedJobsSection />
 
-        {/* Today's Job Market Dashboard */}
         <MarketDashboardSection />
 
-        {/* Top Companies Pro Showcase */}
         <TopCompaniesSection />
 
-        {/* Top Job Categories */}
         <TopCategoriesSection />
 
-        {/* Career Growth & Personality Tests */}
         <CareerGrowthSection />
 
-        {/* Awards, App Showcase, Impressive Numbers & Ecosystem */}
         <AwardsEcosystemSection />
       </main>
 
-      {/* 3. Comprehensive Footer */}
       <Footer />
     </div>
   );

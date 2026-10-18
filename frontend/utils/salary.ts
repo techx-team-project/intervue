@@ -1,31 +1,24 @@
 import { GrossNetCalculationResult } from '@/types/blog';
 
-// Constants for Vietnamese Personal Income Tax & Social Insurance (2026 regulations)
 export const SALARY_CONSTANTS = {
-  // Insurance rates for employee
-  SOCIAL_INSURANCE_RATE: 0.08, // 8% BHXH
-  HEALTH_INSURANCE_RATE: 0.015, // 1.5% BHYT
-  UNEMPLOYMENT_INSURANCE_RATE: 0.01, // 1% BHTN
-  TOTAL_INSURANCE_RATE: 0.105, // 10.5%
+  SOCIAL_INSURANCE_RATE: 0.08,
+  HEALTH_INSURANCE_RATE: 0.015,
+  UNEMPLOYMENT_INSURANCE_RATE: 0.01,
+  TOTAL_INSURANCE_RATE: 0.105,
 
-  // Insurance rates for employer
-  EMPLOYER_SOCIAL_RATE: 0.175, // 17.5%
-  EMPLOYER_HEALTH_RATE: 0.03, // 3%
-  EMPLOYER_UNEMPLOYMENT_RATE: 0.01, // 1%
-  EMPLOYER_OCCUPATIONAL_ACCIDENT_RATE: 0.005, // 0.5%
-  EMPLOYER_TOTAL_RATE: 0.22, // 22%
+  EMPLOYER_SOCIAL_RATE: 0.175,
+  EMPLOYER_HEALTH_RATE: 0.03,
+  EMPLOYER_UNEMPLOYMENT_RATE: 0.01,
+  EMPLOYER_OCCUPATIONAL_ACCIDENT_RATE: 0.005,
+  EMPLOYER_TOTAL_RATE: 0.22,
 
-  // Tax deductions
-  PERSONAL_DEDUCTION: 11_000_000, // 11 million VND / month
-  DEPENDENT_DEDUCTION: 4_400_000, // 4.4 million VND / dependent / month
+  PERSONAL_DEDUCTION: 11_000_000,
+  DEPENDENT_DEDUCTION: 4_400_000,
 
-  // Maximum insurance ceilings (based on base salary 2,340,000 * 20 = 46,800,000 VND)
   MAX_SOCIAL_BASE: 46_800_000,
-  // Regional minimum salary ceilings for unemployment insurance (Vùng 1: 4,960,000 * 20 = 99,200,000)
   MAX_UNEMPLOYMENT_BASE_REGION_1: 99_200_000,
 };
 
-// Tax brackets for progressive income tax (Biểu thuế lũy tiến từng phần 7 bậc)
 const TAX_BRACKETS = [
   { limit: 5_000_000, rate: 0.05, subtraction: 0 },
   { limit: 10_000_000, rate: 0.1, subtraction: 250_000 },
@@ -36,11 +29,9 @@ const TAX_BRACKETS = [
   { limit: Infinity, rate: 0.35, subtraction: 9_850_000 },
 ];
 
-/** Calculate Gross to Net salary */
 export function calculateGrossToNet(gross: number, dependentsCount: number = 0): GrossNetCalculationResult {
   const validGross = Math.max(0, gross);
 
-  // Social & Health insurance capped at 20x base salary
   const socialHealthBase = Math.min(validGross, SALARY_CONSTANTS.MAX_SOCIAL_BASE);
   const unemploymentBase = Math.min(validGross, SALARY_CONSTANTS.MAX_UNEMPLOYMENT_BASE_REGION_1);
 
@@ -49,18 +40,14 @@ export function calculateGrossToNet(gross: number, dependentsCount: number = 0):
   const unemploymentInsurance = Math.round(unemploymentBase * SALARY_CONSTANTS.UNEMPLOYMENT_INSURANCE_RATE);
   const totalInsurance = socialInsurance + healthInsurance + unemploymentInsurance;
 
-  // Income before personal tax
   const incomeBeforeTax = validGross - totalInsurance;
 
-  // Deductions
   const personalDeduction = SALARY_CONSTANTS.PERSONAL_DEDUCTION;
   const dependentDeduction = Math.max(0, dependentsCount) * SALARY_CONSTANTS.DEPENDENT_DEDUCTION;
   const totalDeductions = personalDeduction + dependentDeduction;
 
-  // Taxable income
   const taxableIncome = Math.max(0, incomeBeforeTax - totalDeductions);
 
-  // Progressive tax calculation
   let personalIncomeTax = 0;
   const taxTiers: { tier: number; rate: number; amount: number }[] = [];
 
@@ -88,10 +75,8 @@ export function calculateGrossToNet(gross: number, dependentsCount: number = 0):
     }
   }
 
-  // Net salary
   const netSalary = validGross - totalInsurance - personalIncomeTax;
 
-  // Employer costs
   const employerSocial = Math.round(socialHealthBase * SALARY_CONSTANTS.EMPLOYER_SOCIAL_RATE);
   const employerHealth = Math.round(socialHealthBase * SALARY_CONSTANTS.EMPLOYER_HEALTH_RATE);
   const employerUnemployment = Math.round(unemploymentBase * SALARY_CONSTANTS.EMPLOYER_UNEMPLOYMENT_RATE);
@@ -127,7 +112,6 @@ export function calculateGrossToNet(gross: number, dependentsCount: number = 0):
   };
 }
 
-/** Format currency in VND with separator */
 export function formatCurrencyVND(amount: number): string {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -136,7 +120,6 @@ export function formatCurrencyVND(amount: number): string {
   }).format(amount);
 }
 
-/** Convert numeric input string to raw number */
 export function parseCurrencyInput(value: string): number {
   const digits = value.replace(/\D/g, '');
   return digits ? parseInt(digits, 10) : 0;

@@ -15,7 +15,6 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('all');
 
-  // Compute unique locations for filter
   const locationOptions = Array.from(
     new Set([...jobs.map((j) => j.location), ...(branches ? branches.map((b) => b.name) : [])]),
   );
@@ -35,7 +34,6 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
 
   return (
     <section id="section-jobs" className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
-      {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
         <div className="flex items-center gap-2.5">
           <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
@@ -52,9 +50,7 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
         </span>
       </div>
 
-      {/* Filter / Search Bar */}
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
-        {/* Search Input */}
         <div className="relative flex-1">
           <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
@@ -62,16 +58,15 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
             placeholder="Tìm theo chức danh, từ khóa kỹ năng..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="focus:border-primary focus:ring-primary w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pr-4 pl-10 text-xs text-slate-800 placeholder-slate-400 transition-all focus:bg-white focus:ring-1 focus:outline-none"
+            className="focus:border-primary focus:ring-primary w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pr-4 pl-10 text-xs text-slate-800 placeholder-slate-400 transition focus:bg-white focus:ring-1 focus:outline-none"
           />
         </div>
 
-        {/* Location Filter */}
         <div className="relative sm:w-64">
           <select
             value={selectedBranch}
             onChange={(e) => setSelectedBranch(e.target.value)}
-            className="focus:border-primary w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pr-8 pl-3.5 text-xs font-medium text-slate-700 transition-all focus:bg-white focus:outline-none"
+            className="focus:border-primary w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pr-8 pl-3.5 text-xs font-medium text-slate-700 transition focus:bg-white focus:outline-none"
           >
             <option value="all">Tất cả địa điểm</option>
             {locationOptions.map((loc, idx) => (
@@ -84,7 +79,6 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
         </div>
       </div>
 
-      {/* Jobs List */}
       <div className="mt-5 space-y-3.5">
         {filteredJobs.length === 0 ? (
           <div className="py-12 text-center text-slate-500">
@@ -96,7 +90,7 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
           filteredJobs.map((job) => (
             <div
               key={job.id}
-              className="group hover:border-primary/70 rounded-xl border border-slate-200/90 bg-white p-4.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+              className="group hover:border-primary/70 rounded-xl border border-slate-200/90 bg-white p-4.5 transition duration-200 hover:shadow-md"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0 flex-1">
@@ -119,7 +113,6 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
                     </h3>
                   </Link>
 
-                  {/* Badges metadata */}
                   <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-600">
                     <span className="rounded border border-emerald-100 bg-emerald-50 px-2 py-0.5 font-extrabold text-[#00873c]">
                       {job.salary}
@@ -136,7 +129,6 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
                     </span>
                   </div>
 
-                  {/* Tags */}
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {job.tags.map((tag, idx) => (
                       <span
@@ -149,11 +141,10 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
                   </div>
                 </div>
 
-                {/* Apply Button */}
                 <div className="shrink-0 pt-2 sm:pt-0">
                   <Link
                     href={`/jobs/${job.id}`}
-                    className="from-primary to-primary-hover hover:bg-primary-hover inline-flex cursor-pointer items-center gap-1 rounded-xl bg-linear-to-r px-4 py-2 text-xs font-bold text-white shadow-xs transition-all group-hover:shadow-sm"
+                    className="from-primary to-primary-hover hover:bg-primary-hover inline-flex cursor-pointer items-center gap-1 rounded-xl bg-linear-to-r px-4 py-2 text-xs font-bold text-white shadow-xs transition group-hover:shadow-sm"
                   >
                     <span>Ứng tuyển</span>
                     <ArrowRight className="h-3.5 w-3.5" />
