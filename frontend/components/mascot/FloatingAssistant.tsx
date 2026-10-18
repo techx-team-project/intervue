@@ -57,6 +57,7 @@ export function FloatingAssistant() {
   const pathname = usePathname();
   const [showBubble, setShowBubble] = useState(false);
   const [isAutoGreeting, setIsAutoGreeting] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [robotState, setRobotState] = useState<RobotHeadState>('idle');
   const [currentMessage, setCurrentMessage] = useState<string>(
     'Chào bạn! Mình là bạn nhỏ InterVue Bot AI. Nhấp vào mình hoặc chọn tác vụ nhanh bên dưới nhé!',
@@ -189,12 +190,12 @@ export function FloatingAssistant() {
                 startAutoDismiss(3500);
               }
             }}
-            className="animate-in fade-in slide-in-from-bottom-2 absolute right-0 bottom-full mb-3 w-72 rounded-3xl border border-emerald-100 bg-white/95 p-3.5 shadow-2xl shadow-slate-900/15 backdrop-blur-md transition-all sm:w-80 sm:p-4"
+            className="absolute right-0 bottom-full mb-3 w-72 rounded-3xl border border-emerald-100 bg-white/95 p-3.5 shadow-2xl shadow-slate-900/15 transition sm:w-80 sm:p-4"
           >
             <div className="mb-2 flex items-center justify-between border-b border-slate-100 pb-1.5">
               <div className="flex items-center gap-1.5">
                 <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                 </span>
                 <span className="text-[11px] font-black tracking-wider text-slate-800 uppercase">InterVue Bot AI</span>
@@ -272,7 +273,9 @@ export function FloatingAssistant() {
 
         <div
           onClick={handleRobotClick}
-          className="relative cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className="relative cursor-pointer transition-transform duration-200 active:scale-95"
           style={{
             transform: 'translate3d(0, 0, 0)',
             contain: 'layout paint',
@@ -289,6 +292,7 @@ export function FloatingAssistant() {
             antenna={true}
             floorShadow={false}
             interactive={true}
+            paused={!showBubble && !isHovered}
             speed={1.7}
           />
         </div>
