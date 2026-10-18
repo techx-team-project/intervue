@@ -38,7 +38,7 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
     title: 'Tuyển dụng',
     items: [
       { label: 'Chiến dịch tuyển dụng', href: ROUTES.RECRUITER_CAMPAIGNS, icon: Briefcase, comingSoon: true },
-      { label: 'Tin tuyển dụng', href: ROUTES.RECRUITER_JOBS, icon: ClipboardList, comingSoon: true },
+      { label: 'Tin tuyển dụng', href: ROUTES.RECRUITER_JOBS, icon: ClipboardList },
       { label: 'Hồ sơ ứng tuyển', href: ROUTES.RECRUITER_APPLICATIONS, icon: Users, comingSoon: true },
       { label: 'Tìm hồ sơ ứng viên', href: ROUTES.RECRUITER_CANDIDATES, icon: Users, comingSoon: true },
       { label: 'Lịch phỏng vấn', href: ROUTES.RECRUITER_INTERVIEWS, icon: CalendarClock, comingSoon: true },

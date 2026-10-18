@@ -10,7 +10,7 @@ export const MOCK_RECRUITER_BANNERS: RecruiterBannerSlide[] = [
     title: 'Đăng tin tuyển dụng đầu tiên của bạn',
     description: 'Tạo tin tuyển dụng với sự hỗ trợ của AI để tiếp cận đúng ứng viên IT phù hợp.',
     ctaLabel: 'Đăng tin ngay',
-    href: ROUTES.RECRUITER_JOBS,
+    href: ROUTES.RECRUITER_JOBS_CREATE,
     icon: Megaphone,
     gradientClassName: 'bg-linear-to-br from-[#0c2e24] via-[#103a2e] to-primary',
   },

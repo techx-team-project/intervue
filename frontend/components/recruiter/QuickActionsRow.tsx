@@ -6,7 +6,7 @@ const QUICK_ACTIONS = [
   {
     title: 'Đăng tin tuyển dụng',
     description: 'Tạo tin tuyển dụng mới và tiếp cận ứng viên phù hợp.',
-    href: ROUTES.RECRUITER_JOBS,
+    href: ROUTES.RECRUITER_JOBS_CREATE,
     icon: Plus,
   },
   {

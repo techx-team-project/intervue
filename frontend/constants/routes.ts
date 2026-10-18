@@ -9,6 +9,7 @@ export const ROUTES = {
   RECRUITER_DASHBOARD: '/recruiter/dashboard',
   RECRUITER_CAMPAIGNS: '/recruiter/campaigns',
   RECRUITER_JOBS: '/recruiter/jobs',
+  RECRUITER_JOBS_CREATE: '/recruiter/jobs/create',
   RECRUITER_APPLICATIONS: '/recruiter/applications',
   RECRUITER_CANDIDATES: '/recruiter/candidates',
   RECRUITER_INTERVIEWS: '/recruiter/interviews',
