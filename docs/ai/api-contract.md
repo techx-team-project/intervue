@@ -10,7 +10,7 @@ type ApiResponse<T> = {
   success: boolean;
   message: string;
   data: T | null;
-  error: { code: string; details?: string; fieldErrors?: { field: string; message: string }[] } | null;
+  error: { code: string; details: { field?: string; message: string }[]; meta?: Record<string, unknown> } | null;
   traceId: string;
   timestamp: string; // ISO-8601 UTC
 };
@@ -20,12 +20,14 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 - Base URL: `NEXT_PUBLIC_API_URL` (e.g. `http://localhost:8080/api/v1`).
 - Auth: `Authorization: Bearer <accessToken>`; refresh token is an HttpOnly cookie → frontend requests use `credentials: 'include'`.
 - Frontend branches on `error.code`, never on `message`.
+- CORS: `/api/**` allows only the origin in `app.frontend-url` (`FRONTEND_URL`), with credentials, methods `GET POST PUT PATCH DELETE OPTIONS`, headers `Authorization Content-Type Accept`, and exposes `Retry-After`.
+- Expired or invalid access tokens are rejected with HTTP 401 (`error.code` may be `UNAUTHORIZED` or `UNAUTHENTICATED`); the frontend refreshes on the status code, not the code.
 
 ## Endpoints
 
 | Status | Method & path | Auth | Request | Response `data` |
 |---|---|---|---|---|
-| ✅ | `POST /auth/register` | public | `{ name, email, password, confirmPassword, acceptTerms, confirmAge }` | `{ accessToken, user }` + refresh cookie; sends verification email |
+| ✅ | `POST /auth/register` | public | `{ name, email, password, confirmPassword, acceptTerms }` | `{ accessToken, user }` + refresh cookie; sends verification email |
 | ✅ | `POST /auth/login` | public | `{ email, password }` | `{ accessToken, user }` + cookie. Failure: `INVALID_CREDENTIALS` with `error.meta.captchaRequired` |
 | ✅ | `POST /auth/refresh` | cookie | – | `{ accessToken, user }` (rotates cookie) |
 | ✅ | `POST /auth/logout` | user | – | – (clears cookie, blacklists access token) |
