@@ -3,7 +3,6 @@ import React from 'react';
 export function UpgradeHero() {
   return (
     <section className="relative overflow-hidden border-b border-slate-100 bg-emerald-50/50 px-4 py-12 text-center">
-      {/* Decorative background glows */}
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-60">
         <div className="absolute -top-24 -left-20 h-72 w-72 rounded-full bg-emerald-200/40 blur-3xl" />
         <div className="absolute -right-20 -bottom-24 h-72 w-72 rounded-full bg-emerald-100/50 blur-3xl" />

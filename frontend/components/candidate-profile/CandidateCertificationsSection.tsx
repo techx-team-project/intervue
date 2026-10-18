@@ -18,7 +18,6 @@ export default function CandidateCertificationsSection({
 }: CandidateCertificationsSectionProps) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      {/* 1. Chứng chỉ */}
       <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-7">
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -73,7 +72,6 @@ export default function CandidateCertificationsSection({
         </div>
       </div>
 
-      {/* 2. Ngoại ngữ */}
       <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-7">
         <div className="mb-5 flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">

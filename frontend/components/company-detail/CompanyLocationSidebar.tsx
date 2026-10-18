@@ -21,7 +21,6 @@ export default function CompanyLocationSidebar({ address, mapEmbedUrl }: Company
           <span className="font-medium text-slate-700">{address}</span>
         </div>
 
-        {/* Map Embed Container */}
         <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
           {mapEmbedUrl ? (
             <iframe

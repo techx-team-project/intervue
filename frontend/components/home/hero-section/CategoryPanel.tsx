@@ -23,7 +23,6 @@ export default function CategoryPanel({ categories, page, totalPages, onPrevPage
         ))}
       </div>
 
-      {/* Pagination Bottom (1 / 5 with < >) */}
       <div className="flex items-center justify-between border-t border-[#f4f5f5] px-2 pt-2">
         <span className="text-[13px] font-medium text-[#7f878f]">
           {page} / {totalPages}

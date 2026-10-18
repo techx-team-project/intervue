@@ -18,7 +18,6 @@ export default function MobileAppSection() {
             nghề nghiệp - chỉ với một ứng dụng duy nhất.
           </p>
 
-          {/* QR and Download buttons */}
           <div className="flex flex-wrap items-center gap-5">
             <div className="shrink-0 rounded-xl bg-white p-2 shadow-md">
               <img

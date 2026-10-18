@@ -34,7 +34,6 @@ export default function CandidateAboutSection({ bio, isOwner = true, onEdit }: C
       <div className="relative rounded-2xl bg-[#f8fafc] p-5">
         <p className="text-[14.5px] leading-relaxed text-[#334155]">{bio}</p>
 
-        {/* Highlight tags */}
         <div className="text-primary mt-4 flex flex-wrap items-center gap-2 border-t border-[#e2e8f0]/80 pt-3 text-[12px] font-semibold">
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100/70 px-2.5 py-0.5">
             <Sparkles className="h-3 w-3" /> 6+ Năm kinh nghiệm

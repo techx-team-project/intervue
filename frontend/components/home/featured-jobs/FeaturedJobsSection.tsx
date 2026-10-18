@@ -13,18 +13,15 @@ const LOCATION_FILTERS = [
   { id: 'high_salary', label: 'Lương cao' },
 ];
 
-/** Checks if a job has high salary (>= 20 million VND or equivalent) */
 function isHighSalaryJob(salary: string): boolean {
   if (!salary || salary === 'Thoả thuận') return false;
 
-  // Extract digits representing millions (e.g., '15 - 30 triệu', 'Tới 20 triệu', '25 - 40 Tr')
   const match = salary.match(/(\d+)(?:\s*[-–]\s*(\d+))?\s*(?:triệu|tr)/i);
   if (match) {
     const maxVal = match[2] ? parseInt(match[2], 10) : parseInt(match[1], 10);
     return maxVal >= 20;
   }
 
-  // Check USD if any ($1,000+)
   const usdMatch = salary.match(/\$?\s*([\d,.]+)/);
   if (salary.includes('$') && usdMatch) {
     return parseFloat(usdMatch[1].replace(',', '')) >= 1000;
@@ -54,15 +51,12 @@ export default function FeaturedJobsSection() {
 
   return (
     <section id="feature-jobs" className="container-topcv my-10">
-      {/* 1. Box Header: Title, Job Type Switcher, View All & Arrows */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
-        {/* Title & Tabs */}
         <div className="flex flex-wrap items-center gap-4">
           <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl">
             Việc làm <span className="text-primary">nổi bật</span>
           </h2>
 
-          {/* 2 nút lọc dạng viên thuốc độc lập */}
           <div className="flex items-center gap-2 sm:gap-2.5">
             <button
               type="button"
@@ -89,7 +83,6 @@ export default function FeaturedJobsSection() {
           </div>
         </div>
 
-        {/* Nút Xem tất cả */}
         <div className="flex items-center">
           <a
             href="https://www.topcv.vn/viec-lam-tot-nhat"
@@ -103,7 +96,6 @@ export default function FeaturedJobsSection() {
         </div>
       </div>
 
-      {/* 2. Sub Filter Buttons Bar */}
       <div className="mb-4 flex scrollbar-none items-center gap-2 overflow-x-auto pb-2">
         <span className="mr-1 flex shrink-0 items-center gap-1.5 text-xs font-medium text-slate-500">
           <Filter className="text-primary h-3.5 w-3.5" />
@@ -125,7 +117,6 @@ export default function FeaturedJobsSection() {
         ))}
       </div>
 
-      {/* 3. Quick Guide Tip Banner */}
       {showTip && (
         <div className="mb-5 flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/60 px-4 py-2.5 text-xs text-emerald-800 shadow-2xs">
           <div className="flex items-center gap-2.5">
@@ -148,7 +139,6 @@ export default function FeaturedJobsSection() {
         </div>
       )}
 
-      {/* 4. Beautiful & Professional Job Cards Grid */}
       <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
         {filteredJobs.map((job) => (
           <JobCard key={job.id} job={job} isSaved={savedJobs.includes(job.id)} onToggleSave={toggleSaveJob} />

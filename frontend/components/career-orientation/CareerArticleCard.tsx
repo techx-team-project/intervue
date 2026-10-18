@@ -14,7 +14,6 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
 
   return (
     <article className="group hover:border-primary/50 flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      {/* Cover Image */}
       <Link href={articleUrl} className="relative block aspect-video w-full overflow-hidden bg-gray-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -29,10 +28,8 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
         </div>
       </Link>
 
-      {/* Card Body */}
       <div className="flex flex-1 flex-col justify-between p-5">
         <div>
-          {/* Metadata */}
           <div className="mb-2.5 flex items-center gap-2 text-xs text-[#7f878f]">
             <span className="text-navy font-medium">{article.publishedAt}</span>
             <span>•</span>
@@ -47,17 +44,14 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
             </span>
           </div>
 
-          {/* Title */}
           <Link href={articleUrl}>
             <h3 className="group-hover:text-primary line-clamp-2 text-base leading-snug font-bold text-[#171717] transition-colors">
               {article.title}
             </h3>
           </Link>
 
-          {/* Excerpt */}
           <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-[#526475] sm:text-sm">{article.excerpt}</p>
 
-          {/* Tags */}
           <div className="mt-3 flex flex-wrap gap-1.5">
             {article.tags.slice(0, 3).map((tag) => (
               <span key={tag} className="rounded-md bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-[#526475]">
@@ -67,7 +61,6 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-3.5">
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}

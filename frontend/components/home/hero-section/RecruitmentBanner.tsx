@@ -10,9 +10,7 @@ interface RecruitmentBannerProps {
 export default function RecruitmentBanner({ current, onPrev, onNext, onSelect }: RecruitmentBannerProps) {
   return (
     <div className="group relative flex h-72 flex-col justify-between overflow-hidden rounded-2xl border border-[#e9eaec] bg-white shadow-md md:col-span-6">
-      {/* Banner Carousel Container */}
       <div className="relative h-full w-full overflow-hidden">
-        {/* SLIDE 1: Tuyển dụng Nhân tài Công nghệ & AI InterVue */}
         <div
           className={`absolute inset-0 transition-opacity duration-700 ${
             current === 0 ? 'pointer-events-auto z-10 opacity-100' : 'pointer-events-none z-0 opacity-0'
@@ -23,7 +21,6 @@ export default function RecruitmentBanner({ current, onPrev, onNext, onSelect }:
             alt="InterVue - Hires Smarter. Faster."
             className="h-full w-full object-cover object-center"
           />
-          {/* Clean elegant CTA button bottom right */}
           <div className="absolute right-3 bottom-3 z-20">
             <a
               href="#feature-jobs"
@@ -35,7 +32,6 @@ export default function RecruitmentBanner({ current, onPrev, onNext, onSelect }:
           </div>
         </div>
 
-        {/* SLIDE 2: Kiếm thêm thu nhập & Cơ hội nghề nghiệp */}
         <div
           className={`absolute inset-0 transition-opacity duration-700 ${
             current === 1 ? 'pointer-events-auto z-10 opacity-100' : 'pointer-events-none z-0 opacity-0'
@@ -82,7 +78,6 @@ export default function RecruitmentBanner({ current, onPrev, onNext, onSelect }:
         </div>
       </div>
 
-      {/* Slider Navigation Arrows */}
       <button
         type="button"
         onClick={onPrev}
@@ -100,7 +95,6 @@ export default function RecruitmentBanner({ current, onPrev, onNext, onSelect }:
         <ChevronRight className="h-4 w-4" />
       </button>
 
-      {/* Indicator Dots (2 dots) */}
       <div className="absolute bottom-2.5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5">
         {[0, 1].map((idx) => (
           <button

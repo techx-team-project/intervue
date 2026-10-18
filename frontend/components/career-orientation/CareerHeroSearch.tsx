@@ -29,12 +29,10 @@ export default function CareerHeroSearch({
 }: CareerHeroSearchProps) {
   return (
     <div className="from-primary/10 relative overflow-hidden border-b border-[#e9eaec] bg-linear-to-b via-[#f4fbf7] to-white py-10 lg:py-14">
-      {/* Background ambient blurs */}
       <div className="bg-primary/15 pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full blur-3xl" />
       <div className="pointer-events-none absolute top-1/2 -right-20 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
         <nav className="mb-4 flex items-center gap-1.5 text-xs text-[#7f878f]">
           <Link href="/" className="hover:text-primary transition-colors">
             Trang chủ
@@ -45,7 +43,6 @@ export default function CareerHeroSearch({
           <span className="text-primary font-semibold">Định hướng nghề nghiệp</span>
         </nav>
 
-        {/* Hero Title & Description */}
         <div className="max-w-3xl">
           <div className="bg-primary/10 text-primary mb-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-semibold">
             <Compass className="h-3.5 w-3.5" />
@@ -61,7 +58,6 @@ export default function CareerHeroSearch({
           </p>
         </div>
 
-        {/* Search Bar */}
         <div className="mt-8 max-w-2xl">
           <div className="relative flex items-center">
             <Search className="absolute left-4 h-5 w-5 text-[#9ca3af]" />
@@ -83,7 +79,6 @@ export default function CareerHeroSearch({
             )}
           </div>
 
-          {/* Trending tags */}
           <div className="mt-3.5 flex flex-wrap items-center gap-2 text-xs">
             <span className="flex items-center gap-1 font-medium text-[#7f878f]">
               <TrendingUp className="text-primary h-3.5 w-3.5" />

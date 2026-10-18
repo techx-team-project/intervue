@@ -27,7 +27,6 @@ const SEO_KEYWORDS = [
 export default function Footer() {
   return (
     <footer id="footer-desktop" className="border-t border-[#e9eaec] bg-white pt-10">
-      {/* 1. SEO Keyword Cloud */}
       <div className="container-topcv border-b border-[#f4f5f5] pb-8">
         <div className="flex flex-wrap gap-2 text-[12.5px] text-[#6f7882]">
           {SEO_KEYWORDS.map((kw, i) => (
@@ -44,16 +43,13 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* 2. Main Footer Columns */}
       <div className="container-topcv py-12">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
-          {/* Col 1 & 2: TopCV Info, Contact & Apps */}
           <div className="space-y-5 lg:col-span-2">
             <Link href="/" className="inline-block">
               <img src="/intervue-logo.png" alt="InterVue Vietnam" className="h-14 w-auto object-contain md:h-16" />
             </Link>
 
-            {/* Contact Details */}
             <div className="space-y-2 text-[13.5px] text-[#4d5965]">
               <div className="text-navy text-[14.5px] font-bold">Liên hệ hỗ trợ:</div>
               <div className="flex items-center gap-2">
@@ -86,7 +82,6 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* App Downloads & Social */}
             <div>
               <div className="text-navy mb-2.5 text-[13px] font-bold">Ứng dụng tải xuống:</div>
               <div className="flex items-center gap-2.5">
@@ -111,7 +106,6 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Social Links */}
             <div>
               <div className="text-navy mb-2 text-[13px] font-bold">Cộng đồng InterVue:</div>
               <div className="flex items-center gap-3">
@@ -167,7 +161,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Col 3: Về InterVue */}
           <div className="space-y-3">
             <h3 className="text-navy text-[15px] font-bold">Về InterVue</h3>
             <ul className="space-y-2 text-[13.5px] text-[#6f7882]">
@@ -253,7 +246,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 4: Hồ sơ & Khám phá */}
           <div className="space-y-3">
             <h3 className="text-navy text-[15px] font-bold">Hồ sơ và CV</h3>
             <ul className="space-y-2 text-[13.5px] text-[#6f7882]">
@@ -354,7 +346,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 5: Xây dựng sự nghiệp */}
           <div className="space-y-3">
             <h3 className="text-navy text-[15px] font-bold">Xây dựng sự nghiệp</h3>
             <ul className="space-y-2 text-[13.5px] text-[#6f7882]">
@@ -440,7 +431,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* 3. Bottom Legal & Copyright Bar */}
       <div className="border-t border-[#e9eaec] bg-[#f8fafc] py-8 text-[12.5px] text-[#7f878f]">
         <div className="container-topcv space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

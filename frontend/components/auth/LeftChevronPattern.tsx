@@ -3,19 +3,16 @@
 import { useMemo } from 'react';
 
 export default function LeftChevronPattern() {
-  // Pre-calculate dot positions for halftone chevron pattern
   const dots = useMemo(() => {
     const list: Array<{ cx: number; cy: number; r: number; opacity: number; key: string }> = [];
 
-    // Parameters for Chevron
     const apexX = 135;
     const apexY = 360;
-    const slope = 1.9; // dy / dx
-    const bandWidth = 28; // thickness of dotted band
+    const slope = 1.9;
+    const bandWidth = 28;
     const stepX = 5.5;
     const stepY = 10.5;
 
-    // Outer and Inner Chevron layers
     const chevronOffsets = [0, -42];
 
     chevronOffsets.forEach((offset, chevronIdx) => {
@@ -26,14 +23,11 @@ export default function LeftChevronPattern() {
         const baseYTop = apexY - distFromApexX * slope;
         const baseYBottom = apexY + distFromApexX * slope;
 
-        // Band of dots perpendicular/vertical to arm
         for (let b = -bandWidth / 2; b <= bandWidth / 2; b += stepY * 0.7) {
           const yTop = baseYTop + b;
           const yBottom = baseYBottom + b;
 
-          // Closeness to center of the band (0 = edge, 1 = center)
           const bandFactor = 1 - Math.abs(b) / (bandWidth / 2);
-          // Apex fade factor
           const xFactor = Math.min(1, x / 30);
           const r = Math.max(0.8, 1.2 + bandFactor * 1.8);
           const opacity = Math.max(0.2, (0.35 + bandFactor * 0.55) * xFactor);

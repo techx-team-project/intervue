@@ -22,9 +22,6 @@ export default function AccountOverviewView() {
 
   return (
     <div className="space-y-6">
-      {/* =========================================================================
-          KHỐI 1: CHÀO MỪNG & TRẠNG THÁI TÀI KHOẢN
-          ========================================================================= */}
       <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-7">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
@@ -59,12 +56,8 @@ export default function AccountOverviewView() {
         </div>
       </div>
 
-      {/* =========================================================================
-          KHỐI 2: TRẠNG THÁI TÌM VIỆC & GỢI Ý VIỆC LÀM
-          ========================================================================= */}
       <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-7">
         <div className="space-y-6">
-          {/* Gợi ý việc làm */}
           <div className="flex items-center justify-between border-b border-[#f1f5f9] pb-5">
             <div className="flex items-start gap-3.5">
               <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
@@ -92,7 +85,6 @@ export default function AccountOverviewView() {
             </label>
           </div>
 
-          {/* Bật / Tắt tìm việc */}
           <div>
             <div className="flex items-center justify-between">
               <div className="flex items-start gap-3.5">
@@ -131,7 +123,6 @@ export default function AccountOverviewView() {
               </label>
             </div>
 
-            {/* Hộp giải thích chi tiết khi bật tìm việc */}
             <div className="text-navy mt-4 rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 text-[13px] leading-relaxed">
               <div className="font-bold text-[#00873c]">Khi bật tìm việc:</div>
               <ul className="mt-2 space-y-1.5 text-[#475569]">
@@ -152,9 +143,6 @@ export default function AccountOverviewView() {
         </div>
       </div>
 
-      {/* =========================================================================
-          KHỐI 3: CHO PHÉP NTD TÌM KIẾM HỒ SƠ
-          ========================================================================= */}
       <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-7">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-start gap-3.5">
@@ -184,7 +172,6 @@ export default function AccountOverviewView() {
           </label>
         </div>
 
-        {/* Cảnh báo chưa có CV */}
         <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50/70 p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
@@ -208,9 +195,6 @@ export default function AccountOverviewView() {
         </div>
       </div>
 
-      {/* =========================================================================
-          KHỐI 4: THỐNG KÊ LƯỢT NTD QUAN TÂM ĐẾN HỒ SƠ
-          ========================================================================= */}
       <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-7">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-xl">
@@ -244,7 +228,6 @@ export default function AccountOverviewView() {
             </div>
           </div>
 
-          {/* Metric Box */}
           <div className="flex items-center justify-center rounded-2xl border border-[#e2e8f0] bg-[#f8fafc] p-6 text-center lg:min-w-50">
             <div>
               <div className="flex items-baseline justify-center gap-1.5">

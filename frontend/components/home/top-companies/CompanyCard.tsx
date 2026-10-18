@@ -14,7 +14,6 @@ export default function CompanyCard({ company, isFollowed, onToggleFollow }: Com
   return (
     <div className="group hover:border-primary flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e9eaec] bg-white transition-all duration-300 hover:shadow-xl">
       <div>
-        {/* Cover Image */}
         <Link
           href={`/companies/${company.id}`}
           className="from-navy relative block h-28 w-full overflow-hidden bg-linear-to-r to-[#1e293b]"
@@ -27,7 +26,6 @@ export default function CompanyCard({ company, isFollowed, onToggleFollow }: Com
           />
         </Link>
 
-        {/* Logo Avatar & Content */}
         <div className="relative -mt-10 px-4 pb-4">
           <Link
             href={`/companies/${company.id}`}
@@ -48,7 +46,6 @@ export default function CompanyCard({ company, isFollowed, onToggleFollow }: Com
             <span>{company.field}</span>
           </div>
 
-          {/* Stats: Jobs & Followers */}
           <div className="mb-3 flex items-center justify-between rounded-xl border border-[#f1f5f9] bg-[#f8fafc] p-2.5 text-[12.5px]">
             <Link
               href={`/companies/${company.id}`}
@@ -65,7 +62,6 @@ export default function CompanyCard({ company, isFollowed, onToggleFollow }: Com
         </div>
       </div>
 
-      {/* Follow Button */}
       <div className="px-4 pb-4">
         <button
           type="button"

@@ -34,7 +34,6 @@ export default function BlogDetailBreadcrumb({ article }: BlogDetailBreadcrumbPr
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <Breadcrumb items={breadcrumbItems} className="text-xs" />
 
-          {/* Social share & actions */}
           <div className="flex items-center gap-2">
             <Button
               type="button"

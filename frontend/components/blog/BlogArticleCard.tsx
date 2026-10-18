@@ -15,7 +15,6 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
 
   return (
     <article className="group hover:border-primary/50 flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      {/* Cover Image */}
       <Link href={articleUrl} className="relative block aspect-video w-full overflow-hidden bg-gray-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -30,10 +29,8 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
         </div>
       </Link>
 
-      {/* Card Body */}
       <div className="flex flex-1 flex-col justify-between p-5">
         <div>
-          {/* Metadata */}
           <div className="mb-2.5 flex items-center gap-2 text-xs text-[#7f878f]">
             <span className="text-navy font-medium">{article.publishedAt}</span>
             <span>•</span>
@@ -48,16 +45,13 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
             </span>
           </div>
 
-          {/* Title */}
           <h3 className="group-hover:text-primary line-clamp-2 text-base font-bold text-[#171717] transition-colors">
             <Link href={articleUrl}>{article.title}</Link>
           </h3>
 
-          {/* Excerpt */}
           <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-[#526475]">{article.excerpt}</p>
         </div>
 
-        {/* Card Footer: Author & Action */}
         <div className="mt-4 border-t border-gray-100 pt-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">

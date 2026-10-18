@@ -60,12 +60,10 @@ export default function BlogHeroSearch({
 
   return (
     <section className="relative overflow-hidden bg-linear-to-b from-[#0f172a] via-[#1e293b] to-[#0f172a] py-12 text-white sm:py-16">
-      {/* Decorative blurred background shapes */}
       <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
 
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        {/* Category breadcrumb if in sub-category */}
         {categoryMeta && (
           <nav className="mb-4 flex items-center gap-1.5 text-xs text-gray-400">
             <Link href="/" className="transition hover:text-white">
@@ -81,7 +79,6 @@ export default function BlogHeroSearch({
         )}
 
         <div className="text-center">
-          {/* Badge */}
           <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold ring-1 ring-white/15 backdrop-blur-md">
             <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
             <span className="text-emerald-300">
@@ -89,7 +86,6 @@ export default function BlogHeroSearch({
             </span>
           </div>
 
-          {/* Heading */}
           <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
             {categoryMeta ? (
               <span className="inline-flex items-center justify-center gap-3">
@@ -103,14 +99,12 @@ export default function BlogHeroSearch({
             )}
           </h1>
 
-          {/* Subtitle */}
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-300 sm:text-base">
             {categoryMeta
               ? categoryMeta.description
               : 'Trang bị kiến thức chuyên ngành, bí quyết phỏng vấn chinh phục nhà tuyển dụng, tính lương Gross - Net và định hướng phát triển bản thân vững chắc.'}
           </p>
 
-          {/* Search Box */}
           <div className="mx-auto mt-8 max-w-2xl">
             <div className="relative flex items-center">
               <Search className="pointer-events-none absolute left-4 h-5 w-5 text-gray-400" />
@@ -136,7 +130,6 @@ export default function BlogHeroSearch({
               )}
             </div>
 
-            {/* Popular / Filter Tags */}
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
               <span className="flex items-center gap-1 text-gray-400">
                 <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />

@@ -85,7 +85,6 @@ export function GiftActivationForm({
         </p>
       </div>
 
-      {/* Error Message Box */}
       {errorMsg && (
         <div className="mb-5 flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-sm text-rose-600">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
@@ -96,7 +95,6 @@ export function GiftActivationForm({
         </div>
       )}
 
-      {/* Success Notification Box */}
       {successInfo && (
         <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-5 text-emerald-900">
           <div className="flex items-center gap-2 font-bold text-emerald-700">
@@ -110,9 +108,7 @@ export function GiftActivationForm({
         </div>
       )}
 
-      {/* Form */}
       <form onSubmit={handleApplyCoupon} className="space-y-4">
-        {/* Package Type Selector */}
         <div>
           <label className="mb-1.5 block text-sm font-semibold text-slate-800">Chọn gói tài khoản kích hoạt</label>
           <div className="relative">
@@ -133,7 +129,6 @@ export function GiftActivationForm({
           </div>
         </div>
 
-        {/* Coupon Code Input */}
         <Input
           label="Mã quà tặng (Coupon Code)"
           value={couponCode}
@@ -144,7 +139,6 @@ export function GiftActivationForm({
           placeholder="Nhập mã code quà tặng của bạn"
         />
 
-        {/* Partner Checkbox */}
         <div className="pt-1">
           <label className="flex cursor-pointer items-start gap-2.5 text-xs text-slate-600 select-none">
             <input
@@ -160,7 +154,6 @@ export function GiftActivationForm({
           </label>
         </div>
 
-        {/* Submit Button */}
         <div className="pt-2">
           <Button type="submit" isLoading={loading} className="w-full py-3 text-sm font-bold">
             Áp dụng mã ngay

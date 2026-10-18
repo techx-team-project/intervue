@@ -36,7 +36,6 @@ export default function BlogSidebar({
 }: BlogSidebarProps) {
   return (
     <aside className="space-y-6">
-      {/* 1. Quick Career Tools Widget */}
       <div className="overflow-hidden rounded-2xl border border-emerald-100 bg-linear-to-b from-emerald-50/60 to-white p-5 shadow-xs">
         <div className="mb-4 flex items-center gap-2">
           <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg text-white">
@@ -84,7 +83,6 @@ export default function BlogSidebar({
         </div>
       </div>
 
-      {/* 2. Most Read Articles */}
       <div className="rounded-2xl border border-[#e5e7eb] bg-white p-5 shadow-xs">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -119,7 +117,6 @@ export default function BlogSidebar({
         </div>
       </div>
 
-      {/* 3. Trending Industries Radar */}
       <div className="rounded-2xl border border-[#e5e7eb] bg-white p-5 shadow-xs">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -146,7 +143,6 @@ export default function BlogSidebar({
         </div>
       </div>
 
-      {/* 4. Popular Tags Cloud */}
       <div className="rounded-2xl border border-[#e5e7eb] bg-white p-5 shadow-xs">
         <div className="mb-3 flex items-center gap-2">
           <Tag className="text-primary h-4 w-4" />
@@ -174,7 +170,6 @@ export default function BlogSidebar({
         </div>
       </div>
 
-      {/* 5. Newsletter / Job Alert Box */}
       <div className="rounded-2xl bg-linear-to-br from-slate-900 to-slate-800 p-5 text-white shadow-sm">
         <div className="flex items-center gap-2 text-emerald-400">
           <Mail className="h-5 w-5" />

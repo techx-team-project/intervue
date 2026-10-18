@@ -24,10 +24,8 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter articles based on category, search, tag
   const filteredArticles = useMemo(() => {
     return initialArticles.filter((article) => {
-      // Category filter
       if (activeCategoryId !== 'all') {
         const selectedCategory = categories.find((c) => c.id === activeCategoryId);
         if (selectedCategory && article.categorySlug !== selectedCategory.slug) {
@@ -35,14 +33,12 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
         }
       }
 
-      // Tag filter
       if (selectedTag) {
         const matchesTag = article.tags.some((t) => t.toLowerCase() === selectedTag.toLowerCase());
         const matchesTitle = article.title.toLowerCase().includes(selectedTag.toLowerCase());
         if (!matchesTag && !matchesTitle) return false;
       }
 
-      // Search query
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const matchesTitle = article.title.toLowerCase().includes(query);
@@ -55,12 +51,10 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
     });
   }, [initialArticles, activeCategoryId, selectedTag, searchQuery, categories]);
 
-  // Featured articles
   const featuredArticles = useMemo(() => {
     return initialArticles.filter((art) => art.isFeatured);
   }, [initialArticles]);
 
-  // Pagination
   const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE);
   const paginatedArticles = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -84,7 +78,6 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
 
   return (
     <div className="min-h-screen bg-[#f8faf9]">
-      {/* 1. Hero Search */}
       <BlogHeroSearch
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
@@ -92,19 +85,15 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
         onSelectTag={handleSelectTag}
       />
 
-      {/* 2. Category Tabs */}
       <BlogCategoryTabs />
 
       <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-        {/* 3. 4 Pillar Categories Showcase (Show when no active search) */}
         {!searchQuery && !selectedTag && activeCategoryId === 'all' && (
           <>
             <BlogCategoryShowcase />
             <BlogFeaturedGrid articles={featuredArticles} />
 
-            {/* Quick interactive teasers */}
             <div className="my-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-              {/* Gross Net teaser banner */}
               <div className="relative overflow-hidden rounded-3xl border border-amber-200 bg-linear-to-r from-amber-500/10 via-orange-500/10 to-transparent p-6 shadow-xs">
                 <div className="flex items-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-md">
@@ -132,7 +121,6 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                 </div>
               </div>
 
-              {/* Ikigai Career test banner */}
               <div className="relative overflow-hidden rounded-3xl border border-emerald-200 bg-linear-to-r from-emerald-500/10 via-teal-500/10 to-transparent p-6 shadow-xs">
                 <div className="flex items-center gap-3">
                   <div className="bg-primary flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-md">
@@ -163,7 +151,6 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
           </>
         )}
 
-        {/* 4. Filter Pills bar on hub */}
         <div className="pt-6">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
@@ -175,7 +162,6 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
               </h2>
             </div>
 
-            {/* Category filter pills */}
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
@@ -205,7 +191,6 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
             </div>
           </div>
 
-          {/* Grid Layout: Articles list + Sidebar */}
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
             <div className="lg:col-span-8">
               {paginatedArticles.length > 0 ? (
@@ -216,7 +201,6 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                     ))}
                   </div>
 
-                  {/* Pagination */}
                   {totalPages > 1 && (
                     <div className="mt-10 flex items-center justify-center gap-2">
                       <button
@@ -272,7 +256,6 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
               )}
             </div>
 
-            {/* Sidebar */}
             <div className="lg:col-span-4">
               <BlogSidebar popularArticles={initialArticles} selectedTag={selectedTag} onSelectTag={handleSelectTag} />
             </div>

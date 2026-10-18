@@ -95,13 +95,11 @@ export default function BlogCategoryShowcase() {
             href={`/blog/${cat.slug}`}
             className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-gray-200 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${cat.accentBorder}`}
           >
-            {/* Background subtle gradient */}
             <div
               className={`pointer-events-none absolute inset-0 bg-linear-to-b ${cat.gradientBg} opacity-60 transition duration-300 group-hover:opacity-100`}
             />
 
             <div className="relative">
-              {/* Header Icon & Count Badge */}
               <div className="flex items-center justify-between">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-black/5 transition-transform duration-300 group-hover:scale-110">
                   {cat.icon}
@@ -111,11 +109,9 @@ export default function BlogCategoryShowcase() {
                 </span>
               </div>
 
-              {/* Title & Description */}
               <h3 className="group-hover:text-primary mt-5 text-lg font-bold text-[#0f172a] transition">{cat.name}</h3>
               <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-gray-600">{cat.shortDesc}</p>
 
-              {/* Tags */}
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {cat.tags.map((tag, idx) => (
                   <span
@@ -128,7 +124,6 @@ export default function BlogCategoryShowcase() {
               </div>
             </div>
 
-            {/* Bottom Call to Action */}
             <div className="text-primary relative mt-6 flex items-center gap-1 text-xs font-bold transition-all duration-200 group-hover:translate-x-1">
               <span>Khám phá chuyên mục</span>
               <ArrowRight className="h-3.5 w-3.5" />

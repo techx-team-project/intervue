@@ -17,7 +17,6 @@ const HIGHLIGHT_ICONS: Record<string, React.ElementType> = {
 export default function CompanyAboutSection({ company }: CompanyAboutSectionProps) {
   return (
     <div className="space-y-6">
-      {/* 1. GIỚI THIỆU CÔNG TY */}
       <section className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
         <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
           <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
@@ -26,14 +25,12 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Giới thiệu công ty</h2>
         </div>
 
-        {/* Text descriptions */}
         <div className="mt-5 space-y-3.5 text-[14.5px] leading-relaxed text-slate-700">
           {company.description.map((paragraph, idx) => (
             <p key={idx}>{paragraph}</p>
           ))}
         </div>
 
-        {/* Core Highlights 4-Grid */}
         <div className="mt-6 grid grid-cols-1 gap-3.5 sm:grid-cols-2">
           {company.highlights.map((item, idx) => {
             const IconComp = HIGHLIGHT_ICONS[item.icon] || Sparkles;
@@ -55,7 +52,6 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
         </div>
       </section>
 
-      {/* 2. HỆ THỐNG CHI NHÁNH & VĂN PHÒNG */}
       {company.branches && company.branches.length > 0 && (
         <section className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
           <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
@@ -92,7 +88,6 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
         </section>
       )}
 
-      {/* 3. PHÚC LỢI KHI LÀM VIỆC TẠI MẸ GẤU PILATES */}
       <section className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
         <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
           <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">

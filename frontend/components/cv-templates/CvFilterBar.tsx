@@ -32,7 +32,6 @@ export default function CvFilterBar({
   return (
     <div className="sticky top-18 z-20 border-b border-gray-200 bg-white/95 shadow-xs backdrop-blur-md">
       <div className="mx-auto max-w-7xl space-y-3 px-4 py-3.5 sm:px-6 lg:px-8">
-        {/* Row 1: Style Tabs */}
         <div className="no-scrollbar flex items-center justify-between gap-4 overflow-x-auto">
           <div className="flex shrink-0 items-center gap-1.5">
             {styles.map((style) => {
@@ -61,7 +60,6 @@ export default function CvFilterBar({
             })}
           </div>
 
-          {/* Search Input on Desktop */}
           <div className="relative hidden w-72 shrink-0 md:block">
             <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
             <input
@@ -83,7 +81,6 @@ export default function CvFilterBar({
           </div>
         </div>
 
-        {/* Row 2: Secondary Filters (Industry, Language) */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-2 text-xs">
           <div className="flex flex-wrap items-center gap-2">
             <span className="flex items-center gap-1 font-semibold text-[#7f878f]">
@@ -103,7 +100,6 @@ export default function CvFilterBar({
             </select>
           </div>
 
-          {/* Language filters */}
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1 font-semibold text-[#7f878f]">
               <Globe className="h-3.5 w-3.5 text-blue-600" />

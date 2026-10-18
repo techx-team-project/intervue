@@ -24,14 +24,12 @@ export default function JobStickyNav({ job, onApply }: JobStickyNavProps) {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Check if scrolled past hero card (around 320px)
       if (window.scrollY > 340) {
         setShowCompactBar(true);
       } else {
         setShowCompactBar(false);
       }
 
-      // Check current section in viewport
       for (const tab of [...NAV_TABS].reverse()) {
         const el = document.getElementById(tab.id);
         if (el) {
@@ -52,7 +50,7 @@ export default function JobStickyNav({ job, onApply }: JobStickyNavProps) {
     setActiveTab(id);
     const element = document.getElementById(id);
     if (element) {
-      const yOffset = -140; // Offset for sticky header + nav
+      const yOffset = -140;
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
@@ -61,7 +59,6 @@ export default function JobStickyNav({ job, onApply }: JobStickyNavProps) {
   return (
     <div className="sticky top-17.5 z-40 border-b border-slate-200 bg-white/95 shadow-xs backdrop-blur-md transition-all">
       <div className="container-topcv flex items-center justify-between gap-4 py-2">
-        {/* Navigation Tabs */}
         <div className="flex scrollbar-none items-center gap-1 overflow-x-auto py-1">
           {NAV_TABS.map((tab) => {
             const isActive = activeTab === tab.id;
@@ -82,7 +79,6 @@ export default function JobStickyNav({ job, onApply }: JobStickyNavProps) {
           })}
         </div>
 
-        {/* Compact Right CTA (visible on scroll) */}
         {showCompactBar && (
           <div className="animate-in fade-in hidden shrink-0 items-center gap-3 duration-200 md:flex">
             <div className="text-right">

@@ -23,29 +23,24 @@ export default function GrossNetCalculatorWidget() {
   const [region, setRegion] = useState<number>(1);
   const [showFormulaDetails, setShowFormulaDetails] = useState<boolean>(false);
 
-  // Parse salary
   const numericSalary = useMemo(() => {
     const val = parseInt(salaryInput.replace(/\D/g, ''), 10);
     return isNaN(val) ? 0 : val;
   }, [salaryInput]);
 
-  // Handle formatted input
   const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawVal = e.target.value.replace(/\D/g, '');
     setSalaryInput(rawVal);
   };
 
-  // Preset salary quick clicks
   const handleQuickSalary = (amount: number) => {
     setSalaryInput(amount.toString());
   };
 
-  // Calculation result
   const result = useMemo(() => {
     if (calculationMode === 'grossToNet') {
       return calculateGrossToNet(numericSalary, dependents);
     } else {
-      // Approximation for Net to Gross by binary search
       let low = numericSalary;
       let high = numericSalary * 2.5;
       let estimatedGross = numericSalary;
@@ -70,7 +65,6 @@ export default function GrossNetCalculatorWidget() {
 
   return (
     <div className="overflow-hidden rounded-3xl border border-[#e5e7eb] bg-white shadow-xl">
-      {/* Header Banner */}
       <div className="bg-linear-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] p-6 text-white sm:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
@@ -90,7 +84,6 @@ export default function GrossNetCalculatorWidget() {
             </div>
           </div>
 
-          {/* Mode Switcher */}
           <div className="inline-flex rounded-xl bg-slate-800/80 p-1 ring-1 ring-white/10">
             <button
               type="button"
@@ -117,9 +110,7 @@ export default function GrossNetCalculatorWidget() {
       </div>
 
       <div className="p-6 sm:p-8">
-        {/* Input Form Controls */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
-          {/* Main Salary Input */}
           <div className="md:col-span-6">
             <label className="mb-2 block text-xs font-bold tracking-wider text-[#475569] uppercase">
               {calculationMode === 'grossToNet'
@@ -137,7 +128,6 @@ export default function GrossNetCalculatorWidget() {
               <span className="absolute top-1/2 right-4 -translate-y-1/2 text-sm font-bold text-gray-400">VNĐ</span>
             </div>
 
-            {/* Quick preset buttons */}
             <div className="mt-2.5 flex flex-wrap gap-1.5 text-xs">
               <span className="self-center text-gray-500">Gợi ý nhanh:</span>
               {[15000000, 20000000, 25000000, 35000000, 50000000].map((amount) => (
@@ -157,7 +147,6 @@ export default function GrossNetCalculatorWidget() {
             </div>
           </div>
 
-          {/* Dependents Selection */}
           <div className="md:col-span-3">
             <label className="mb-2 block text-xs font-bold tracking-wider text-[#475569] uppercase">
               Người phụ thuộc
@@ -179,7 +168,6 @@ export default function GrossNetCalculatorWidget() {
             <p className="mt-1.5 text-xs text-gray-500">Giảm trừ 4.400.000đ/người/tháng</p>
           </div>
 
-          {/* Region Selection */}
           <div className="md:col-span-3">
             <label className="mb-2 block text-xs font-bold tracking-wider text-[#475569] uppercase">
               Vùng làm việc
@@ -198,9 +186,7 @@ export default function GrossNetCalculatorWidget() {
           </div>
         </div>
 
-        {/* Calculation Summary Big Cards */}
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Card 1: Lương Net */}
           <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-500/30 bg-emerald-50/50 p-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold tracking-wider text-emerald-800 uppercase">Lương Net thực nhận</span>
@@ -214,7 +200,6 @@ export default function GrossNetCalculatorWidget() {
             <p className="mt-1 text-xs text-emerald-700">Số tiền đổ về tài khoản ngân hàng</p>
           </div>
 
-          {/* Card 2: Lương Gross */}
           <div className="rounded-2xl border border-gray-200 bg-gray-50/70 p-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold tracking-wider text-[#475569] uppercase">Lương Gross</span>
@@ -226,7 +211,6 @@ export default function GrossNetCalculatorWidget() {
             <p className="mt-1 text-xs text-gray-500">Thu nhập cam kết ban đầu</p>
           </div>
 
-          {/* Card 3: Đóng bảo hiểm */}
           <div className="rounded-2xl border border-gray-200 bg-gray-50/70 p-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold tracking-wider text-[#475569] uppercase">Đóng bảo hiểm (10.5%)</span>
@@ -238,7 +222,6 @@ export default function GrossNetCalculatorWidget() {
             <p className="mt-1 text-xs text-gray-500">BHXH 8%, BHYT 1.5%, BHTN 1%</p>
           </div>
 
-          {/* Card 4: Thuế TNCN */}
           <div className="rounded-2xl border border-gray-200 bg-gray-50/70 p-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold tracking-wider text-[#475569] uppercase">Thuế TNCN tạm nộp</span>
@@ -253,20 +236,17 @@ export default function GrossNetCalculatorWidget() {
           </div>
         </div>
 
-        {/* Breakdown Breakdown Details Table */}
         <div className="mt-8 overflow-hidden rounded-2xl border border-gray-200 bg-white">
           <div className="border-b border-gray-200 bg-gray-50/80 px-6 py-4">
             <h4 className="text-sm font-bold text-[#0f172a]">Bảng bóc tách chi tiết các khoản trừ và nghĩa vụ</h4>
           </div>
 
           <div className="divide-y divide-gray-100 text-sm">
-            {/* 1. Lương Gross */}
             <div className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-50/50">
               <span className="font-semibold text-[#0f172a]">1. Lương Gross</span>
               <span className="font-bold text-[#0f172a]">{formatCurrencyVND(result.grossSalary)}</span>
             </div>
 
-            {/* 2. Bảo hiểm bắt buộc */}
             <div className="bg-blue-50/30 px-6 py-3.5">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-blue-950">2. Bảo hiểm bắt buộc người lao động đóng (10.5%)</span>
@@ -288,7 +268,6 @@ export default function GrossNetCalculatorWidget() {
               </div>
             </div>
 
-            {/* 3. Thu nhập trước thuế */}
             <div className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-50/50">
               <span className="font-semibold text-[#0f172a]">3. Thu nhập trước thuế (Lương Gross - Bảo hiểm)</span>
               <span className="font-bold text-[#0f172a]">
@@ -296,7 +275,6 @@ export default function GrossNetCalculatorWidget() {
               </span>
             </div>
 
-            {/* 4. Giảm trừ gia cảnh */}
             <div className="bg-emerald-50/30 px-6 py-3.5">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-emerald-950">4. Tổng mức giảm trừ gia cảnh</span>
@@ -314,13 +292,11 @@ export default function GrossNetCalculatorWidget() {
               </div>
             </div>
 
-            {/* 5. Thu nhập tính thuế */}
             <div className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-50/50">
               <span className="font-semibold text-[#0f172a]">5. Thu nhập tính thuế TNCN</span>
               <span className="font-bold text-[#0f172a]">{formatCurrencyVND(result.taxableIncome)}</span>
             </div>
 
-            {/* 6. Thuế TNCN */}
             <div className="bg-amber-50/30 px-6 py-3.5">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-amber-950">6. Thuế thu nhập cá nhân (TNCN)</span>
@@ -342,13 +318,11 @@ export default function GrossNetCalculatorWidget() {
               )}
             </div>
 
-            {/* 7. Lương Net thực nhận */}
             <div className="flex items-center justify-between bg-emerald-500/10 px-6 py-4">
               <span className="text-base font-bold text-emerald-950">7. LƯƠNG NET THỰC NHẬN</span>
               <span className="text-primary text-xl font-black">{formatCurrencyVND(result.netSalary)}</span>
             </div>
 
-            {/* 8. Chi phí doanh nghiệp phải trả */}
             <div className="bg-slate-50 px-6 py-3.5 text-xs text-slate-600">
               <div className="flex items-center justify-between font-semibold text-slate-900">
                 <span className="flex items-center gap-1.5">
@@ -366,7 +340,6 @@ export default function GrossNetCalculatorWidget() {
           </div>
         </div>
 
-        {/* Accordion: Giải thích công thức & Luật */}
         <div className="mt-6">
           <button
             type="button"

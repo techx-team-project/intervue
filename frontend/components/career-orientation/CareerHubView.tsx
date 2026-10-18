@@ -24,10 +24,8 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter articles based on category, search, tag
   const filteredArticles = useMemo(() => {
     return initialArticles.filter((article) => {
-      // Category filter
       if (activeCategoryId !== 'all') {
         const selectedCategory = categories.find((c) => c.id === activeCategoryId);
         if (selectedCategory && article.category !== selectedCategory.name) {
@@ -35,14 +33,12 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
         }
       }
 
-      // Tag filter
       if (selectedTag) {
         const matchesTag = article.tags.some((t) => t.toLowerCase() === selectedTag.toLowerCase());
         const matchesTitle = article.title.toLowerCase().includes(selectedTag.toLowerCase());
         if (!matchesTag && !matchesTitle) return false;
       }
 
-      // Search query
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const matchesTitle = article.title.toLowerCase().includes(query);
@@ -55,12 +51,10 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
     });
   }, [initialArticles, activeCategoryId, selectedTag, searchQuery, categories]);
 
-  // Featured articles (top 3)
   const featuredArticles = useMemo(() => {
     return initialArticles.filter((art) => art.isFeatured);
   }, [initialArticles]);
 
-  // Pagination
   const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE);
   const paginatedArticles = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -84,7 +78,6 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
 
   return (
     <div className="min-h-screen bg-[#f8faf9]">
-      {/* 1. Hero Search */}
       <CareerHeroSearch
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
@@ -92,7 +85,6 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
         onSelectTag={handleSelectTag}
       />
 
-      {/* 2. Category Tabs */}
       <CareerCategoryTabs
         categories={categories}
         activeCategoryId={activeCategoryId}
@@ -100,7 +92,6 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
       />
 
       <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-        {/* 3. Featured Articles (only show if no search/filter active) */}
         {!searchQuery && !selectedTag && activeCategoryId === 'all' && (
           <>
             <CareerFeaturedGrid articles={featuredArticles} />
@@ -108,7 +99,6 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
           </>
         )}
 
-        {/* 4. Main Listing & Sidebar Section */}
         <div className="pt-6">
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -121,7 +111,6 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
           </div>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-            {/* Left 8 cols: Articles list */}
             <div className="lg:col-span-8">
               {paginatedArticles.length > 0 ? (
                 <>
@@ -131,7 +120,6 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
                     ))}
                   </div>
 
-                  {/* Pagination */}
                   {totalPages > 1 && (
                     <div className="mt-10 flex items-center justify-center gap-2">
                       <button
@@ -194,7 +182,6 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
               )}
             </div>
 
-            {/* Right 4 cols: Sidebar */}
             <div className="lg:col-span-4">
               <CareerSidebar trendingIndustries={trendingIndustries} />
             </div>

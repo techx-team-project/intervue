@@ -12,7 +12,6 @@ export default function JobAiInterviewBanner({ jobTitle }: JobAiInterviewBannerP
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-linear-to-br from-slate-900 via-[#132d22] to-slate-900 p-6 text-white shadow-lg sm:p-7">
-      {/* Decorative background glow */}
       <div className="bg-primary/25 pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full blur-3xl" />
       <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-teal-500/20 blur-3xl" />
 
@@ -48,7 +47,6 @@ export default function JobAiInterviewBanner({ jobTitle }: JobAiInterviewBannerP
           </div>
         </div>
 
-        {/* Action card */}
         <div className="flex shrink-0 flex-col gap-3 sm:flex-row md:flex-col">
           <button
             type="button"

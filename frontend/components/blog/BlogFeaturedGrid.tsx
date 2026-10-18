@@ -32,7 +32,6 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* Main large featured card */}
         {mainArticle && (
           <div className="group hover:border-primary/50 flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl lg:col-span-7">
             <Link
@@ -115,7 +114,6 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
           </div>
         )}
 
-        {/* 2 Side medium cards */}
         <div className="flex flex-col gap-6 lg:col-span-5">
           {sideArticles.map((article) => (
             <div

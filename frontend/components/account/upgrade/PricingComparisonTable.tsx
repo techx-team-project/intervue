@@ -52,7 +52,6 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
     <div className="w-full bg-white px-2 py-10 sm:px-4">
       <div className="mx-auto max-w-7xl overflow-x-auto pb-4">
         <div className="flex min-w-6xl items-start justify-center gap-2">
-          {/* ================= CỘT 1: DANH MỤC TÍNH NĂNG ================= */}
           <div className="w-80 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
             <div className="flex h-20 items-center border-b border-slate-200 bg-slate-50 px-5 text-base font-bold text-slate-800">
               Loại tài khoản
@@ -89,7 +88,6 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
             </div>
           </div>
 
-          {/* ================= CỘT 2-6: CÁC GÓI DỊCH VỤ ================= */}
           {plans.map((plan) => {
             const isHighlight = plan.isHighlight;
             const isPro = plan.id === 'pro';
@@ -105,7 +103,6 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
                   isPro && 'border-emerald-200 shadow-md shadow-emerald-500/5',
                 )}
               >
-                {/* Header Cột */}
                 <div
                   className={cn(
                     'flex h-20 flex-col items-center justify-center border-b border-slate-200 px-2',
@@ -146,7 +143,6 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
                   </span>
                 </div>
 
-                {/* Danh sách quyền lợi */}
                 <ul className="divide-y divide-slate-200 text-sm">
                   {features.map((feature) => (
                     <li
@@ -166,7 +162,6 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
                   ))}
                 </ul>
 
-                {/* Footer Cột & CTA */}
                 <div
                   className={cn(
                     'flex h-28 items-center justify-center border-t border-slate-200 p-3 text-center',

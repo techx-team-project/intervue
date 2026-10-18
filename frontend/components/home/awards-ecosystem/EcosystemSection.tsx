@@ -12,7 +12,6 @@ export default function EcosystemSection() {
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {/* InterVue */}
         <Link
           href="/"
           className="group hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 transition-all hover:shadow-lg"
@@ -33,7 +32,6 @@ export default function EcosystemSection() {
           </div>
         </Link>
 
-        {/* HappyTime */}
         <a
           href="https://happytime.vn/"
           target="_blank"
@@ -60,7 +58,6 @@ export default function EcosystemSection() {
           </div>
         </a>
 
-        {/* TestCenter */}
         <a
           href="https://www.testcenter.vn/"
           target="_blank"
@@ -87,7 +84,6 @@ export default function EcosystemSection() {
           </div>
         </a>
 
-        {/* SHiring */}
         <a
           href="https://www.shiring.ai/"
           target="_blank"
