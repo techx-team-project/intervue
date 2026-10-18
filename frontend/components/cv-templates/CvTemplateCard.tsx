@@ -14,10 +14,10 @@ interface CvTemplateCardProps {
 
 export default function CvTemplateCard({ template, onPreview, onUseTemplate }: CvTemplateCardProps) {
   return (
-    <div className="group hover:border-primary/60 flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <div className="group hover:border-primary/60 flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-xs transition duration-300 hover:shadow-xl">
       <div>
         <div className="relative overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-2">
-          <div className="transition-transform duration-500 group-hover:scale-102">
+          <div className="transition-transform duration-500">
             <CvPaperPreview sampleData={template.sampleData} primaryColor={template.defaultColorHex} isMini={true} />
           </div>
 
@@ -36,7 +36,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
             )}
           </div>
 
-          <div className="absolute inset-0 flex items-center justify-center gap-3 rounded-xl bg-black/40 p-4 opacity-0 backdrop-blur-xs transition-opacity duration-300 group-hover:opacity-100">
+          <div className="absolute inset-0 flex items-center justify-center gap-3 rounded-xl bg-black/40 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             <button
               type="button"
               onClick={() => onPreview(template)}

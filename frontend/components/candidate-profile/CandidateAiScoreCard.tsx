@@ -54,7 +54,7 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3.5 lg:grid-cols-4">
-        <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-2xs backdrop-blur-xs">
+        <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-2xs">
           <div className="mb-2 flex items-center justify-between text-[#6f7882]">
             <span className="text-[12px] font-bold uppercase">Chuẩn ATS CV</span>
             <FileSearch className="text-primary h-4 w-4" />
@@ -65,7 +65,7 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-2xs backdrop-blur-xs">
+        <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-2xs">
           <div className="mb-2 flex items-center justify-between text-[#6f7882]">
             <span className="text-[12px] font-bold uppercase">Cấu trúc STAR</span>
             <Zap className="h-4 w-4 text-amber-500" />
@@ -74,7 +74,7 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
           <div className="mt-1 text-[11.5px] font-medium text-amber-600">Trả lời logic & đo lường</div>
         </div>
 
-        <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-2xs backdrop-blur-xs">
+        <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-2xs">
           <div className="mb-2 flex items-center justify-between text-[#6f7882]">
             <span className="text-[12px] font-bold uppercase">Luyện phỏng vấn</span>
             <Flame className="h-4 w-4 text-rose-500" />
@@ -83,7 +83,7 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
           <div className="mt-1 text-[11.5px] font-medium text-rose-600">Đã hoàn thành</div>
         </div>
 
-        <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-2xs backdrop-blur-xs">
+        <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-2xs">
           <div className="mb-2 flex items-center justify-between text-[#6f7882]">
             <span className="text-[12px] font-bold uppercase">Điểm trung bình</span>
             <ShieldCheck className="h-4 w-4 text-blue-500" />
@@ -131,7 +131,7 @@ export default function CandidateAiScoreCard({ aiScore }: CandidateAiScoreCardPr
         </span>
         <button
           type="button"
-          className="bg-primary hover:bg-primary-hover inline-flex items-center gap-2 rounded-xl px-4 py-2 text-[13px] font-semibold text-white shadow-xs transition-all"
+          className="bg-primary hover:bg-primary-hover inline-flex items-center gap-2 rounded-xl px-4 py-2 text-[13px] font-semibold text-white shadow-xs transition"
         >
           <span>Luyện phỏng vấn AI ngay</span>
           <ArrowRight className="h-3.5 w-3.5" />

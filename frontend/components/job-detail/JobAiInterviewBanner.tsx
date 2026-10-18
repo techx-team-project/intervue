@@ -18,7 +18,7 @@ export default function JobAiInterviewBanner({ jobTitle }: JobAiInterviewBannerP
       <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="max-w-xl">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-300">
-            <Sparkles className="h-3.5 w-3.5 animate-pulse text-emerald-300" />
+            <Sparkles className="h-3.5 w-3.5 text-emerald-300" />
             <span>Tính năng độc quyền InterVue AI</span>
           </div>
 
@@ -51,14 +51,14 @@ export default function JobAiInterviewBanner({ jobTitle }: JobAiInterviewBannerP
           <button
             type="button"
             onClick={() => setStarted(true)}
-            className="bg-primary shadow-primary/40 flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-[14.5px] font-extrabold text-white shadow-md transition-all hover:bg-[#00c957] hover:shadow-lg active:scale-95"
+            className="bg-primary shadow-primary/40 flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-[14.5px] font-extrabold text-white shadow-md transition hover:bg-[#00c957] hover:shadow-lg active:scale-95"
           >
             <Bot className="h-5 w-5" />
             <span>{started ? 'Đang mở phòng AI...' : 'Luyện phỏng vấn ngay'}</span>
             <ArrowRight className="ml-1 h-4 w-4" />
           </button>
 
-          <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-[11.5px] text-slate-300 backdrop-blur-xs">
+          <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-[11.5px] text-slate-300">
             <span className="font-semibold text-emerald-300">💡 Câu hỏi mẫu:</span> &ldquo;Khi kiểm tra hóa đơn thuế bị
             sai lệch số liệu so với sổ sách, bạn sẽ xử lý thế nào?&rdquo;
           </div>

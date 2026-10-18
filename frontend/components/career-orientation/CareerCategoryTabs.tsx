@@ -15,7 +15,7 @@ export default function CareerCategoryTabs({
   onSelectCategory,
 }: CareerCategoryTabsProps) {
   return (
-    <div className="sticky top-18 z-20 border-b border-[#e9eaec] bg-white/95 shadow-xs backdrop-blur-md">
+    <div className="sticky top-18 z-20 border-b border-[#e9eaec] bg-white/95 shadow-xs">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="no-scrollbar flex items-center gap-2 overflow-x-auto scroll-smooth py-2.5">
           {categories.map((cat) => {
@@ -25,7 +25,7 @@ export default function CareerCategoryTabs({
                 key={cat.id}
                 type="button"
                 onClick={() => onSelectCategory(cat.id)}
-                className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all ${
+                className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition ${
                   isActive
                     ? 'bg-primary shadow-primary/20 text-white shadow-sm'
                     : 'hover:bg-primary-light hover:text-primary text-[#526475]'

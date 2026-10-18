@@ -33,11 +33,17 @@ export default function CompanySimilarSidebar({ currentCompanyId }: CompanySimil
           <Link
             key={comp.id}
             href={`/companies/${comp.id}`}
-            className="group flex items-start gap-3 rounded-xl border border-slate-100 p-2.5 transition-all hover:border-emerald-200 hover:bg-emerald-50/20"
+            className="group flex items-start gap-3 rounded-xl border border-slate-100 p-2.5 transition hover:border-emerald-200 hover:bg-emerald-50/20"
           >
             <div className="group-hover:border-primary/40 flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white p-1 shadow-2xs">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={comp.logo} alt={comp.name} className="h-full w-full object-contain" />
+              <img
+                loading="lazy"
+                decoding="async"
+                src={comp.logo}
+                alt={comp.name}
+                className="h-full w-full object-contain"
+              />
             </div>
 
             <div className="min-w-0 flex-1">

@@ -35,7 +35,7 @@ export function GiftFaqSection({ faqs }: GiftFaqSectionProps) {
             <div
               key={index}
               className={cn(
-                'overflow-hidden rounded-2xl border bg-white transition-all duration-200',
+                'overflow-hidden rounded-2xl border bg-white transition duration-200',
                 isOpen ? 'border-emerald-300 bg-emerald-50/10 shadow-xs' : 'border-slate-200 hover:border-slate-300',
               )}
             >
@@ -53,11 +53,7 @@ export function GiftFaqSection({ faqs }: GiftFaqSectionProps) {
                 />
               </button>
 
-              {isOpen && (
-                <div className="animate-in fade-in px-5 pb-5 text-sm leading-relaxed text-slate-600 duration-150">
-                  {faq.a}
-                </div>
-              )}
+              {isOpen && <div className="px-5 pb-5 text-sm leading-relaxed text-slate-600">{faq.a}</div>}
             </div>
           );
         })}

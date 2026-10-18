@@ -40,7 +40,7 @@ export function AvailableVouchersSection({ vouchers, onUseVoucher }: AvailableVo
           return (
             <div
               key={voucher.id}
-              className="relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-xs transition-all hover:border-slate-300 hover:shadow-md"
+              className="relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-xs transition hover:border-slate-300 hover:shadow-md"
             >
               <div>
                 <div className="mb-3 flex items-center justify-between gap-2">

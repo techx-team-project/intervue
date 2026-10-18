@@ -106,7 +106,7 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
               return (
                 <div
                   key={index}
-                  className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-3.5 transition-all hover:border-emerald-200 hover:bg-emerald-50/40"
+                  className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-3.5 transition hover:border-emerald-200 hover:bg-emerald-50/40"
                 >
                   <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200/60 bg-white shadow-2xs">
                     <IconComp className="h-4 w-4" />
@@ -198,7 +198,7 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
           <button
             type="button"
             onClick={onApply}
-            className="from-primary to-primary-hover shadow-primary/30 hover:shadow-primary/40 flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r px-7 py-3.5 text-[15px] font-black text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0"
+            className="from-primary to-primary-hover shadow-primary/30 hover:shadow-primary/40 flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r px-7 py-3.5 text-[15px] font-black text-white shadow-md transition hover:shadow-lg active:translate-y-0"
           >
             <Send className="h-4 w-4" />
             <span>Ứng tuyển ngay</span>

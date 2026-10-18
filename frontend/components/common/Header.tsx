@@ -28,7 +28,7 @@ export default function Header() {
               width={140}
               height={40}
               priority
-              className="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              className="h-10 w-auto object-contain transition-transform duration-200"
             />
           </Link>
 
@@ -90,7 +90,7 @@ export default function Header() {
 
             <Link
               href="/mascot"
-              className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-black text-emerald-700 transition-all hover:scale-105 hover:bg-emerald-100"
+              className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-black text-emerald-700 transition hover:bg-emerald-100"
             >
               <Bot className="h-3.5 w-3.5 text-emerald-600" />
               <span>AI Mascot</span>

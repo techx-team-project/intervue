@@ -37,7 +37,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm transition-all sm:p-7">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm transition sm:p-7">
       <div className="from-primary absolute inset-x-0 top-0 h-1.5 bg-linear-to-r via-emerald-500 to-emerald-700" />
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -45,7 +45,13 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
           <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-xs sm:h-24 sm:w-24">
             {job.company.logo ? (
               /* eslint-disable-next-line @next/next/no-img-element */
-              <img src={job.company.logo} alt={job.company.name} className="h-full w-full object-contain" />
+              <img
+                loading="lazy"
+                decoding="async"
+                src={job.company.logo}
+                alt={job.company.name}
+                className="h-full w-full object-contain"
+              />
             ) : (
               <Building2 className="h-10 w-10 text-slate-400" />
             )}
@@ -147,7 +153,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
           <button
             type="button"
             onClick={onApply}
-            className="group from-primary relative flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl bg-linear-to-r to-emerald-700 px-6 py-3.5 text-sm font-extrabold text-white shadow-md shadow-emerald-500/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.98]"
+            className="group from-primary relative flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl bg-linear-to-r to-emerald-700 px-6 py-3.5 text-sm font-extrabold text-white shadow-md shadow-emerald-500/20 transition duration-200 hover:shadow-lg active:translate-y-0 active:scale-[0.98]"
           >
             <Send className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             <span>Ứng tuyển ngay</span>
@@ -158,7 +164,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
             <button
               type="button"
               onClick={onToggleSave}
-              className={`flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all ${
+              className={`flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition ${
                 isSaved
                   ? 'text-primary border-emerald-300 bg-emerald-50'
                   : 'hover:text-primary border-slate-200 bg-white text-slate-700 hover:border-emerald-300 hover:bg-emerald-50/50'
@@ -171,13 +177,13 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
             <button
               type="button"
               onClick={handleShare}
-              className="relative flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50"
+              className="relative flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
               title="Sao chép liên kết chia sẻ"
             >
               <Share2 className="h-4 w-4 text-slate-500" />
               <span>Chia sẻ</span>
               {copied && (
-                <div className="animate-in fade-in absolute -top-9 left-1/2 -translate-x-1/2 rounded-md bg-slate-900 px-2.5 py-1 text-xs font-medium whitespace-nowrap text-white shadow-lg">
+                <div className="absolute -top-9 left-1/2 -translate-x-1/2 rounded-md bg-slate-900 px-2.5 py-1 text-xs font-medium whitespace-nowrap text-white shadow-lg">
                   Đã copy link!
                 </div>
               )}

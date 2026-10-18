@@ -13,13 +13,15 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
   const articleUrl = `/blog/${article.categorySlug || 'dinh-huong-nghe-nghiep'}/${article.slug}`;
 
   return (
-    <article className="group hover:border-primary/50 flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <article className="group hover:border-primary/50 flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition duration-300 hover:shadow-xl">
       <Link href={articleUrl} className="relative block aspect-video w-full overflow-hidden bg-gray-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
+          loading="lazy"
+          decoding="async"
           src={article.coverImage}
           alt={article.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform duration-500"
         />
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
           <span className="bg-primary rounded-full px-2.5 py-0.5 text-xs font-semibold text-white shadow-sm">
@@ -64,7 +66,13 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
         <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-3.5">
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={article.author.avatar} alt={article.author.name} className="h-6 w-6 rounded-full object-cover" />
+            <img
+              loading="lazy"
+              decoding="async"
+              src={article.author.avatar}
+              alt={article.author.name}
+              className="h-6 w-6 rounded-full object-cover"
+            />
             <span className="text-navy line-clamp-1 text-xs font-medium">{article.author.name}</span>
           </div>
 

@@ -74,7 +74,7 @@ export default function JobGeneralInfoSidebar({ job }: JobGeneralInfoSidebarProp
           {job.tags.map((tag, idx) => (
             <span
               key={idx}
-              className="hover:text-primary cursor-pointer rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-700 transition-all hover:border-emerald-300 hover:bg-emerald-50/50"
+              className="hover:text-primary cursor-pointer rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50/50"
             >
               {tag}
             </span>

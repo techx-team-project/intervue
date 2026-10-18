@@ -109,7 +109,7 @@ export function RecruitmentMascot({
         />
       </div>
 
-      <div className="relative max-w-sm rounded-2xl border border-emerald-100 bg-white/95 p-4 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-xs transition-all">
+      <div className="relative max-w-sm rounded-2xl border border-emerald-100 bg-white/95 p-4 text-xs font-medium text-slate-700 shadow-sm transition">
         <p className="leading-relaxed">{message || current.defaultMsg}</p>
 
         {orientation === 'horizontal' ? (

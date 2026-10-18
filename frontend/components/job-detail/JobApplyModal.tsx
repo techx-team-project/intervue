@@ -55,7 +55,7 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
       description={`${job.title} - ${job.company.name}`}
     >
       {isSubmitted ? (
-        <div className="animate-in zoom-in-95 space-y-4 py-6 text-center duration-200">
+        <div className="space-y-4 py-6 text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
             <CheckCircle2 className="h-10 w-10" />
           </div>
@@ -105,7 +105,7 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div
                 onClick={() => setSelectedCv('profile')}
-                className={`cursor-pointer rounded-xl border p-3.5 transition-all ${
+                className={`cursor-pointer rounded-xl border p-3.5 transition ${
                   selectedCv === 'profile'
                     ? 'border-emerald-600 bg-emerald-50/50 shadow-xs'
                     : 'border-slate-200 hover:border-slate-300'
@@ -123,7 +123,7 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
 
               <div
                 onClick={() => setSelectedCv('upload')}
-                className={`cursor-pointer rounded-xl border p-3.5 transition-all ${
+                className={`cursor-pointer rounded-xl border p-3.5 transition ${
                   selectedCv === 'upload'
                     ? 'border-emerald-600 bg-emerald-50/50 shadow-xs'
                     : 'border-dashed border-slate-300 hover:border-slate-400'

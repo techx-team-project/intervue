@@ -132,7 +132,7 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
           <button
             type="button"
             onClick={handleToggleMode}
-            className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold shadow-2xs transition-all ${
+            className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold shadow-2xs transition ${
               isOwner
                 ? 'border border-slate-300 bg-slate-50 text-slate-700 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600'
                 : 'border-primary hover:bg-primary border bg-emerald-50 text-emerald-700 hover:text-white'
@@ -171,7 +171,7 @@ export default function CandidateProfileView({ initialCandidate, initialIsOwner 
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold whitespace-nowrap transition-all ${
+                  className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold whitespace-nowrap transition ${
                     isActive
                       ? 'text-primary bg-white shadow-xs ring-1 ring-slate-200'
                       : 'text-slate-500 hover:bg-white/60 hover:text-slate-800'

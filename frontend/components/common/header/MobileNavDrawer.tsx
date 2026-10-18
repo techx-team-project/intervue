@@ -18,7 +18,7 @@ export function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="animate-in slide-in-from-top-2 space-y-3 border-t border-slate-200 bg-white px-5 py-4 duration-150 lg:hidden">
+    <div className="space-y-3 border-t border-slate-200 bg-white px-5 py-4 lg:hidden">
       <Link
         href="#feature-jobs"
         onClick={onClose}

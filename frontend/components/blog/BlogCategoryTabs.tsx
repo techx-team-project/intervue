@@ -58,7 +58,7 @@ export default function BlogCategoryTabs({ currentCategorySlug }: BlogCategoryTa
   const pathname = usePathname();
 
   return (
-    <div className="sticky top-16 z-30 border-b border-[#e5e7eb] bg-white/95 backdrop-blur-md">
+    <div className="sticky top-16 z-30 border-b border-[#e5e7eb] bg-white/95">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="no-scrollbar -mb-px flex items-center gap-2 overflow-x-auto py-2.5 sm:gap-3">
           {TABS.map((tab) => {
@@ -70,7 +70,7 @@ export default function BlogCategoryTabs({ currentCategorySlug }: BlogCategoryTa
               <Link
                 key={tab.id}
                 href={tab.href}
-                className={`group flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 sm:text-sm ${
+                className={`group flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition duration-200 sm:text-sm ${
                   isActive
                     ? 'bg-primary text-white shadow-md shadow-emerald-500/20'
                     : 'bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:text-[#0f172a]'

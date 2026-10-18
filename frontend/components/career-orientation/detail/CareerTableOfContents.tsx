@@ -82,7 +82,7 @@ export default function CareerTableOfContents({ items }: CareerTableOfContentsPr
                 key={item.id}
                 href={`#${item.id}`}
                 onClick={(e) => handleScrollToSection(e, item.id)}
-                className={`block rounded-lg px-2.5 py-1.5 text-xs leading-relaxed font-medium transition-all duration-200 ${
+                className={`block rounded-lg px-2.5 py-1.5 text-xs leading-relaxed font-medium transition duration-200 ${
                   item.level === 2 ? 'pl-6' : ''
                 } ${
                   isActive

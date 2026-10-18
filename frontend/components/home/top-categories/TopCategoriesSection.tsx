@@ -30,10 +30,10 @@ export default function TopCategoriesSection() {
           return (
             <div
               key={cat.id}
-              className={`rounded-2xl border border-[#e9eaec] bg-white p-4.5 ${cat.border} group flex cursor-pointer items-center gap-4 transition-all duration-200 hover:shadow-md`}
+              className={`rounded-2xl border border-[#e9eaec] bg-white p-4.5 ${cat.border} group flex cursor-pointer items-center gap-4 transition duration-200 hover:shadow-md`}
             >
               <div
-                className={`h-12 w-12 rounded-xl ${cat.bg} ${cat.color} flex shrink-0 items-center justify-center transition-transform group-hover:scale-110`}
+                className={`h-12 w-12 rounded-xl ${cat.bg} ${cat.color} flex shrink-0 items-center justify-center transition-transform`}
               >
                 <Icon className="h-6 w-6" />
               </div>
@@ -45,7 +45,7 @@ export default function TopCategoriesSection() {
                 <div className="text-primary mt-0.5 text-[13px] font-semibold">{cat.count} việc làm</div>
               </div>
 
-              <ChevronRight className="group-hover:text-primary h-4 w-4 shrink-0 text-[#939ca5] transition-all group-hover:translate-x-0.5" />
+              <ChevronRight className="group-hover:text-primary h-4 w-4 shrink-0 text-[#939ca5] transition group-hover:translate-x-0.5" />
             </div>
           );
         })}

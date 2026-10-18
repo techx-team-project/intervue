@@ -17,6 +17,8 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
         <div className="mt-3 flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
+            loading="lazy"
+            decoding="async"
             src={article.author.avatar}
             alt={article.author.name}
             className="h-12 w-12 rounded-full object-cover ring-2 ring-emerald-100"
@@ -93,6 +95,8 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={rel.coverImage}
                   alt={rel.title}
                   className="h-16 w-20 shrink-0 rounded-xl object-cover group-hover:opacity-90"

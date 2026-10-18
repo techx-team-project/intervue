@@ -10,8 +10,14 @@ export default function PressSection() {
 
         <div className="flex flex-wrap items-center justify-center gap-8 opacity-85 transition-opacity hover:opacity-100 md:gap-12">
           {PRESS_LOGOS.map((logo, idx) => (
-            <div key={idx} className="flex h-10 items-center justify-center grayscale transition-all hover:grayscale-0">
-              <img src={logo} alt={`Báo chí ${idx + 1}`} className="max-h-full w-auto object-contain" />
+            <div key={idx} className="flex h-10 items-center justify-center grayscale transition hover:grayscale-0">
+              <img
+                loading="lazy"
+                decoding="async"
+                src={logo}
+                alt={`Báo chí ${idx + 1}`}
+                className="max-h-full w-auto object-contain"
+              />
             </div>
           ))}
         </div>

@@ -14,13 +14,15 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
   const articleUrl = `/blog/${article.categorySlug}/${article.slug}`;
 
   return (
-    <article className="group hover:border-primary/50 flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <article className="group hover:border-primary/50 flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition duration-300 hover:shadow-xl">
       <Link href={articleUrl} className="relative block aspect-video w-full overflow-hidden bg-gray-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
+          loading="lazy"
+          decoding="async"
           src={article.coverImage}
           alt={article.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform duration-500"
         />
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
           <Badge variant="success" size="sm" className="bg-primary border-transparent text-white">
@@ -57,6 +59,8 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
             <div className="flex items-center gap-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
+                loading="lazy"
+                decoding="async"
                 src={article.author.avatar}
                 alt={article.author.name}
                 className="h-6 w-6 rounded-full object-cover"

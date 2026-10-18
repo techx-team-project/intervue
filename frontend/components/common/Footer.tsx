@@ -47,7 +47,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
           <div className="space-y-5 lg:col-span-2">
             <Link href="/" className="inline-block">
-              <img src="/intervue-logo.png" alt="InterVue Vietnam" className="h-14 w-auto object-contain md:h-16" />
+              <img
+                loading="lazy"
+                decoding="async"
+                src="/intervue-logo.png"
+                alt="InterVue Vietnam"
+                className="h-14 w-auto object-contain md:h-16"
+              />
             </Link>
 
             <div className="space-y-2 text-[13.5px] text-[#4d5965]">
@@ -91,6 +97,8 @@ export default function Footer() {
                   rel="noreferrer"
                 >
                   <img
+                    loading="lazy"
+                    decoding="async"
                     src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/welcome/download/app_store.png"
                     alt="App Store"
                     className="h-9 w-auto"
@@ -98,6 +106,8 @@ export default function Footer() {
                 </a>
                 <a href="https://play.google.com/store/apps/details?id=com.topcv" target="_blank" rel="noreferrer">
                   <img
+                    loading="lazy"
+                    decoding="async"
                     src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/welcome/download/chplay.png"
                     alt="Google Play"
                     className="h-9 w-auto"
@@ -116,6 +126,8 @@ export default function Footer() {
                   className="h-8 w-8 overflow-hidden rounded-full transition-opacity hover:opacity-80"
                 >
                   <img
+                    loading="lazy"
+                    decoding="async"
                     src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/footer/facebook.png"
                     alt="Facebook"
                     className="h-full w-full object-cover"
@@ -128,6 +140,8 @@ export default function Footer() {
                   className="h-8 w-8 overflow-hidden rounded-full transition-opacity hover:opacity-80"
                 >
                   <img
+                    loading="lazy"
+                    decoding="async"
                     src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/footer/youtube.png"
                     alt="YouTube"
                     className="h-full w-full object-cover"
@@ -140,6 +154,8 @@ export default function Footer() {
                   className="h-8 w-8 overflow-hidden rounded-full transition-opacity hover:opacity-80"
                 >
                   <img
+                    loading="lazy"
+                    decoding="async"
                     src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/footer/linkedin.png"
                     alt="LinkedIn"
                     className="h-full w-full object-cover"
@@ -152,6 +168,8 @@ export default function Footer() {
                   className="h-8 w-8 overflow-hidden rounded-full transition-opacity hover:opacity-80"
                 >
                   <img
+                    loading="lazy"
+                    decoding="async"
                     src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/footer/tiktok.png"
                     alt="TikTok"
                     className="h-full w-full object-cover"

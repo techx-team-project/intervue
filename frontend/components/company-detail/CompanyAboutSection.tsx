@@ -37,7 +37,7 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
             return (
               <div
                 key={idx}
-                className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-4 transition-all hover:border-emerald-200 hover:bg-emerald-50/30"
+                className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-4 transition hover:border-emerald-200 hover:bg-emerald-50/30"
               >
                 <div className="flex items-center gap-2.5">
                   <div className="text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-emerald-200 bg-white shadow-2xs">

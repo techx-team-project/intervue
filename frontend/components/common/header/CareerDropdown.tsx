@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export function CareerDropdown() {
   return (
-    <div className="animate-in fade-in absolute top-15 left-0 z-50 w-72 space-y-1 rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl duration-150">
+    <div className="absolute top-15 left-0 z-50 w-72 space-y-1 rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl">
       <Link href="/blog" className="text-primary hover:bg-primary-light block rounded-lg p-2 text-sm font-bold">
         Tất cả cẩm nang nghề nghiệp
       </Link>

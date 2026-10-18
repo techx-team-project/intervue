@@ -58,7 +58,7 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
             placeholder="Tìm theo chức danh, từ khóa kỹ năng..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="focus:border-primary focus:ring-primary w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pr-4 pl-10 text-xs text-slate-800 placeholder-slate-400 transition-all focus:bg-white focus:ring-1 focus:outline-none"
+            className="focus:border-primary focus:ring-primary w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pr-4 pl-10 text-xs text-slate-800 placeholder-slate-400 transition focus:bg-white focus:ring-1 focus:outline-none"
           />
         </div>
 
@@ -66,7 +66,7 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
           <select
             value={selectedBranch}
             onChange={(e) => setSelectedBranch(e.target.value)}
-            className="focus:border-primary w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pr-8 pl-3.5 text-xs font-medium text-slate-700 transition-all focus:bg-white focus:outline-none"
+            className="focus:border-primary w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pr-8 pl-3.5 text-xs font-medium text-slate-700 transition focus:bg-white focus:outline-none"
           >
             <option value="all">Tất cả địa điểm</option>
             {locationOptions.map((loc, idx) => (
@@ -90,7 +90,7 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
           filteredJobs.map((job) => (
             <div
               key={job.id}
-              className="group hover:border-primary/70 rounded-xl border border-slate-200/90 bg-white p-4.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+              className="group hover:border-primary/70 rounded-xl border border-slate-200/90 bg-white p-4.5 transition duration-200 hover:shadow-md"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0 flex-1">
@@ -144,7 +144,7 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
                 <div className="shrink-0 pt-2 sm:pt-0">
                   <Link
                     href={`/jobs/${job.id}`}
-                    className="from-primary to-primary-hover hover:bg-primary-hover inline-flex cursor-pointer items-center gap-1 rounded-xl bg-linear-to-r px-4 py-2 text-xs font-bold text-white shadow-xs transition-all group-hover:shadow-sm"
+                    className="from-primary to-primary-hover hover:bg-primary-hover inline-flex cursor-pointer items-center gap-1 rounded-xl bg-linear-to-r px-4 py-2 text-xs font-bold text-white shadow-xs transition group-hover:shadow-sm"
                   >
                     <span>Ứng tuyển</span>
                     <ArrowRight className="h-3.5 w-3.5" />

@@ -30,7 +30,7 @@ export function MascotSkeleton({
 }: MascotSkeletonProps) {
   return (
     <div
-      className={`relative flex w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-emerald-100/70 bg-linear-to-b from-white via-emerald-50/25 to-emerald-50/40 p-8 text-center shadow-xs backdrop-blur-xs select-none ${minHeight} ${className}`}
+      className={`relative flex w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-emerald-100/70 bg-linear-to-b from-white via-emerald-50/25 to-emerald-50/40 p-8 text-center shadow-xs select-none ${minHeight} ${className}`}
     >
       <div className="pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_2.4s_infinite] bg-linear-to-r from-transparent via-white/70 to-transparent" />
 

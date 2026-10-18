@@ -61,7 +61,7 @@ export default function FeaturedJobsSection() {
             <button
               type="button"
               onClick={() => setJobType('office')}
-              className={`cursor-pointer rounded-full px-5 py-2 text-sm font-extrabold transition-all duration-200 active:scale-95 ${
+              className={`cursor-pointer rounded-full px-5 py-2 text-sm font-extrabold transition duration-200 active:scale-95 ${
                 jobType === 'office'
                   ? 'bg-primary text-white shadow-xs hover:bg-emerald-600'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
@@ -72,7 +72,7 @@ export default function FeaturedJobsSection() {
             <button
               type="button"
               onClick={() => setJobType('general_labor')}
-              className={`cursor-pointer rounded-full px-5 py-2 text-sm font-extrabold transition-all duration-200 active:scale-95 ${
+              className={`cursor-pointer rounded-full px-5 py-2 text-sm font-extrabold transition duration-200 active:scale-95 ${
                 jobType === 'general_labor'
                   ? 'bg-primary text-white shadow-xs hover:bg-emerald-600'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
@@ -88,7 +88,7 @@ export default function FeaturedJobsSection() {
             href="https://www.topcv.vn/viec-lam-tot-nhat"
             target="_blank"
             rel="noreferrer"
-            className="group bg-primary inline-flex cursor-pointer items-center gap-2 rounded-xl px-4.5 py-2 text-sm font-extrabold text-white shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-600 sm:px-5 sm:py-2.5"
+            className="group bg-primary inline-flex cursor-pointer items-center gap-2 rounded-xl px-4.5 py-2 text-sm font-extrabold text-white shadow-xs transition duration-200 hover:bg-emerald-600 sm:px-5 sm:py-2.5"
           >
             <span>Xem tất cả</span>
             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -106,7 +106,7 @@ export default function FeaturedJobsSection() {
             key={item.id}
             type="button"
             onClick={() => setActiveFilter(item.id)}
-            className={`shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-xs transition-all ${
+            className={`shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-xs transition ${
               activeFilter === item.id
                 ? 'bg-primary font-bold text-white shadow-xs'
                 : 'hover:text-primary border border-slate-200 bg-white font-medium text-slate-600 shadow-2xs hover:border-emerald-300 hover:bg-emerald-50/50'

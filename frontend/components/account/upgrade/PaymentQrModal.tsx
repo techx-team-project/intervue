@@ -68,7 +68,7 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
       description="Quét mã VietQR chuyển khoản nhanh 24/7 để tự động kích hoạt tài khoản"
     >
       {isSuccess ? (
-        <div className="animate-in zoom-in-95 space-y-4 py-6 text-center duration-200">
+        <div className="space-y-4 py-6 text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
             <CheckCircle2 className="h-10 w-10" />
           </div>
@@ -108,6 +108,8 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
             <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
               <div className="relative flex h-48 w-48 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 p-2">
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=247_MBBANK_INTERVUE_${order.orderCode}_${order.priceValue}`}
                   alt="VietQR Code"
                   className="h-full w-full object-contain"

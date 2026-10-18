@@ -18,7 +18,13 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
           <div className="flex items-center gap-2">
             <div className="h-6 w-6 shrink-0 overflow-hidden rounded-full border border-white/40 bg-white/20">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={sampleData.avatar} alt={sampleData.name} className="h-full w-full object-cover" />
+              <img
+                loading="lazy"
+                decoding="async"
+                src={sampleData.avatar}
+                alt={sampleData.name}
+                className="h-full w-full object-cover"
+              />
             </div>
             <div>
               <div className="line-clamp-1 text-[9px] font-bold tracking-wide">{sampleData.name}</div>
@@ -129,6 +135,8 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
           <div className="flex items-center gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
+              loading="lazy"
+              decoding="async"
               src={sampleData.avatar}
               alt={sampleData.name}
               className="h-16 w-16 shrink-0 rounded-full object-cover ring-4 ring-white/30 sm:h-20 sm:w-20"

@@ -12,7 +12,7 @@ interface CompanyCardProps {
 
 export default function CompanyCard({ company, isFollowed, onToggleFollow }: CompanyCardProps) {
   return (
-    <div className="group hover:border-primary flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e9eaec] bg-white transition-all duration-300 hover:shadow-xl">
+    <div className="group hover:border-primary flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e9eaec] bg-white transition duration-300 hover:shadow-xl">
       <div>
         <Link
           href={`/companies/${company.id}`}
@@ -20,19 +20,27 @@ export default function CompanyCard({ company, isFollowed, onToggleFollow }: Com
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
+            loading="lazy"
+            decoding="async"
             src={company.cover}
             alt={company.name}
-            className="h-full w-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover opacity-80 transition-transform duration-500"
           />
         </Link>
 
         <div className="relative -mt-10 px-4 pb-4">
           <Link
             href={`/companies/${company.id}`}
-            className="mb-3 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#e9eaec] bg-white p-1.5 shadow-md transition-transform group-hover:scale-105"
+            className="mb-3 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#e9eaec] bg-white p-1.5 shadow-md transition-transform"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={company.logo} alt={company.name} className="h-full w-full object-contain" />
+            <img
+              loading="lazy"
+              decoding="async"
+              src={company.logo}
+              alt={company.name}
+              className="h-full w-full object-contain"
+            />
           </Link>
 
           <Link href={`/companies/${company.id}`}>
@@ -66,7 +74,7 @@ export default function CompanyCard({ company, isFollowed, onToggleFollow }: Com
         <button
           type="button"
           onClick={() => onToggleFollow(company.id)}
-          className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl py-2 text-[13.5px] font-semibold transition-all ${
+          className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl py-2 text-[13.5px] font-semibold transition ${
             isFollowed
               ? 'border-primary bg-primary-tag text-primary border'
               : 'text-navy hover:border-primary hover:bg-primary-light hover:text-primary border border-[#e9eaec] bg-white'

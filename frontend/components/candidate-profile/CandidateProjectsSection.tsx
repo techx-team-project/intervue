@@ -41,7 +41,7 @@ export default function CandidateProjectsSection({
           <button
             type="button"
             onClick={onAddProject}
-            className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition-all"
+            className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition"
           >
             <span>+ Thêm dự án</span>
           </button>
@@ -52,7 +52,7 @@ export default function CandidateProjectsSection({
         {projects.map((proj) => (
           <div
             key={proj.id}
-            className="hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-[#fbfcfd] p-5 transition-all hover:bg-white hover:shadow-md"
+            className="hover:border-primary flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-[#fbfcfd] p-5 transition hover:bg-white hover:shadow-md"
           >
             <div>
               <div className="flex items-start justify-between gap-2">
