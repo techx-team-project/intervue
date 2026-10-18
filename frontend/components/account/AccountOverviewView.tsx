@@ -48,7 +48,7 @@ export default function AccountOverviewView() {
 
           <Link
             href="/profile"
-            className="border-primary text-primary inline-flex items-center justify-center gap-2 rounded-full border bg-white px-5 py-2 text-[13.5px] font-bold shadow-2xs transition-all hover:bg-emerald-50 active:scale-[0.99]"
+            className="border-primary text-primary inline-flex items-center justify-center gap-2 rounded-full border bg-white px-5 py-2 text-[13.5px] font-bold shadow-2xs transition hover:bg-emerald-50 active:scale-[0.99]"
           >
             <span>Xem Profile của bạn</span>
             <ArrowRight className="h-4 w-4" />

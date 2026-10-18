@@ -38,7 +38,7 @@ export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
               <div
                 key={faq.id}
                 className={cn(
-                  'overflow-hidden rounded-2xl border transition-all duration-200',
+                  'overflow-hidden rounded-2xl border transition duration-200',
                   isOpen
                     ? 'border-emerald-300 bg-emerald-50/20 shadow-xs'
                     : 'border-slate-200 bg-white hover:border-slate-300',
@@ -58,11 +58,7 @@ export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
                   />
                 </button>
 
-                {isOpen && (
-                  <div className="animate-in fade-in px-5 pb-5 text-sm leading-relaxed text-slate-600 duration-150">
-                    {faq.answer}
-                  </div>
-                )}
+                {isOpen && <div className="px-5 pb-5 text-sm leading-relaxed text-slate-600">{faq.answer}</div>}
               </div>
             );
           })}

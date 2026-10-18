@@ -96,7 +96,7 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
               <div
                 key={plan.id}
                 className={cn(
-                  'shrink-0 overflow-hidden rounded-2xl bg-white text-center transition-all',
+                  'shrink-0 overflow-hidden rounded-2xl bg-white text-center transition',
                   isHighlight
                     ? 'relative w-48 border-2 border-amber-400 shadow-lg shadow-amber-500/10'
                     : 'w-44 border border-slate-200 shadow-xs hover:border-slate-300',

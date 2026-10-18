@@ -38,7 +38,7 @@ export default function CareerSalaryInteractive({ salaryTiers }: CareerSalaryInt
               key={idx}
               type="button"
               onClick={() => setActiveTierIndex(idx)}
-              className={`shrink-0 rounded-xl px-4 py-2.5 text-xs font-bold transition-all ${
+              className={`shrink-0 rounded-xl px-4 py-2.5 text-xs font-bold transition ${
                 isSelected
                   ? 'bg-primary shadow-primary/25 scale-102 text-white shadow-md'
                   : 'hover:border-primary hover:text-primary border border-gray-200 bg-white text-[#526475]'

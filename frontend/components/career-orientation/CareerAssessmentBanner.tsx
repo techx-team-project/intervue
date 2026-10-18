@@ -130,7 +130,7 @@ export default function CareerAssessmentBanner() {
               {QUIZ_STEPS.map((step, idx) => (
                 <div
                   key={step.id}
-                  className={`h-2 rounded-full transition-all duration-300 ${
+                  className={`h-2 rounded-full transition duration-300 ${
                     isCompleted || idx <= currentStep ? 'bg-primary w-8' : 'w-4 bg-white/20'
                   }`}
                 />
@@ -149,7 +149,7 @@ export default function CareerAssessmentBanner() {
                   key={idx}
                   type="button"
                   onClick={() => handleSelectOption(idx)}
-                  className="group hover:border-primary flex flex-col rounded-2xl border border-white/15 bg-white/10 p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20"
+                  className="group hover:border-primary flex flex-col rounded-2xl border border-white/15 bg-white/10 p-4 text-left transition duration-200 hover:bg-white/20"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <span className="text-sm font-bold text-white transition-colors group-hover:text-emerald-300">
@@ -177,7 +177,7 @@ export default function CareerAssessmentBanner() {
             )}
           </div>
         ) : (
-          <div className="rounded-2xl border border-emerald-400/30 bg-white/10 p-6 backdrop-blur-xs">
+          <div className="rounded-2xl border border-emerald-400/30 bg-white/10 p-6">
             <div className="mb-3 flex items-center gap-3 text-emerald-300">
               <CheckCircle2 className="text-primary h-6 w-6" />
               <span className="text-sm font-semibold tracking-wider uppercase">Kết quả định hướng dành cho bạn</span>

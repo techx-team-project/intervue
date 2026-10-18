@@ -25,6 +25,8 @@ function JobLogo({ job }: { job: Job }) {
       <div className="flex h-full w-full items-center justify-center rounded-xl bg-white p-0.5 shadow-xs">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
+          loading="lazy"
+          decoding="async"
           src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/company_logos/68463c85c449e1749433477.png"
           alt="Mẹ Gấu Pilates"
           className="h-full w-full object-contain"
@@ -142,12 +144,12 @@ function JobLogo({ job }: { job: Job }) {
 
 export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
   return (
-    <div className="group hover:border-primary/70 relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_32px_-8px_rgba(0,177,79,0.12),0_4px_12px_-2px_rgba(0,0,0,0.04)] sm:p-5">
+    <div className="group hover:border-primary/70 relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 transition duration-300 hover:shadow-[0_16px_32px_-8px_rgba(0,177,79,0.12),0_4px_12px_-2px_rgba(0,0,0,0.04)] sm:p-5">
       <div className="from-primary absolute inset-x-0 top-0 h-[2.5px] rounded-t-2xl bg-linear-to-r via-[#10b981] to-[#047857] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
       <div>
         <div className="flex items-start gap-3.5">
-          <div className="group-hover:border-primary/30 relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-slate-100 bg-linear-to-b from-white to-slate-50 p-1.5 shadow-2xs transition-all duration-300 group-hover:scale-105 group-hover:shadow-sm">
+          <div className="group-hover:border-primary/30 relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-slate-100 bg-linear-to-b from-white to-slate-50 p-1.5 shadow-2xs transition duration-300 group-hover:shadow-sm">
             <JobLogo job={job} />
           </div>
 
@@ -180,10 +182,10 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
               e.stopPropagation();
               onToggleSave(job.id);
             }}
-            className={`ml-1 flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 ${
+            className={`ml-1 flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border transition duration-200 ${
               isSaved
                 ? 'border-primary text-primary scale-105 bg-[#ecfdf5] shadow-xs'
-                : 'hover:border-primary hover:text-primary border-slate-200 bg-slate-50/60 text-slate-400 hover:scale-110 hover:bg-[#ecfdf5] active:scale-95'
+                : 'hover:border-primary hover:text-primary border-slate-200 bg-slate-50/60 text-slate-400 hover:bg-[#ecfdf5] active:scale-95'
             }`}
             title={isSaved ? 'Bỏ lưu việc làm' : 'Lưu việc làm này'}
           >
@@ -200,7 +202,7 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
           {job.tags.map((tag, idx) => (
             <span
               key={idx}
-              className="hover:border-primary/30 hover:text-primary rounded-md border border-slate-200/50 bg-slate-100/80 px-2.5 py-1 text-[11.5px] font-medium text-slate-600 transition-all hover:bg-[#e8f5e9]"
+              className="hover:border-primary/30 hover:text-primary rounded-md border border-slate-200/50 bg-slate-100/80 px-2.5 py-1 text-[11.5px] font-medium text-slate-600 transition hover:bg-[#e8f5e9]"
             >
               {tag}
             </span>
@@ -210,7 +212,7 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
 
       <div className="mt-3.5 border-t border-slate-100 pt-3.5">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="group-hover:border-primary/50 inline-flex shrink-0 items-center rounded-lg border border-[#a7f3d0]/80 bg-linear-to-r from-[#e8fbf0] to-[#f0fdf4] px-3 py-1.5 text-[13px] font-extrabold text-[#00873c] shadow-2xs transition-all">
+          <span className="group-hover:border-primary/50 inline-flex shrink-0 items-center rounded-lg border border-[#a7f3d0]/80 bg-linear-to-r from-[#e8fbf0] to-[#f0fdf4] px-3 py-1.5 text-[13px] font-extrabold text-[#00873c] shadow-2xs transition">
             {job.salary}
           </span>
           <span className="inline-flex max-w-36.25 shrink-0 items-center gap-1 truncate rounded-lg border border-slate-200/60 bg-slate-50 px-2.5 py-1.5 text-[12px] font-medium text-slate-600 transition-colors hover:bg-slate-100">
@@ -233,7 +235,7 @@ export default function JobCard({ job, isSaved, onToggleSave }: JobCardProps) {
 
           <Link
             href={`/jobs/${job.id}`}
-            className="text-primary group-hover:text-primary-hover inline-flex items-center gap-1 text-[12.5px] font-bold transition-all group-hover:translate-x-1"
+            className="text-primary group-hover:text-primary-hover inline-flex items-center gap-1 text-[12.5px] font-bold transition group-hover:translate-x-1"
           >
             <span>Ứng tuyển ngay</span>
             <ArrowRight className="h-3.5 w-3.5" />

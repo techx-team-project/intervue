@@ -4,7 +4,7 @@ import { Award, Bookmark, Building2, Search, Send, Sparkles } from 'lucide-react
 
 export function JobsDropdown() {
   return (
-    <div className="animate-in fade-in absolute top-15 left-0 z-50 grid w-125 grid-cols-2 gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl duration-150">
+    <div className="absolute top-15 left-0 z-50 grid w-125 grid-cols-2 gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
       <div>
         <div className="mb-2 px-2 text-xs font-bold tracking-wider text-slate-400 uppercase">Tìm việc làm</div>
         <div className="space-y-1">

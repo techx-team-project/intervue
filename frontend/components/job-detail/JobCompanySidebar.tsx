@@ -15,13 +15,19 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
   return (
     <div
       id="job-company"
-      className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs transition-all"
+      className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs transition"
     >
       <div className="flex items-start gap-3.5">
         <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-2xs">
           {company.logo ? (
             /* eslint-disable-next-line @next/next/no-img-element */
-            <img src={company.logo} alt={company.name} className="h-full w-full object-contain" />
+            <img
+              loading="lazy"
+              decoding="async"
+              src={company.logo}
+              alt={company.name}
+              className="h-full w-full object-contain"
+            />
           ) : (
             <Building2 className="h-8 w-8 text-slate-400" />
           )}
@@ -44,7 +50,7 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
         <button
           type="button"
           onClick={() => setIsFollowing((prev) => !prev)}
-          className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border py-2 text-xs font-bold transition-all ${
+          className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border py-2 text-xs font-bold transition ${
             isFollowing
               ? 'text-primary border-emerald-200 bg-emerald-50'
               : 'hover:text-primary border-slate-200 bg-slate-50/70 text-slate-700 hover:border-emerald-300 hover:bg-emerald-50/40'

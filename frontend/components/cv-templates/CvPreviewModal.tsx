@@ -54,7 +54,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm duration-200 sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm sm:p-6"
     >
       <div className="relative flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl lg:flex-row">
         <button

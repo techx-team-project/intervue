@@ -46,6 +46,8 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
               <div className="flex items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={article.author.avatar}
                   alt={article.author.name}
                   className="h-7 w-7 rounded-full object-cover ring-2 ring-emerald-50"

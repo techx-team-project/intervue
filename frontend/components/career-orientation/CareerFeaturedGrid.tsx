@@ -29,22 +29,24 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {mainArticle && (
-          <div className="group hover:border-primary/50 flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-xl lg:col-span-7">
+          <div className="group hover:border-primary/50 flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition duration-300 hover:shadow-xl lg:col-span-7">
             <Link
               href={`/career-orientation/${mainArticle.slug}`}
               className="relative block aspect-video w-full overflow-hidden bg-gray-100"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
+                loading="lazy"
+                decoding="async"
                 src={mainArticle.coverImage}
                 alt={mainArticle.title}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="h-full w-full object-cover transition-transform duration-500"
               />
               <div className="absolute top-3 left-3 flex items-center gap-2">
                 <span className="bg-primary rounded-full px-3 py-1 text-xs font-semibold text-white shadow-md">
                   {mainArticle.category}
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/90 px-2.5 py-1 text-xs font-semibold text-white shadow-md backdrop-blur-xs">
+                <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/90 px-2.5 py-1 text-xs font-semibold text-white shadow-md">
                   <Sparkles className="h-3 w-3" />
                   Tiêu điểm
                 </span>
@@ -80,6 +82,8 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                 <div className="flex items-center gap-2.5">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
+                    loading="lazy"
+                    decoding="async"
                     src={mainArticle.author.avatar}
                     alt={mainArticle.author.name}
                     className="h-8 w-8 rounded-full object-cover ring-2 ring-emerald-50"
@@ -106,7 +110,7 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
           {sideArticles.map((article) => (
             <div
               key={article.id}
-              className="group hover:border-primary/50 flex flex-1 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:flex-row lg:flex-row"
+              className="group hover:border-primary/50 flex flex-1 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition duration-300 hover:shadow-lg sm:flex-row lg:flex-row"
             >
               <Link
                 href={`/career-orientation/${article.slug}`}
@@ -114,9 +118,11 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={article.coverImage}
                   alt={article.title}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-500"
                 />
                 <span className="bg-primary absolute top-2 left-2 rounded-md px-2 py-0.5 text-[10px] font-semibold text-white">
                   {article.category}
@@ -147,6 +153,8 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                   <div className="flex items-center gap-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
+                      loading="lazy"
+                      decoding="async"
                       src={article.author.avatar}
                       alt={article.author.name}
                       className="h-6 w-6 rounded-full object-cover"

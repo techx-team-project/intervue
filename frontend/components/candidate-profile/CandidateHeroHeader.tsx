@@ -67,7 +67,13 @@ export default function CandidateHeroHeader({
           <div className="relative shrink-0">
             <div className="h-24 w-24 overflow-hidden rounded-2xl border-2 border-slate-200 bg-white shadow-sm ring-2 ring-emerald-500/20 sm:h-28 sm:w-28">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={candidate.avatar} alt={candidate.fullName} className="h-full w-full object-cover" />
+              <img
+                loading="lazy"
+                decoding="async"
+                src={candidate.avatar}
+                alt={candidate.fullName}
+                className="h-full w-full object-cover"
+              />
             </div>
             <div
               className="bg-primary absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white text-white shadow-xs"
@@ -190,7 +196,7 @@ export default function CandidateHeroHeader({
               href={candidate.links.github}
               target="_blank"
               rel="noreferrer"
-              className="hover:text-primary flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-800 transition-all hover:border-emerald-500 hover:bg-emerald-50/50"
+              className="hover:text-primary flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-800 transition hover:border-emerald-500 hover:bg-emerald-50/50"
               title="GitHub Profile"
             >
               <GithubIcon className="h-4 w-4" />
@@ -202,7 +208,7 @@ export default function CandidateHeroHeader({
               href={candidate.links.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-[#0077b5] transition-all hover:border-[#0077b5] hover:bg-[#0077b5]/5"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-[#0077b5] transition hover:border-[#0077b5] hover:bg-[#0077b5]/5"
               title="LinkedIn Profile"
             >
               <LinkedinIcon className="h-4 w-4" />
@@ -214,7 +220,7 @@ export default function CandidateHeroHeader({
               href={candidate.links.portfolio}
               target="_blank"
               rel="noreferrer"
-              className="text-primary flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white transition-all hover:border-emerald-500 hover:bg-emerald-50/50"
+              className="text-primary flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white transition hover:border-emerald-500 hover:bg-emerald-50/50"
               title="Portfolio Website"
             >
               <Globe className="h-4 w-4" />

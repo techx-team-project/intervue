@@ -107,7 +107,7 @@ export default function InterviewPrepChecklist() {
           <button
             type="button"
             onClick={handleReset}
-            className="inline-flex items-center gap-1.5 self-start rounded-xl bg-white/10 px-3 py-2 text-xs font-semibold text-white backdrop-blur-xs transition hover:bg-white/20 sm:self-center"
+            className="inline-flex items-center gap-1.5 self-start rounded-xl bg-white/10 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/20 sm:self-center"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             Làm lại checklist
@@ -136,7 +136,7 @@ export default function InterviewPrepChecklist() {
               <div
                 key={item.id}
                 onClick={() => toggleItem(item.id)}
-                className={`group flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition-all duration-200 ${
+                className={`group flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition duration-200 ${
                   isChecked
                     ? 'border-emerald-200 bg-emerald-50/50 shadow-xs'
                     : 'border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50/20'

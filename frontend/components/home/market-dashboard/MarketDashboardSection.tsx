@@ -82,6 +82,8 @@ export default function MarketDashboardSection() {
     >
       <div className="pointer-events-none absolute inset-0 z-0">
         <img
+          loading="lazy"
+          decoding="async"
           src="/market-bg.jpg"
           alt="Market Dashboard Background"
           className="h-full w-full object-cover object-center opacity-65"
@@ -99,7 +101,7 @@ export default function MarketDashboardSection() {
             <span className="text-[20px] font-bold text-[#00e668] sm:text-[25px]">23/09/2026</span>
           </div>
 
-          <div className="hidden h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 shadow-sm backdrop-blur-xs sm:flex">
+          <div className="hidden h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 shadow-sm sm:flex">
             <div className="relative flex h-5 w-5 items-end justify-center gap-0.5">
               <span className="h-2 w-1 rounded-xs bg-[#00e668]" />
               <span className="h-4 w-1 rounded-xs bg-teal-300" />
@@ -117,13 +119,13 @@ export default function MarketDashboardSection() {
             <div
               onMouseEnter={() => setHoveredStat(1)}
               onMouseLeave={() => setHoveredStat(null)}
-              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 backdrop-blur-xs transition-all duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
+              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 transition duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
             >
               <div className="flex items-center justify-between">
                 <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white transition-colors group-hover:text-[#00e668] sm:text-[34px] lg:text-[38px]">
                   3.994
                 </div>
-                <span className="rounded-full bg-[#00e668]/15 px-2 py-0.5 text-[11px] font-bold text-[#00e668] transition-transform duration-200 group-hover:scale-105">
+                <span className="rounded-full bg-[#00e668]/15 px-2 py-0.5 text-[11px] font-bold text-[#00e668] transition-transform duration-200">
                   +24h
                 </span>
               </div>
@@ -135,13 +137,13 @@ export default function MarketDashboardSection() {
             <div
               onMouseEnter={() => setHoveredStat(2)}
               onMouseLeave={() => setHoveredStat(null)}
-              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 backdrop-blur-xs transition-all duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
+              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 transition duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
             >
               <div className="flex items-center justify-between">
                 <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white transition-colors group-hover:text-[#00e668] sm:text-[34px] lg:text-[38px]">
                   45.351
                 </div>
-                <span className="rounded-full bg-teal-400/15 px-2 py-0.5 text-[11px] font-bold text-teal-300 transition-transform duration-200 group-hover:scale-105">
+                <span className="rounded-full bg-teal-400/15 px-2 py-0.5 text-[11px] font-bold text-teal-300 transition-transform duration-200">
                   Toàn quốc
                 </span>
               </div>
@@ -153,13 +155,13 @@ export default function MarketDashboardSection() {
             <div
               onMouseEnter={() => setHoveredStat(3)}
               onMouseLeave={() => setHoveredStat(null)}
-              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 backdrop-blur-xs transition-all duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
+              className="group flex cursor-pointer flex-col justify-between rounded-2xl border border-white/5 bg-white/3 p-4 transition duration-300 hover:border-[#00e668]/40 hover:bg-white/[0.07] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
             >
               <div className="flex items-center justify-between">
                 <div className="text-[30px] leading-tight font-extrabold tracking-tight text-white transition-colors group-hover:text-[#00e668] sm:text-[34px] lg:text-[38px]">
                   16.435
                 </div>
-                <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[11px] font-bold text-emerald-300 transition-transform duration-200 group-hover:scale-105">
+                <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[11px] font-bold text-emerald-300 transition-transform duration-200">
                   Doanh nghiệp
                 </span>
               </div>
@@ -360,7 +362,7 @@ export default function MarketDashboardSection() {
                       </div>
 
                       <div
-                        className="w-full rounded-t-xs transition-all duration-300"
+                        className="w-full rounded-t-xs transition duration-300"
                         style={{
                           height: `${bar.heightPercent}%`,
                           backgroundColor: bar.color,

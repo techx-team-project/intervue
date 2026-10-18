@@ -35,7 +35,7 @@ export default function CvBenefitsSection() {
             return (
               <div
                 key={idx}
-                className="hover:border-primary/50 flex flex-col justify-between rounded-3xl border border-gray-200 bg-white p-6 shadow-xs transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="hover:border-primary/50 flex flex-col justify-between rounded-3xl border border-gray-200 bg-white p-6 shadow-xs transition duration-300 hover:shadow-xl"
               >
                 <div>
                   <div className="text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100">

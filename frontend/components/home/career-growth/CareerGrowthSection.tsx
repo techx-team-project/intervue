@@ -119,14 +119,20 @@ export default function CareerGrowthSection() {
                 href={tool.href}
                 target={tool.isExternal ? '_blank' : undefined}
                 rel={tool.isExternal ? 'noreferrer' : undefined}
-                className={`group relative flex items-center gap-4 rounded-2xl border border-emerald-500/25 bg-[#032616]/80 p-4.5 shadow-[0_10px_25px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-300 hover:border-[#00ff87] hover:bg-[#053720]/95 hover:shadow-[0_0_25px_rgba(0,255,135,0.3)] ${
+                className={`group relative flex items-center gap-4 rounded-2xl border border-emerald-500/25 bg-[#032616]/95 p-4.5 shadow-[0_10px_25px_rgba(0,0,0,0.35)] transition duration-300 hover:border-[#00ff87] hover:bg-[#053720]/95 hover:shadow-[0_0_25px_rgba(0,255,135,0.3)] ${
                   idx === 1
                     ? 'lg:-translate-x-8 hover:lg:-translate-x-9 xl:-translate-x-10'
                     : 'lg:translate-x-2 hover:lg:translate-x-1'
-                } hover:-translate-y-1`}
+                } `}
               >
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 p-2 shadow-inner transition-transform duration-300 group-hover:scale-105 group-hover:border-[#00ff87]/50">
-                  <img src={tool.icon} alt={tool.title} className="h-full w-full object-contain drop-shadow-sm" />
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 p-2 shadow-inner transition-transform duration-300 group-hover:border-[#00ff87]/50">
+                  <img
+                    loading="lazy"
+                    decoding="async"
+                    src={tool.icon}
+                    alt={tool.title}
+                    className="h-full w-full object-contain drop-shadow-sm"
+                  />
                 </div>
 
                 <div className="min-w-0 flex-1">
@@ -134,7 +140,7 @@ export default function CareerGrowthSection() {
                     {tool.title}
                   </h3>
                   <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-emerald-100/70">{tool.desc}</p>
-                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#00ff87] transition-all group-hover:translate-x-1">
+                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#00ff87] transition group-hover:translate-x-1">
                     <span>{tool.ctaText}</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </div>
@@ -148,9 +154,11 @@ export default function CareerGrowthSection() {
             <div className="pointer-events-none absolute -bottom-4 h-12 w-52 rounded-[100%] bg-[#00ff87]/40 blur-xl" />
 
             <img
+              loading="lazy"
+              decoding="async"
               src="/personal-brand-center.png"
               alt="InterVue Personal Branding"
-              className="relative z-10 max-h-95 w-auto object-contain drop-shadow-[0_15px_35px_rgba(0,255,135,0.3)] transition-transform duration-500 hover:scale-105 sm:max-h-110"
+              className="relative z-10 max-h-95 w-auto object-contain drop-shadow-[0_15px_35px_rgba(0,255,135,0.3)] transition-transform duration-500 sm:max-h-110"
             />
           </div>
 
@@ -161,14 +169,20 @@ export default function CareerGrowthSection() {
                 href={tool.href}
                 target={tool.isExternal ? '_blank' : undefined}
                 rel={tool.isExternal ? 'noreferrer' : undefined}
-                className={`group relative flex items-center gap-4 rounded-2xl border border-emerald-500/25 bg-[#032616]/80 p-4.5 shadow-[0_10px_25px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-300 hover:border-[#00ff87] hover:bg-[#053720]/95 hover:shadow-[0_0_25px_rgba(0,255,135,0.3)] ${
+                className={`group relative flex items-center gap-4 rounded-2xl border border-emerald-500/25 bg-[#032616]/95 p-4.5 shadow-[0_10px_25px_rgba(0,0,0,0.35)] transition duration-300 hover:border-[#00ff87] hover:bg-[#053720]/95 hover:shadow-[0_0_25px_rgba(0,255,135,0.3)] ${
                   idx === 1
                     ? 'lg:translate-x-8 hover:lg:translate-x-9 xl:translate-x-10'
                     : 'lg:-translate-x-2 hover:lg:-translate-x-1'
-                } hover:-translate-y-1`}
+                } `}
               >
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 p-2 shadow-inner transition-transform duration-300 group-hover:scale-105 group-hover:border-[#00ff87]/50">
-                  <img src={tool.icon} alt={tool.title} className="h-full w-full object-contain drop-shadow-sm" />
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 p-2 shadow-inner transition-transform duration-300 group-hover:border-[#00ff87]/50">
+                  <img
+                    loading="lazy"
+                    decoding="async"
+                    src={tool.icon}
+                    alt={tool.title}
+                    className="h-full w-full object-contain drop-shadow-sm"
+                  />
                 </div>
 
                 <div className="min-w-0 flex-1">
@@ -176,7 +190,7 @@ export default function CareerGrowthSection() {
                     {tool.title}
                   </h3>
                   <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-emerald-100/70">{tool.desc}</p>
-                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#00ff87] transition-all group-hover:translate-x-1">
+                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#00ff87] transition group-hover:translate-x-1">
                     <span>{tool.ctaText}</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </div>

@@ -91,7 +91,7 @@ export default function CareerHeroSearch({
                   key={tag}
                   type="button"
                   onClick={() => onSelectTag(isSelected ? null : tag)}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                  className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                     isSelected
                       ? 'bg-primary text-white shadow-sm'
                       : 'hover:border-primary hover:text-primary border border-[#e5e7eb] bg-white text-[#4b5563]'

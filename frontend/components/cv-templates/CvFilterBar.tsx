@@ -30,7 +30,7 @@ export default function CvFilterBar({
   onSearchChange,
 }: CvFilterBarProps) {
   return (
-    <div className="sticky top-18 z-20 border-b border-gray-200 bg-white/95 shadow-xs backdrop-blur-md">
+    <div className="sticky top-18 z-20 border-b border-gray-200 bg-white/95 shadow-xs">
       <div className="mx-auto max-w-7xl space-y-3 px-4 py-3.5 sm:px-6 lg:px-8">
         <div className="no-scrollbar flex items-center justify-between gap-4 overflow-x-auto">
           <div className="flex shrink-0 items-center gap-1.5">
@@ -41,7 +41,7 @@ export default function CvFilterBar({
                   key={style.id}
                   type="button"
                   onClick={() => onSelectStyle(style.slug)}
-                  className={`flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
+                  className={`flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition sm:text-sm ${
                     isActive
                       ? 'bg-primary text-white shadow-xs'
                       : 'hover:bg-primary-light hover:text-primary text-[#526475]'

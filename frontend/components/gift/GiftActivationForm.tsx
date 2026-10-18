@@ -120,7 +120,7 @@ export function GiftActivationForm({
               name="type"
               value={packageType}
               onChange={(e) => setPackageType(e.target.value)}
-              className="h-11 w-full appearance-none rounded-xl border border-slate-300 bg-white pr-10 pl-11 text-sm font-medium text-slate-800 transition-all hover:border-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
+              className="h-11 w-full appearance-none rounded-xl border border-slate-300 bg-white pr-10 pl-11 text-sm font-medium text-slate-800 transition hover:border-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
             >
               <option value="300">Tài khoản Education VIP (1 năm)</option>
               <option value="400">Tài khoản Pro VIP (1 tháng)</option>

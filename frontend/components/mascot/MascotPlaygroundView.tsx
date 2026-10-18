@@ -179,7 +179,7 @@ export default function MascotPlaygroundView() {
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-slate-50/60 px-6 py-3.5">
             <div className="flex items-center gap-2.5">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
               </span>
               <span className="text-xs font-black tracking-wider text-slate-800 uppercase">
@@ -209,14 +209,14 @@ export default function MascotPlaygroundView() {
                         key={item.state}
                         type="button"
                         onClick={() => setSelectedState(item.state)}
-                        className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border p-2.5 text-center transition-all ${
+                        className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border p-2.5 text-center transition ${
                           isActive
                             ? 'scale-[1.03] border-slate-900 bg-slate-900 text-white shadow-md ring-2 shadow-slate-900/20 ring-emerald-400'
                             : 'border-slate-200/80 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-100/80'
                         }`}
                       >
                         <div
-                          className={`mb-1.5 rounded-xl p-1.5 transition-transform group-hover:scale-110 ${
+                          className={`mb-1.5 rounded-xl p-1.5 transition-transform ${
                             isActive ? 'bg-white/10 text-emerald-400' : 'bg-slate-100 ' + item.accentColor
                           }`}
                         >
@@ -241,7 +241,7 @@ export default function MascotPlaygroundView() {
               <div className="rounded-2xl border border-slate-800 bg-slate-900 p-3.5 text-white shadow-md">
                 <div className="mb-1.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                     <span className="font-mono text-[10px] font-bold tracking-wider text-emerald-400 uppercase">
                       Màn hình LED
                     </span>
@@ -257,7 +257,7 @@ export default function MascotPlaygroundView() {
             <div className="flex min-h-145 flex-col items-center justify-between bg-linear-to-b from-white via-emerald-50/15 to-slate-50/30 p-6 sm:p-8 lg:col-span-6">
               <div className="flex w-full items-center justify-between text-xs text-slate-500">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100/80 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
-                  <span className="h-1.5 w-1.5 animate-ping rounded-full bg-emerald-600" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
                   Bạn Nhỏ AI InterVue
                 </span>
                 <span className="text-[11px] text-slate-400 italic">Rê chuột hoặc bấm vào đầu Bot nha!</span>
@@ -276,7 +276,7 @@ export default function MascotPlaygroundView() {
                 />
 
                 <div
-                  className="relative z-10 cursor-pointer overflow-visible transition-transform duration-200 hover:scale-105 active:scale-95"
+                  className="relative z-10 cursor-pointer overflow-visible transition-transform duration-200 active:scale-95"
                   style={{
                     transform: 'translate3d(0, 0, 0)',
                     backfaceVisibility: 'hidden',
@@ -307,7 +307,7 @@ export default function MascotPlaygroundView() {
                 </div>
               </div>
 
-              <div className="w-full max-w-md rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-sm backdrop-blur-xs">
+              <div className="w-full max-w-md rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-sm">
                 <div className="flex items-start gap-3">
                   <div className="rounded-xl border border-emerald-200/50 bg-emerald-50 p-2 text-emerald-700">
                     <Bot className="h-4 w-4" />
@@ -347,7 +347,7 @@ export default function MascotPlaygroundView() {
                   <button
                     type="button"
                     onClick={() => setSize(160)}
-                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition-all ${
+                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition ${
                       size === 160
                         ? 'border border-slate-200/50 bg-white font-bold text-slate-900 shadow-xs'
                         : 'text-slate-500 hover:text-slate-800'
@@ -359,7 +359,7 @@ export default function MascotPlaygroundView() {
                   <button
                     type="button"
                     onClick={() => setSize(240)}
-                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition-all ${
+                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition ${
                       size === 240
                         ? 'bg-slate-900 font-bold text-white shadow-xs'
                         : 'text-slate-500 hover:text-slate-800'
@@ -386,7 +386,7 @@ export default function MascotPlaygroundView() {
                   <button
                     type="button"
                     onClick={() => setSpeed(1)}
-                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition-all ${
+                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition ${
                       speed === 1
                         ? 'border border-slate-200/50 bg-white font-bold text-slate-900 shadow-xs'
                         : 'text-slate-500 hover:text-slate-800'
@@ -397,7 +397,7 @@ export default function MascotPlaygroundView() {
                   <button
                     type="button"
                     onClick={() => setSpeed(1.7)}
-                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition-all ${
+                    className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 transition ${
                       speed === 1.7
                         ? 'bg-slate-900 font-bold text-white shadow-xs'
                         : 'text-slate-500 hover:text-slate-800'

@@ -62,14 +62,11 @@ export function Modal({
 
   return (
     <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        onClick={onClose}
-        className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-200"
-      />
+      <div onClick={onClose} className="fixed inset-0 bg-slate-950/60 transition-opacity duration-200" />
 
       <div
         className={cn(
-          'relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl transition-all duration-200 sm:p-7',
+          'relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl transition duration-200 sm:p-7',
           maxWidthMap[maxWidth],
           className,
         )}

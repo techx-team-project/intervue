@@ -33,7 +33,7 @@ export default function JobRelatedSection({ relatedJobs }: JobRelatedSectionProp
           <Link
             key={job.id}
             href={`/jobs/${job.id}`}
-            className="group hover:border-primary/60 block rounded-xl border border-slate-200/80 bg-white p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+            className="group hover:border-primary/60 block rounded-xl border border-slate-200/80 bg-white p-4 transition duration-200 hover:shadow-md"
           >
             <div className="flex items-start gap-3">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 p-1 group-hover:border-emerald-200">

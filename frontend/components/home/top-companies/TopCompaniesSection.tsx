@@ -57,7 +57,7 @@ export default function TopCompaniesSection() {
               key={field.id}
               type="button"
               onClick={() => setSelectedField(field.id)}
-              className={`shrink-0 cursor-pointer rounded-xl px-4 py-2 text-[13.5px] font-semibold transition-all ${
+              className={`shrink-0 cursor-pointer rounded-xl px-4 py-2 text-[13.5px] font-semibold transition ${
                 selectedField === field.id
                   ? 'bg-navy text-white shadow-xs'
                   : 'hover:bg-primary-light hover:text-primary border border-[#e9eaec] bg-[#f8fafc] text-[#6f7882]'

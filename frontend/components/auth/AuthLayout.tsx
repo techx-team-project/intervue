@@ -44,7 +44,7 @@ export default function AuthLayout({ title, children }: AuthLayoutProps) {
           <aside
             role="status"
             aria-live="polite"
-            className="fixed top-20 right-5 z-40 flex items-center gap-2.5 rounded-lg border border-emerald-600/20 bg-[#2ea35b] px-4 py-2.5 text-[13px] font-semibold text-white shadow-xl shadow-black/10 backdrop-blur-md transition-all"
+            className="fixed top-20 right-5 z-40 flex items-center gap-2.5 rounded-lg border border-emerald-600/20 bg-[#2ea35b] px-4 py-2.5 text-[13px] font-semibold text-white shadow-xl shadow-black/10 backdrop-blur-md transition"
           >
             <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/20">
               <Check className="h-3.5 w-3.5 stroke-3" />

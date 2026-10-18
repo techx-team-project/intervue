@@ -4,7 +4,7 @@ import { Compass, FilePlus, FileText, Mail } from 'lucide-react';
 
 export function CvDropdown() {
   return (
-    <div className="animate-in fade-in absolute top-15 left-0 z-50 w-105 space-y-1 rounded-2xl border border-slate-200 bg-white p-4.5 shadow-2xl duration-150">
+    <div className="absolute top-15 left-0 z-50 w-105 space-y-1 rounded-2xl border border-slate-200 bg-white p-4.5 shadow-2xl">
       <Link
         href="/cv-templates"
         className="text-navy hover:bg-primary-light hover:text-primary flex items-center gap-3 rounded-lg p-2 transition-colors"

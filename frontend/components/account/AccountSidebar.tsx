@@ -73,7 +73,7 @@ export default function AccountSidebar() {
             <button
               type="button"
               title="Cập nhật ảnh đại diện"
-              className="bg-primary hover:bg-primary-hover absolute -right-0.5 -bottom-0.5 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-white shadow-sm ring-2 ring-white transition-transform hover:scale-110"
+              className="bg-primary hover:bg-primary-hover absolute -right-0.5 -bottom-0.5 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-white shadow-sm ring-2 ring-white transition-transform"
             >
               <Camera className="h-3.5 w-3.5" />
             </button>
@@ -113,7 +113,7 @@ export default function AccountSidebar() {
             <button
               type="button"
               onClick={() => setIsSuggestJob(!isSuggestJob)}
-              className={`cursor-pointer rounded-full border px-3 py-1 text-[11.5px] font-bold transition-all ${
+              className={`cursor-pointer rounded-full border px-3 py-1 text-[11.5px] font-bold transition ${
                 isSuggestJob
                   ? 'border-primary bg-emerald-50 text-[#00873c]'
                   : 'border-primary text-primary hover:bg-emerald-50'
@@ -176,7 +176,7 @@ export default function AccountSidebar() {
 
           <Link
             href={ROUTES.CANDIDATE_PROFILE}
-            className="border-primary text-primary mt-2.5 inline-flex items-center justify-center rounded-full border bg-white px-3.5 py-1 text-[12px] font-bold transition-all hover:bg-emerald-50 active:scale-[0.98]"
+            className="border-primary text-primary mt-2.5 inline-flex items-center justify-center rounded-full border bg-white px-3.5 py-1 text-[12px] font-bold transition hover:bg-emerald-50 active:scale-[0.98]"
           >
             Tạo CV ngay
           </Link>
@@ -218,7 +218,7 @@ export default function AccountSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[13px] font-medium transition-all ${
+                className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[13px] font-medium transition ${
                   isActive
                     ? 'border-primary/30 border bg-emerald-50/70 font-bold text-[#00873c]'
                     : 'hover:text-navy text-[#475569] hover:bg-[#f8fafc]'
@@ -237,7 +237,7 @@ export default function AccountSidebar() {
 
         <Link
           href={ROUTES.CANDIDATE_PROFILE}
-          className="hover:text-primary flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[13px] font-medium text-[#475569] transition-all hover:bg-emerald-50/50"
+          className="hover:text-primary flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[13px] font-medium text-[#475569] transition hover:bg-emerald-50/50"
         >
           <div className="flex items-center gap-3">
             <User className="h-4.5 w-4.5 shrink-0 text-[#64748b]" />

@@ -52,7 +52,7 @@ export default function CandidateActivityStatsSidebar({
           <button
             type="button"
             onClick={onContact || (() => alert(`Đã mở hộp thoại gửi tin nhắn tuyển dụng tới ${candidateName}!`))}
-            className="bg-primary hover:bg-primary-hover flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white shadow-xs transition-all"
+            className="bg-primary hover:bg-primary-hover flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold text-white shadow-xs transition"
           >
             <Send className="h-4 w-4" />
             <span>Gửi lời mời phỏng vấn ngay</span>
@@ -61,7 +61,7 @@ export default function CandidateActivityStatsSidebar({
           <button
             type="button"
             onClick={onBookmark || (() => alert(`Đã lưu hồ sơ của ${candidateName} vào danh sách theo dõi!`))}
-            className="text-navy hover:border-primary hover:text-primary flex w-full items-center justify-center gap-2 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] py-2 text-[13px] font-semibold transition-all hover:bg-white"
+            className="text-navy hover:border-primary hover:text-primary flex w-full items-center justify-center gap-2 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] py-2 text-[13px] font-semibold transition hover:bg-white"
           >
             <Bookmark className="h-4 w-4" />
             <span>Lưu hồ sơ theo dõi</span>

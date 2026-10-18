@@ -115,7 +115,7 @@ export default function SuperiorToolsSection() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`cursor-pointer rounded-full px-4 py-2 text-[13px] font-bold transition-all duration-200 ${
+                className={`cursor-pointer rounded-full px-4 py-2 text-[13px] font-bold transition duration-200 ${
                   activeTab === tab.id
                     ? 'bg-primary shadow-primary/30 text-white shadow-sm'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
@@ -134,12 +134,18 @@ export default function SuperiorToolsSection() {
               href={tool.link}
               target="_blank"
               rel="noreferrer"
-              className="group hover:border-primary relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-[#fbfcfc] p-6 transition-all duration-300 hover:-translate-y-1.5 hover:bg-white hover:shadow-[0_12px_32px_rgba(0,177,79,0.12)]"
+              className="group hover:border-primary relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-[#fbfcfc] p-6 transition duration-300 hover:bg-white hover:shadow-[0_12px_32px_rgba(0,177,79,0.12)]"
             >
               <div>
                 <div className="mb-4 flex items-center justify-between">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-emerald-100 bg-white p-2.5 shadow-2xs transition-transform duration-300 group-hover:scale-105">
-                    <img src={tool.icon} alt={tool.title} className="h-full w-full object-contain" />
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-emerald-100 bg-white p-2.5 shadow-2xs transition-transform duration-300">
+                    <img
+                      loading="lazy"
+                      decoding="async"
+                      src={tool.icon}
+                      alt={tool.title}
+                      className="h-full w-full object-contain"
+                    />
                   </div>
 
                   <div className="flex items-center gap-1.5">
@@ -162,7 +168,7 @@ export default function SuperiorToolsSection() {
               </div>
 
               <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-3.5">
-                <span className="text-primary inline-flex items-center gap-1.5 text-[13px] font-bold transition-all group-hover:translate-x-1">
+                <span className="text-primary inline-flex items-center gap-1.5 text-[13px] font-bold transition group-hover:translate-x-1">
                   <span>Trải nghiệm ngay</span>
                   <ArrowRight className="h-4 w-4" />
                 </span>

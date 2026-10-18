@@ -31,7 +31,7 @@ export default function CandidateExperienceSection({
           <button
             type="button"
             onClick={onAddExperience}
-            className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition-all"
+            className="text-primary hover:border-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-xl border border-[#e9eaec] bg-white px-3 py-1.5 text-[12.5px] font-semibold transition"
           >
             <Plus className="h-4 w-4" />
             <span>Thêm kinh nghiệm</span>
@@ -50,7 +50,7 @@ export default function CandidateExperienceSection({
               {exp.isCurrent && <span className="h-1.5 w-1.5 rounded-full bg-white"></span>}
             </div>
 
-            <div className="rounded-2xl border border-[#f1f5f9] bg-[#fbfcfd] p-5 transition-all hover:border-[#cbd5e1] hover:bg-white hover:shadow-sm">
+            <div className="rounded-2xl border border-[#f1f5f9] bg-[#fbfcfd] p-5 transition hover:border-[#cbd5e1] hover:bg-white hover:shadow-sm">
               <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-start">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">

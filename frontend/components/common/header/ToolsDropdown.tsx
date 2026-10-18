@@ -4,7 +4,7 @@ import { Calculator, Compass, Percent, ShieldCheck, Sparkles, TrendingUp } from 
 
 export function ToolsDropdown() {
   return (
-    <div className="animate-in fade-in absolute top-15 -left-10 z-50 grid w-115 grid-cols-2 gap-3 rounded-2xl border border-slate-200 bg-white p-4.5 shadow-2xl duration-150">
+    <div className="absolute top-15 -left-10 z-50 grid w-115 grid-cols-2 gap-3 rounded-2xl border border-slate-200 bg-white p-4.5 shadow-2xl">
       <div className="space-y-1">
         <Link
           href="#superior-tool"

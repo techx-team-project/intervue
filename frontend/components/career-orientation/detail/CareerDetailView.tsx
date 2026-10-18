@@ -43,6 +43,8 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
               <div className="flex items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={article.author.avatar}
                   alt={article.author.name}
                   className="h-7 w-7 rounded-full object-cover ring-2 ring-emerald-50"
@@ -82,7 +84,13 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
           <article className="space-y-10 rounded-3xl border border-gray-200 bg-white p-6 shadow-xs sm:p-8 lg:col-span-6 lg:p-10">
             <div className="overflow-hidden rounded-2xl border border-gray-100 bg-gray-100">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={article.coverImage} alt={article.title} className="h-auto w-full object-cover" />
+              <img
+                loading="lazy"
+                decoding="async"
+                src={article.coverImage}
+                alt={article.title}
+                className="h-auto w-full object-cover"
+              />
             </div>
 
             {article.sections.map((section) => (

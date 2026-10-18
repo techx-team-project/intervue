@@ -179,10 +179,7 @@ export default function AccountPasswordView() {
                   <span className={`font-bold ${strength.color}`}>{strength.text}</span>
                 </div>
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
-                  <div
-                    className={`h-full transition-all duration-300 ${strength.bar}`}
-                    style={{ width: strength.width }}
-                  />
+                  <div className={`h-full transition duration-300 ${strength.bar}`} style={{ width: strength.width }} />
                 </div>
               </div>
             )}

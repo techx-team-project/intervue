@@ -159,7 +159,7 @@ export default function AccountSecurityView() {
             </div>
             <Link
               href="/account/two-factor"
-              className="bg-primary inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold text-white shadow-2xs transition-all hover:bg-emerald-700"
+              className="bg-primary inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold text-white shadow-2xs transition hover:bg-emerald-700"
             >
               <span>Kích hoạt</span>
               <ArrowRight className="h-3 w-3" />
@@ -248,7 +248,7 @@ export default function AccountSecurityView() {
             </div>
             <Link
               href="/account/two-factor"
-              className="bg-primary rounded-full px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition-all hover:bg-emerald-700"
+              className="bg-primary rounded-full px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition hover:bg-emerald-700"
             >
               Kích hoạt ngay
             </Link>
@@ -283,7 +283,7 @@ export default function AccountSecurityView() {
           {sessions.map((session) => (
             <div
               key={session.id}
-              className={`flex items-center justify-between rounded-xl border p-4 transition-all ${
+              className={`flex items-center justify-between rounded-xl border p-4 transition ${
                 session.isCurrent
                   ? 'border-emerald-200 bg-emerald-50/40'
                   : 'border-slate-100 bg-slate-50 hover:bg-white'

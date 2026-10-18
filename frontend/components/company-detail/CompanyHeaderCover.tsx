@@ -26,7 +26,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
     <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm">
       <div className="relative h-48 w-full overflow-hidden bg-slate-900 sm:h-64 lg:h-72">
         <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
           style={{ backgroundImage: `url(${company.cover})` }}
         />
         <div className="absolute inset-0 bg-linear-to-t from-slate-950/85 via-slate-900/40 to-transparent" />
@@ -46,7 +46,13 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
             <div className="relative -mt-16 flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-white p-2 shadow-md sm:-mt-20 sm:h-32 sm:w-32">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={company.logo} alt={company.name} className="h-full w-full object-contain" />
+              <img
+                loading="lazy"
+                decoding="async"
+                src={company.logo}
+                alt={company.name}
+                className="h-full w-full object-contain"
+              />
             </div>
 
             <div className="min-w-0">
@@ -94,7 +100,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
             <button
               type="button"
               onClick={() => setIsFollowing((prev) => !prev)}
-              className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold transition-all ${
+              className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold transition ${
                 isFollowing
                   ? 'text-primary border border-emerald-300 bg-emerald-50'
                   : 'bg-primary hover:bg-primary-hover text-white shadow-xs'
@@ -122,7 +128,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
               <Share2 className="h-4 w-4 text-slate-500" />
               <span>Chia sẻ</span>
               {copied && (
-                <div className="animate-in fade-in absolute -top-9 left-1/2 -translate-x-1/2 rounded-md bg-slate-900 px-2.5 py-1 text-[11px] font-medium whitespace-nowrap text-white shadow-lg">
+                <div className="absolute -top-9 left-1/2 -translate-x-1/2 rounded-md bg-slate-900 px-2.5 py-1 text-[11px] font-medium whitespace-nowrap text-white shadow-lg">
                   Đã copy link!
                 </div>
               )}
@@ -136,7 +142,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
           <button
             type="button"
             onClick={() => onTabChange('overview')}
-            className={`cursor-pointer border-b-2 px-3 py-3 text-[13.5px] font-bold transition-all ${
+            className={`cursor-pointer border-b-2 px-3 py-3 text-[13.5px] font-bold transition ${
               activeTab === 'overview'
                 ? 'border-primary text-primary'
                 : 'border-transparent text-slate-600 hover:text-slate-900'
@@ -148,7 +154,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
           <button
             type="button"
             onClick={() => onTabChange('jobs')}
-            className={`flex cursor-pointer items-center gap-1.5 border-b-2 px-3 py-3 text-[13.5px] font-bold transition-all ${
+            className={`flex cursor-pointer items-center gap-1.5 border-b-2 px-3 py-3 text-[13.5px] font-bold transition ${
               activeTab === 'jobs'
                 ? 'border-primary text-primary'
                 : 'border-transparent text-slate-600 hover:text-slate-900'
