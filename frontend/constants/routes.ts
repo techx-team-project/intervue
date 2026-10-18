@@ -6,6 +6,20 @@ export const ROUTES = {
   RESET_PASSWORD: '/reset-password',
   VERIFY_EMAIL: '/verify-email',
   CANDIDATE_PROFILE: '/candidate/profile',
+  RECRUITER_DASHBOARD: '/recruiter/dashboard',
+  RECRUITER_CAMPAIGNS: '/recruiter/campaigns',
+  RECRUITER_JOBS: '/recruiter/jobs',
+  RECRUITER_APPLICATIONS: '/recruiter/applications',
+  RECRUITER_CANDIDATES: '/recruiter/candidates',
+  RECRUITER_INTERVIEWS: '/recruiter/interviews',
+  RECRUITER_MESSAGES: '/recruiter/messages',
+  RECRUITER_COMPANY: '/recruiter/company',
+  RECRUITER_COMPANY_VERIFICATION: '/recruiter/company/verification',
+  RECRUITER_COMPANY_NEEDS: '/recruiter/company/needs',
+  RECRUITER_SERVICES: '/recruiter/services',
+  RECRUITER_SERVICES_TRANSACTIONS: '/recruiter/services/transactions',
+  RECRUITER_REPORTS: '/recruiter/reports',
+  RECRUITER_NOTIFICATIONS: '/recruiter/notifications',
 } as const;
 
 export const REDIRECT_PARAM = 'redirect';
