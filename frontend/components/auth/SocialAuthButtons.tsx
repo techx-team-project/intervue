@@ -39,14 +39,13 @@ const LinkedinIcon = () => (
 
 export default function SocialAuthButtons({ mode = 'login' }: SocialAuthButtonsProps) {
   const handleSocialAuth = (provider: string) => {
-    alert(`Đang kết nối xác thực tài khoản qua ${provider}...`);
+    alert(`Connecting with ${provider}...`);
   };
 
-  const googleText = mode === 'register' ? 'Đăng ký bằng Google' : 'Đăng nhập bằng Google';
+  const googleText = mode === 'register' ? 'Sign up with Google' : 'Sign in with Google';
 
   return (
     <div className="space-y-3">
-      {/* 1. Google Button (Full width pill) */}
       <button
         type="button"
         onClick={() => handleSocialAuth('Google')}
@@ -56,7 +55,6 @@ export default function SocialAuthButtons({ mode = 'login' }: SocialAuthButtonsP
         <span>{googleText}</span>
       </button>
 
-      {/* 2. Facebook & Linkedin Buttons (Row with 2 pills) */}
       <div className="flex items-center gap-3">
         <button
           type="button"
