@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ChevronDown, MapPin, Search } from 'lucide-react';
 
 import {
@@ -19,14 +19,6 @@ export default function HeroSection() {
   const [selectedCity, setSelectedCity] = useState('Địa điểm');
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [categoryPage, setCategoryPage] = useState(1);
-  const [currentBanner, setCurrentBanner] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentBanner((prev) => (prev + 1) % 2);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
 
   const categories = categoryPage === 1 ? HERO_CATEGORIES_PAGE_1 : HERO_CATEGORIES_PAGE_2;
 
@@ -114,7 +106,7 @@ export default function HeroSection() {
 
           <button
             type="button"
-            className="bg-primary hover:bg-primary-hover mr-1 flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-8 py-3 text-[15px] font-semibold text-white shadow-md transition-all"
+            className="bg-primary hover:bg-primary-hover mr-1 flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-8 py-3 text-[15px] font-semibold text-white shadow-md transition"
           >
             <Search className="h-4 w-4" />
             <span>Tìm kiếm</span>
@@ -130,12 +122,7 @@ export default function HeroSection() {
             onNextPage={() => setCategoryPage((p) => (p < HERO_CATEGORY_TOTAL_PAGES ? p + 1 : 1))}
           />
 
-          <RecruitmentBanner
-            current={currentBanner}
-            onPrev={() => setCurrentBanner((prev) => (prev - 1 + 2) % 2)}
-            onNext={() => setCurrentBanner((prev) => (prev + 1) % 2)}
-            onSelect={setCurrentBanner}
-          />
+          <RecruitmentBanner />
 
           <QrLoginPanel />
         </div>
