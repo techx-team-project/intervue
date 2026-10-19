@@ -2,6 +2,7 @@ import { ROUTES } from '@/constants/routes';
 import {
   BarChart3,
   Bell,
+  Bookmark,
   Briefcase,
   Building2,
   CalendarClock,
@@ -39,7 +40,8 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
     items: [
       { label: 'Chiến dịch tuyển dụng', href: ROUTES.RECRUITER_CAMPAIGNS, icon: Briefcase, comingSoon: true },
       { label: 'Tin tuyển dụng', href: ROUTES.RECRUITER_JOBS, icon: ClipboardList },
-      { label: 'Hồ sơ ứng tuyển', href: ROUTES.RECRUITER_APPLICATIONS, icon: Users, comingSoon: true },
+      { label: 'Hồ sơ ứng tuyển', href: ROUTES.RECRUITER_APPLICATIONS, icon: Users },
+      { label: 'Ứng viên đã lưu', href: ROUTES.RECRUITER_CANDIDATES_SAVED, icon: Bookmark },
       { label: 'Tìm hồ sơ ứng viên', href: ROUTES.RECRUITER_CANDIDATES, icon: Users, comingSoon: true },
       { label: 'Lịch phỏng vấn', href: ROUTES.RECRUITER_INTERVIEWS, icon: CalendarClock, comingSoon: true },
       { label: 'Tin nhắn', href: ROUTES.RECRUITER_MESSAGES, icon: MessageSquare, comingSoon: true },
