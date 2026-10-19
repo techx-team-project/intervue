@@ -14,6 +14,7 @@ import {
   SendHorizontal,
   Square,
   TimerReset,
+  Users,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -78,6 +79,15 @@ export default function JobPostRowActionsMenu({
   }
 
   actions.push({ key: 'preview', label: 'Xem trước', icon: Eye, onClick: onPreview });
+
+  if (job.status !== 'DRAFT') {
+    actions.push({
+      key: 'applications',
+      label: 'Hồ sơ ứng tuyển',
+      icon: Users,
+      href: `${ROUTES.RECRUITER_APPLICATIONS_COMMAND_CENTER}?job=${job.id}`,
+    });
+  }
 
   if (job.status === 'DRAFT' || job.status === 'REJECTED') {
     actions.push({ key: 'submit', label: 'Gửi duyệt', icon: SendHorizontal, onClick: onSubmitForReview });
