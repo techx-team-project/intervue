@@ -101,7 +101,7 @@ export default function ApplicationStatusMenu({
           aria-label={label}
           aria-expanded={isOpen}
           className={cn(
-            'flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-40',
+            'flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-40 sm:h-7 sm:w-7',
             isOpen ? 'bg-slate-100 text-slate-700' : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700',
           )}
         >
