@@ -5,6 +5,7 @@ import RecruiterBottomCta from './RecruiterBottomCta';
 import RecruiterHeader from './RecruiterHeader';
 import RecruiterMobileNavDrawer from './RecruiterMobileNavDrawer';
 import RecruiterSidebar from './RecruiterSidebar';
+import RecruiterTopNotice from './RecruiterTopNotice';
 
 const SIDEBAR_COLLAPSED_STORAGE_KEY = 'intervue.recruiter.sidebarCollapsed';
 const listeners = new Set<() => void>();
@@ -33,6 +34,9 @@ export default function RecruiterShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="text-navy flex min-h-screen flex-col bg-[#f4f5f5] antialiased">
+      {/* Top Critical Notice Bar (above entire header, matching TopCV) */}
+      <RecruiterTopNotice />
+
       <RecruiterHeader
         isSidebarCollapsed={isCollapsed}
         onToggleSidebar={() => setSidebarCollapsed(!isCollapsed)}

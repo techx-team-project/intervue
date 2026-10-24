@@ -50,12 +50,11 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
   {
     title: 'Company',
     items: [
-      { label: 'Company profile', href: ROUTES.RECRUITER_COMPANY, icon: Building2, comingSoon: true },
+      { label: 'Company profile', href: ROUTES.RECRUITER_COMPANY, icon: Building2 },
       {
         label: 'Company verification',
         href: ROUTES.RECRUITER_COMPANY_VERIFICATION,
         icon: ShieldCheck,
-        comingSoon: true,
       },
       { label: 'Hiring needs', href: ROUTES.RECRUITER_COMPANY_NEEDS, icon: ClipboardList, comingSoon: true },
     ],
