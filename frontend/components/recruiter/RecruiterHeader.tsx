@@ -36,8 +36,8 @@ export default function RecruiterHeader({ isSidebarCollapsed, onToggleSidebar }:
           <button
             type="button"
             onClick={onToggleSidebar}
-            aria-label={isSidebarCollapsed ? 'Mở rộng menu' : 'Thu gọn menu'}
-            title={isSidebarCollapsed ? 'Mở rộng menu' : 'Thu gọn menu'}
+            aria-label={isSidebarCollapsed ? 'Expand the menu' : 'Collapse the menu'}
+            title={isSidebarCollapsed ? 'Expand the menu' : 'Collapse the menu'}
             className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800"
           >
             {isSidebarCollapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
@@ -61,12 +61,12 @@ export default function RecruiterHeader({ isSidebarCollapsed, onToggleSidebar }:
             className="bg-primary hover:bg-primary-hover hidden items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-white transition-colors sm:inline-flex"
           >
             <Plus className="h-4 w-4" />
-            <span>Đăng tin tuyển dụng</span>
+            <span>Post a job</span>
           </Link>
 
           <Link
             href={ROUTES.RECRUITER_NOTIFICATIONS}
-            title="Thông báo"
+            title="Notifications"
             className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200"
           >
             <Bell className="h-4.5 w-4.5" />

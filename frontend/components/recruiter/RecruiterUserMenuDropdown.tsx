@@ -9,10 +9,10 @@ interface RecruiterUserMenuDropdownProps {
 }
 
 const LINKS = [
-  { label: 'Hồ sơ công ty', href: '/recruiter/company', icon: Building2 },
-  { label: 'Bảo mật tài khoản', href: '/account/security', icon: ShieldCheck },
-  { label: 'Đổi mật khẩu', href: '/account/password', icon: KeyRound },
-  { label: 'Xác thực 2 bước (2FA)', href: '/account/two-factor', icon: Smartphone },
+  { label: 'Company profile', href: '/recruiter/company', icon: Building2 },
+  { label: 'Account security', href: '/account/security', icon: ShieldCheck },
+  { label: 'Change password', href: '/account/password', icon: KeyRound },
+  { label: 'Two-factor authentication', href: '/account/two-factor', icon: Smartphone },
 ];
 
 export default function RecruiterUserMenuDropdown({ onClose }: RecruiterUserMenuDropdownProps) {
