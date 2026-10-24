@@ -10,7 +10,7 @@ import {
 import { cn } from '@/lib/utils';
 import { MOCK_RECRUITER_JOB_POSTS } from '@/mocks/job.mock';
 import type { ApplicationFilters, ApplicationSource, ApplicationSortKey } from '@/types/recruiter-application';
-import { Bookmark, RotateCcw, Search, X } from 'lucide-react';
+import { Bookmark, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface ApplicationsFilterBarProps {
@@ -42,6 +42,7 @@ export default function ApplicationsFilterBar({
   onReset,
 }: ApplicationsFilterBarProps) {
   const [searchDraft, setSearchDraft] = useState(filters.search);
+  const [isFilterPanelOpen, setFilterPanelOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => onFilterChange('search', searchDraft), DEBOUNCE_MS);
@@ -49,13 +50,14 @@ export default function ApplicationsFilterBar({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchDraft]);
 
-  const hasActiveFilter =
-    filters.search !== '' ||
-    filters.jobId !== '' ||
-    filters.aiMatchBand !== 'ALL' ||
-    filters.source !== '' ||
-    filters.savedOnly ||
-    filters.sort !== 'NEWEST';
+  const activeFilterCount = [
+    filters.jobId !== '',
+    filters.aiMatchBand !== 'ALL',
+    filters.source !== '',
+    filters.sort !== 'NEWEST',
+  ].filter(Boolean).length;
+
+  const hasActiveFilter = filters.search !== '' || filters.savedOnly || activeFilterCount > 0;
 
   return (
     <div className="rounded-2xl border border-[#e5e9ef] bg-white p-3.5 shadow-xs">
@@ -80,9 +82,33 @@ export default function ApplicationsFilterBar({
               ) : undefined
             }
           />
+          <button
+            type="button"
+            onClick={() => setFilterPanelOpen((previous) => !previous)}
+            aria-expanded={isFilterPanelOpen}
+            className={cn(
+              'mt-3 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-[13px] font-bold transition-colors xl:hidden',
+              activeFilterCount > 0
+                ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
+                : 'border-slate-200 bg-white text-slate-700',
+            )}
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            Filters
+            {activeFilterCount > 0 && (
+              <span className="bg-primary rounded-full px-1.5 py-0.5 text-[10.5px] font-black text-white">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
         </div>
 
-        <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4 xl:gap-2.5">
+        <div
+          className={cn(
+            'flex-1 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid xl:grid-cols-4 xl:gap-2.5',
+            isFilterPanelOpen ? 'grid' : 'hidden',
+          )}
+        >
           <Select
             value={filters.jobId}
             onChange={(event) => onFilterChange('jobId', event.target.value)}
