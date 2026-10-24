@@ -14,15 +14,15 @@ export default async function SavedCandidatesPage() {
   return (
     <>
       <PageHeader
-        title="Ứng viên đã lưu"
-        description="Những ứng viên bạn đánh dấu để theo dõi, kể cả khi hồ sơ ứng tuyển của họ đã kết thúc."
+        title="Saved candidates"
+        description="Candidates you bookmarked to follow, even once their application is closed."
         actions={
           <Link
             href={ROUTES.RECRUITER_APPLICATIONS}
             className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-[13px] font-bold text-slate-700 transition-colors hover:bg-slate-50"
           >
             <LayoutDashboard className="h-4 w-4" />
-            Hồ sơ ứng tuyển
+            Applications
           </Link>
         }
       />
