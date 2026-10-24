@@ -34,7 +34,7 @@ export default function ApplicationHistoryTab({ history }: ApplicationHistoryTab
                 {APPLICATION_STATUS_META[entry.to].label}
               </span>
               {entry.from && (
-                <span className="text-[11px] text-[#94a3b8]">từ {APPLICATION_STATUS_META[entry.from].label}</span>
+                <span className="text-[11px] text-[#94a3b8]">from {APPLICATION_STATUS_META[entry.from].label}</span>
               )}
             </div>
 
