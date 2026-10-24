@@ -75,46 +75,46 @@ export default function JobPostRowActionsMenu({
   const actions: MenuAction[] = [];
 
   if (EDITABLE_STATUSES.has(job.status)) {
-    actions.push({ key: 'edit', label: 'Chỉnh sửa', icon: Pencil, href: `${ROUTES.RECRUITER_JOBS}/${job.id}/edit` });
+    actions.push({ key: 'edit', label: 'Edit', icon: Pencil, href: `${ROUTES.RECRUITER_JOBS}/${job.id}/edit` });
   }
 
-  actions.push({ key: 'preview', label: 'Xem trước', icon: Eye, onClick: onPreview });
+  actions.push({ key: 'preview', label: 'Preview', icon: Eye, onClick: onPreview });
 
   if (job.status !== 'DRAFT') {
     actions.push({
       key: 'applications',
-      label: 'Hồ sơ ứng tuyển',
+      label: 'Applications',
       icon: Users,
-      href: `${ROUTES.RECRUITER_APPLICATIONS_COMMAND_CENTER}?job=${job.id}`,
+      href: `${ROUTES.RECRUITER_APPLICATIONS}?job=${job.id}`,
     });
   }
 
   if (job.status === 'DRAFT' || job.status === 'REJECTED') {
-    actions.push({ key: 'submit', label: 'Gửi duyệt', icon: SendHorizontal, onClick: onSubmitForReview });
+    actions.push({ key: 'submit', label: 'Submit for review', icon: SendHorizontal, onClick: onSubmitForReview });
   }
 
   if (job.status === 'PUBLISHED') {
-    actions.push({ key: 'pause', label: 'Tạm dừng', icon: Pause, onClick: onPause });
-    actions.push({ key: 'extend', label: 'Gia hạn', icon: TimerReset, onClick: onExtend });
+    actions.push({ key: 'pause', label: 'Pause', icon: Pause, onClick: onPause });
+    actions.push({ key: 'extend', label: 'Extend', icon: TimerReset, onClick: onExtend });
   }
 
   if (job.status === 'PAUSED') {
-    actions.push({ key: 'reopen', label: 'Mở lại', icon: PlayCircle, onClick: onReopen });
+    actions.push({ key: 'reopen', label: 'Reopen', icon: PlayCircle, onClick: onReopen });
   }
 
   if (job.status === 'PUBLISHED' || job.status === 'PAUSED') {
-    actions.push({ key: 'close', label: 'Đóng tin', icon: Square, onClick: onClose, tone: 'danger' });
+    actions.push({ key: 'close', label: 'Close post', icon: Square, onClick: onClose, tone: 'danger' });
   }
 
   if (job.status === 'EXPIRED') {
-    actions.push({ key: 'repost', label: 'Đăng lại', icon: RotateCcw, onClick: onRepost });
+    actions.push({ key: 'repost', label: 'Repost', icon: RotateCcw, onClick: onRepost });
   }
 
   if (job.status === 'REJECTED') {
-    actions.push({ key: 'reason', label: 'Xem lý do từ chối', icon: AlertCircle, onClick: onViewRejectionReason });
+    actions.push({ key: 'reason', label: 'View rejection reason', icon: AlertCircle, onClick: onViewRejectionReason });
   }
 
-  actions.push({ key: 'duplicate', label: 'Nhân bản', icon: Copy, onClick: onDuplicate });
+  actions.push({ key: 'duplicate', label: 'Duplicate', icon: Copy, onClick: onDuplicate });
 
   return (
     <div ref={menuRef} className="relative">
@@ -122,7 +122,7 @@ export default function JobPostRowActionsMenu({
         type="button"
         disabled={isPending}
         onClick={() => setIsOpen((prev) => !prev)}
-        aria-label="Thao tác"
+        aria-label="Actions"
         className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <MoreVertical className="h-4 w-4" />

@@ -74,7 +74,7 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
   const handleSaveDraft = async () => {
     setIsSaving(true);
     await new Promise((resolve) => setTimeout(resolve, 600));
-    toast.success('Đã lưu tin tuyển dụng dưới dạng bản nháp.');
+    toast.success('Job post saved as a draft.');
     setIsSaving(false);
     router.push(ROUTES.RECRUITER_JOBS);
   };
@@ -82,7 +82,7 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
   const handleSubmitForReview = form.handleSubmit(async () => {
     setIsSaving(true);
     await new Promise((resolve) => setTimeout(resolve, 600));
-    toast.success('Đã gửi tin tuyển dụng để duyệt.');
+    toast.success('Job post submitted for review.');
     setIsSaving(false);
     router.push(ROUTES.RECRUITER_JOBS);
   });
@@ -106,7 +106,7 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
             leftIcon={<Eye className="h-4 w-4" />}
             onClick={() => setIsPreviewing(true)}
           >
-            Xem trước
+            Preview
           </Button>
           <Button
             type="button"
@@ -115,7 +115,7 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
             leftIcon={<Save className="h-4 w-4" />}
             onClick={handleSaveDraft}
           >
-            Lưu bản nháp
+            Save draft
           </Button>
           <Button
             type="button"
@@ -123,7 +123,7 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
             leftIcon={<SendHorizontal className="h-4 w-4" />}
             onClick={handleSubmitForReview}
           >
-            {mode === 'create' ? 'Gửi duyệt' : 'Cập nhật & gửi duyệt'}
+            {mode === 'create' ? 'Submit for review' : 'Update & submit for review'}
           </Button>
         </div>
       </div>
