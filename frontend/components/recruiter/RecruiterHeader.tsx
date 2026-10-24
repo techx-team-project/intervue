@@ -2,7 +2,7 @@
 
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
-import { Bell, ChevronDown, PanelLeftClose, PanelLeftOpen, Plus } from 'lucide-react';
+import { Bell, ChevronDown, Menu, PanelLeftClose, PanelLeftOpen, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -11,9 +11,14 @@ import RecruiterUserMenuDropdown from './RecruiterUserMenuDropdown';
 interface RecruiterHeaderProps {
   isSidebarCollapsed: boolean;
   onToggleSidebar: () => void;
+  onOpenMobileNav: () => void;
 }
 
-export default function RecruiterHeader({ isSidebarCollapsed, onToggleSidebar }: RecruiterHeaderProps) {
+export default function RecruiterHeader({
+  isSidebarCollapsed,
+  onToggleSidebar,
+  onOpenMobileNav,
+}: RecruiterHeaderProps) {
   const { user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -35,10 +40,19 @@ export default function RecruiterHeader({ isSidebarCollapsed, onToggleSidebar }:
         <div className="flex items-center gap-3">
           <button
             type="button"
+            onClick={onOpenMobileNav}
+            aria-label="Open the menu"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 lg:hidden"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+
+          <button
+            type="button"
             onClick={onToggleSidebar}
             aria-label={isSidebarCollapsed ? 'Expand the menu' : 'Collapse the menu'}
             title={isSidebarCollapsed ? 'Expand the menu' : 'Collapse the menu'}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800"
+            className="hidden h-9 w-9 cursor-pointer items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 lg:flex"
           >
             {isSidebarCollapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
           </button>
@@ -67,7 +81,7 @@ export default function RecruiterHeader({ isSidebarCollapsed, onToggleSidebar }:
           <Link
             href={ROUTES.RECRUITER_NOTIFICATIONS}
             title="Notifications"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 sm:h-9 sm:w-9"
           >
             <Bell className="h-4.5 w-4.5" />
           </Link>

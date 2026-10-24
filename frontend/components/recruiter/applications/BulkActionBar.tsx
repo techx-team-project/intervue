@@ -22,7 +22,7 @@ export default function BulkActionBar({
   if (selectedCount === 0) return null;
 
   return (
-    <div className="fixed bottom-6 left-1/2 z-40 w-[calc(100%-2rem)] max-w-xl -translate-x-1/2">
+    <div className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-xl sm:inset-x-4 sm:bottom-6">
       <div className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-slate-700 bg-[#1e293b] px-3.5 py-3 shadow-2xl">
         <p className="mr-auto text-[12.5px] font-bold text-white">
           <span className="text-emerald-300">{selectedCount}</span> applications selected
@@ -33,19 +33,19 @@ export default function BulkActionBar({
         <button
           type="button"
           onClick={onSave}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-600 px-3 py-2 text-[12.5px] font-bold text-slate-100 transition-colors hover:bg-slate-700"
+          className="inline-flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-600 px-3 py-2 text-[12.5px] font-bold text-slate-100 transition-colors hover:bg-slate-700 sm:flex-none"
         >
           <Bookmark className="h-3.5 w-3.5" />
-          Save candidates
+          Save
         </button>
 
         <button
           type="button"
           onClick={onReject}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-rose-600 px-3 py-2 text-[12.5px] font-bold text-white transition-colors hover:bg-rose-700"
+          className="inline-flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-rose-600 px-3 py-2 text-[12.5px] font-bold text-white transition-colors hover:bg-rose-700 sm:flex-none"
         >
           <XCircle className="h-3.5 w-3.5" />
-          Close applications
+          Close
         </button>
 
         <button

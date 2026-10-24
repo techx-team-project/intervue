@@ -88,7 +88,7 @@ export default function ApplicationCard({
               event.stopPropagation();
               onToggleSelected();
             }}
-            className="mt-1 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+            className="mt-1 h-4.5 w-4.5 shrink-0 cursor-pointer rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 sm:h-4 sm:w-4"
           />
         )}
 
@@ -184,7 +184,7 @@ export default function ApplicationCard({
                 onToggleSaved();
               }}
               className={cn(
-                'flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-slate-100',
+                'flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-slate-100 sm:h-7 sm:w-7',
                 application.isSaved ? 'text-amber-500' : 'text-slate-400 hover:text-slate-700',
               )}
             >
