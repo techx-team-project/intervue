@@ -8,27 +8,25 @@ import { cn } from '@/lib/utils';
 import { interviewScheduleSchema, type InterviewScheduleFormData } from '@/schemas/application.schema';
 import type { ApplicationInterview } from '@/types/recruiter-application';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Building2, Video } from 'lucide-react';
+import { Building2, CalendarClock, Video } from 'lucide-react';
 import { useForm, useWatch } from 'react-hook-form';
 
 interface InterviewScheduleModalProps {
   candidateName: string;
   jobTitle: string;
   onClose: () => void;
-  onSkip: () => void;
   onConfirm: (interview: ApplicationInterview) => void;
 }
 
 const MODE_CHOICES = [
-  { value: 'ONLINE' as const, label: 'Phỏng vấn online', icon: Video },
-  { value: 'OFFLINE' as const, label: 'Phỏng vấn tại công ty', icon: Building2 },
+  { value: 'ONLINE' as const, label: 'Online interview', icon: Video },
+  { value: 'OFFLINE' as const, label: 'On-site interview', icon: Building2 },
 ];
 
 export default function InterviewScheduleModal({
   candidateName,
   jobTitle,
   onClose,
-  onSkip,
   onConfirm,
 }: InterviewScheduleModalProps) {
   const { register, handleSubmit, setValue, control, formState } = useForm<InterviewScheduleFormData>({
@@ -53,18 +51,26 @@ export default function InterviewScheduleModal({
       isOpen
       onClose={onClose}
       maxWidth="lg"
-      title="Đặt lịch phỏng vấn"
+      title="Schedule the interview"
       description={`${candidateName} — ${jobTitle}`}
       footer={
         <>
-          <Button variant="ghost" onClick={onSkip}>
-            Chuyển trạng thái, đặt lịch sau
+          <Button variant="ghost" onClick={onClose}>
+            Cancel
           </Button>
-          <Button onClick={handleSubmit(submit)}>Lưu lịch phỏng vấn</Button>
+          <Button onClick={handleSubmit(submit)}>Save schedule and move to Interview</Button>
         </>
       }
     >
       <div className="space-y-4">
+        <div className="flex items-start gap-2.5 rounded-xl border border-violet-200 bg-violet-50/60 p-3">
+          <CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-violet-500" />
+          <p className="text-[11.5px] leading-relaxed text-violet-900">
+            The application moves to <strong>Interview</strong> only after the schedule is saved. If you cancel, the
+            current status stays unchanged.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {MODE_CHOICES.map((choice) => {
             const Icon = choice.icon;
@@ -89,30 +95,30 @@ export default function InterviewScheduleModal({
         </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Input type="date" label="Ngày phỏng vấn" error={formState.errors.date?.message} {...register('date')} />
-          <Input type="time" label="Giờ bắt đầu" error={formState.errors.time?.message} {...register('time')} />
+          <Input type="date" label="Interview date" error={formState.errors.date?.message} {...register('date')} />
+          <Input type="time" label="Start time" error={formState.errors.time?.message} {...register('time')} />
         </div>
 
         {mode === 'ONLINE' ? (
           <Input
-            label="Liên kết họp trực tuyến"
+            label="Online meeting link"
             placeholder="https://meet.google.com/..."
             error={formState.errors.meetingUrl?.message}
             {...register('meetingUrl')}
           />
         ) : (
           <Input
-            label="Địa điểm phỏng vấn"
-            placeholder="Tầng 12, toà Keangnam, Nam Từ Liêm, Hà Nội"
+            label="Interview location"
+            placeholder="Floor 12, Keangnam Tower, Nam Tu Liem, Hanoi"
             error={formState.errors.location?.message}
             {...register('location')}
           />
         )}
 
         <Textarea
-          label="Ghi chú cho buổi phỏng vấn"
+          label="Interview notes"
           rows={3}
-          placeholder="Vòng kỹ thuật 60 phút, có phần live coding..."
+          placeholder="60-minute technical round with live coding..."
           error={formState.errors.note?.message}
           {...register('note')}
         />
