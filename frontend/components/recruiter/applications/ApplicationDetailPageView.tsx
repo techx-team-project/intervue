@@ -96,14 +96,14 @@ export default function ApplicationDetailPageView({ initialApplication }: Applic
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-navy text-xl font-black">{candidate.fullName}</h1>
+              <h1 className="text-navy text-lg font-black break-words sm:text-xl">{candidate.fullName}</h1>
               <ApplicationStatusBadge status={application.status} />
             </div>
             <p className="mt-0.5 text-[13px] text-[#64748b]">
               {candidate.title} • {candidate.experienceYears} years of experience
             </p>
 
-            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12.5px] text-[#475569]">
+            <div className="mt-3 flex flex-col gap-1.5 text-[12.5px] break-all text-[#475569] sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:break-normal">
               <span className="inline-flex items-center gap-1.5">
                 <Mail className="h-3.5 w-3.5 text-[#94a3b8]" />
                 {candidate.email}
@@ -171,7 +171,8 @@ export default function ApplicationDetailPageView({ initialApplication }: Applic
             className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12.5px] font-bold text-slate-700 transition-colors hover:bg-slate-50"
           >
             <ExternalLink className="h-3.5 w-3.5" />
-            Full candidate profile
+            <span className="sm:hidden">Profile</span>
+            <span className="hidden sm:inline">Candidate profile</span>
           </Link>
 
           <button
@@ -180,7 +181,7 @@ export default function ApplicationDetailPageView({ initialApplication }: Applic
             className="ml-auto inline-flex cursor-pointer items-center gap-1.5 rounded-xl px-2.5 py-2 text-[12.5px] font-bold text-rose-600 transition-colors hover:bg-rose-50"
           >
             <Flag className="h-3.5 w-3.5" />
-            Report candidate
+            Report
           </button>
         </div>
       </section>
