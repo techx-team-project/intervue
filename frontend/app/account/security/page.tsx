@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import AccountSecurityView from '@/components/account/AccountSecurityView';
 
 export const metadata: Metadata = {
-  title: 'Bảo mật tài khoản | InterVue',
-  description: 'Quản lý an ninh tài khoản, phiên đăng nhập đang hoạt động và thiết bị truy cập.',
+  title: 'Account security | InterVue',
+  description: 'Manage account security, active sessions and the devices that access it.',
 };
 
 export default function SecurityPage() {

@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import AccountPasswordView from '@/components/account/AccountPasswordView';
 
 export const metadata: Metadata = {
-  title: 'Đổi mật khẩu | InterVue',
-  description: 'Đổi mật khẩu đăng nhập tài khoản an toàn với tiêu chuẩn mã hóa cao.',
+  title: 'Change password | InterVue',
+  description: 'Change your account password securely with strong encryption standards.',
 };
 
 export default function PasswordPage() {

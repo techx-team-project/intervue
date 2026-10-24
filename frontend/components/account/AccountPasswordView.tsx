@@ -33,11 +33,11 @@ export default function AccountPasswordView() {
   const strengthScore = [hasMinLength, hasUppercase, hasNumber, hasSpecial].filter(Boolean).length;
 
   const getStrengthLabel = () => {
-    if (!newPass) return { text: 'Chưa nhập', color: 'text-slate-400', bar: 'bg-slate-200', width: '0%' };
-    if (strengthScore <= 1) return { text: 'Yếu', color: 'text-rose-500', bar: 'bg-rose-500', width: '25%' };
-    if (strengthScore === 2) return { text: 'Trung bình', color: 'text-amber-500', bar: 'bg-amber-500', width: '50%' };
-    if (strengthScore === 3) return { text: 'Khá mạnh', color: 'text-blue-500', bar: 'bg-blue-500', width: '75%' };
-    return { text: 'Rất mạnh', color: 'text-emerald-500', bar: 'bg-primary', width: '100%' };
+    if (!newPass) return { text: 'Not entered', color: 'text-slate-400', bar: 'bg-slate-200', width: '0%' };
+    if (strengthScore <= 1) return { text: 'Weak', color: 'text-rose-500', bar: 'bg-rose-500', width: '25%' };
+    if (strengthScore === 2) return { text: 'Medium', color: 'text-amber-500', bar: 'bg-amber-500', width: '50%' };
+    if (strengthScore === 3) return { text: 'Fairly strong', color: 'text-blue-500', bar: 'bg-blue-500', width: '75%' };
+    return { text: 'Very strong', color: 'text-emerald-500', bar: 'bg-primary', width: '100%' };
   };
 
   const strength = getStrengthLabel();
@@ -74,7 +74,7 @@ export default function AccountPasswordView() {
 
     setTimeout(() => {
       setIsLoading(false);
-      setSuccessMsg('Đổi mật khẩu tài khoản thành công! Các thiết bị khác đã được đăng xuất an toàn.');
+      setSuccessMsg('Password changed successfully. All other devices have been signed out.');
       setFormData({
         currentPassword: '',
         newPassword: '',
@@ -100,11 +100,10 @@ export default function AccountPasswordView() {
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
         <div className="flex items-center gap-2">
           <KeyRound className="text-primary h-5 w-5" />
-          <h1 className="text-xl font-black text-slate-800 sm:text-2xl">Đổi mật khẩu</h1>
+          <h1 className="text-xl font-black text-slate-800 sm:text-2xl">Change password</h1>
         </div>
         <p className="mt-1 text-sm text-slate-500">
-          Để đảm bảo an toàn thông tin hồ sơ và quyền riêng tư, vui lòng đặt mật khẩu mạnh mà bạn chưa từng sử dụng ở
-          nơi khác.
+          To keep your profile and privacy safe, choose a strong password that you have never used anywhere else.
         </p>
       </div>
 
@@ -126,9 +125,9 @@ export default function AccountPasswordView() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <div className="mb-1 flex items-center justify-between">
-              <span className="text-sm font-bold text-slate-800">Mật khẩu hiện tại</span>
+              <span className="text-sm font-bold text-slate-800">Current password</span>
               <Link href="/forgot-password" className="text-primary text-xs font-semibold hover:underline">
-                Quên mật khẩu?
+                Forgot password?
               </Link>
             </div>
             <Input
@@ -136,13 +135,13 @@ export default function AccountPasswordView() {
               type={showCurrent ? 'text' : 'password'}
               value={formData.currentPassword}
               onChange={(e) => handleChange('currentPassword', e.target.value)}
-              placeholder="Nhập mật khẩu hiện tại"
+              placeholder="Enter your current password"
               error={fieldErrors.currentPassword}
               rightElement={
                 <button
                   type="button"
                   onClick={() => setShowCurrent(!showCurrent)}
-                  aria-label={showCurrent ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                  aria-label={showCurrent ? 'Hide password' : 'Show password'}
                   className="cursor-pointer text-slate-400 hover:text-slate-600"
                 >
                   {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -154,17 +153,17 @@ export default function AccountPasswordView() {
           <div>
             <Input
               id="new-password"
-              label="Mật khẩu mới"
+              label="New password"
               type={showNew ? 'text' : 'password'}
               value={formData.newPassword}
               onChange={(e) => handleChange('newPassword', e.target.value)}
-              placeholder="Nhập mật khẩu mới"
+              placeholder="Enter a new password"
               error={fieldErrors.newPassword}
               rightElement={
                 <button
                   type="button"
                   onClick={() => setShowNew(!showNew)}
-                  aria-label={showNew ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                  aria-label={showNew ? 'Hide password' : 'Show password'}
                   className="cursor-pointer text-slate-400 hover:text-slate-600"
                 >
                   {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -175,7 +174,7 @@ export default function AccountPasswordView() {
             {newPass && (
               <div className="mt-2.5 space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-500">Độ mạnh mật khẩu:</span>
+                  <span className="text-slate-500">Password strength:</span>
                   <span className={`font-bold ${strength.color}`}>{strength.text}</span>
                 </div>
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
@@ -188,17 +187,17 @@ export default function AccountPasswordView() {
           <div>
             <Input
               id="confirm-password"
-              label="Xác nhận mật khẩu mới"
+              label="Confirm new password"
               type={showConfirm ? 'text' : 'password'}
               value={formData.confirmPassword}
               onChange={(e) => handleChange('confirmPassword', e.target.value)}
-              placeholder="Nhập lại mật khẩu mới"
+              placeholder="Re-enter the new password"
               error={fieldErrors.confirmPassword}
               rightElement={
                 <button
                   type="button"
                   onClick={() => setShowConfirm(!showConfirm)}
-                  aria-label={showConfirm ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                  aria-label={showConfirm ? 'Hide password' : 'Show password'}
                   className="cursor-pointer text-slate-400 hover:text-slate-600"
                 >
                   {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -208,7 +207,7 @@ export default function AccountPasswordView() {
           </div>
 
           <div className="rounded-xl border border-slate-100 bg-slate-50 p-4 text-xs">
-            <div className="font-bold text-slate-800">Tiêu chuẩn mật khẩu an toàn:</div>
+            <div className="font-bold text-slate-800">Secure password requirements:</div>
             <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
               <div
                 className={`flex items-center gap-2 ${
@@ -222,7 +221,7 @@ export default function AccountPasswordView() {
                 >
                   <Check className="h-2.5 w-2.5 stroke-3" />
                 </div>
-                <span>Tối thiểu 8 ký tự</span>
+                <span>At least 8 characters</span>
               </div>
 
               <div
@@ -237,7 +236,7 @@ export default function AccountPasswordView() {
                 >
                   <Check className="h-2.5 w-2.5 stroke-3" />
                 </div>
-                <span>Ít nhất 1 chữ in hoa (A-Z)</span>
+                <span>At least 1 uppercase letter (A-Z)</span>
               </div>
 
               <div
@@ -250,7 +249,7 @@ export default function AccountPasswordView() {
                 >
                   <Check className="h-2.5 w-2.5 stroke-3" />
                 </div>
-                <span>Ít nhất 1 chữ số (0-9)</span>
+                <span>At least 1 digit (0-9)</span>
               </div>
 
               <div
@@ -263,7 +262,7 @@ export default function AccountPasswordView() {
                 >
                   <Check className="h-2.5 w-2.5 stroke-3" />
                 </div>
-                <span>Ít nhất 1 ký tự đặc biệt (!@#$)</span>
+                <span>At least 1 special character (!@#$)</span>
               </div>
             </div>
           </div>
@@ -275,7 +274,7 @@ export default function AccountPasswordView() {
               onChange={(e) => handleChange('logoutOtherDevices', e.target.checked)}
               className="mt-0.5 h-4 w-4 rounded accent-emerald-600"
             />
-            <span>Đăng xuất khỏi tất cả các thiết bị khác sau khi đổi mật khẩu thành công.</span>
+            <span>Sign out of all other devices after the password is changed.</span>
           </label>
 
           <div className="flex items-center gap-3 pt-2">
@@ -286,11 +285,11 @@ export default function AccountPasswordView() {
               isLoading={isLoading}
               leftIcon={<Lock className="h-4 w-4" />}
             >
-              Cập nhật mật khẩu
+              Update password
             </Button>
 
             <Button type="button" variant="outline" size="md" onClick={handleReset}>
-              Hủy bỏ
+              Cancel
             </Button>
           </div>
         </form>
