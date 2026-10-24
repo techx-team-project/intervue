@@ -23,7 +23,7 @@ export function Breadcrumb({ items, showHome = true, className }: BreadcrumbProp
           <li className="flex items-center">
             <Link href="/" className="flex items-center gap-1.5 transition-colors hover:text-emerald-600">
               <Home className="h-3.5 w-3.5 text-slate-400" />
-              <span>Trang chủ</span>
+              <span>Home</span>
             </Link>
             <ChevronRight className="ml-1.5 h-3.5 w-3.5 text-slate-300 sm:ml-2" />
           </li>

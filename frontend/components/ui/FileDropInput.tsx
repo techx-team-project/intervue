@@ -45,13 +45,13 @@ export function FileDropInput({
           <>
             <FileText className="h-6 w-6 text-emerald-600" />
             <span className="text-sm font-semibold text-slate-800">{selectedFileName}</span>
-            <span className="text-xs text-slate-500">Bấm để chọn file khác</span>
+            <span className="text-xs text-slate-500">Click to choose another file</span>
           </>
         ) : (
           <>
             <UploadCloud className="h-6 w-6 text-slate-400" />
-            <span className="text-sm font-semibold text-slate-700">Chọn file JD để tải lên</span>
-            <span className="text-xs text-slate-500">Hỗ trợ PDF, DOC, DOCX</span>
+            <span className="text-sm font-semibold text-slate-700">Choose a JD file to upload</span>
+            <span className="text-xs text-slate-500">Supports PDF, DOC, DOCX</span>
           </>
         )}
       </button>
