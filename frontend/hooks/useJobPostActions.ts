@@ -26,23 +26,21 @@ export function useJobPostActions(setJobs: Dispatch<SetStateAction<RecruiterJobP
     setPendingId(null);
   };
 
-  const pauseJob = (id: string) =>
-    runUpdate(id, (job) => ({ ...job, status: 'PAUSED' }), 'Đã tạm dừng tin tuyển dụng.');
+  const pauseJob = (id: string) => runUpdate(id, (job) => ({ ...job, status: 'PAUSED' }), 'Job post paused.');
 
-  const reopenJob = (id: string) =>
-    runUpdate(id, (job) => ({ ...job, status: 'PUBLISHED' }), 'Đã mở lại tin tuyển dụng.');
+  const reopenJob = (id: string) => runUpdate(id, (job) => ({ ...job, status: 'PUBLISHED' }), 'Job post reopened.');
 
-  const closeJob = (id: string) => runUpdate(id, (job) => ({ ...job, status: 'CLOSED' }), 'Đã đóng tin tuyển dụng.');
+  const closeJob = (id: string) => runUpdate(id, (job) => ({ ...job, status: 'CLOSED' }), 'Job post closed.');
 
   const extendJob = (id: string) =>
     runUpdate(
       id,
       (job) => ({ ...job, expiresAt: new Date(Date.now() + EXTEND_DAYS * 24 * 60 * 60 * 1000).toISOString() }),
-      `Đã gia hạn tin tuyển dụng thêm ${EXTEND_DAYS} ngày.`,
+      `Job post extended by ${EXTEND_DAYS} days.`,
     );
 
   const submitForReview = (id: string) =>
-    runUpdate(id, (job) => ({ ...job, status: 'PENDING_REVIEW' }), 'Đã gửi tin tuyển dụng để duyệt.');
+    runUpdate(id, (job) => ({ ...job, status: 'PENDING_REVIEW' }), 'Job post submitted for review.');
 
   const repostJob = (id: string) =>
     runUpdate(
@@ -52,7 +50,7 @@ export function useJobPostActions(setJobs: Dispatch<SetStateAction<RecruiterJobP
         status: 'PENDING_REVIEW',
         expiresAt: new Date(Date.now() + EXTEND_DAYS * 24 * 60 * 60 * 1000).toISOString(),
       }),
-      'Đã đăng lại tin tuyển dụng, đang chờ duyệt.',
+      'Job post reposted and waiting for review.',
     );
 
   const duplicateJob = async (id: string) => {
@@ -66,7 +64,7 @@ export function useJobPostActions(setJobs: Dispatch<SetStateAction<RecruiterJobP
       const copy: RecruiterJobPost = {
         ...source,
         id: `${source.id}-copy-${Date.now()}`,
-        title: `${source.title} (bản sao)`,
+        title: `${source.title} (copy)`,
         status: 'DRAFT',
         rejectionReason: undefined,
         publishedAt: undefined,
@@ -76,7 +74,7 @@ export function useJobPostActions(setJobs: Dispatch<SetStateAction<RecruiterJobP
       };
       return [copy, ...prev];
     });
-    toast.success('Đã tạo bản sao tin tuyển dụng ở trạng thái bản nháp.');
+    toast.success('Job post duplicated as a draft.');
     setPendingId(null);
   };
 
