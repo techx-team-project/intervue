@@ -99,10 +99,11 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
       <JobScreeningQuestionsSection form={form} />
 
       <div className="sticky bottom-0 z-20 -mx-4 border-t border-[#e2e8f0] bg-white/95 px-4 py-3 backdrop-blur-sm sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex flex-wrap items-center justify-end gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5 sm:justify-end">
           <Button
             type="button"
             variant="ghost"
+            className="flex-1 sm:flex-none"
             leftIcon={<Eye className="h-4 w-4" />}
             onClick={() => setIsPreviewing(true)}
           >
@@ -112,6 +113,7 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
             type="button"
             variant="secondary"
             isLoading={isSaving}
+            className="flex-1 sm:flex-none"
             leftIcon={<Save className="h-4 w-4" />}
             onClick={handleSaveDraft}
           >
@@ -120,6 +122,7 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
           <Button
             type="button"
             isLoading={isSaving}
+            className="w-full sm:w-auto"
             leftIcon={<SendHorizontal className="h-4 w-4" />}
             onClick={handleSubmitForReview}
           >
