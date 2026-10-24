@@ -21,7 +21,7 @@ export default function QuickActionCard({ title, description, href, icon: Icon }
       <h3 className="text-navy mt-3 text-[14.5px] font-bold">{title}</h3>
       <p className="mt-1 text-[12.5px] text-[#64748b]">{description}</p>
       <span className="text-primary mt-3 inline-flex items-center gap-1 text-[12.5px] font-bold">
-        <span>Bắt đầu</span>
+        <span>Get started</span>
         <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
       </span>
     </Link>

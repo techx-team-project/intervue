@@ -21,10 +21,10 @@ export default function VerificationStatusBanner({ verification }: VerificationS
 
       <div className="min-w-0 flex-1">
         <p className="text-navy text-[13.5px] font-bold">
-          Tài khoản đã xác thực {verification.stepsCompleted}/{verification.stepsTotal} bước
+          Account verified: {verification.stepsCompleted}/{verification.stepsTotal} steps
         </p>
         <p className="mt-0.5 text-[12.5px] text-[#64748b]">
-          Hoàn tất xác thực để đăng tin tuyển dụng và tiếp cận ứng viên hiệu quả hơn.
+          Finish verification to publish job posts and reach candidates more effectively.
         </p>
       </div>
 
@@ -38,7 +38,7 @@ export default function VerificationStatusBanner({ verification }: VerificationS
       <button
         type="button"
         onClick={() => setIsDismissed(true)}
-        aria-label="Đóng"
+        aria-label="Dismiss"
         className="shrink-0 cursor-pointer rounded-lg p-1 text-amber-500 transition-colors hover:bg-amber-100 hover:text-amber-700"
       >
         <X className="h-4 w-4" />

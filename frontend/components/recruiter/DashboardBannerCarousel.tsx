@@ -64,7 +64,7 @@ export default function DashboardBannerCarousel() {
             type="button"
             onClick={onPrev}
             className="text-navy absolute top-1/2 left-2.5 z-20 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white/90 shadow-md transition hover:bg-white"
-            title="Banner trước"
+            title="Previous banner"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -72,7 +72,7 @@ export default function DashboardBannerCarousel() {
             type="button"
             onClick={onNext}
             className="text-navy absolute top-1/2 right-2.5 z-20 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white/90 shadow-md transition hover:bg-white"
-            title="Banner tiếp theo"
+            title="Next banner"
           >
             <ChevronRight className="h-4 w-4" />
           </button>

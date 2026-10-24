@@ -19,16 +19,16 @@ export default function PipelineFunnelCard({ stages }: PipelineFunnelCardProps) 
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           {user?.name && (
-            <p className="text-[12.5px] text-[#64748b]">Chào {user.name}, đây là tình hình tuyển dụng của bạn</p>
+            <p className="text-[12.5px] text-[#64748b]">Hi {user.name}, here is how your hiring is going</p>
           )}
-          <h2 className="text-navy mt-0.5 text-[17px] font-black">Phễu tuyển dụng</h2>
+          <h2 className="text-navy mt-0.5 text-[17px] font-black">Hiring funnel</h2>
         </div>
 
         <Link
           href={ROUTES.RECRUITER_APPLICATIONS}
           className="text-primary inline-flex items-center gap-1 text-[12.5px] font-bold hover:underline"
         >
-          <span>Xem chi tiết</span>
+          <span>View details</span>
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
