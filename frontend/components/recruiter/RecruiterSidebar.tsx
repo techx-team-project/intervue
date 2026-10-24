@@ -3,6 +3,7 @@
 import { RECRUITER_NAV_SECTIONS } from '@/constants/recruiter-nav';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
+import { cn } from '@/lib/utils';
 import { MOCK_RECRUITER_DASHBOARD } from '@/mocks/recruiter-dashboard.mock';
 import type { VerificationLevel } from '@/types/recruiter';
 import { HelpCircle } from 'lucide-react';
@@ -11,6 +12,8 @@ import { usePathname } from 'next/navigation';
 
 interface RecruiterSidebarProps {
   isCollapsed: boolean;
+  className?: string;
+  onNavigate?: () => void;
 }
 
 const VERIFICATION_TEXT_COLOR: Record<VerificationLevel, string> = {
@@ -19,17 +22,13 @@ const VERIFICATION_TEXT_COLOR: Record<VerificationLevel, string> = {
   verified: 'text-[#00873c]',
 };
 
-export default function RecruiterSidebar({ isCollapsed }: RecruiterSidebarProps) {
+export default function RecruiterSidebar({ isCollapsed, className, onNavigate }: RecruiterSidebarProps) {
   const pathname = usePathname();
   const { user } = useAuth();
   const { company, verification } = MOCK_RECRUITER_DASHBOARD;
 
   return (
-    <aside
-      className={`shrink-0 border-[#e2e8f0] bg-white transition-[width] duration-200 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto lg:border-r lg:border-b-0 ${
-        isCollapsed ? 'hidden lg:block lg:w-20' : 'block w-full border-b lg:w-72'
-      }`}
-    >
+    <aside className={cn('shrink-0 bg-white', isCollapsed ? 'lg:w-20' : 'lg:w-72', className)}>
       <div className={isCollapsed ? 'flex justify-center p-3' : 'p-5'}>
         <div className={isCollapsed ? '' : 'flex items-center gap-3.5'}>
           <div
@@ -64,6 +63,7 @@ export default function RecruiterSidebar({ isCollapsed }: RecruiterSidebarProps)
         {!isCollapsed && verification.level !== 'verified' && (
           <Link
             href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
+            onClick={onNavigate}
             className="mt-3 flex w-full items-center justify-center rounded-full bg-amber-600 px-3 py-2 text-[12.5px] font-bold text-white transition-colors hover:bg-amber-700"
           >
             Your account is not secure enough
@@ -83,6 +83,7 @@ export default function RecruiterSidebar({ isCollapsed }: RecruiterSidebarProps)
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={onNavigate}
                 title={isCollapsed ? item.label : undefined}
                 className={`flex items-center rounded-xl py-2.5 text-[13px] transition ${
                   isCollapsed ? 'justify-center px-2' : 'justify-between px-2.5'
