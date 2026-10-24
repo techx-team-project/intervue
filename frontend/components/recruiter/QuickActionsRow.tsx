@@ -4,20 +4,20 @@ import QuickActionCard from './QuickActionCard';
 
 const QUICK_ACTIONS = [
   {
-    title: 'Đăng tin tuyển dụng',
-    description: 'Tạo tin tuyển dụng mới và tiếp cận ứng viên phù hợp.',
+    title: 'Post a job',
+    description: 'Create a new job post and reach the right candidates.',
     href: ROUTES.RECRUITER_JOBS_CREATE,
     icon: Plus,
   },
   {
-    title: 'Tìm hồ sơ ứng viên',
-    description: 'Chủ động tìm kiếm ứng viên theo kỹ năng, vị trí.',
+    title: 'Search candidates',
+    description: 'Proactively search candidates by skill and role.',
     href: ROUTES.RECRUITER_CANDIDATES,
     icon: Search,
   },
   {
-    title: 'Mua dịch vụ',
-    description: 'Xem các gói dịch vụ giúp tin tuyển dụng nổi bật hơn.',
+    title: 'Buy services',
+    description: 'Browse packages that make your job posts stand out.',
     href: ROUTES.RECRUITER_SERVICES,
     icon: ShoppingBag,
   },

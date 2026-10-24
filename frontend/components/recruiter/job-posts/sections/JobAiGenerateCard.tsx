@@ -9,10 +9,10 @@ import { UseFormReturn } from 'react-hook-form';
 const MOCK_DELAY_MS = 1200;
 
 const MOCK_DESCRIPTION =
-  'Chúng tôi đang tìm kiếm một thành viên tài năng để tham gia đội ngũ kỹ thuật, chịu trách nhiệm phát triển và vận hành các tính năng cốt lõi của sản phẩm. Bạn sẽ làm việc trong môi trường năng động, phối hợp chặt chẽ với các team Product và Design.';
+  'We are looking for a talented engineer to join our technical team, owning the development and operation of the core product features. You will work in a dynamic environment, collaborating closely with the Product and Design teams.';
 
 const MOCK_REQUIREMENTS =
-  'Có kinh nghiệm làm việc với các công nghệ liên quan đến vị trí ứng tuyển. Tư duy giải quyết vấn đề tốt, khả năng làm việc nhóm và giao tiếp rõ ràng. Ưu tiên ứng viên có kinh nghiệm trong lĩnh vực tuyển dụng/HR Tech.';
+  'Experience with the technologies relevant to this role. Strong problem-solving skills, teamwork and clear communication. Candidates with recruitment or HR Tech experience are preferred.';
 
 interface JobAiGenerateCardProps {
   form: UseFormReturn<JobPostFormData>;
@@ -38,14 +38,14 @@ export default function JobAiGenerateCard({ form, onGenerated }: JobAiGenerateCa
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="text-navy text-[13px] font-bold">Tạo mô tả công việc bằng AI</p>
+        <p className="text-navy text-[13px] font-bold">Generate the job description with AI</p>
         <p className="mt-0.5 text-[12px] text-[#64748b]">
-          AI sẽ gợi ý nội dung mô tả và yêu cầu dựa trên tên tin và kỹ năng bạn đã nhập.
+          AI suggests the description and requirements from the title and skills you entered.
         </p>
       </div>
 
       <Button type="button" size="sm" variant="outline" isLoading={isGenerating} onClick={handleGenerate}>
-        Tạo ngay
+        Generate
       </Button>
     </div>
   );

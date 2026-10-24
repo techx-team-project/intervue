@@ -47,12 +47,7 @@ function buildLanes(applications: RecruiterApplication[]): JobLane[] {
     .sort((left, right) => right.applications.length - left.applications.length);
 }
 
-export default function SwimlaneBoard({
-  visibleApplications,
-  handlers,
-  activeApplicationId,
-  selectedIds,
-}: ApplicationBoardViewProps) {
+export default function SwimlaneBoard({ visibleApplications, handlers, selectedIds }: ApplicationBoardViewProps) {
   const [collapsedJobIds, setCollapsedJobIds] = useState<string[]>([]);
   const lanes = buildLanes(visibleApplications);
 
@@ -66,8 +61,8 @@ export default function SwimlaneBoard({
     return (
       <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-[#e5e9ef] bg-white py-20 text-center shadow-xs">
         <Briefcase className="h-9 w-9 text-[#cbd5e1]" />
-        <p className="text-navy text-[14px] font-bold">Không có hồ sơ nào khớp bộ lọc</p>
-        <p className="max-w-sm text-[12px] text-[#64748b]">Thử xoá bộ lọc hoặc chọn một tin tuyển dụng khác.</p>
+        <p className="text-navy text-[14px] font-bold">No applications match these filters</p>
+        <p className="max-w-sm text-[12px] text-[#64748b]">Try clearing the filters or picking another job post.</p>
       </div>
     );
   }
@@ -96,7 +91,7 @@ export default function SwimlaneBoard({
                 </span>
                 <span className="min-w-0">
                   <span className="text-navy block truncate text-[14px] font-bold">{lane.jobTitle}</span>
-                  <span className="block text-[11.5px] text-[#64748b]">{lane.applications.length} hồ sơ ứng tuyển</span>
+                  <span className="block text-[11.5px] text-[#64748b]">{lane.applications.length} applications</span>
                 </span>
               </button>
 
@@ -119,7 +114,7 @@ export default function SwimlaneBoard({
                   className="ml-1 inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11.5px] font-bold text-[#64748b] transition-colors hover:bg-slate-100 hover:text-slate-800"
                 >
                   <ExternalLink className="h-3 w-3" />
-                  Xem tin
+                  View job post
                 </Link>
               </div>
             </header>
@@ -133,15 +128,14 @@ export default function SwimlaneBoard({
                       column={column}
                       droppableId={`${lane.jobId}:${column.meta.id}`}
                       handlers={handlers}
-                      cardVariant="compact"
+                      cardVariant="rich"
                       headerStyle="plain"
                       totalVisible={lane.applications.length}
-                      activeApplicationId={activeApplicationId}
                       selectedIds={selectedIds}
                       showJobTitle={false}
                       showStatusBadge={column.meta.id === 'CLOSED'}
-                      className="w-[240px] shrink-0"
-                      bodyClassName="max-h-[22rem] min-h-[9rem]"
+                      className="w-[304px] shrink-0"
+                      bodyClassName="max-h-[34rem] min-h-[11rem]"
                     />
                   ))}
                 </div>

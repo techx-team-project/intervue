@@ -1,28 +1,28 @@
 const TIME_ZONE = 'Asia/Ho_Chi_Minh';
 const DAY_MS = 86_400_000;
 
-const dateFormatter = new Intl.DateTimeFormat('vi-VN', {
+const dateFormatter = new Intl.DateTimeFormat('en-GB', {
   timeZone: TIME_ZONE,
   day: '2-digit',
-  month: '2-digit',
+  month: 'short',
   year: 'numeric',
 });
 
-const dateTimeFormatter = new Intl.DateTimeFormat('vi-VN', {
+const dateTimeFormatter = new Intl.DateTimeFormat('en-GB', {
   timeZone: TIME_ZONE,
   day: '2-digit',
-  month: '2-digit',
+  month: 'short',
   year: 'numeric',
   hour: '2-digit',
   minute: '2-digit',
   hour12: false,
 });
 
-const weekdayFormatter = new Intl.DateTimeFormat('vi-VN', {
+const weekdayFormatter = new Intl.DateTimeFormat('en-GB', {
   timeZone: TIME_ZONE,
   weekday: 'long',
   day: '2-digit',
-  month: '2-digit',
+  month: 'short',
   hour: '2-digit',
   minute: '2-digit',
   hour12: false,
@@ -43,9 +43,9 @@ export function formatInterviewMoment(iso: string): string {
 function startOfDayInTimeZone(value: Date): number {
   const parts = dateFormatter.formatToParts(value);
   const day = parts.find((part) => part.type === 'day')?.value ?? '01';
-  const month = parts.find((part) => part.type === 'month')?.value ?? '01';
+  const month = parts.find((part) => part.type === 'month')?.value ?? 'Jan';
   const year = parts.find((part) => part.type === 'year')?.value ?? '1970';
-  return Date.parse(`${year}-${month}-${day}T00:00:00Z`);
+  return Date.parse(`${day} ${month} ${year} 00:00:00 GMT`);
 }
 
 export function dayDifferenceFromToday(iso: string): number {
@@ -55,9 +55,9 @@ export function dayDifferenceFromToday(iso: string): number {
 export function formatRelativeDay(iso: string): string {
   const difference = dayDifferenceFromToday(iso);
 
-  if (difference === 0) return 'Hôm nay';
-  if (difference === -1) return 'Hôm qua';
-  if (difference === 1) return 'Ngày mai';
-  if (difference < 0) return `${Math.abs(difference)} ngày trước`;
-  return `Còn ${difference} ngày`;
+  if (difference === 0) return 'Today';
+  if (difference === -1) return 'Yesterday';
+  if (difference === 1) return 'Tomorrow';
+  if (difference < 0) return `${Math.abs(difference)} days ago`;
+  return `In ${difference} days`;
 }

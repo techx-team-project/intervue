@@ -39,7 +39,7 @@ export default function RecruiterBottomCta() {
         <button
           type="button"
           onClick={dismiss}
-          aria-label="Đóng"
+          aria-label="Dismiss"
           className="absolute top-2.5 right-2.5 cursor-pointer rounded-full p-1 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
         >
           <X className="h-4 w-4" />
@@ -50,15 +50,15 @@ export default function RecruiterBottomCta() {
         </div>
 
         <div className="min-w-0">
-          <p className="text-[13px] font-bold">Cần tuyển dụng nhanh hơn?</p>
+          <p className="text-[13px] font-bold">Need to hire faster?</p>
           <p className="mt-0.5 text-[12px] leading-relaxed text-white/80">
-            Khám phá các gói dịch vụ giúp tin tuyển dụng nổi bật và tiếp cận đúng ứng viên IT.
+            Explore service packages that make your job posts stand out to the right IT candidates.
           </p>
           <Link
             href={ROUTES.RECRUITER_SERVICES}
             className="mt-2 inline-flex items-center gap-1 text-[12px] font-bold text-white hover:underline"
           >
-            <span>Xem gói dịch vụ</span>
+            <span>View packages</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>

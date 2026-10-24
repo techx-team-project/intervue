@@ -15,7 +15,6 @@ export type ApplicationCardVariant = 'rich' | 'compact' | 'minimal';
 interface ApplicationCardProps {
   application: RecruiterApplication;
   variant?: ApplicationCardVariant;
-  isActive?: boolean;
   isSelected?: boolean;
   isDragging?: boolean;
   isOverlay?: boolean;
@@ -33,7 +32,6 @@ const MAX_VISIBLE_SKILLS = 3;
 export default function ApplicationCard({
   application,
   variant = 'rich',
-  isActive = false,
   isSelected = false,
   isDragging = false,
   isOverlay = false,
@@ -55,7 +53,7 @@ export default function ApplicationCard({
     <article
       role={onOpen ? 'button' : undefined}
       tabIndex={onOpen ? 0 : undefined}
-      aria-label={onOpen ? `Mở hồ sơ của ${candidate.fullName}` : undefined}
+      aria-label={onOpen ? `Open ${candidate.fullName}’s application` : undefined}
       onClick={handleOpen}
       onKeyDown={(event) => {
         if (!onOpen) return;
@@ -67,8 +65,8 @@ export default function ApplicationCard({
       className={cn(
         'group relative rounded-2xl border bg-white text-left transition',
         onOpen && 'cursor-pointer hover:-translate-y-0.5 hover:shadow-md',
-        isActive ? 'border-primary ring-primary/30 ring-2' : 'border-[#e5e9ef] shadow-2xs',
-        isSelected && !isActive && 'border-emerald-300 ring-1 ring-emerald-200',
+        'border-[#e5e9ef] shadow-2xs',
+        isSelected && 'border-emerald-300 ring-1 ring-emerald-200',
         isDragging && 'opacity-40',
         isOverlay && 'rotate-2 shadow-2xl',
         variant === 'rich' ? 'p-3.5' : 'p-3',
@@ -84,7 +82,7 @@ export default function ApplicationCard({
           <input
             type="checkbox"
             checked={isSelected}
-            aria-label={`Chọn hồ sơ của ${candidate.fullName}`}
+            aria-label={`Select ${candidate.fullName}’s application`}
             onClick={(event) => event.stopPropagation()}
             onChange={(event) => {
               event.stopPropagation();
@@ -111,7 +109,7 @@ export default function ApplicationCard({
               <MapPin className="h-3 w-3 shrink-0" />
               <span className="truncate">{candidate.location}</span>
               <span className="text-[#cbd5e1]">•</span>
-              <span className="shrink-0">{candidate.experienceYears} năm KN</span>
+              <span className="shrink-0">{candidate.experienceYears} yrs exp</span>
             </p>
           )}
         </div>
@@ -146,13 +144,13 @@ export default function ApplicationCard({
           {application.screeningAnswers.length > 0 && (
             <span className="inline-flex items-center gap-1 text-[#64748b]">
               <ListChecks className="h-3 w-3" />
-              {application.screeningAnswers.length} câu sàng lọc
+              {application.screeningAnswers.length} screening answers
             </span>
           )}
           {application.source === 'AI_RECOMMENDATION' && (
             <span className="text-primary inline-flex items-center gap-1">
               <Sparkles className="h-3 w-3" />
-              AI gợi ý
+              AI suggested
             </span>
           )}
         </div>
@@ -179,7 +177,7 @@ export default function ApplicationCard({
           {onToggleSaved && (
             <button
               type="button"
-              aria-label={application.isSaved ? 'Bỏ lưu ứng viên' : 'Lưu ứng viên'}
+              aria-label={application.isSaved ? 'Remove from saved' : 'Save candidate'}
               aria-pressed={application.isSaved}
               onClick={(event) => {
                 event.stopPropagation();
@@ -201,7 +199,7 @@ export default function ApplicationCard({
                 onSelect={onChangeStatus}
                 trigger="icon"
                 disabled={!isMovableStatus(application.status)}
-                label={`Chuyển trạng thái hồ sơ của ${candidate.fullName}`}
+                label={`Change the status of ${candidate.fullName}’s application`}
               />
             </div>
           )}

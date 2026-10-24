@@ -11,14 +11,14 @@ export default function SuggestedServicePackages({ services }: SuggestedServiceP
   return (
     <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-7">
       <div className="flex items-center justify-between">
-        <h2 className="text-navy text-[16px] font-bold">Gói dịch vụ gợi ý</h2>
+        <h2 className="text-navy text-[16px] font-bold">Suggested packages</h2>
         <Link href={ROUTES.RECRUITER_SERVICES} className="text-primary text-[12.5px] font-bold hover:underline">
-          Xem tất cả
+          View all
         </Link>
       </div>
 
       {services.length === 0 ? (
-        <p className="mt-4 text-[13px] text-[#64748b]">Hiện chưa có gói dịch vụ gợi ý nào.</p>
+        <p className="mt-4 text-[13px] text-[#64748b]">No suggested packages right now.</p>
       ) : (
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {services.map((service) => (

@@ -10,9 +10,9 @@ export default function ApplicationScreeningTab({ answers }: ApplicationScreenin
     return (
       <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[#e2e8f0] bg-[#fafbfc] py-14 text-center">
         <MessageSquareOff className="h-8 w-8 text-[#cbd5e1]" />
-        <p className="text-navy text-[13px] font-bold">Tin tuyển dụng này không có câu hỏi sàng lọc</p>
+        <p className="text-navy text-[13px] font-bold">This job post has no screening questions</p>
         <p className="max-w-xs text-[11.5px] text-[#94a3b8]">
-          Bạn có thể thêm câu hỏi sàng lọc khi chỉnh sửa tin tuyển dụng để lọc ứng viên ngay lúc họ ứng tuyển.
+          You can add screening questions when editing the job post to filter candidates as they apply.
         </p>
       </div>
     );

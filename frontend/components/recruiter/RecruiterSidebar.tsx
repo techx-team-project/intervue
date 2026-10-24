@@ -42,7 +42,7 @@ export default function RecruiterSidebar({ isCollapsed }: RecruiterSidebarProps)
 
           {!isCollapsed && (
             <div className="min-w-0 flex-1">
-              <p className="text-[11.5px] text-[#64748b]">Nhà tuyển dụng</p>
+              <p className="text-[11.5px] text-[#64748b]">Recruiter</p>
               <h3 className="text-navy truncate text-[15px] font-bold">{user?.name}</h3>
               <p className="truncate text-[12px] text-[#64748b]">{company.name}</p>
             </div>
@@ -51,11 +51,11 @@ export default function RecruiterSidebar({ isCollapsed }: RecruiterSidebarProps)
 
         {!isCollapsed && (
           <div className="mt-3 flex items-center gap-1.5 text-[12.5px]">
-            <span className="text-[#64748b]">Tài khoản xác thực:</span>
+            <span className="text-[#64748b]">Account verification:</span>
             <span className={`font-bold ${VERIFICATION_TEXT_COLOR[verification.level]}`}>
-              Cấp {verification.stepsCompleted}/{verification.stepsTotal}
+              Level {verification.stepsCompleted}/{verification.stepsTotal}
             </span>
-            <span title="Hoàn tất xác thực để đăng tin và tiếp cận ứng viên hiệu quả hơn">
+            <span title="Finish verification to publish job posts and reach candidates more effectively">
               <HelpCircle className="h-3.5 w-3.5 text-[#94a3b8]" />
             </span>
           </div>
@@ -66,7 +66,7 @@ export default function RecruiterSidebar({ isCollapsed }: RecruiterSidebarProps)
             href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
             className="mt-3 flex w-full items-center justify-center rounded-full bg-amber-600 px-3 py-2 text-[12.5px] font-bold text-white transition-colors hover:bg-amber-700"
           >
-            Tài khoản chưa đủ an toàn
+            Your account is not secure enough
           </Link>
         )}
       </div>
@@ -101,7 +101,7 @@ export default function RecruiterSidebar({ isCollapsed }: RecruiterSidebarProps)
 
                 {!isCollapsed && item.comingSoon && (
                   <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-500">
-                    Sắp có
+                    Coming soon
                   </span>
                 )}
               </Link>
@@ -114,13 +114,13 @@ export default function RecruiterSidebar({ isCollapsed }: RecruiterSidebarProps)
         <div className="mt-4 space-y-1 border-t border-[#f1f5f9] px-4 pt-4 pb-5 text-[11.5px]">
           {/* TODO: wire to real legal routes once they exist */}
           <a href="#" className="text-primary block hover:underline">
-            Chính sách quyền riêng tư
+            Privacy policy
           </a>
           <a href="#" className="text-primary block hover:underline">
-            Chính sách cookie
+            Cookie policy
           </a>
           <a href="#" className="text-primary block hover:underline">
-            Điều khoản dịch vụ
+            Terms of service
           </a>
           <p className="pt-2 text-[#94a3b8]">Version 1.0.0</p>
           <p className="text-[#94a3b8]">© 2024 - 2026 InterVue Vietnam JSC. All rights reserved.</p>

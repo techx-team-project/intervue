@@ -35,7 +35,6 @@ export interface ApplicationBoardViewProps {
   visibleApplications: RecruiterApplication[];
   handlers: ApplicationCardHandlers;
   totalVisible: number;
-  activeApplicationId: string | null;
   selectedIds: string[];
   showJobTitle: boolean;
 }
@@ -161,12 +160,12 @@ export function useApplicationBoard(initialApplications: RecruiterApplication[],
 
       const label =
         targets.length === 1
-          ? `Đã chuyển ${targets[0].candidate.fullName} sang "${APPLICATION_STATUS_META[toStatus].label}".`
-          : `Đã chuyển ${targets.length} hồ sơ sang "${APPLICATION_STATUS_META[toStatus].label}".`;
+          ? `Moved ${targets[0].candidate.fullName} to "${APPLICATION_STATUS_META[toStatus].label}".`
+          : `Moved ${targets.length} applications to "${APPLICATION_STATUS_META[toStatus].label}".`;
 
       toast.success(label, {
         action: {
-          label: 'Hoàn tác',
+          label: 'Undo',
           onClick: () => setApplications(snapshot),
         },
       });
@@ -187,7 +186,7 @@ export function useApplicationBoard(initialApplications: RecruiterApplication[],
             : application,
         ),
       );
-      toast.success(isSaved ? 'Đã lưu ứng viên vào danh sách của bạn.' : 'Đã bỏ lưu ứng viên.');
+      toast.success(isSaved ? 'Candidate saved to your list.' : 'Candidate removed from your saved list.');
     },
     [applications],
   );
@@ -201,7 +200,7 @@ export function useApplicationBoard(initialApplications: RecruiterApplication[],
       ),
     );
     setSelectedIds([]);
-    toast.success(`Đã lưu ${ids.length} ứng viên.`);
+    toast.success(`Saved ${ids.length} candidates.`);
   }, []);
 
   const addNote = useCallback((id: string, content: string) => {
@@ -223,13 +222,7 @@ export function useApplicationBoard(initialApplications: RecruiterApplication[],
           : application,
       ),
     );
-    toast.success('Đã thêm ghi chú nội bộ.');
-  }, []);
-
-  const markAsViewed = useCallback((id: string) => {
-    setApplications((previous) =>
-      previous.map((application) => (application.id === id ? { ...application, isViewed: true } : application)),
-    );
+    toast.success('Internal note added.');
   }, []);
 
   const toggleSelected = useCallback((id: string) => {
@@ -252,7 +245,6 @@ export function useApplicationBoard(initialApplications: RecruiterApplication[],
     toggleSaved,
     saveMany,
     addNote,
-    markAsViewed,
   };
 }
 

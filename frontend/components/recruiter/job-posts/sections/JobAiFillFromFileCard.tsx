@@ -14,8 +14,8 @@ const MOCK_PARSED_DATA: Partial<JobPostFormData> = {
   workingArrangement: 'HYBRID',
   skills: ['Node.js', 'React', 'PostgreSQL'],
   description:
-    'Nội dung được trích xuất từ file JD bạn tải lên (demo). Xây dựng và bảo trì các dịch vụ backend và giao diện người dùng cho hệ thống.',
-  requirements: 'Nội dung được trích xuất từ file JD bạn tải lên (demo). Tối thiểu 2 năm kinh nghiệm fullstack.',
+    'Content extracted from the JD file you uploaded (demo). Build and maintain the backend services and user interfaces of the system.',
+  requirements: 'Content extracted from the JD file you uploaded (demo). At least 2 years of fullstack experience.',
 };
 
 interface JobAiFillFromFileCardProps {
@@ -40,14 +40,14 @@ export default function JobAiFillFromFileCard({ form, onFilled }: JobAiFillFromF
 
   return (
     <div className="rounded-xl border border-[#e2e8f0] bg-[#f8fafc] p-4">
-      <p className="text-navy text-[13px] font-bold">Điền tự động từ file JD</p>
+      <p className="text-navy text-[13px] font-bold">Auto-fill from a JD file</p>
       <p className="mt-0.5 mb-3 text-[12px] text-[#64748b]">
-        Tải lên file mô tả công việc có sẵn, AI sẽ điền tự động vào form bên dưới.
+        Upload an existing job description and AI will fill in the form below.
       </p>
 
       <FileDropInput
         onFileSelected={handleFileSelected}
-        selectedFileName={isParsing ? `Đang xử lý ${fileName}...` : fileName}
+        selectedFileName={isParsing ? `Processing ${fileName}...` : fileName}
       />
     </div>
   );

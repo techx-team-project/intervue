@@ -86,7 +86,7 @@ export function Modal({
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Đóng"
+                aria-label="Close"
                 className="shrink-0 cursor-pointer rounded-xl p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
               >
                 <X className="h-5 w-5" />

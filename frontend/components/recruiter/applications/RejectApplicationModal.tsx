@@ -22,13 +22,13 @@ interface RejectApplicationModalProps {
 const STATUS_CHOICES: { value: RejectApplicationFormData['status']; label: string; description: string }[] = [
   {
     value: 'REJECTED',
-    label: 'Từ chối hồ sơ',
-    description: 'Nhà tuyển dụng quyết định không tiếp tục với ứng viên',
+    label: 'Reject the application',
+    description: 'The recruiter decided not to continue with this candidate',
   },
   {
     value: 'NO_AGREEMENT',
-    label: 'Không thỏa thuận được',
-    description: 'Hai bên không thống nhất được điều kiện làm việc',
+    label: 'No agreement',
+    description: 'Both sides could not agree on the working terms',
   },
 ];
 
@@ -52,19 +52,19 @@ export default function RejectApplicationModal({
       isOpen
       onClose={onClose}
       maxWidth="lg"
-      title="Kết thúc hồ sơ ứng tuyển"
+      title="Close this application"
       description={
         candidateNames.length === 1
-          ? `Hồ sơ của ${candidateNames[0]} sẽ chuyển sang nhóm đã kết thúc.`
-          : `${candidateNames.length} hồ sơ sẽ chuyển sang nhóm đã kết thúc.`
+          ? `${candidateNames[0]}’s application will move to the closed group.`
+          : `${candidateNames.length} applications will move to the closed group.`
       }
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>
-            Huỷ
+            Cancel
           </Button>
           <Button variant="danger" onClick={handleSubmit(onConfirm)}>
-            Xác nhận kết thúc
+            Confirm closing
           </Button>
         </>
       }
@@ -91,7 +91,7 @@ export default function RejectApplicationModal({
 
         <div>
           <p className="text-navy mb-2 text-[13px] font-bold">
-            Lý do <span className="text-rose-500">*</span>
+            Reason <span className="text-rose-500">*</span>
           </p>
 
           <div className="space-y-2">
@@ -135,13 +135,13 @@ export default function RejectApplicationModal({
                 }}
                 className="mt-0.5 h-4 w-4 cursor-pointer border-slate-300 text-emerald-600 focus:ring-emerald-500"
               />
-              <span className="font-medium text-slate-700">Lý do khác</span>
+              <span className="font-medium text-slate-700">Other reason</span>
             </label>
           </div>
 
           {isCustomReason && (
             <div className="mt-2.5">
-              <Input placeholder="Nhập lý do kết thúc hồ sơ" {...register('reason')} />
+              <Input placeholder="Enter the reason for closing" {...register('reason')} />
             </div>
           )}
 
@@ -151,9 +151,9 @@ export default function RejectApplicationModal({
         </div>
 
         <Textarea
-          label="Ghi chú nội bộ (không gửi cho ứng viên)"
+          label="Internal note (not sent to the candidate)"
           rows={3}
-          placeholder="Ghi lại bối cảnh để đồng nghiệp hiểu quyết định này..."
+          placeholder="Record the context so colleagues understand this decision..."
           error={formState.errors.detail?.message}
           {...register('detail')}
         />
@@ -161,8 +161,8 @@ export default function RejectApplicationModal({
         <div className="flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50/70 p-3">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
           <p className="text-[11.5px] leading-relaxed text-amber-800">
-            Quyết định kết thúc hồ sơ do nhà tuyển dụng đưa ra. InterVue AI chỉ đưa ra gợi ý và không tự động từ chối
-            bất kỳ ứng viên nào.
+            Closing an application is the recruiter’s decision. InterVue AI only offers suggestions and never rejects a
+            candidate automatically.
           </p>
         </div>
       </div>

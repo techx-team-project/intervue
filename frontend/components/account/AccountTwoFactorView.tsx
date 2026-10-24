@@ -53,7 +53,7 @@ export default function AccountTwoFactorView() {
     setErrorMsg('');
 
     if (otpCode.length !== 6) {
-      setErrorMsg('Vui lòng nhập đủ 6 chữ số mã xác thực từ ứng dụng Authenticator.');
+      setErrorMsg('Please enter all 6 digits from your Authenticator app.');
       return;
     }
 
@@ -62,12 +62,12 @@ export default function AccountTwoFactorView() {
     setTimeout(() => {
       setIsLoading(false);
       setIsEnabled(true);
-      setSuccessMsg('Đã kích hoạt xác thực 2 bước (2FA) thành công! Tài khoản của bạn được bảo vệ tối đa.');
+      setSuccessMsg('Two-factor authentication is now active. Your account has the strongest protection.');
     }, 800);
   };
 
   const handleDisable2FA = () => {
-    if (confirm('Bạn có chắc chắn muốn tắt xác thực 2 bước? Tài khoản sẽ giảm mức độ an toàn.')) {
+    if (confirm('Turn off two-factor authentication? Your account will be less secure.')) {
       setIsEnabled(false);
       setOtpCode('');
       setSuccessMsg('');
@@ -81,16 +81,16 @@ export default function AccountTwoFactorView() {
           <div>
             <div className="flex items-center gap-2">
               <Smartphone className="text-primary h-5 w-5" />
-              <h1 className="text-xl font-black text-slate-800 sm:text-2xl">Xác thực 2 bước (2FA)</h1>
+              <h1 className="text-xl font-black text-slate-800 sm:text-2xl">Two-factor authentication</h1>
             </div>
             <p className="mt-1 text-sm text-slate-500">
-              Thêm một lớp bảo vệ vững chắc ngoài mật khẩu, ngăn chặn xâm nhập trái phép kể cả khi mật khẩu bị lộ.
+              Add a strong layer beyond your password, blocking unauthorised access even if the password leaks.
             </p>
           </div>
 
           <div className="flex items-center gap-2.5">
             <Badge variant={isEnabled ? 'success' : 'warning'} size="md">
-              {isEnabled ? '● Đang kích hoạt' : '○ Chưa kích hoạt'}
+              {isEnabled ? '● Active' : '○ Not active'}
             </Badge>
           </div>
         </div>
@@ -111,10 +111,10 @@ export default function AccountTwoFactorView() {
                 <ShieldCheck className="h-7 w-7" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Tài khoản của bạn đã được bảo vệ bằng 2FA</h3>
+                <h3 className="text-lg font-bold text-slate-900">Your account is protected with 2FA</h3>
                 <p className="mt-1 text-sm text-slate-600">
-                  Phương thức chính: Ứng dụng xác thực (Google / Microsoft Authenticator). Khi đăng nhập trên thiết bị
-                  mới, hệ thống sẽ yêu cầu mã xác nhận từ điện thoại của bạn.
+                  Primary method: an authenticator app (Google / Microsoft Authenticator). When you sign in on a new
+                  device, the system asks for the code from your phone.
                 </p>
                 <div className="mt-4">
                   <button
@@ -122,7 +122,7 @@ export default function AccountTwoFactorView() {
                     onClick={handleDisable2FA}
                     className="cursor-pointer text-xs font-bold text-rose-600 hover:underline"
                   >
-                    Tắt xác thực 2 bước
+                    Turn off two-factor authentication
                   </button>
                 </div>
               </div>
@@ -132,9 +132,9 @@ export default function AccountTwoFactorView() {
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h3 className="text-base font-bold text-slate-800">Mã khôi phục dự phòng (Backup Codes)</h3>
+                <h3 className="text-base font-bold text-slate-800">Backup recovery codes</h3>
                 <p className="text-xs text-slate-500">
-                  Lưu trữ các mã này ở nơi an toàn. Mỗi mã chỉ sử dụng được 1 lần khi bạn không thể truy cập điện thoại.
+                  Keep these codes somewhere safe. Each one works once, for when you cannot reach your phone.
                 </p>
               </div>
 
@@ -148,7 +148,7 @@ export default function AccountTwoFactorView() {
                     isCopiedBackup ? <Check className="text-primary h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />
                   }
                 >
-                  {isCopiedBackup ? 'Đã sao chép' : 'Sao chép'}
+                  {isCopiedBackup ? 'Copied' : 'Copy'}
                 </Button>
                 <Button
                   type="button"
@@ -157,7 +157,7 @@ export default function AccountTwoFactorView() {
                   onClick={handleDownloadBackupCodes}
                   leftIcon={<Download className="h-3.5 w-3.5" />}
                 >
-                  Tải .txt
+                  Download .txt
                 </Button>
               </div>
             </div>
@@ -173,9 +173,9 @@ export default function AccountTwoFactorView() {
         </div>
       ) : (
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
-          <h2 className="text-base font-bold text-slate-800">Kích hoạt xác thực qua Authenticator App</h2>
+          <h2 className="text-base font-bold text-slate-800">Set up authentication with an authenticator app</h2>
           <p className="mt-1 text-sm text-slate-500">
-            Sử dụng Google Authenticator, Microsoft Authenticator hoặc 1Password trên điện thoại của bạn.
+            Use Google Authenticator, Microsoft Authenticator or 1Password on your phone.
           </p>
 
           <div className="mt-6 space-y-6">
@@ -184,7 +184,7 @@ export default function AccountTwoFactorView() {
                 1
               </div>
               <div className="flex-1">
-                <div className="text-sm font-bold text-slate-800">Mở ứng dụng Authenticator và quét mã QR</div>
+                <div className="text-sm font-bold text-slate-800">Open your authenticator app and scan the QR code</div>
                 <div className="mt-4 flex flex-col gap-6 sm:flex-row sm:items-center">
                   <div className="flex h-44 w-44 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white p-3 shadow-xs">
                     <svg viewBox="0 0 100 100" className="h-full w-full">
@@ -214,7 +214,7 @@ export default function AccountTwoFactorView() {
 
                   <div className="space-y-2">
                     <span className="text-xs text-slate-500">
-                      Nếu không quét được mã, bạn có thể nhập khóa thiết lập thủ công:
+                      If you cannot scan the code, enter the setup key manually:
                     </span>
                     <div className="flex items-center gap-2">
                       <div className="rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 font-mono text-sm font-bold text-slate-800">
@@ -229,7 +229,7 @@ export default function AccountTwoFactorView() {
                           isCopiedKey ? <Check className="text-primary h-4 w-4" /> : <Copy className="h-4 w-4" />
                         }
                       >
-                        {isCopiedKey ? 'Đã chép' : 'Sao chép'}
+                        {isCopiedKey ? 'Copied' : 'Copy'}
                       </Button>
                     </div>
                   </div>
@@ -242,7 +242,7 @@ export default function AccountTwoFactorView() {
                 2
               </div>
               <div className="flex-1">
-                <div className="text-sm font-bold text-slate-800">Nhập mã 6 chữ số từ ứng dụng để hoàn tất</div>
+                <div className="text-sm font-bold text-slate-800">Enter the 6-digit code from the app to finish</div>
 
                 {errorMsg && (
                   <div className="mt-3 rounded-lg bg-rose-50 p-2.5 text-xs font-semibold text-rose-600">{errorMsg}</div>
@@ -259,7 +259,7 @@ export default function AccountTwoFactorView() {
                   />
 
                   <Button type="submit" variant="primary" size="md" isLoading={isLoading}>
-                    Xác minh & Kích hoạt 2FA
+                    Verify & enable 2FA
                   </Button>
                 </form>
               </div>

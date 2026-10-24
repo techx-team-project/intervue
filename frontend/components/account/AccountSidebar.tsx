@@ -25,27 +25,27 @@ import {
 const MENU_ITEMS = [
   {
     href: '/account',
-    label: 'Cài đặt tìm việc & CV',
+    label: 'Job search & CV settings',
     icon: Briefcase,
   },
   {
     href: '/upgrade',
-    label: 'Nâng cấp tài khoản VIP',
+    label: 'Upgrade to VIP',
     icon: Sparkles,
   },
   {
     href: '/account/security',
-    label: 'Bảo mật tài khoản',
+    label: 'Account security',
     icon: ShieldCheck,
   },
   {
     href: '/account/password',
-    label: 'Đổi mật khẩu',
+    label: 'Change password',
     icon: KeyRound,
   },
   {
     href: '/account/two-factor',
-    label: 'Xác thực 2 bước (2FA)',
+    label: 'Two-factor authentication',
     icon: Smartphone,
   },
 ];
@@ -72,7 +72,7 @@ export default function AccountSidebar() {
 
             <button
               type="button"
-              title="Cập nhật ảnh đại diện"
+              title="Update profile photo"
               className="bg-primary hover:bg-primary-hover absolute -right-0.5 -bottom-0.5 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-white shadow-sm ring-2 ring-white transition-transform"
             >
               <Camera className="h-3.5 w-3.5" />
@@ -80,11 +80,11 @@ export default function AccountSidebar() {
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="text-[12px] text-[#64748b]">Chào bạn trở lại,</p>
+            <p className="text-[12px] text-[#64748b]">Welcome back,</p>
             <h3 className="text-navy truncate text-[16px] font-bold">An Lâm Hoàng</h3>
             <div className="mt-1">
               <span className="inline-block rounded bg-[#526477] px-2 py-0.5 text-[10.5px] font-semibold text-white">
-                Tài khoản đã xác thực
+                Verified account
               </span>
             </div>
             <Link
@@ -92,7 +92,7 @@ export default function AccountSidebar() {
               className="text-navy mt-1.5 inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#f1f5f9] px-2.5 py-0.5 text-[11px] font-semibold transition-colors hover:bg-slate-200"
             >
               <ArrowUpCircle className="text-primary h-3.5 w-3.5" />
-              <span>Nâng cấp tài khoản</span>
+              <span>Upgrade account</span>
             </Link>
           </div>
         </div>
@@ -100,10 +100,10 @@ export default function AccountSidebar() {
         <div className="mt-4 border-t border-[#f1f5f9] pt-3.5">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-1">
-              <span className="text-navy text-[13px] font-bold">Gợi ý việc làm</span>
+              <span className="text-navy text-[13px] font-bold">Job suggestions</span>
               <button
                 type="button"
-                title="Bật tính năng nhận thông báo cơ hội việc làm phù hợp"
+                title="Turn on notifications about matching job opportunities"
                 className="text-[#94a3b8] hover:text-[#64748b]"
               >
                 <HelpCircle className="h-3.5 w-3.5" />
@@ -119,7 +119,7 @@ export default function AccountSidebar() {
                   : 'border-primary text-primary hover:bg-emerald-50'
               }`}
             >
-              {isSuggestJob ? 'Đang bật' : 'Bật gợi ý'}
+              {isSuggestJob ? 'On' : 'Turn on'}
             </button>
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function AccountSidebar() {
         <div className="mt-4 border-t border-[#f1f5f9] pt-3.5">
           <div className="flex items-center justify-between gap-2">
             <span className={`text-[13.5px] font-bold ${isJobSeeking ? 'text-[#00873c]' : 'text-[#64748b]'}`}>
-              {isJobSeeking ? 'Đang Bật tìm việc' : 'Đang Tắt tìm việc'}
+              {isJobSeeking ? 'Job search is on' : 'Job search is off'}
             </span>
 
             <button
@@ -148,20 +148,20 @@ export default function AccountSidebar() {
           </div>
 
           <div className="mt-2.5">
-            <p className="text-[11.5px] text-[#64748b]">Khi bật tìm việc:</p>
+            <p className="text-[11.5px] text-[#64748b]">When job search is on:</p>
             <div className="mt-1.5 space-y-1.5 text-[11.5px] leading-relaxed text-[#64748b]">
               <div className="flex items-start gap-1.5">
                 <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 stroke-2 text-slate-400" />
                 <span>
-                  Nhà tuyển dụng (NTD) có thể <strong className="text-navy font-semibold">tìm thấy</strong> và mang đến
-                  cho bạn những cơ hội hấp dẫn (Xem thêm tại phần Cho phép NTD tìm kiếm bên dưới).
+                  Recruiters can <strong className="text-navy font-semibold">find you</strong> and bring you relevant
+                  opportunities (see the recruiter search setting below).
                 </span>
               </div>
               <div className="flex items-start gap-1.5">
                 <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 stroke-2 text-slate-400" />
                 <span>
-                  Hồ sơ của bạn sẽ <strong className="text-navy font-semibold">hiển thị nổi bật</strong> trên kết quả
-                  tìm kiếm của Nhà tuyển dụng.
+                  Your profile is <strong className="text-navy font-semibold">highlighted</strong> in recruiter search
+                  results.
                 </span>
               </div>
             </div>
@@ -169,22 +169,22 @@ export default function AccountSidebar() {
         </div>
 
         <div className="mt-4 border-t border-[#f1f5f9] pt-3.5">
-          <h4 className="text-navy text-[13.5px] font-bold">Cho phép NTD tìm kiếm hồ sơ</h4>
+          <h4 className="text-navy text-[13.5px] font-bold">Let recruiters find your profile</h4>
           <p className="mt-1 text-[11.5px] leading-relaxed text-[#64748b]">
-            Bạn chưa có CV nào trên hệ thống. Tạo CV ngay để bắt đầu nhận lời mời kết nối từ các Nhà tuyển dụng uy tín.
+            You do not have a CV yet. Create one to start receiving invitations from trusted recruiters.
           </p>
 
           <Link
             href={ROUTES.CANDIDATE_PROFILE}
             className="border-primary text-primary mt-2.5 inline-flex items-center justify-center rounded-full border bg-white px-3.5 py-1 text-[12px] font-bold transition hover:bg-emerald-50 active:scale-[0.98]"
           >
-            Tạo CV ngay
+            Create a CV
           </Link>
 
           <div className="mt-3 rounded-xl border border-slate-100 bg-[#f8fafc] p-2.5 text-[11.5px] leading-relaxed text-[#64748b]">
             <p>
-              Khi bạn cho phép Nhà tuyển dụng (NTD) tìm kiếm hồ sơ, các NTD uy tín có thể tiếp cận thông tin kinh nghiệm
-              làm việc, học vấn, kỹ năng... trên CV của bạn.
+              When you let recruiters search for your profile, trusted recruiters can see the work experience, education
+              and skills on your CV.
             </p>
 
             <button
@@ -192,14 +192,14 @@ export default function AccountSidebar() {
               onClick={() => setShowMoreInfo(!showMoreInfo)}
               className="text-navy hover:text-primary mt-1.5 flex cursor-pointer items-center gap-1 font-semibold"
             >
-              <span>Tìm hiểu thêm</span>
+              <span>Learn more</span>
               {showMoreInfo ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
             </button>
 
             {showMoreInfo && (
               <div className="mt-2 border-t border-slate-200/70 pt-2 text-[11px] text-[#64748b]">
-                InterVue cam kết chỉ chia sẻ dữ liệu với các doanh nghiệp đã xác thực danh tính. Bạn có thể thay đổi
-                trạng thái này bất kỳ lúc nào trong mục Cài đặt tài khoản.
+                InterVue only shares your data with companies that passed identity verification. You can change this
+                setting at any time in Account settings.
               </div>
             )}
           </div>
@@ -207,7 +207,7 @@ export default function AccountSidebar() {
       </div>
 
       <div className="rounded-2xl border border-[#e2e8f0] bg-white p-3 shadow-xs">
-        <div className="px-3 py-2 text-[11px] font-bold tracking-wider text-[#94a3b8] uppercase">Quản lý tài khoản</div>
+        <div className="px-3 py-2 text-[11px] font-bold tracking-wider text-[#94a3b8] uppercase">Account</div>
 
         <nav className="space-y-1">
           {MENU_ITEMS.map((item) => {
@@ -241,7 +241,7 @@ export default function AccountSidebar() {
         >
           <div className="flex items-center gap-3">
             <User className="h-4.5 w-4.5 shrink-0 text-[#64748b]" />
-            <span>Hồ sơ tuyển dụng (Profile)</span>
+            <span>Candidate profile</span>
           </div>
           <ExternalLink className="h-3.5 w-3.5 text-[#94a3b8]" />
         </Link>
@@ -266,9 +266,9 @@ export default function AccountSidebar() {
               <span className="h-1.5 w-1.5 rounded-full bg-[#00e066]" />
             </div>
 
-            <div className="mt-2 text-[12.5px] leading-snug font-bold">Tải App InterVue ngay!</div>
+            <div className="mt-2 text-[12.5px] leading-snug font-bold">Get the InterVue app!</div>
             <p className="mt-1 text-[11px] leading-relaxed text-white/80">
-              Để không bỏ lỡ bất cứ cơ hội nào từ Nhà tuyển dụng
+              So you never miss an opportunity from a recruiter
             </p>
           </div>
 
@@ -277,7 +277,7 @@ export default function AccountSidebar() {
               viewBox="0 0 29 29"
               className="h-16 w-16 text-[#0f2c25]"
               fill="currentColor"
-              aria-label="QR Code tải app"
+              aria-label="App download QR code"
             >
               <path d="M2 2h7v7H2V2zm2 2v3h3V4H4z" />
               <rect x="5" y="5" width="1" height="1" />

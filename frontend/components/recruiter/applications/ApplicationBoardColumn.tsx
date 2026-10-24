@@ -15,7 +15,6 @@ interface ApplicationBoardColumnProps {
   cardVariant: ApplicationCardVariant;
   headerStyle?: 'metrics' | 'plain';
   totalVisible?: number;
-  activeApplicationId?: string | null;
   selectedIds?: string[];
   showJobTitle?: boolean;
   showStatusBadge?: boolean;
@@ -33,7 +32,6 @@ export default function ApplicationBoardColumn({
   cardVariant,
   headerStyle = 'plain',
   totalVisible = 0,
-  activeApplicationId = null,
   selectedIds = [],
   showJobTitle = true,
   showStatusBadge = false,
@@ -64,7 +62,7 @@ export default function ApplicationBoardColumn({
   return (
     <section
       ref={setNodeRef}
-      aria-label={`${meta.label} — ${applications.length} hồ sơ`}
+      aria-label={`${meta.label} — ${applications.length} applications`}
       className={cn(
         'flex min-w-0 flex-col rounded-2xl border transition-colors',
         isOver ? cn('border-transparent bg-white ring-2', meta.accentRingClassName) : 'border-[#e5e9ef] bg-[#fafbfc]',
@@ -89,14 +87,14 @@ export default function ApplicationBoardColumn({
           <div className="flex shrink-0 items-center gap-1">
             {newCount > 0 && (
               <span className="bg-primary rounded-full px-1.5 py-0.5 text-[10.5px] font-black text-white">
-                {newCount} mới
+                {newCount} new
               </span>
             )}
             {onToggleCollapse && (
               <button
                 type="button"
                 onClick={onToggleCollapse}
-                aria-label={`Thu gọn cột ${meta.label}`}
+                aria-label={`Collapse the ${meta.label} column`}
                 className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white hover:text-slate-700"
               >
                 <ChevronDown className="h-3.5 w-3.5" />
@@ -122,8 +120,8 @@ export default function ApplicationBoardColumn({
         {applications.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-[#e2e8f0] py-8 text-center">
             <Inbox className="h-5 w-5 text-[#cbd5e1]" />
-            <p className="text-[11.5px] font-semibold text-[#94a3b8]">Chưa có hồ sơ</p>
-            <p className="px-3 text-[10.5px] text-[#cbd5e1]">Kéo một hồ sơ vào đây để chuyển trạng thái</p>
+            <p className="text-[11.5px] font-semibold text-[#94a3b8]">No applications yet</p>
+            <p className="px-3 text-[10.5px] text-[#cbd5e1]">Drop an application here to change its status</p>
           </div>
         ) : (
           applications.map((application) => (
@@ -131,7 +129,6 @@ export default function ApplicationBoardColumn({
               key={application.id}
               application={application}
               variant={cardVariant}
-              isActive={activeApplicationId === application.id}
               isSelected={selectedIds.includes(application.id)}
               showJobTitle={showJobTitle}
               showStatusBadge={showStatusBadge}

@@ -4,18 +4,18 @@ import { AlertTriangle, CalendarClock, Users } from 'lucide-react';
 
 export const MOCK_RECRUITER_DASHBOARD: RecruiterDashboardData = {
   company: {
-    name: 'Công ty TNHH Công nghệ InterVue',
+    name: 'InterVue Technology Co., Ltd',
   },
   verification: {
     level: 'basic',
     stepsCompleted: 1,
     stepsTotal: 3,
-    nextStepLabel: 'Xác thực số điện thoại',
+    nextStepLabel: 'Verify your phone number',
   },
   stats: [
     {
       kind: 'activeJobPosts',
-      label: 'Tin tuyển dụng đang chạy',
+      label: 'Active job posts',
       value: 3,
       trendPercent: 12,
       trendDirection: 'up',
@@ -23,7 +23,7 @@ export const MOCK_RECRUITER_DASHBOARD: RecruiterDashboardData = {
     },
     {
       kind: 'newApplications',
-      label: 'Hồ sơ ứng tuyển mới',
+      label: 'New applications',
       value: 12,
       trendPercent: 28,
       trendDirection: 'up',
@@ -31,7 +31,7 @@ export const MOCK_RECRUITER_DASHBOARD: RecruiterDashboardData = {
     },
     {
       kind: 'scheduledInterviews',
-      label: 'Lịch phỏng vấn sắp tới',
+      label: 'Upcoming interviews',
       value: 2,
       trendPercent: 5,
       trendDirection: 'down',
@@ -39,7 +39,7 @@ export const MOCK_RECRUITER_DASHBOARD: RecruiterDashboardData = {
     },
     {
       kind: 'creditBalance',
-      label: 'Số dư credit',
+      label: 'Credit balance',
       value: 150,
       trendPercent: 9,
       trendDirection: 'down',
@@ -47,31 +47,31 @@ export const MOCK_RECRUITER_DASHBOARD: RecruiterDashboardData = {
     },
   ],
   pipeline: [
-    { status: 'APPLIED', label: 'Ứng tuyển', count: 42 },
-    { status: 'IN_REVIEW', label: 'Đang xem xét', count: 18 },
-    { status: 'INTERVIEW', label: 'Phỏng vấn', count: 9 },
-    { status: 'OFFER', label: 'Đề nghị offer', count: 4 },
-    { status: 'HIRED', label: 'Đã tuyển', count: 2 },
+    { status: 'APPLIED', label: 'Applied', count: 42 },
+    { status: 'IN_REVIEW', label: 'In review', count: 18 },
+    { status: 'INTERVIEW', label: 'Interview', count: 9 },
+    { status: 'OFFER', label: 'Offer', count: 4 },
+    { status: 'HIRED', label: 'Hired', count: 2 },
   ],
   priorities: [
     {
       id: 'priority-interviews',
-      label: '2 cuộc phỏng vấn hôm nay',
-      description: 'Backend Engineer · 14:00 và 16:00',
+      label: '2 interviews today',
+      description: 'Backend Engineer · 14:00 and 16:00',
       href: '/recruiter/interviews',
       icon: CalendarClock,
     },
     {
       id: 'priority-unreviewed',
-      label: '5 hồ sơ chưa xem',
-      description: 'Đã nằm trong hàng chờ hơn 2 ngày',
+      label: '5 applications not reviewed',
+      description: 'Waiting in the queue for more than 2 days',
       href: '/recruiter/applications',
       icon: Users,
     },
     {
       id: 'priority-expiring',
-      label: '1 tin sắp hết hạn',
-      description: 'DevOps Engineer · hết hạn trong 3 ngày',
+      label: '1 job post expiring soon',
+      description: 'DevOps Engineer · expires in 3 days',
       href: '/recruiter/jobs',
       icon: AlertTriangle,
       tone: 'warning',
@@ -81,15 +81,15 @@ export const MOCK_RECRUITER_DASHBOARD: RecruiterDashboardData = {
     {
       id: 'svc-top-max',
       name: 'TOP MAX',
-      description: 'Đăng tin hiệu quả với vị trí nổi bật trong Việc làm nổi bật.',
-      priceLabel: '7.500.000đ',
-      highlight: 'Phù hợp với tin đang tuyển gấp',
+      description: 'Maximise reach with a featured slot in Highlighted jobs.',
+      priceLabel: '7,500,000 VND',
+      highlight: 'Best for urgent openings',
     },
     {
       id: 'svc-standard-extra',
       name: 'STANDARD EXTRA',
-      description: 'Đăng tin tiết kiệm với vị trí ưu tiên trên danh sách tìm việc.',
-      priceLabel: '2.550.000đ',
+      description: 'Budget-friendly posting with priority placement in job search.',
+      priceLabel: '2,550,000 VND',
     },
   ],
   recentApplications: [

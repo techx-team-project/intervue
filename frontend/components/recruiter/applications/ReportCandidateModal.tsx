@@ -16,12 +16,12 @@ interface ReportCandidateModalProps {
 }
 
 const REPORT_REASON_OPTIONS = [
-  { value: '', label: 'Chọn lý do báo cáo' },
-  { value: 'FAKE_PROFILE', label: 'Hồ sơ giả mạo hoặc thông tin không đúng' },
-  { value: 'SPAM', label: 'Ứng tuyển spam hàng loạt' },
-  { value: 'INAPPROPRIATE_CONTENT', label: 'Nội dung CV không phù hợp' },
-  { value: 'IMPERSONATION', label: 'Mạo danh người khác' },
-  { value: 'OTHER', label: 'Lý do khác' },
+  { value: '', label: 'Select a reason' },
+  { value: 'FAKE_PROFILE', label: 'Fake profile or inaccurate information' },
+  { value: 'SPAM', label: 'Mass spam applications' },
+  { value: 'INAPPROPRIATE_CONTENT', label: 'Inappropriate CV content' },
+  { value: 'IMPERSONATION', label: 'Impersonating someone else' },
+  { value: 'OTHER', label: 'Other reason' },
 ];
 
 export default function ReportCandidateModal({ candidateName, onClose, onConfirm }: ReportCandidateModalProps) {
@@ -35,31 +35,31 @@ export default function ReportCandidateModal({ candidateName, onClose, onConfirm
       isOpen
       onClose={onClose}
       maxWidth="md"
-      title="Báo cáo ứng viên"
-      description={`Báo cáo về hồ sơ của ${candidateName} sẽ được gửi tới đội ngũ kiểm duyệt InterVue.`}
+      title="Report candidate"
+      description={`Your report about ${candidateName} will be sent to the InterVue moderation team.`}
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>
-            Huỷ
+            Cancel
           </Button>
           <Button variant="danger" onClick={handleSubmit(onConfirm)}>
-            Gửi báo cáo
+            Send report
           </Button>
         </>
       }
     >
       <div className="space-y-4">
         <Select
-          label="Lý do báo cáo"
+          label="Reason for reporting"
           options={REPORT_REASON_OPTIONS}
           error={formState.errors.reason?.message}
           {...register('reason')}
         />
 
         <Textarea
-          label="Mô tả chi tiết"
+          label="Details"
           rows={4}
-          placeholder="Mô tả cụ thể vấn đề bạn gặp phải với hồ sơ này..."
+          placeholder="Describe exactly what is wrong with this application..."
           error={formState.errors.detail?.message}
           {...register('detail')}
         />
@@ -67,8 +67,8 @@ export default function ReportCandidateModal({ candidateName, onClose, onConfirm
         <div className="flex items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-50 p-3">
           <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
           <p className="text-[11.5px] leading-relaxed text-slate-600">
-            Báo cáo sai sự thật có thể ảnh hưởng tới uy tín tài khoản nhà tuyển dụng của bạn. Vui lòng chỉ báo cáo khi
-            có căn cứ rõ ràng.
+            False reports can affect the reputation of your recruiter account. Please report only when you have clear
+            grounds.
           </p>
         </div>
       </div>

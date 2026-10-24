@@ -21,12 +21,12 @@ const INNER_SIZE_CLASS = {
 
 export function getAiMatchTone(score: number): { color: string; track: string; label: string; text: string } {
   if (score >= AI_MATCH_HIGH_THRESHOLD) {
-    return { color: '#00b14f', track: '#dcfce7', label: 'Rất phù hợp', text: 'text-emerald-700' };
+    return { color: '#00b14f', track: '#dcfce7', label: 'Strong match', text: 'text-emerald-700' };
   }
   if (score >= AI_MATCH_MEDIUM_THRESHOLD) {
-    return { color: '#f59e0b', track: '#fef3c7', label: 'Phù hợp', text: 'text-amber-700' };
+    return { color: '#f59e0b', track: '#fef3c7', label: 'Good match', text: 'text-amber-700' };
   }
-  return { color: '#64748b', track: '#e2e8f0', label: 'Cần xem kỹ', text: 'text-slate-600' };
+  return { color: '#64748b', track: '#e2e8f0', label: 'Needs a closer look', text: 'text-slate-600' };
 }
 
 export default function AiMatchRing({ score, size = 'md', className }: AiMatchRingProps) {
@@ -35,7 +35,7 @@ export default function AiMatchRing({ score, size = 'md', className }: AiMatchRi
   return (
     <span
       role="img"
-      aria-label={`Điểm phù hợp AI ${score} trên 100 — ${tone.label}`}
+      aria-label={`AI match score ${score} out of 100 — ${tone.label}`}
       className={cn(
         'relative inline-flex shrink-0 items-center justify-center rounded-full',
         SIZE_CLASS[size],

@@ -10,7 +10,7 @@ import {
 import { cn } from '@/lib/utils';
 import { MOCK_RECRUITER_JOB_POSTS } from '@/mocks/job.mock';
 import type { ApplicationFilters, ApplicationSource, ApplicationSortKey } from '@/types/recruiter-application';
-import { Bookmark, RotateCcw, Search } from 'lucide-react';
+import { Bookmark, RotateCcw, Search, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface ApplicationsFilterBarProps {
@@ -23,12 +23,12 @@ interface ApplicationsFilterBarProps {
 const DEBOUNCE_MS = 300;
 
 const JOB_OPTIONS = [
-  { value: '', label: 'Tất cả tin tuyển dụng' },
+  { value: '', label: 'All job posts' },
   ...MOCK_RECRUITER_JOB_POSTS.map((job) => ({ value: job.id, label: job.title })),
 ];
 
 const SOURCE_OPTIONS = [
-  { value: '', label: 'Mọi nguồn hồ sơ' },
+  { value: '', label: 'Any source' },
   ...(Object.keys(APPLICATION_SOURCE_LABEL) as ApplicationSource[]).map((source) => ({
     value: source,
     label: APPLICATION_SOURCE_LABEL[source],
@@ -60,42 +60,55 @@ export default function ApplicationsFilterBar({
   return (
     <div className="rounded-2xl border border-[#e5e9ef] bg-white p-3.5 shadow-xs">
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 xl:w-80">
           <Input
             value={searchDraft}
             onChange={(event) => setSearchDraft(event.target.value)}
-            placeholder="Tìm theo tên ứng viên, vị trí, email hoặc kỹ năng..."
+            placeholder="Search by name, title, email or skill..."
+            aria-label="Search applications"
             leftIcon={<Search className="h-4 w-4" />}
+            rightElement={
+              searchDraft.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => setSearchDraft('')}
+                  aria-label="Clear the search keyword"
+                  className="cursor-pointer rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              ) : undefined
+            }
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4 xl:gap-2.5">
+        <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4 xl:gap-2.5">
           <Select
             value={filters.jobId}
             onChange={(event) => onFilterChange('jobId', event.target.value)}
             options={JOB_OPTIONS}
-            aria-label="Lọc theo tin tuyển dụng"
+            aria-label="Filter by job post"
           />
 
           <Select
             value={filters.aiMatchBand}
             onChange={(event) => onFilterChange('aiMatchBand', event.target.value as ApplicationFilters['aiMatchBand'])}
             options={AI_MATCH_BAND_OPTIONS}
-            aria-label="Lọc theo điểm phù hợp AI"
+            aria-label="Filter by AI match score"
           />
 
           <Select
             value={filters.source}
             onChange={(event) => onFilterChange('source', event.target.value as ApplicationSource | '')}
             options={SOURCE_OPTIONS}
-            aria-label="Lọc theo nguồn hồ sơ"
+            aria-label="Filter by application source"
           />
 
           <Select
             value={filters.sort}
             onChange={(event) => onFilterChange('sort', event.target.value as ApplicationSortKey)}
             options={APPLICATION_SORT_OPTIONS}
-            aria-label="Sắp xếp hồ sơ"
+            aria-label="Sort applications"
           />
         </div>
       </div>
@@ -114,8 +127,15 @@ export default function ApplicationsFilterBar({
             )}
           >
             <Bookmark className={cn('h-3.5 w-3.5', filters.savedOnly && 'fill-current')} />
-            Chỉ ứng viên đã lưu
+            Saved candidates only
           </button>
+
+          {filters.search.length > 0 && (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-[12px] font-bold text-sky-700">
+              <Search className="h-3.5 w-3.5" />
+              Keyword: {filters.search}
+            </span>
+          )}
 
           {hasActiveFilter && (
             <button
@@ -127,13 +147,13 @@ export default function ApplicationsFilterBar({
               className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[12px] font-bold text-[#64748b] transition-colors hover:bg-slate-100 hover:text-slate-800"
             >
               <RotateCcw className="h-3.5 w-3.5" />
-              Xoá bộ lọc
+              Clear filters
             </button>
           )}
         </div>
 
         <p className="text-[12px] font-semibold text-[#64748b]">
-          Đang hiển thị <span className="text-navy font-black">{resultCount}</span> hồ sơ
+          Showing <span className="text-navy font-black">{resultCount}</span> applications
         </p>
       </div>
     </div>

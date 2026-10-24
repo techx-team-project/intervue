@@ -5,7 +5,7 @@ import { MOCK_RECRUITER_DASHBOARD } from '@/mocks/recruiter-dashboard.mock';
 export default function RecruiterDashboardPage() {
   return (
     <>
-      <PageHeader title="Bảng tin" />
+      <PageHeader title="Dashboard" />
       <RecruiterDashboardView data={MOCK_RECRUITER_DASHBOARD} />
     </>
   );

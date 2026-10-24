@@ -32,54 +32,54 @@ export interface RecruiterNavSection {
 
 export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
   {
-    title: 'Tổng quan',
-    items: [{ label: 'Bảng tin', href: ROUTES.RECRUITER_DASHBOARD, icon: LayoutDashboard }],
+    title: 'Overview',
+    items: [{ label: 'Dashboard', href: ROUTES.RECRUITER_DASHBOARD, icon: LayoutDashboard }],
   },
   {
-    title: 'Tuyển dụng',
+    title: 'Hiring',
     items: [
-      { label: 'Chiến dịch tuyển dụng', href: ROUTES.RECRUITER_CAMPAIGNS, icon: Briefcase, comingSoon: true },
-      { label: 'Tin tuyển dụng', href: ROUTES.RECRUITER_JOBS, icon: ClipboardList },
-      { label: 'Hồ sơ ứng tuyển', href: ROUTES.RECRUITER_APPLICATIONS, icon: Users },
-      { label: 'Ứng viên đã lưu', href: ROUTES.RECRUITER_CANDIDATES_SAVED, icon: Bookmark },
-      { label: 'Tìm hồ sơ ứng viên', href: ROUTES.RECRUITER_CANDIDATES, icon: Users, comingSoon: true },
-      { label: 'Lịch phỏng vấn', href: ROUTES.RECRUITER_INTERVIEWS, icon: CalendarClock, comingSoon: true },
-      { label: 'Tin nhắn', href: ROUTES.RECRUITER_MESSAGES, icon: MessageSquare, comingSoon: true },
+      { label: 'Hiring campaigns', href: ROUTES.RECRUITER_CAMPAIGNS, icon: Briefcase, comingSoon: true },
+      { label: 'Job posts', href: ROUTES.RECRUITER_JOBS, icon: ClipboardList },
+      { label: 'Applications', href: ROUTES.RECRUITER_APPLICATIONS, icon: Users },
+      { label: 'Saved candidates', href: ROUTES.RECRUITER_CANDIDATES_SAVED, icon: Bookmark },
+      { label: 'Candidate search', href: ROUTES.RECRUITER_CANDIDATES, icon: Users, comingSoon: true },
+      { label: 'Interviews', href: ROUTES.RECRUITER_INTERVIEWS, icon: CalendarClock, comingSoon: true },
+      { label: 'Messages', href: ROUTES.RECRUITER_MESSAGES, icon: MessageSquare, comingSoon: true },
     ],
   },
   {
-    title: 'Công ty',
+    title: 'Company',
     items: [
-      { label: 'Hồ sơ công ty', href: ROUTES.RECRUITER_COMPANY, icon: Building2, comingSoon: true },
+      { label: 'Company profile', href: ROUTES.RECRUITER_COMPANY, icon: Building2, comingSoon: true },
       {
-        label: 'Xác thực doanh nghiệp',
+        label: 'Company verification',
         href: ROUTES.RECRUITER_COMPANY_VERIFICATION,
         icon: ShieldCheck,
         comingSoon: true,
       },
-      { label: 'Nhu cầu tuyển dụng', href: ROUTES.RECRUITER_COMPANY_NEEDS, icon: ClipboardList, comingSoon: true },
+      { label: 'Hiring needs', href: ROUTES.RECRUITER_COMPANY_NEEDS, icon: ClipboardList, comingSoon: true },
     ],
   },
   {
-    title: 'Dịch vụ',
+    title: 'Services',
     items: [
-      { label: 'Gói dịch vụ', href: ROUTES.RECRUITER_SERVICES, icon: ShoppingBag, comingSoon: true },
-      { label: 'Lịch sử giao dịch', href: ROUTES.RECRUITER_SERVICES_TRANSACTIONS, icon: Receipt, comingSoon: true },
+      { label: 'Service packages', href: ROUTES.RECRUITER_SERVICES, icon: ShoppingBag, comingSoon: true },
+      { label: 'Transaction history', href: ROUTES.RECRUITER_SERVICES_TRANSACTIONS, icon: Receipt, comingSoon: true },
     ],
   },
   {
-    title: 'Báo cáo & Thông báo',
+    title: 'Reports & notifications',
     items: [
-      { label: 'Báo cáo tuyển dụng', href: ROUTES.RECRUITER_REPORTS, icon: BarChart3, comingSoon: true },
-      { label: 'Thông báo', href: ROUTES.RECRUITER_NOTIFICATIONS, icon: Bell, comingSoon: true },
+      { label: 'Hiring reports', href: ROUTES.RECRUITER_REPORTS, icon: BarChart3, comingSoon: true },
+      { label: 'Notifications', href: ROUTES.RECRUITER_NOTIFICATIONS, icon: Bell, comingSoon: true },
     ],
   },
   {
-    title: 'Tài khoản',
+    title: 'Account',
     items: [
-      { label: 'Bảo mật tài khoản', href: '/account/security', icon: ShieldCheck },
-      { label: 'Đổi mật khẩu', href: '/account/password', icon: KeyRound },
-      { label: 'Xác thực 2 bước (2FA)', href: '/account/two-factor', icon: Smartphone },
+      { label: 'Account security', href: '/account/security', icon: ShieldCheck },
+      { label: 'Change password', href: '/account/password', icon: KeyRound },
+      { label: 'Two-factor authentication', href: '/account/two-factor', icon: Smartphone },
     ],
   },
 ];

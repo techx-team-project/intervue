@@ -19,10 +19,10 @@ export default async function EditJobPostPage({ params }: EditJobPostPageProps) 
     <>
       <Breadcrumb
         showHome={false}
-        items={[{ label: 'Tin tuyển dụng', href: ROUTES.RECRUITER_JOBS }, { label: 'Chỉnh sửa' }]}
+        items={[{ label: 'Job posts', href: ROUTES.RECRUITER_JOBS }, { label: 'Edit' }]}
         className="mb-3"
       />
-      <PageHeader title={`Chỉnh sửa: ${job.title}`} />
+      <PageHeader title={`Edit: ${job.title}`} />
       <JobPostFormView mode="edit" initialData={job} />
     </>
   );

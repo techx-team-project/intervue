@@ -11,7 +11,7 @@ interface JobPostPreviewModalProps {
 }
 
 const LEVEL_LABEL: Record<RecruiterJobPost['level'], string> = {
-  INTERN: 'Thực tập sinh',
+  INTERN: 'Intern',
   JUNIOR: 'Junior',
   MID: 'Middle',
   SENIOR: 'Senior',
@@ -19,27 +19,27 @@ const LEVEL_LABEL: Record<RecruiterJobPost['level'], string> = {
 };
 
 const CONTRACT_LABEL: Record<RecruiterJobPost['contractType'], string> = {
-  FULL_TIME: 'Toàn thời gian',
-  PART_TIME: 'Bán thời gian',
-  INTERNSHIP: 'Thực tập',
+  FULL_TIME: 'Full-time',
+  PART_TIME: 'Part-time',
+  INTERNSHIP: 'Internship',
 };
 
 const ARRANGEMENT_LABEL: Record<RecruiterJobPost['workingArrangement'], string> = {
-  ON_SITE: 'Tại văn phòng',
+  ON_SITE: 'On-site',
   HYBRID: 'Hybrid',
-  REMOTE: 'Từ xa',
-  FLEXIBLE: 'Linh hoạt',
+  REMOTE: 'Remote',
+  FLEXIBLE: 'Flexible',
 };
 
 function formatSalary(salary: RecruiterJobPost['salary']): string {
-  if (salary.negotiable || !salary.min || !salary.max) return 'Thỏa thuận';
+  if (salary.negotiable || !salary.min || !salary.max) return 'Negotiable';
   const formatter = new Intl.NumberFormat('vi-VN');
   return `${formatter.format(salary.min)} - ${formatter.format(salary.max)} ${salary.currency ?? 'VND'}`;
 }
 
 export default function JobPostPreviewModal({ job, onClose }: JobPostPreviewModalProps) {
   return (
-    <Modal isOpen onClose={onClose} maxWidth="2xl" title="Xem trước tin tuyển dụng">
+    <Modal isOpen onClose={onClose} maxWidth="2xl" title="Job post preview">
       <div className="space-y-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -66,7 +66,7 @@ export default function JobPostPreviewModal({ job, onClose }: JobPostPreviewModa
           </div>
           <div className="flex items-center gap-2 text-[12.5px] text-[#475569]">
             <Briefcase className="h-4 w-4 shrink-0 text-[#64748b]" />
-            <span>{job.recruitsCount} vị trí cần tuyển</span>
+            <span>{job.recruitsCount} openings</span>
           </div>
         </div>
 
@@ -83,13 +83,13 @@ export default function JobPostPreviewModal({ job, onClose }: JobPostPreviewModa
           </div>
         )}
 
-        <PreviewSection title="Mô tả công việc" content={job.description} />
-        <PreviewSection title="Yêu cầu ứng viên" content={job.requirements} />
-        <PreviewSection title="Quyền lợi" content={job.benefits} />
+        <PreviewSection title="Job description" content={job.description} />
+        <PreviewSection title="Candidate requirements" content={job.requirements} />
+        <PreviewSection title="Benefits" content={job.benefits} />
 
         {job.screeningQuestions.length > 0 && (
           <div>
-            <h4 className="text-navy text-[13.5px] font-bold">Câu hỏi sàng lọc</h4>
+            <h4 className="text-navy text-[13.5px] font-bold">Screening questions</h4>
             <ul className="mt-2 space-y-1.5">
               {job.screeningQuestions.map((question) => (
                 <li key={question.id} className="text-[12.5px] text-[#475569]">

@@ -9,9 +9,9 @@ import { Plus, Trash2 } from 'lucide-react';
 import { Controller, UseFormReturn, useFieldArray, useWatch } from 'react-hook-form';
 
 const QUESTION_TYPE_OPTIONS = [
-  { value: 'TEXT', label: 'Trả lời tự do' },
-  { value: 'YES_NO', label: 'Có/Không' },
-  { value: 'SINGLE_CHOICE', label: 'Chọn 1 đáp án' },
+  { value: 'TEXT', label: 'Free text' },
+  { value: 'YES_NO', label: 'Yes/No' },
+  { value: 'SINGLE_CHOICE', label: 'Single choice' },
 ];
 
 interface JobScreeningQuestionsSectionProps {
@@ -26,8 +26,8 @@ export default function JobScreeningQuestionsSection({ form }: JobScreeningQuest
     <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-7">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-navy text-[15px] font-bold">Câu hỏi sàng lọc</h2>
-          <p className="mt-0.5 text-[12px] text-[#64748b]">Tùy chọn — giúp sàng lọc ứng viên ngay khi họ ứng tuyển.</p>
+          <h2 className="text-navy text-[15px] font-bold">Screening questions</h2>
+          <p className="mt-0.5 text-[12px] text-[#64748b]">Optional — screen candidates as soon as they apply.</p>
         </div>
 
         <Button
@@ -45,7 +45,7 @@ export default function JobScreeningQuestionsSection({ form }: JobScreeningQuest
             })
           }
         >
-          Thêm câu hỏi
+          Add question
         </Button>
       </div>
 
@@ -84,7 +84,7 @@ function ScreeningQuestionRow({ form, index, onRemove, error, register }: Screen
       <div className="flex items-start gap-3">
         <div className="min-w-0 flex-1 space-y-3">
           <Input
-            placeholder="Nhập câu hỏi sàng lọc"
+            placeholder="Enter a screening question"
             error={error}
             {...register(`screeningQuestions.${index}.question` as const)}
           />
@@ -98,7 +98,7 @@ function ScreeningQuestionRow({ form, index, onRemove, error, register }: Screen
                 className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                 {...register(`screeningQuestions.${index}.required` as const)}
               />
-              <span>Bắt buộc trả lời</span>
+              <span>Required answer</span>
             </label>
           </div>
 
@@ -108,10 +108,10 @@ function ScreeningQuestionRow({ form, index, onRemove, error, register }: Screen
               name={`screeningQuestions.${index}.options`}
               render={({ field }) => (
                 <TagInput
-                  placeholder="Nhập đáp án rồi nhấn Enter"
+                  placeholder="Type an option and press Enter"
                   value={field.value ?? []}
                   onChange={field.onChange}
-                  helperText="Thêm tối thiểu 2 đáp án"
+                  helperText="Add at least 2 options"
                 />
               )}
             />
@@ -121,7 +121,7 @@ function ScreeningQuestionRow({ form, index, onRemove, error, register }: Screen
         <button
           type="button"
           onClick={onRemove}
-          aria-label="Xóa câu hỏi"
+          aria-label="Remove question"
           className="shrink-0 cursor-pointer rounded-lg p-2 text-rose-500 transition-colors hover:bg-rose-50"
         >
           <Trash2 className="h-4 w-4" />

@@ -25,10 +25,10 @@ export default function JobPostsTable({ jobs, actions }: JobPostsTableProps) {
       <div className="overflow-x-auto">
         <div className="min-w-180">
           <div className="grid grid-cols-[3fr_1.2fr_1fr_1fr_auto] gap-4 border-b border-[#f1f5f9] px-2.5 pb-2.5 text-[11px] font-bold tracking-wide text-[#94a3b8] uppercase">
-            <span>Tin tuyển dụng</span>
-            <span>Trạng thái</span>
-            <span>Số lượng tuyển</span>
-            <span>Cập nhật</span>
+            <span>Job post</span>
+            <span>Status</span>
+            <span>Openings</span>
+            <span>Updated</span>
             <span />
           </div>
 
@@ -55,7 +55,7 @@ export default function JobPostsTable({ jobs, actions }: JobPostsTableProps) {
                     <JobPostStatusBadge status={job.status} />
                   </span>
 
-                  <span className="text-[12.5px] text-[#475569]">{job.recruitsCount} người</span>
+                  <span className="text-[12.5px] text-[#475569]">{job.recruitsCount} people</span>
 
                   <span className="text-[11.5px] text-[#94a3b8]">{dateFormatter.format(new Date(job.updatedAt))}</span>
 
@@ -81,7 +81,12 @@ export default function JobPostsTable({ jobs, actions }: JobPostsTableProps) {
 
       {previewJob && <JobPostPreviewModal job={previewJob} onClose={() => setPreviewJob(null)} />}
 
-      <Modal isOpen={rejectionJob !== null} onClose={() => setRejectionJob(null)} title="Lý do từ chối" maxWidth="md">
+      <Modal
+        isOpen={rejectionJob !== null}
+        onClose={() => setRejectionJob(null)}
+        title="Rejection reason"
+        maxWidth="md"
+      >
         <div className="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4">
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600" />
           <p className="text-[13.5px] leading-relaxed text-rose-700">{rejectionJob?.rejectionReason}</p>

@@ -36,7 +36,7 @@ export default function JobPostsFilterBar({ search, status, onSearchChange, onSt
         <Input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Tìm theo tên tin tuyển dụng..."
+          placeholder="Search by job post title..."
           leftIcon={<Search className="h-4 w-4" />}
         />
       </div>
@@ -45,7 +45,7 @@ export default function JobPostsFilterBar({ search, status, onSearchChange, onSt
         <Select
           value={status}
           onChange={(e) => onStatusChange(e.target.value as JobStatus | '')}
-          placeholder="Tất cả trạng thái"
+          placeholder="All statuses"
           options={STATUS_OPTIONS}
         />
       </div>

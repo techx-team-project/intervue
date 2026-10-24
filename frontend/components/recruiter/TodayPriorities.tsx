@@ -9,10 +9,10 @@ interface TodayPrioritiesProps {
 export default function TodayPriorities({ items }: TodayPrioritiesProps) {
   return (
     <div className="flex h-full flex-col rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-7">
-      <h2 className="text-navy text-[15px] font-black">Việc cần làm hôm nay</h2>
+      <h2 className="text-navy text-[15px] font-black">Today’s priorities</h2>
 
       {items.length === 0 ? (
-        <p className="mt-4 text-[13px] text-[#64748b]">Không có việc cần xử lý hôm nay 🎉</p>
+        <p className="mt-4 text-[13px] text-[#64748b]">Nothing needs your attention today 🎉</p>
       ) : (
         <div className="mt-4 flex-1 space-y-2">
           {items.map((item) => {
