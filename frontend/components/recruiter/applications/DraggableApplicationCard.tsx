@@ -9,7 +9,6 @@ import ApplicationCard, { type ApplicationCardVariant } from './ApplicationCard'
 interface DraggableApplicationCardProps {
   application: RecruiterApplication;
   variant?: ApplicationCardVariant;
-  isActive?: boolean;
   isSelected?: boolean;
   showJobTitle?: boolean;
   showStatusBadge?: boolean;
@@ -30,7 +29,7 @@ export default function DraggableApplicationCard({ application, ...cardProps }: 
   const { onPointerDown } = (listeners ?? {}) as { onPointerDown?: PointerEventHandler<HTMLDivElement> };
 
   // Only the pointer listener is bound: keyboard users change status through the
-  // "Chuyển trạng thái" menu instead of a keyboard drag, which conflicts with
+  // "Change status" menu instead of a keyboard drag, which conflicts with
   // Enter/Space opening the application detail.
   return (
     <div ref={setNodeRef} onPointerDown={onPointerDown} className={isDraggable ? 'touch-none' : undefined}>

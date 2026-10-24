@@ -35,22 +35,22 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
 
   const unsave = (id: string, fullName: string) => {
     setApplications((previous) => previous.filter((application) => application.id !== id));
-    toast.success(`Đã bỏ lưu ${fullName}.`);
+    toast.success(`${fullName} removed from your saved list.`);
   };
 
   if (applications.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-2.5 rounded-2xl border border-[#e5e9ef] bg-white py-20 text-center shadow-xs">
         <Bookmark className="h-10 w-10 text-[#cbd5e1]" />
-        <p className="text-navy text-[14px] font-bold">Bạn chưa lưu ứng viên nào</p>
+        <p className="text-navy text-[14px] font-bold">You have not saved any candidates yet</p>
         <p className="max-w-sm text-[12.5px] text-[#64748b]">
-          Khi xem hồ sơ ứng tuyển, bấm biểu tượng dấu trang trên thẻ ứng viên để lưu lại những người bạn muốn theo dõi.
+          While reviewing applications, use the bookmark icon on a candidate card to keep track of people you like.
         </p>
         <Link
           href={ROUTES.RECRUITER_APPLICATIONS}
           className="bg-primary hover:bg-primary-hover mt-1 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-bold text-white transition-colors"
         >
-          Xem hồ sơ ứng tuyển
+          View applications
         </Link>
       </div>
     );
@@ -63,19 +63,19 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
           <Input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Tìm theo tên, vị trí, tin tuyển dụng hoặc kỹ năng..."
+            placeholder="Search by name, title, job post or skill..."
             leftIcon={<Search className="h-4 w-4" />}
           />
         </div>
         <p className="text-[12px] font-semibold text-[#64748b]">
-          <span className="text-navy font-black">{visibleApplications.length}</span> ứng viên đã lưu
+          <span className="text-navy font-black">{visibleApplications.length}</span> saved candidates
         </p>
       </div>
 
       {visibleApplications.length === 0 ? (
         <div className="rounded-2xl border border-[#e5e9ef] bg-white py-16 text-center shadow-xs">
-          <p className="text-navy text-[13.5px] font-bold">Không tìm thấy ứng viên phù hợp</p>
-          <p className="mt-1 text-[12px] text-[#64748b]">Thử từ khoá khác hoặc xoá nội dung tìm kiếm.</p>
+          <p className="text-navy text-[13.5px] font-bold">No matching candidates found</p>
+          <p className="mt-1 text-[12px] text-[#64748b]">Try another keyword or clear the search box.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3.5 lg:grid-cols-2 2xl:grid-cols-3">
@@ -94,7 +94,7 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
                     <MapPin className="h-3 w-3 shrink-0" />
                     <span className="truncate">{application.candidate.location}</span>
                     <span className="text-[#cbd5e1]">•</span>
-                    <span className="shrink-0">{application.candidate.experienceYears} năm KN</span>
+                    <span className="shrink-0">{application.candidate.experienceYears} yrs exp</span>
                   </p>
                 </div>
 
@@ -117,21 +117,21 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
                 <div className="flex items-center gap-2">
                   <ApplicationStatusBadge status={application.status} />
                   {application.savedAt && (
-                    <span className="text-[11px] text-[#94a3b8]">Lưu ngày {formatDate(application.savedAt)}</span>
+                    <span className="text-[11px] text-[#94a3b8]">Saved on {formatDate(application.savedAt)}</span>
                   )}
                 </div>
               </div>
 
               <div className="mt-3 flex items-center gap-2">
                 <Link
-                  href={`${ROUTES.RECRUITER_APPLICATIONS_COMMAND_CENTER}?application=${application.id}`}
+                  href={`${ROUTES.RECRUITER_APPLICATIONS}/${application.id}`}
                   className={cn(
                     'inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-[12.5px] font-bold text-white transition-colors',
                     'bg-primary hover:bg-primary-hover',
                   )}
                 >
                   <LayoutDashboard className="h-3.5 w-3.5" />
-                  Mở hồ sơ ứng tuyển
+                  Open application
                 </Link>
 
                 <Link
@@ -139,13 +139,13 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
                   className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2 text-[12.5px] font-bold text-slate-700 transition-colors hover:bg-slate-50"
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
-                  Hồ sơ
+                  Profile
                 </Link>
 
                 <button
                   type="button"
                   onClick={() => unsave(application.id, application.candidate.fullName)}
-                  aria-label={`Bỏ lưu ${application.candidate.fullName}`}
+                  aria-label={`Remove ${application.candidate.fullName} from saved`}
                   className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-xl text-amber-500 transition-colors hover:bg-amber-50"
                 >
                   <BookmarkX className="h-4 w-4" />
