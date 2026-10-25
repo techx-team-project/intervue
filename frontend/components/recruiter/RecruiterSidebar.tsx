@@ -28,7 +28,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
   const { company, verification } = MOCK_RECRUITER_DASHBOARD;
 
   return (
-    <aside className={cn('shrink-0 bg-white', isCollapsed ? 'lg:w-20' : 'lg:w-72', className)}>
+    <aside className={cn('scrollbar-on-hover shrink-0 bg-white', isCollapsed ? 'lg:w-20' : 'lg:w-72', className)}>
       <div className={isCollapsed ? 'flex justify-center p-3' : 'p-5'}>
         <div className={isCollapsed ? '' : 'flex items-center gap-3.5'}>
           <div
