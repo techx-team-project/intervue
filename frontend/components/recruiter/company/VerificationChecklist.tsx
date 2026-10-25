@@ -86,19 +86,19 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
         </div>
 
         {/* Countdown Timer Badges matching TopCV */}
-        <div className="flex items-center gap-2 pt-0.5 pb-1">
+        <div className="flex items-center justify-center gap-2 pt-0.5 pb-1">
           <div className="flex min-w-[46px] flex-col items-center justify-center rounded-lg bg-[#00b14f] px-3 py-1.5 text-white shadow-sm">
-            <span className="text-base leading-none font-extrabold">11</span>
+            <span className="text-[16px] leading-none font-extrabold">11</span>
             <span className="mt-0.5 text-[10px] leading-tight font-medium opacity-90">Ngày</span>
           </div>
           <span className="text-lg font-black text-[#00b14f]">:</span>
           <div className="flex min-w-[46px] flex-col items-center justify-center rounded-lg bg-[#00b14f] px-3 py-1.5 text-white shadow-sm">
-            <span className="text-base leading-none font-extrabold">5</span>
+            <span className="text-[16px] leading-none font-extrabold">5</span>
             <span className="mt-0.5 text-[10px] leading-tight font-medium opacity-90">Giờ</span>
           </div>
           <span className="text-lg font-black text-[#00b14f]">:</span>
           <div className="flex min-w-[46px] flex-col items-center justify-center rounded-lg bg-[#00b14f] px-3 py-1.5 text-white shadow-sm">
-            <span className="text-base leading-none font-extrabold">10</span>
+            <span className="text-[16px] leading-none font-extrabold">10</span>
             <span className="mt-0.5 text-[10px] leading-tight font-medium opacity-90">Phút</span>
           </div>
         </div>
