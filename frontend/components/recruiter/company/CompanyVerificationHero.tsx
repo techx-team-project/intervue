@@ -12,7 +12,7 @@ export function CompanyVerificationHero({ profile, onPresetLevelChange }: Compan
   return (
     <div className="relative flex h-full flex-col justify-between bg-[#009647] p-3.5 select-none sm:p-4 lg:p-5">
       {/* Inner curved forest-emerald container matching TopCV */}
-      <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#005c38] via-[#004e30] to-[#003722] p-5 text-white shadow-inner sm:p-6 lg:rounded-3xl">
+      <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b from-[#005c38] via-[#004e30] to-[#003722] p-5 text-white shadow-inner sm:p-6">
         {/* Decorative Cityscape / Tech Towers Silhouette at the bottom */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-48 items-end justify-center overflow-hidden opacity-25">
           <svg

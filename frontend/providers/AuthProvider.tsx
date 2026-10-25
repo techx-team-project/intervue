@@ -16,10 +16,12 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         setSession({
           accessToken: 'dev-mock-recruiter-token',
           user: {
-            id: '838025',
+            id: 838025,
             name: 'Nguyễn Minh Phúc',
             email: 'phuc.recruiter@intervue.vn',
+            emailVerified: true,
             roles: ['RECRUITER'],
+            createdAt: '2026-01-01T00:00:00Z',
           },
         });
         return;

@@ -35,7 +35,7 @@ export default function RecruiterHeader({
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white">
+    <header className="w-full border-b border-slate-200 bg-white">
       <div className="flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
           <button
