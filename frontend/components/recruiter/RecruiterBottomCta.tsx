@@ -3,7 +3,11 @@
 import { ROUTES } from '@/constants/routes';
 import { ArrowRight, Sparkles, X } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useSyncExternalStore } from 'react';
+
+// Pages that already own the bottom of the screen with their own promo bar.
+const ROUTES_WITHOUT_BOTTOM_CTA: string[] = [ROUTES.RECRUITER_COMPANY_VERIFICATION];
 
 const DISMISS_STORAGE_KEY = 'intervue.recruiter.bottomCtaDismissedUntil';
 const REAPPEAR_AFTER_MS = 24 * 60 * 60 * 1000;
@@ -30,8 +34,9 @@ function dismiss() {
 
 export default function RecruiterBottomCta() {
   const isVisible = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const pathname = usePathname();
 
-  if (!isVisible) return null;
+  if (!isVisible || ROUTES_WITHOUT_BOTTOM_CTA.includes(pathname)) return null;
 
   return (
     <div className="fixed right-4 bottom-4 z-30 w-[calc(100%-2rem)] max-w-sm sm:right-6 sm:bottom-6 sm:w-auto">
