@@ -6,6 +6,7 @@ import { Award, Briefcase, ChevronDown, ChevronUp, FileText, LogOut, ShieldCheck
 import { useAuth } from '@/hooks/useAuth';
 import { useLogout } from '@/hooks/useLogout';
 import { ROUTES } from '@/constants/routes';
+import RoleSwitcher from './RoleSwitcher';
 
 interface UserMenuDropdownProps {
   onClose: () => void;
@@ -55,6 +56,8 @@ export function UserMenuDropdown({ onClose, onMouseEnter, onMouseLeave }: UserMe
           </p>
         </div>
       </Link>
+
+      <RoleSwitcher onNavigate={onClose} className="mt-2" />
 
       <div className="mt-1.5 divide-y divide-slate-100">
         <div className="py-1">

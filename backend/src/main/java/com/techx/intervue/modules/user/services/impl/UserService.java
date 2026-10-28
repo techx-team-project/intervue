@@ -7,6 +7,7 @@ import com.techx.intervue.modules.user.entities.Role;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.events.EmailVerificationRequestedEvent;
+import com.techx.intervue.modules.user.events.UserRolesChangedEvent;
 import com.techx.intervue.modules.user.mappers.UserMapper;
 import com.techx.intervue.modules.user.repositories.RoleRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
@@ -43,10 +44,7 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new AppException(ErrorCode.EMAIL_ALREADY_USED);
         }
 
-        Role candidateRole =
-                roleRepository
-                        .findByName(RoleType.CANDIDATE)
-                        .orElseThrow(() -> new IllegalStateException("CANDIDATE role is missing"));
+        Role candidateRole = findRole(RoleType.CANDIDATE);
         User user =
                 User.builder()
                         .name(request.name().trim())
@@ -68,5 +66,28 @@ public class UserService extends BaseService implements UserServiceInterface {
     public UserResource getMe(Long userId) {
         User user = findOrThrow(userRepository.findByIdWithRoles(userId), "User not found");
         return userMapper.toResource(user);
+    }
+
+    @Override
+    @Transactional
+    public UserResource becomeRecruiter(Long userId) {
+        User user = findOrThrow(userRepository.findByIdWithRoles(userId), "User not found");
+        if (!user.isEmailVerified()) {
+            throw new AppException(ErrorCode.EMAIL_NOT_VERIFIED);
+        }
+        if (user.activeRoleTypes().contains(RoleType.RECRUITER)) {
+            return userMapper.toResource(user);
+        }
+
+        user.addRole(findRole(RoleType.RECRUITER));
+        User saved = userRepository.save(user);
+        eventPublisher.publishEvent(new UserRolesChangedEvent(saved.getId()));
+        return userMapper.toResource(saved);
+    }
+
+    private Role findRole(RoleType type) {
+        return roleRepository
+                .findByName(type)
+                .orElseThrow(() -> new IllegalStateException(type + " role is missing"));
     }
 }

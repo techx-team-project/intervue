@@ -28,3 +28,4 @@ export const ROUTES = {
 } as const;
 
 export const REDIRECT_PARAM = 'redirect';
+export const RECRUITER_AREA_PREFIX = '/recruiter';
