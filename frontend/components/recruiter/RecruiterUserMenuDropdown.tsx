@@ -1,5 +1,6 @@
 'use client';
 
+import RoleSwitcher from '@/components/common/header/RoleSwitcher';
 import { useLogout } from '@/hooks/useLogout';
 import { Building2, KeyRound, LogOut, ShieldCheck, Smartphone } from 'lucide-react';
 import Link from 'next/link';
@@ -23,6 +24,8 @@ export default function RecruiterUserMenuDropdown({ onClose }: RecruiterUserMenu
       className="absolute top-12 right-0 z-50 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 text-slate-800 shadow-2xl"
       onClick={(e) => e.stopPropagation()}
     >
+      <RoleSwitcher onNavigate={onClose} />
+
       <nav className="space-y-0.5">
         {LINKS.map((link) => {
           const Icon = link.icon;
