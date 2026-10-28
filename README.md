@@ -199,12 +199,24 @@ spring:
 
 jwt:
   secret: <your-base64-secret>
+
+seed:
+  accounts:
+    admin:
+      password: <password-for-local-admin>
+    recruiter:
+      password: <password-for-local-recruiter>
+    candidate:
+      password: <password-for-local-candidate>
+    multi-role:
+      password: <password-for-local-multirole>
 ```
 
 | Key | Value |
 |---|---|
 | `spring.datasource.password` | Exactly the same as `MYSQL_PASSWORD` in the root `.env` (Step 3) |
 | `jwt.secret` | A **Base64-encoded** key of at least 32 bytes (256 bits), used to sign JWT tokens. Generate one with the command below |
+| `seed.accounts.<key>.password` | Optional. Password (at most 72 bytes) for a local test account created at startup when the `local` profile is active; existing accounts are never changed. An account without a password is skipped with a `WARN` log. Emails, names and roles live in the `local`-only section at the end of `application.yaml`: `local.admin@intervue.test` (ADMIN), `local.recruiter@intervue.test` (RECRUITER), `local.candidate@intervue.test` (CANDIDATE), `local.multirole@intervue.test` (CANDIDATE + RECRUITER) |
 
 Generate a JWT secret:
 
