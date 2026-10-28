@@ -14,13 +14,13 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     refreshSession().catch(() => {
       if (process.env.NODE_ENV === 'development') {
         setSession({
-          accessToken: 'dev-mock-recruiter-token',
+          accessToken: 'dev-mock-session-token',
           user: {
             id: 838025,
             name: 'Nguyễn Minh Phúc',
             email: 'phuc.recruiter@intervue.vn',
             emailVerified: true,
-            roles: ['RECRUITER'],
+            roles: ['RECRUITER', 'ADMIN'],
             createdAt: '2026-01-01T00:00:00Z',
           },
         });

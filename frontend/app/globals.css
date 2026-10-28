@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* Opt-in dark mode driven by data-theme, so only surfaces that declare dark: change. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
 @theme {
   --color-primary: #00b14f;
   --color-primary-hover: #009643;
@@ -7,6 +10,18 @@
   --color-primary-tag: #e6f7ee;
   --color-navy: #263a4d;
   --color-dark: #212f3f;
+
+  /* Dark-mode surfaces for the admin panel: deep InterVue green instead of blue slate. */
+  --color-forest-50: #e8f1ec;
+  --color-forest-100: #cfe7dc;
+  --color-forest-200: #a9cdbb;
+  --color-forest-300: #86b39d;
+  --color-forest-400: #5f907a;
+  --color-forest-700: #1d4a3a;
+  --color-forest-800: #14362a;
+  --color-forest-850: #0f2a20;
+  --color-forest-900: #0a1f17;
+  --color-forest-950: #05120d;
 }
 
 :root {
