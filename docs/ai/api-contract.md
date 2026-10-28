@@ -36,6 +36,7 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /auth/forgot-password` | public | `{ email }` | – (same message whether or not the email exists; 60s cooldown, 3 per 15 min by email and IP) |
 | ✅ | `POST /auth/reset-password` | public | `{ token, password, confirmPassword }` | – (link valid 15 min, single use; logs out all devices) |
 | ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, roles, createdAt }` |
+| ✅ | `POST /users/me/roles/recruiter` | user | – | `UserResource` with `RECRUITER` in `roles`. `EMAIL_NOT_VERIFIED` if the email is not verified. Idempotent when already a recruiter. Evicts the user's session cache after commit: call `POST /auth/refresh` (or let the next 401 trigger it) to rebuild the session and receive the new `user.roles`. ADMIN can never be self-assigned (no endpoint). |
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 
@@ -47,6 +48,7 @@ Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 | `INVALID_CREDENTIALS` | 401 | Wrong email or password; `error.meta.captchaRequired` is true after 3 failures |
 | `INVALID_OR_EXPIRED_TOKEN` | 400 | Verification or reset link is invalid, expired or already used |
 | `EMAIL_ALREADY_VERIFIED` | 409 | |
+| `EMAIL_NOT_VERIFIED` | 422 | The action requires a verified email (e.g. enabling the Recruiter role) |
 | `UNAUTHENTICATED` | 401 | Missing/expired token → frontend tries refresh once |
 | `FORBIDDEN` | 403 | Role/ownership failure |
 | `NOT_FOUND` | 404 | |

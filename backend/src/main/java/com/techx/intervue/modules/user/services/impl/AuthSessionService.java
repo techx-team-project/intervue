@@ -34,6 +34,11 @@ public class AuthSessionService implements AuthSessionServiceInterface {
         return new AuthResult(grantAccess(user), refreshToken, userMapper.toResource(user));
     }
 
+    @Override
+    public void invalidate(Long userId) {
+        userSessionCache.evict(userId);
+    }
+
     private String grantAccess(User user) {
         userSessionCache.set(
                 user.getId(),

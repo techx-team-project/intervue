@@ -7,4 +7,6 @@ public interface AuthSessionServiceInterface {
     AuthResult open(User user);
 
     AuthResult renew(User user, String refreshToken);
+
+    void invalidate(Long userId);
 }

@@ -8,4 +8,6 @@ public interface UserServiceInterface {
     AuthResult register(RegisterRequest request);
 
     UserResource getMe(Long userId);
+
+    UserResource becomeRecruiter(Long userId);
 }
