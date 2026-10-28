@@ -55,7 +55,7 @@ const PERIODIC_GREETINGS: Array<{ state: RobotHeadState; msg: string }> = [
 
 export function FloatingAssistant() {
   const pathname = usePathname();
-  const isHidden = pathname === '/mascot' || pathname.startsWith('/recruiter');
+  const isHidden = pathname === '/mascot' || pathname.startsWith('/recruiter') || pathname.startsWith('/admin');
   const [showBubble, setShowBubble] = useState(false);
   const [isAutoGreeting, setIsAutoGreeting] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
