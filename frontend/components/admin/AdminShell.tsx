@@ -1,5 +1,7 @@
 'use client';
 
+import PanelBrandSplash from '@/components/common/PanelBrandSplash';
+import { useAdminTheme } from '@/hooks/useAdminTheme';
 import { useAuth } from '@/hooks/useAuth';
 import type { AdminAccountState, AdminPermission, AdminQueueCounts } from '@/types/admin';
 import { ReactNode, useEffect, useState, useSyncExternalStore } from 'react';
@@ -39,6 +41,7 @@ function setSidebarCollapsed(value: boolean) {
 
 export default function AdminShell({ children, queueCounts, account, permissions }: AdminShellProps) {
   const { user } = useAuth();
+  const { theme } = useAdminTheme();
   const isCollapsed = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [isPaletteOpen, setPaletteOpen] = useState(false);
@@ -56,7 +59,9 @@ export default function AdminShell({ children, queueCounts, account, permissions
   }, []);
 
   return (
-    <div className="text-navy dark:bg-forest-950 dark:text-forest-50 flex min-h-screen flex-col bg-[#f4f5f5] antialiased">
+    <div className="text-navy dark:bg-forest-950 dark:text-forest-50 flex min-h-screen flex-col overscroll-y-none bg-[#f4f5f5] antialiased">
+      <PanelBrandSplash variant="admin" theme={theme} />
+
       <AdminTopBar
         queueCounts={queueCounts}
         onToggleSidebar={() => setSidebarCollapsed(!isCollapsed)}
@@ -72,7 +77,7 @@ export default function AdminShell({ children, queueCounts, account, permissions
           adminEmail={user?.email}
           permissions={permissions}
           onExpand={() => setSidebarCollapsed(false)}
-          className="dark:border-forest-800 hidden border-[#e2e8f0] transition-[width] duration-200 lg:sticky lg:top-18 lg:block lg:h-[calc(100vh-4.5rem)] lg:overflow-y-auto lg:border-r"
+          className="dark:border-forest-800 hidden border-[#e2e8f0] transition-[width] duration-200 lg:sticky lg:top-18 lg:block lg:h-[calc(100vh-4.5rem)] lg:overflow-y-auto lg:overscroll-contain lg:border-r"
         />
 
         <main className="min-w-0 flex-1">

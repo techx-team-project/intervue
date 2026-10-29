@@ -1,5 +1,6 @@
 'use client';
 
+import PanelBrandSplash from '@/components/common/PanelBrandSplash';
 import { ReactNode, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import RecruiterBottomCta from './RecruiterBottomCta';
 import RecruiterHeader from './RecruiterHeader';
@@ -67,6 +68,8 @@ export default function RecruiterShell({ children }: { children: ReactNode }) {
       ref={shellRef}
       className="text-navy flex min-h-screen flex-col bg-[#f4f5f5] antialiased [--recruiter-sticky-top:4rem]"
     >
+      <PanelBrandSplash variant="recruiter" />
+
       {/* Notice + header scroll as one block so both stay pinned to the top. */}
       <div ref={stickyTopRef} className="sticky top-0 z-40">
         <RecruiterTopNotice />
