@@ -72,28 +72,28 @@ export default function AdminBannerCarousel({ slides }: AdminBannerCarouselProps
             key={slide.id}
             href={slide.href}
             className={cn(
-              'relative flex min-w-full shrink-0 snap-start overflow-hidden rounded-2xl shadow-sm transition-shadow hover:shadow-md lg:min-w-[calc(50%-0.5rem)]',
+              'group/card relative flex min-w-full shrink-0 snap-start overflow-hidden rounded-2xl shadow-sm transition-all hover:shadow-md lg:min-w-[calc(50%-0.5rem)]',
               slide.gradientClassName,
             )}
           >
-            <div className="relative z-10 flex min-w-0 flex-1 flex-col justify-center gap-2 p-5 sm:p-6">
+            <div className="relative z-10 flex min-w-0 flex-1 flex-col justify-center gap-2 p-5 pr-1 sm:p-6 sm:pr-2">
               <span className="text-[11.5px] font-bold tracking-wider text-white/70 uppercase">{slide.eyebrow}</span>
               <h3 className="max-w-[18rem] text-[17px] leading-snug font-black text-white sm:text-lg">{slide.title}</h3>
               <p className="max-w-[20rem] text-[12.5px] leading-relaxed text-white/80">{slide.description}</p>
 
-              <span className="mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-[12.5px] font-bold text-[#0c2e24]">
+              <span className="mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-[12.5px] font-bold text-[#0c2e24] shadow-xs transition-transform group-hover/card:scale-105">
                 <span>{slide.ctaLabel}</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </span>
             </div>
 
-            <div className="relative h-44 w-32 shrink-0 self-end sm:w-44">
+            <div className="relative w-40 shrink-0 self-stretch overflow-hidden sm:w-52 lg:w-60">
               <Image
                 src={slide.imageSrc}
                 alt={slide.imageAlt}
                 fill
-                sizes="(max-width: 1024px) 40vw, 20vw"
-                className="object-contain object-bottom"
+                sizes="(max-width: 1024px) 40vw, 25vw"
+                className="[mask-image:linear-gradient(to_right,transparent_0%,black_24%,black_100%)] object-cover object-center transition-transform duration-500 group-hover/card:scale-105"
               />
             </div>
           </Link>

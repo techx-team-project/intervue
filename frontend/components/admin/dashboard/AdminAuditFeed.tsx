@@ -24,8 +24,8 @@ const OUTCOME_STYLE: Record<AdminAuditOutcome, string> = {
 
 export default function AdminAuditFeed({ entries }: AdminAuditFeedProps) {
   return (
-    <section className="dark:border-forest-800 dark:bg-forest-900 flex flex-col overflow-hidden rounded-2xl border border-[#e9eaec] bg-white shadow-xs">
-      <header className="dark:border-forest-800 flex items-baseline justify-between gap-2 border-b border-[#f1f5f9] px-4 py-3.5">
+    <section className="dark:border-forest-800 dark:bg-forest-900 flex h-full max-h-[34rem] flex-col overflow-hidden rounded-2xl border border-[#e9eaec] bg-white shadow-xs">
+      <header className="dark:border-forest-800 flex shrink-0 items-baseline justify-between gap-2 border-b border-[#f1f5f9] px-4 py-3.5">
         <h2 className="text-navy dark:text-forest-50 text-[14px] font-bold">Admin activity</h2>
         <span className="text-[11.5px] text-[#94a3b8]">Today</span>
       </header>

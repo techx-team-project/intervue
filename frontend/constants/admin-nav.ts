@@ -94,8 +94,8 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         label: 'Users',
         icon: Users,
         children: [
-          { label: 'All users', href: ROUTES.ADMIN_USERS, permission: 'users.manage', comingSoon: true },
-          { label: 'Admin accounts', href: ROUTES.ADMIN_ADMINS, permission: 'users.admins', comingSoon: true },
+          { label: 'All users', href: ROUTES.ADMIN_USERS, permission: 'users.manage' },
+          { label: 'Admin accounts', href: ROUTES.ADMIN_ADMINS, permission: 'users.admins' },
         ],
       },
       {

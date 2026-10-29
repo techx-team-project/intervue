@@ -19,13 +19,13 @@ export default function AdminMascotCard() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 px-4 pb-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-        <div className="relative h-44 overflow-hidden rounded-xl bg-linear-to-br from-[#06231a] via-[#0c3b2c] to-[#0f5132]">
+        <div className="relative h-44 overflow-hidden rounded-xl bg-[#00110b]">
           <Image
-            src="/intervue-bot.png"
+            src="/admin/banner-bot.jpg"
             alt="InterVue Bot AI mascot waving"
             fill
             sizes="(max-width: 1024px) 90vw, 30vw"
-            className="object-contain"
+            className="object-cover object-center"
           />
         </div>
 

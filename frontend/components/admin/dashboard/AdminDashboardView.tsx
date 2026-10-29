@@ -45,12 +45,12 @@ export default function AdminDashboardView({ data, initialKind }: AdminDashboard
 
       <AdminQueueBreakdown queues={data.queues} />
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+      <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-3">
         <div className="xl:col-span-2">
           <AdminWorklist items={items} initialKind={initialKind} onApprove={approve} onReject={requestReject} />
         </div>
 
-        <div className="min-h-0 xl:max-h-[34rem]">
+        <div className="min-h-0">
           <AdminAuditFeed entries={data.recentAudit} />
         </div>
       </div>

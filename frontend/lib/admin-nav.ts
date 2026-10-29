@@ -31,9 +31,23 @@ export function flattenItems(items: AdminNavItem[]): AdminNavItem[] {
   return items.flatMap((item) => [item, ...(item.children ? flattenItems(item.children) : [])]);
 }
 
+function allNavItems(): AdminNavItem[] {
+  return ADMIN_NAV_SECTIONS.flatMap((section) => flattenItems(section.items));
+}
+
+// Nav hrefs nest (/admin/users is a prefix of /admin/users/admins), so a plain
+// prefix test lights up both rows. Only the longest match counts as active.
+function activeHref(pathname: string): string | undefined {
+  return allNavItems()
+    .map((item) => item.href)
+    .filter((href): href is string => Boolean(href) && (pathname === href || pathname.startsWith(`${href}/`)))
+    .sort((left, right) => right.length - left.length)
+    .at(0);
+}
+
 export function isNavItemActive(href: string | undefined, pathname: string): boolean {
   if (!href) return false;
-  return pathname === href || pathname.startsWith(`${href}/`);
+  return activeHref(pathname) === href;
 }
 
 export function hasActiveDescendant(item: AdminNavItem, pathname: string): boolean {
@@ -42,9 +56,7 @@ export function hasActiveDescendant(item: AdminNavItem, pathname: string): boole
 
 export function isRouteAvailable(href?: string): boolean {
   if (!href) return false;
-  const item = ADMIN_NAV_SECTIONS.flatMap((section) => flattenItems(section.items)).find(
-    (navItem) => navItem.href === href,
-  );
+  const item = allNavItems().find((navItem) => navItem.href === href);
   return item ? !item.comingSoon : false;
 }
 
