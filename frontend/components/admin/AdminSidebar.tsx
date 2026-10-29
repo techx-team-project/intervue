@@ -128,7 +128,7 @@ export default function AdminSidebar({
           </button>
 
           {isExpanded && (
-            <div className="dark:border-forest-800 mt-0.5 ml-[26px] space-y-0.5 border-l border-[#f1f5f9] pl-3">
+            <div className="dark:border-forest-800 mt-1.5 mb-1 ml-[26px] space-y-1.5 border-l border-[#f1f5f9] pl-3">
               {item.children?.map((child) => renderItem(child, isAction, true))}
             </div>
           )}
@@ -179,7 +179,7 @@ export default function AdminSidebar({
 
     const rowClass = cn(
       'flex items-center justify-between rounded-xl text-[13px] transition',
-      isChild ? 'px-2.5 py-1.5' : 'px-2.5 py-2.5',
+      isChild ? 'px-3 py-2.5' : 'px-2.5 py-2.5',
     );
 
     if (item.comingSoon) {
