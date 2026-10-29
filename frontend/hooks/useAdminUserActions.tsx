@@ -1,14 +1,22 @@
 'use client';
 
 import AdminUserConfirmDialog from '@/components/admin/users/AdminUserConfirmDialog';
-import AdminUserLockDialog from '@/components/admin/users/AdminUserLockDialog';
-import { lockBlockedReason } from '@/lib/admin-user';
-import type { LockUserFormData } from '@/schemas/admin-user.schema';
-import type { AdminUserListItem } from '@/types/admin-user';
+import AdminUserRestrictDialog from '@/components/admin/users/AdminUserRestrictDialog';
+import { RESTRICTION_META } from '@/constants/admin-user';
+import { restrictBlockedReason } from '@/lib/admin-user';
+import type { RestrictUserFormData } from '@/schemas/admin-user.schema';
+import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-user';
 import { useCallback, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 
-export type AdminUserConfirmKind = 'unlock' | 'revokeSessions' | 'resetTwoFactor' | 'sendPasswordReset';
+export type AdminUserConfirmKind = 'unlock' | 'unban' | 'revokeSessions' | 'resetTwoFactor' | 'sendPasswordReset';
+
+export type AdminUserAction = AdminUserRestrictionKind | AdminUserConfirmKind;
+
+interface RestrictRequest {
+  kind: AdminUserRestrictionKind;
+  users: AdminUserListItem[];
+}
 
 interface ConfirmRequest {
   kind: AdminUserConfirmKind;
@@ -36,16 +44,25 @@ function confirmCopy({ kind, users }: ConfirmRequest): ConfirmCopy {
 
   switch (kind) {
     case 'unlock':
+    case 'unban': {
+      const isUnban = kind === 'unban';
       return {
-        title: `Unlock — ${subject}`,
+        title: `${isUnban ? 'Unban' : 'Unlock'} — ${subject}`,
         description: 'Sign-in is restored immediately.',
         consequences: [
           'Sign-in is allowed again right away',
           'Existing sessions stay revoked — the user signs in fresh',
-          'The original lock and its reason remain in the audit log',
+          isUnban
+            ? 'Public content becomes visible again'
+            : 'Public content was never hidden, so nothing changes there',
+          `The original ${isUnban ? 'ban' : 'lock'} and its reason remain in the audit log`,
         ],
-        confirmLabel: users.length === 1 ? 'Unlock account' : `Unlock ${users.length} accounts`,
+        confirmLabel:
+          users.length === 1
+            ? `${isUnban ? 'Unban' : 'Unlock'} account`
+            : `${isUnban ? 'Unban' : 'Unlock'} ${users.length} accounts`,
       };
+    }
     case 'revokeSessions':
       return {
         title: `Revoke all sessions — ${subject}`,
@@ -83,15 +100,13 @@ function confirmCopy({ kind, users }: ConfirmRequest): ConfirmCopy {
   }
 }
 
-export type AdminUserAction = 'lock' | AdminUserConfirmKind;
-
 export function useAdminUserActions(
   initialUsers: AdminUserListItem[],
   currentAdminId: number,
   onResolved?: (action: AdminUserAction, userIds: number[], reason?: string) => void,
 ) {
   const [users, setUsers] = useState(initialUsers);
-  const [lockRequest, setLockRequest] = useState<AdminUserListItem[] | null>(null);
+  const [restrictRequest, setRestrictRequest] = useState<RestrictRequest | null>(null);
   const [confirmRequest, setConfirmRequest] = useState<ConfirmRequest | null>(null);
 
   const currentAdminName = users.find((user) => user.id === currentAdminId)?.name ?? 'You';
@@ -108,59 +123,59 @@ export function useAdminUserActions(
     [users],
   );
 
-  const requestLock = useCallback(
-    (targets: AdminUserListItem[]) => {
-      const blocked = targets.filter((user) => lockBlockedReason(user, currentAdminId, users) !== null);
-      const allowed = targets.filter((user) => lockBlockedReason(user, currentAdminId, users) === null);
+  const requestRestrict = useCallback(
+    (kind: AdminUserRestrictionKind, targets: AdminUserListItem[]) => {
+      const allowed = targets.filter((user) => restrictBlockedReason(user, kind, currentAdminId, users) === null);
+      const blocked = targets.length - allowed.length;
 
       if (allowed.length === 0) {
         toast.error(
-          blocked.length === 1
-            ? (lockBlockedReason(blocked[0], currentAdminId, users) ?? '')
-            : 'None of the selected accounts can be locked',
+          targets.length === 1
+            ? (restrictBlockedReason(targets[0], kind, currentAdminId, users) ?? '')
+            : `None of the selected accounts can be ${kind === 'ban' ? 'banned' : 'locked'}`,
         );
         return;
       }
 
-      if (blocked.length > 0) {
-        toast.warning(`${plural(blocked.length, 'account')} skipped — they cannot be locked`);
-      }
+      if (blocked > 0) toast.warning(`${plural(blocked, 'account')} skipped — they cannot be restricted`);
 
-      setLockRequest(allowed);
+      setRestrictRequest({ kind, users: allowed });
     },
     [currentAdminId, users],
   );
 
-  const confirmLock = useCallback(
-    (data: LockUserFormData) => {
-      if (!lockRequest) return;
-      const targets = lockRequest;
-      setLockRequest(null);
+  const confirmRestrict = useCallback(
+    (data: RestrictUserFormData) => {
+      if (!restrictRequest) return;
+      const { kind, users: targets } = restrictRequest;
+      setRestrictRequest(null);
 
       patchUsers(
         targets.map((user) => user.id),
         (user) => ({
           ...user,
-          status: 'LOCKED',
+          status: RESTRICTION_META[kind].status,
           activeSessionCount: 0,
-          lockImpact: { ...user.lockImpact, activeSessionCount: 0 },
-          lock: {
+          restrictionImpact: { ...user.restrictionImpact, activeSessionCount: 0 },
+          restriction: {
+            kind,
             reason: data.reason,
             detail: data.detail?.length ? data.detail : null,
             at: new Date().toISOString(),
             byName: currentAdminName,
+            expiresAt: data.isTemporary && data.expiresAt ? new Date(data.expiresAt).toISOString() : null,
           },
         }),
       );
 
       onResolved?.(
-        'lock',
+        kind,
         targets.map((user) => user.id),
         data.reason,
       );
-      undoableToast(`Locked ${subjectOf(targets)} — ${data.reason}`);
+      undoableToast(`${kind === 'ban' ? 'Banned' : 'Locked'} ${subjectOf(targets)} — ${data.reason}`);
     },
-    [lockRequest, patchUsers, undoableToast, currentAdminName, onResolved],
+    [restrictRequest, patchUsers, undoableToast, currentAdminName, onResolved],
   );
 
   const confirmPending = useCallback(() => {
@@ -172,14 +187,15 @@ export function useAdminUserActions(
 
     switch (kind) {
       case 'unlock':
-        patchUsers(ids, (user) => ({ ...user, status: 'ACTIVE', lock: null }));
-        undoableToast(`Unlocked ${subjectOf(targets)}`);
+      case 'unban':
+        patchUsers(ids, (user) => ({ ...user, status: 'ACTIVE', restriction: null }));
+        undoableToast(`${kind === 'unban' ? 'Unbanned' : 'Unlocked'} ${subjectOf(targets)}`);
         return;
       case 'revokeSessions':
         patchUsers(ids, (user) => ({
           ...user,
           activeSessionCount: 0,
-          lockImpact: { ...user.lockImpact, activeSessionCount: 0 },
+          restrictionImpact: { ...user.restrictionImpact, activeSessionCount: 0 },
         }));
         toast.success(`Signed ${subjectOf(targets)} out of every device`);
         return;
@@ -199,8 +215,13 @@ export function useAdminUserActions(
 
   const actionModals: ReactNode = (
     <>
-      {lockRequest && (
-        <AdminUserLockDialog users={lockRequest} onClose={() => setLockRequest(null)} onConfirm={confirmLock} />
+      {restrictRequest && (
+        <AdminUserRestrictDialog
+          kind={restrictRequest.kind}
+          users={restrictRequest.users}
+          onClose={() => setRestrictRequest(null)}
+          onConfirm={confirmRestrict}
+        />
       )}
 
       {confirmRequest && (
@@ -213,5 +234,5 @@ export function useAdminUserActions(
     </>
   );
 
-  return { users, requestLock, requestConfirm, actionModals };
+  return { users, requestRestrict, requestConfirm, actionModals };
 }
