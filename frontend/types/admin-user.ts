@@ -1,11 +1,16 @@
 import type { AdminPermission } from '@/types/admin';
 import type { RoleType } from '@/types/auth';
 
-export type AdminUserStatus = 'ACTIVE' | 'LOCKED' | 'DELETED';
+// LOCKED is a reversible security hold; BANNED is policy enforcement that also
+// hides the account's public content. Both are lifted by an admin and both stay
+// in the activity history.
+export type AdminUserStatus = 'ACTIVE' | 'LOCKED' | 'BANNED' | 'DELETED';
 
-export type AdminUserSegment = 'all' | 'candidates' | 'recruiters' | 'admins' | 'locked' | 'unverified';
+export type AdminUserRestrictionKind = 'lock' | 'ban';
 
-export type AdminUserSort = 'newest' | 'oldest' | 'name' | 'lastLocked';
+export type AdminUserSegment = 'all' | 'candidates' | 'recruiters' | 'admins' | 'locked' | 'banned' | 'unverified';
+
+export type AdminUserSort = 'newest' | 'oldest' | 'name' | 'lastRestricted' | 'lastSignIn';
 
 // Mirrors user_roles: a grant carries who issued it and when it lapses, both of
 // which the schema already stores and nothing writes yet.
@@ -16,18 +21,22 @@ export interface AdminUserRoleGrant {
   expiresAt: string | null;
 }
 
-export interface AdminUserLock {
+export interface AdminUserRestriction {
+  kind: AdminUserRestrictionKind;
   reason: string;
   detail: string | null;
   at: string;
   byName: string;
+  expiresAt: string | null;
 }
 
-// What locking actually touches on this account, shown before the admin commits.
-export interface AdminUserLockImpact {
+// What a restriction actually touches on this account, shown before the admin
+// commits to it.
+export interface AdminUserRestrictionImpact {
   activeSessionCount: number;
   publishedJobPostCount: number;
   applicationsInProgressCount: number;
+  savedCandidateCount: number;
 }
 
 export interface AdminUserListItem {
@@ -42,8 +51,9 @@ export interface AdminUserListItem {
   activeSessionCount: number;
   hasTokenReuseIncident: boolean;
   createdAt: string;
-  lock: AdminUserLock | null;
-  lockImpact: AdminUserLockImpact;
+  lastSignInAt: string | null;
+  restriction: AdminUserRestriction | null;
+  restrictionImpact: AdminUserRestrictionImpact;
 }
 
 // One refresh_tokens row. replacedByTokenId is the rotation chain, and a revoked
@@ -66,10 +76,23 @@ export type AdminUserActivityKind =
   | 'roleRevoked'
   | 'locked'
   | 'unlocked'
+  | 'banned'
+  | 'unbanned'
   | 'sessionsRevoked'
   | 'twoFactorReset'
   | 'passwordResetSent'
   | 'tokenReuseDetected';
+
+// Derived from refresh_tokens: every row is one successful sign-in that kept a
+// session, so the table doubles as the login history until a dedicated one exists.
+export interface AdminUserSignIn {
+  id: string;
+  at: string;
+  deviceLabel: string;
+  ipAddress: string;
+  location: string;
+  outcome: 'success' | 'revoked';
+}
 
 export interface AdminUserActivityEntry {
   id: string;
@@ -90,12 +113,24 @@ export interface AdminUserLinkedRecord {
   href: string | null;
 }
 
+export interface AdminUserProfileSummary {
+  headline: string | null;
+  jobSearchStatus: string | null;
+  completeness: number;
+  cvCount: number;
+  identityVerification: 'approved' | 'pending' | 'rejected' | 'not_submitted';
+  companyName: string | null;
+  companyVerificationLevel: 1 | 2 | 3 | null;
+}
+
 export interface AdminUserDetail extends AdminUserListItem {
   address: string | null;
   termsAcceptedAt: string | null;
   updatedAt: string;
   twoFactorEnabled: boolean;
+  profile: AdminUserProfileSummary;
   sessions: AdminUserSession[];
+  signIns: AdminUserSignIn[];
   activity: AdminUserActivityEntry[];
   linkedRecords: AdminUserLinkedRecord[];
 }
@@ -103,6 +138,14 @@ export interface AdminUserDetail extends AdminUserListItem {
 export interface AdminUserSegmentCount {
   segment: AdminUserSegment;
   count: number;
+}
+
+export interface AdminUserAttentionItem {
+  key: string;
+  label: string;
+  count: number;
+  tone: 'danger' | 'warning' | 'info';
+  segment?: AdminUserSegment;
 }
 
 export interface AdminUserListData {
@@ -123,6 +166,8 @@ export interface AdminAccountListItem {
   grantedAt: string;
   expiresAt: string | null;
   isCurrentAdmin: boolean;
+  lastSignInAt: string | null;
+  decisionsLast30Days: number;
 }
 
 export interface AdminAccountListData {

@@ -1,4 +1,5 @@
 import { ADMIN_NAV_SECTIONS } from '@/constants/admin-nav';
+import { ROUTES } from '@/constants/routes';
 import type {
   AdminBreadcrumbEntry,
   AdminNavItem,
@@ -68,21 +69,37 @@ export function sectionPendingCount(section: AdminNavSection, counts: AdminQueue
   return section.items.reduce((total, item) => total + itemPendingCount(item, counts), 0);
 }
 
+// Routes below a nav entry have no nav item of their own, so their last crumb
+// is read off the pathname instead. Keep the labels derivable from the URL
+// alone — the page bar renders before any page data is available.
+const DYNAMIC_LEAVES: { pattern: RegExp; label: (match: RegExpMatchArray) => string }[] = [
+  { pattern: /^\/admin\/users\/admins\/create$/, label: () => 'Create admin' },
+  { pattern: /^\/admin\/users\/(\d+)$/, label: (match) => `Account #${match[1]}` },
+];
+
+function dynamicLeaf(pathname: string): AdminBreadcrumbEntry[] {
+  for (const { pattern, label } of DYNAMIC_LEAVES) {
+    const match = pathname.match(pattern);
+    if (match) return [{ label: label(match) }];
+  }
+  return [];
+}
+
 export function buildAdminBreadcrumb(pathname: string, granted?: AdminPermission[]): AdminBreadcrumbEntry[] {
-  const trail: AdminBreadcrumbEntry[] = [{ label: 'Admin' }];
+  const trail: AdminBreadcrumbEntry[] = [{ label: 'Admin', href: ROUTES.ADMIN_DASHBOARD }];
 
   for (const section of visibleSections(granted)) {
     for (const item of section.items) {
       if (isNavItemActive(item.href, pathname)) {
         if (section.id !== 'overview') trail.push({ label: section.title });
-        trail.push({ label: item.label });
-        return trail;
+        trail.push({ label: item.label, href: item.href });
+        return [...trail, ...dynamicLeaf(pathname)];
       }
 
       const child = (item.children ?? []).find((entry) => isNavItemActive(entry.href, pathname));
       if (child) {
-        trail.push({ label: section.title }, { label: item.label }, { label: child.label });
-        return trail;
+        trail.push({ label: section.title }, { label: item.label }, { label: child.label, href: child.href });
+        return [...trail, ...dynamicLeaf(pathname)];
       }
     }
   }

@@ -11,9 +11,12 @@ import type {
   AdminUserLinkedRecord,
   AdminUserListData,
   AdminUserListItem,
+  AdminUserProfileSummary,
+  AdminUserRestrictionKind,
   AdminUserRoleGrant,
   AdminUserSegmentCount,
   AdminUserSession,
+  AdminUserSignIn,
   AdminUserStatus,
 } from '@/types/admin-user';
 import type { AdminPermission } from '@/types/admin';
@@ -44,13 +47,17 @@ interface UserSeed {
   sessions: number;
   emailVerified?: false;
   status?: Exclude<AdminUserStatus, 'ACTIVE'>;
-  lockReason?: string;
-  lockDetail?: string;
-  lockedDaysAgo?: number;
+  restrictionKind?: AdminUserRestrictionKind;
+  restrictionReason?: string;
+  restrictionDetail?: string;
+  restrictedDaysAgo?: number;
+  restrictionExpiresInDays?: number;
   recruiterExpiresInDays?: number;
   adminExpiresInDays?: number;
   tokenReuse?: true;
   address?: string;
+  headline?: string;
+  companyName?: string;
 }
 
 const USER_SEEDS: UserSeed[] = [
@@ -102,9 +109,10 @@ const USER_SEEDS: UserSeed[] = [
     joinedDaysAgo: 54,
     sessions: 0,
     status: 'LOCKED',
-    lockReason: 'Security incident — credentials compromised',
-    lockDetail: 'Password reuse found in an external breach dump. Locked until a new password and 2FA are set.',
-    lockedDaysAgo: 2,
+    restrictionKind: 'lock',
+    restrictionReason: 'Security incident — credentials compromised',
+    restrictionDetail: 'Password reuse found in an external breach dump. Locked until a new password and 2FA are set.',
+    restrictedDaysAgo: 2,
   },
   {
     id: 204117,
@@ -219,10 +227,12 @@ const USER_SEEDS: UserSeed[] = [
     roles: [ROLES.CANDIDATE],
     joinedDaysAgo: 44,
     sessions: 0,
-    status: 'LOCKED',
-    lockReason: 'Spam or mass unsolicited contact',
-    lockDetail: 'Sent the same template message to 180 recruiters in one hour.',
-    lockedDaysAgo: 6,
+    status: 'BANNED',
+    restrictionKind: 'ban',
+    restrictionReason: 'Repeated spam after a warning',
+    restrictionDetail: 'Sent the same template message to 180 recruiters in one hour, twice after a warning.',
+    restrictedDaysAgo: 6,
+    restrictionExpiresInDays: 24,
   },
   {
     id: 302077,
@@ -279,10 +289,11 @@ const USER_SEEDS: UserSeed[] = [
     roles: [ROLES.CANDIDATE],
     joinedDaysAgo: 94,
     sessions: 0,
-    status: 'LOCKED',
-    lockReason: 'Fraudulent or fake identity documents',
-    lockDetail: 'Submitted an ID card that belongs to another person. eKYC attempt 3 of 3.',
-    lockedDaysAgo: 11,
+    status: 'BANNED',
+    restrictionKind: 'ban',
+    restrictionReason: 'Fake or impersonated account',
+    restrictionDetail: 'Submitted an ID card that belongs to another person. eKYC attempt 3 of 3.',
+    restrictedDaysAgo: 11,
   },
   {
     id: 303277,
@@ -314,6 +325,50 @@ const USER_SEEDS: UserSeed[] = [
   },
 ];
 
+const FAMILY_NAMES = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Vũ', 'Đặng', 'Bùi', 'Đỗ', 'Ngô'];
+const GIVEN_NAMES = [
+  'Anh Thư',
+  'Bảo Châu',
+  'Chí Thành',
+  'Diễm My',
+  'Gia Hân',
+  'Hữu Nghĩa',
+  'Khả Vy',
+  'Minh Khôi',
+  'Ngọc Mai',
+  'Phú Quý',
+  'Quỳnh Như',
+  'Tấn Dũng',
+  'Thuý Vi',
+  'Tuấn Kiệt',
+  'Xuân Mai',
+];
+
+// Filler accounts so the list is long enough to page through; the hand-written
+// seeds above carry every interesting state.
+function generatedSeeds(): UserSeed[] {
+  return Array.from({ length: 34 }, (_, index) => {
+    const family = FAMILY_NAMES[index % FAMILY_NAMES.length];
+    const given = GIVEN_NAMES[index % GIVEN_NAMES.length];
+    const slug = `${given.split(' ').join('').toLowerCase()}.${family.toLowerCase()}${index}`;
+    const isRecruiter = index % 7 === 3;
+
+    return {
+      id: 400000 + index * 137,
+      name: `${family} ${given}`,
+      email: `${slug}@gmail.com`
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd'),
+      phone: index % 5 === 0 ? null : `09${String(10_000_000 + index * 48_271).slice(0, 8)}`,
+      roles: isRecruiter ? [ROLES.CANDIDATE, ROLES.RECRUITER] : [ROLES.CANDIDATE],
+      joinedDaysAgo: 5 + index * 6,
+      sessions: index % 4 === 0 ? 0 : (index % 3) + 1,
+      ...(index % 9 === 4 ? { emailVerified: false as const } : {}),
+    };
+  });
+}
+
 function buildRoleGrants(seed: UserSeed): AdminUserRoleGrant[] {
   return seed.roles.map((role) => {
     if (role === ROLES.CANDIDATE) {
@@ -338,6 +393,13 @@ function buildRoleGrants(seed: UserSeed): AdminUserRoleGrant[] {
   });
 }
 
+function lastSignIn(seed: UserSeed): string | null {
+  if (seed.sessions > 0) return daysAgo(1);
+  if (seed.restrictedDaysAgo !== undefined) return daysAgo(seed.restrictedDaysAgo + 1);
+  if (seed.emailVerified === false) return null;
+  return daysAgo(Math.min(seed.joinedDaysAgo, (seed.id % 40) + 9));
+}
+
 function buildListItem(seed: UserSeed): AdminUserListItem {
   return {
     id: seed.id,
@@ -351,18 +413,22 @@ function buildListItem(seed: UserSeed): AdminUserListItem {
     activeSessionCount: seed.sessions,
     hasTokenReuseIncident: seed.tokenReuse === true,
     createdAt: daysAgo(seed.joinedDaysAgo),
-    lock: seed.lockReason
+    lastSignInAt: lastSignIn(seed),
+    restriction: seed.restrictionReason
       ? {
-          reason: seed.lockReason,
-          detail: seed.lockDetail ?? null,
-          at: daysAgo(seed.lockedDaysAgo ?? 1),
+          kind: seed.restrictionKind ?? 'lock',
+          reason: seed.restrictionReason,
+          detail: seed.restrictionDetail ?? null,
+          at: daysAgo(seed.restrictedDaysAgo ?? 1),
           byName: PLATFORM_ADMIN,
+          expiresAt: seed.restrictionExpiresInDays ? daysAhead(seed.restrictionExpiresInDays) : null,
         }
       : null,
-    lockImpact: {
+    restrictionImpact: {
       activeSessionCount: seed.sessions,
       publishedJobPostCount: seed.roles.includes(ROLES.RECRUITER) ? (seed.id % 5) + 1 : 0,
       applicationsInProgressCount: seed.roles.includes(ROLES.CANDIDATE) ? seed.id % 3 : 0,
+      savedCandidateCount: seed.roles.includes(ROLES.RECRUITER) ? (seed.id % 11) + 2 : 0,
     },
   };
 }
@@ -399,11 +465,11 @@ function buildSessions(seed: UserSeed): AdminUserSession[] {
     });
   }
 
-  if (seed.status === 'LOCKED') {
+  if (seed.restrictedDaysAgo !== undefined) {
     sessions.push({
-      id: `rt-${seed.id}-locked`,
-      createdAt: daysAgo((seed.lockedDaysAgo ?? 1) + 4),
-      expiresAt: daysAgo(seed.lockedDaysAgo ?? 1),
+      id: `rt-${seed.id}-restricted`,
+      createdAt: daysAgo(seed.restrictedDaysAgo + 4),
+      expiresAt: daysAgo(seed.restrictedDaysAgo),
       revoked: true,
       replacedByTokenId: null,
       deviceLabel: DEVICE_LABELS[0],
@@ -462,16 +528,25 @@ function buildActivity(seed: UserSeed): AdminUserActivityEntry[] {
     );
   }
 
-  if (seed.lockReason) {
+  if (seed.restrictionReason) {
+    const isBan = seed.restrictionKind === 'ban';
+    const daysBack = seed.restrictedDaysAgo ?? 1;
     entries.push(
-      activityEntry(seed, 'locked', 'Account locked', seed.lockedDaysAgo ?? 1, PLATFORM_ADMIN, seed.lockReason),
+      activityEntry(
+        seed,
+        isBan ? 'banned' : 'locked',
+        isBan ? 'Account banned' : 'Account locked',
+        daysBack,
+        PLATFORM_ADMIN,
+        seed.restrictionReason,
+      ),
     );
     entries.push(
       activityEntry(
         seed,
         'sessionsRevoked',
-        'All sessions revoked by the lock',
-        seed.lockedDaysAgo ?? 1,
+        `All sessions revoked by the ${isBan ? 'ban' : 'lock'}`,
+        daysBack,
         PLATFORM_ADMIN,
       ),
     );
@@ -489,11 +564,12 @@ function buildLinkedRecords(seed: UserSeed): AdminUserLinkedRecord[] {
     records.push({
       key: 'identityVerification',
       label: 'Identity verification',
-      value: seed.lockReason?.startsWith('Fraudulent')
-        ? 'Rejected — 3 of 3 attempts used'
-        : seed.emailVerified === false
-          ? 'Not submitted'
-          : 'Approved',
+      value:
+        seed.restrictionKind === 'ban'
+          ? 'Rejected — 3 of 3 attempts used'
+          : seed.emailVerified === false
+            ? 'Not submitted'
+            : 'Approved',
       href: null,
     });
     records.push({
@@ -528,6 +604,56 @@ function buildLinkedRecords(seed: UserSeed): AdminUserLinkedRecord[] {
   return records;
 }
 
+const LOCATIONS = ['Hanoi, VN', 'Ho Chi Minh City, VN', 'Da Nang, VN', 'Can Tho, VN'];
+
+const CANDIDATE_HEADLINES = [
+  'Backend Developer · Java, Spring Boot',
+  'Frontend Developer · React, TypeScript',
+  'Fullstack Developer · Node.js, Next.js',
+  'QA Engineer · Automation',
+  'DevOps Engineer · AWS, Kubernetes',
+  'Data Engineer · Python, Airflow',
+];
+
+const JOB_SEARCH_STATUSES = ['Actively looking', 'Open to offers', 'Not looking'];
+
+// One sign-in per refresh token: refresh_tokens.created_at is the only record of
+// a successful login the backend keeps today.
+function buildSignIns(seed: UserSeed): AdminUserSignIn[] {
+  return buildSessions(seed)
+    .map((session, index) => ({
+      id: `signin-${session.id}`,
+      at: session.createdAt,
+      deviceLabel: session.deviceLabel,
+      ipAddress: session.ipAddress,
+      location: LOCATIONS[(seed.id + index) % LOCATIONS.length],
+      outcome: session.revoked ? ('revoked' as const) : ('success' as const),
+    }))
+    .sort((left, right) => Date.parse(right.at) - Date.parse(left.at));
+}
+
+function buildProfile(seed: UserSeed): AdminUserProfileSummary {
+  const isCandidate = seed.roles.includes(ROLES.CANDIDATE);
+  const isRecruiter = seed.roles.includes(ROLES.RECRUITER);
+
+  return {
+    headline: isCandidate ? (seed.headline ?? CANDIDATE_HEADLINES[seed.id % CANDIDATE_HEADLINES.length]) : null,
+    jobSearchStatus: isCandidate ? JOB_SEARCH_STATUSES[seed.id % JOB_SEARCH_STATUSES.length] : null,
+    completeness: isCandidate ? 40 + (seed.id % 13) * 5 : 100,
+    cvCount: isCandidate ? (seed.id % 4) + 1 : 0,
+    identityVerification:
+      seed.restrictionKind === 'ban'
+        ? 'rejected'
+        : seed.emailVerified === false
+          ? 'not_submitted'
+          : isCandidate
+            ? 'approved'
+            : 'not_submitted',
+    companyName: isRecruiter ? (seed.companyName ?? seed.email.split('@')[1]) : null,
+    companyVerificationLevel: isRecruiter ? (seed.recruiterExpiresInDays ? 2 : 3) : null,
+  };
+}
+
 function buildDetail(seed: UserSeed): AdminUserDetail {
   const listItem = buildListItem(seed);
 
@@ -535,15 +661,19 @@ function buildDetail(seed: UserSeed): AdminUserDetail {
     ...listItem,
     address: seed.address ?? null,
     termsAcceptedAt: daysAgo(seed.joinedDaysAgo),
-    updatedAt: daysAgo(Math.min(seed.joinedDaysAgo, seed.lockedDaysAgo ?? 4)),
+    updatedAt: daysAgo(Math.min(seed.joinedDaysAgo, seed.restrictedDaysAgo ?? 4)),
     twoFactorEnabled: seed.roles.includes(ROLES.ADMIN) && seed.id !== CURRENT_ADMIN_ID,
+    profile: buildProfile(seed),
     sessions: buildSessions(seed),
+    signIns: buildSignIns(seed),
     activity: buildActivity(seed),
     linkedRecords: buildLinkedRecords(seed),
   };
 }
 
-const USERS: AdminUserListItem[] = USER_SEEDS.map(buildListItem);
+const ALL_SEEDS: UserSeed[] = [...USER_SEEDS, ...generatedSeeds()];
+
+const USERS: AdminUserListItem[] = ALL_SEEDS.map(buildListItem);
 
 const ADMIN_PERMISSION_SETS: Record<number, AdminPermission[]> = {
   838025: ['users.manage', 'users.admins'],
@@ -576,14 +706,14 @@ export async function fetchAdminUserList(): Promise<AdminUserListData> {
 
 export async function fetchAdminUserDetail(id: number): Promise<AdminUserDetail | undefined> {
   await new Promise((resolve) => setTimeout(resolve, MOCK_FETCH_DELAY_MS));
-  const seed = USER_SEEDS.find((entry) => entry.id === id);
+  const seed = ALL_SEEDS.find((entry) => entry.id === id);
   return seed ? buildDetail(seed) : undefined;
 }
 
 export async function fetchAdminAccountList(): Promise<AdminAccountListData> {
   await new Promise((resolve) => setTimeout(resolve, MOCK_FETCH_DELAY_MS));
 
-  const accounts: AdminAccountListItem[] = USER_SEEDS.filter((seed) => seed.roles.includes(ROLES.ADMIN)).map((seed) => {
+  const accounts: AdminAccountListItem[] = ALL_SEEDS.filter((seed) => seed.roles.includes(ROLES.ADMIN)).map((seed) => {
     const grant = buildRoleGrants(seed).find((entry) => entry.role === ROLES.ADMIN);
 
     return {
@@ -598,6 +728,8 @@ export async function fetchAdminAccountList(): Promise<AdminAccountListData> {
       grantedAt: grant?.grantedAt ?? daysAgo(seed.joinedDaysAgo),
       expiresAt: grant?.expiresAt ?? null,
       isCurrentAdmin: seed.id === CURRENT_ADMIN_ID,
+      lastSignInAt: lastSignIn(seed),
+      decisionsLast30Days: (seed.id % 23) * 3,
     };
   });
 

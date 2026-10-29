@@ -45,6 +45,7 @@ export interface AdminNavSection {
 
 export interface AdminBreadcrumbEntry {
   label: string;
+  href?: string;
 }
 
 // Kept out of the shared User type on purpose: that shape mirrors the API contract,

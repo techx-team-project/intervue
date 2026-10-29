@@ -35,6 +35,7 @@ export const ROUTES = {
   ADMIN_USERS: '/admin/users',
   ADMIN_COMPANIES: '/admin/companies',
   ADMIN_ADMINS: '/admin/users/admins',
+  ADMIN_ADMINS_CREATE: '/admin/users/admins/create',
   ADMIN_AUDIT_LOG: '/admin/users/audit-log',
   ADMIN_CATALOG_POSITIONS: '/admin/catalogs/positions',
   ADMIN_CATALOG_LEVELS: '/admin/catalogs/levels',

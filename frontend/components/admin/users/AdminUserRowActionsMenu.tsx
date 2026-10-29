@@ -1,8 +1,20 @@
 'use client';
 
 import { ROUTES } from '@/constants/routes';
-import type { AdminUserListItem } from '@/types/admin-user';
-import { Eye, KeyRound, Lock, LogOut, MoreVertical, ShieldCheck, ShieldOff, Unlock } from 'lucide-react';
+import type { AdminUserConfirmKind } from '@/hooks/useAdminUserActions';
+import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-user';
+import {
+  Ban,
+  CircleCheck,
+  Eye,
+  KeyRound,
+  Lock,
+  LogOut,
+  MoreVertical,
+  ShieldCheck,
+  ShieldOff,
+  Unlock,
+} from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -11,11 +23,9 @@ import { createPortal } from 'react-dom';
 interface AdminUserRowActionsMenuProps {
   user: AdminUserListItem;
   lockBlockedReason: string | null;
-  onLock: () => void;
-  onUnlock: () => void;
-  onRevokeSessions: () => void;
-  onResetTwoFactor: () => void;
-  onSendPasswordReset: () => void;
+  banBlockedReason: string | null;
+  onRestrict: (kind: AdminUserRestrictionKind, user: AdminUserListItem) => void;
+  onConfirm: (kind: AdminUserConfirmKind, user: AdminUserListItem) => void;
 }
 
 interface MenuAction {
@@ -36,11 +46,9 @@ const ITEM_HEIGHT = 36;
 export default function AdminUserRowActionsMenu({
   user,
   lockBlockedReason,
-  onLock,
-  onUnlock,
-  onRevokeSessions,
-  onResetTwoFactor,
-  onSendPasswordReset,
+  banBlockedReason,
+  onRestrict,
+  onConfirm,
 }: AdminUserRowActionsMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
@@ -82,29 +90,41 @@ export default function AdminUserRowActionsMenu({
       key: 'sessions',
       label: 'Revoke all sessions',
       icon: LogOut,
-      onClick: onRevokeSessions,
+      onClick: () => onConfirm('revokeSessions', user),
       disabledReason: user.activeSessionCount === 0 ? 'No active session on this account' : undefined,
     },
-    { key: 'two-factor', label: 'Reset two-factor', icon: ShieldOff, onClick: onResetTwoFactor },
+    { key: 'two-factor', label: 'Reset two-factor', icon: ShieldOff, onClick: () => onConfirm('resetTwoFactor', user) },
     {
       key: 'password',
       label: 'Send password reset',
       icon: KeyRound,
-      onClick: onSendPasswordReset,
+      onClick: () => onConfirm('sendPasswordReset', user),
       disabledReason: user.emailVerifiedAt === null ? 'The email address is not verified' : undefined,
     },
   ];
 
   if (user.status === 'LOCKED') {
-    actions.push({ key: 'unlock', label: 'Unlock account', icon: Unlock, onClick: onUnlock });
-  } else {
+    actions.push({ key: 'unlock', label: 'Unlock account', icon: Unlock, onClick: () => onConfirm('unlock', user) });
+  } else if (user.status !== 'BANNED') {
     actions.push({
       key: 'lock',
       label: 'Lock account',
       icon: Lock,
-      onClick: onLock,
-      tone: 'danger',
+      onClick: () => onRestrict('lock', user),
       disabledReason: lockBlockedReason ?? undefined,
+    });
+  }
+
+  if (user.status === 'BANNED') {
+    actions.push({ key: 'unban', label: 'Unban account', icon: CircleCheck, onClick: () => onConfirm('unban', user) });
+  } else {
+    actions.push({
+      key: 'ban',
+      label: 'Ban account',
+      icon: Ban,
+      onClick: () => onRestrict('ban', user),
+      tone: 'danger',
+      disabledReason: banBlockedReason ?? undefined,
     });
   }
 

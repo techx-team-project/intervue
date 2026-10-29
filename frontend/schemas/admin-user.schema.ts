@@ -2,13 +2,24 @@ import { ADMIN_PERMISSION_ORDER } from '@/constants/admin-user';
 import { ROLES } from '@/constants/auth';
 import { z } from 'zod';
 
-export const lockUserSchema = z.object({
-  reason: z.string().trim().min(1, 'Pick a reason or write your own'),
-  detail: z.string().trim().max(500, 'Keep the note under 500 characters').optional(),
-  notifyUser: z.boolean(),
-});
+export const restrictUserSchema = z
+  .object({
+    reason: z.string().trim().min(1, 'Pick a reason or write your own'),
+    detail: z.string().trim().max(500, 'Keep the note under 500 characters').optional(),
+    notifyUser: z.boolean(),
+    isTemporary: z.boolean(),
+    expiresAt: z.string().trim().optional(),
+  })
+  .refine((data) => !data.isTemporary || (data.expiresAt ?? '').length > 0, {
+    message: 'Pick the date the restriction lifts',
+    path: ['expiresAt'],
+  })
+  .refine((data) => !data.isTemporary || Date.parse(data.expiresAt ?? '') > Date.now(), {
+    message: 'The lift date must be in the future',
+    path: ['expiresAt'],
+  });
 
-export type LockUserFormData = z.infer<typeof lockUserSchema>;
+export type RestrictUserFormData = z.infer<typeof restrictUserSchema>;
 
 export const grantRoleSchema = z
   .object({
