@@ -3,11 +3,11 @@
 import UserAvatar from '@/components/ui/UserAvatar';
 import { ROUTES } from '@/constants/routes';
 import type { AdminUserConfirmKind } from '@/hooks/useAdminUserActions';
-import { lockBlockedReason } from '@/lib/admin-user';
+import { restrictBlockedReason } from '@/lib/admin-user';
 import { cn } from '@/lib/utils';
-import type { AdminUserListItem } from '@/types/admin-user';
-import { formatDate } from '@/utils/datetime';
-import { CalendarClock } from 'lucide-react';
+import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-user';
+import { formatDate, formatRelativeDay } from '@/utils/datetime';
+import { CalendarClock, Clock } from 'lucide-react';
 import Link from 'next/link';
 import AdminUserRoleChips from './AdminUserRoleChips';
 import AdminUserRowActionsMenu from './AdminUserRowActionsMenu';
@@ -20,7 +20,7 @@ interface AdminUsersMobileListProps {
   currentAdminId: number;
   selectedIds: number[];
   onToggleSelect: (id: number) => void;
-  onLock: (user: AdminUserListItem) => void;
+  onRestrict: (kind: AdminUserRestrictionKind, user: AdminUserListItem) => void;
   onConfirm: (kind: AdminUserConfirmKind, user: AdminUserListItem) => void;
 }
 
@@ -30,7 +30,7 @@ export default function AdminUsersMobileList({
   currentAdminId,
   selectedIds,
   onToggleSelect,
-  onLock,
+  onRestrict,
   onConfirm,
 }: AdminUsersMobileListProps) {
   return (
@@ -72,26 +72,30 @@ export default function AdminUsersMobileList({
 
               <AdminUserRowActionsMenu
                 user={user}
-                lockBlockedReason={lockBlockedReason(user, currentAdminId, allUsers)}
-                onLock={() => onLock(user)}
-                onUnlock={() => onConfirm('unlock', user)}
-                onRevokeSessions={() => onConfirm('revokeSessions', user)}
-                onResetTwoFactor={() => onConfirm('resetTwoFactor', user)}
-                onSendPasswordReset={() => onConfirm('sendPasswordReset', user)}
+                lockBlockedReason={restrictBlockedReason(user, 'lock', currentAdminId, allUsers)}
+                banBlockedReason={restrictBlockedReason(user, 'ban', currentAdminId, allUsers)}
+                onRestrict={onRestrict}
+                onConfirm={onConfirm}
               />
             </div>
 
             <div className="mt-3 flex flex-wrap items-center gap-2 pl-7">
-              <AdminUserStatusBadge status={user.status} />
+              <AdminUserStatusBadge status={user.status} restriction={user.restriction} />
               <AdminUserRoleChips roles={user.roles} />
             </div>
 
-            <div className="dark:border-forest-800 mt-3 flex items-center justify-between gap-3 border-t border-[#f1f5f9] pt-2.5 pl-7">
+            <div className="dark:border-forest-800 mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[#f1f5f9] pt-2.5 pl-7">
               <AdminUserSignals user={user} />
 
-              <span className="inline-flex items-center gap-1.5 text-[11.5px] text-[#94a3b8]">
-                <CalendarClock className="h-3.5 w-3.5" />
-                {formatDate(user.createdAt)}
+              <span className="flex items-center gap-3">
+                <span className="inline-flex items-center gap-1.5 text-[11.5px] text-[#94a3b8]">
+                  <Clock className="h-3.5 w-3.5" />
+                  {user.lastSignInAt ? formatRelativeDay(user.lastSignInAt) : 'Never'}
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-[11.5px] text-[#94a3b8]">
+                  <CalendarClock className="h-3.5 w-3.5" />
+                  {formatDate(user.createdAt)}
+                </span>
               </span>
             </div>
           </article>

@@ -2,16 +2,16 @@
 
 import UserAvatar from '@/components/ui/UserAvatar';
 import { ROUTES } from '@/constants/routes';
-import { lockBlockedReason } from '@/lib/admin-user';
+import type { AdminUserConfirmKind } from '@/hooks/useAdminUserActions';
+import { restrictBlockedReason } from '@/lib/admin-user';
 import { cn } from '@/lib/utils';
-import type { AdminUserListItem } from '@/types/admin-user';
-import { formatDate } from '@/utils/datetime';
+import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-user';
+import { formatDate, formatRelativeDay } from '@/utils/datetime';
 import Link from 'next/link';
 import AdminUserRoleChips from './AdminUserRoleChips';
 import AdminUserRowActionsMenu from './AdminUserRowActionsMenu';
 import AdminUserSignals from './AdminUserSignals';
 import AdminUserStatusBadge from './AdminUserStatusBadge';
-import type { AdminUserConfirmKind } from '@/hooks/useAdminUserActions';
 
 interface AdminUsersTableProps {
   users: AdminUserListItem[];
@@ -20,11 +20,12 @@ interface AdminUsersTableProps {
   selectedIds: number[];
   onToggleSelect: (id: number) => void;
   onToggleSelectAll: () => void;
-  onLock: (user: AdminUserListItem) => void;
+  onRestrict: (kind: AdminUserRestrictionKind, user: AdminUserListItem) => void;
   onConfirm: (kind: AdminUserConfirmKind, user: AdminUserListItem) => void;
 }
 
-const GRID = 'grid grid-cols-[auto_minmax(0,3fr)_minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto]';
+const GRID =
+  'grid grid-cols-[auto_minmax(0,2.6fr)_minmax(0,1.5fr)_minmax(0,0.9fr)_minmax(0,0.8fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_auto]';
 
 export default function AdminUsersTable({
   users,
@@ -33,16 +34,16 @@ export default function AdminUsersTable({
   selectedIds,
   onToggleSelect,
   onToggleSelectAll,
-  onLock,
+  onRestrict,
   onConfirm,
 }: AdminUsersTableProps) {
   const selectableIds = users.filter((user) => user.id !== currentAdminId).map((user) => user.id);
   const allSelected = selectableIds.length > 0 && selectableIds.every((id) => selectedIds.includes(id));
 
   return (
-    <div className="dark:border-forest-800 dark:bg-forest-900 hidden rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-7 lg:block">
+    <div className="dark:border-forest-800 dark:bg-forest-900 hidden rounded-2xl border border-[#e2e8f0] bg-white p-5 shadow-xs sm:p-6 lg:block">
       <div className="overflow-x-auto">
-        <div className="min-w-240">
+        <div className="min-w-260">
           <div
             className={cn(
               GRID,
@@ -62,6 +63,7 @@ export default function AdminUsersTable({
             <span>Roles</span>
             <span>Status</span>
             <span>Signals</span>
+            <span>Last active</span>
             <span>Joined</span>
             <span />
           </div>
@@ -76,7 +78,7 @@ export default function AdminUsersTable({
                   key={user.id}
                   className={cn(
                     GRID,
-                    'dark:hover:bg-forest-850/40 items-center gap-4 rounded-lg px-2.5 py-3.5 transition hover:bg-[#f8fafc]',
+                    'dark:hover:bg-forest-850/40 items-center gap-4 rounded-lg px-2.5 py-3 transition hover:bg-[#f8fafc]',
                     isSelected && 'dark:bg-forest-850/60 bg-[#f1f5f9]',
                   )}
                 >
@@ -109,21 +111,23 @@ export default function AdminUsersTable({
                   <AdminUserRoleChips roles={user.roles} />
 
                   <span>
-                    <AdminUserStatusBadge status={user.status} />
+                    <AdminUserStatusBadge status={user.status} restriction={user.restriction} />
                   </span>
 
                   <AdminUserSignals user={user} />
+
+                  <span className="text-[11.5px] text-[#94a3b8]">
+                    {user.lastSignInAt ? formatRelativeDay(user.lastSignInAt) : 'Never signed in'}
+                  </span>
 
                   <span className="text-[11.5px] text-[#94a3b8]">{formatDate(user.createdAt)}</span>
 
                   <AdminUserRowActionsMenu
                     user={user}
-                    lockBlockedReason={lockBlockedReason(user, currentAdminId, allUsers)}
-                    onLock={() => onLock(user)}
-                    onUnlock={() => onConfirm('unlock', user)}
-                    onRevokeSessions={() => onConfirm('revokeSessions', user)}
-                    onResetTwoFactor={() => onConfirm('resetTwoFactor', user)}
-                    onSendPasswordReset={() => onConfirm('sendPasswordReset', user)}
+                    lockBlockedReason={restrictBlockedReason(user, 'lock', currentAdminId, allUsers)}
+                    banBlockedReason={restrictBlockedReason(user, 'ban', currentAdminId, allUsers)}
+                    onRestrict={onRestrict}
+                    onConfirm={onConfirm}
                   />
                 </div>
               );
