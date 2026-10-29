@@ -47,6 +47,21 @@ export default function AdminShell({ children, queueCounts, account, permissions
   const [isPaletteOpen, setPaletteOpen] = useState(false);
 
   useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
+    const prevRoot = root.style.overscrollBehaviorY;
+    const prevBody = body.style.overscrollBehaviorY;
+
+    root.style.overscrollBehaviorY = 'none';
+    body.style.overscrollBehaviorY = 'none';
+
+    return () => {
+      root.style.overscrollBehaviorY = prevRoot;
+      body.style.overscrollBehaviorY = prevBody;
+    };
+  }, []);
+
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
