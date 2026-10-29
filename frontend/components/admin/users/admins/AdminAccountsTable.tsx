@@ -6,8 +6,8 @@ import { ADMIN_PERMISSION_META } from '@/constants/admin-user';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/utils';
 import type { AdminAccountListItem } from '@/types/admin-user';
-import { formatDate } from '@/utils/datetime';
-import { ExternalLink, Pencil, ShieldCheck, ShieldOff, Timer } from 'lucide-react';
+import { formatDate, formatRelativeDay } from '@/utils/datetime';
+import { Clock, ExternalLink, Gavel, Pencil, ShieldCheck, ShieldOff, Timer } from 'lucide-react';
 import Link from 'next/link';
 
 interface AdminAccountsTableProps {
@@ -48,6 +48,17 @@ export default function AdminAccountsTable({ accounts, onEdit }: AdminAccountsTa
                 <p className="mt-1 text-[11.5px] text-[#94a3b8]">
                   Admin since {formatDate(account.grantedAt)}
                   {account.grantedByName ? ` · granted by ${account.grantedByName}` : ''}
+                </p>
+
+                <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11.5px] text-[#94a3b8]">
+                  <span className="inline-flex items-center gap-1">
+                    <Clock className="h-3 w-3 shrink-0" />
+                    {account.lastSignInAt ? `Active ${formatRelativeDay(account.lastSignInAt)}` : 'Never signed in'}
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <Gavel className="h-3 w-3 shrink-0" />
+                    {account.decisionsLast30Days} decisions in 30 days
+                  </span>
                 </p>
               </div>
             </div>

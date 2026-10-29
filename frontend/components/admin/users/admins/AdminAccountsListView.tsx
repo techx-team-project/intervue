@@ -1,14 +1,18 @@
 'use client';
 
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import Pagination from '@/components/common/Pagination';
+import { USER_PAGE_SIZE } from '@/constants/admin-user';
 import { ROUTES } from '@/constants/routes';
+import { buildAdminAccountStats, pageCount, paginate } from '@/lib/admin-user';
 import type { AdminAccountFormData } from '@/schemas/admin-user.schema';
 import type { AdminAccountListData, AdminAccountListItem } from '@/types/admin-user';
 import { ArrowLeft, Plus, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import AdminAccountFormDialog from './AdminAccountFormDialog';
+import AdminAccountPermissionsDialog from './AdminAccountPermissionsDialog';
+import AdminAccountStatsRow from './AdminAccountStatsRow';
 import AdminAccountsTable from './AdminAccountsTable';
 
 interface AdminAccountsListViewProps {
@@ -17,31 +21,15 @@ interface AdminAccountsListViewProps {
 
 export default function AdminAccountsListView({ data }: AdminAccountsListViewProps) {
   const [accounts, setAccounts] = useState(data.accounts);
-  const [isCreating, setIsCreating] = useState(false);
   const [editing, setEditing] = useState<AdminAccountListItem | null>(null);
+  const [page, setPage] = useState(1);
 
+  const stats = useMemo(() => buildAdminAccountStats(accounts), [accounts]);
   const withoutTwoFactor = accounts.filter((account) => account.status === 'ACTIVE' && !account.twoFactorEnabled);
 
-  const createAccount = (form: AdminAccountFormData) => {
-    setIsCreating(false);
-    setAccounts((previous) => [
-      ...previous,
-      {
-        id: Math.max(...previous.map((account) => account.id)) + 1,
-        name: form.name,
-        email: form.email,
-        image: null,
-        status: 'ACTIVE',
-        twoFactorEnabled: false,
-        permissions: form.permissions,
-        grantedByName: previous.find((account) => account.isCurrentAdmin)?.name ?? null,
-        grantedAt: new Date().toISOString(),
-        expiresAt: form.expiresAt ? new Date(form.expiresAt).toISOString() : null,
-        isCurrentAdmin: false,
-      },
-    ]);
-    toast.success(`Invitation sent to ${form.email}`);
-  };
+  const totalPages = pageCount(accounts.length, USER_PAGE_SIZE);
+  const safePage = Math.min(page, totalPages);
+  const visibleAccounts = paginate(accounts, safePage, USER_PAGE_SIZE);
 
   const saveAccount = (form: AdminAccountFormData) => {
     if (!editing) return;
@@ -64,9 +52,9 @@ export default function AdminAccountsListView({ data }: AdminAccountsListViewPro
   return (
     <div className="space-y-4">
       <AdminPageHeader
-        title="Admin accounts"
         description="Who can reach this panel, what they are allowed to do, and who granted it."
         count={accounts.length}
+        countLabel="admins"
         actions={
           <>
             <Link
@@ -77,17 +65,18 @@ export default function AdminAccountsListView({ data }: AdminAccountsListViewPro
               All users
             </Link>
 
-            <button
-              type="button"
-              onClick={() => setIsCreating(true)}
-              className="bg-primary hover:bg-primary-hover inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 text-[12.5px] font-bold text-white transition-colors"
+            <Link
+              href={ROUTES.ADMIN_ADMINS_CREATE}
+              className="bg-primary hover:bg-primary-hover inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[12.5px] font-bold text-white transition-colors"
             >
               <Plus className="h-4 w-4" />
               Create admin
-            </button>
+            </Link>
           </>
         }
       />
+
+      <AdminAccountStatsRow stats={stats} />
 
       {withoutTwoFactor.length > 0 && (
         <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3.5">
@@ -106,11 +95,19 @@ export default function AdminAccountsListView({ data }: AdminAccountsListViewPro
         </div>
       )}
 
-      <AdminAccountsTable accounts={accounts} onEdit={setEditing} />
+      <AdminAccountsTable accounts={visibleAccounts} onEdit={setEditing} />
 
-      {isCreating && <AdminAccountFormDialog onClose={() => setIsCreating(false)} onConfirm={createAccount} />}
+      <Pagination
+        page={safePage}
+        pageCount={totalPages}
+        totalItems={accounts.length}
+        pageSize={USER_PAGE_SIZE}
+        onPageChange={setPage}
+      />
 
-      {editing && <AdminAccountFormDialog account={editing} onClose={() => setEditing(null)} onConfirm={saveAccount} />}
+      {editing && (
+        <AdminAccountPermissionsDialog account={editing} onClose={() => setEditing(null)} onConfirm={saveAccount} />
+      )}
     </div>
   );
 }
