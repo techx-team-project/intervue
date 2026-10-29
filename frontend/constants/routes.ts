@@ -23,6 +23,7 @@ export const ROUTES = {
   RECRUITER_COMPANY_AGREEMENTS: '/recruiter/company/verification/agreements',
   RECRUITER_COMPANY_NEEDS: '/recruiter/company/needs',
   RECRUITER_SERVICES: '/recruiter/services',
+  RECRUITER_CART: '/recruiter/cart',
   RECRUITER_SERVICES_TRANSACTIONS: '/recruiter/services/transactions',
   RECRUITER_REPORTS: '/recruiter/reports',
   RECRUITER_NOTIFICATIONS: '/recruiter/notifications',
