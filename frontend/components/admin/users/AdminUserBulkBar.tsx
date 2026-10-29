@@ -1,15 +1,22 @@
 'use client';
 
-import { Lock, LogOut, X } from 'lucide-react';
+import { Ban, Lock, LogOut, X } from 'lucide-react';
 
 interface AdminUserBulkBarProps {
   selectedCount: number;
   onClear: () => void;
   onLock: () => void;
+  onBan: () => void;
   onRevokeSessions: () => void;
 }
 
-export default function AdminUserBulkBar({ selectedCount, onClear, onLock, onRevokeSessions }: AdminUserBulkBarProps) {
+export default function AdminUserBulkBar({
+  selectedCount,
+  onClear,
+  onLock,
+  onBan,
+  onRevokeSessions,
+}: AdminUserBulkBarProps) {
   if (selectedCount === 0) return null;
 
   return (
@@ -37,10 +44,19 @@ export default function AdminUserBulkBar({ selectedCount, onClear, onLock, onRev
           <button
             type="button"
             onClick={onLock}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-rose-50 px-3.5 py-2 text-[12.5px] font-bold text-rose-700 transition-colors hover:bg-rose-100 dark:bg-rose-500/10"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-amber-50 px-3.5 py-2 text-[12.5px] font-bold text-amber-800 transition-colors hover:bg-amber-100 dark:bg-amber-500/10"
           >
             <Lock className="h-3.5 w-3.5" />
-            Lock accounts
+            Lock
+          </button>
+
+          <button
+            type="button"
+            onClick={onBan}
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-rose-50 px-3.5 py-2 text-[12.5px] font-bold text-rose-700 transition-colors hover:bg-rose-100 dark:bg-rose-500/10"
+          >
+            <Ban className="h-3.5 w-3.5" />
+            Ban
           </button>
 
           <button
