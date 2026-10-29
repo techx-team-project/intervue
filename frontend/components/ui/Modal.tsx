@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useSyncExternalStore } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+const emptySubscribe = () => () => {};
 
 export interface ModalProps {
   isOpen: boolean;
@@ -35,6 +38,12 @@ export function Modal({
   showCloseButton = true,
   className,
 }: ModalProps) {
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -58,11 +67,14 @@ export function Modal({
     };
   }, [isOpen, handleKeyDown]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !isClient) return null;
 
-  return (
-    <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div onClick={onClose} className="fixed inset-0 bg-slate-950/60 transition-opacity duration-200" />
+  return createPortal(
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div
+        onClick={onClose}
+        className="fixed inset-0 h-screen w-screen bg-slate-950/60 backdrop-blur-xs transition-opacity duration-200"
+      />
 
       <div
         className={cn(
@@ -99,7 +111,8 @@ export function Modal({
 
         {footer && <div className="mt-2 flex justify-end gap-2 border-t border-slate-100 pt-4">{footer}</div>}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
