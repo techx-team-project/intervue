@@ -3,6 +3,7 @@ import type { AdminPermission } from '@/types/admin';
 import type {
   AdminUserActivityKind,
   AdminUserLinkedRecordKey,
+  AdminUserRestrictionKind,
   AdminUserSegment,
   AdminUserSort,
   AdminUserStatus,
@@ -10,8 +11,10 @@ import type {
 import type { RoleType } from '@/types/auth';
 import {
   BadgeCheck,
+  Ban,
   Bookmark,
   Building2,
+  CircleCheck,
   FileText,
   KeyRound,
   LogOut,
@@ -31,9 +34,28 @@ import type { LucideIcon } from 'lucide-react';
 export const USER_STATUS_META: Record<AdminUserStatus, { label: string; variant: NonNullable<BadgeProps['variant']> }> =
   {
     ACTIVE: { label: 'Active', variant: 'success' },
-    LOCKED: { label: 'Locked', variant: 'danger' },
+    LOCKED: { label: 'Locked', variant: 'warning' },
+    BANNED: { label: 'Banned', variant: 'danger' },
     DELETED: { label: 'Deleted', variant: 'default' },
   };
+
+export const RESTRICTION_META: Record<
+  AdminUserRestrictionKind,
+  { verb: string; liftVerb: string; status: AdminUserStatus; blurb: string }
+> = {
+  lock: {
+    verb: 'Lock',
+    liftVerb: 'Unlock',
+    status: 'LOCKED',
+    blurb: 'A reversible security hold. Sign-in is blocked, public content stays up.',
+  },
+  ban: {
+    verb: 'Ban',
+    liftVerb: 'Unban',
+    status: 'BANNED',
+    blurb: 'Policy enforcement. Sign-in is blocked and the account’s public content is hidden.',
+  },
+};
 
 export const USER_ROLE_META: Record<RoleType, { label: string; chipClassName: string }> = {
   CANDIDATE: { label: 'Candidate', chipClassName: 'bg-sky-50 text-sky-700 ring-sky-200' },
@@ -47,23 +69,36 @@ export const USER_SEGMENTS: { segment: AdminUserSegment; label: string }[] = [
   { segment: 'recruiters', label: 'Recruiters' },
   { segment: 'admins', label: 'Admins' },
   { segment: 'locked', label: 'Locked' },
+  { segment: 'banned', label: 'Banned' },
   { segment: 'unverified', label: 'Unverified email' },
 ];
+
+export const USER_PAGE_SIZE = 20;
 
 export const USER_SORT_OPTIONS: { value: AdminUserSort; label: string }[] = [
   { value: 'newest', label: 'Newest first' },
   { value: 'oldest', label: 'Oldest first' },
   { value: 'name', label: 'Name A–Z' },
-  { value: 'lastLocked', label: 'Recently locked' },
+  { value: 'lastSignIn', label: 'Recently active' },
+  { value: 'lastRestricted', label: 'Recently restricted' },
 ];
 
-export const LOCK_REASON_PRESETS: string[] = [
-  'Fraudulent or fake identity documents',
-  'Spam or mass unsolicited contact',
-  'Violated the platform terms',
-  'Requested by the account owner',
-  'Security incident — credentials compromised',
-];
+export const RESTRICTION_REASON_PRESETS: Record<AdminUserRestrictionKind, string[]> = {
+  lock: [
+    'Security incident — credentials compromised',
+    'Fraudulent or fake identity documents',
+    'Spam or mass unsolicited contact',
+    'Suspicious sign-in activity under review',
+    'Requested by the account owner',
+  ],
+  ban: [
+    'Fake or impersonated account',
+    'Recruitment scam or fraudulent job posting',
+    'Harassment or abusive behaviour',
+    'Repeated spam after a warning',
+    'Scraping or reselling candidate data',
+  ],
+};
 
 export const LINKED_RECORD_ICON: Record<AdminUserLinkedRecordKey, LucideIcon> = {
   identityVerification: BadgeCheck,
@@ -80,6 +115,8 @@ export const ACTIVITY_ICON: Record<AdminUserActivityKind, LucideIcon> = {
   roleRevoked: UserMinus,
   locked: Lock,
   unlocked: Unlock,
+  banned: Ban,
+  unbanned: CircleCheck,
   sessionsRevoked: LogOut,
   twoFactorReset: ShieldOff,
   passwordResetSent: Send,
@@ -91,8 +128,10 @@ export const ACTIVITY_TONE: Record<AdminUserActivityKind, string> = {
   emailVerified: 'bg-emerald-50 text-emerald-600',
   roleGranted: 'bg-violet-50 text-violet-600',
   roleRevoked: 'bg-amber-50 text-amber-700',
-  locked: 'bg-rose-50 text-rose-600',
+  locked: 'bg-amber-50 text-amber-700',
   unlocked: 'bg-emerald-50 text-emerald-600',
+  banned: 'bg-rose-50 text-rose-600',
+  unbanned: 'bg-emerald-50 text-emerald-600',
   sessionsRevoked: 'bg-sky-50 text-sky-600',
   twoFactorReset: 'bg-amber-50 text-amber-700',
   passwordResetSent: 'bg-sky-50 text-sky-600',
