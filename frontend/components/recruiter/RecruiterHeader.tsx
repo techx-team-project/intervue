@@ -1,7 +1,9 @@
 'use client';
 
+import NotificationDropdown from '@/components/common/NotificationDropdown';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotificationCount } from '@/hooks/useNotifications';
 import { useRecruiterCartCount } from '@/hooks/useRecruiterCart';
 import { Bell, ChevronDown, Menu, PanelLeftClose, PanelLeftOpen, Plus, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
@@ -22,7 +24,9 @@ export default function RecruiterHeader({
 }: RecruiterHeaderProps) {
   const { user } = useAuth();
   const cartCount = useRecruiterCartCount();
+  const unreadCount = useNotificationCount('recruiter');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -80,13 +84,31 @@ export default function RecruiterHeader({
             <span>Post a job</span>
           </Link>
 
-          <Link
-            href={ROUTES.RECRUITER_NOTIFICATIONS}
-            title="Notifications"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 sm:h-9.5 sm:w-9.5"
-          >
-            <Bell className="h-4.5 w-4.5" />
-          </Link>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => {
+                setIsNotificationOpen((prev) => !prev);
+                setIsMenuOpen(false);
+              }}
+              title="Notifications"
+              aria-label="Notifications"
+              className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 sm:h-9.5 sm:w-9.5"
+            >
+              <Bell className="h-4.5 w-4.5" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 text-[11px] font-bold text-white shadow-xs">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
+            </button>
+
+            <NotificationDropdown
+              target="recruiter"
+              isOpen={isNotificationOpen}
+              onClose={() => setIsNotificationOpen(false)}
+            />
+          </div>
 
           <Link
             href={ROUTES.RECRUITER_CART}

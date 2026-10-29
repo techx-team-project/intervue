@@ -3,6 +3,7 @@
 import { RECRUITER_NAV_SECTIONS } from '@/constants/recruiter-nav';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotificationCount } from '@/hooks/useNotifications';
 import { cn } from '@/lib/utils';
 import { MOCK_RECRUITER_DASHBOARD } from '@/mocks/recruiter-dashboard.mock';
 import type { VerificationLevel } from '@/types/recruiter';
@@ -26,6 +27,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
   const pathname = usePathname();
   const { user } = useAuth();
   const { company, verification } = MOCK_RECRUITER_DASHBOARD;
+  const unreadNotificationsCount = useNotificationCount('recruiter');
 
   return (
     <aside className={cn('scrollbar-on-hover shrink-0 bg-white', isCollapsed ? 'lg:w-20' : 'lg:w-72', className)}>
@@ -99,6 +101,12 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
                   </span>
                   {!isCollapsed && <span className={isActive ? 'text-primary' : ''}>{item.label}</span>}
                 </div>
+
+                {!isCollapsed && item.href === ROUTES.RECRUITER_NOTIFICATIONS && unreadNotificationsCount > 0 && (
+                  <span className="rounded-full bg-[#00b14f] px-2 py-0.5 text-[11px] font-bold text-white shadow-2xs">
+                    {unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount}
+                  </span>
+                )}
 
                 {!isCollapsed && item.comingSoon && (
                   <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-500">
