@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
     return [
       { source: '/auth', destination: '/login', permanent: true },
       { source: '/profile', destination: '/candidate/profile', permanent: true },
+      { source: '/app/cart', destination: '/recruiter/cart', permanent: false },
     ];
   },
 };

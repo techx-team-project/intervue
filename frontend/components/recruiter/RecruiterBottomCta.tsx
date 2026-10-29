@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useSyncExternalStore } from 'react';
 
 // Pages that already own the bottom of the screen with their own promo bar.
-const ROUTES_WITHOUT_BOTTOM_CTA: string[] = [ROUTES.RECRUITER_COMPANY_VERIFICATION];
+const ROUTES_WITHOUT_BOTTOM_CTA: string[] = [ROUTES.RECRUITER_COMPANY_VERIFICATION, ROUTES.RECRUITER_CART];
 
 const DISMISS_STORAGE_KEY = 'intervue.recruiter.bottomCtaDismissedUntil';
 const REAPPEAR_AFTER_MS = 24 * 60 * 60 * 1000;

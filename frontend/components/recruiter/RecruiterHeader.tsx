@@ -2,7 +2,8 @@
 
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
-import { Bell, ChevronDown, Menu, PanelLeftClose, PanelLeftOpen, Plus } from 'lucide-react';
+import { useRecruiterCartCount } from '@/hooks/useRecruiterCart';
+import { Bell, ChevronDown, Menu, PanelLeftClose, PanelLeftOpen, Plus, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -20,6 +21,7 @@ export default function RecruiterHeader({
   onOpenMobileNav,
 }: RecruiterHeaderProps) {
   const { user } = useAuth();
+  const cartCount = useRecruiterCartCount();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -69,7 +71,7 @@ export default function RecruiterHeader({
           </Link>
         </div>
 
-        <div className="flex items-center gap-2.5 sm:gap-3">
+        <div className="flex items-center gap-3 sm:gap-4 md:gap-4.5 lg:gap-5">
           <Link
             href={ROUTES.RECRUITER_JOBS}
             className="bg-primary hover:bg-primary-hover hidden items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-white transition-colors sm:inline-flex"
@@ -81,10 +83,25 @@ export default function RecruiterHeader({
           <Link
             href={ROUTES.RECRUITER_NOTIFICATIONS}
             title="Notifications"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 sm:h-9 sm:w-9"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 sm:h-9.5 sm:w-9.5"
           >
             <Bell className="h-4.5 w-4.5" />
           </Link>
+
+          <Link
+            href={ROUTES.RECRUITER_CART}
+            title="Shopping cart"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 sm:h-9.5 sm:w-9.5"
+          >
+            <ShoppingCart className="h-4.5 w-4.5" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 text-[11px] font-bold text-white shadow-xs">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+
+          <div className="hidden h-5 w-px bg-slate-200/80 sm:block" />
 
           <div ref={menuRef} className="relative">
             <button
