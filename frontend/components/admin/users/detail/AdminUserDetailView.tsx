@@ -1,7 +1,7 @@
 'use client';
 
 import { useAdminUserActions, type AdminUserAction } from '@/hooks/useAdminUserActions';
-import { lockBlockedReason } from '@/lib/admin-user';
+import { restrictBlockedReason } from '@/lib/admin-user';
 import { cn } from '@/lib/utils';
 import type { GrantRoleFormData } from '@/schemas/admin-user.schema';
 import type { AdminUserActivityEntry, AdminUserDetail, AdminUserListData, AdminUserSession } from '@/types/admin-user';
@@ -15,6 +15,7 @@ import AdminUserOverviewTab from './AdminUserOverviewTab';
 import AdminUserRolesTab from './AdminUserRolesTab';
 import AdminUserSecurityTab from './AdminUserSecurityTab';
 import AdminUserSessionsTab from './AdminUserSessionsTab';
+import AdminUserSignInHistory from './AdminUserSignInHistory';
 
 interface AdminUserDetailViewProps {
   detail: AdminUserDetail;
@@ -33,7 +34,9 @@ type TabId = (typeof TABS)[number]['id'];
 
 const ACTION_SUMMARY: Record<AdminUserAction, string> = {
   lock: 'Account locked',
+  ban: 'Account banned',
   unlock: 'Account unlocked',
+  unban: 'Account unbanned',
   revokeSessions: 'All sessions revoked',
   resetTwoFactor: 'Two-factor authentication reset',
   sendPasswordReset: 'Password reset email sent',
@@ -41,7 +44,9 @@ const ACTION_SUMMARY: Record<AdminUserAction, string> = {
 
 const ACTION_KIND: Record<AdminUserAction, AdminUserActivityEntry['kind']> = {
   lock: 'locked',
+  ban: 'banned',
   unlock: 'unlocked',
+  unban: 'unbanned',
   revokeSessions: 'sessionsRevoked',
   resetTwoFactor: 'twoFactorReset',
   sendPasswordReset: 'passwordResetSent',
@@ -80,7 +85,7 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
     (action: AdminUserAction, userIds: number[], reason?: string) => {
       if (!userIds.includes(detail.id)) return;
 
-      if (action === 'lock' || action === 'revokeSessions') {
+      if (action === 'lock' || action === 'ban' || action === 'revokeSessions') {
         setSessions((previous) => previous.map((session) => ({ ...session, revoked: true, isCurrent: false })));
       }
 
@@ -91,7 +96,7 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
     [detail.id, recordActivity],
   );
 
-  const { users, requestLock, requestConfirm, actionModals } = useAdminUserActions(
+  const { users, requestRestrict, requestConfirm, actionModals } = useAdminUserActions(
     listData.users,
     listData.currentAdminId,
     handleResolved,
@@ -134,9 +139,10 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
       <AdminUserDetailHeader
         user={user}
         isSelf={isSelf}
-        lockBlockedReason={lockBlockedReason(user, listData.currentAdminId, users)}
-        onLock={() => requestLock([user])}
-        onUnlock={() => requestConfirm('unlock', [user])}
+        lockBlockedReason={restrictBlockedReason(user, 'lock', listData.currentAdminId, users)}
+        banBlockedReason={restrictBlockedReason(user, 'ban', listData.currentAdminId, users)}
+        onRestrict={(kind) => requestRestrict(kind, [user])}
+        onLift={(kind) => requestConfirm(kind, [user])}
         onRevokeSessions={() => requestConfirm('revokeSessions', [user])}
       />
 
@@ -180,7 +186,10 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
       )}
 
       {activeTab === 'sessions' && (
-        <AdminUserSessionsTab sessions={sessions} onRevokeAll={() => requestConfirm('revokeSessions', [user])} />
+        <div className="space-y-4">
+          <AdminUserSessionsTab sessions={sessions} onRevokeAll={() => requestConfirm('revokeSessions', [user])} />
+          <AdminUserSignInHistory signIns={detail.signIns} />
+        </div>
       )}
 
       {activeTab === 'security' && (
