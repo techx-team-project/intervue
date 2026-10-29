@@ -58,6 +58,7 @@ export const ROUTES = {
   ADMIN_CONTENT_FEATURED_COMPANIES: '/admin/content/featured-companies',
   ADMIN_CONTENT_CHATBOT: '/admin/content/chatbot',
   ADMIN_CONTENT_ANNOUNCEMENTS: '/admin/content/announcements',
+  ADMIN_NOTIFICATIONS: '/admin/notifications',
 } as const;
 
 export const REDIRECT_PARAM = 'redirect';

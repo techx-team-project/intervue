@@ -2,6 +2,7 @@ import { ROUTES } from '@/constants/routes';
 import type { AdminNavSection } from '@/types/admin';
 import {
   BadgeCheck,
+  Bell,
   Building2,
   FileText,
   Flag,
@@ -217,6 +218,11 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: ScrollText,
         permission: 'users.admins',
         comingSoon: true,
+      },
+      {
+        label: 'Notifications',
+        href: ROUTES.ADMIN_NOTIFICATIONS,
+        icon: Bell,
       },
     ],
   },

@@ -1,7 +1,8 @@
 'use client';
 
+import { ROUTES } from '@/constants/routes';
 import { useLogout } from '@/hooks/useLogout';
-import { Building2, KeyRound, LogOut, ShieldCheck, Smartphone } from 'lucide-react';
+import { Bell, Building2, KeyRound, LogOut, ShieldCheck, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 
 interface RecruiterUserMenuDropdownProps {
@@ -9,6 +10,7 @@ interface RecruiterUserMenuDropdownProps {
 }
 
 const LINKS = [
+  { label: 'Notifications', href: ROUTES.RECRUITER_NOTIFICATIONS, icon: Bell },
   { label: 'Company profile', href: '/recruiter/company', icon: Building2 },
   { label: 'Account security', href: '/account/security', icon: ShieldCheck },
   { label: 'Change password', href: '/account/password', icon: KeyRound },

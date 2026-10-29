@@ -72,7 +72,7 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
     title: 'Reports & notifications',
     items: [
       { label: 'Hiring reports', href: ROUTES.RECRUITER_REPORTS, icon: BarChart3, comingSoon: true },
-      { label: 'Notifications', href: ROUTES.RECRUITER_NOTIFICATIONS, icon: Bell, comingSoon: true },
+      { label: 'Notifications', href: ROUTES.RECRUITER_NOTIFICATIONS, icon: Bell },
     ],
   },
   {
