@@ -75,6 +75,7 @@ export function sectionPendingCount(section: AdminNavSection, counts: AdminQueue
 const DYNAMIC_LEAVES: { pattern: RegExp; label: (match: RegExpMatchArray) => string }[] = [
   { pattern: /^\/admin\/users\/admins\/create$/, label: () => 'Create admin' },
   { pattern: /^\/admin\/users\/(\d+)$/, label: (match) => `Account #${match[1]}` },
+  { pattern: /^\/admin\/notifications\/([^/]+)$/, label: () => 'Notification details' },
 ];
 
 function dynamicLeaf(pathname: string): AdminBreadcrumbEntry[] {

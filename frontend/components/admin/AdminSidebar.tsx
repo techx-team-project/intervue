@@ -10,6 +10,7 @@ import {
 import { cn } from '@/lib/utils';
 import type { AdminNavItem, AdminNavSection, AdminPermission, AdminQueueCounts } from '@/types/admin';
 import { ROUTES } from '@/constants/routes';
+import { useNotificationCount } from '@/hooks/useNotifications';
 import { ChevronDown, HelpCircle, Search } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -57,27 +58,31 @@ export default function AdminSidebar({
   const pathname = usePathname();
   const [query, setQuery] = useState('');
   const [toggled, setToggled] = useState<Record<string, boolean>>({});
+  const unreadNotificationsCount = useNotificationCount('admin');
 
   const needle = query.trim().toLowerCase();
   const sections = useMemo(() => filterByQuery(visibleSections(permissions), needle), [permissions, needle]);
 
-  const renderBadge = (count: number, isAction: boolean) =>
+  const renderBadge = (count: number, isAction: boolean, isNotification = false) =>
     count > 0 ? (
       <span
         className={cn(
-          'shrink-0 rounded-full px-1.5 py-0.5 text-[10.5px] font-bold tabular-nums',
-          isAction
-            ? 'bg-amber-100 text-amber-700'
-            : 'dark:bg-forest-850 dark:text-forest-300 bg-slate-100 text-slate-500',
+          'shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold tabular-nums',
+          isNotification
+            ? 'bg-[#00b14f] text-white shadow-2xs'
+            : isAction
+              ? 'bg-amber-100 text-amber-700'
+              : 'dark:bg-forest-850 dark:text-forest-300 bg-slate-100 text-slate-500',
         )}
       >
-        {count}
+        {count > 99 ? '99+' : count}
       </span>
     ) : null;
 
   const renderItem = (item: AdminNavItem, isAction: boolean, isChild = false) => {
     const Icon = item.icon;
-    const pending = itemPendingCount(item, queueCounts);
+    const isNotification = item.href === ROUTES.ADMIN_NOTIFICATIONS;
+    const pending = isNotification ? unreadNotificationsCount : itemPendingCount(item, queueCounts);
     const isActive = isNavItemActive(item.href, pathname);
     const hasChildren = Boolean(item.children?.length) && !item.href;
 
@@ -117,7 +122,7 @@ export default function AdminSidebar({
             </span>
 
             <span className="flex shrink-0 items-center gap-1.5">
-              {renderBadge(pending, isAction)}
+              {renderBadge(pending, isAction, isNotification)}
               <ChevronDown
                 className={cn(
                   'dark:text-forest-400 h-3.5 w-3.5 text-[#94a3b8] transition-transform',
@@ -167,11 +172,19 @@ export default function AdminSidebar({
         >
           <span
             className={cn(
-              'flex h-9 w-9 items-center justify-center rounded-full',
+              'relative flex h-9 w-9 items-center justify-center rounded-full',
               isActive && 'bg-primary/10 text-primary',
             )}
           >
             {Icon && <Icon className="h-5 w-5" />}
+            {pending > 0 && (
+              <span
+                className={cn(
+                  'dark:ring-forest-900 absolute top-0.5 right-0.5 h-2 w-2 rounded-full ring-2 ring-white',
+                  isNotification ? 'bg-[#00b14f]' : 'bg-amber-500',
+                )}
+              />
+            )}
           </span>
         </Link>
       );
@@ -199,7 +212,7 @@ export default function AdminSidebar({
           </span>
 
           <span className="flex shrink-0 items-center gap-1.5">
-            {renderBadge(pending, isAction)}
+            {renderBadge(pending, isAction, isNotification)}
             {!isChild && (
               <span className="dark:bg-forest-850 dark:text-forest-300 rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-500">
                 Coming soon
@@ -236,7 +249,7 @@ export default function AdminSidebar({
           <span className="truncate">{item.label}</span>
         </span>
 
-        {renderBadge(pending, isAction)}
+        {renderBadge(pending, isAction, isNotification)}
       </Link>
     );
   };

@@ -1,9 +1,11 @@
 'use client';
 
+import NotificationDropdown from '@/components/common/NotificationDropdown';
 import { ADMIN_QUICK_LINKS } from '@/constants/admin-work';
 import { ROUTES } from '@/constants/routes';
 import { useAdminTheme } from '@/hooks/useAdminTheme';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotificationCount } from '@/hooks/useNotifications';
 import type { AdminQueueCounts } from '@/types/admin';
 import { Bell, ChevronDown, Menu, Moon, Sun } from 'lucide-react';
 import Image from 'next/image';
@@ -23,10 +25,10 @@ const ICON_BUTTON_CLASS =
 export default function AdminTopBar({ queueCounts, onToggleSidebar, onOpenMobileNav }: AdminTopBarProps) {
   const { user } = useAuth();
   const { theme, toggleTheme } = useAdminTheme();
+  const unreadNotifications = useNotificationCount('admin');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
-  const pendingTotal = Object.values(queueCounts).reduce((total, count) => total + (count ?? 0), 0);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -112,19 +114,31 @@ export default function AdminTopBar({ queueCounts, onToggleSidebar, onOpenMobile
             {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
 
-          <button
-            type="button"
-            title={`${pendingTotal} items waiting for review`}
-            aria-label={`${pendingTotal} items waiting for review`}
-            className={`relative ${ICON_BUTTON_CLASS}`}
-          >
-            <Bell className="h-5 w-5" />
-            {pendingTotal > 0 && (
-              <span className="ring-dark dark:ring-forest-50 absolute top-0.5 right-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-black text-white ring-2">
-                {pendingTotal > 99 ? '99+' : pendingTotal}
-              </span>
-            )}
-          </button>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => {
+                setIsNotificationOpen((prev) => !prev);
+                setIsMenuOpen(false);
+              }}
+              title="Notifications"
+              aria-label="Notifications"
+              className={`relative ${ICON_BUTTON_CLASS}`}
+            >
+              <Bell className="h-5 w-5" />
+              {unreadNotifications > 0 && (
+                <span className="ring-dark dark:ring-forest-50 absolute top-0.5 right-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-black text-white ring-2">
+                  {unreadNotifications > 99 ? '99+' : unreadNotifications}
+                </span>
+              )}
+            </button>
+
+            <NotificationDropdown
+              target="admin"
+              isOpen={isNotificationOpen}
+              onClose={() => setIsNotificationOpen(false)}
+            />
+          </div>
 
           <div ref={menuRef} className="relative">
             <button
