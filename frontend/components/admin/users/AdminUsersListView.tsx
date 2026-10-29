@@ -1,13 +1,25 @@
 'use client';
 
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
-import { USER_ROLE_META, USER_SORT_OPTIONS, USER_STATUS_META } from '@/constants/admin-user';
+import Pagination from '@/components/common/Pagination';
+import { USER_PAGE_SIZE, USER_ROLE_META, USER_SORT_OPTIONS, USER_STATUS_META } from '@/constants/admin-user';
 import { ROUTES } from '@/constants/routes';
 import { useAdminUserActions, type AdminUserConfirmKind } from '@/hooks/useAdminUserActions';
-import { countSegment, filterUsers } from '@/lib/admin-user';
+import {
+  buildAttentionItems,
+  buildUserStats,
+  countSegment,
+  EMPTY_USER_FILTERS,
+  filterUsers,
+  hasActiveFilters,
+  pageCount,
+  paginate,
+  type AdminUserFilters,
+} from '@/lib/admin-user';
 import type {
   AdminUserListData,
   AdminUserListItem,
+  AdminUserRestrictionKind,
   AdminUserSegment,
   AdminUserSort,
   AdminUserStatus,
@@ -15,10 +27,12 @@ import type {
 import type { RoleType } from '@/types/auth';
 import { ShieldCheck, UsersRound } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
+import AdminUserAttentionPanel from './AdminUserAttentionPanel';
 import AdminUserBulkBar from './AdminUserBulkBar';
 import AdminUserSegmentTabs from './AdminUserSegmentTabs';
+import AdminUserStatsRow from './AdminUserStatsRow';
 import AdminUsersFilterBar from './AdminUsersFilterBar';
 import AdminUsersMobileList from './AdminUsersMobileList';
 import AdminUsersTable from './AdminUsersTable';
@@ -27,48 +41,77 @@ interface AdminUsersListViewProps {
   data: AdminUserListData;
 }
 
-const SEGMENT_VALUES: AdminUserSegment[] = ['all', 'candidates', 'recruiters', 'admins', 'locked', 'unverified'];
+const SEGMENT_VALUES: AdminUserSegment[] = [
+  'all',
+  'candidates',
+  'recruiters',
+  'admins',
+  'locked',
+  'banned',
+  'unverified',
+];
 const SORT_VALUES = USER_SORT_OPTIONS.map((option) => option.value);
+const ROLE_VALUES = Object.keys(USER_ROLE_META) as RoleType[];
+const STATUS_VALUES = Object.keys(USER_STATUS_META) as AdminUserStatus[];
 
 function readParam<T extends string>(raw: string | null, allowed: readonly T[], fallback: T): T {
   return raw !== null && (allowed as readonly string[]).includes(raw) ? (raw as T) : fallback;
 }
 
 export default function AdminUsersListView({ data }: AdminUsersListViewProps) {
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  // Filters are local state, not derived from the router: going through
+  // router.replace re-ran this force-dynamic page on every keystroke, which is
+  // what made filtering feel slow. The URL is still kept in sync below so a
+  // filtered view stays shareable.
+  const [filters, setFilters] = useState<AdminUserFilters>(() => ({
+    segment: readParam(searchParams.get('segment'), SEGMENT_VALUES, 'all'),
+    search: searchParams.get('q') ?? '',
+    role: readParam(searchParams.get('role'), ROLE_VALUES, '' as RoleType | ''),
+    status: readParam(searchParams.get('status'), STATUS_VALUES, '' as AdminUserStatus | ''),
+    sort: readParam(searchParams.get('sort'), SORT_VALUES, 'newest' as AdminUserSort),
+  }));
+  const [page, setPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  const { users, requestLock, requestConfirm, actionModals } = useAdminUserActions(data.users, data.currentAdminId);
+  const { users, requestRestrict, requestConfirm, actionModals } = useAdminUserActions(data.users, data.currentAdminId);
 
-  const segment = readParam(searchParams.get('segment'), SEGMENT_VALUES, 'all');
-  const sort = readParam(searchParams.get('sort'), SORT_VALUES, 'newest' as AdminUserSort);
-  const role = readParam(searchParams.get('role'), Object.keys(USER_ROLE_META) as RoleType[], '' as RoleType | '');
-  const status = readParam(
-    searchParams.get('status'),
-    Object.keys(USER_STATUS_META) as AdminUserStatus[],
-    '' as AdminUserStatus | '',
-  );
-  const search = searchParams.get('q') ?? '';
-
-  const setParam = (key: string, value: string) => {
-    const next = new URLSearchParams(searchParams.toString());
-    if (value.length > 0) next.set(key, value);
-    else next.delete(key);
-    const query = next.toString();
-    router.replace(query.length > 0 ? `${pathname}?${query}` : pathname, { scroll: false });
+  const syncUrl = (next: AdminUserFilters) => {
+    const params = new URLSearchParams();
+    if (next.segment !== 'all') params.set('segment', next.segment);
+    if (next.search.trim().length > 0) params.set('q', next.search.trim());
+    if (next.role !== '') params.set('role', next.role);
+    if (next.status !== '') params.set('status', next.status);
+    if (next.sort !== 'newest') params.set('sort', next.sort);
+    const query = params.toString();
+    window.history.replaceState(null, '', query.length > 0 ? `${ROUTES.ADMIN_USERS}?${query}` : ROUTES.ADMIN_USERS);
   };
 
-  const visibleUsers = useMemo(
-    () => filterUsers(users, { segment, search, role, status, sort }),
-    [users, segment, search, role, status, sort],
-  );
+  const applyFilters = (patch: Partial<AdminUserFilters>) => {
+    const next = { ...filters, ...patch };
+    setFilters(next);
+    setPage(1);
+    syncUrl(next);
+  };
 
+  const clearFilters = () => {
+    setFilters(EMPTY_USER_FILTERS);
+    setPage(1);
+    syncUrl(EMPTY_USER_FILTERS);
+  };
+
+  const stats = useMemo(() => buildUserStats(users), [users]);
+  const attentionItems = useMemo(() => buildAttentionItems(users), [users]);
   const segmentCounts = useMemo(
     () => SEGMENT_VALUES.map((entry) => ({ segment: entry, count: countSegment(users, entry) })),
     [users],
   );
+  const matchedUsers = useMemo(() => filterUsers(users, filters), [users, filters]);
+
+  const totalPages = pageCount(matchedUsers.length, USER_PAGE_SIZE);
+  const safePage = Math.min(page, totalPages);
+  const visibleUsers = paginate(matchedUsers, safePage, USER_PAGE_SIZE);
 
   const selectedUsers = users.filter((user) => selectedIds.includes(user.id));
 
@@ -87,17 +130,15 @@ export default function AdminUsersListView({ data }: AdminUsersListViewProps) {
     );
   };
 
-  const handleLock = (user: AdminUserListItem) => requestLock([user]);
+  const handleRestrict = (kind: AdminUserRestrictionKind, user: AdminUserListItem) => requestRestrict(kind, [user]);
   const handleConfirm = (kind: AdminUserConfirmKind, user: AdminUserListItem) => requestConfirm(kind, [user]);
-
-  const clearFilters = () => router.replace(pathname, { scroll: false });
 
   return (
     <div className="space-y-4 pb-20 lg:pb-0">
       <AdminPageHeader
-        title="Users"
         description="Every account on the platform. One account can hold several roles at once."
         count={users.length}
+        countLabel="accounts"
         actions={
           <Link
             href={ROUTES.ADMIN_ADMINS}
@@ -109,37 +150,50 @@ export default function AdminUsersListView({ data }: AdminUsersListViewProps) {
         }
       />
 
+      <AdminUserStatsRow
+        stats={stats}
+        activeSegment={filters.segment}
+        onSelectSegment={(segment) => applyFilters({ segment, status: '' })}
+      />
+
+      <AdminUserAttentionPanel
+        items={attentionItems}
+        onSelectSegment={(segment) => applyFilters({ segment, status: '' })}
+      />
+
       <AdminUserSegmentTabs
-        active={segment}
+        active={filters.segment}
         counts={segmentCounts}
-        onChange={(value) => setParam('segment', value === 'all' ? '' : value)}
+        onChange={(segment) => applyFilters({ segment })}
       />
 
       <AdminUsersFilterBar
-        search={search}
-        role={role}
-        status={status}
-        sort={sort}
-        onSearchChange={(value) => setParam('q', value)}
-        onRoleChange={(value) => setParam('role', value)}
-        onStatusChange={(value) => setParam('status', value)}
-        onSortChange={(value) => setParam('sort', value === 'newest' ? '' : value)}
+        search={filters.search}
+        role={filters.role}
+        status={filters.status}
+        sort={filters.sort}
+        onSearchChange={(search) => applyFilters({ search })}
+        onRoleChange={(role) => applyFilters({ role })}
+        onStatusChange={(status) => applyFilters({ status })}
+        onSortChange={(sort) => applyFilters({ sort })}
       />
 
-      {visibleUsers.length === 0 ? (
+      {matchedUsers.length === 0 ? (
         <div className="dark:border-forest-800 dark:bg-forest-900 flex flex-col items-center justify-center gap-3 rounded-2xl border border-[#e2e8f0] bg-white px-6 py-16 text-center shadow-xs">
           <UsersRound className="h-10 w-10 text-[#cbd5e1]" />
           <p className="text-navy dark:text-forest-50 text-[14px] font-bold">No account matches these filters</p>
           <p className="dark:text-forest-300 max-w-sm text-[12.5px] text-[#64748b]">
             Try a different keyword, or widen the segment, role and status filters.
           </p>
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="text-primary mt-1 cursor-pointer text-[12.5px] font-bold hover:underline"
-          >
-            Clear all filters
-          </button>
+          {hasActiveFilters(filters) && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="text-primary mt-1 cursor-pointer text-[12.5px] font-bold hover:underline"
+            >
+              Clear all filters
+            </button>
+          )}
         </div>
       ) : (
         <>
@@ -150,7 +204,7 @@ export default function AdminUsersListView({ data }: AdminUsersListViewProps) {
             selectedIds={selectedIds}
             onToggleSelect={toggleSelect}
             onToggleSelectAll={toggleSelectAll}
-            onLock={handleLock}
+            onRestrict={handleRestrict}
             onConfirm={handleConfirm}
           />
 
@@ -160,8 +214,16 @@ export default function AdminUsersListView({ data }: AdminUsersListViewProps) {
             currentAdminId={data.currentAdminId}
             selectedIds={selectedIds}
             onToggleSelect={toggleSelect}
-            onLock={handleLock}
+            onRestrict={handleRestrict}
             onConfirm={handleConfirm}
+          />
+
+          <Pagination
+            page={safePage}
+            pageCount={totalPages}
+            totalItems={matchedUsers.length}
+            pageSize={USER_PAGE_SIZE}
+            onPageChange={setPage}
           />
         </>
       )}
@@ -169,7 +231,8 @@ export default function AdminUsersListView({ data }: AdminUsersListViewProps) {
       <AdminUserBulkBar
         selectedCount={selectedUsers.length}
         onClear={() => setSelectedIds([])}
-        onLock={() => requestLock(selectedUsers)}
+        onLock={() => requestRestrict('lock', selectedUsers)}
+        onBan={() => requestRestrict('ban', selectedUsers)}
         onRevokeSessions={() => requestConfirm('revokeSessions', selectedUsers)}
       />
 
