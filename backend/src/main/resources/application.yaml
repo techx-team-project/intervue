@@ -46,3 +46,28 @@ jwt:
   expiration: 900000
   issuer: InterVue
   refresh-token-ttl-days: 14
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+seed:
+  accounts:
+    admin:
+      email: local.admin@intervue.test
+      name: Local Admin
+      roles: [ADMIN]
+    recruiter:
+      email: local.recruiter@intervue.test
+      name: Local Recruiter
+      roles: [RECRUITER]
+    candidate:
+      email: local.candidate@intervue.test
+      name: Local Candidate
+      roles: [CANDIDATE]
+    multi-role:
+      email: local.multirole@intervue.test
+      name: Local Multi Role
+      roles: [CANDIDATE, RECRUITER]
