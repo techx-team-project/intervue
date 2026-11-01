@@ -54,3 +54,11 @@ Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 | `IDENTITY_NOT_VERIFIED` | 422 | Candidate must complete eKYC to apply |
 | `COMPANY_NOT_VERIFIED` | 422 | Company must be verified to post |
 | `RATE_LIMITED` | 429 | Honor `Retry-After` |
+| `AI_USER_QUOTA_EXCEEDED` | 429 | Daily AI limit per user reached; honor `Retry-After` |
+| `AI_IP_QUOTA_EXCEEDED` | 429 | Hourly AI limit per IP reached; honor `Retry-After` |
+| `AI_NOT_CONFIGURED` | 503 | AI provider key missing or rejected |
+| `AI_PROVIDER_BUSY` | 503 | AI provider is rate limited or overloaded; retry later |
+| `AI_PROVIDER_TIMEOUT` | 504 | AI provider did not answer in time |
+| `AI_PROVIDER_ERROR` | 502 | AI provider returned an error or an unreadable response |
+| `AI_REQUEST_REFUSED` | 422 | AI provider declined to process the content |
+| `AI_PROMPT_NOT_FOUND` | 500 | Server prompt file is missing |
