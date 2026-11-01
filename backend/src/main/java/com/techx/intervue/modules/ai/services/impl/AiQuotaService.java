@@ -20,7 +20,6 @@ public class AiQuotaService implements AiQuotaServiceInterface {
     private static final Duration USER_WINDOW = Duration.ofDays(1);
     private static final Duration IP_WINDOW = Duration.ofHours(1);
 
-    // Returns 0 when a slot was taken, otherwise the seconds until the window resets.
     private static final RedisScript<Long> RESERVE =
             new DefaultRedisScript<>(
                     """
@@ -76,6 +75,21 @@ public class AiQuotaService implements AiQuotaServiceInterface {
             releaseSlot(userKey(userId));
         }
         releaseSlot(ipKey(ip));
+    }
+
+    @Override
+    public int getRemaining(Long userId, String ip) {
+        if (userId != null) {
+            String userKey = userKey(userId);
+            String val = redis.opsForValue().get(userKey);
+            int used = val != null ? Integer.parseInt(val) : 0;
+            return Math.max(0, properties.quota().userPerDay() - used);
+        } else {
+            String ipKey = ipKey(ip);
+            String val = redis.opsForValue().get(ipKey);
+            int used = val != null ? Integer.parseInt(val) : 0;
+            return Math.max(0, properties.quota().ipPerHour() - used);
+        }
     }
 
     private void reserveIp(String ip) {
