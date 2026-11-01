@@ -53,6 +53,8 @@ public class SecurityConfig {
                                         .requestMatchers("/uploads/**")
                                         .permitAll()
                                         // 2. Public API
+                                        .requestMatchers("/api/v1/ai/chat")
+                                        .permitAll()
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()
                                         .anyRequest()

@@ -56,8 +56,8 @@ ai:
     timeout: 30s
     max-retries: 2
   quota:
-    user-per-day: 20
-    ip-per-hour: 60
+    user-per-day: 30
+    ip-per-hour: 10
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
