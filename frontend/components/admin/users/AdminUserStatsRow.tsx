@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import type { AdminUserStats } from '@/lib/admin-user';
 import type { AdminUserSegment } from '@/types/admin-user';
-import { Ban, Lock, MailWarning, UserCheck, UserPlus, Users } from 'lucide-react';
+import { Ban, MailWarning, UserCheck, UserPlus, Users } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 interface AdminUserStatsRowProps {
@@ -52,15 +52,6 @@ export default function AdminUserStatsRow({ stats, activeSegment, onSelectSegmen
       tone: 'bg-sky-50 text-sky-600',
     },
     {
-      key: 'locked',
-      label: 'Locked',
-      value: stats.locked,
-      caption: 'Security hold, reversible',
-      icon: Lock,
-      tone: 'bg-amber-50 text-amber-600',
-      segment: 'locked',
-    },
-    {
       key: 'banned',
       label: 'Banned',
       value: stats.banned,
@@ -81,7 +72,7 @@ export default function AdminUserStatsRow({ stats, activeSegment, onSelectSegmen
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
       {tiles.map((tile) => {
         const Icon = tile.icon;
         const isActive = tile.segment !== undefined && tile.segment === activeSegment;

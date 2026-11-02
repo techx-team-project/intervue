@@ -41,9 +41,7 @@ const TABS = [
 type TabId = (typeof TABS)[number]['id'];
 
 const ACTION_SUMMARY: Record<AdminUserAction, string> = {
-  lock: 'Account locked',
   ban: 'Account banned',
-  unlock: 'Account unlocked',
   unban: 'Account unbanned',
   revokeSessions: 'All sessions revoked',
   resetTwoFactor: 'Two-factor authentication reset',
@@ -52,9 +50,7 @@ const ACTION_SUMMARY: Record<AdminUserAction, string> = {
 };
 
 const ACTION_KIND: Record<AdminUserAction, AdminUserActivityEntry['kind']> = {
-  lock: 'locked',
   ban: 'banned',
-  unlock: 'unlocked',
   unban: 'unbanned',
   revokeSessions: 'sessionsRevoked',
   resetTwoFactor: 'twoFactorReset',
@@ -96,7 +92,7 @@ export default function AdminUserDetailView({ detail, allUsers, currentAdminId }
     (action: AdminUserAction, userIds: number[], reason?: string) => {
       if (!userIds.includes(detail.id)) return;
 
-      if (action === 'lock' || action === 'ban' || action === 'revokeSessions') {
+      if (action === 'ban' || action === 'revokeSessions') {
         setSessions((previous) => previous.map((session) => ({ ...session, revoked: true, isCurrent: false })));
       }
 
@@ -191,7 +187,6 @@ export default function AdminUserDetailView({ detail, allUsers, currentAdminId }
       <AdminUserDetailHeader
         user={user}
         isSelf={isSelf}
-        lockBlockedReason={restrictBlockedReason(user, 'lock', currentAdminId, users)}
         banBlockedReason={restrictBlockedReason(user, 'ban', currentAdminId, users)}
         onRestrict={(kind) => requestRestrict(kind, [user])}
         onLift={(kind) => requestConfirm(kind, [user])}

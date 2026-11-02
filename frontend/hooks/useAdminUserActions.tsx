@@ -10,8 +10,7 @@ import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-
 import { useCallback, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 
-export type AdminUserConfirmKind =
-  'unlock' | 'unban' | 'revokeSessions' | 'resetTwoFactor' | 'sendPasswordReset' | 'restore';
+export type AdminUserConfirmKind = 'unban' | 'revokeSessions' | 'resetTwoFactor' | 'sendPasswordReset' | 'restore';
 
 export type AdminUserAction = AdminUserRestrictionKind | AdminUserConfirmKind;
 
@@ -45,24 +44,17 @@ function confirmCopy({ kind, users }: ConfirmRequest): ConfirmCopy {
   const sessionCount = users.reduce((total, user) => total + user.activeSessionCount, 0);
 
   switch (kind) {
-    case 'unlock':
     case 'unban': {
-      const isUnban = kind === 'unban';
       return {
-        title: `${isUnban ? 'Unban' : 'Unlock'} — ${subject}`,
+        title: `Unban — ${subject}`,
         description: 'Sign-in is restored immediately.',
         consequences: [
           'Sign-in is allowed again right away',
           'Existing sessions stay revoked — the user signs in fresh',
-          isUnban
-            ? 'Public content becomes visible again'
-            : 'Public content was never hidden, so nothing changes there',
-          `The original ${isUnban ? 'ban' : 'lock'} and its reason remain in the audit log`,
+          'Public content becomes visible again',
+          'The original ban and its reason remain in the audit log',
         ],
-        confirmLabel:
-          users.length === 1
-            ? `${isUnban ? 'Unban' : 'Unlock'} account`
-            : `${isUnban ? 'Unban' : 'Unlock'} ${users.length} accounts`,
+        confirmLabel: users.length === 1 ? 'Unban account' : `Unban ${users.length} accounts`,
       };
     }
     case 'revokeSessions':
@@ -117,8 +109,16 @@ export function useAdminUserActions(
   initialUsers: AdminUserListItem[],
   currentAdminId: number,
   onResolved?: (action: AdminUserAction, userIds: number[], reason?: string) => void,
+  activeAdminCountTotal?: number,
 ) {
+  const [prevInitialUsers, setPrevInitialUsers] = useState(initialUsers);
   const [users, setUsers] = useState(initialUsers);
+
+  if (initialUsers !== prevInitialUsers) {
+    setPrevInitialUsers(initialUsers);
+    setUsers(initialUsers);
+  }
+
   const [restrictRequest, setRestrictRequest] = useState<RestrictRequest | null>(null);
   const [confirmRequest, setConfirmRequest] = useState<ConfirmRequest | null>(null);
 
@@ -138,14 +138,16 @@ export function useAdminUserActions(
 
   const requestRestrict = useCallback(
     (kind: AdminUserRestrictionKind, targets: AdminUserListItem[]) => {
-      const allowed = targets.filter((user) => restrictBlockedReason(user, kind, currentAdminId, users) === null);
+      const allowed = targets.filter(
+        (user) => restrictBlockedReason(user, kind, currentAdminId, users, activeAdminCountTotal) === null,
+      );
       const blocked = targets.length - allowed.length;
 
       if (allowed.length === 0) {
         toast.error(
           targets.length === 1
-            ? (restrictBlockedReason(targets[0], kind, currentAdminId, users) ?? '')
-            : `None of the selected accounts can be ${kind === 'ban' ? 'banned' : 'locked'}`,
+            ? (restrictBlockedReason(targets[0], kind, currentAdminId, users, activeAdminCountTotal) ?? '')
+            : 'None of the selected accounts can be banned',
         );
         return;
       }
@@ -154,7 +156,7 @@ export function useAdminUserActions(
 
       setRestrictRequest({ kind, users: allowed });
     },
-    [currentAdminId, users],
+    [currentAdminId, users, activeAdminCountTotal],
   );
 
   const confirmRestrict = useCallback(
@@ -235,10 +237,9 @@ export function useAdminUserActions(
     onResolved?.(kind, ids);
 
     switch (kind) {
-      case 'unlock':
       case 'unban':
         patchUsers(ids, (user) => ({ ...user, status: 'ACTIVE', restriction: null }));
-        undoableToast(`${kind === 'unban' ? 'Unbanned' : 'Unlocked'} ${subjectOf(targets)}`);
+        undoableToast(`Unbanned ${subjectOf(targets)}`);
         return;
       case 'restore':
         patchUsers(ids, (user) => ({ ...user, status: 'ACTIVE', restriction: null, deleteRequestedAt: null }));

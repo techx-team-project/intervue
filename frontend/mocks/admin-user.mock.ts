@@ -108,8 +108,8 @@ const USER_SEEDS: UserSeed[] = [
     roles: [ROLES.ADMIN],
     joinedDaysAgo: 54,
     sessions: 0,
-    status: 'LOCKED',
-    restrictionKind: 'lock',
+    status: 'BANNED',
+    restrictionKind: 'ban',
     restrictionReason: 'Security incident — credentials compromised',
     restrictionDetail: 'Password reuse found in an external breach dump. Locked until a new password and 2FA are set.',
     restrictedDaysAgo: 2,
@@ -416,7 +416,7 @@ function buildListItem(seed: UserSeed): AdminUserListItem {
     lastSignInAt: lastSignIn(seed),
     restriction: seed.restrictionReason
       ? {
-          kind: seed.restrictionKind ?? 'lock',
+          kind: seed.restrictionKind ?? 'ban',
           reason: seed.restrictionReason,
           detail: seed.restrictionDetail ?? null,
           at: daysAgo(seed.restrictedDaysAgo ?? 1),
@@ -529,27 +529,9 @@ function buildActivity(seed: UserSeed): AdminUserActivityEntry[] {
   }
 
   if (seed.restrictionReason) {
-    const isBan = seed.restrictionKind === 'ban';
     const daysBack = seed.restrictedDaysAgo ?? 1;
-    entries.push(
-      activityEntry(
-        seed,
-        isBan ? 'banned' : 'locked',
-        isBan ? 'Account banned' : 'Account locked',
-        daysBack,
-        PLATFORM_ADMIN,
-        seed.restrictionReason,
-      ),
-    );
-    entries.push(
-      activityEntry(
-        seed,
-        'sessionsRevoked',
-        `All sessions revoked by the ${isBan ? 'ban' : 'lock'}`,
-        daysBack,
-        PLATFORM_ADMIN,
-      ),
-    );
+    entries.push(activityEntry(seed, 'banned', 'Account banned', daysBack, PLATFORM_ADMIN, seed.restrictionReason));
+    entries.push(activityEntry(seed, 'sessionsRevoked', 'All sessions revoked by the ban', daysBack, PLATFORM_ADMIN));
   }
 
   return entries.sort((left, right) => Date.parse(right.at) - Date.parse(left.at));

@@ -5,23 +5,21 @@ import AdminUserStatusBadge from '@/components/admin/users/AdminUserStatusBadge'
 import UserAvatar from '@/components/ui/UserAvatar';
 import { ROUTES } from '@/constants/routes';
 import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-user';
-import { ArrowLeft, Ban, CircleCheck, Lock, LogOut, RotateCcw, Unlock } from 'lucide-react';
+import { ArrowLeft, Ban, CircleCheck, LogOut, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
 
 interface AdminUserDetailHeaderProps {
   user: AdminUserListItem;
   isSelf: boolean;
-  lockBlockedReason: string | null;
   banBlockedReason: string | null;
   onRestrict: (kind: AdminUserRestrictionKind) => void;
-  onLift: (kind: 'unlock' | 'unban' | 'restore') => void;
+  onLift: (kind: 'unban' | 'restore') => void;
   onRevokeSessions: () => void;
 }
 
 export default function AdminUserDetailHeader({
   user,
   isSelf,
-  lockBlockedReason,
   banBlockedReason,
   onRestrict,
   onLift,
@@ -87,17 +85,6 @@ export default function AdminUserDetailHeader({
           </button>
         )}
 
-        {user.status === 'LOCKED' && (
-          <button
-            type="button"
-            onClick={() => onLift('unlock')}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-emerald-50 px-3.5 py-2 text-[12.5px] font-bold text-emerald-700 transition-colors hover:bg-emerald-100 dark:bg-emerald-500/10"
-          >
-            <Unlock className="h-3.5 w-3.5" />
-            Unlock account
-          </button>
-        )}
-
         {user.status === 'BANNED' && (
           <button
             type="button"
@@ -106,19 +93,6 @@ export default function AdminUserDetailHeader({
           >
             <CircleCheck className="h-3.5 w-3.5" />
             Unban account
-          </button>
-        )}
-
-        {user.status !== 'LOCKED' && user.status !== 'BANNED' && (
-          <button
-            type="button"
-            onClick={() => onRestrict('lock')}
-            disabled={lockBlockedReason !== null}
-            title={lockBlockedReason ?? undefined}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-amber-50 px-3.5 py-2 text-[12.5px] font-bold text-amber-800 transition-colors hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-amber-500/10"
-          >
-            <Lock className="h-3.5 w-3.5" />
-            Lock account
           </button>
         )}
 

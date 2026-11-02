@@ -13,6 +13,9 @@ spring:
     hibernate:
       ddl-auto: validate
 
+  flyway:
+    out-of-order: true
+
   data:
     redis:
       host: ${REDIS_HOST:localhost}
@@ -41,6 +44,8 @@ app:
   frontend-url: ${FRONTEND_URL:http://localhost:3000}
   mail-from-name: InterVue
   support-email: ${SUPPORT_EMAIL:support@intervue.vn}
+  geolocation:
+    enabled: ${GEOLOCATION_ENABLED:false}
 
 auth:
   email-verification-ttl: 24h
