@@ -10,4 +10,6 @@ public interface AuthSessionServiceInterface {
     AuthResult open(User user, String userAgent, String ip);
 
     AuthResult renew(User user, String refreshToken);
+
+    void invalidate(Long userId);
 }

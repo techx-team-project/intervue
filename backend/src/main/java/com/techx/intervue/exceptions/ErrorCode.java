@@ -14,6 +14,8 @@ public enum ErrorCode {
     NOT_FOUND(HttpStatus.NOT_FOUND, "Resource not found!"),
     EMAIL_ALREADY_USED(HttpStatus.CONFLICT, "This email is already registered!"),
     EMAIL_ALREADY_VERIFIED(HttpStatus.CONFLICT, "Email is already verified!"),
+    EMAIL_NOT_VERIFIED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "Please verify your email before continuing!"),
     INVALID_OR_EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "The link is invalid or has expired!"),
     ACCOUNT_BANNED(HttpStatus.FORBIDDEN, "This account has been banned!"),
     ACCOUNT_ALREADY_RESTRICTED(HttpStatus.CONFLICT, "This account is already banned!"),

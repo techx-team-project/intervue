@@ -11,4 +11,6 @@ public interface UserServiceInterface {
     AuthResult register(RegisterRequest request, String userAgent, String ip);
 
     UserResource getMe(Long userId);
+
+    UserResource becomeRecruiter(Long userId);
 }
