@@ -6,7 +6,6 @@ import lombok.Builder;
 public record AdminUserSummaryResource(
         long total,
         long active,
-        long locked,
         long banned,
         long unverified,
         long newLast7Days,
@@ -15,6 +14,6 @@ public record AdminUserSummaryResource(
         long recruiters,
         long admins,
         long activeAdminCount,
-        long lockedOverAWeek,
+        long bannedOverAWeek,
         long unverifiedOverAWeek,
         long grantsExpiringIn14Days) {}

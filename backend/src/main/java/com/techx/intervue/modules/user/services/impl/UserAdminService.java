@@ -1,5 +1,10 @@
 package com.techx.intervue.modules.user.services.impl;
 
+import com.techx.intervue.common.audit.enums.AuditAction;
+import com.techx.intervue.common.audit.enums.AuditActorType;
+import com.techx.intervue.common.audit.enums.AuditTargetType;
+import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
+import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.user.entities.User;
@@ -12,11 +17,14 @@ import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.repositories.UserRestrictionRepository;
 import com.techx.intervue.modules.user.repositories.UserSpecifications;
+import com.techx.intervue.modules.user.requests.LiftRestrictionRequest;
+import com.techx.intervue.modules.user.requests.RestrictUserRequest;
 import com.techx.intervue.modules.user.requests.SearchUsersRequest;
 import com.techx.intervue.modules.user.resources.AdminUserDetailResource;
 import com.techx.intervue.modules.user.resources.AdminUserListResource;
 import com.techx.intervue.modules.user.resources.AdminUserSummaryResource;
 import com.techx.intervue.modules.user.services.interfaces.UserAdminServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.UserSessionCacheInterface;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
@@ -50,6 +58,8 @@ public class UserAdminService implements UserAdminServiceInterface {
     private final UserRepository userRepository;
     private final UserRestrictionRepository userRestrictionRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final UserSessionCacheInterface userSessionCache;
+    private final AuditLogServiceInterface auditLogService;
     private final AdminUserMapper adminUserMapper;
 
     @Override
@@ -120,7 +130,6 @@ public class UserAdminService implements UserAdminServiceInterface {
         return AdminUserSummaryResource.builder()
                 .total(total)
                 .active(byStatus.getOrDefault(UserStatus.ACTIVE, 0L))
-                .locked(byStatus.getOrDefault(UserStatus.LOCKED, 0L))
                 .banned(byStatus.getOrDefault(UserStatus.BANNED, 0L))
                 .unverified(userRepository.countByEmailVerifiedAtIsNull())
                 .newLast7Days(userRepository.countByCreatedAtAfter(staleBefore))
@@ -131,9 +140,9 @@ public class UserAdminService implements UserAdminServiceInterface {
                 .activeAdminCount(
                         userRepository.countByStatusAndActiveRole(
                                 UserStatus.ACTIVE, RoleType.ADMIN, now))
-                .lockedOverAWeek(
+                .bannedOverAWeek(
                         userRestrictionRepository.countByKindAndLiftedAtIsNullAndCreatedAtBefore(
-                                RestrictionKind.LOCK, staleBefore))
+                                RestrictionKind.BAN, staleBefore))
                 .unverifiedOverAWeek(
                         userRepository.countByEmailVerifiedAtIsNullAndCreatedAtBefore(staleBefore))
                 .grantsExpiringIn14Days(
@@ -148,6 +157,116 @@ public class UserAdminService implements UserAdminServiceInterface {
         Sort requested = pageable.getSort().isSorted() ? pageable.getSort() : DEFAULT_SORT;
         return PageRequest.of(
                 pageable.getPageNumber(), pageable.getPageSize(), requested.and(TIE_BREAKER));
+    }
+
+    @Override
+    @Transactional
+    public AdminUserDetailResource restrict(
+            Long userId, RestrictUserRequest request, AdminActor actor) {
+        User target = loadWithRoles(userId);
+        guardRestriction(target, actor);
+
+        UserRestriction restriction =
+                userRestrictionRepository.save(
+                        UserRestriction.builder()
+                                .userId(target.getId())
+                                .kind(RestrictionKind.BAN)
+                                .reason(request.reason())
+                                .detail(request.detail())
+                                .notifyUser(request.notifyUser())
+                                .createdBy(userRepository.getReferenceById(actor.id()))
+                                .expiresAt(request.expiresAt())
+                                .build());
+
+        target.setStatus(RestrictionKind.BAN.getStatus());
+        userRepository.save(target);
+        endEverySession(target.getId());
+
+        audit(
+                RestrictionKind.BAN.getAppliedAction(),
+                target,
+                actor,
+                request.reason(),
+                request.detail());
+        return detailOf(target, restriction);
+    }
+
+    @Override
+    @Transactional
+    public AdminUserDetailResource liftRestriction(
+            Long userId, LiftRestrictionRequest request, AdminActor actor) {
+        User target = loadWithRoles(userId);
+        UserRestriction standing =
+                userRestrictionRepository
+                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_RESTRICTED));
+
+        standing.setLiftedAt(Instant.now());
+        standing.setLiftedBy(userRepository.getReferenceById(actor.id()));
+        standing.setLiftReason(request.reason());
+        userRestrictionRepository.save(standing);
+
+        target.setStatus(UserStatus.ACTIVE);
+        userRepository.save(target);
+
+        audit(RestrictionKind.BAN.getLiftedAction(), target, actor, request.reason(), null);
+        return detailOf(target, null);
+    }
+
+    private User loadWithRoles(Long userId) {
+        return userRepository
+                .findByIdWithRoles(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+    }
+
+    private void guardRestriction(User target, AdminActor actor) {
+        if (target.getId().equals(actor.id())) {
+            throw new AppException(ErrorCode.CANNOT_RESTRICT_SELF);
+        }
+        if (userRestrictionRepository
+                .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
+                .isPresent()) {
+            throw new AppException(ErrorCode.ACCOUNT_ALREADY_RESTRICTED);
+        }
+        boolean lastWayIn =
+                target.getStatus() == UserStatus.ACTIVE
+                        && target.activeRoleTypes().contains(RoleType.ADMIN)
+                        && userRepository.countByStatusAndActiveRole(
+                                        UserStatus.ACTIVE, RoleType.ADMIN, Instant.now())
+                                <= 1;
+        if (lastWayIn) {
+            throw new AppException(ErrorCode.LAST_ACTIVE_ADMIN);
+        }
+    }
+
+    // Dropping the Redis session entry rejects the live access token on the next
+    // request, so the account is out immediately instead of after the token expires.
+    private void endEverySession(Long userId) {
+        userSessionCache.evict(userId);
+        refreshTokenRepository.revokeAllRefreshTokenByUser(userId);
+    }
+
+    private void audit(
+            AuditAction action, User target, AdminActor actor, String reason, String detail) {
+        auditLogService.record(
+                AuditEntry.builder()
+                        .actorType(AuditActorType.ADMIN)
+                        .actorId(actor.id())
+                        .actorEmail(actor.email())
+                        .action(action)
+                        .targetType(AuditTargetType.USER)
+                        .targetId(target.getId())
+                        .reason(reason)
+                        .detail(detail)
+                        .ip(actor.ip())
+                        .build());
+    }
+
+    private AdminUserDetailResource detailOf(User target, UserRestriction restriction) {
+        return adminUserMapper.toDetailResource(
+                target,
+                activeSessionCounts(List.of(target.getId())).getOrDefault(target.getId(), 0L),
+                restriction);
     }
 
     private void verifySortable(Sort sort) {
