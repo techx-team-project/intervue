@@ -30,7 +30,7 @@ public enum ErrorCode {
     AI_PROVIDER_ERROR(HttpStatus.BAD_GATEWAY, "The AI service returned an unexpected error!"),
     AI_REQUEST_REFUSED(
             HttpStatus.UNPROCESSABLE_CONTENT, "The AI service declined to process this request!"),
-    AI_PROMPT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "The AI prompt is not available!");
+    AI_PROMPT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "The AI prompt is not available!"),
     ACCOUNT_BANNED(HttpStatus.FORBIDDEN, "This account has been banned!"),
     ACCOUNT_ALREADY_RESTRICTED(HttpStatus.CONFLICT, "This account is already banned!"),
     ACCOUNT_NOT_RESTRICTED(HttpStatus.CONFLICT, "This account has no restriction to lift!"),
@@ -49,8 +49,7 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "This account is not pending deletion!"),
     DELETION_BLOCKED(
             HttpStatus.UNPROCESSABLE_CONTENT,
-            "Account cannot be deleted while unresolved operations remain!"),
-    RATE_LIMITED(HttpStatus.TOO_MANY_REQUESTS, "Too many requests, please try again later!");
+            "Account cannot be deleted while unresolved operations remain!");
 
     private final HttpStatus status;
     private final String message;
