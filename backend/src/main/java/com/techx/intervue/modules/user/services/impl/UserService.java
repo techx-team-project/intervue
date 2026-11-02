@@ -74,6 +74,18 @@ public class UserService extends BaseService implements UserServiceInterface {
         user.addRole(candidateRole);
         User saved = userRepository.save(user);
 
+        auditLogService.record(
+                AuditEntry.builder()
+                        .actorType(AuditActorType.USER)
+                        .actorId(saved.getId())
+                        .actorEmail(saved.getEmail())
+                        .action(AuditAction.USER_REGISTERED)
+                        .targetType(AuditTargetType.USER)
+                        .targetId(saved.getId())
+                        .reason("Account self-registered")
+                        .ip(ip)
+                        .build());
+
         eventPublisher.publishEvent(
                 new EmailVerificationRequestedEvent(
                         saved.getId(), saved.getEmail(), saved.getName()));
