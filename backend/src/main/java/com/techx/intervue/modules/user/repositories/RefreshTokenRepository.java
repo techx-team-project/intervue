@@ -2,20 +2,23 @@ package com.techx.intervue.modules.user.repositories;
 
 import com.techx.intervue.modules.user.entities.RefreshToken;
 import jakarta.persistence.LockModeType;
-import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
+
     Optional<RefreshToken> findByTokenHash(String token);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -25,8 +28,32 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
     @Modifying
     @Transactional
     @Query(
-            "UPDATE RefreshToken r SET r.revoked = true WHERE r.userId = :userId AND r.revoked = false")
-    public void revokeAllRefreshTokenByUser(@Param(("userId")) Long userId);
+            """
+                UPDATE RefreshToken r
+                SET r.revoked = true, r.revokedAt = :now, r.revokedReason = :reason
+                WHERE r.userId = :userId AND r.revoked = false
+            """)
+    int revokeAllByUserId(
+            @Param("userId") Long userId,
+            @Param("now") Instant now,
+            @Param("reason") String reason);
+
+    @Modifying
+    @Transactional
+    @Query(
+            """
+                UPDATE RefreshToken r
+                SET r.revoked = true, r.revokedAt = CURRENT_TIMESTAMP, r.revokedReason = 'REVOKED'
+                WHERE r.userId = :userId AND r.revoked = false
+            """)
+    void revokeAllRefreshTokenByUser(@Param("userId") Long userId);
+
+    Optional<RefreshToken> findByIdAndUserId(Long id, Long userId);
+
+    List<RefreshToken> findByUserIdAndRevokedFalseAndExpiryDateAfterOrderByCreatedAtDesc(
+            Long userId, Instant now);
+
+    Page<RefreshToken> findByUserId(Long userId, Pageable pageable);
 
     Long deleteByExpiryDateBefore(Instant now);
 
