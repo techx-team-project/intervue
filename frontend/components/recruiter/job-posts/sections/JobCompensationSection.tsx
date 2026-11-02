@@ -36,16 +36,22 @@ export default function JobCompensationSection({ form }: JobCompensationSectionP
   const maxVal = useWatch({ control, name: 'salary.max' });
   const currency = useWatch({ control, name: 'salary.currency' }) || 'VND';
 
-  const isMinGreaterThanMax =
-    !negotiable &&
-    minVal !== undefined &&
-    maxVal !== undefined &&
-    Number(minVal) > 0 &&
-    Number(maxVal) > 0 &&
-    Number(minVal) > Number(maxVal);
+  const parsePositiveNumber = (val: unknown): number | undefined => {
+    if (typeof val === 'number' && !Number.isNaN(val) && val > 0) return val;
+    if (typeof val === 'string' && val.trim() !== '') {
+      const parsed = Number(val);
+      if (!Number.isNaN(parsed) && parsed > 0) return parsed;
+    }
+    return undefined;
+  };
+
+  const validMin = parsePositiveNumber(minVal);
+  const validMax = parsePositiveNumber(maxVal);
+
+  const isMinGreaterThanMax = !negotiable && validMin !== undefined && validMax !== undefined && validMin > validMax;
 
   const formatVnd = (num?: number) => {
-    if (!num) return '';
+    if (num === undefined || Number.isNaN(num)) return '';
     return new Intl.NumberFormat('en-US').format(num);
   };
 
@@ -93,7 +99,8 @@ export default function JobCompensationSection({ form }: JobCompensationSectionP
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
         <span className="text-[11px] font-semibold text-slate-400">Quick presets:</span>
         {PRESETS.map((p) => {
-          const isSelected = p.negotiable === negotiable && (p.negotiable || (minVal === p.min && maxVal === p.max));
+          const isSelected =
+            p.negotiable === negotiable && (p.negotiable || (validMin === p.min && validMax === p.max));
 
           return (
             <button
@@ -123,13 +130,15 @@ export default function JobCompensationSection({ form }: JobCompensationSectionP
                 type="number"
                 placeholder="e.g. 15000000"
                 error={errors.salary?.min?.message}
-                {...register('salary.min', { valueAsNumber: true })}
+                {...register('salary.min', {
+                  setValueAs: (v) => (v === '' || v === null || Number.isNaN(Number(v)) ? undefined : Number(v)),
+                })}
               />
-              {minVal && Number(minVal) > 0 && (
+              {validMin !== undefined ? (
                 <p className="mt-1 text-[11px] font-medium text-emerald-700">
-                  ≈ {formatVnd(Number(minVal))} {currency}
+                  ≈ {formatVnd(validMin)} {currency}
                 </p>
-              )}
+              ) : null}
             </div>
 
             <div>
@@ -138,39 +147,41 @@ export default function JobCompensationSection({ form }: JobCompensationSectionP
                 type="number"
                 placeholder="e.g. 25000000"
                 error={errors.salary?.max?.message}
-                {...register('salary.max', { valueAsNumber: true })}
+                {...register('salary.max', {
+                  setValueAs: (v) => (v === '' || v === null || Number.isNaN(Number(v)) ? undefined : Number(v)),
+                })}
               />
-              {maxVal && Number(maxVal) > 0 && (
+              {validMax !== undefined ? (
                 <p className="mt-1 text-[11px] font-medium text-emerald-700">
-                  ≈ {formatVnd(Number(maxVal))} {currency}
+                  ≈ {formatVnd(validMax)} {currency}
                 </p>
-              )}
+              ) : null}
             </div>
 
             <Select label="Currency" options={CURRENCY_OPTIONS} {...register('salary.currency')} />
           </div>
 
           {/* Validation warning if min > max */}
-          {isMinGreaterThanMax && (
+          {isMinGreaterThanMax && validMin !== undefined && validMax !== undefined ? (
             <div className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
               <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" />
               <span>
-                Minimum salary ({formatVnd(Number(minVal))}) is greater than maximum salary ({formatVnd(Number(maxVal))}
+                Minimum salary ({formatVnd(validMin)}) is greater than maximum salary ({formatVnd(validMax)}
                 ). Please check your values.
               </span>
             </div>
-          )}
+          ) : null}
 
           {/* Formatted live preview bar */}
-          {minVal && maxVal && !isMinGreaterThanMax && (
+          {validMin !== undefined && validMax !== undefined && !isMinGreaterThanMax ? (
             <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/70 p-3 text-xs text-slate-700">
               <DollarSign className="h-4 w-4 text-emerald-600" />
               <span className="font-semibold text-slate-500">Applicant will see:</span>
               <span className="text-navy font-bold">
-                {formatVnd(Number(minVal))} – {formatVnd(Number(maxVal))} {currency} / month
+                {formatVnd(validMin)} – {formatVnd(validMax)} {currency} / month
               </span>
             </div>
-          )}
+          ) : null}
         </div>
       )}
     </section>
