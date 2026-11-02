@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -54,7 +55,7 @@ public class GlobalExceptionHandler {
         return build(ErrorCode.VALIDATION_FAILED, List.of());
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler({EntityNotFoundException.class, NoResourceFoundException.class})
     public ResponseEntity<ApiResource<Void>> handleNotFound() {
         return build(ErrorCode.NOT_FOUND, List.of());
     }

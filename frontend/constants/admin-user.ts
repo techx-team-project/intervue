@@ -28,6 +28,8 @@ import {
   UserPlus,
   Users,
   Unlock,
+  RotateCcw,
+  UserX,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -36,6 +38,7 @@ export const USER_STATUS_META: Record<AdminUserStatus, { label: string; variant:
     ACTIVE: { label: 'Active', variant: 'success' },
     LOCKED: { label: 'Locked', variant: 'warning' },
     BANNED: { label: 'Banned', variant: 'danger' },
+    PENDING_DELETION: { label: 'Pending deletion', variant: 'warning' },
     DELETED: { label: 'Deleted', variant: 'default' },
   };
 
@@ -71,9 +74,15 @@ export const USER_SEGMENTS: { segment: AdminUserSegment; label: string }[] = [
   { segment: 'locked', label: 'Locked' },
   { segment: 'banned', label: 'Banned' },
   { segment: 'unverified', label: 'Unverified email' },
+  { segment: 'pendingDeletion', label: 'Pending deletion' },
 ];
 
 export const USER_PAGE_SIZE = 20;
+
+// One request feeds the whole screen because filtering, sorting, paging and the
+// stat tiles are still computed client-side. 100 is the API's hard cap, so the
+// list silently stops at 100 accounts until the server-side filters are wired.
+export const USER_FETCH_SIZE = 100;
 
 export const USER_SORT_OPTIONS: { value: AdminUserSort; label: string }[] = [
   { value: 'newest', label: 'Newest first' },
@@ -121,6 +130,9 @@ export const ACTIVITY_ICON: Record<AdminUserActivityKind, LucideIcon> = {
   twoFactorReset: ShieldOff,
   passwordResetSent: Send,
   tokenReuseDetected: ShieldAlert,
+  deletionRequested: UserX,
+  deletionCancelled: RotateCcw,
+  restored: RotateCcw,
 };
 
 export const ACTIVITY_TONE: Record<AdminUserActivityKind, string> = {
@@ -136,6 +148,9 @@ export const ACTIVITY_TONE: Record<AdminUserActivityKind, string> = {
   twoFactorReset: 'bg-amber-50 text-amber-700',
   passwordResetSent: 'bg-sky-50 text-sky-600',
   tokenReuseDetected: 'bg-rose-50 text-rose-600',
+  deletionRequested: 'bg-amber-50 text-amber-700',
+  deletionCancelled: 'bg-emerald-50 text-emerald-600',
+  restored: 'bg-emerald-50 text-emerald-600',
 };
 
 export const ADMIN_PERMISSION_META: Record<AdminPermission, { label: string; description: string }> = {

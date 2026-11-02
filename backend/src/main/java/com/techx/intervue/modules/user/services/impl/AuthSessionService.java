@@ -8,6 +8,7 @@ import com.techx.intervue.modules.user.services.interfaces.AuthSessionServiceInt
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
+import com.techx.intervue.modules.user.services.interfaces.UserSessionCacheInterface;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,20 +19,31 @@ public class AuthSessionService implements AuthSessionServiceInterface {
 
     private final JwtServiceInterface jwtService;
     private final RefreshTokenServiceInterface refreshTokenService;
-    private final UserSessionCache userSessionCache;
+    private final UserSessionCacheInterface userSessionCache;
     private final AuthConfig authConfig;
     private final UserMapper userMapper;
 
     @Override
     public AuthResult open(User user) {
+        return open(user, null, null);
+    }
+
+    @Override
+    public AuthResult open(User user, String userAgent, String ip) {
         String accessToken = grantAccess(user);
-        IssuedToken refreshToken = refreshTokenService.issueRefreshToken(user.getId());
+        IssuedToken refreshToken =
+                refreshTokenService.issueRefreshToken(user.getId(), userAgent, ip);
         return new AuthResult(accessToken, refreshToken.rawToken(), userMapper.toResource(user));
     }
 
     @Override
     public AuthResult renew(User user, String refreshToken) {
         return new AuthResult(grantAccess(user), refreshToken, userMapper.toResource(user));
+    }
+
+    @Override
+    public void invalidate(Long userId) {
+        userSessionCache.evict(userId);
     }
 
     private String grantAccess(User user) {

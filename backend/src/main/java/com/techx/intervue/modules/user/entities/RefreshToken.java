@@ -44,6 +44,27 @@ public class RefreshToken {
     @Column(name = "replaced_by_token_id")
     private Long replacedByTokenId;
 
+    @Column(name = "user_agent", length = 255)
+    private String userAgent;
+
+    @Column(length = 45)
+    private String ip;
+
+    @Column(name = "device_label", length = 100)
+    private String deviceLabel;
+
+    @Column(length = 100)
+    private String location;
+
+    @Column(name = "last_used_at")
+    private Instant lastUsedAt;
+
+    @Column(name = "revoked_at")
+    private Instant revokedAt;
+
+    @Column(name = "revoked_reason", length = 32)
+    private String revokedReason;
+
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 

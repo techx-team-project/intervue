@@ -17,7 +17,6 @@ import {
   type AdminUserFilters,
 } from '@/lib/admin-user';
 import type {
-  AdminUserListData,
   AdminUserListItem,
   AdminUserRestrictionKind,
   AdminUserSegment,
@@ -38,7 +37,8 @@ import AdminUsersMobileList from './AdminUsersMobileList';
 import AdminUsersTable from './AdminUsersTable';
 
 interface AdminUsersListViewProps {
-  data: AdminUserListData;
+  users: AdminUserListItem[];
+  currentAdminId: number;
 }
 
 const SEGMENT_VALUES: AdminUserSegment[] = [
@@ -49,6 +49,7 @@ const SEGMENT_VALUES: AdminUserSegment[] = [
   'locked',
   'banned',
   'unverified',
+  'pendingDeletion',
 ];
 const SORT_VALUES = USER_SORT_OPTIONS.map((option) => option.value);
 const ROLE_VALUES = Object.keys(USER_ROLE_META) as RoleType[];
@@ -58,7 +59,7 @@ function readParam<T extends string>(raw: string | null, allowed: readonly T[], 
   return raw !== null && (allowed as readonly string[]).includes(raw) ? (raw as T) : fallback;
 }
 
-export default function AdminUsersListView({ data }: AdminUsersListViewProps) {
+export default function AdminUsersListView({ users: initialUsers, currentAdminId }: AdminUsersListViewProps) {
   const searchParams = useSearchParams();
 
   // Filters are local state, not derived from the router: going through
@@ -75,7 +76,7 @@ export default function AdminUsersListView({ data }: AdminUsersListViewProps) {
   const [page, setPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  const { users, requestRestrict, requestConfirm, actionModals } = useAdminUserActions(data.users, data.currentAdminId);
+  const { users, requestRestrict, requestConfirm, actionModals } = useAdminUserActions(initialUsers, currentAdminId);
 
   const syncUrl = (next: AdminUserFilters) => {
     const params = new URLSearchParams();
@@ -121,7 +122,7 @@ export default function AdminUsersListView({ data }: AdminUsersListViewProps) {
     );
 
   const toggleSelectAll = () => {
-    const selectable = visibleUsers.filter((user) => user.id !== data.currentAdminId).map((user) => user.id);
+    const selectable = visibleUsers.filter((user) => user.id !== currentAdminId).map((user) => user.id);
     const allSelected = selectable.length > 0 && selectable.every((id) => selectedIds.includes(id));
     setSelectedIds(
       allSelected
@@ -200,7 +201,7 @@ export default function AdminUsersListView({ data }: AdminUsersListViewProps) {
           <AdminUsersTable
             users={visibleUsers}
             allUsers={users}
-            currentAdminId={data.currentAdminId}
+            currentAdminId={currentAdminId}
             selectedIds={selectedIds}
             onToggleSelect={toggleSelect}
             onToggleSelectAll={toggleSelectAll}
@@ -211,7 +212,7 @@ export default function AdminUsersListView({ data }: AdminUsersListViewProps) {
           <AdminUsersMobileList
             users={visibleUsers}
             allUsers={users}
-            currentAdminId={data.currentAdminId}
+            currentAdminId={currentAdminId}
             selectedIds={selectedIds}
             onToggleSelect={toggleSelect}
             onRestrict={handleRestrict}

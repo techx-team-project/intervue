@@ -1,10 +1,5 @@
-import AdminUsersListView from '@/components/admin/users/AdminUsersListView';
-import { fetchAdminUserList } from '@/mocks/admin-user.mock';
+import AdminUsersPageClient from '@/components/admin/users/AdminUsersPageClient';
 
-export const dynamic = 'force-dynamic';
-
-export default async function AdminUsersPage() {
-  const data = await fetchAdminUserList();
-
-  return <AdminUsersListView data={data} />;
+export default function AdminUsersPage() {
+  return <AdminUsersPageClient />;
 }

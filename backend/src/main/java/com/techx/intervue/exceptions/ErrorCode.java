@@ -14,8 +14,28 @@ public enum ErrorCode {
     NOT_FOUND(HttpStatus.NOT_FOUND, "Resource not found!"),
     EMAIL_ALREADY_USED(HttpStatus.CONFLICT, "This email is already registered!"),
     EMAIL_ALREADY_VERIFIED(HttpStatus.CONFLICT, "Email is already verified!"),
+    EMAIL_NOT_VERIFIED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "Please verify your email before continuing!"),
     INVALID_OR_EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "The link is invalid or has expired!"),
-    RATE_LIMITED(HttpStatus.TOO_MANY_REQUESTS, "Too many requests, please try again later!"),
+    ACCOUNT_BANNED(HttpStatus.FORBIDDEN, "This account has been banned!"),
+    ACCOUNT_ALREADY_RESTRICTED(HttpStatus.CONFLICT, "This account is already banned!"),
+    ACCOUNT_NOT_RESTRICTED(HttpStatus.CONFLICT, "This account has no restriction to lift!"),
+    CANNOT_RESTRICT_SELF(HttpStatus.UNPROCESSABLE_CONTENT, "You cannot restrict your own account!"),
+    LAST_ACTIVE_ADMIN(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "This is the last active admin account and must stay reachable!"),
+    ROLE_ALREADY_GRANTED(HttpStatus.CONFLICT, "User already has this role!"),
+    ROLE_NOT_ASSIGNED(HttpStatus.UNPROCESSABLE_CONTENT, "User does not have this role assigned!"),
+    CANNOT_REMOVE_SELF_ADMIN(
+            HttpStatus.UNPROCESSABLE_CONTENT, "You cannot remove your own admin role!"),
+    CANNOT_REMOVE_LAST_ROLE(
+            HttpStatus.UNPROCESSABLE_CONTENT, "A user must retain at least one role!"),
+    ACCOUNT_DELETED(HttpStatus.FORBIDDEN, "This account has been deleted!"),
+    ACCOUNT_NOT_PENDING_DELETION(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This account is not pending deletion!"),
+    DELETION_BLOCKED(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "Account cannot be deleted while unresolved operations remain!"),
     AI_USER_QUOTA_EXCEEDED(
             HttpStatus.TOO_MANY_REQUESTS, "You have reached your daily AI usage limit!"),
     AI_IP_QUOTA_EXCEEDED(
@@ -28,7 +48,8 @@ public enum ErrorCode {
     AI_PROVIDER_ERROR(HttpStatus.BAD_GATEWAY, "The AI service returned an unexpected error!"),
     AI_REQUEST_REFUSED(
             HttpStatus.UNPROCESSABLE_CONTENT, "The AI service declined to process this request!"),
-    AI_PROMPT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "The AI prompt is not available!");
+    AI_PROMPT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "The AI prompt is not available!"),
+    RATE_LIMITED(HttpStatus.TOO_MANY_REQUESTS, "Too many requests, please try again later!");
 
     private final HttpStatus status;
     private final String message;
