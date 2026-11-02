@@ -24,6 +24,12 @@ public enum ErrorCode {
     LAST_ACTIVE_ADMIN(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "This is the last active admin account and must stay reachable!"),
+    ROLE_ALREADY_GRANTED(HttpStatus.CONFLICT, "User already has this role!"),
+    ROLE_NOT_ASSIGNED(HttpStatus.UNPROCESSABLE_CONTENT, "User does not have this role assigned!"),
+    CANNOT_REMOVE_SELF_ADMIN(
+            HttpStatus.UNPROCESSABLE_CONTENT, "You cannot remove your own admin role!"),
+    CANNOT_REMOVE_LAST_ROLE(
+            HttpStatus.UNPROCESSABLE_CONTENT, "A user must retain at least one role!"),
     RATE_LIMITED(HttpStatus.TOO_MANY_REQUESTS, "Too many requests, please try again later!");
 
     private final HttpStatus status;

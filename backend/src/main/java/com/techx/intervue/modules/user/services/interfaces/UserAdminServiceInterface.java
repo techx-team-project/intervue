@@ -1,7 +1,10 @@
 package com.techx.intervue.modules.user.services.interfaces;
 
+import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.requests.GrantUserRoleRequest;
 import com.techx.intervue.modules.user.requests.LiftRestrictionRequest;
 import com.techx.intervue.modules.user.requests.RestrictUserRequest;
+import com.techx.intervue.modules.user.requests.RevokeUserRoleRequest;
 import com.techx.intervue.modules.user.requests.SearchUsersRequest;
 import com.techx.intervue.modules.user.resources.AdminUserActivityResource;
 import com.techx.intervue.modules.user.resources.AdminUserDetailResource;
@@ -39,4 +42,11 @@ public interface UserAdminServiceInterface {
     void revokeAllSessions(Long userId, AdminActor actor);
 
     Page<AdminUserSignInResource> findSignIns(Long userId, Pageable pageable);
+
+    AdminUserDetailResource grantRole(Long userId, GrantUserRoleRequest request, AdminActor actor);
+
+    AdminUserDetailResource revokeRole(
+            Long userId, RoleType role, RevokeUserRoleRequest request, AdminActor actor);
+
+    int sweepExpiredRoleGrants();
 }

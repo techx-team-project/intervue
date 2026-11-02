@@ -23,6 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
 @Table(name = "user_roles")
 public class UserRole {
     @EmbeddedId @Builder.Default private UserRoleId id = new UserRoleId();

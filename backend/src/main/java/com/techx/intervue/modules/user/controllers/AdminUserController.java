@@ -2,8 +2,11 @@ package com.techx.intervue.modules.user.controllers;
 
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.helpers.IpHelper;
+import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.requests.GrantUserRoleRequest;
 import com.techx.intervue.modules.user.requests.LiftRestrictionRequest;
 import com.techx.intervue.modules.user.requests.RestrictUserRequest;
+import com.techx.intervue.modules.user.requests.RevokeUserRoleRequest;
 import com.techx.intervue.modules.user.requests.SearchUsersRequest;
 import com.techx.intervue.modules.user.resources.AdminUserActivityResource;
 import com.techx.intervue.modules.user.resources.AdminUserDetailResource;
@@ -119,6 +122,29 @@ public class AdminUserController extends BaseController {
         return ok(
                 PageResource.of(userAdminService.findSignIns(id, pageable)),
                 "Sign-in history retrieved successfully!");
+    }
+
+    @PostMapping("/{id}/roles")
+    public ResponseEntity<ApiResource<AdminUserDetailResource>> grantRole(
+            @PathVariable Long id,
+            @Valid @RequestBody GrantUserRoleRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                userAdminService.grantRole(id, request, actor(principal, httpRequest)),
+                "Role granted successfully!");
+    }
+
+    @DeleteMapping("/{id}/roles/{role}")
+    public ResponseEntity<ApiResource<AdminUserDetailResource>> revokeRole(
+            @PathVariable Long id,
+            @PathVariable RoleType role,
+            @Valid @RequestBody(required = false) RevokeUserRoleRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                userAdminService.revokeRole(id, role, request, actor(principal, httpRequest)),
+                "Role revoked successfully!");
     }
 
     private AdminActor actor(CustomUserDetails principal, HttpServletRequest httpRequest) {

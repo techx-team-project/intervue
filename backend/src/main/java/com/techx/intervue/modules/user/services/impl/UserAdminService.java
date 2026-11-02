@@ -10,20 +10,28 @@ import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterf
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.user.entities.RefreshToken;
+import com.techx.intervue.modules.user.entities.Role;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.entities.UserRestriction;
+import com.techx.intervue.modules.user.entities.UserRole;
+import com.techx.intervue.modules.user.entities.UserRole.UserRoleId;
 import com.techx.intervue.modules.user.enums.RestrictionKind;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.events.AccountRestrictedEvent;
 import com.techx.intervue.modules.user.events.AccountRestrictionLiftedEvent;
+import com.techx.intervue.modules.user.events.UserRolesChangedEvent;
 import com.techx.intervue.modules.user.mappers.AdminUserMapper;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
+import com.techx.intervue.modules.user.repositories.RoleRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.repositories.UserRestrictionRepository;
+import com.techx.intervue.modules.user.repositories.UserRoleRepository;
 import com.techx.intervue.modules.user.repositories.UserSpecifications;
+import com.techx.intervue.modules.user.requests.GrantUserRoleRequest;
 import com.techx.intervue.modules.user.requests.LiftRestrictionRequest;
 import com.techx.intervue.modules.user.requests.RestrictUserRequest;
+import com.techx.intervue.modules.user.requests.RevokeUserRoleRequest;
 import com.techx.intervue.modules.user.requests.SearchUsersRequest;
 import com.techx.intervue.modules.user.resources.AdminUserActivityResource;
 import com.techx.intervue.modules.user.resources.AdminUserDetailResource;
@@ -35,12 +43,14 @@ import com.techx.intervue.modules.user.services.interfaces.UserAdminServiceInter
 import com.techx.intervue.modules.user.services.interfaces.UserSessionCacheInterface;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -72,6 +82,8 @@ public class UserAdminService implements UserAdminServiceInterface {
 
     private final UserRepository userRepository;
     private final UserRestrictionRepository userRestrictionRepository;
+    private final RoleRepository roleRepository;
+    private final UserRoleRepository userRoleRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserSessionCacheInterface userSessionCache;
     private final AuditLogServiceInterface auditLogService;
@@ -576,5 +588,127 @@ public class UserAdminService implements UserAdminServiceInterface {
                                                         : "Unknown Location")
                                         .outcome(r.isRevoked() ? "revoked" : "success")
                                         .build());
+    }
+
+    @Override
+    @Transactional
+    public AdminUserDetailResource grantRole(
+            Long userId, GrantUserRoleRequest request, AdminActor actor) {
+        User target = loadWithRoles(userId);
+
+        RoleType roleType = request.role();
+        if (target.activeRoleTypes().contains(roleType)) {
+            throw new AppException(ErrorCode.ROLE_ALREADY_GRANTED);
+        }
+
+        if (request.expiresAt() != null && !request.expiresAt().isAfter(Instant.now())) {
+            throw AppException.validation("expiresAt", "Expiry date must be in the future");
+        }
+
+        Role role =
+                roleRepository
+                        .findByName(roleType)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        User actorRef = userRepository.findById(actor.id()).orElse(null);
+
+        Optional<UserRole> existingGrant =
+                target.getUserRoles().stream()
+                        .filter(ur -> ur.getRole().getName() == roleType)
+                        .findFirst();
+
+        if (existingGrant.isPresent()) {
+            UserRole ur = existingGrant.get();
+            ur.setGrantedBy(actorRef);
+            ur.setGrantedAt(Instant.now());
+            ur.setExpiresAt(request.expiresAt());
+        } else {
+            UserRole newGrant =
+                    UserRole.builder()
+                            .id(new UserRoleId(target.getId(), role.getId()))
+                            .user(target)
+                            .role(role)
+                            .grantedBy(actorRef)
+                            .grantedAt(Instant.now())
+                            .expiresAt(request.expiresAt())
+                            .build();
+            target.getUserRoles().add(newGrant);
+        }
+
+        userRepository.save(target);
+
+        String detail =
+                request.expiresAt() != null
+                        ? roleType.name() + " (expires " + request.expiresAt() + ")"
+                        : roleType.name();
+        audit(AuditAction.ROLE_GRANTED, target, actor, request.reason(), detail);
+
+        eventPublisher.publishEvent(new UserRolesChangedEvent(target.getId()));
+
+        UserRestriction standing =
+                userRestrictionRepository
+                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
+                        .orElse(null);
+        return detailOf(target, standing);
+    }
+
+    @Override
+    @Transactional
+    public AdminUserDetailResource revokeRole(
+            Long userId, RoleType roleType, RevokeUserRoleRequest request, AdminActor actor) {
+        User target = loadWithRoles(userId);
+
+        if (!target.activeRoleTypes().contains(roleType)) {
+            throw new AppException(ErrorCode.ROLE_NOT_ASSIGNED);
+        }
+
+        if (target.getId().equals(actor.id()) && roleType == RoleType.ADMIN) {
+            throw new AppException(ErrorCode.CANNOT_REMOVE_SELF_ADMIN);
+        }
+
+        if (roleType == RoleType.ADMIN
+                && target.getStatus() == UserStatus.ACTIVE
+                && userRepository.countByStatusAndActiveRole(
+                                UserStatus.ACTIVE, RoleType.ADMIN, Instant.now())
+                        <= 1) {
+            throw new AppException(ErrorCode.LAST_ACTIVE_ADMIN);
+        }
+
+        if (target.activeRoleTypes().size() <= 1) {
+            throw new AppException(ErrorCode.CANNOT_REMOVE_LAST_ROLE);
+        }
+
+        target.getUserRoles().removeIf(ur -> ur.getRole().getName() == roleType);
+        userRepository.save(target);
+
+        String reason = request != null ? request.reason() : null;
+        audit(AuditAction.ROLE_REVOKED, target, actor, reason, roleType.name());
+
+        eventPublisher.publishEvent(new UserRolesChangedEvent(target.getId()));
+
+        UserRestriction standing =
+                userRestrictionRepository
+                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
+                        .orElse(null);
+        return detailOf(target, standing);
+    }
+
+    @Override
+    @Transactional
+    @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.MINUTES)
+    public int sweepExpiredRoleGrants() {
+        Instant now = Instant.now();
+        Instant windowStart = now.minus(15, ChronoUnit.MINUTES);
+        List<UserRole> recentlyExpired =
+                userRoleRepository.findRecentlyExpiredGrants(windowStart, now);
+        for (UserRole grant : recentlyExpired) {
+            userSessionCache.evict(grant.getUser().getId());
+        }
+        if (!recentlyExpired.isEmpty()) {
+            log.info(
+                    "Evicted session cache for {} users with expired role grants",
+                    recentlyExpired.size());
+        }
+        return recentlyExpired.size();
     }
 }
