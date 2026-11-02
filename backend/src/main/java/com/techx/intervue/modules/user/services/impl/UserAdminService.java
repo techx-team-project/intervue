@@ -12,6 +12,8 @@ import com.techx.intervue.modules.user.entities.UserRestriction;
 import com.techx.intervue.modules.user.enums.RestrictionKind;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
+import com.techx.intervue.modules.user.events.AccountRestrictedEvent;
+import com.techx.intervue.modules.user.events.AccountRestrictionLiftedEvent;
 import com.techx.intervue.modules.user.mappers.AdminUserMapper;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
@@ -38,6 +40,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -65,6 +68,7 @@ public class UserAdminService implements UserAdminServiceInterface {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserSessionCacheInterface userSessionCache;
     private final AuditLogServiceInterface auditLogService;
+    private final ApplicationEventPublisher eventPublisher;
     private final AdminUserMapper adminUserMapper;
 
     @Override
@@ -193,6 +197,15 @@ public class UserAdminService implements UserAdminServiceInterface {
                 actor,
                 request.reason(),
                 request.detail());
+        if (request.notifyUser()) {
+            eventPublisher.publishEvent(
+                    new AccountRestrictedEvent(
+                            target.getId(),
+                            target.getEmail(),
+                            target.getName(),
+                            request.reason(),
+                            request.expiresAt()));
+        }
         return detailOf(target, restriction);
     }
 
@@ -215,6 +228,9 @@ public class UserAdminService implements UserAdminServiceInterface {
         userRepository.save(target);
 
         audit(RestrictionKind.BAN.getLiftedAction(), target, actor, request.reason(), null);
+        if (standing.isNotifyUser()) {
+            notifyLifted(target);
+        }
         return detailOf(target, null);
     }
 
@@ -242,6 +258,9 @@ public class UserAdminService implements UserAdminServiceInterface {
                     User owner = owners.get(restriction.getUserId());
                     if (owner != null) {
                         owner.setStatus(UserStatus.ACTIVE);
+                        if (restriction.isNotifyUser()) {
+                            notifyLifted(owner);
+                        }
                     }
                     auditLogService.record(
                             AuditEntry.builder()
@@ -256,6 +275,12 @@ public class UserAdminService implements UserAdminServiceInterface {
         userRepository.saveAll(owners.values());
         log.info("Lifted {} expired account restrictions", expired.size());
         return expired.size();
+    }
+
+    private void notifyLifted(User target) {
+        eventPublisher.publishEvent(
+                new AccountRestrictionLiftedEvent(
+                        target.getId(), target.getEmail(), target.getName()));
     }
 
     private User loadWithRoles(Long userId) {
