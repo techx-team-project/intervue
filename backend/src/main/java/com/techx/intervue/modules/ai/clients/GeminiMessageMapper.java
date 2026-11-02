@@ -63,12 +63,12 @@ public class GeminiMessageMapper {
         return switch (block) {
             case AiContentBlock.Text text -> GeminiPart.ofText(text.text());
             case AiContentBlock.ToolUse toolUse ->
-                    GeminiPart.ofFunctionCall(toolUse.name(), toolUse.input());
+                    GeminiPart.ofFunctionCall(toolUse.name(), toolUse.input(), null);
             case AiContentBlock.ToolResult toolResult ->
                     GeminiPart.ofFunctionResponse(
                             toolResult.toolUseId(),
                             Map.of(
-                                    "content",
+                                    "output",
                                     toolResult.content() != null ? toolResult.content() : "",
                                     "error",
                                     toolResult.error()));
@@ -184,23 +184,26 @@ public class GeminiMessageMapper {
     public record GeminiPart(
             String text,
             @JsonProperty("functionCall") GeminiFunctionCall functionCall,
-            @JsonProperty("functionResponse") GeminiFunctionResponse functionResponse) {
+            @JsonProperty("functionResponse") GeminiFunctionResponse functionResponse,
+            @JsonProperty("thoughtSignature") String thoughtSignature) {
 
         public static GeminiPart ofText(String text) {
-            return new GeminiPart(text, null, null);
+            return new GeminiPart(text, null, null, null);
         }
 
-        public static GeminiPart ofFunctionCall(String name, Map<String, Object> args) {
-            return new GeminiPart(null, new GeminiFunctionCall(name, args), null);
+        public static GeminiPart ofFunctionCall(
+                String name, Map<String, Object> args, String thoughtSignature) {
+            return new GeminiPart(
+                    null, new GeminiFunctionCall(name, args, null), null, thoughtSignature);
         }
 
         public static GeminiPart ofFunctionResponse(String name, Map<String, Object> response) {
-            return new GeminiPart(null, null, new GeminiFunctionResponse(name, response));
+            return new GeminiPart(null, null, new GeminiFunctionResponse(name, response), null);
         }
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record GeminiFunctionCall(String name, Map<String, Object> args) {}
+    public record GeminiFunctionCall(String name, Map<String, Object> args, String id) {}
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record GeminiFunctionResponse(String name, Map<String, Object> response) {}

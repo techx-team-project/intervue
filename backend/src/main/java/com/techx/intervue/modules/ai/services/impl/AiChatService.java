@@ -7,19 +7,25 @@ import com.techx.intervue.modules.ai.requests.AiChatMessage;
 import com.techx.intervue.modules.ai.requests.AiChatRequest;
 import com.techx.intervue.modules.ai.requests.AiContentBlock;
 import com.techx.intervue.modules.ai.requests.AiRole;
+import com.techx.intervue.modules.ai.requests.AiToolDefinition;
 import com.techx.intervue.modules.ai.requests.UserChatRequest;
 import com.techx.intervue.modules.ai.resources.AiChatResult;
+import com.techx.intervue.modules.ai.resources.AiStopReason;
 import com.techx.intervue.modules.ai.resources.KnowledgeMatch;
 import com.techx.intervue.modules.ai.resources.PromptTemplate;
+import com.techx.intervue.modules.ai.resources.ToolExecutionResult;
 import com.techx.intervue.modules.ai.resources.UserChatResponse;
 import com.techx.intervue.modules.ai.services.interfaces.AiChatServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.AiQuotaServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.KnowledgeBaseServiceInterface;
+import com.techx.intervue.modules.ai.services.interfaces.PlatformAgentToolServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -38,11 +44,13 @@ public class AiChatService implements AiChatServiceInterface {
     private static final int MAX_HISTORY_MESSAGES = 6;
     private static final int TOP_K_CHUNKS = 3;
     private static final double MIN_SCORE_THRESHOLD = 0.60;
+    private static final int MAX_AGENT_STEPS = 3;
 
     private final AiGatewayServiceInterface aiGatewayService;
     private final KnowledgeBaseServiceInterface knowledgeBaseService;
     private final AiQuotaServiceInterface quotaService;
     private final PromptServiceInterface promptService;
+    private final PlatformAgentToolServiceInterface agentToolService;
     private final StringRedisTemplate redis;
     private final ObjectMapper objectMapper;
 
@@ -53,11 +61,10 @@ public class AiChatService implements AiChatServiceInterface {
         List<KnowledgeMatch> matches =
                 knowledgeBaseService.retrieve(request.message(), TOP_K_CHUNKS, MIN_SCORE_THRESHOLD);
 
-        List<String> sources =
-                matches.stream()
-                        .map(m -> m.documentName() + " - " + m.heading())
-                        .distinct()
-                        .toList();
+        Set<String> aggregatedSources = new LinkedHashSet<>();
+        matches.stream()
+                .map(m -> m.documentName() + " - " + m.heading())
+                .forEach(aggregatedSources::add);
 
         PromptTemplate systemPrompt = promptService.load(PROMPT_NAME, PROMPT_VERSION);
 
@@ -66,15 +73,44 @@ public class AiChatService implements AiChatServiceInterface {
         String augmentedUserMessage = buildAugmentedUserMessage(matches, request.message());
         messages.add(AiChatMessage.user(augmentedUserMessage));
 
-        AiCallContext callContext = new AiCallContext(FEATURE_NAME, userId, ip);
-        AiChatRequest chatRequest = new AiChatRequest(systemPrompt, messages, List.of());
+        List<AiToolDefinition> tools = agentToolService.getAvailableTools();
+
+        AiCallContext callContext = new AiCallContext(FEATURE_NAME, userId, ip, true);
+        AiChatRequest chatRequest = new AiChatRequest(systemPrompt, messages, tools);
         AiChatResult result = aiGatewayService.chat(callContext, chatRequest);
+
+        int steps = 0;
+        while (steps < MAX_AGENT_STEPS
+                && result.stopReason() == AiStopReason.TOOL_USE
+                && !result.toolCalls().isEmpty()) {
+            steps++;
+            messages.add(result.assistantMessage());
+
+            List<AiContentBlock.ToolResult> toolResults = new ArrayList<>();
+            for (AiContentBlock.ToolUse call : result.toolCalls()) {
+                ToolExecutionResult execResult =
+                        agentToolService.execute(call.name(), call.input());
+                if (!execResult.sources().isEmpty()) {
+                    aggregatedSources.addAll(execResult.sources());
+                }
+                toolResults.add(
+                        new AiContentBlock.ToolResult(
+                                call.name(), execResult.content(), execResult.error()));
+            }
+
+            messages.add(AiChatMessage.toolResults(toolResults));
+
+            AiCallContext followUpContext = new AiCallContext(FEATURE_NAME, userId, ip, false);
+            AiChatRequest followUpRequest = new AiChatRequest(systemPrompt, messages, tools);
+            result = aiGatewayService.chat(followUpContext, followUpRequest);
+        }
 
         saveHistory(historyKey, request.message(), result.text());
 
         int remainingQuota = quotaService.getRemaining(userId, ip);
 
-        return new UserChatResponse(result.text(), sources, remainingQuota);
+        return new UserChatResponse(
+                result.text(), new ArrayList<>(aggregatedSources), remainingQuota);
     }
 
     private String buildAugmentedUserMessage(List<KnowledgeMatch> matches, String userMessage) {
@@ -140,10 +176,10 @@ public class AiChatService implements AiChatServiceInterface {
             return HISTORY_PREFIX + "user:" + userId;
         }
         if (sessionId != null && !sessionId.isBlank()) {
-            return HISTORY_PREFIX + "session:" + sessionId.trim();
+            return HISTORY_PREFIX + "session:" + sessionId;
         }
-        return HISTORY_PREFIX + "ip:" + (ip != null ? ip : "unknown");
+        return HISTORY_PREFIX + "ip:" + ip;
     }
 
-    private record HistoryEntry(String role, String text) {}
+    public record HistoryEntry(String role, String text) {}
 }

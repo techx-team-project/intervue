@@ -55,26 +55,20 @@ public class AiQuotaService implements AiQuotaServiceInterface {
             reserveIp(ip);
             return;
         }
-        String userKey = userKey(userId);
         reserveSlot(
-                userKey,
+                userKey(userId),
                 properties.quota().userPerDay(),
                 USER_WINDOW,
                 ErrorCode.AI_USER_QUOTA_EXCEEDED);
-        try {
-            reserveIp(ip);
-        } catch (AppException ex) {
-            releaseSlot(userKey);
-            throw ex;
-        }
     }
 
     @Override
     public void release(Long userId, String ip) {
         if (userId != null) {
             releaseSlot(userKey(userId));
+        } else {
+            releaseSlot(ipKey(ip));
         }
-        releaseSlot(ipKey(ip));
     }
 
     @Override

@@ -56,14 +56,14 @@ public class GeminiAiClient implements AiClient {
     }
 
     private GeminiMessageMapper.GeminiResponse send(GeminiMessageMapper.GeminiRequest body) {
-        String modelPath =
-                config.model().startsWith("models/") ? config.model() : "models/" + config.model();
+        String modelName =
+                config.model().startsWith("models/") ? config.model().substring(7) : config.model();
         try {
             return retryTemplate.invoke(
                     () ->
                             restClient
                                     .post()
-                                    .uri("/{modelPath}:generateContent", modelPath)
+                                    .uri("/models/{model}:generateContent", modelName)
                                     .header(API_KEY_HEADER, config.apiKey())
                                     .body(body)
                                     .retrieve()
