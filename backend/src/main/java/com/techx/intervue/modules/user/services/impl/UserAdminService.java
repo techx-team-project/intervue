@@ -33,18 +33,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserAdminService implements UserAdminServiceInterface {
 
@@ -54,6 +58,7 @@ public class UserAdminService implements UserAdminServiceInterface {
     private static final Sort TIE_BREAKER = Sort.by(Sort.Direction.DESC, "id");
     private static final Duration STALE_WINDOW = Duration.ofDays(7);
     private static final Duration EXPIRING_GRANT_WINDOW = Duration.ofDays(14);
+    private static final int SWEEP_BATCH_SIZE = 200;
 
     private final UserRepository userRepository;
     private final UserRestrictionRepository userRestrictionRepository;
@@ -211,6 +216,46 @@ public class UserAdminService implements UserAdminServiceInterface {
 
         audit(RestrictionKind.BAN.getLiftedAction(), target, actor, request.reason(), null);
         return detailOf(target, null);
+    }
+
+    @Override
+    @Transactional
+    @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.MINUTES)
+    public int liftExpiredRestrictions() {
+        Instant now = Instant.now();
+        List<UserRestriction> expired =
+                userRestrictionRepository.findStandingExpired(
+                        now, PageRequest.of(0, SWEEP_BATCH_SIZE));
+        if (expired.isEmpty()) {
+            return 0;
+        }
+
+        Map<Long, User> owners =
+                userRepository
+                        .findAllById(expired.stream().map(UserRestriction::getUserId).toList())
+                        .stream()
+                        .collect(Collectors.toMap(User::getId, Function.identity()));
+
+        expired.forEach(
+                restriction -> {
+                    restriction.setLiftedAt(now);
+                    User owner = owners.get(restriction.getUserId());
+                    if (owner != null) {
+                        owner.setStatus(UserStatus.ACTIVE);
+                    }
+                    auditLogService.record(
+                            AuditEntry.builder()
+                                    .actorType(AuditActorType.SYSTEM)
+                                    .action(AuditAction.USER_RESTRICTION_EXPIRED)
+                                    .targetType(AuditTargetType.USER)
+                                    .targetId(restriction.getUserId())
+                                    .build());
+                });
+
+        userRestrictionRepository.saveAll(expired);
+        userRepository.saveAll(owners.values());
+        log.info("Lifted {} expired account restrictions", expired.size());
+        return expired.size();
     }
 
     private User loadWithRoles(Long userId) {

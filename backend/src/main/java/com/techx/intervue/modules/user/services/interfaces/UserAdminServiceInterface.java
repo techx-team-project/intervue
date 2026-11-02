@@ -23,4 +23,6 @@ public interface UserAdminServiceInterface {
 
     AdminUserDetailResource liftRestriction(
             Long userId, LiftRestrictionRequest request, AdminActor actor);
+
+    int liftExpiredRestrictions();
 }

@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,4 +27,12 @@ public interface UserRestrictionRepository extends JpaRepository<UserRestriction
     Optional<UserRestriction> findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(Long userId);
 
     long countByKindAndLiftedAtIsNullAndCreatedAtBefore(RestrictionKind kind, Instant before);
+
+    @Query(
+            """
+                SELECT r FROM UserRestriction r
+                WHERE r.liftedAt IS NULL AND r.expiresAt IS NOT NULL AND r.expiresAt <= :now
+                ORDER BY r.expiresAt ASC
+            """)
+    List<UserRestriction> findStandingExpired(@Param("now") Instant now, Pageable pageable);
 }
