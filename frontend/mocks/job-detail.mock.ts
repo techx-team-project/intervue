@@ -415,6 +415,27 @@ const JOBS_REGISTRY: Record<number, JobDetail> = {
     requirements: ['Có chứng chỉ bảo mật quốc tế (CEH, OSCP, CompTIA Security+) là lợi thế lớn.'],
   }),
 
+  103: buildJobFromCompany(103, 1, {
+    title: 'Senior Backend Engineer (Node.js / TypeScript / Microservices)',
+    salary: '25 - 45 triệu',
+    location: 'Hà Nội (Cầu Giấy)',
+    experience: '3+ năm',
+    tags: ['Node.js', 'TypeScript', 'NestJS', 'PostgreSQL', 'Redis'],
+    category: 'IT - Phần mềm / Lập trình Backend',
+    isHot: true,
+    isUrgent: true,
+    jobDescription: [
+      'Thiết kế và phát triển các dịch vụ backend phục vụ hệ sinh thái thanh toán và giải pháp số với Node.js, TypeScript và NestJS.',
+      'Tối ưu hóa hiệu năng cơ sở dữ liệu PostgreSQL, triển khai caching với Redis và kiến trúc Microservices chịu tải cao.',
+      'Phối hợp cùng đội ngũ Frontend và DevOps để triển khai giải pháp CI/CD và giám sát hệ thống 24/7.',
+    ],
+    requirements: [
+      'Tối thiểu 3 năm kinh nghiệm phát triển hệ thống backend với Node.js / TypeScript (ưu tiên thành thạo NestJS/Express).',
+      'Nắm vững kiến trúc RESTful API, Microservices, Event-driven và hệ cơ sở dữ liệu quan hệ/NoSQL.',
+      'Kinh nghiệm viết Unit Test, Integration Test và tối ưu truy vấn cơ sở dữ liệu.',
+    ],
+  }),
+
   4: buildJobFromCompany(4, 2, {
     title: 'Chuyên Viên Quản Lý Quan Hệ Khách Hàng Doanh Nghiệp (SME)',
     salary: '20 - 35 triệu',
@@ -478,6 +499,24 @@ const JOBS_REGISTRY: Record<number, JobDetail> = {
       'Định hướng công nghệ, giải quyết các bài toán tải cao (High Concurrency) và khả năng mở rộng hệ thống.',
     ],
     requirements: ['Hơn 5 năm kinh nghiệm backend Java / Spring Boot và kiến trúc Microservices trên Cloud.'],
+  }),
+
+  302: buildJobFromCompany(302, 3, {
+    title: 'Fullstack Developer (Node.js / React.js / Next.js)',
+    salary: '20 - 35 triệu',
+    location: 'Hà Nội & TP. HCM',
+    experience: '2+ năm',
+    tags: ['Node.js', 'ReactJS', 'Next.js', 'TypeScript', 'REST API'],
+    category: 'IT - Phần mềm / Lập trình Fullstack',
+    isHot: true,
+    jobDescription: [
+      'Tham gia phát triển các tính năng Fullstack từ giao diện người dùng React/Next.js đến hệ thống API backend Node.js.',
+      'Tối ưu hóa giao diện người dùng và tích hợp các dịch vụ bên thứ ba qua RESTful API.',
+    ],
+    requirements: [
+      'Từ 2 năm kinh nghiệm làm việc với hệ sinh thái JavaScript/TypeScript (Node.js và React/Next.js).',
+      'Hiểu biết về cơ sở dữ liệu SQL/NoSQL và quy trình phát triển Agile/Scrum.',
+    ],
   }),
 
   401: buildJobFromCompany(401, 4, {
