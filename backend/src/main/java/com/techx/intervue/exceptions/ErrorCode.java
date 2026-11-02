@@ -15,6 +15,7 @@ public enum ErrorCode {
     EMAIL_ALREADY_USED(HttpStatus.CONFLICT, "This email is already registered!"),
     EMAIL_ALREADY_VERIFIED(HttpStatus.CONFLICT, "Email is already verified!"),
     INVALID_OR_EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "The link is invalid or has expired!"),
+    ACCOUNT_BANNED(HttpStatus.FORBIDDEN, "This account has been banned!"),
     ACCOUNT_ALREADY_RESTRICTED(HttpStatus.CONFLICT, "This account is already banned!"),
     ACCOUNT_NOT_RESTRICTED(HttpStatus.CONFLICT, "This account has no restriction to lift!"),
     CANNOT_RESTRICT_SELF(HttpStatus.UNPROCESSABLE_CONTENT, "You cannot restrict your own account!"),
