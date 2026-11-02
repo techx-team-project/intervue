@@ -7,7 +7,7 @@ import { RESTRICTION_META } from '@/constants/admin-user';
 import { restrictBlockedReason } from '@/lib/admin-user';
 import type { RestrictUserFormData } from '@/schemas/admin-user.schema';
 import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-user';
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 
 export type AdminUserConfirmKind =
@@ -121,26 +121,6 @@ export function useAdminUserActions(
   const [users, setUsers] = useState(initialUsers);
   const [restrictRequest, setRestrictRequest] = useState<RestrictRequest | null>(null);
   const [confirmRequest, setConfirmRequest] = useState<ConfirmRequest | null>(null);
-
-  useEffect(() => {
-    adminUserApi
-      .getUsers({ size: 100 })
-      .then((page) => {
-        if (page.items && page.items.length > 0) {
-          const normalized = page.items.map((item) => ({
-            ...item,
-            restrictionImpact: item.restrictionImpact ?? {
-              activeSessionCount: item.activeSessionCount,
-              publishedJobPostCount: 0,
-              applicationsInProgressCount: 0,
-              savedCandidateCount: 0,
-            },
-          }));
-          setUsers(normalized);
-        }
-      })
-      .catch(() => {});
-  }, []);
 
   const currentAdminName = users.find((user) => user.id === currentAdminId)?.name ?? 'You';
 

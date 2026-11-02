@@ -8,7 +8,7 @@ import type { GrantRoleFormData } from '@/schemas/admin-user.schema';
 import type {
   AdminUserActivityEntry,
   AdminUserDetail,
-  AdminUserListData,
+  AdminUserListItem,
   AdminUserSession,
   AdminUserSignIn,
 } from '@/types/admin-user';
@@ -26,7 +26,8 @@ import AdminUserSignInHistory from './AdminUserSignInHistory';
 
 interface AdminUserDetailViewProps {
   detail: AdminUserDetail;
-  listData: AdminUserListData;
+  allUsers: AdminUserListItem[];
+  currentAdminId: number;
 }
 
 const TABS = [
@@ -61,7 +62,7 @@ const ACTION_KIND: Record<AdminUserAction, AdminUserActivityEntry['kind']> = {
   restore: 'restored',
 };
 
-export default function AdminUserDetailView({ detail, listData }: AdminUserDetailViewProps) {
+export default function AdminUserDetailView({ detail, allUsers, currentAdminId }: AdminUserDetailViewProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -72,7 +73,7 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
   const [activity, setActivity] = useState<AdminUserActivityEntry[]>(detail.activity);
   const [roles, setRoles] = useState(detail.roles);
 
-  const currentAdminName = listData.users.find((entry) => entry.id === listData.currentAdminId)?.name ?? 'You';
+  const currentAdminName = allUsers.find((entry) => entry.id === currentAdminId)?.name ?? 'You';
 
   const recordActivity = useCallback(
     (kind: AdminUserActivityEntry['kind'], summary: string, reason?: string) => {
@@ -107,13 +108,13 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
   );
 
   const { users, requestRestrict, requestConfirm, actionModals } = useAdminUserActions(
-    listData.users,
-    listData.currentAdminId,
+    allUsers,
+    currentAdminId,
     handleResolved,
   );
 
   const user = { ...(users.find((entry) => entry.id === detail.id) ?? detail), roles };
-  const isSelf = user.id === listData.currentAdminId;
+  const isSelf = user.id === currentAdminId;
   const activeTab = (TABS.find((tab) => tab.id === searchParams.get('tab'))?.id ?? 'overview') as TabId;
 
   const selectTab = (tab: TabId) => {
@@ -123,21 +124,6 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
     const query = next.toString();
     router.replace(query.length > 0 ? `${pathname}?${query}` : pathname, { scroll: false });
   };
-
-  useEffect(() => {
-    adminUserApi
-      .getUserDetail(detail.id)
-      .then((live) => {
-        if (live) {
-          setRoles(live.roles);
-          setTwoFactorEnabled(live.twoFactorEnabled);
-          if (live.sessions) setSessions(live.sessions);
-          if (live.activity) setActivity(live.activity);
-          if (live.signIns) setSignIns(live.signIns);
-        }
-      })
-      .catch(() => {});
-  }, [detail.id]);
 
   useEffect(() => {
     if (activeTab === 'sessions') {
@@ -205,8 +191,8 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
       <AdminUserDetailHeader
         user={user}
         isSelf={isSelf}
-        lockBlockedReason={restrictBlockedReason(user, 'lock', listData.currentAdminId, users)}
-        banBlockedReason={restrictBlockedReason(user, 'ban', listData.currentAdminId, users)}
+        lockBlockedReason={restrictBlockedReason(user, 'lock', currentAdminId, users)}
+        banBlockedReason={restrictBlockedReason(user, 'ban', currentAdminId, users)}
         onRestrict={(kind) => requestRestrict(kind, [user])}
         onLift={(kind) => requestConfirm(kind, [user])}
         onRevokeSessions={() => requestConfirm('revokeSessions', [user])}
@@ -245,7 +231,7 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
         <AdminUserRolesTab
           user={user}
           allUsers={users}
-          currentAdminId={listData.currentAdminId}
+          currentAdminId={currentAdminId}
           onGrant={grantRole}
           onRevoke={revokeRole}
         />

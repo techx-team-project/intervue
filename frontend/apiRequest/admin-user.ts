@@ -4,6 +4,7 @@ import type {
   AdminUserActivityEntry,
   AdminUserDetail,
   AdminUserListItem,
+  AdminUserProfileSummary,
   AdminUserSession,
   AdminUserSignIn,
 } from '@/types/admin-user';
@@ -55,6 +56,53 @@ export interface RevokeRolePayload {
   reason?: string;
 }
 
+// The API answers with the columns the user module owns. Everything below is
+// either served by a dedicated endpoint or waits on a module that does not exist
+// yet, so it is filled in here rather than left undefined for the views.
+type ApiUserListItem = Omit<AdminUserListItem, 'restrictionImpact'>;
+type ApiUserDetail = Omit<
+  AdminUserDetail,
+  'restrictionImpact' | 'twoFactorEnabled' | 'profile' | 'sessions' | 'signIns' | 'activity' | 'linkedRecords'
+> &
+  Partial<Pick<AdminUserDetail, 'twoFactorEnabled'>>;
+
+const EMPTY_PROFILE: AdminUserProfileSummary = {
+  headline: null,
+  jobSearchStatus: null,
+  completeness: 0,
+  cvCount: 0,
+  identityVerification: 'not_submitted',
+  companyName: null,
+  companyVerificationLevel: null,
+};
+
+function toListItem(item: ApiUserListItem): AdminUserListItem {
+  return {
+    ...item,
+    restrictionImpact: {
+      activeSessionCount: item.activeSessionCount,
+      publishedJobPostCount: 0,
+      applicationsInProgressCount: 0,
+      savedCandidateCount: 0,
+    },
+  };
+}
+
+function toDetail(detail: ApiUserDetail): AdminUserDetail {
+  return {
+    ...toListItem(detail),
+    address: detail.address,
+    termsAcceptedAt: detail.termsAcceptedAt,
+    updatedAt: detail.updatedAt,
+    twoFactorEnabled: detail.twoFactorEnabled ?? false,
+    profile: EMPTY_PROFILE,
+    sessions: [],
+    signIns: [],
+    activity: [],
+    linkedRecords: [],
+  };
+}
+
 export const adminUserApi = {
   getUsers: (params?: AdminUserQueryParams) => {
     const query = new URLSearchParams();
@@ -66,18 +114,21 @@ export const adminUserApi = {
     if (params?.size !== undefined) query.set('size', String(params.size));
     if (params?.sort) query.set('sort', params.sort);
     const qs = query.toString();
-    return request<Page<AdminUserListItem>>(`/admin/users${qs ? `?${qs}` : ''}`);
+    return request<Page<ApiUserListItem>>(`/admin/users${qs ? `?${qs}` : ''}`).then((page) => ({
+      ...page,
+      items: page.items.map(toListItem),
+    }));
   },
 
   getUserSummary: () => request<AdminUserSummary>('/admin/users/summary'),
 
-  getUserDetail: (id: number) => request<AdminUserDetail>(`/admin/users/${id}`),
+  getUserDetail: (id: number) => request<ApiUserDetail>(`/admin/users/${id}`).then(toDetail),
 
   banUser: (id: number, body: BanUserPayload) =>
-    request<AdminUserDetail>(`/admin/users/${id}/ban`, { method: 'POST', body }),
+    request<ApiUserDetail>(`/admin/users/${id}/ban`, { method: 'POST', body }).then(toDetail),
 
   unbanUser: (id: number, body?: UnbanUserPayload) =>
-    request<AdminUserDetail>(`/admin/users/${id}/unban`, { method: 'POST', body }),
+    request<ApiUserDetail>(`/admin/users/${id}/unban`, { method: 'POST', body }).then(toDetail),
 
   getUserActivities: (id: number, page = 0, size = 20) =>
     request<Page<AdminUserActivityEntry>>(`/admin/users/${id}/activity?page=${page}&size=${size}`),
@@ -93,17 +144,19 @@ export const adminUserApi = {
     request<Page<AdminUserSignIn>>(`/admin/users/${id}/sign-ins?page=${page}&size=${size}`),
 
   grantRole: (id: number, body: GrantRolePayload) =>
-    request<AdminUserDetail>(`/admin/users/${id}/roles`, { method: 'POST', body }),
+    request<ApiUserDetail>(`/admin/users/${id}/roles`, { method: 'POST', body }).then(toDetail),
 
   revokeRole: (id: number, role: string, body?: RevokeRolePayload) =>
-    request<AdminUserDetail>(`/admin/users/${id}/roles/${role}`, { method: 'DELETE', body }),
+    request<ApiUserDetail>(`/admin/users/${id}/roles/${role}`, { method: 'DELETE', body }).then(toDetail),
 
-  resetTwoFactor: (id: number) => request<AdminUserDetail>(`/admin/users/${id}/reset-two-factor`, { method: 'POST' }),
+  resetTwoFactor: (id: number) =>
+    request<ApiUserDetail>(`/admin/users/${id}/reset-two-factor`, { method: 'POST' }).then(toDetail),
 
   sendPasswordReset: (id: number) =>
-    request<AdminUserDetail>(`/admin/users/${id}/send-password-reset`, { method: 'POST' }),
+    request<ApiUserDetail>(`/admin/users/${id}/send-password-reset`, { method: 'POST' }).then(toDetail),
 
-  cancelDeletion: (id: number) => request<AdminUserDetail>(`/admin/users/${id}/cancel-deletion`, { method: 'POST' }),
+  cancelDeletion: (id: number) =>
+    request<ApiUserDetail>(`/admin/users/${id}/cancel-deletion`, { method: 'POST' }).then(toDetail),
 
-  restoreUser: (id: number) => request<AdminUserDetail>(`/admin/users/${id}/restore`, { method: 'POST' }),
+  restoreUser: (id: number) => request<ApiUserDetail>(`/admin/users/${id}/restore`, { method: 'POST' }).then(toDetail),
 };
