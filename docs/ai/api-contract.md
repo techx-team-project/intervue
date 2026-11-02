@@ -40,6 +40,8 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `GET /admin/users` | admin | query `q`, `role`, `status`, `emailVerified` + pagination | `PageResource<AdminUserListResource>` |
 | ✅ | `GET /admin/users/summary` | admin | – | `AdminUserSummaryResource` |
 | ✅ | `GET /admin/users/{id}` | admin | – | `AdminUserDetailResource` |
+| ✅ | `POST /admin/users/{id}/ban` | admin | `{ reason, detail?, notifyUser, expiresAt? }` | `AdminUserDetailResource` (revokes every session) |
+| ✅ | `POST /admin/users/{id}/unban` | admin | `{ reason? }` | `AdminUserDetailResource` |
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 
@@ -50,12 +52,12 @@ Everything under `/admin/**` requires `ROLE_ADMIN`; a signed-in non-admin gets 4
 ```ts
 type AdminUserRoleGrant = { role: RoleType; grantedAt: string; grantedByName: string | null; expiresAt: string | null };
 type AdminUserRestriction = {
-  kind: 'LOCK' | 'BAN'; reason: string; detail: string | null;
+  kind: 'BAN'; reason: string; detail: string | null;
   at: string; byName: string | null; expiresAt: string | null;
 };
 type AdminUserListResource = {
   id: number; name: string; email: string; phone: string | null; image: string | null;
-  status: 'ACTIVE' | 'LOCKED' | 'BANNED'; emailVerifiedAt: string | null;
+  status: 'ACTIVE' | 'BANNED'; emailVerifiedAt: string | null;
   roles: AdminUserRoleGrant[]; activeSessionCount: number;
   createdAt: string; lastSignInAt: string | null; restriction: AdminUserRestriction | null;
 };
@@ -63,17 +65,28 @@ type AdminUserDetailResource = AdminUserListResource & {
   address: string | null; termsAcceptedAt: string | null; updatedAt: string;
 };
 type AdminUserSummaryResource = {
-  total: number; active: number; locked: number; banned: number; unverified: number;
+  total: number; active: number; banned: number; unverified: number;
   newLast7Days: number; activeLast7Days: number;
   candidates: number; recruiters: number; admins: number;
   activeAdminCount: number;
-  lockedOverAWeek: number; unverifiedOverAWeek: number; grantsExpiringIn14Days: number;
+  bannedOverAWeek: number; unverifiedOverAWeek: number; grantsExpiringIn14Days: number;
 };
 ```
 
 - `GET /admin/users` filters: `q` matches name, email, phone or numeric id (max 100 chars); `role` and `status` take a single enum value; `emailVerified` is a boolean. Sortable properties: `id`, `createdAt`, `name`, `email`, `status`, `lastLoginAt`. The primary key is always appended as a tie-breaker, so paging never repeats or skips a row.
 - `activeAdminCount` exists so the panel can keep the "cannot restrict the last active admin" guardrail while paging server-side.
 - `GET /admin/users/{id}` returns 404 `NOT_FOUND` for an unknown id.
+
+Ban takes a required `reason`, an optional free-text `detail` (max 500), `notifyUser`, and an optional `expiresAt` that must be in the future — omit it for an open-ended ban. An account holds at most one standing restriction: lift the current one before applying another. Banning revokes every refresh token and drops the Redis session entry, so the account is signed out on its next request rather than when its access token expires. Unbanning does not re-issue anything; the user signs in fresh.
+
+`restriction.kind` is `BAN` today. A second kind — a reversible security hold, distinct from policy enforcement — is planned but not implemented, so `status` only ever returns `ACTIVE` or `BANNED`.
+
+| Code | HTTP | Meaning |
+|---|---|---|
+| `ACCOUNT_ALREADY_RESTRICTED` | 409 | The account already has a standing ban |
+| `ACCOUNT_NOT_RESTRICTED` | 409 | No standing restriction to lift |
+| `CANNOT_RESTRICT_SELF` | 422 | An admin cannot ban their own account |
+| `LAST_ACTIVE_ADMIN` | 422 | The target is the only active admin left |
 
 ## Error codes
 
