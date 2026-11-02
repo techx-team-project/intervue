@@ -3,6 +3,7 @@ package com.techx.intervue.modules.user.services.interfaces;
 import com.techx.intervue.modules.user.requests.LiftRestrictionRequest;
 import com.techx.intervue.modules.user.requests.RestrictUserRequest;
 import com.techx.intervue.modules.user.requests.SearchUsersRequest;
+import com.techx.intervue.modules.user.resources.AdminUserActivityResource;
 import com.techx.intervue.modules.user.resources.AdminUserDetailResource;
 import com.techx.intervue.modules.user.resources.AdminUserListResource;
 import com.techx.intervue.modules.user.resources.AdminUserSummaryResource;
@@ -25,4 +26,6 @@ public interface UserAdminServiceInterface {
             Long userId, LiftRestrictionRequest request, AdminActor actor);
 
     int liftExpiredRestrictions();
+
+    Page<AdminUserActivityResource> findActivities(Long userId, Pageable pageable);
 }

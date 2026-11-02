@@ -5,6 +5,7 @@ import com.techx.intervue.modules.helpers.IpHelper;
 import com.techx.intervue.modules.user.requests.LiftRestrictionRequest;
 import com.techx.intervue.modules.user.requests.RestrictUserRequest;
 import com.techx.intervue.modules.user.requests.SearchUsersRequest;
+import com.techx.intervue.modules.user.resources.AdminUserActivityResource;
 import com.techx.intervue.modules.user.resources.AdminUserDetailResource;
 import com.techx.intervue.modules.user.resources.AdminUserListResource;
 import com.techx.intervue.modules.user.resources.AdminUserSummaryResource;
@@ -51,6 +52,14 @@ public class AdminUserController extends BaseController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResource<AdminUserDetailResource>> detail(@PathVariable Long id) {
         return ok(userAdminService.findDetail(id), "Account details retrieved successfully!");
+    }
+
+    @GetMapping("/{id}/activity")
+    public ResponseEntity<ApiResource<PageResource<AdminUserActivityResource>>> activity(
+            @PathVariable Long id, Pageable pageable) {
+        return ok(
+                PageResource.of(userAdminService.findActivities(id, pageable)),
+                "Account activity history retrieved successfully!");
     }
 
     @PostMapping("/{id}/ban")

@@ -1,8 +1,10 @@
 package com.techx.intervue.modules.user.services.impl;
 
+import com.techx.intervue.common.audit.entities.AuditLog;
 import com.techx.intervue.common.audit.enums.AuditAction;
 import com.techx.intervue.common.audit.enums.AuditActorType;
 import com.techx.intervue.common.audit.enums.AuditTargetType;
+import com.techx.intervue.common.audit.repositories.AuditLogRepository;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.exceptions.AppException;
@@ -22,6 +24,7 @@ import com.techx.intervue.modules.user.repositories.UserSpecifications;
 import com.techx.intervue.modules.user.requests.LiftRestrictionRequest;
 import com.techx.intervue.modules.user.requests.RestrictUserRequest;
 import com.techx.intervue.modules.user.requests.SearchUsersRequest;
+import com.techx.intervue.modules.user.resources.AdminUserActivityResource;
 import com.techx.intervue.modules.user.resources.AdminUserDetailResource;
 import com.techx.intervue.modules.user.resources.AdminUserListResource;
 import com.techx.intervue.modules.user.resources.AdminUserSummaryResource;
@@ -34,6 +37,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -68,6 +72,7 @@ public class UserAdminService implements UserAdminServiceInterface {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserSessionCacheInterface userSessionCache;
     private final AuditLogServiceInterface auditLogService;
+    private final AuditLogRepository auditLogRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final AdminUserMapper adminUserMapper;
 
@@ -363,5 +368,102 @@ public class UserAdminService implements UserAdminServiceInterface {
                 .findStandingByUserIds(ids)
                 .forEach(restriction -> standing.putIfAbsent(restriction.getUserId(), restriction));
         return standing;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<AdminUserActivityResource> findActivities(Long userId, Pageable pageable) {
+        User target =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        Pageable stablePageable = withStableOrder(pageable);
+        Page<AuditLog> logs =
+                auditLogRepository.findByTargetTypeAndTargetId(
+                        AuditTargetType.USER, target.getId(), stablePageable);
+
+        Set<Long> actorIds =
+                logs.getContent().stream()
+                        .map(AuditLog::getActorId)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet());
+
+        Map<Long, String> actorNames =
+                actorIds.isEmpty()
+                        ? Map.of()
+                        : userRepository.findAllById(actorIds).stream()
+                                .collect(Collectors.toMap(User::getId, User::getName));
+
+        return logs.map(log -> toActivityResource(log, actorNames));
+    }
+
+    private AdminUserActivityResource toActivityResource(
+            AuditLog log, Map<Long, String> actorNames) {
+        String actorName = null;
+        if (log.getActorType() == AuditActorType.SYSTEM) {
+            actorName = "System";
+        } else if (log.getActorId() != null && actorNames.containsKey(log.getActorId())) {
+            actorName = actorNames.get(log.getActorId());
+        } else if (log.getActorEmail() != null) {
+            actorName = log.getActorEmail();
+        }
+
+        String kind = mapActionToActivityKind(log.getAction());
+        String summary = mapActionToSummary(log.getAction(), log.getDetail());
+
+        return AdminUserActivityResource.builder()
+                .id(log.getId())
+                .kind(kind)
+                .summary(summary)
+                .actorName(actorName)
+                .reason(log.getReason())
+                .at(log.getCreatedAt())
+                .build();
+    }
+
+    private String mapActionToActivityKind(AuditAction action) {
+        return switch (action) {
+            case USER_BANNED -> "banned";
+            case USER_UNBANNED, USER_RESTRICTION_EXPIRED -> "unbanned";
+            case USER_LOCKED -> "locked";
+            case USER_UNLOCKED -> "unlocked";
+            case USER_REGISTERED -> "accountCreated";
+            case EMAIL_VERIFIED -> "emailVerified";
+            case ROLE_GRANTED -> "roleGranted";
+            case ROLE_REVOKED -> "roleRevoked";
+            case SESSIONS_REVOKED -> "sessionsRevoked";
+            case TWO_FACTOR_RESET -> "twoFactorReset";
+            case PASSWORD_RESET_SENT -> "passwordResetSent";
+            case TOKEN_REUSE_DETECTED -> "tokenReuseDetected";
+        };
+    }
+
+    private String mapActionToSummary(AuditAction action, String detail) {
+        return switch (action) {
+            case USER_BANNED ->
+                    detail != null && !detail.isBlank()
+                            ? "Account banned: " + detail
+                            : "Account banned";
+            case USER_UNBANNED -> "Account unbanned";
+            case USER_RESTRICTION_EXPIRED -> "Account ban expired";
+            case USER_LOCKED -> "Account locked";
+            case USER_UNLOCKED -> "Account unlocked";
+            case USER_REGISTERED -> "Account registered";
+            case EMAIL_VERIFIED -> "Email address verified";
+            case ROLE_GRANTED ->
+                    detail != null && !detail.isBlank()
+                            ? "Role granted: " + detail
+                            : "Role granted";
+            case ROLE_REVOKED ->
+                    detail != null && !detail.isBlank()
+                            ? "Role revoked: " + detail
+                            : "Role revoked";
+            case SESSIONS_REVOKED -> "All sessions revoked";
+            case TWO_FACTOR_RESET -> "Two-factor authentication reset";
+            case PASSWORD_RESET_SENT -> "Password reset link sent";
+            case TOKEN_REUSE_DETECTED ->
+                    "Revoked refresh token presented again — every session was revoked";
+        };
     }
 }
