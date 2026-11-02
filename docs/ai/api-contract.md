@@ -42,6 +42,8 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `GET /admin/users/{id}` | admin | – | `AdminUserDetailResource` |
 | ✅ | `POST /admin/users/{id}/ban` | admin | `{ reason, detail?, notifyUser, expiresAt? }` | `AdminUserDetailResource` (revokes every session) |
 | ✅ | `POST /admin/users/{id}/unban` | admin | `{ reason? }` | `AdminUserDetailResource` |
+| ✅ | `GET /admin/users/{id}/activity` | admin | pagination | `PageResource<AdminUserActivityResource>` |
+| ✅ | `GET /admin/audit-log` | admin | query `actorType`, `action`, `targetType`, `targetId`, `from`, `to`, `q` + pagination | `PageResource<AdminAuditLogResource>` |
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 
@@ -71,6 +73,17 @@ type AdminUserSummaryResource = {
   activeAdminCount: number;
   bannedOverAWeek: number; unverifiedOverAWeek: number; grantsExpiringIn14Days: number;
 };
+type AdminUserActivityResource = {
+  id: number; kind: string; summary: string; actorName: string | null;
+  reason: string | null; at: string;
+};
+type AdminAuditLogResource = {
+  id: number; actorType: 'ADMIN' | 'SYSTEM' | 'USER'; actorId: number | null;
+  actorEmail: string | null; actorName: string; actorRoleLabel: string;
+  action: string; targetType: string; targetId: number | null; targetLabel: string;
+  reason: string | null; detail: string | null; ip: string | null;
+  traceId: string | null; createdAt: string;
+};
 ```
 
 - `GET /admin/users` filters: `q` matches name, email, phone or numeric id (max 100 chars); `role` and `status` take a single enum value; `emailVerified` is a boolean. Sortable properties: `id`, `createdAt`, `name`, `email`, `status`, `lastLoginAt`. The primary key is always appended as a tie-breaker, so paging never repeats or skips a row.
@@ -84,6 +97,9 @@ Ban takes a required `reason`, an optional free-text `detail` (max 500), `notify
 A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears the restriction once it is past, recording the lift against a `SYSTEM` actor rather than an admin. Sign-in stops being refused the moment `expiresAt` passes, so `status` can read `BANNED` for up to one sweep interval after the account is usable again.
 
 `restriction.kind` is `BAN` today. A second kind — a reversible security hold, distinct from policy enforcement — is planned but not implemented, so `status` only ever returns `ACTIVE` or `BANNED`.
+
+- `GET /admin/users/{id}/activity` returns paged events for the specified account, mapped from audit logs and ordered newest first (`createdAt DESC, id DESC`). Unknown `id` returns 404 `NOT_FOUND`.
+- `GET /admin/audit-log` (also accessible via `/admin/audit-logs` and `/admin/users/audit-log`) returns system-wide paged audit records with optional filters (`actorType`, `action`, `targetType`, `targetId`, `from`, `to`, `q` search).
 
 | Code | HTTP | Meaning |
 |---|---|---|
