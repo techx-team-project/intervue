@@ -59,6 +59,14 @@ export interface JobDetail {
   }[];
   atsMatchScore?: number;
   verifiedBadges: string[];
+  screeningQuestions?: {
+    id: string;
+    question: string;
+    type: 'TEXT' | 'YES_NO' | 'MULTIPLE_CHOICE' | string;
+    required: boolean;
+    options?: string[];
+    idealAnswer?: string;
+  }[];
 }
 
 export interface RelatedJob {

@@ -23,6 +23,7 @@ import type { JobDetail } from '@/types/job';
 interface JobDescriptionSectionProps {
   job: JobDetail;
   onApply: () => void;
+  onReport?: () => void;
 }
 
 const PERK_ICONS: Record<string, React.ElementType> = {
@@ -34,7 +35,7 @@ const PERK_ICONS: Record<string, React.ElementType> = {
   Coffee,
 };
 
-export default function JobDescriptionSection({ job, onApply }: JobDescriptionSectionProps) {
+export default function JobDescriptionSection({ job, onApply, onReport }: JobDescriptionSectionProps) {
   return (
     <div className="space-y-6">
       <section id="job-description" className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
@@ -213,8 +214,14 @@ export default function JobDescriptionSection({ job, onApply }: JobDescriptionSe
               <span className="font-bold">Cảnh báo an toàn từ InterVue:</span> NTD chân chính không bao giờ yêu cầu ứng
               viên đóng tiền phí tuyển dụng, tiền cọc đồng phục hay tham gia các hoạt động nạp tiền online. Nếu gặp dấu
               hiệu khả nghi, vui lòng nhấn nút{' '}
-              <span className="cursor-pointer font-semibold underline">Báo cáo tin xấu</span> để được hỗ trợ bảo vệ
-              quyền lợi.
+              <button
+                type="button"
+                onClick={onReport}
+                className="cursor-pointer font-semibold text-amber-900 underline hover:text-amber-700"
+              >
+                Báo cáo tin xấu
+              </button>{' '}
+              để được hỗ trợ bảo vệ quyền lợi.
             </div>
           </div>
         </div>

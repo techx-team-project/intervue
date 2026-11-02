@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import {
   Banknote,
   MapPin,
@@ -30,8 +31,10 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
 
   const handleShare = () => {
     if (typeof window !== 'undefined') {
-      navigator.clipboard.writeText(window.location.href);
+      const publicUrl = `${window.location.origin}/jobs/${job.id}`;
+      navigator.clipboard.writeText(publicUrl);
       setCopied(true);
+      toast.success('Đã sao chép liên kết công khai của tin tuyển dụng!');
       setTimeout(() => setCopied(false), 2500);
     }
   };
