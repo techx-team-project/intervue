@@ -147,6 +147,26 @@ public class AdminUserController extends BaseController {
                 "Role revoked successfully!");
     }
 
+    @PostMapping("/{id}/reset-two-factor")
+    public ResponseEntity<ApiResource<AdminUserDetailResource>> resetTwoFactor(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                userAdminService.resetTwoFactor(id, actor(principal, httpRequest)),
+                "Two-factor authentication reset successfully!");
+    }
+
+    @PostMapping("/{id}/send-password-reset")
+    public ResponseEntity<ApiResource<AdminUserDetailResource>> sendPasswordReset(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                userAdminService.sendPasswordReset(id, actor(principal, httpRequest)),
+                "Password reset link sent successfully!");
+    }
+
     private AdminActor actor(CustomUserDetails principal, HttpServletRequest httpRequest) {
         return new AdminActor(
                 principal.getId(), principal.getEmail(), IpHelper.getClientIp(httpRequest));

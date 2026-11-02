@@ -20,6 +20,7 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.events.AccountRestrictedEvent;
 import com.techx.intervue.modules.user.events.AccountRestrictionLiftedEvent;
+import com.techx.intervue.modules.user.events.PasswordResetRequestedEvent;
 import com.techx.intervue.modules.user.events.UserRolesChangedEvent;
 import com.techx.intervue.modules.user.mappers.AdminUserMapper;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
@@ -28,6 +29,8 @@ import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.repositories.UserRestrictionRepository;
 import com.techx.intervue.modules.user.repositories.UserRoleRepository;
 import com.techx.intervue.modules.user.repositories.UserSpecifications;
+import com.techx.intervue.modules.user.repositories.UserTwoFactorRecoveryCodeRepository;
+import com.techx.intervue.modules.user.repositories.UserTwoFactorRepository;
 import com.techx.intervue.modules.user.requests.GrantUserRoleRequest;
 import com.techx.intervue.modules.user.requests.LiftRestrictionRequest;
 import com.techx.intervue.modules.user.requests.RestrictUserRequest;
@@ -84,6 +87,8 @@ public class UserAdminService implements UserAdminServiceInterface {
     private final UserRestrictionRepository userRestrictionRepository;
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
+    private final UserTwoFactorRepository userTwoFactorRepository;
+    private final UserTwoFactorRecoveryCodeRepository userTwoFactorRecoveryCodeRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserSessionCacheInterface userSessionCache;
     private final AuditLogServiceInterface auditLogService;
@@ -111,6 +116,7 @@ public class UserAdminService implements UserAdminServiceInterface {
         Set<Long> tokenReuseUserIds =
                 auditLogRepository.findTargetIdsByTargetTypeAndTargetIdInAndAction(
                         AuditTargetType.USER, ids, AuditAction.TOKEN_REUSE_DETECTED);
+        Set<Long> twoFactorUserIds = userTwoFactorRepository.findUserIdsWithActiveTwoFactor(ids);
 
         List<AdminUserListResource> items =
                 ids.stream()
@@ -120,6 +126,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                                                 withRoles.get(id),
                                                 sessionCounts.getOrDefault(id, 0L),
                                                 tokenReuseUserIds.contains(id),
+                                                twoFactorUserIds.contains(id),
                                                 restrictions.get(id)))
                         .toList();
 
@@ -359,10 +366,13 @@ public class UserAdminService implements UserAdminServiceInterface {
         boolean hasTokenReuseIncident =
                 auditLogRepository.existsByTargetTypeAndTargetIdAndAction(
                         AuditTargetType.USER, target.getId(), AuditAction.TOKEN_REUSE_DETECTED);
+        boolean twoFactorEnabled =
+                userTwoFactorRepository.existsByUserIdAndConfirmedAtIsNotNull(target.getId());
         return adminUserMapper.toDetailResource(
                 target,
                 activeSessionCounts(List.of(target.getId())).getOrDefault(target.getId(), 0L),
                 hasTokenReuseIncident,
+                twoFactorEnabled,
                 restriction);
     }
 
@@ -710,5 +720,54 @@ public class UserAdminService implements UserAdminServiceInterface {
                     recentlyExpired.size());
         }
         return recentlyExpired.size();
+    }
+
+    @Override
+    @Transactional
+    public AdminUserDetailResource resetTwoFactor(Long userId, AdminActor actor) {
+        User target = loadWithRoles(userId);
+
+        userTwoFactorRepository.deleteByUserId(target.getId());
+        userTwoFactorRecoveryCodeRepository.deleteByUserId(target.getId());
+
+        audit(
+                AuditAction.TWO_FACTOR_RESET,
+                target,
+                actor,
+                "Two-factor authentication reset by admin",
+                null);
+
+        UserRestriction standing =
+                userRestrictionRepository
+                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
+                        .orElse(null);
+        return detailOf(target, standing);
+    }
+
+    @Override
+    @Transactional
+    public AdminUserDetailResource sendPasswordReset(Long userId, AdminActor actor) {
+        User target = loadWithRoles(userId);
+
+        if (!target.isEmailVerified()) {
+            throw new AppException(ErrorCode.EMAIL_NOT_VERIFIED);
+        }
+
+        eventPublisher.publishEvent(
+                new PasswordResetRequestedEvent(
+                        target.getId(), target.getEmail(), target.getName()));
+
+        audit(
+                AuditAction.PASSWORD_RESET_SENT,
+                target,
+                actor,
+                "Password reset email sent by admin",
+                null);
+
+        UserRestriction standing =
+                userRestrictionRepository
+                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
+                        .orElse(null);
+        return detailOf(target, standing);
     }
 }

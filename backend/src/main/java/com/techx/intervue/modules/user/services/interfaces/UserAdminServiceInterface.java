@@ -49,4 +49,8 @@ public interface UserAdminServiceInterface {
             Long userId, RoleType role, RevokeUserRoleRequest request, AdminActor actor);
 
     int sweepExpiredRoleGrants();
+
+    AdminUserDetailResource resetTwoFactor(Long userId, AdminActor actor);
+
+    AdminUserDetailResource sendPasswordReset(Long userId, AdminActor actor);
 }

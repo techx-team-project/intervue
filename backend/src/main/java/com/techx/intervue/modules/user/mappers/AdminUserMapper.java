@@ -15,13 +15,22 @@ public class AdminUserMapper {
 
     public AdminUserListResource toListResource(
             User user, long activeSessionCount, UserRestriction restriction) {
-        return toListResource(user, activeSessionCount, false, restriction);
+        return toListResource(user, activeSessionCount, false, false, restriction);
     }
 
     public AdminUserListResource toListResource(
             User user,
             long activeSessionCount,
             boolean hasTokenReuseIncident,
+            UserRestriction restriction) {
+        return toListResource(user, activeSessionCount, hasTokenReuseIncident, false, restriction);
+    }
+
+    public AdminUserListResource toListResource(
+            User user,
+            long activeSessionCount,
+            boolean hasTokenReuseIncident,
+            boolean twoFactorEnabled,
             UserRestriction restriction) {
         return AdminUserListResource.builder()
                 .id(user.getId())
@@ -34,6 +43,7 @@ public class AdminUserMapper {
                 .roles(toRoleResources(user))
                 .activeSessionCount(activeSessionCount)
                 .hasTokenReuseIncident(hasTokenReuseIncident)
+                .twoFactorEnabled(twoFactorEnabled)
                 .createdAt(user.getCreatedAt())
                 .lastSignInAt(user.getLastLoginAt())
                 .restriction(toRestrictionResource(restriction))
@@ -42,13 +52,23 @@ public class AdminUserMapper {
 
     public AdminUserDetailResource toDetailResource(
             User user, long activeSessionCount, UserRestriction restriction) {
-        return toDetailResource(user, activeSessionCount, false, restriction);
+        return toDetailResource(user, activeSessionCount, false, false, restriction);
     }
 
     public AdminUserDetailResource toDetailResource(
             User user,
             long activeSessionCount,
             boolean hasTokenReuseIncident,
+            UserRestriction restriction) {
+        return toDetailResource(
+                user, activeSessionCount, hasTokenReuseIncident, false, restriction);
+    }
+
+    public AdminUserDetailResource toDetailResource(
+            User user,
+            long activeSessionCount,
+            boolean hasTokenReuseIncident,
+            boolean twoFactorEnabled,
             UserRestriction restriction) {
         return AdminUserDetailResource.builder()
                 .id(user.getId())
@@ -63,6 +83,7 @@ public class AdminUserMapper {
                 .roles(toRoleResources(user))
                 .activeSessionCount(activeSessionCount)
                 .hasTokenReuseIncident(hasTokenReuseIncident)
+                .twoFactorEnabled(twoFactorEnabled)
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .lastSignInAt(user.getLastLoginAt())
