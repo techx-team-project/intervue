@@ -10,10 +10,11 @@ import { ReactNode, useEffect } from 'react';
 
 type RequireAuthProps = {
   roles?: RoleType[];
+  forbiddenFallback?: ReactNode;
   children: ReactNode;
 };
 
-export default function RequireAuth({ roles, children }: RequireAuthProps) {
+export default function RequireAuth({ roles, forbiddenFallback, children }: RequireAuthProps) {
   const router = useRouter();
   const { status, hasRole } = useAuth();
 
@@ -32,6 +33,7 @@ export default function RequireAuth({ roles, children }: RequireAuthProps) {
   }
 
   if (roles && !roles.some(hasRole)) {
+    if (forbiddenFallback) return forbiddenFallback;
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 px-4 text-center">
         <h1 className="text-lg font-bold text-slate-800">You do not have access to this page</h1>

@@ -1,15 +1,17 @@
 'use client';
 
+import { adminUserApi } from '@/apiRequest/admin-user';
 import AdminUserConfirmDialog from '@/components/admin/users/AdminUserConfirmDialog';
 import AdminUserRestrictDialog from '@/components/admin/users/AdminUserRestrictDialog';
 import { RESTRICTION_META } from '@/constants/admin-user';
 import { restrictBlockedReason } from '@/lib/admin-user';
 import type { RestrictUserFormData } from '@/schemas/admin-user.schema';
 import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-user';
-import { useCallback, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 
-export type AdminUserConfirmKind = 'unlock' | 'unban' | 'revokeSessions' | 'resetTwoFactor' | 'sendPasswordReset';
+export type AdminUserConfirmKind =
+  'unlock' | 'unban' | 'revokeSessions' | 'resetTwoFactor' | 'sendPasswordReset' | 'restore';
 
 export type AdminUserAction = AdminUserRestrictionKind | AdminUserConfirmKind;
 
@@ -85,6 +87,17 @@ function confirmCopy({ kind, users }: ConfirmRequest): ConfirmCopy {
         ],
         confirmLabel: 'Reset two-factor',
       };
+    case 'restore':
+      return {
+        title: `Restore account — ${subject}`,
+        description: 'Cancels the pending deletion request and restores account to active.',
+        consequences: [
+          'The account is immediately active again',
+          'The deletion countdown is cancelled',
+          'The user can sign in normally with existing credentials',
+        ],
+        confirmLabel: 'Restore account',
+      };
     case 'sendPasswordReset':
     default:
       return {
@@ -108,6 +121,26 @@ export function useAdminUserActions(
   const [users, setUsers] = useState(initialUsers);
   const [restrictRequest, setRestrictRequest] = useState<RestrictRequest | null>(null);
   const [confirmRequest, setConfirmRequest] = useState<ConfirmRequest | null>(null);
+
+  useEffect(() => {
+    adminUserApi
+      .getUsers({ size: 100 })
+      .then((page) => {
+        if (page.items && page.items.length > 0) {
+          const normalized = page.items.map((item) => ({
+            ...item,
+            restrictionImpact: item.restrictionImpact ?? {
+              activeSessionCount: item.activeSessionCount,
+              publishedJobPostCount: 0,
+              applicationsInProgressCount: 0,
+              savedCandidateCount: 0,
+            },
+          }));
+          setUsers(normalized);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const currentAdminName = users.find((user) => user.id === currentAdminId)?.name ?? 'You';
 
@@ -145,10 +178,28 @@ export function useAdminUserActions(
   );
 
   const confirmRestrict = useCallback(
-    (data: RestrictUserFormData) => {
+    async (data: RestrictUserFormData) => {
       if (!restrictRequest) return;
       const { kind, users: targets } = restrictRequest;
       setRestrictRequest(null);
+
+      try {
+        if (kind === 'ban') {
+          await Promise.all(
+            targets.map((target) =>
+              adminUserApi.banUser(target.id, {
+                reason: data.reason,
+                detail: data.detail,
+                notifyUser: data.notifyUser,
+                expiresAt: data.isTemporary && data.expiresAt ? new Date(data.expiresAt).toISOString() : undefined,
+              }),
+            ),
+          );
+        }
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : 'Action failed');
+        return;
+      }
 
       patchUsers(
         targets.map((user) => user.id),
@@ -178,11 +229,29 @@ export function useAdminUserActions(
     [restrictRequest, patchUsers, undoableToast, currentAdminName, onResolved],
   );
 
-  const confirmPending = useCallback(() => {
+  const confirmPending = useCallback(async () => {
     if (!confirmRequest) return;
     const { kind, users: targets } = confirmRequest;
     const ids = targets.map((user) => user.id);
     setConfirmRequest(null);
+
+    try {
+      if (kind === 'unban') {
+        await Promise.all(ids.map((id) => adminUserApi.unbanUser(id)));
+      } else if (kind === 'revokeSessions') {
+        await Promise.all(ids.map((id) => adminUserApi.revokeAllSessions(id)));
+      } else if (kind === 'resetTwoFactor') {
+        await Promise.all(ids.map((id) => adminUserApi.resetTwoFactor(id)));
+      } else if (kind === 'sendPasswordReset') {
+        await Promise.all(ids.map((id) => adminUserApi.sendPasswordReset(id)));
+      } else if (kind === 'restore') {
+        await Promise.all(ids.map((id) => adminUserApi.restoreUser(id)));
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Action failed');
+      return;
+    }
+
     onResolved?.(kind, ids);
 
     switch (kind) {
@@ -190,6 +259,10 @@ export function useAdminUserActions(
       case 'unban':
         patchUsers(ids, (user) => ({ ...user, status: 'ACTIVE', restriction: null }));
         undoableToast(`${kind === 'unban' ? 'Unbanned' : 'Unlocked'} ${subjectOf(targets)}`);
+        return;
+      case 'restore':
+        patchUsers(ids, (user) => ({ ...user, status: 'ACTIVE', restriction: null, deleteRequestedAt: null }));
+        toast.success(`Restored account for ${subjectOf(targets)}`);
         return;
       case 'revokeSessions':
         patchUsers(ids, (user) => ({

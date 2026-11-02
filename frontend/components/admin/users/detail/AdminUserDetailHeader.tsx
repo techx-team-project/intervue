@@ -5,7 +5,7 @@ import AdminUserStatusBadge from '@/components/admin/users/AdminUserStatusBadge'
 import UserAvatar from '@/components/ui/UserAvatar';
 import { ROUTES } from '@/constants/routes';
 import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-user';
-import { ArrowLeft, Ban, CircleCheck, Lock, LogOut, Unlock } from 'lucide-react';
+import { ArrowLeft, Ban, CircleCheck, Lock, LogOut, RotateCcw, Unlock } from 'lucide-react';
 import Link from 'next/link';
 
 interface AdminUserDetailHeaderProps {
@@ -14,7 +14,7 @@ interface AdminUserDetailHeaderProps {
   lockBlockedReason: string | null;
   banBlockedReason: string | null;
   onRestrict: (kind: AdminUserRestrictionKind) => void;
-  onLift: (kind: 'unlock' | 'unban') => void;
+  onLift: (kind: 'unlock' | 'unban' | 'restore') => void;
   onRevokeSessions: () => void;
 }
 
@@ -75,6 +75,17 @@ export default function AdminUserDetailHeader({
           <LogOut className="h-3.5 w-3.5" />
           Revoke sessions
         </button>
+
+        {user.status === 'PENDING_DELETION' && (
+          <button
+            type="button"
+            onClick={() => onLift('restore')}
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-emerald-50 px-3.5 py-2 text-[12.5px] font-bold text-emerald-700 transition-colors hover:bg-emerald-100 dark:bg-emerald-500/10"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            Restore account
+          </button>
+        )}
 
         {user.status === 'LOCKED' && (
           <button

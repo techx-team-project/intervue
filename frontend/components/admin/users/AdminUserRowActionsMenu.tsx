@@ -11,6 +11,7 @@ import {
   Lock,
   LogOut,
   MoreVertical,
+  RotateCcw,
   ShieldCheck,
   ShieldOff,
   Unlock,
@@ -102,6 +103,15 @@ export default function AdminUserRowActionsMenu({
       disabledReason: user.emailVerifiedAt === null ? 'The email address is not verified' : undefined,
     },
   ];
+
+  if (user.status === 'PENDING_DELETION') {
+    actions.push({
+      key: 'restore',
+      label: 'Restore account',
+      icon: RotateCcw,
+      onClick: () => onConfirm('restore', user),
+    });
+  }
 
   if (user.status === 'LOCKED') {
     actions.push({ key: 'unlock', label: 'Unlock account', icon: Unlock, onClick: () => onConfirm('unlock', user) });
