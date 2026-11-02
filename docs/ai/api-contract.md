@@ -29,7 +29,7 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | Status | Method & path | Auth | Request | Response `data` |
 |---|---|---|---|---|
 | ✅ | `POST /auth/register` | public | `{ name, email, password, confirmPassword, acceptTerms }` | `{ accessToken, user }` + refresh cookie; sends verification email |
-| ✅ | `POST /auth/login` | public | `{ email, password }` | `{ accessToken, user }` + cookie. Failure: `INVALID_CREDENTIALS` with `error.meta.captchaRequired` |
+| ✅ | `POST /auth/login` | public | `{ email, password }` | `{ accessToken, user }` + cookie. Failure: `INVALID_CREDENTIALS` with `error.meta.captchaRequired`, or `ACCOUNT_BANNED` once the password is correct |
 | ✅ | `POST /auth/refresh` | cookie | – | `{ accessToken, user }` (rotates cookie) |
 | ✅ | `POST /auth/logout` | user | – | – (clears cookie, blacklists access token) |
 | ✅ | `POST /auth/verify-email` | public | `{ token }` | – (link valid 24h, single use) |
@@ -100,6 +100,7 @@ Ban takes a required `reason`, an optional free-text `detail` (max 500), `notify
 | `FORBIDDEN` | 403 | Role/ownership failure |
 | `NOT_FOUND` | 404 | |
 | `EMAIL_ALREADY_USED` | 409 | |
+| `ACCOUNT_BANNED` | 403 | The account is banned, so signing in and refreshing are both refused. Only raised after the password matches, so it never reveals the state of an account to someone who does not hold its credentials |
 | `IDENTITY_NOT_VERIFIED` | 422 | Candidate must complete eKYC to apply |
 | `COMPANY_NOT_VERIFIED` | 422 | Company must be verified to post |
 | `RATE_LIMITED` | 429 | Honor `Retry-After` |
