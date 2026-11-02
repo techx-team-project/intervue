@@ -3,12 +3,14 @@ package com.techx.intervue.modules.user.repositories;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -97,4 +99,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     long countByLastLoginAtAfter(Instant since);
 
     long countByEmailVerifiedAtIsNullAndCreatedAtBefore(Instant before);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.lastLoginAt = :at WHERE u.id = :id")
+    void touchLastLogin(@Param("id") Long id, @Param("at") Instant at);
 }

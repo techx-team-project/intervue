@@ -4,7 +4,9 @@ import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.helpers.EmailHelper;
 import com.techx.intervue.modules.user.entities.User;
+import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.repositories.UserRepository;
+import com.techx.intervue.modules.user.repositories.UserRestrictionRepository;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.services.interfaces.AuthServiceInterface;
@@ -31,6 +33,7 @@ public class AuthService implements AuthServiceInterface {
             "$2a$10$eM4EXOxqLsBgw6Tq.SA/4uIAlNcwCwXwH.1Pk/0NXTeaEo7AyQ82O";
 
     private final UserRepository userRepository;
+    private final UserRestrictionRepository userRestrictionRepository;
     private final PasswordEncoder passwordEncoder;
     private final LoginAttemptServiceInterface loginAttemptService;
     private final AuthSessionServiceInterface authSessionService;
@@ -52,7 +55,12 @@ public class AuthService implements AuthServiceInterface {
         }
 
         loginAttemptService.reset(email, ip);
-        return authSessionService.open(found.get());
+        User user = found.get();
+        ensureSignInAllowed(user);
+
+        AuthResult result = authSessionService.open(user);
+        userRepository.touchLastLogin(user.getId(), Instant.now());
+        return result;
     }
 
     @Override
@@ -62,7 +70,24 @@ public class AuthService implements AuthServiceInterface {
                 userRepository
                         .findByIdWithRoles(rotated.userId())
                         .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        ensureSignInAllowed(user);
         return authSessionService.renew(user, rotated.newRefreshToken());
+    }
+
+    // users.status is only an indexed projection, so the restriction row decides:
+    // one that is still standing and has not expired yet is what blocks the sign-in.
+    private void ensureSignInAllowed(User user) {
+        if (user.getStatus() == UserStatus.ACTIVE) {
+            return;
+        }
+        boolean restricted =
+                userRestrictionRepository
+                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(user.getId())
+                        .filter(restriction -> !restriction.isExpired())
+                        .isPresent();
+        if (restricted) {
+            throw new AppException(ErrorCode.ACCOUNT_BANNED);
+        }
     }
 
     @Override
