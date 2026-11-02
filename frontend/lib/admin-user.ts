@@ -54,6 +54,8 @@ export function matchesSegment(user: AdminUserListItem, segment: AdminUserSegmen
       return user.status === 'LOCKED';
     case 'banned':
       return user.status === 'BANNED';
+    case 'pendingDeletion':
+      return user.status === 'PENDING_DELETION';
     case 'unverified':
       return !isEmailVerified(user);
     case 'all':
@@ -163,6 +165,7 @@ export function roleRemovalBlockedReason(
   if (!hasActiveRole(user, role)) return 'This role is not active on the account';
   if (role === ROLES.ADMIN && user.id === currentAdminId) return 'You cannot remove your own admin role';
   if (role === ROLES.ADMIN && activeAdminCount(users) <= 1) return 'This is the last active admin account';
+  if (activeRoles(user).length <= 1) return 'A user must retain at least one role';
   return null;
 }
 

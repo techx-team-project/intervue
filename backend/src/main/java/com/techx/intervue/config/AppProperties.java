@@ -3,4 +3,4 @@ package com.techx.intervue.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "app")
-public record AppProperties(String frontendUrl, String mailFromName) {}
+public record AppProperties(String frontendUrl, String mailFromName, String supportEmail) {}

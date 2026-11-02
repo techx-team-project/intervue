@@ -1,0 +1,20 @@
+CREATE TABLE user_restrictions (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    kind VARCHAR(20) NOT NULL,
+    reason VARCHAR(255) NOT NULL,
+    detail TEXT NULL,
+    notify_user TINYINT(1) NOT NULL DEFAULT 0,
+    created_by BIGINT UNSIGNED NULL,
+    expires_at TIMESTAMP NULL,
+    lifted_at TIMESTAMP NULL,
+    lifted_by BIGINT UNSIGNED NULL,
+    lift_reason VARCHAR(255) NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    CONSTRAINT fk_user_restrictions_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_restrictions_created_by FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE SET NULL,
+    CONSTRAINT fk_user_restrictions_lifted_by FOREIGN KEY (lifted_by) REFERENCES users (id) ON DELETE SET NULL,
+    INDEX idx_user_restrictions_user_lifted (user_id, lifted_at),
+    INDEX idx_user_restrictions_expires_at (expires_at)
+);

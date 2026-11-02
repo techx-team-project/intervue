@@ -70,6 +70,16 @@ export function refreshSession(): Promise<AuthSession> {
   return refreshInFlight;
 }
 
+export async function renewSession(): Promise<AuthSession> {
+  await refreshInFlight?.catch(() => undefined);
+  try {
+    return await refreshSession();
+  } catch (error) {
+    if (isApiError(error) && error.status === UNAUTHORIZED) useAuthStore.getState().clearSession();
+    throw error;
+  }
+}
+
 export async function request<T = null>(path: string, options: RequestOptions = {}): Promise<T> {
   const { auth = true } = options;
   try {

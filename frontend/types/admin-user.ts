@@ -4,11 +4,12 @@ import type { RoleType } from '@/types/auth';
 // LOCKED is a reversible security hold; BANNED is policy enforcement that also
 // hides the account's public content. Both are lifted by an admin and both stay
 // in the activity history.
-export type AdminUserStatus = 'ACTIVE' | 'LOCKED' | 'BANNED' | 'DELETED';
+export type AdminUserStatus = 'ACTIVE' | 'LOCKED' | 'BANNED' | 'PENDING_DELETION' | 'DELETED';
 
 export type AdminUserRestrictionKind = 'lock' | 'ban';
 
-export type AdminUserSegment = 'all' | 'candidates' | 'recruiters' | 'admins' | 'locked' | 'banned' | 'unverified';
+export type AdminUserSegment =
+  'all' | 'candidates' | 'recruiters' | 'admins' | 'locked' | 'banned' | 'unverified' | 'pendingDeletion';
 
 export type AdminUserSort = 'newest' | 'oldest' | 'name' | 'lastRestricted' | 'lastSignIn';
 
@@ -81,7 +82,10 @@ export type AdminUserActivityKind =
   | 'sessionsRevoked'
   | 'twoFactorReset'
   | 'passwordResetSent'
-  | 'tokenReuseDetected';
+  | 'tokenReuseDetected'
+  | 'deletionRequested'
+  | 'deletionCancelled'
+  | 'restored';
 
 // Derived from refresh_tokens: every row is one successful sign-in that kept a
 // session, so the table doubles as the login history until a dedicated one exists.

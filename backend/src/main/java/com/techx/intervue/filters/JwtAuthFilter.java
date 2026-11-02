@@ -2,8 +2,8 @@ package com.techx.intervue.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
-import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.UserSessionCacheInterface;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
@@ -40,6 +40,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
     private final UserSessionCache userSessionCache;
     private final org.springframework.core.env.Environment environment;
+    private final UserSessionCacheInterface userSessionCache;
 
     public static final String TOKEN_ATTRIBUTE = "jwt_token";
 
@@ -98,7 +99,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                UserSessionCache.SessionData session = userSessionCache.get(userId);
+                UserSessionCacheInterface.SessionData session = userSessionCache.get(userId);
 
                 if (session == null) {
                     if ("/api/v1/ai/chat".equals(request.getRequestURI())) {

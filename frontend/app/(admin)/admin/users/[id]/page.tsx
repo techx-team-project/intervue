@@ -1,8 +1,5 @@
-import AdminUserDetailView from '@/components/admin/users/detail/AdminUserDetailView';
-import { fetchAdminUserDetail, fetchAdminUserList } from '@/mocks/admin-user.mock';
+import AdminUserDetailPageClient from '@/components/admin/users/detail/AdminUserDetailPageClient';
 import { notFound } from 'next/navigation';
-
-export const dynamic = 'force-dynamic';
 
 interface AdminUserDetailPageProps {
   params: Promise<{ id: string }>;
@@ -10,9 +7,9 @@ interface AdminUserDetailPageProps {
 
 export default async function AdminUserDetailPage({ params }: AdminUserDetailPageProps) {
   const { id } = await params;
-  const [detail, listData] = await Promise.all([fetchAdminUserDetail(Number(id)), fetchAdminUserList()]);
+  const userId = Number(id);
 
-  if (!detail) notFound();
+  if (!Number.isInteger(userId) || userId <= 0) notFound();
 
-  return <AdminUserDetailView detail={detail} listData={listData} />;
+  return <AdminUserDetailPageClient userId={userId} />;
 }
