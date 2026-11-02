@@ -79,6 +79,11 @@ export const USER_SEGMENTS: { segment: AdminUserSegment; label: string }[] = [
 
 export const USER_PAGE_SIZE = 20;
 
+// One request feeds the whole screen because filtering, sorting, paging and the
+// stat tiles are still computed client-side. 100 is the API's hard cap, so the
+// list silently stops at 100 accounts until the server-side filters are wired.
+export const USER_FETCH_SIZE = 100;
+
 export const USER_SORT_OPTIONS: { value: AdminUserSort; label: string }[] = [
   { value: 'newest', label: 'Newest first' },
   { value: 'oldest', label: 'Oldest first' },
