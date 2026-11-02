@@ -37,6 +37,12 @@ public class UserService extends BaseService implements UserServiceInterface {
     @Override
     @Transactional
     public AuthResult register(RegisterRequest request) {
+        return register(request, null, null);
+    }
+
+    @Override
+    @Transactional
+    public AuthResult register(RegisterRequest request, String userAgent, String ip) {
         String email = EmailHelper.normalize(request.email());
         PasswordPolicy.verify(request.password(), request.confirmPassword(), email);
         if (userRepository.existsByEmail(email)) {
@@ -60,7 +66,7 @@ public class UserService extends BaseService implements UserServiceInterface {
         eventPublisher.publishEvent(
                 new EmailVerificationRequestedEvent(
                         saved.getId(), saved.getEmail(), saved.getName()));
-        return authSessionService.open(saved);
+        return authSessionService.open(saved, userAgent, ip);
     }
 
     @Override

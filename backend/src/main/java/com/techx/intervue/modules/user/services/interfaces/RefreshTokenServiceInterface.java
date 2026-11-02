@@ -1,15 +1,20 @@
 package com.techx.intervue.modules.user.services.interfaces;
 
 public interface RefreshTokenServiceInterface {
-    public String generateRefreshTokenRaw();
 
-    public IssuedToken issueRefreshToken(Long userId);
+    String generateRefreshTokenRaw();
 
-    public RefreshResult rotateToken(String rawToken);
+    IssuedToken issueRefreshToken(Long userId);
 
-    public void revokeToken(String rawToken);
+    IssuedToken issueRefreshToken(Long userId, String userAgent, String ip);
 
-    public record RefreshResult(Long userId, String newRefreshToken) {}
+    RefreshResult rotateToken(String rawToken);
 
-    public record IssuedToken(String rawToken, Long tokenId) {}
+    RefreshResult rotateToken(String rawToken, String userAgent, String ip);
+
+    void revokeToken(String rawToken);
+
+    record RefreshResult(Long userId, String newRefreshToken) {}
+
+    record IssuedToken(String rawToken, Long tokenId) {}
 }

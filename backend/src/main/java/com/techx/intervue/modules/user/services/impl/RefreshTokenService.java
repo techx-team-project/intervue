@@ -1,5 +1,12 @@
 package com.techx.intervue.modules.user.services.impl;
 
+import com.techx.intervue.common.audit.enums.AuditAction;
+import com.techx.intervue.common.audit.enums.AuditActorType;
+import com.techx.intervue.common.audit.enums.AuditTargetType;
+import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
+import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
+import com.techx.intervue.common.device.DeviceLabelResolver;
+import com.techx.intervue.common.geolocation.GeoLocationServiceInterface;
 import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
@@ -7,21 +14,26 @@ import com.techx.intervue.modules.helpers.TokenHashUtil;
 import com.techx.intervue.modules.user.entities.RefreshToken;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.UserSessionCacheInterface;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RefreshTokenService implements RefreshTokenServiceInterface {
-    private RefreshTokenRepository repository;
-    private AuthConfig authConfig;
-    private TokenHashUtil utils;
+
+    private final RefreshTokenRepository repository;
+    private final AuthConfig authConfig;
+    private final TokenHashUtil utils;
+    private final GeoLocationServiceInterface geoLocationService;
+    private final UserSessionCacheInterface userSessionCache;
+    private final AuditLogServiceInterface auditLogService;
 
     @Override
     public String generateRefreshTokenRaw() {
@@ -30,12 +42,26 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
 
     @Override
     public IssuedToken issueRefreshToken(Long userId) {
+        return issueRefreshToken(userId, null, null);
+    }
+
+    @Override
+    @Transactional
+    public IssuedToken issueRefreshToken(Long userId, String userAgent, String ip) {
         String token = this.generateRefreshTokenRaw();
         String tokenHash = utils.hash(token);
+        String deviceLabel = DeviceLabelResolver.resolve(userAgent);
+        String location = geoLocationService.resolveLocation(ip);
+
         RefreshToken entity =
                 RefreshToken.builder()
-                        .tokenHash(tokenHash) // token đã hash
+                        .tokenHash(tokenHash)
                         .userId(userId)
+                        .userAgent(userAgent)
+                        .ip(ip)
+                        .deviceLabel(deviceLabel)
+                        .location(location)
+                        .lastUsedAt(Instant.now())
                         .expiryDate(
                                 Instant.now()
                                         .plus(authConfig.getRefreshTokenTTLDays(), ChronoUnit.DAYS))
@@ -49,14 +75,29 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
     @Override
     @Transactional(noRollbackFor = AppException.class)
     public RefreshResult rotateToken(String rawToken) {
+        return rotateToken(rawToken, null, null);
+    }
+
+    @Override
+    @Transactional(noRollbackFor = AppException.class)
+    public RefreshResult rotateToken(String rawToken, String userAgent, String ip) {
         RefreshToken existing =
                 repository
                         .findByTokenHashForUpdate(utils.hash(rawToken))
                         .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
         this.checkIsRevoked(existing);
         this.checkExpiryDate(existing);
+
+        String effectiveUa = userAgent != null ? userAgent : existing.getUserAgent();
+        String effectiveIp = ip != null ? ip : existing.getIp();
+
         existing.setRevoked(true);
-        IssuedToken newToken = this.issueRefreshToken(existing.getUserId());
+        existing.setRevokedAt(Instant.now());
+        existing.setRevokedReason("ROTATED");
+        existing.setLastUsedAt(Instant.now());
+
+        IssuedToken newToken =
+                this.issueRefreshToken(existing.getUserId(), effectiveUa, effectiveIp);
         existing.setReplacedByTokenId(newToken.tokenId());
         repository.save(existing);
         return new RefreshResult(existing.getUserId(), newToken.rawToken());
@@ -72,15 +113,32 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
         this.checkIsRevoked(existing);
         this.checkExpiryDate(existing);
         existing.setRevoked(true);
+        existing.setRevokedAt(Instant.now());
+        existing.setRevokedReason("MANUAL_LOGOUT");
         repository.save(existing);
     }
 
     private void checkIsRevoked(RefreshToken entity) {
         if (entity.isRevoked()) {
-            // revoked hết tất cả những refresh token của người dùng
-            repository.revokeAllRefreshTokenByUser(entity.getUserId());
-            log.error(
-                    "Phát hiện token bị đánh cắp, đã tiến hành revoke tất cả token của người dùng.");
+            repository.revokeAllByUserId(entity.getUserId(), Instant.now(), "TOKEN_REUSE");
+            userSessionCache.evict(entity.getUserId());
+            log.warn(
+                    "Token reuse incident detected for user {}. All sessions revoked.",
+                    entity.getUserId());
+            auditLogService.record(
+                    AuditEntry.builder()
+                            .actorType(AuditActorType.SYSTEM)
+                            .actorId(null)
+                            .actorEmail("system")
+                            .action(AuditAction.TOKEN_REUSE_DETECTED)
+                            .targetType(AuditTargetType.USER)
+                            .targetId(entity.getUserId())
+                            .reason(
+                                    "Revoked refresh token presented again — every session was"
+                                            + " revoked")
+                            .detail(null)
+                            .ip(entity.getIp())
+                            .build());
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
     }

@@ -52,25 +52,35 @@ public class AuthController extends BaseController {
 
     @PostMapping("/register")
     public ResponseEntity<ApiResource<AuthResource>> register(
-            @Valid @RequestBody RegisterRequest request) {
-        return withSession(userService.register(request), "Account registered successfully!");
+            @Valid @RequestBody RegisterRequest request, HttpServletRequest httpRequest) {
+        String userAgent = httpRequest.getHeader(HttpHeaders.USER_AGENT);
+        String ip = IpHelper.getClientIp(httpRequest);
+        return withSession(
+                userService.register(request, userAgent, ip), "Account registered successfully!");
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResource<AuthResource>> login(
             @Valid @RequestBody LoginRequest request, HttpServletRequest httpRequest) {
-        AuthResult result = authService.login(request, IpHelper.getClientIp(httpRequest));
+        String userAgent = httpRequest.getHeader(HttpHeaders.USER_AGENT);
+        String ip = IpHelper.getClientIp(httpRequest);
+        AuthResult result = authService.login(request, userAgent, ip);
         return withSession(result, "Logged in successfully!");
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<ApiResource<AuthResource>> refresh(
             @CookieValue(name = CookieHelper.REFRESH_TOKEN_COOKIE, required = false)
-                    String refreshToken) {
+                    String refreshToken,
+            HttpServletRequest httpRequest) {
         if (refreshToken == null) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
-        return withSession(authService.refresh(refreshToken), "Session refreshed successfully!");
+        String userAgent = httpRequest.getHeader(HttpHeaders.USER_AGENT);
+        String ip = IpHelper.getClientIp(httpRequest);
+        return withSession(
+                authService.refresh(refreshToken, userAgent, ip),
+                "Session refreshed successfully!");
     }
 
     @PostMapping("/logout")

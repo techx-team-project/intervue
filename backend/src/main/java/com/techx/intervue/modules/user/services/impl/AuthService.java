@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -42,7 +43,14 @@ public class AuthService implements AuthServiceInterface {
     private final BlacklistServiceInterface blacklistService;
 
     @Override
+    @Transactional
     public AuthResult login(LoginRequest request, String ip) {
+        return login(request, null, ip);
+    }
+
+    @Override
+    @Transactional
+    public AuthResult login(LoginRequest request, String userAgent, String ip) {
         String email = EmailHelper.normalize(request.email());
         Optional<User> found = userRepository.findByEmailWithRoles(email);
 
@@ -58,14 +66,21 @@ public class AuthService implements AuthServiceInterface {
         User user = found.get();
         ensureSignInAllowed(user);
 
-        AuthResult result = authSessionService.open(user);
+        AuthResult result = authSessionService.open(user, userAgent, ip);
         userRepository.touchLastLogin(user.getId(), Instant.now());
         return result;
     }
 
     @Override
+    @Transactional
     public AuthResult refresh(String refreshToken) {
-        RefreshResult rotated = refreshTokenService.rotateToken(refreshToken);
+        return refresh(refreshToken, null, null);
+    }
+
+    @Override
+    @Transactional
+    public AuthResult refresh(String refreshToken, String userAgent, String ip) {
+        RefreshResult rotated = refreshTokenService.rotateToken(refreshToken, userAgent, ip);
         User user =
                 userRepository
                         .findByIdWithRoles(rotated.userId())

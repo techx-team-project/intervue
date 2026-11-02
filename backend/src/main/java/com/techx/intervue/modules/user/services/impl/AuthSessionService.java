@@ -25,8 +25,14 @@ public class AuthSessionService implements AuthSessionServiceInterface {
 
     @Override
     public AuthResult open(User user) {
+        return open(user, null, null);
+    }
+
+    @Override
+    public AuthResult open(User user, String userAgent, String ip) {
         String accessToken = grantAccess(user);
-        IssuedToken refreshToken = refreshTokenService.issueRefreshToken(user.getId());
+        IssuedToken refreshToken =
+                refreshTokenService.issueRefreshToken(user.getId(), userAgent, ip);
         return new AuthResult(accessToken, refreshToken.rawToken(), userMapper.toResource(user));
     }
 
