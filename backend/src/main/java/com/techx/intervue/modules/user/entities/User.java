@@ -1,9 +1,12 @@
 package com.techx.intervue.modules.user.entities;
 
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.enums.UserStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,6 +48,11 @@ public class User {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private UserStatus status = UserStatus.ACTIVE;
+
     @Column(unique = true)
     private String phone;
 
@@ -56,6 +64,9 @@ public class User {
 
     @Column(name = "terms_accepted_at")
     private Instant termsAcceptedAt;
+
+    @Column(name = "last_login_at")
+    private Instant lastLoginAt;
 
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
