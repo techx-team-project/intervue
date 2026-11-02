@@ -7,8 +7,9 @@ import type { useJobPostActions } from '@/hooks/useJobPostActions';
 import { cn } from '@/lib/utils';
 import type { RecruiterJobPost } from '@/types/recruiter-job';
 import { formatDate } from '@/utils/datetime';
-import { ArrowUpRight, Flame, Link2, MapPin, Pencil, Sparkles, Users } from 'lucide-react';
+import { ArrowUpRight, Check, Flame, Link2, MapPin, Pencil, Sparkles, Users } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 import JobPostRowActionsMenu from './JobPostRowActionsMenu';
 import JobPostStatusBadge from './JobPostStatusBadge';
 
@@ -17,7 +18,6 @@ interface JobPostsMobileListProps {
   actions: ReturnType<typeof useJobPostActions>;
   selectedIds: Set<string>;
   onToggleSelect: (id: string) => void;
-  onPreview: (job: RecruiterJobPost) => void;
   onViewRejectionReason: (job: RecruiterJobPost) => void;
   onCopyLink: (jobId: string) => void;
 }
@@ -27,10 +27,17 @@ export default function JobPostsMobileList({
   actions,
   selectedIds,
   onToggleSelect,
-  onPreview,
   onViewRejectionReason,
   onCopyLink,
 }: JobPostsMobileListProps) {
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const handleMobileCopy = (id: string) => {
+    onCopyLink(id);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId((curr) => (curr === id ? null : curr)), 2000);
+  };
+
   return (
     <div className="space-y-3">
       {jobs.map((job) => {
@@ -77,11 +84,15 @@ export default function JobPostsMobileList({
               <div className="flex items-center gap-1">
                 <button
                   type="button"
-                  onClick={() => onCopyLink(job.id)}
+                  onClick={() => handleMobileCopy(job.id)}
                   className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800"
-                  title="Copy public link"
+                  title={copiedId === job.id ? 'Copied!' : 'Copy public link'}
                 >
-                  <Link2 className="h-4 w-4" />
+                  {copiedId === job.id ? (
+                    <Check className="animate-in zoom-in-75 h-4 w-4 text-emerald-600 duration-150" />
+                  ) : (
+                    <Link2 className="h-4 w-4" />
+                  )}
                 </button>
 
                 <Link
@@ -102,7 +113,6 @@ export default function JobPostsMobileList({
                   onSubmitForReview={() => actions.submitForReview(job.id)}
                   onRepost={() => actions.repostJob(job.id)}
                   onDuplicate={() => actions.duplicateJob(job.id)}
-                  onPreview={() => onPreview(job)}
                   onViewRejectionReason={() => onViewRejectionReason(job)}
                   onCopyLink={() => onCopyLink(job.id)}
                   onDelete={() => actions.deleteJob(job.id)}

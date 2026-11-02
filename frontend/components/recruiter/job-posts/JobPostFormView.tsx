@@ -12,7 +12,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import JobAiAssistantModal from './JobAiAssistantModal';
 import JobPostFormSidebar from './JobPostFormSidebar';
-import JobPostPreviewModal from './JobPostPreviewModal';
 import JobBasicInfoSection from './sections/JobBasicInfoSection';
 import JobCompensationSection from './sections/JobCompensationSection';
 import JobDescriptionSection from './sections/JobDescriptionSection';
@@ -43,7 +42,7 @@ function toPreviewJob(values: JobPostFormData, source?: RecruiterJobPost): Recru
   const now = new Date().toISOString();
   return {
     id: source?.id ?? 'preview',
-    title: values.title,
+    title: values.title || 'Untitled Job Post',
     status: source?.status ?? 'DRAFT',
     level: values.level,
     contractType: values.contractType,
@@ -64,7 +63,6 @@ function toPreviewJob(values: JobPostFormData, source?: RecruiterJobPost): Recru
 export default function JobPostFormView({ mode, initialData }: JobPostFormViewProps) {
   const router = useRouter();
   const [isAiGenerated, setIsAiGenerated] = useState(Boolean(initialData?.aiGenerated?.description));
-  const [isPreviewing, setIsPreviewing] = useState(false);
   const [isAiAssistantOpen, setIsAiAssistantOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -73,6 +71,18 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
     mode: 'onTouched',
     defaultValues: toFormDefaults(initialData),
   });
+
+  const handlePreview = () => {
+    const previewData = toPreviewJob(form.getValues(), initialData);
+    const storageKey = initialData?.id ? `intervue_preview_${initialData.id}` : 'intervue_preview_draft';
+    try {
+      sessionStorage.setItem(storageKey, JSON.stringify(previewData));
+    } catch {
+      // Storage quota or privacy mode fallback
+    }
+    const previewUrl = `${ROUTES.RECRUITER_JOBS}/${initialData?.id || 'draft'}/preview`;
+    window.open(previewUrl, '_blank');
+  };
 
   const handleSaveDraft = async () => {
     setIsSaving(true);
@@ -113,7 +123,7 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
             form={form}
             mode={mode}
             isSaving={isSaving}
-            onPreview={() => setIsPreviewing(true)}
+            onPreview={handlePreview}
             onSaveDraft={handleSaveDraft}
             onSubmitForReview={handleSubmitForReview}
             onOpenAiAssistant={() => setIsAiAssistantOpen(true)}
@@ -130,7 +140,7 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
             size="sm"
             className="flex-1"
             leftIcon={<Eye className="h-4 w-4" />}
-            onClick={() => setIsPreviewing(true)}
+            onClick={handlePreview}
           >
             Preview
           </Button>
@@ -168,11 +178,6 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
           form={form}
           onApplied={() => setIsAiGenerated(true)}
         />
-      )}
-
-      {/* Candidate View Preview Modal */}
-      {isPreviewing && (
-        <JobPostPreviewModal job={toPreviewJob(form.getValues(), initialData)} onClose={() => setIsPreviewing(false)} />
       )}
     </div>
   );

@@ -33,7 +33,6 @@ interface JobPostRowActionsMenuProps {
   onSubmitForReview: () => void;
   onRepost: () => void;
   onDuplicate: () => void;
-  onPreview: () => void;
   onViewRejectionReason: () => void;
   onCopyLink?: () => void;
   onDelete?: () => void;
@@ -65,7 +64,6 @@ export default function JobPostRowActionsMenu({
   onSubmitForReview,
   onRepost,
   onDuplicate,
-  onPreview,
   onViewRejectionReason,
   onCopyLink,
   onDelete,
@@ -107,7 +105,12 @@ export default function JobPostRowActionsMenu({
     actions.push({ key: 'edit', label: 'Edit post', icon: Pencil, href: `${ROUTES.RECRUITER_JOBS}/${job.id}/edit` });
   }
 
-  actions.push({ key: 'preview', label: 'Preview candidate view', icon: Eye, onClick: onPreview });
+  actions.push({
+    key: 'preview',
+    label: 'Preview candidate view',
+    icon: Eye,
+    href: `${ROUTES.RECRUITER_JOBS}/${job.id}/preview`,
+  });
 
   if (onCopyLink && (job.status === 'PUBLISHED' || job.status === 'PAUSED')) {
     actions.push({ key: 'copy-link', label: 'Copy public link', icon: Link2, onClick: onCopyLink });

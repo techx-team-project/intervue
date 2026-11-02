@@ -7,11 +7,10 @@ import { ROUTES } from '@/constants/routes';
 import type { useJobPostActions } from '@/hooks/useJobPostActions';
 import type { RecruiterJobPost } from '@/types/recruiter-job';
 import { formatDate } from '@/utils/datetime';
-import { AlertCircle, ArrowUpRight, Flame, Link2, MapPin, Pencil, Sparkles, Users } from 'lucide-react';
+import { AlertCircle, ArrowUpRight, Check, Flame, Link2, MapPin, Pencil, Sparkles, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import JobPostPreviewModal from './JobPostPreviewModal';
 import JobPostRowActionsMenu from './JobPostRowActionsMenu';
 import JobPostStatusBadge from './JobPostStatusBadge';
 import JobPostsMobileList from './JobPostsMobileList';
@@ -33,14 +32,16 @@ export default function JobPostsTable({
   onSelectAll,
   isAllSelected,
 }: JobPostsTableProps) {
-  const [previewJob, setPreviewJob] = useState<RecruiterJobPost | null>(null);
   const [rejectionJob, setRejectionJob] = useState<RecruiterJobPost | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const handleCopyLink = (jobId: string) => {
     const url =
       typeof window !== 'undefined' ? `${window.location.origin}/jobs/${jobId}` : `https://intervue.vn/jobs/${jobId}`;
     navigator.clipboard.writeText(url);
+    setCopiedId(jobId);
     toast.success('Public job post link copied to clipboard!');
+    setTimeout(() => setCopiedId((curr) => (curr === jobId ? null : curr)), 2000);
   };
 
   return (
@@ -52,7 +53,6 @@ export default function JobPostsTable({
           actions={actions}
           selectedIds={selectedIds}
           onToggleSelect={onToggleSelect}
-          onPreview={setPreviewJob}
           onViewRejectionReason={setRejectionJob}
           onCopyLink={handleCopyLink}
         />
@@ -256,9 +256,13 @@ export default function JobPostsTable({
                         type="button"
                         onClick={() => handleCopyLink(job.id)}
                         className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800"
-                        title="Copy public link"
+                        title={copiedId === job.id ? 'Copied to clipboard!' : 'Copy public link'}
                       >
-                        <Link2 className="h-4 w-4" />
+                        {copiedId === job.id ? (
+                          <Check className="animate-in zoom-in-75 h-4 w-4 text-emerald-600 duration-150" />
+                        ) : (
+                          <Link2 className="h-4 w-4" />
+                        )}
                       </button>
 
                       {/* Edit button */}
@@ -281,7 +285,6 @@ export default function JobPostsTable({
                         onSubmitForReview={() => actions.submitForReview(job.id)}
                         onRepost={() => actions.repostJob(job.id)}
                         onDuplicate={() => actions.duplicateJob(job.id)}
-                        onPreview={() => setPreviewJob(job)}
                         onViewRejectionReason={() => setRejectionJob(job)}
                         onCopyLink={() => handleCopyLink(job.id)}
                         onDelete={() => actions.deleteJob(job.id)}
@@ -294,9 +297,6 @@ export default function JobPostsTable({
           </div>
         </div>
       </div>
-
-      {/* Preview Candidate Modal */}
-      {previewJob && <JobPostPreviewModal job={previewJob} onClose={() => setPreviewJob(null)} />}
 
       {/* Rejection Reason Modal */}
       <Modal
