@@ -2,7 +2,7 @@
 
 import Button from '@/components/ui/Button';
 import { ROUTES } from '@/constants/routes';
-import { jobPostSchema, JobPostFormData } from '@/schemas/job.schema';
+import { JobPostFormData, jobPostSchema } from '@/schemas/job.schema';
 import type { RecruiterJobPost } from '@/types/recruiter-job';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, Save, SendHorizontal } from 'lucide-react';
@@ -10,6 +10,8 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import JobAiAssistantModal from './JobAiAssistantModal';
+import JobPostFormSidebar from './JobPostFormSidebar';
 import JobPostPreviewModal from './JobPostPreviewModal';
 import JobBasicInfoSection from './sections/JobBasicInfoSection';
 import JobCompensationSection from './sections/JobCompensationSection';
@@ -63,6 +65,7 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
   const router = useRouter();
   const [isAiGenerated, setIsAiGenerated] = useState(Boolean(initialData?.aiGenerated?.description));
   const [isPreviewing, setIsPreviewing] = useState(false);
+  const [isAiAssistantOpen, setIsAiAssistantOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const form = useForm<JobPostFormData>({
@@ -88,49 +91,86 @@ export default function JobPostFormView({ mode, initialData }: JobPostFormViewPr
   });
 
   return (
-    <div className="space-y-5 pb-24">
-      <JobBasicInfoSection form={form} />
-      <JobCompensationSection form={form} />
-      <JobDescriptionSection
-        form={form}
-        isAiGenerated={isAiGenerated}
-        onAiContentApplied={() => setIsAiGenerated(true)}
-      />
-      <JobScreeningQuestionsSection form={form} />
+    <div className="pb-24">
+      {/* Responsive 2-column split layout */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px] lg:items-start lg:gap-8 xl:grid-cols-[1fr_360px]">
+        {/* Main Column (68% - Form Sections) */}
+        <div className="space-y-6">
+          <JobBasicInfoSection form={form} />
+          <JobCompensationSection form={form} />
+          <JobDescriptionSection
+            form={form}
+            isAiGenerated={isAiGenerated}
+            onOpenAiAssistant={() => setIsAiAssistantOpen(true)}
+            onAiContentApplied={() => setIsAiGenerated(true)}
+          />
+          <JobScreeningQuestionsSection form={form} />
+        </div>
 
-      <div className="sticky bottom-0 z-20 -mx-4 border-t border-[#e2e8f0] bg-white/95 px-4 py-3 backdrop-blur-sm sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex flex-wrap items-center gap-2.5 sm:justify-end">
+        {/* Sticky Sidebar Assistant (32% - Desktop) */}
+        <div className="hidden lg:sticky lg:top-20 lg:block">
+          <JobPostFormSidebar
+            form={form}
+            mode={mode}
+            isSaving={isSaving}
+            onPreview={() => setIsPreviewing(true)}
+            onSaveDraft={handleSaveDraft}
+            onSubmitForReview={handleSubmitForReview}
+            onOpenAiAssistant={() => setIsAiAssistantOpen(true)}
+          />
+        </div>
+      </div>
+
+      {/* Sticky Bottom Bar for Mobile (< lg) */}
+      <div className="fixed right-0 bottom-0 left-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 shadow-lg backdrop-blur-md lg:hidden">
+        <div className="flex items-center gap-2">
           <Button
             type="button"
             variant="ghost"
-            className="flex-1 sm:flex-none"
+            size="sm"
+            className="flex-1"
             leftIcon={<Eye className="h-4 w-4" />}
             onClick={() => setIsPreviewing(true)}
           >
             Preview
           </Button>
+
           <Button
             type="button"
             variant="secondary"
+            size="sm"
             isLoading={isSaving}
-            className="flex-1 sm:flex-none"
+            className="flex-1"
             leftIcon={<Save className="h-4 w-4" />}
             onClick={handleSaveDraft}
           >
-            Save draft
+            Draft
           </Button>
+
           <Button
             type="button"
+            size="sm"
             isLoading={isSaving}
-            className="w-full sm:w-auto"
+            className="flex-1"
             leftIcon={<SendHorizontal className="h-4 w-4" />}
             onClick={handleSubmitForReview}
           >
-            {mode === 'create' ? 'Submit for review' : 'Update & submit for review'}
+            {mode === 'create' ? 'Submit' : 'Update'}
           </Button>
         </div>
       </div>
 
+      {/* AI Assistant Modal */}
+      {isAiAssistantOpen && (
+        <JobAiAssistantModal
+          isOpen={isAiAssistantOpen}
+          onClose={() => setIsAiAssistantOpen(false)}
+          form={form}
+          onApplied={() => setIsAiGenerated(true)}
+        />
+      )}
+
+      {/* Candidate View Preview Modal */}
       {isPreviewing && (
         <JobPostPreviewModal job={toPreviewJob(form.getValues(), initialData)} onClose={() => setIsPreviewing(false)} />
       )}
