@@ -53,6 +53,10 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `DELETE /admin/users/{id}/roles/{role}` | admin | `{ reason? }` | `AdminUserDetailResource` (revokes role; evicts session cache; guards last role & self admin) |
 | ✅ | `POST /admin/users/{id}/reset-two-factor` | admin | – | `AdminUserDetailResource` (clears authenticator secret and backup codes) |
 | ✅ | `POST /admin/users/{id}/send-password-reset` | admin | – | `AdminUserDetailResource` (sends a single-use 15-minute reset link; requires verified email) |
+| ✅ | `POST /users/me/delete-request` | user | – | – (starts 7-day grace period, sets status PENDING_DELETION, evicts session) |
+| ✅ | `POST /users/me/cancel-deletion` | user | – | `UserResource` (cancels pending deletion) |
+| ✅ | `POST /admin/users/{id}/cancel-deletion` | admin | – | `AdminUserDetailResource` (cancels deletion request) |
+| ✅ | `POST /admin/users/{id}/restore` | admin | – | `AdminUserDetailResource` (restores account from PENDING_DELETION or lifts BANNED) |
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 
@@ -66,11 +70,12 @@ type AdminUserRestriction = {
   kind: 'BAN'; reason: string; detail: string | null;
   at: string; byName: string | null; expiresAt: string | null;
 };
+type AdminUserStatus = 'ACTIVE' | 'BANNED' | 'PENDING_DELETION' | 'DELETED';
 type AdminUserListResource = {
   id: number; name: string; email: string; phone: string | null; image: string | null;
-  status: 'ACTIVE' | 'BANNED'; emailVerifiedAt: string | null;
-  roles: AdminUserRoleGrant[]; activeSessionCount: number; hasTokenReuseIncident: boolean;
-  createdAt: string; lastSignInAt: string | null; restriction: AdminUserRestriction | null;
+  status: AdminUserStatus; emailVerifiedAt: string | null;
+  roles: AdminUserRoleGrant[]; activeSessionCount: number; hasTokenReuseIncident: boolean; twoFactorEnabled: boolean;
+  createdAt: string; lastSignInAt: string | null; deleteRequestedAt: string | null; restriction: AdminUserRestriction | null;
 };
 type AdminUserDetailResource = AdminUserListResource & {
   address: string | null; termsAcceptedAt: string | null; updatedAt: string;
@@ -143,6 +148,9 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `ROLE_NOT_ASSIGNED` | 422 | The user does not hold this role |
 | `CANNOT_REMOVE_SELF_ADMIN` | 422 | An admin cannot remove their own admin role |
 | `CANNOT_REMOVE_LAST_ROLE` | 422 | A user must retain at least one role |
+| `ACCOUNT_DELETED` | 403 | The account has been permanently deleted |
+| `ACCOUNT_NOT_PENDING_DELETION` | 422 | The account is not pending deletion |
+| `DELETION_BLOCKED` | 422 | Account deletion is blocked while unresolved operations remain |
 | `IDENTITY_NOT_VERIFIED` | 422 | Candidate must complete eKYC to apply |
 | `COMPANY_NOT_VERIFIED` | 422 | Company must be verified to post |
 | `RATE_LIMITED` | 429 | Honor `Retry-After` |
