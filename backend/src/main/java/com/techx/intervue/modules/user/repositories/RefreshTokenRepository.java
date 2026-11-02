@@ -4,6 +4,8 @@ import com.techx.intervue.modules.user.entities.RefreshToken;
 import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -27,4 +29,20 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
     public void revokeAllRefreshTokenByUser(@Param(("userId")) Long userId);
 
     Long deleteByExpiryDateBefore(Instant now);
+
+    interface ActiveSessionCount {
+        Long getUserId();
+
+        long getSessionCount();
+    }
+
+    @Query(
+            """
+                SELECT r.userId AS userId, COUNT(r) AS sessionCount
+                FROM RefreshToken r
+                WHERE r.userId IN :ids AND r.revoked = false AND r.expiryDate > :now
+                GROUP BY r.userId
+            """)
+    List<ActiveSessionCount> countActiveSessionsByUserIds(
+            @Param("ids") Collection<Long> ids, @Param("now") Instant now);
 }
