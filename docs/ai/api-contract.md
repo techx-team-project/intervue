@@ -37,6 +37,7 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /auth/forgot-password` | public | `{ email }` | – (same message whether or not the email exists; 60s cooldown, 3 per 15 min by email and IP) |
 | ✅ | `POST /auth/reset-password` | public | `{ token, password, confirmPassword }` | – (link valid 15 min, single use; logs out all devices) |
 | ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, roles, createdAt }` |
+| ✅ | `POST /ai/chat` | public / optional user | `{ message, sessionId? }` | `{ answer, sources, remainingQuota }` |
 | ✅ | `POST /users/me/roles/recruiter` | user | – | `UserResource` with `RECRUITER` in `roles`. `EMAIL_NOT_VERIFIED` if the email is not verified. Idempotent when already a recruiter. Evicts the user's session cache after commit: call `POST /auth/refresh` (or let the next 401 trigger it) to rebuild the session and receive the new `user.roles`. ADMIN can never be self-assigned (no endpoint). |
 | ✅ | `GET /admin/users` | admin | query `q`, `role`, `status`, `emailVerified` + pagination | `PageResource<AdminUserListResource>` |
 | ✅ | `GET /admin/users/summary` | admin | – | `AdminUserSummaryResource` |
@@ -154,3 +155,11 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `IDENTITY_NOT_VERIFIED` | 422 | Candidate must complete eKYC to apply |
 | `COMPANY_NOT_VERIFIED` | 422 | Company must be verified to post |
 | `RATE_LIMITED` | 429 | Honor `Retry-After` |
+| `AI_USER_QUOTA_EXCEEDED` | 429 | Daily AI limit per user reached; honor `Retry-After` |
+| `AI_IP_QUOTA_EXCEEDED` | 429 | Hourly AI limit per IP reached; honor `Retry-After` |
+| `AI_NOT_CONFIGURED` | 503 | AI provider key missing or rejected |
+| `AI_PROVIDER_BUSY` | 503 | AI provider is rate limited or overloaded; retry later |
+| `AI_PROVIDER_TIMEOUT` | 504 | AI provider did not answer in time |
+| `AI_PROVIDER_ERROR` | 502 | AI provider returned an error or an unreadable response |
+| `AI_REQUEST_REFUSED` | 422 | AI provider declined to process the content |
+| `AI_PROMPT_NOT_FOUND` | 500 | Server prompt file is missing |

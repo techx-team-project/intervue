@@ -13,4 +13,8 @@ export const ERROR_MESSAGES: Record<string, string> = {
   INVALID_OR_EXPIRED_TOKEN: 'The link is invalid or has expired.',
   IDENTITY_NOT_VERIFIED: 'You need to verify your identity before doing this.',
   RATE_LIMITED: 'Too many attempts, please try again in a few minutes.',
+  AI_IP_QUOTA_EXCEEDED: 'Bạn đã dùng hết 10 câu hỏi/giờ dành cho khách. Vui lòng đăng nhập hoặc thử lại sau.',
+  AI_USER_QUOTA_EXCEEDED: 'Bạn đã đạt giới hạn 30 câu hỏi trong ngày hôm nay.',
+  AI_CHAT_FAILED: 'Không thể xử lý tin nhắn lúc này, vui lòng thử lại sau.',
+  AI_PROVIDER_UNAVAILABLE: 'Dịch vụ AI tạm thời gián đoạn, vui lòng thử lại sau.',
 };

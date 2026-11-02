@@ -17,6 +17,20 @@ public enum ErrorCode {
     EMAIL_NOT_VERIFIED(
             HttpStatus.UNPROCESSABLE_CONTENT, "Please verify your email before continuing!"),
     INVALID_OR_EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "The link is invalid or has expired!"),
+    RATE_LIMITED(HttpStatus.TOO_MANY_REQUESTS, "Too many requests, please try again later!"),
+    AI_USER_QUOTA_EXCEEDED(
+            HttpStatus.TOO_MANY_REQUESTS, "You have reached your daily AI usage limit!"),
+    AI_IP_QUOTA_EXCEEDED(
+            HttpStatus.TOO_MANY_REQUESTS,
+            "Too many AI requests from your network, please try again later!"),
+    AI_NOT_CONFIGURED(HttpStatus.SERVICE_UNAVAILABLE, "The AI service is not available right now!"),
+    AI_PROVIDER_BUSY(
+            HttpStatus.SERVICE_UNAVAILABLE, "The AI service is busy, please try again later!"),
+    AI_PROVIDER_TIMEOUT(HttpStatus.GATEWAY_TIMEOUT, "The AI service took too long to respond!"),
+    AI_PROVIDER_ERROR(HttpStatus.BAD_GATEWAY, "The AI service returned an unexpected error!"),
+    AI_REQUEST_REFUSED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "The AI service declined to process this request!"),
+    AI_PROMPT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "The AI prompt is not available!");
     ACCOUNT_BANNED(HttpStatus.FORBIDDEN, "This account has been banned!"),
     ACCOUNT_ALREADY_RESTRICTED(HttpStatus.CONFLICT, "This account is already banned!"),
     ACCOUNT_NOT_RESTRICTED(HttpStatus.CONFLICT, "This account has no restriction to lift!"),

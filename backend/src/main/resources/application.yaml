@@ -51,6 +51,24 @@ auth:
   login-fail-threshold: 3
   login-fail-window: 15m
 
+ai:
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    base-url: https://generativelanguage.googleapis.com/v1beta
+    model: gemini-3.5-flash-lite
+    max-tokens: 4096
+    timeout: 60s
+    max-retries: 2
+  voyage:
+    api-key: ${VOYAGE_API_KEY:}
+    base-url: https://api.voyageai.com/v1
+    model: voyage-4
+    timeout: 30s
+    max-retries: 2
+  quota:
+    user-per-day: 30
+    ip-per-hour: 10
+
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
   expiration: 900000

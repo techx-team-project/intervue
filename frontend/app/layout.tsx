@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { FloatingAssistant } from '@/components/mascot';
+import { SupportChatbot } from '@/components/support-chat';
 import AppProviders from '@/providers/AppProviders';
 
 const inter = Inter({
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body className="text-navy min-h-screen bg-[#f4f5f5] antialiased">
         <AppProviders>
           {children}
-          <FloatingAssistant />
+          <SupportChatbot />
         </AppProviders>
       </body>
     </html>

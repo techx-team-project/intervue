@@ -43,6 +43,10 @@ public class AppException extends RuntimeException {
     }
 
     public static AppException rateLimited(long retryAfterSeconds) {
-        return new AppException(ErrorCode.RATE_LIMITED, List.of(), Map.of(), retryAfterSeconds);
+        return rateLimited(ErrorCode.RATE_LIMITED, retryAfterSeconds);
+    }
+
+    public static AppException rateLimited(ErrorCode errorCode, long retryAfterSeconds) {
+        return new AppException(errorCode, List.of(), Map.of(), retryAfterSeconds);
     }
 }
