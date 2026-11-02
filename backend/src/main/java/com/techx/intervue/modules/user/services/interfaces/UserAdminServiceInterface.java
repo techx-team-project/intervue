@@ -6,7 +6,10 @@ import com.techx.intervue.modules.user.requests.SearchUsersRequest;
 import com.techx.intervue.modules.user.resources.AdminUserActivityResource;
 import com.techx.intervue.modules.user.resources.AdminUserDetailResource;
 import com.techx.intervue.modules.user.resources.AdminUserListResource;
+import com.techx.intervue.modules.user.resources.AdminUserSessionResource;
+import com.techx.intervue.modules.user.resources.AdminUserSignInResource;
 import com.techx.intervue.modules.user.resources.AdminUserSummaryResource;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,4 +31,12 @@ public interface UserAdminServiceInterface {
     int liftExpiredRestrictions();
 
     Page<AdminUserActivityResource> findActivities(Long userId, Pageable pageable);
+
+    List<AdminUserSessionResource> findSessions(Long userId);
+
+    void revokeSession(Long userId, Long sessionId, AdminActor actor);
+
+    void revokeAllSessions(Long userId, AdminActor actor);
+
+    Page<AdminUserSignInResource> findSignIns(Long userId, Pageable pageable);
 }

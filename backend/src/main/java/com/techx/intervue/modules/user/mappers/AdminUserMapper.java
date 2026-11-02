@@ -15,6 +15,14 @@ public class AdminUserMapper {
 
     public AdminUserListResource toListResource(
             User user, long activeSessionCount, UserRestriction restriction) {
+        return toListResource(user, activeSessionCount, false, restriction);
+    }
+
+    public AdminUserListResource toListResource(
+            User user,
+            long activeSessionCount,
+            boolean hasTokenReuseIncident,
+            UserRestriction restriction) {
         return AdminUserListResource.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -25,6 +33,7 @@ public class AdminUserMapper {
                 .emailVerifiedAt(user.getEmailVerifiedAt())
                 .roles(toRoleResources(user))
                 .activeSessionCount(activeSessionCount)
+                .hasTokenReuseIncident(hasTokenReuseIncident)
                 .createdAt(user.getCreatedAt())
                 .lastSignInAt(user.getLastLoginAt())
                 .restriction(toRestrictionResource(restriction))
@@ -33,6 +42,14 @@ public class AdminUserMapper {
 
     public AdminUserDetailResource toDetailResource(
             User user, long activeSessionCount, UserRestriction restriction) {
+        return toDetailResource(user, activeSessionCount, false, restriction);
+    }
+
+    public AdminUserDetailResource toDetailResource(
+            User user,
+            long activeSessionCount,
+            boolean hasTokenReuseIncident,
+            UserRestriction restriction) {
         return AdminUserDetailResource.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -45,6 +62,7 @@ public class AdminUserMapper {
                 .termsAcceptedAt(user.getTermsAcceptedAt())
                 .roles(toRoleResources(user))
                 .activeSessionCount(activeSessionCount)
+                .hasTokenReuseIncident(hasTokenReuseIncident)
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .lastSignInAt(user.getLastLoginAt())
@@ -53,6 +71,9 @@ public class AdminUserMapper {
     }
 
     private List<AdminUserRoleGrantResource> toRoleResources(User user) {
+        if (user.getUserRoles() == null) {
+            return List.of();
+        }
         return user.getUserRoles().stream()
                 .map(
                         grant ->

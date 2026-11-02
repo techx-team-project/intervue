@@ -16,6 +16,7 @@ public record AdminUserListResource(
         Instant emailVerifiedAt,
         List<AdminUserRoleGrantResource> roles,
         long activeSessionCount,
+        boolean hasTokenReuseIncident,
         Instant createdAt,
         Instant lastSignInAt,
         AdminUserRestrictionResource restriction) {}

@@ -8,6 +8,8 @@ import com.techx.intervue.modules.user.requests.SearchUsersRequest;
 import com.techx.intervue.modules.user.resources.AdminUserActivityResource;
 import com.techx.intervue.modules.user.resources.AdminUserDetailResource;
 import com.techx.intervue.modules.user.resources.AdminUserListResource;
+import com.techx.intervue.modules.user.resources.AdminUserSessionResource;
+import com.techx.intervue.modules.user.resources.AdminUserSignInResource;
 import com.techx.intervue.modules.user.resources.AdminUserSummaryResource;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.services.interfaces.UserAdminServiceInterface;
@@ -16,11 +18,13 @@ import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,6 +86,39 @@ public class AdminUserController extends BaseController {
         return ok(
                 userAdminService.liftRestriction(id, request, actor(principal, httpRequest)),
                 "Account unbanned successfully!");
+    }
+
+    @GetMapping("/{id}/sessions")
+    public ResponseEntity<ApiResource<List<AdminUserSessionResource>>> sessions(
+            @PathVariable Long id) {
+        return ok(userAdminService.findSessions(id), "Active sessions retrieved successfully!");
+    }
+
+    @DeleteMapping("/{id}/sessions/{sessionId}")
+    public ResponseEntity<ApiResource<Void>> revokeSession(
+            @PathVariable Long id,
+            @PathVariable Long sessionId,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        userAdminService.revokeSession(id, sessionId, actor(principal, httpRequest));
+        return ok(null, "Session revoked successfully!");
+    }
+
+    @PostMapping("/{id}/sessions/revoke-all")
+    public ResponseEntity<ApiResource<Void>> revokeAllSessions(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        userAdminService.revokeAllSessions(id, actor(principal, httpRequest));
+        return ok(null, "All sessions revoked successfully!");
+    }
+
+    @GetMapping("/{id}/sign-ins")
+    public ResponseEntity<ApiResource<PageResource<AdminUserSignInResource>>> signIns(
+            @PathVariable Long id, Pageable pageable) {
+        return ok(
+                PageResource.of(userAdminService.findSignIns(id, pageable)),
+                "Sign-in history retrieved successfully!");
     }
 
     private AdminActor actor(CustomUserDetails principal, HttpServletRequest httpRequest) {

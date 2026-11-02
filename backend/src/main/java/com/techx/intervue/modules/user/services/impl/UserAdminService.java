@@ -9,6 +9,7 @@ import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterf
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
+import com.techx.intervue.modules.user.entities.RefreshToken;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.entities.UserRestriction;
 import com.techx.intervue.modules.user.enums.RestrictionKind;
@@ -27,6 +28,8 @@ import com.techx.intervue.modules.user.requests.SearchUsersRequest;
 import com.techx.intervue.modules.user.resources.AdminUserActivityResource;
 import com.techx.intervue.modules.user.resources.AdminUserDetailResource;
 import com.techx.intervue.modules.user.resources.AdminUserListResource;
+import com.techx.intervue.modules.user.resources.AdminUserSessionResource;
+import com.techx.intervue.modules.user.resources.AdminUserSignInResource;
 import com.techx.intervue.modules.user.resources.AdminUserSummaryResource;
 import com.techx.intervue.modules.user.services.interfaces.UserAdminServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserSessionCacheInterface;
@@ -93,6 +96,9 @@ public class UserAdminService implements UserAdminServiceInterface {
                         .collect(Collectors.toMap(User::getId, Function.identity()));
         Map<Long, Long> sessionCounts = activeSessionCounts(ids);
         Map<Long, UserRestriction> restrictions = standingRestrictions(ids);
+        Set<Long> tokenReuseUserIds =
+                auditLogRepository.findTargetIdsByTargetTypeAndTargetIdInAndAction(
+                        AuditTargetType.USER, ids, AuditAction.TOKEN_REUSE_DETECTED);
 
         List<AdminUserListResource> items =
                 ids.stream()
@@ -101,6 +107,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                                         adminUserMapper.toListResource(
                                                 withRoles.get(id),
                                                 sessionCounts.getOrDefault(id, 0L),
+                                                tokenReuseUserIds.contains(id),
                                                 restrictions.get(id)))
                         .toList();
 
@@ -115,9 +122,8 @@ public class UserAdminService implements UserAdminServiceInterface {
                         .findByIdWithRoles(userId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
-        return adminUserMapper.toDetailResource(
+        return detailOf(
                 user,
-                activeSessionCounts(List.of(userId)).getOrDefault(userId, 0L),
                 userRestrictionRepository
                         .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(userId)
                         .orElse(null));
@@ -338,9 +344,13 @@ public class UserAdminService implements UserAdminServiceInterface {
     }
 
     private AdminUserDetailResource detailOf(User target, UserRestriction restriction) {
+        boolean hasTokenReuseIncident =
+                auditLogRepository.existsByTargetTypeAndTargetIdAndAction(
+                        AuditTargetType.USER, target.getId(), AuditAction.TOKEN_REUSE_DETECTED);
         return adminUserMapper.toDetailResource(
                 target,
                 activeSessionCounts(List.of(target.getId())).getOrDefault(target.getId(), 0L),
+                hasTokenReuseIncident,
                 restriction);
     }
 
@@ -465,5 +475,106 @@ public class UserAdminService implements UserAdminServiceInterface {
             case TOKEN_REUSE_DETECTED ->
                     "Revoked refresh token presented again — every session was revoked";
         };
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AdminUserSessionResource> findSessions(Long userId) {
+        User target =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        return refreshTokenRepository
+                .findByUserIdAndRevokedFalseAndExpiryDateAfterOrderByCreatedAtDesc(
+                        target.getId(), Instant.now())
+                .stream()
+                .map(
+                        r ->
+                                AdminUserSessionResource.builder()
+                                        .id(r.getId())
+                                        .createdAt(r.getCreatedAt())
+                                        .expiresAt(r.getExpiryDate())
+                                        .revoked(r.isRevoked())
+                                        .replacedByTokenId(r.getReplacedByTokenId())
+                                        .deviceLabel(
+                                                r.getDeviceLabel() != null
+                                                        ? r.getDeviceLabel()
+                                                        : "Unknown Device")
+                                        .ipAddress(r.getIp() != null ? r.getIp() : "Unknown")
+                                        .isCurrent(false)
+                                        .build())
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public void revokeSession(Long userId, Long sessionId, AdminActor actor) {
+        User target =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        RefreshToken session =
+                refreshTokenRepository
+                        .findByIdAndUserId(sessionId, userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        if (!session.isRevoked()) {
+            session.setRevoked(true);
+            session.setRevokedAt(Instant.now());
+            session.setRevokedReason("ADMIN_REVOKED");
+            refreshTokenRepository.save(session);
+
+            audit(
+                    AuditAction.SESSIONS_REVOKED,
+                    target,
+                    actor,
+                    "Session #" + sessionId + " revoked by admin",
+                    null);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void revokeAllSessions(Long userId, AdminActor actor) {
+        User target =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        refreshTokenRepository.revokeAllByUserId(userId, Instant.now(), "ADMIN_REVOKE_ALL");
+        userSessionCache.evict(userId);
+
+        audit(AuditAction.SESSIONS_REVOKED, target, actor, "All sessions revoked by admin", null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<AdminUserSignInResource> findSignIns(Long userId, Pageable pageable) {
+        User target =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        Pageable ordered = withStableOrder(pageable);
+        return refreshTokenRepository
+                .findByUserId(target.getId(), ordered)
+                .map(
+                        r ->
+                                AdminUserSignInResource.builder()
+                                        .id(r.getId())
+                                        .at(r.getCreatedAt())
+                                        .deviceLabel(
+                                                r.getDeviceLabel() != null
+                                                        ? r.getDeviceLabel()
+                                                        : "Unknown Device")
+                                        .ipAddress(r.getIp() != null ? r.getIp() : "Unknown")
+                                        .location(
+                                                r.getLocation() != null
+                                                        ? r.getLocation()
+                                                        : "Unknown Location")
+                                        .outcome(r.isRevoked() ? "revoked" : "success")
+                                        .build());
     }
 }
