@@ -13,4 +13,8 @@ public interface UserServiceInterface {
     UserResource getMe(Long userId);
 
     UserResource becomeRecruiter(Long userId);
+
+    void requestAccountDeletion(Long userId);
+
+    UserResource cancelAccountDeletion(Long userId);
 }

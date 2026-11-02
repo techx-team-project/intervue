@@ -167,6 +167,26 @@ public class AdminUserController extends BaseController {
                 "Password reset link sent successfully!");
     }
 
+    @PostMapping("/{id}/cancel-deletion")
+    public ResponseEntity<ApiResource<AdminUserDetailResource>> cancelDeletion(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                userAdminService.cancelDeletion(id, actor(principal, httpRequest)),
+                "Account deletion request cancelled successfully!");
+    }
+
+    @PostMapping("/{id}/restore")
+    public ResponseEntity<ApiResource<AdminUserDetailResource>> restore(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                userAdminService.restoreUser(id, actor(principal, httpRequest)),
+                "Account restored successfully!");
+    }
+
     private AdminActor actor(CustomUserDetails principal, HttpServletRequest httpRequest) {
         return new AdminActor(
                 principal.getId(), principal.getEmail(), IpHelper.getClientIp(httpRequest));

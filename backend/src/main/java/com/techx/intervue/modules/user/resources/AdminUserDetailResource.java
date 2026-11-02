@@ -23,4 +23,5 @@ public record AdminUserDetailResource(
         Instant createdAt,
         Instant updatedAt,
         Instant lastSignInAt,
+        Instant deleteRequestedAt,
         AdminUserRestrictionResource restriction) {}

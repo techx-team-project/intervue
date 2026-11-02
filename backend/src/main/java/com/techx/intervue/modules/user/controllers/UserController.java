@@ -38,4 +38,21 @@ public class UserController extends BaseController {
                 userService.becomeRecruiter(principal.getId()),
                 "Recruiter role enabled successfully!");
     }
+
+    @PostMapping("/me/delete-request")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResource<Void>> requestDeletion(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        userService.requestAccountDeletion(principal.getId());
+        return ok(null, "Account deletion request submitted. 7-day recovery grace period started.");
+    }
+
+    @PostMapping("/me/cancel-deletion")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResource<UserResource>> cancelDeletion(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                userService.cancelAccountDeletion(principal.getId()),
+                "Account deletion request cancelled successfully!");
+    }
 }

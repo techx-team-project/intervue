@@ -36,6 +36,7 @@ export const USER_STATUS_META: Record<AdminUserStatus, { label: string; variant:
     ACTIVE: { label: 'Active', variant: 'success' },
     LOCKED: { label: 'Locked', variant: 'warning' },
     BANNED: { label: 'Banned', variant: 'danger' },
+    PENDING_DELETION: { label: 'Pending deletion', variant: 'warning' },
     DELETED: { label: 'Deleted', variant: 'default' },
   };
 

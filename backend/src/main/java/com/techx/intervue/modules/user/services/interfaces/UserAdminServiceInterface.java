@@ -53,4 +53,10 @@ public interface UserAdminServiceInterface {
     AdminUserDetailResource resetTwoFactor(Long userId, AdminActor actor);
 
     AdminUserDetailResource sendPasswordReset(Long userId, AdminActor actor);
+
+    AdminUserDetailResource cancelDeletion(Long userId, AdminActor actor);
+
+    AdminUserDetailResource restoreUser(Long userId, AdminActor actor);
+
+    int purgeExpiredPendingDeletions();
 }

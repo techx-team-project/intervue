@@ -20,4 +20,5 @@ public record AdminUserListResource(
         boolean twoFactorEnabled,
         Instant createdAt,
         Instant lastSignInAt,
+        Instant deleteRequestedAt,
         AdminUserRestrictionResource restriction) {}

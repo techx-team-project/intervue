@@ -46,6 +46,7 @@ public class AdminUserMapper {
                 .twoFactorEnabled(twoFactorEnabled)
                 .createdAt(user.getCreatedAt())
                 .lastSignInAt(user.getLastLoginAt())
+                .deleteRequestedAt(user.getDeleteRequestedAt())
                 .restriction(toRestrictionResource(restriction))
                 .build();
     }
@@ -87,6 +88,7 @@ public class AdminUserMapper {
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .lastSignInAt(user.getLastLoginAt())
+                .deleteRequestedAt(user.getDeleteRequestedAt())
                 .restriction(toRestrictionResource(restriction))
                 .build();
     }

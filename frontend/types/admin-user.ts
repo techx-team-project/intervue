@@ -4,7 +4,7 @@ import type { RoleType } from '@/types/auth';
 // LOCKED is a reversible security hold; BANNED is policy enforcement that also
 // hides the account's public content. Both are lifted by an admin and both stay
 // in the activity history.
-export type AdminUserStatus = 'ACTIVE' | 'LOCKED' | 'BANNED' | 'DELETED';
+export type AdminUserStatus = 'ACTIVE' | 'LOCKED' | 'BANNED' | 'PENDING_DELETION' | 'DELETED';
 
 export type AdminUserRestrictionKind = 'lock' | 'ban';
 

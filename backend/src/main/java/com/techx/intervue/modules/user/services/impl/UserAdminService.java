@@ -42,6 +42,7 @@ import com.techx.intervue.modules.user.resources.AdminUserListResource;
 import com.techx.intervue.modules.user.resources.AdminUserSessionResource;
 import com.techx.intervue.modules.user.resources.AdminUserSignInResource;
 import com.techx.intervue.modules.user.resources.AdminUserSummaryResource;
+import com.techx.intervue.modules.user.services.interfaces.DeletionBlocker;
 import com.techx.intervue.modules.user.services.interfaces.UserAdminServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserSessionCacheInterface;
 import java.time.Duration;
@@ -82,6 +83,8 @@ public class UserAdminService implements UserAdminServiceInterface {
     private static final Duration STALE_WINDOW = Duration.ofDays(7);
     private static final Duration EXPIRING_GRANT_WINDOW = Duration.ofDays(14);
     private static final int SWEEP_BATCH_SIZE = 200;
+    private static final String DUMMY_PASSWORD_HASH =
+            "$2a$10$eM4EXOxqLsBgw6Tq.SA/4uIAlNcwCwXwH.1Pk/0NXTeaEo7AyQ82O";
 
     private final UserRepository userRepository;
     private final UserRestrictionRepository userRestrictionRepository;
@@ -95,6 +98,7 @@ public class UserAdminService implements UserAdminServiceInterface {
     private final AuditLogRepository auditLogRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final AdminUserMapper adminUserMapper;
+    private final List<DeletionBlocker> deletionBlockers;
 
     @Override
     @Transactional(readOnly = true)
@@ -468,6 +472,10 @@ public class UserAdminService implements UserAdminServiceInterface {
             case TWO_FACTOR_RESET -> "twoFactorReset";
             case PASSWORD_RESET_SENT -> "passwordResetSent";
             case TOKEN_REUSE_DETECTED -> "tokenReuseDetected";
+            case USER_DELETION_REQUESTED -> "deletionRequested";
+            case USER_DELETION_CANCELLED -> "deletionCancelled";
+            case USER_RESTORED -> "accountRestored";
+            case USER_PURGED -> "accountPurged";
         };
     }
 
@@ -496,6 +504,11 @@ public class UserAdminService implements UserAdminServiceInterface {
             case PASSWORD_RESET_SENT -> "Password reset link sent";
             case TOKEN_REUSE_DETECTED ->
                     "Revoked refresh token presented again — every session was revoked";
+            case USER_DELETION_REQUESTED ->
+                    "Account deletion requested (7-day grace period started)";
+            case USER_DELETION_CANCELLED -> "Account deletion request cancelled";
+            case USER_RESTORED -> "Account restored";
+            case USER_PURGED -> "Account permanently purged and anonymized";
         };
     }
 
@@ -769,5 +782,113 @@ public class UserAdminService implements UserAdminServiceInterface {
                         .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
                         .orElse(null);
         return detailOf(target, standing);
+    }
+
+    @Override
+    @Transactional
+    public AdminUserDetailResource cancelDeletion(Long userId, AdminActor actor) {
+        User target = loadWithRoles(userId);
+        if (target.getStatus() != UserStatus.PENDING_DELETION) {
+            throw new AppException(ErrorCode.ACCOUNT_NOT_PENDING_DELETION);
+        }
+
+        target.setStatus(UserStatus.ACTIVE);
+        target.setDeleteRequestedAt(null);
+        userRepository.save(target);
+
+        audit(
+                AuditAction.USER_DELETION_CANCELLED,
+                target,
+                actor,
+                "Cancelled account deletion request by admin",
+                null);
+
+        UserRestriction standing =
+                userRestrictionRepository
+                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
+                        .orElse(null);
+        return detailOf(target, standing);
+    }
+
+    @Override
+    @Transactional
+    public AdminUserDetailResource restoreUser(Long userId, AdminActor actor) {
+        User target = loadWithRoles(userId);
+        if (target.getStatus() == UserStatus.PENDING_DELETION) {
+            return cancelDeletion(userId, actor);
+        }
+        if (target.getStatus() == UserStatus.BANNED) {
+            return liftRestriction(userId, new LiftRestrictionRequest("Restored by admin"), actor);
+        }
+        UserRestriction standing =
+                userRestrictionRepository
+                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
+                        .orElse(null);
+        return detailOf(target, standing);
+    }
+
+    @Override
+    @Transactional
+    @Scheduled(cron = "0 0 2 * * *")
+    public int purgeExpiredPendingDeletions() {
+        Instant cutoff = Instant.now().minus(7, ChronoUnit.DAYS);
+        List<User> expired =
+                userRepository.findPendingDeletionsExpired(
+                        UserStatus.PENDING_DELETION, cutoff, PageRequest.of(0, SWEEP_BATCH_SIZE));
+        if (expired.isEmpty()) {
+            return 0;
+        }
+
+        int purgedCount = 0;
+        for (User user : expired) {
+            boolean blocked = false;
+            for (DeletionBlocker blocker : deletionBlockers) {
+                Optional<String> reason = blocker.checkBlocker(user.getId());
+                if (reason.isPresent()) {
+                    log.warn("Purge blocked for user {}: {}", user.getId(), reason.get());
+                    blocked = true;
+                    break;
+                }
+            }
+            if (blocked) {
+                continue;
+            }
+
+            user.setStatus(UserStatus.DELETED);
+            user.setDeletedAt(Instant.now());
+            user.setName("Deleted User");
+            user.setEmail(
+                    "deleted_"
+                            + user.getId()
+                            + "_"
+                            + System.currentTimeMillis()
+                            + "@deleted.local");
+            user.setPhone(null);
+            user.setAddress(null);
+            user.setImage(null);
+            user.setPassword(DUMMY_PASSWORD_HASH);
+            userRepository.save(user);
+
+            refreshTokenRepository.revokeAllRefreshTokenByUser(user.getId());
+            userSessionCache.evict(user.getId());
+            userTwoFactorRepository.deleteByUserId(user.getId());
+            userTwoFactorRecoveryCodeRepository.deleteByUserId(user.getId());
+
+            auditLogService.record(
+                    AuditEntry.builder()
+                            .actorType(AuditActorType.SYSTEM)
+                            .actorId(null)
+                            .actorEmail("system")
+                            .action(AuditAction.USER_PURGED)
+                            .targetType(AuditTargetType.USER)
+                            .targetId(user.getId())
+                            .reason("Account permanently purged after 7-day grace period")
+                            .build());
+            purgedCount++;
+        }
+        if (purgedCount > 0) {
+            log.info("Purged {} expired pending-deletion accounts", purgedCount);
+        }
+        return purgedCount;
     }
 }

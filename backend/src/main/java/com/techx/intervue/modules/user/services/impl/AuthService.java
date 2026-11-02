@@ -1,5 +1,10 @@
 package com.techx.intervue.modules.user.services.impl;
 
+import com.techx.intervue.common.audit.enums.AuditAction;
+import com.techx.intervue.common.audit.enums.AuditActorType;
+import com.techx.intervue.common.audit.enums.AuditTargetType;
+import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
+import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.helpers.EmailHelper;
@@ -17,6 +22,7 @@ import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceIn
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.RefreshResult;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +47,7 @@ public class AuthService implements AuthServiceInterface {
     private final RefreshTokenServiceInterface refreshTokenService;
     private final JwtServiceInterface jwtService;
     private final BlacklistServiceInterface blacklistService;
+    private final AuditLogServiceInterface auditLogService;
 
     @Override
     @Transactional
@@ -94,6 +101,32 @@ public class AuthService implements AuthServiceInterface {
     private void ensureSignInAllowed(User user) {
         if (user.getStatus() == UserStatus.ACTIVE) {
             return;
+        }
+        if (user.getStatus() == UserStatus.PENDING_DELETION) {
+            Instant requestedAt = user.getDeleteRequestedAt();
+            if (requestedAt != null
+                    && Instant.now().isBefore(requestedAt.plus(7, ChronoUnit.DAYS))) {
+                user.setStatus(UserStatus.ACTIVE);
+                user.setDeleteRequestedAt(null);
+                userRepository.save(user);
+                auditLogService.record(
+                        AuditEntry.builder()
+                                .actorType(AuditActorType.USER)
+                                .actorId(user.getId())
+                                .actorEmail(user.getEmail())
+                                .action(AuditAction.USER_RESTORED)
+                                .targetType(AuditTargetType.USER)
+                                .targetId(user.getId())
+                                .reason(
+                                        "User automatically restored upon signing in during 7-day"
+                                                + " grace period")
+                                .build());
+                return;
+            }
+            throw new AppException(ErrorCode.ACCOUNT_DELETED);
+        }
+        if (user.getStatus() == UserStatus.DELETED) {
+            throw new AppException(ErrorCode.ACCOUNT_DELETED);
         }
         boolean restricted =
                 userRestrictionRepository
