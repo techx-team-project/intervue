@@ -49,6 +49,7 @@ const SEGMENT_VALUES: AdminUserSegment[] = [
   'locked',
   'banned',
   'unverified',
+  'pendingDeletion',
 ];
 const SORT_VALUES = USER_SORT_OPTIONS.map((option) => option.value);
 const ROLE_VALUES = Object.keys(USER_ROLE_META) as RoleType[];

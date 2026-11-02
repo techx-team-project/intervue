@@ -5,7 +5,13 @@ import { useAdminUserActions, type AdminUserAction } from '@/hooks/useAdminUserA
 import { restrictBlockedReason } from '@/lib/admin-user';
 import { cn } from '@/lib/utils';
 import type { GrantRoleFormData } from '@/schemas/admin-user.schema';
-import type { AdminUserActivityEntry, AdminUserDetail, AdminUserListData, AdminUserSession } from '@/types/admin-user';
+import type {
+  AdminUserActivityEntry,
+  AdminUserDetail,
+  AdminUserListData,
+  AdminUserSession,
+  AdminUserSignIn,
+} from '@/types/admin-user';
 import type { RoleType } from '@/types/auth';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
@@ -41,6 +47,7 @@ const ACTION_SUMMARY: Record<AdminUserAction, string> = {
   revokeSessions: 'All sessions revoked',
   resetTwoFactor: 'Two-factor authentication reset',
   sendPasswordReset: 'Password reset email sent',
+  restore: 'Account restored',
 };
 
 const ACTION_KIND: Record<AdminUserAction, AdminUserActivityEntry['kind']> = {
@@ -51,6 +58,7 @@ const ACTION_KIND: Record<AdminUserAction, AdminUserActivityEntry['kind']> = {
   revokeSessions: 'sessionsRevoked',
   resetTwoFactor: 'twoFactorReset',
   sendPasswordReset: 'passwordResetSent',
+  restore: 'restored',
 };
 
 export default function AdminUserDetailView({ detail, listData }: AdminUserDetailViewProps) {
@@ -59,6 +67,7 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
   const searchParams = useSearchParams();
 
   const [sessions, setSessions] = useState<AdminUserSession[]>(detail.sessions);
+  const [signIns, setSignIns] = useState<AdminUserSignIn[]>(detail.signIns);
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(detail.twoFactorEnabled);
   const [activity, setActivity] = useState<AdminUserActivityEntry[]>(detail.activity);
   const [roles, setRoles] = useState(detail.roles);
@@ -116,10 +125,31 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
   };
 
   useEffect(() => {
+    adminUserApi
+      .getUserDetail(detail.id)
+      .then((live) => {
+        if (live) {
+          setRoles(live.roles);
+          setTwoFactorEnabled(live.twoFactorEnabled);
+          if (live.sessions) setSessions(live.sessions);
+          if (live.activity) setActivity(live.activity);
+          if (live.signIns) setSignIns(live.signIns);
+        }
+      })
+      .catch(() => {});
+  }, [detail.id]);
+
+  useEffect(() => {
     if (activeTab === 'sessions') {
       adminUserApi
         .getUserSessions(detail.id)
         .then((liveSessions) => setSessions(liveSessions))
+        .catch(() => {});
+      adminUserApi
+        .getUserSignIns(detail.id)
+        .then((page) => {
+          if (page.items) setSignIns(page.items);
+        })
         .catch(() => {});
     } else if (activeTab === 'activity') {
       adminUserApi
@@ -128,6 +158,21 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
         .catch(() => {});
     }
   }, [activeTab, detail.id]);
+
+  const handleRevokeSingleSession = async (sessionId: number | string) => {
+    try {
+      await adminUserApi.revokeSession(detail.id, sessionId);
+      setSessions((previous) =>
+        previous.map((session) =>
+          String(session.id) === String(sessionId) ? { ...session, revoked: true, isCurrent: false } : session,
+        ),
+      );
+      recordActivity('sessionsRevoked', `Session #${sessionId} revoked`);
+      toast.success('Session revoked successfully');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to revoke session');
+    }
+  };
 
   const grantRole = async (data: GrantRoleFormData) => {
     try {
@@ -208,8 +253,12 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
 
       {activeTab === 'sessions' && (
         <div className="space-y-4">
-          <AdminUserSessionsTab sessions={sessions} onRevokeAll={() => requestConfirm('revokeSessions', [user])} />
-          <AdminUserSignInHistory signIns={detail.signIns} />
+          <AdminUserSessionsTab
+            sessions={sessions}
+            onRevokeAll={() => requestConfirm('revokeSessions', [user])}
+            onRevokeSession={handleRevokeSingleSession}
+          />
+          <AdminUserSignInHistory signIns={signIns} />
         </div>
       )}
 

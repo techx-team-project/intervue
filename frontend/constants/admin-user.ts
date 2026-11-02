@@ -28,6 +28,8 @@ import {
   UserPlus,
   Users,
   Unlock,
+  RotateCcw,
+  UserX,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -72,6 +74,7 @@ export const USER_SEGMENTS: { segment: AdminUserSegment; label: string }[] = [
   { segment: 'locked', label: 'Locked' },
   { segment: 'banned', label: 'Banned' },
   { segment: 'unverified', label: 'Unverified email' },
+  { segment: 'pendingDeletion', label: 'Pending deletion' },
 ];
 
 export const USER_PAGE_SIZE = 20;
@@ -122,6 +125,9 @@ export const ACTIVITY_ICON: Record<AdminUserActivityKind, LucideIcon> = {
   twoFactorReset: ShieldOff,
   passwordResetSent: Send,
   tokenReuseDetected: ShieldAlert,
+  deletionRequested: UserX,
+  deletionCancelled: RotateCcw,
+  restored: RotateCcw,
 };
 
 export const ACTIVITY_TONE: Record<AdminUserActivityKind, string> = {
@@ -137,6 +143,9 @@ export const ACTIVITY_TONE: Record<AdminUserActivityKind, string> = {
   twoFactorReset: 'bg-amber-50 text-amber-700',
   passwordResetSent: 'bg-sky-50 text-sky-600',
   tokenReuseDetected: 'bg-rose-50 text-rose-600',
+  deletionRequested: 'bg-amber-50 text-amber-700',
+  deletionCancelled: 'bg-emerald-50 text-emerald-600',
+  restored: 'bg-emerald-50 text-emerald-600',
 };
 
 export const ADMIN_PERMISSION_META: Record<AdminPermission, { label: string; description: string }> = {

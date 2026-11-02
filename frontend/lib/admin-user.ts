@@ -54,6 +54,8 @@ export function matchesSegment(user: AdminUserListItem, segment: AdminUserSegmen
       return user.status === 'LOCKED';
     case 'banned':
       return user.status === 'BANNED';
+    case 'pendingDeletion':
+      return user.status === 'PENDING_DELETION';
     case 'unverified':
       return !isEmailVerified(user);
     case 'all':

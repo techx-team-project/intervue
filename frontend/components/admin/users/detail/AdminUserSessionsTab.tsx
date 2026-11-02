@@ -9,9 +9,10 @@ import AdminUserPanel from './AdminUserPanel';
 interface AdminUserSessionsTabProps {
   sessions: AdminUserSession[];
   onRevokeAll: () => void;
+  onRevokeSession?: (sessionId: string | number) => void;
 }
 
-export default function AdminUserSessionsTab({ sessions, onRevokeAll }: AdminUserSessionsTabProps) {
+export default function AdminUserSessionsTab({ sessions, onRevokeAll, onRevokeSession }: AdminUserSessionsTabProps) {
   const active = sessions.filter((session) => !session.revoked);
 
   return (
@@ -82,6 +83,15 @@ export default function AdminUserSessionsTab({ sessions, onRevokeAll }: AdminUse
                 <p className="text-[11px] text-[#94a3b8]">
                   {session.revoked ? 'Ended' : 'Expires'} {formatDateTime(session.expiresAt)}
                 </p>
+                {!session.revoked && onRevokeSession && (
+                  <button
+                    type="button"
+                    onClick={() => onRevokeSession(session.id)}
+                    className="mt-1 cursor-pointer text-[11px] font-bold text-rose-600 transition-colors hover:text-rose-700 hover:underline"
+                  >
+                    Revoke session
+                  </button>
+                )}
               </div>
             </li>
           ))}

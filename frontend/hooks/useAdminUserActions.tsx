@@ -10,7 +10,8 @@ import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 
-export type AdminUserConfirmKind = 'unlock' | 'unban' | 'revokeSessions' | 'resetTwoFactor' | 'sendPasswordReset';
+export type AdminUserConfirmKind =
+  'unlock' | 'unban' | 'revokeSessions' | 'resetTwoFactor' | 'sendPasswordReset' | 'restore';
 
 export type AdminUserAction = AdminUserRestrictionKind | AdminUserConfirmKind;
 
@@ -85,6 +86,17 @@ function confirmCopy({ kind, users }: ConfirmRequest): ConfirmCopy {
           'This cannot be undone — ask the user to re-enable two-factor',
         ],
         confirmLabel: 'Reset two-factor',
+      };
+    case 'restore':
+      return {
+        title: `Restore account — ${subject}`,
+        description: 'Cancels the pending deletion request and restores account to active.',
+        consequences: [
+          'The account is immediately active again',
+          'The deletion countdown is cancelled',
+          'The user can sign in normally with existing credentials',
+        ],
+        confirmLabel: 'Restore account',
       };
     case 'sendPasswordReset':
     default:
@@ -232,6 +244,8 @@ export function useAdminUserActions(
         await Promise.all(ids.map((id) => adminUserApi.resetTwoFactor(id)));
       } else if (kind === 'sendPasswordReset') {
         await Promise.all(ids.map((id) => adminUserApi.sendPasswordReset(id)));
+      } else if (kind === 'restore') {
+        await Promise.all(ids.map((id) => adminUserApi.restoreUser(id)));
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Action failed');
@@ -245,6 +259,10 @@ export function useAdminUserActions(
       case 'unban':
         patchUsers(ids, (user) => ({ ...user, status: 'ACTIVE', restriction: null }));
         undoableToast(`${kind === 'unban' ? 'Unbanned' : 'Unlocked'} ${subjectOf(targets)}`);
+        return;
+      case 'restore':
+        patchUsers(ids, (user) => ({ ...user, status: 'ACTIVE', restriction: null, deleteRequestedAt: null }));
+        toast.success(`Restored account for ${subjectOf(targets)}`);
         return;
       case 'revokeSessions':
         patchUsers(ids, (user) => ({
