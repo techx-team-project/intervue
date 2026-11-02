@@ -44,6 +44,10 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /admin/users/{id}/unban` | admin | `{ reason? }` | `AdminUserDetailResource` |
 | ✅ | `GET /admin/users/{id}/activity` | admin | pagination | `PageResource<AdminUserActivityResource>` |
 | ✅ | `GET /admin/audit-log` | admin | query `actorType`, `action`, `targetType`, `targetId`, `from`, `to`, `q` + pagination | `PageResource<AdminAuditLogResource>` |
+| ✅ | `GET /admin/users/{id}/sessions` | admin | – | `List<AdminUserSessionResource>` |
+| ✅ | `DELETE /admin/users/{id}/sessions/{sessionId}` | admin | – | – (revokes specific session) |
+| ✅ | `POST /admin/users/{id}/sessions/revoke-all` | admin | – | – (logs out all devices and evicts session cache) |
+| ✅ | `GET /admin/users/{id}/sign-ins` | admin | pagination | `PageResource<AdminUserSignInResource>` |
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 
@@ -60,7 +64,7 @@ type AdminUserRestriction = {
 type AdminUserListResource = {
   id: number; name: string; email: string; phone: string | null; image: string | null;
   status: 'ACTIVE' | 'BANNED'; emailVerifiedAt: string | null;
-  roles: AdminUserRoleGrant[]; activeSessionCount: number;
+  roles: AdminUserRoleGrant[]; activeSessionCount: number; hasTokenReuseIncident: boolean;
   createdAt: string; lastSignInAt: string | null; restriction: AdminUserRestriction | null;
 };
 type AdminUserDetailResource = AdminUserListResource & {
@@ -76,6 +80,14 @@ type AdminUserSummaryResource = {
 type AdminUserActivityResource = {
   id: number; kind: string; summary: string; actorName: string | null;
   reason: string | null; at: string;
+};
+type AdminUserSessionResource = {
+  id: number; createdAt: string; expiresAt: string; revoked: boolean;
+  replacedByTokenId: number | null; deviceLabel: string; ipAddress: string; isCurrent: boolean;
+};
+type AdminUserSignInResource = {
+  id: number; at: string; deviceLabel: string; ipAddress: string;
+  location: string; outcome: 'success' | 'revoked';
 };
 type AdminAuditLogResource = {
   id: number; actorType: 'ADMIN' | 'SYSTEM' | 'USER'; actorId: number | null;
