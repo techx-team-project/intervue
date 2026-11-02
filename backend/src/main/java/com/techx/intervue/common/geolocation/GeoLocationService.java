@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.net.InetAddress;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,13 @@ public class GeoLocationService implements GeoLocationServiceInterface {
 
     private final StringRedisTemplate redisTemplate;
     private final RestClient restClient;
+    private final boolean enabled;
 
-    public GeoLocationService(StringRedisTemplate redisTemplate) {
+    public GeoLocationService(
+            StringRedisTemplate redisTemplate,
+            @Value("${app.geolocation.enabled:false}") boolean enabled) {
         this.redisTemplate = redisTemplate;
+        this.enabled = enabled;
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(Duration.ofMillis(1500));
         factory.setReadTimeout(Duration.ofMillis(1500));
@@ -32,7 +37,7 @@ public class GeoLocationService implements GeoLocationServiceInterface {
     }
 
     @Override
-    public String resolveLocation(String ip) {
+    public String resolveCachedOrLocalLocation(String ip) {
         if (ip == null || ip.isBlank()) {
             return "Unknown Location";
         }
@@ -52,8 +57,24 @@ public class GeoLocationService implements GeoLocationServiceInterface {
             log.debug("Redis cache lookup failed for IP {}: {}", trimmed, e.getMessage());
         }
 
+        return null;
+    }
+
+    @Override
+    public String resolveLocation(String ip) {
+        if (!enabled) {
+            return "Unknown Location";
+        }
+
+        String cachedOrLocal = resolveCachedOrLocalLocation(ip);
+        if (cachedOrLocal != null) {
+            return cachedOrLocal;
+        }
+
+        String trimmed = ip.trim();
         String location = fetchLocationFromApi(trimmed);
         try {
+            String cacheKey = CACHE_PREFIX + trimmed;
             redisTemplate.opsForValue().set(cacheKey, location, CACHE_TTL);
         } catch (Exception e) {
             log.debug("Redis cache write failed for IP {}: {}", trimmed, e.getMessage());

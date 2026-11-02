@@ -1,5 +1,7 @@
 package com.techx.intervue.modules.user.services.interfaces;
 
+import com.techx.intervue.modules.user.enums.TokenOrigin;
+
 public interface RefreshTokenServiceInterface {
 
     String generateRefreshTokenRaw();
@@ -7,6 +9,8 @@ public interface RefreshTokenServiceInterface {
     IssuedToken issueRefreshToken(Long userId);
 
     IssuedToken issueRefreshToken(Long userId, String userAgent, String ip);
+
+    IssuedToken issueRefreshToken(Long userId, String userAgent, String ip, TokenOrigin origin);
 
     RefreshResult rotateToken(String rawToken);
 

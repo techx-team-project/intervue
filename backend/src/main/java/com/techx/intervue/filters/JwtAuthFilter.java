@@ -38,7 +38,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtServiceInterface jwtService;
     private final BlacklistServiceInterface blacklistService;
     private final ObjectMapper objectMapper;
-    private final UserSessionCache userSessionCache;
     private final org.springframework.core.env.Environment environment;
     private final UserSessionCacheInterface userSessionCache;
 
