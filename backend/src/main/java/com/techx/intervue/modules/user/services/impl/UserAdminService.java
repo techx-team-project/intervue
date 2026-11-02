@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserAdminService implements UserAdminServiceInterface {
 
     private static final Set<String> SORTABLE_PROPERTIES =
-            Set.of("createdAt", "name", "email", "status", "lastLoginAt");
+            Set.of("id", "createdAt", "name", "email", "status", "lastLoginAt");
+    private static final Sort DEFAULT_SORT = Sort.by(Sort.Direction.DESC, "createdAt");
+    private static final Sort TIE_BREAKER = Sort.by(Sort.Direction.DESC, "id");
     private static final Duration STALE_WINDOW = Duration.ofDays(7);
     private static final Duration EXPIRING_GRANT_WINDOW = Duration.ofDays(14);
 
@@ -53,11 +56,12 @@ public class UserAdminService implements UserAdminServiceInterface {
     @Transactional(readOnly = true)
     public Page<AdminUserListResource> search(SearchUsersRequest request, Pageable pageable) {
         verifySortable(pageable.getSort());
+        Pageable ordered = withStableOrder(pageable);
 
-        Page<User> page = userRepository.findAll(UserSpecifications.matching(request), pageable);
+        Page<User> page = userRepository.findAll(UserSpecifications.matching(request), ordered);
         List<Long> ids = page.map(User::getId).getContent();
         if (ids.isEmpty()) {
-            return new PageImpl<>(List.of(), pageable, page.getTotalElements());
+            return new PageImpl<>(List.of(), ordered, page.getTotalElements());
         }
 
         Map<Long, User> withRoles =
@@ -76,7 +80,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                                                 restrictions.get(id)))
                         .toList();
 
-        return new PageImpl<>(items, pageable, page.getTotalElements());
+        return new PageImpl<>(items, ordered, page.getTotalElements());
     }
 
     @Override
@@ -136,6 +140,14 @@ public class UserAdminService implements UserAdminServiceInterface {
                         userRepository.countWithGrantsExpiringBetween(
                                 now, now.plus(EXPIRING_GRANT_WINDOW)))
                 .build();
+    }
+
+    // Seeded accounts share a created_at, and an unstable order would let the same
+    // row show up on two pages, so every sort ends with the primary key.
+    private Pageable withStableOrder(Pageable pageable) {
+        Sort requested = pageable.getSort().isSorted() ? pageable.getSort() : DEFAULT_SORT;
+        return PageRequest.of(
+                pageable.getPageNumber(), pageable.getPageSize(), requested.and(TIE_BREAKER));
     }
 
     private void verifySortable(Sort sort) {
