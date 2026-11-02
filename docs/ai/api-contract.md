@@ -18,6 +18,7 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 ```
 
 - Base URL: `NEXT_PUBLIC_API_URL` (e.g. `http://localhost:8080/api/v1`).
+- Pagination query: `?page=0&size=20&sort=<property>,<asc|desc>`. `page` is 0-based, `size` defaults to 20 and is capped at 100. Each endpoint whitelists the properties it can sort by; anything else is `VALIDATION_FAILED` on field `sort`.
 - Auth: `Authorization: Bearer <accessToken>`; refresh token is an HttpOnly cookie → frontend requests use `credentials: 'include'`.
 - Frontend branches on `error.code`, never on `message`.
 - CORS: `/api/**` allows only the origin in `app.frontend-url` (`FRONTEND_URL`), with credentials, methods `GET POST PUT PATCH DELETE OPTIONS`, headers `Authorization Content-Type Accept`, and exposes `Retry-After`.
@@ -36,8 +37,43 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /auth/forgot-password` | public | `{ email }` | – (same message whether or not the email exists; 60s cooldown, 3 per 15 min by email and IP) |
 | ✅ | `POST /auth/reset-password` | public | `{ token, password, confirmPassword }` | – (link valid 15 min, single use; logs out all devices) |
 | ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, roles, createdAt }` |
+| ✅ | `GET /admin/users` | admin | query `q`, `role`, `status`, `emailVerified` + pagination | `PageResource<AdminUserListResource>` |
+| ✅ | `GET /admin/users/summary` | admin | – | `AdminUserSummaryResource` |
+| ✅ | `GET /admin/users/{id}` | admin | – | `AdminUserDetailResource` |
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
+
+## Admin user management
+
+Everything under `/admin/**` requires `ROLE_ADMIN`; a signed-in non-admin gets 403 `FORBIDDEN`.
+
+```ts
+type AdminUserRoleGrant = { role: RoleType; grantedAt: string; grantedByName: string | null; expiresAt: string | null };
+type AdminUserRestriction = {
+  kind: 'LOCK' | 'BAN'; reason: string; detail: string | null;
+  at: string; byName: string | null; expiresAt: string | null;
+};
+type AdminUserListResource = {
+  id: number; name: string; email: string; phone: string | null; image: string | null;
+  status: 'ACTIVE' | 'LOCKED' | 'BANNED'; emailVerifiedAt: string | null;
+  roles: AdminUserRoleGrant[]; activeSessionCount: number;
+  createdAt: string; lastSignInAt: string | null; restriction: AdminUserRestriction | null;
+};
+type AdminUserDetailResource = AdminUserListResource & {
+  address: string | null; termsAcceptedAt: string | null; updatedAt: string;
+};
+type AdminUserSummaryResource = {
+  total: number; active: number; locked: number; banned: number; unverified: number;
+  newLast7Days: number; activeLast7Days: number;
+  candidates: number; recruiters: number; admins: number;
+  activeAdminCount: number;
+  lockedOverAWeek: number; unverifiedOverAWeek: number; grantsExpiringIn14Days: number;
+};
+```
+
+- `GET /admin/users` filters: `q` matches name, email, phone or numeric id (max 100 chars); `role` and `status` take a single enum value; `emailVerified` is a boolean. Sortable properties: `id`, `createdAt`, `name`, `email`, `status`, `lastLoginAt`. The primary key is always appended as a tie-breaker, so paging never repeats or skips a row.
+- `activeAdminCount` exists so the panel can keep the "cannot restrict the last active admin" guardrail while paging server-side.
+- `GET /admin/users/{id}` returns 404 `NOT_FOUND` for an unknown id.
 
 ## Error codes
 
