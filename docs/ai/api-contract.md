@@ -49,6 +49,8 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `DELETE /admin/users/{id}/sessions/{sessionId}` | admin | – | – (revokes specific session) |
 | ✅ | `POST /admin/users/{id}/sessions/revoke-all` | admin | – | – (logs out all devices and evicts session cache) |
 | ✅ | `GET /admin/users/{id}/sign-ins` | admin | pagination | `PageResource<AdminUserSignInResource>` |
+| ✅ | `POST /admin/users/{id}/roles` | admin | `{ role, expiresAt?, reason? }` | `AdminUserDetailResource` (grants role; evicts session cache; 409 if already active) |
+| ✅ | `DELETE /admin/users/{id}/roles/{role}` | admin | `{ reason? }` | `AdminUserDetailResource` (revokes role; evicts session cache; guards last role & self admin) |
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 
@@ -135,6 +137,10 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `NOT_FOUND` | 404 | |
 | `EMAIL_ALREADY_USED` | 409 | |
 | `ACCOUNT_BANNED` | 403 | The account is banned, so signing in and refreshing are both refused. Only raised after the password matches, so it never reveals the state of an account to someone who does not hold its credentials |
+| `ROLE_ALREADY_GRANTED` | 409 | The user already holds an active grant for this role |
+| `ROLE_NOT_ASSIGNED` | 422 | The user does not hold this role |
+| `CANNOT_REMOVE_SELF_ADMIN` | 422 | An admin cannot remove their own admin role |
+| `CANNOT_REMOVE_LAST_ROLE` | 422 | A user must retain at least one role |
 | `IDENTITY_NOT_VERIFIED` | 422 | Candidate must complete eKYC to apply |
 | `COMPANY_NOT_VERIFIED` | 422 | Company must be verified to post |
 | `RATE_LIMITED` | 429 | Honor `Retry-After` |
