@@ -45,17 +45,10 @@ public class SecurityConfig {
                                         // 1. Route AUTH - No JWT
                                         .requestMatchers("/api/v1/auth/**")
                                         .permitAll()
-                                        .requestMatchers("/api/v1/refresh")
-                                        .permitAll()
                                         // Ping - health check
                                         .requestMatchers("/ping")
                                         .permitAll()
-                                        .requestMatchers("/uploads/**")
-                                        .permitAll()
-                                        // 2. Public API
-                                        .requestMatchers("/api/v1/products")
-                                        .permitAll()
-                                        // 3. Admin area
+                                        // 2. Admin area
                                         .requestMatchers("/api/v1/admin/**")
                                         .hasRole("ADMIN")
                                         .anyRequest()
