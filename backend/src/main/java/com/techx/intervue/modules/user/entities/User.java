@@ -72,6 +72,12 @@ public class User {
     @Column(name = "last_login_at")
     private Instant lastLoginAt;
 
+    @Column(name = "delete_requested_at")
+    private Instant deleteRequestedAt;
+
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
+
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 

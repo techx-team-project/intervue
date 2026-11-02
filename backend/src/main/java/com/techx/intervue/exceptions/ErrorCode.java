@@ -30,6 +30,12 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "You cannot remove your own admin role!"),
     CANNOT_REMOVE_LAST_ROLE(
             HttpStatus.UNPROCESSABLE_CONTENT, "A user must retain at least one role!"),
+    ACCOUNT_DELETED(HttpStatus.FORBIDDEN, "This account has been deleted!"),
+    ACCOUNT_NOT_PENDING_DELETION(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This account is not pending deletion!"),
+    DELETION_BLOCKED(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "Account cannot be deleted while unresolved operations remain!"),
     RATE_LIMITED(HttpStatus.TOO_MANY_REQUESTS, "Too many requests, please try again later!");
 
     private final HttpStatus status;

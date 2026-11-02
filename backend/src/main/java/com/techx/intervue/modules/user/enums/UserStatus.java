@@ -2,5 +2,7 @@ package com.techx.intervue.modules.user.enums;
 
 public enum UserStatus {
     ACTIVE,
-    BANNED
+    BANNED,
+    PENDING_DELETION,
+    DELETED
 }

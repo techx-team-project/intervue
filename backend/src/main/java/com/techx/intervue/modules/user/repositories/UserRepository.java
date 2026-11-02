@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -105,4 +106,12 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Transactional
     @Query("UPDATE User u SET u.lastLoginAt = :at WHERE u.id = :id")
     void touchLastLogin(@Param("id") Long id, @Param("at") Instant at);
+
+    @Query(
+            """
+                SELECT u FROM User u
+                WHERE u.status = :status AND u.deleteRequestedAt <= :cutoff
+            """)
+    List<User> findPendingDeletionsExpired(
+            @Param("status") UserStatus status, @Param("cutoff") Instant cutoff, Pageable pageable);
 }
