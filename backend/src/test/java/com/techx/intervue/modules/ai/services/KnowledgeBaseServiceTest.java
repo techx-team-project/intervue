@@ -42,45 +42,37 @@ class KnowledgeBaseServiceTest {
     }
 
     @Test
-    @DisplayName("Should load and chunk all 10 guide documents into 300-500 token chunks")
+    @DisplayName("Should load and chunk core platform documents")
     void shouldLoadAndChunkAllGuideDocuments() {
         List<KnowledgeChunk> chunks = chunker.loadAndChunkAll();
 
         assertThat(chunks).isNotEmpty();
         assertThat(chunks.stream().map(KnowledgeChunk::documentName).distinct())
-                .contains(
-                        "register.md",
-                        "profile.md",
-                        "cv.md",
-                        "search.md",
-                        "apply.md",
-                        "track.md",
-                        "interviews.md",
-                        "recruiter_flows.md",
-                        "account_security.md",
-                        "faq.md");
+                .contains("cv.md", "account_security.md", "faq.md");
 
-        boolean hasCompanyVerification =
+        boolean has2fa =
                 chunks.stream()
                         .anyMatch(
                                 c ->
-                                        c.documentName().equals("recruiter_flows.md")
-                                                && c.heading().contains("Verify Your Company"));
-        assertThat(hasCompanyVerification).isTrue();
+                                        c.documentName().equals("account_security.md")
+                                                && c.heading()
+                                                        .contains("Two-Factor Authentication"));
+        assertThat(has2fa).isTrue();
     }
 
     @Test
-    @DisplayName("'How do I verify my company?' finds the right chunk")
-    void shouldFindRightChunkForCompanyVerification() {
-        float[] verificationVector = new float[] {0.9f, 0.1f, 0.0f};
+    @DisplayName("'How do I enable 2FA?' finds the right chunk")
+    void shouldFindRightChunkForSecurityTopic() {
+        float[] securityVector = new float[] {0.9f, 0.1f, 0.0f};
         float[] otherVector = new float[] {0.0f, 0.1f, 0.9f};
 
         AiKnowledgeChunk chunk1 =
                 AiKnowledgeChunk.builder()
                         .id(1L)
-                        .documentName("recruiter_flows.md")
-                        .heading("How to Verify Your Company (Company Verification Process)")
-                        .content("To maintain a safe, trusted IT hiring ecosystem...")
+                        .documentName("account_security.md")
+                        .heading("Two-Factor Authentication (2FA)")
+                        .content(
+                                "To protect your account, InterVue supports two-factor authentication...")
                         .tokenCount(250)
                         .embedding("[0.9, 0.1, 0.0]")
                         .build();
@@ -103,12 +95,11 @@ class KnowledgeBaseServiceTest {
                 .thenReturn(
                         new EmbeddingResult(List.of(queryVector), new AiUsage(10, 0), "voyage-4"));
 
-        List<KnowledgeMatch> matches = service.retrieve("How do I verify my company?", 3, 0.65);
+        List<KnowledgeMatch> matches = service.retrieve("How do I enable 2FA?", 3, 0.65);
 
         assertThat(matches).isNotEmpty();
-        assertThat(matches.getFirst().documentName()).isEqualTo("recruiter_flows.md");
-        assertThat(matches.getFirst().heading())
-                .isEqualTo("How to Verify Your Company (Company Verification Process)");
+        assertThat(matches.getFirst().documentName()).isEqualTo("account_security.md");
+        assertThat(matches.getFirst().heading()).isEqualTo("Two-Factor Authentication (2FA)");
         assertThat(matches.getFirst().score()).isGreaterThan(0.9);
     }
 
@@ -118,9 +109,10 @@ class KnowledgeBaseServiceTest {
         AiKnowledgeChunk chunk =
                 AiKnowledgeChunk.builder()
                         .id(1L)
-                        .documentName("recruiter_flows.md")
-                        .heading("How to Verify Your Company (Company Verification Process)")
-                        .content("To maintain a safe, trusted IT hiring ecosystem...")
+                        .documentName("account_security.md")
+                        .heading("Two-Factor Authentication (2FA)")
+                        .content(
+                                "To protect your account, InterVue supports two-factor authentication...")
                         .tokenCount(250)
                         .embedding("[0.9, 0.1, 0.0]")
                         .build();
@@ -128,7 +120,6 @@ class KnowledgeBaseServiceTest {
         when(repository.findAll()).thenReturn(List.of(chunk));
         service.reloadIntoMemory();
 
-        // An unrelated query vector pointing in an orthogonal direction
         float[] unrelatedQueryVector = new float[] {0.0f, 0.0f, 1.0f};
         when(embeddingClient.embed(any(EmbeddingRequest.class)))
                 .thenReturn(

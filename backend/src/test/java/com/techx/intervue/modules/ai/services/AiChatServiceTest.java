@@ -25,6 +25,7 @@ import com.techx.intervue.modules.ai.services.impl.AiChatService;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.AiQuotaServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.KnowledgeBaseServiceInterface;
+import com.techx.intervue.modules.ai.services.interfaces.PlatformAgentToolServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -49,6 +50,8 @@ class AiChatServiceTest {
 
     @Mock private PromptServiceInterface promptService;
 
+    @Mock private PlatformAgentToolServiceInterface agentToolService;
+
     @Mock private StringRedisTemplate redis;
 
     @Mock private ListOperations<String, String> listOperations;
@@ -65,6 +68,7 @@ class AiChatServiceTest {
                         knowledgeBaseService,
                         quotaService,
                         promptService,
+                        agentToolService,
                         redis,
                         objectMapper);
     }
