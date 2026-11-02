@@ -51,6 +51,8 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `GET /admin/users/{id}/sign-ins` | admin | pagination | `PageResource<AdminUserSignInResource>` |
 | ✅ | `POST /admin/users/{id}/roles` | admin | `{ role, expiresAt?, reason? }` | `AdminUserDetailResource` (grants role; evicts session cache; 409 if already active) |
 | ✅ | `DELETE /admin/users/{id}/roles/{role}` | admin | `{ reason? }` | `AdminUserDetailResource` (revokes role; evicts session cache; guards last role & self admin) |
+| ✅ | `POST /admin/users/{id}/reset-two-factor` | admin | – | `AdminUserDetailResource` (clears authenticator secret and backup codes) |
+| ✅ | `POST /admin/users/{id}/send-password-reset` | admin | – | `AdminUserDetailResource` (sends a single-use 15-minute reset link; requires verified email) |
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 
