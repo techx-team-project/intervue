@@ -8,6 +8,11 @@ spring:
     password: ${MYSQL_PASSWORD:changename}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
   data:
     redis:
       host: ${REDIS_HOST:localhost}
