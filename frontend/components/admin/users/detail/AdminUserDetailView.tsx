@@ -1,5 +1,6 @@
 'use client';
 
+import { adminUserApi } from '@/apiRequest/admin-user';
 import { useAdminUserActions, type AdminUserAction } from '@/hooks/useAdminUserActions';
 import { restrictBlockedReason } from '@/lib/admin-user';
 import { cn } from '@/lib/utils';
@@ -7,7 +8,7 @@ import type { GrantRoleFormData } from '@/schemas/admin-user.schema';
 import type { AdminUserActivityEntry, AdminUserDetail, AdminUserListData, AdminUserSession } from '@/types/admin-user';
 import type { RoleType } from '@/types/auth';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import AdminUserActivityTab from './AdminUserActivityTab';
 import AdminUserDetailHeader from './AdminUserDetailHeader';
@@ -114,24 +115,44 @@ export default function AdminUserDetailView({ detail, listData }: AdminUserDetai
     router.replace(query.length > 0 ? `${pathname}?${query}` : pathname, { scroll: false });
   };
 
-  const grantRole = (data: GrantRoleFormData) => {
-    setRoles((previous) => [
-      ...previous.filter((grant) => grant.role !== data.role),
-      {
+  useEffect(() => {
+    if (activeTab === 'sessions') {
+      adminUserApi
+        .getUserSessions(detail.id)
+        .then((liveSessions) => setSessions(liveSessions))
+        .catch(() => {});
+    } else if (activeTab === 'activity') {
+      adminUserApi
+        .getUserActivities(detail.id)
+        .then((page) => setActivity(page.items))
+        .catch(() => {});
+    }
+  }, [activeTab, detail.id]);
+
+  const grantRole = async (data: GrantRoleFormData) => {
+    try {
+      const updated = await adminUserApi.grantRole(detail.id, {
         role: data.role,
-        grantedAt: new Date().toISOString(),
-        grantedByName: currentAdminName,
-        expiresAt: data.isTemporary && data.expiresAt ? new Date(data.expiresAt).toISOString() : null,
-      },
-    ]);
-    recordActivity('roleGranted', `${data.role} role granted`, data.reason);
-    toast.success(`Granted the ${data.role} role to ${user.name}`);
+        expiresAt: data.isTemporary && data.expiresAt ? new Date(data.expiresAt).toISOString() : undefined,
+        reason: data.reason,
+      });
+      setRoles(updated.roles);
+      recordActivity('roleGranted', `${data.role} role granted`, data.reason);
+      toast.success(`Granted the ${data.role} role to ${user.name}`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to grant role');
+    }
   };
 
-  const revokeRole = (role: RoleType) => {
-    setRoles((previous) => previous.filter((grant) => grant.role !== role));
-    recordActivity('roleRevoked', `${role} role revoked`);
-    toast.success(`Revoked the ${role} role from ${user.name}`);
+  const revokeRole = async (role: RoleType) => {
+    try {
+      const updated = await adminUserApi.revokeRole(detail.id, role);
+      setRoles(updated.roles);
+      recordActivity('roleRevoked', `${role} role revoked`);
+      toast.success(`Revoked the ${role} role from ${user.name}`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to revoke role');
+    }
   };
 
   return (
