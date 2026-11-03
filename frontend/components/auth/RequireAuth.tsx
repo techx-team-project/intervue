@@ -1,10 +1,10 @@
 'use client';
 
 import Spinner from '@/components/common/Spinner';
+import NotFoundView from '@/components/common/NotFoundView';
 import { REDIRECT_PARAM, ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
 import type { RoleType } from '@/types/auth';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 
@@ -34,14 +34,7 @@ export default function RequireAuth({ roles, forbiddenFallback, children }: Requ
 
   if (roles && !roles.some(hasRole)) {
     if (forbiddenFallback) return forbiddenFallback;
-    return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 px-4 text-center">
-        <h1 className="text-lg font-bold text-slate-800">You do not have access to this page</h1>
-        <Link href={ROUTES.HOME} className="text-sm font-semibold text-emerald-600 hover:underline">
-          Back to home
-        </Link>
-      </div>
-    );
+    return <NotFoundView />;
   }
 
   return children;

@@ -20,37 +20,37 @@ export default function BecomeRecruiterDialog({ isOpen, onClose }: BecomeRecruit
   const footer = emailVerified ? (
     <>
       <Button variant="ghost" onClick={onClose} disabled={becomeRecruiter.isPending}>
-        Để sau
+        Maybe Later
       </Button>
       <Button
         isLoading={becomeRecruiter.isPending}
         onClick={() => becomeRecruiter.mutate(undefined, { onSuccess: onClose })}
       >
-        Trở thành nhà tuyển dụng
+        Activate Recruiter Role
       </Button>
     </>
   ) : (
     <>
       <Button variant="ghost" onClick={onClose}>
-        Đóng
+        Close
       </Button>
       <Button isLoading={resend.isPending} onClick={() => resend.mutate()}>
-        Gửi lại email xác minh
+        Resend Verification Email
       </Button>
     </>
   );
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Trở thành nhà tuyển dụng" footer={footer}>
+    <Modal isOpen={isOpen} onClose={onClose} title="Activate Recruiter Privileges" footer={footer}>
       {emailVerified ? (
         <p className="text-sm leading-relaxed text-slate-600">
-          Tài khoản của bạn sẽ có thêm vai trò Nhà tuyển dụng để đăng tin và quản lý hồ sơ ứng tuyển. Các vai trò hiện
-          có vẫn được giữ nguyên và bạn có thể chuyển qua lại bất cứ lúc nào.
+          Your account will be granted Recruiter privileges to publish job posts and manage candidate applications. Your
+          existing candidate roles will remain intact and you can switch between roles at any time.
         </p>
       ) : (
         <p className="text-sm leading-relaxed text-slate-600">
-          Bạn cần xác minh email <strong>{user?.email}</strong> trước khi bật vai trò Nhà tuyển dụng. Hãy kiểm tra hộp
-          thư hoặc gửi lại email xác minh.
+          You need to verify your email address <strong>{user?.email}</strong> before activating the Recruiter role.
+          Please check your inbox or click below to resend the verification email.
         </p>
       )}
     </Modal>

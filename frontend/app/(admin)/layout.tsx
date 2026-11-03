@@ -1,5 +1,6 @@
 import AdminShell from '@/components/admin/AdminShell';
 import RequireAuth from '@/components/auth/RequireAuth';
+import NotFoundView from '@/components/common/NotFoundView';
 import { ROLES } from '@/constants/auth';
 import { getAdminAccountState } from '@/mocks/admin-account.mock';
 import { getAdminQueueCounts } from '@/mocks/admin-dashboard.mock';
@@ -10,7 +11,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const account = getAdminAccountState();
 
   return (
-    <RequireAuth roles={[ROLES.ADMIN]}>
+    <RequireAuth roles={[ROLES.ADMIN]} forbiddenFallback={<NotFoundView />}>
       <AdminShell queueCounts={queueCounts} account={account}>
         {children}
       </AdminShell>
