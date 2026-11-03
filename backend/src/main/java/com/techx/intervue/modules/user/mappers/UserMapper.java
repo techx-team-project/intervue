@@ -13,6 +13,7 @@ public class UserMapper {
                 .email(user.getEmail())
                 .name(user.getName())
                 .phone(user.getPhone())
+                .address(user.getAddress())
                 .status(user.getStatus())
                 .emailVerified(user.isEmailVerified())
                 .phoneVerified(user.getPhoneVerifiedAt() != null)
