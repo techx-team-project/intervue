@@ -9,7 +9,11 @@ import UserMenuDropdown from './UserMenuDropdown';
 
 const MENU_CLOSE_DELAY_MS = 300;
 
-export default function HeaderAccountActions() {
+interface HeaderAccountActionsProps {
+  portal?: 'candidate' | 'recruiter';
+}
+
+export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAccountActionsProps = {}) {
   const { user, status } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -50,19 +54,20 @@ export default function HeaderAccountActions() {
   }
 
   if (!user) {
+    const isRecruiter = portal === 'recruiter';
     return (
       <div className="hidden items-center gap-2 sm:flex">
         <Link
-          href={ROUTES.REGISTER}
+          href={isRecruiter ? ROUTES.RECRUITER_REGISTER : ROUTES.REGISTER}
           className="rounded-full border border-emerald-600 px-4 py-2 text-sm font-semibold text-emerald-600 transition-colors hover:bg-emerald-50"
         >
-          Sign up
+          Đăng ký
         </Link>
         <Link
-          href={ROUTES.LOGIN}
+          href={isRecruiter ? ROUTES.RECRUITER_LOGIN : ROUTES.LOGIN}
           className="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
         >
-          Sign in
+          Đăng nhập
         </Link>
       </div>
     );
@@ -111,6 +116,7 @@ export default function HeaderAccountActions() {
 
         {isUserMenuOpen && (
           <UserMenuDropdown
+            portal={portal}
             onClose={() => setIsUserMenuOpen(false)}
             onMouseEnter={handleUserMouseEnter}
             onMouseLeave={handleUserMouseLeave}

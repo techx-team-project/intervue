@@ -13,6 +13,7 @@ import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
 import com.techx.intervue.modules.user.services.interfaces.EmailSendLimiterInterface;
 import com.techx.intervue.modules.user.services.interfaces.OneTimeTokenServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.UserSessionCacheInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +31,7 @@ public class PasswordResetService implements PasswordResetServiceInterface {
     private final OneTimeTokenServiceInterface oneTimeTokenService;
     private final EmailSendLimiterInterface emailSendLimiter;
     private final PasswordEncoder passwordEncoder;
-    private final UserSessionCache userSessionCache;
+    private final UserSessionCacheInterface userSessionCache;
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
