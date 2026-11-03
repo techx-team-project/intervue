@@ -60,6 +60,8 @@ auth:
   resend-window: 15m
   login-fail-threshold: 3
   login-fail-window: 15m
+  phone-otp-ttl: 5m
+  phone-otp-max-attempts: 3
 
 ai:
   gemini:

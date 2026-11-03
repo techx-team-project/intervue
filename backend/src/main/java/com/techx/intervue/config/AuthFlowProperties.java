@@ -11,4 +11,6 @@ public record AuthFlowProperties(
         int resendMaxAttempts,
         Duration resendWindow,
         int loginFailThreshold,
-        Duration loginFailWindow) {}
+        Duration loginFailWindow,
+        Duration phoneOtpTtl,
+        int phoneOtpMaxAttempts) {}
