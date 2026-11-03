@@ -161,6 +161,9 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `UNAUTHENTICATED` | 401 | Missing/expired token → frontend tries refresh once |
 | `FORBIDDEN` | 403 | Role/ownership failure |
 | `NOT_FOUND` | 404 | |
+| `METHOD_NOT_ALLOWED` | 405 | The HTTP method is not supported by this endpoint |
+| `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
+| `INTERNAL_ERROR` | 500 | Unexpected server error; the cause is logged server-side and never returned |
 | `EMAIL_ALREADY_USED` | 409 | |
 | `ACCOUNT_BANNED` | 403 | The account is banned, so signing in and refreshing are both refused. Only raised after the password matches, so it never reveals the state of an account to someone who does not hold its credentials |
 | `ROLE_ALREADY_GRANTED` | 409 | The user already holds an active grant for this role |
