@@ -6,7 +6,7 @@ import type { UserChatRequest, UserChatResponse } from '@/types/ai-chat';
 export const aiChatApi = {
   chat: async (payload: UserChatRequest) => {
     const token = useAuthStore.getState().accessToken;
-    const hasValidToken = Boolean(token && (token.split('.').length === 3 || token === 'dev-mock-session-token'));
+    const hasValidToken = Boolean(token && token.split('.').length === 3);
 
     if (!hasValidToken) {
       return request<UserChatResponse>('/ai/chat', {
