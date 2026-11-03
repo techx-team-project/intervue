@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -28,4 +29,15 @@ public interface BusinessDocumentRepository
 
     long countByCompanyIdAndDocumentTypeAndReviewStatus(
             Long companyId, BusinessDocumentType documentType, DocumentReviewStatus reviewStatus);
+
+    interface ReviewStatusCount {
+        DocumentReviewStatus getStatus();
+
+        long getTotal();
+    }
+
+    @Query(
+            "SELECT d.reviewStatus AS status, COUNT(d) AS total FROM BusinessDocument d"
+                    + " GROUP BY d.reviewStatus")
+    List<ReviewStatusCount> countGroupedByReviewStatus();
 }
