@@ -6,6 +6,7 @@ import com.techx.intervue.modules.candidate.entities.CandidatePreferredLocation;
 import com.techx.intervue.modules.candidate.entities.CandidateProfile;
 import com.techx.intervue.modules.candidate.requests.SaveCandidateProfileRequest;
 import com.techx.intervue.modules.candidate.resources.CandidateProfileResource;
+import com.techx.intervue.modules.candidate.resources.CandidateProfileSectionsResource;
 import com.techx.intervue.modules.user.resources.UserResource;
 import java.util.Collection;
 import java.util.List;
@@ -44,7 +45,8 @@ public class CandidateProfileMapper {
             CandidateProfile profile,
             UserResource user,
             List<CandidatePreferredLocation> preferredLocations,
-            List<CandidatePreferredIndustry> preferredIndustries) {
+            List<CandidatePreferredIndustry> preferredIndustries,
+            CandidateProfileSectionsResource sections) {
         return CandidateProfileResource.builder()
                 .userId(user.id())
                 .name(user.name())
@@ -76,6 +78,12 @@ public class CandidateProfileMapper {
                 .preferredLocations(sorted(preferredLocations.stream().map(this::toCity).toList()))
                 .preferredIndustries(
                         sorted(preferredIndustries.stream().map(this::toIndustry).toList()))
+                .experiences(sections.experiences())
+                .educations(sections.educations())
+                .projects(sections.projects())
+                .certifications(sections.certifications())
+                .languages(sections.languages())
+                .skills(sections.skills())
                 .updatedAt(profile.getUpdatedAt())
                 .build();
     }

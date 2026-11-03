@@ -39,4 +39,10 @@ public record CandidateProfileResource(
         ContractType contractType,
         List<String> preferredLocations,
         List<String> preferredIndustries,
+        List<CandidateExperienceResource> experiences,
+        List<CandidateEducationResource> educations,
+        List<CandidateProjectResource> projects,
+        List<CandidateCertificationResource> certifications,
+        List<CandidateLanguageResource> languages,
+        List<CandidateSkillResource> skills,
         Instant updatedAt) {}

@@ -1,5 +1,7 @@
 package com.techx.intervue.modules.candidate.events;
 
+import com.techx.intervue.modules.candidate.entities.CandidateCertification;
+import com.techx.intervue.modules.candidate.repositories.CandidateCertificationRepository;
 import com.techx.intervue.modules.candidate.repositories.CandidateProfileRepository;
 import com.techx.intervue.modules.user.events.UserPurgedEvent;
 import java.util.List;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class CandidateProfilePurgeListener {
 
     private final CandidateProfileRepository profileRepository;
+    private final CandidateCertificationRepository certificationRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @EventListener
@@ -23,11 +26,18 @@ public class CandidateProfilePurgeListener {
                 .findByUserId(event.userId())
                 .ifPresent(
                         profile -> {
+                            List<CandidateCertification> certifications =
+                                    certificationRepository
+                                            .findByCandidateProfileIdOrderByIssueDateDesc(
+                                                    profile.getId());
                             profileRepository.delete(profile);
                             List<String> publicIds =
-                                    Stream.of(
-                                                    profile.getAvatarPublicId(),
-                                                    profile.getCoverPublicId())
+                                    Stream.concat(
+                                                    Stream.of(
+                                                            profile.getAvatarPublicId(),
+                                                            profile.getCoverPublicId()),
+                                                    certifications.stream()
+                                                            .map(this::imagePublicId))
                                             .filter(Objects::nonNull)
                                             .toList();
                             if (!publicIds.isEmpty()) {
@@ -35,5 +45,9 @@ public class CandidateProfilePurgeListener {
                                         new CandidateAssetsDiscardedEvent(publicIds));
                             }
                         });
+    }
+
+    private String imagePublicId(CandidateCertification certification) {
+        return certification.getImagePublicId();
     }
 }

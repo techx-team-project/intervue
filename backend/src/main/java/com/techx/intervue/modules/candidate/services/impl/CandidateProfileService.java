@@ -12,27 +12,18 @@ import com.techx.intervue.modules.candidate.repositories.CandidatePreferredLocat
 import com.techx.intervue.modules.candidate.repositories.CandidateProfileRepository;
 import com.techx.intervue.modules.candidate.requests.SaveCandidateProfileRequest;
 import com.techx.intervue.modules.candidate.resources.CandidateProfileResource;
+import com.techx.intervue.modules.candidate.resources.CandidateProfileSectionsResource;
 import com.techx.intervue.modules.candidate.services.interfaces.CandidateProfileServiceInterface;
 import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
-import java.text.CollationKey;
-import java.text.Collator;
-import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TreeSet;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class CandidateProfileService implements CandidateProfileServiceInterface {
 
     private static final String AVATAR_FOLDER = "candidate-avatars";
@@ -44,6 +35,9 @@ public class CandidateProfileService implements CandidateProfileServiceInterface
     private final UserServiceInterface userService;
     private final StorageServiceInterface storageService;
     private final CandidateProfileMapper profileMapper;
+    private final CandidateTextNormalizer normalizer;
+    private final CandidateProfileSectionsLoader sectionsLoader;
+    private final CandidateImageCleaner imageCleaner;
 
     @Override
     @Transactional(readOnly = true)
@@ -113,10 +107,10 @@ public class CandidateProfileService implements CandidateProfileServiceInterface
         try {
             saved = profileRepository.save(profile);
         } catch (RuntimeException e) {
-            deleteQuietly(uploaded);
+            imageCleaner.deleteQuietly(uploaded);
             throw e;
         }
-        deleteQuietly(previous);
+        imageCleaner.deleteQuietly(previous);
         return buildResource(saved, userService.getMe(userId));
     }
 
@@ -131,7 +125,7 @@ public class CandidateProfileService implements CandidateProfileServiceInterface
         locationRepository.deleteByCandidateProfileId(profileId);
         industryRepository.deleteByCandidateProfileId(profileId);
         locationRepository.saveAll(
-                normalizeValues(request.preferredLocations()).stream()
+                normalizer.normalizeValues(request.preferredLocations()).stream()
                         .map(
                                 city ->
                                         CandidatePreferredLocation.builder()
@@ -140,7 +134,7 @@ public class CandidateProfileService implements CandidateProfileServiceInterface
                                                 .build())
                         .toList());
         industryRepository.saveAll(
-                normalizeValues(request.preferredIndustries()).stream()
+                normalizer.normalizeValues(request.preferredIndustries()).stream()
                         .map(
                                 industry ->
                                         CandidatePreferredIndustry.builder()
@@ -152,51 +146,14 @@ public class CandidateProfileService implements CandidateProfileServiceInterface
 
     private CandidateProfileResource buildResource(CandidateProfile profile, UserResource user) {
         if (profile.getId() == null) {
-            return profileMapper.toResource(profile, user, List.of(), List.of());
+            return profileMapper.toResource(
+                    profile, user, List.of(), List.of(), CandidateProfileSectionsResource.empty());
         }
         return profileMapper.toResource(
                 profile,
                 user,
                 locationRepository.findByCandidateProfileIdOrderByCityAsc(profile.getId()),
-                industryRepository.findByCandidateProfileIdOrderByIndustryAsc(profile.getId()));
-    }
-
-    private List<String> normalizeValues(Collection<String> values) {
-        List<String> kept = new ArrayList<>();
-        if (values == null) {
-            return kept;
-        }
-        Collator collator = Collator.getInstance(Locale.ROOT);
-        collator.setStrength(Collator.PRIMARY);
-        Set<CollationKey> seen = new TreeSet<>();
-        for (String value : values) {
-            if (value == null) {
-                continue;
-            }
-            String trimmed = value.trim();
-            if (!trimmed.isEmpty() && seen.add(collator.getCollationKey(foldKey(trimmed)))) {
-                kept.add(trimmed);
-            }
-        }
-        return kept;
-    }
-
-    private String foldKey(String value) {
-        return Normalizer.normalize(value, Normalizer.Form.NFKD)
-                .replaceAll("\\p{M}+", "")
-                .replace('đ', 'd')
-                .replace('Đ', 'D')
-                .toLowerCase(Locale.ROOT);
-    }
-
-    private void deleteQuietly(String publicId) {
-        if (publicId == null) {
-            return;
-        }
-        try {
-            storageService.delete(publicId, StorageTarget.IMAGE);
-        } catch (RuntimeException e) {
-            log.warn("Could not delete stored image {}: {}", publicId, e.getMessage());
-        }
+                industryRepository.findByCandidateProfileIdOrderByIndustryAsc(profile.getId()),
+                sectionsLoader.load(profile.getId()));
     }
 }
