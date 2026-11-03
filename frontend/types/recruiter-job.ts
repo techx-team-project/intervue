@@ -30,6 +30,10 @@ export interface JobLocation {
   specificAddress?: string;
 }
 
+export type RecruiterJobSegment = 'all' | 'published' | 'pending' | 'paused' | 'expired' | 'draft' | 'closed';
+
+export type RecruiterJobSort = 'newest' | 'expiringSoon' | 'mostApplicants' | 'highestSalary';
+
 export interface RecruiterJobPost {
   id: string;
   title: string;
@@ -45,6 +49,11 @@ export interface RecruiterJobPost {
   benefits: string;
   screeningQuestions: ScreeningQuestion[];
   recruitsCount: number;
+  applicantsCount?: number;
+  newApplicantsCount?: number;
+  viewsCount?: number;
+  isFeatured?: boolean;
+  isUrgent?: boolean;
   rejectionReason?: string;
   aiGenerated?: {
     description?: boolean;

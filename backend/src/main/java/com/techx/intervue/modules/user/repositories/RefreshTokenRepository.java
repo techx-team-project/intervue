@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.user.repositories;
 
 import com.techx.intervue.modules.user.entities.RefreshToken;
+import com.techx.intervue.modules.user.enums.TokenOrigin;
 import jakarta.persistence.LockModeType;
 import java.time.Instant;
 import java.util.Collection;
@@ -48,12 +49,19 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
             """)
     void revokeAllRefreshTokenByUser(@Param("userId") Long userId);
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE RefreshToken r SET r.location = :location WHERE r.id = :id")
+    int updateLocation(@Param("id") Long id, @Param("location") String location);
+
     Optional<RefreshToken> findByIdAndUserId(Long id, Long userId);
 
     List<RefreshToken> findByUserIdAndRevokedFalseAndExpiryDateAfterOrderByCreatedAtDesc(
             Long userId, Instant now);
 
     Page<RefreshToken> findByUserId(Long userId, Pageable pageable);
+
+    Page<RefreshToken> findByUserIdAndOrigin(Long userId, TokenOrigin origin, Pageable pageable);
 
     Long deleteByExpiryDateBefore(Instant now);
 

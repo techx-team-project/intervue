@@ -1,3 +1,4 @@
+import type { AdminUserSummary } from '@/apiRequest/admin-user';
 import { ADMIN_PERMISSION_ORDER, RESTRICTION_META } from '@/constants/admin-user';
 import { ROLES } from '@/constants/auth';
 import type { AdminPermission } from '@/types/admin';
@@ -34,7 +35,7 @@ export function isEmailVerified(user: AdminUserListItem): boolean {
 }
 
 export function isRestricted(user: AdminUserListItem): boolean {
-  return user.status === 'LOCKED' || user.status === 'BANNED';
+  return user.status === 'BANNED';
 }
 
 export function daysSince(iso: string | null): number | null {
@@ -50,8 +51,6 @@ export function matchesSegment(user: AdminUserListItem, segment: AdminUserSegmen
       return hasActiveRole(user, ROLES.RECRUITER);
     case 'admins':
       return hasActiveRole(user, ROLES.ADMIN);
-    case 'locked':
-      return user.status === 'LOCKED';
     case 'banned':
       return user.status === 'BANNED';
     case 'pendingDeletion':
@@ -145,12 +144,13 @@ export function restrictBlockedReason(
   kind: AdminUserRestrictionKind,
   currentAdminId: number,
   users: AdminUserListItem[],
+  fallbackActiveAdminCount?: number,
 ): string | null {
   if (user.id === currentAdminId) return `You cannot ${RESTRICTION_META[kind].verb.toLowerCase()} your own account`;
   if (user.status === 'DELETED') return 'This account is already deleted';
-  if (user.status === RESTRICTION_META[kind].status)
-    return `This account is already ${kind === 'lock' ? 'locked' : 'banned'}`;
-  if (user.status === 'ACTIVE' && hasActiveRole(user, ROLES.ADMIN) && activeAdminCount(users) <= 1) {
+  if (user.status === RESTRICTION_META[kind].status) return 'This account is already banned';
+  const adminCount = fallbackActiveAdminCount ?? activeAdminCount(users);
+  if (user.status === 'ACTIVE' && hasActiveRole(user, ROLES.ADMIN) && adminCount <= 1) {
     return 'This is the last active admin account';
   }
   return null;
@@ -161,10 +161,12 @@ export function roleRemovalBlockedReason(
   role: RoleType,
   currentAdminId: number,
   users: AdminUserListItem[],
+  fallbackActiveAdminCount?: number,
 ): string | null {
   if (!hasActiveRole(user, role)) return 'This role is not active on the account';
   if (role === ROLES.ADMIN && user.id === currentAdminId) return 'You cannot remove your own admin role';
-  if (role === ROLES.ADMIN && activeAdminCount(users) <= 1) return 'This is the last active admin account';
+  const adminCount = fallbackActiveAdminCount ?? activeAdminCount(users);
+  if (role === ROLES.ADMIN && adminCount <= 1) return 'This is the last active admin account';
   if (activeRoles(user).length <= 1) return 'A user must retain at least one role';
   return null;
 }
@@ -172,7 +174,6 @@ export function roleRemovalBlockedReason(
 export interface AdminUserStats {
   total: number;
   active: number;
-  locked: number;
   banned: number;
   unverified: number;
   newLast7Days: number;
@@ -191,7 +192,6 @@ export function buildUserStats(users: AdminUserListItem[]): AdminUserStats {
   return {
     total: users.length,
     active: users.filter((user) => user.status === 'ACTIVE').length,
-    locked: users.filter((user) => user.status === 'LOCKED').length,
     banned: users.filter((user) => user.status === 'BANNED').length,
     unverified: users.filter((user) => !isEmailVerified(user)).length,
     newLast7Days: users.filter((user) => within7Days(user.createdAt)).length,
@@ -212,11 +212,6 @@ export function buildAttentionItems(users: AdminUserListItem[]): AdminUserAttent
 
   const tokenReuse = users.filter((user) => user.hasTokenReuseIncident).length;
 
-  const lockedOverAWeek = users.filter((user) => {
-    const days = daysSince(user.restriction?.at ?? null);
-    return user.status === 'LOCKED' && days !== null && days > STALE_UNVERIFIED_DAYS;
-  }).length;
-
   const expiringGrants = users.filter((user) =>
     user.roles.some((grant) => {
       if (grant.expiresAt === null) return false;
@@ -228,13 +223,6 @@ export function buildAttentionItems(users: AdminUserListItem[]): AdminUserAttent
   return [
     { key: 'tokenReuse', label: 'Accounts with refresh-token reuse detected', count: tokenReuse, tone: 'danger' },
     {
-      key: 'lockedStale',
-      label: `Locked more than ${STALE_UNVERIFIED_DAYS} days with no decision`,
-      count: lockedOverAWeek,
-      tone: 'warning',
-      segment: 'locked',
-    },
-    {
       key: 'staleUnverified',
       label: `Email still unverified after ${STALE_UNVERIFIED_DAYS} days`,
       count: staleUnverified,
@@ -245,7 +233,31 @@ export function buildAttentionItems(users: AdminUserListItem[]): AdminUserAttent
       key: 'expiringGrants',
       label: `Role grants expiring within ${EXPIRING_GRANT_DAYS} days`,
       count: expiringGrants,
-      tone: 'info',
+      tone: 'neutral',
+    },
+  ].filter((item) => item.count > 0) as AdminUserAttentionItem[];
+}
+
+export function buildAttentionItemsFromSummary(
+  summary: AdminUserSummary,
+  users?: AdminUserListItem[],
+): AdminUserAttentionItem[] {
+  const tokenReuse = users ? users.filter((user) => user.hasTokenReuseIncident).length : 0;
+
+  return [
+    { key: 'tokenReuse', label: 'Accounts with refresh-token reuse detected', count: tokenReuse, tone: 'danger' },
+    {
+      key: 'staleUnverified',
+      label: `Email still unverified after ${STALE_UNVERIFIED_DAYS} days`,
+      count: summary.unverifiedOverAWeek,
+      tone: 'warning',
+      segment: 'unverified',
+    },
+    {
+      key: 'expiringGrants',
+      label: `Role grants expiring within ${EXPIRING_GRANT_DAYS} days`,
+      count: summary.grantsExpiringIn14Days,
+      tone: 'neutral',
     },
   ].filter((item) => item.count > 0) as AdminUserAttentionItem[];
 }

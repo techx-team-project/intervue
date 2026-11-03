@@ -1,7 +1,10 @@
 package com.techx.intervue.modules.user.entities;
 
+import com.techx.intervue.modules.user.enums.TokenOrigin;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -55,6 +58,11 @@ public class RefreshToken {
 
     @Column(length = 100)
     private String location;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "origin", nullable = false, length = 16)
+    @Builder.Default
+    private TokenOrigin origin = TokenOrigin.SIGN_IN;
 
     @Column(name = "last_used_at")
     private Instant lastUsedAt;

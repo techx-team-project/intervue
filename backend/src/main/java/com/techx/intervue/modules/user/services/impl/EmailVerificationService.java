@@ -1,5 +1,10 @@
 package com.techx.intervue.modules.user.services.impl;
 
+import com.techx.intervue.common.audit.enums.AuditAction;
+import com.techx.intervue.common.audit.enums.AuditActorType;
+import com.techx.intervue.common.audit.enums.AuditTargetType;
+import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
+import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.user.entities.User;
@@ -25,6 +30,7 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
     private final OneTimeTokenServiceInterface oneTimeTokenService;
     private final EmailSendLimiterInterface emailSendLimiter;
     private final ApplicationEventPublisher eventPublisher;
+    private final AuditLogServiceInterface auditLogService;
 
     @Override
     @Transactional
@@ -39,6 +45,16 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
                         .orElseThrow(() -> new AppException(ErrorCode.INVALID_OR_EXPIRED_TOKEN));
         if (!user.isEmailVerified()) {
             user.setEmailVerifiedAt(Instant.now());
+            auditLogService.record(
+                    AuditEntry.builder()
+                            .actorType(AuditActorType.USER)
+                            .actorId(user.getId())
+                            .actorEmail(user.getEmail())
+                            .action(AuditAction.EMAIL_VERIFIED)
+                            .targetType(AuditTargetType.USER)
+                            .targetId(user.getId())
+                            .reason("Email address verified via token link")
+                            .build());
         }
     }
 

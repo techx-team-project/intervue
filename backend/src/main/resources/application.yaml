@@ -13,6 +13,9 @@ spring:
     hibernate:
       ddl-auto: validate
 
+  flyway:
+    out-of-order: true
+
   data:
     redis:
       host: ${REDIS_HOST:localhost}
@@ -41,6 +44,8 @@ app:
   frontend-url: ${FRONTEND_URL:http://localhost:3000}
   mail-from-name: InterVue
   support-email: ${SUPPORT_EMAIL:support@intervue.vn}
+  geolocation:
+    enabled: ${GEOLOCATION_ENABLED:false}
 
 auth:
   email-verification-ttl: 24h
@@ -74,3 +79,28 @@ jwt:
   expiration: 900000
   issuer: InterVue
   refresh-token-ttl-days: 14
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+seed:
+  accounts:
+    admin:
+      email: local.admin@intervue.test
+      name: Local Admin
+      roles: [ADMIN]
+    recruiter:
+      email: local.recruiter@intervue.test
+      name: Local Recruiter
+      roles: [RECRUITER]
+    candidate:
+      email: local.candidate@intervue.test
+      name: Local Candidate
+      roles: [CANDIDATE]
+    multi-role:
+      email: local.multirole@intervue.test
+      name: Local Multi Role
+      roles: [CANDIDATE, RECRUITER]

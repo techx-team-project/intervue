@@ -12,6 +12,8 @@ import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.helpers.TokenHashUtil;
 import com.techx.intervue.modules.user.entities.RefreshToken;
+import com.techx.intervue.modules.user.enums.TokenOrigin;
+import com.techx.intervue.modules.user.events.RefreshTokenLocationResolveEvent;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserSessionCacheInterface;
@@ -20,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +37,7 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
     private final GeoLocationServiceInterface geoLocationService;
     private final UserSessionCacheInterface userSessionCache;
     private final AuditLogServiceInterface auditLogService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public String generateRefreshTokenRaw() {
@@ -42,16 +46,25 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
 
     @Override
     public IssuedToken issueRefreshToken(Long userId) {
-        return issueRefreshToken(userId, null, null);
+        return issueRefreshToken(userId, null, null, TokenOrigin.SIGN_IN);
     }
 
     @Override
     @Transactional
     public IssuedToken issueRefreshToken(Long userId, String userAgent, String ip) {
+        return issueRefreshToken(userId, userAgent, ip, TokenOrigin.SIGN_IN);
+    }
+
+    @Override
+    @Transactional
+    public IssuedToken issueRefreshToken(
+            Long userId, String userAgent, String ip, TokenOrigin origin) {
         String token = this.generateRefreshTokenRaw();
         String tokenHash = utils.hash(token);
         String deviceLabel = DeviceLabelResolver.resolve(userAgent);
-        String location = geoLocationService.resolveLocation(ip);
+
+        String cachedOrLocal = geoLocationService.resolveCachedOrLocalLocation(ip);
+        String location = cachedOrLocal != null ? cachedOrLocal : "Unknown Location";
 
         RefreshToken entity =
                 RefreshToken.builder()
@@ -61,6 +74,7 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
                         .ip(ip)
                         .deviceLabel(deviceLabel)
                         .location(location)
+                        .origin(origin != null ? origin : TokenOrigin.SIGN_IN)
                         .lastUsedAt(Instant.now())
                         .expiryDate(
                                 Instant.now()
@@ -68,6 +82,10 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
                         .revoked(false)
                         .build();
         repository.save(entity);
+
+        if (cachedOrLocal == null && ip != null && !ip.isBlank()) {
+            eventPublisher.publishEvent(new RefreshTokenLocationResolveEvent(entity.getId(), ip));
+        }
 
         return new IssuedToken(token, entity.getId());
     }
@@ -97,7 +115,8 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
         existing.setLastUsedAt(Instant.now());
 
         IssuedToken newToken =
-                this.issueRefreshToken(existing.getUserId(), effectiveUa, effectiveIp);
+                this.issueRefreshToken(
+                        existing.getUserId(), effectiveUa, effectiveIp, TokenOrigin.ROTATION);
         existing.setReplacedByTokenId(newToken.tokenId());
         repository.save(existing);
         return new RefreshResult(existing.getUserId(), newToken.rawToken());

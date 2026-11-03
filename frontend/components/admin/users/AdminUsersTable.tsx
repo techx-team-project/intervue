@@ -18,6 +18,7 @@ interface AdminUsersTableProps {
   allUsers: AdminUserListItem[];
   currentAdminId: number;
   selectedIds: number[];
+  activeAdminCount?: number;
   onToggleSelect: (id: number) => void;
   onToggleSelectAll: () => void;
   onRestrict: (kind: AdminUserRestrictionKind, user: AdminUserListItem) => void;
@@ -32,6 +33,7 @@ export default function AdminUsersTable({
   allUsers,
   currentAdminId,
   selectedIds,
+  activeAdminCount,
   onToggleSelect,
   onToggleSelectAll,
   onRestrict,
@@ -124,8 +126,7 @@ export default function AdminUsersTable({
 
                   <AdminUserRowActionsMenu
                     user={user}
-                    lockBlockedReason={restrictBlockedReason(user, 'lock', currentAdminId, allUsers)}
-                    banBlockedReason={restrictBlockedReason(user, 'ban', currentAdminId, allUsers)}
+                    banBlockedReason={restrictBlockedReason(user, 'ban', currentAdminId, allUsers, activeAdminCount)}
                     onRestrict={onRestrict}
                     onConfirm={onConfirm}
                   />

@@ -1,6 +1,6 @@
 'use client';
 
-import type { RecruiterJobPost } from '@/types/recruiter-job';
+import type { JobStatus, RecruiterJobPost } from '@/types/recruiter-job';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -29,6 +29,14 @@ export function useJobPostActions(setJobs: Dispatch<SetStateAction<RecruiterJobP
   const pauseJob = (id: string) => runUpdate(id, (job) => ({ ...job, status: 'PAUSED' }), 'Job post paused.');
 
   const reopenJob = (id: string) => runUpdate(id, (job) => ({ ...job, status: 'PUBLISHED' }), 'Job post reopened.');
+
+  const toggleJobStatus = async (id: string, currentStatus: JobStatus) => {
+    if (currentStatus === 'PUBLISHED') {
+      await pauseJob(id);
+    } else if (currentStatus === 'PAUSED') {
+      await reopenJob(id);
+    }
+  };
 
   const closeJob = (id: string) => runUpdate(id, (job) => ({ ...job, status: 'CLOSED' }), 'Job post closed.');
 
@@ -69,6 +77,9 @@ export function useJobPostActions(setJobs: Dispatch<SetStateAction<RecruiterJobP
         rejectionReason: undefined,
         publishedAt: undefined,
         expiresAt: undefined,
+        applicantsCount: 0,
+        newApplicantsCount: 0,
+        viewsCount: 0,
         createdAt: now,
         updatedAt: now,
       };
@@ -78,5 +89,57 @@ export function useJobPostActions(setJobs: Dispatch<SetStateAction<RecruiterJobP
     setPendingId(null);
   };
 
-  return { pendingId, pauseJob, reopenJob, closeJob, extendJob, submitForReview, repostJob, duplicateJob };
+  const deleteJob = async (id: string) => {
+    setPendingId(id);
+    await delay(MOCK_DELAY_MS);
+    setJobs((prev) => prev.filter((job) => job.id !== id));
+    toast.success('Job post deleted.');
+    setPendingId(null);
+  };
+
+  const bulkPauseJobs = async (ids: string[]) => {
+    if (ids.length === 0) return;
+    setPendingId('bulk');
+    await delay(MOCK_DELAY_MS);
+    setJobs((prev) =>
+      prev.map((job) => (ids.includes(job.id) && job.status === 'PUBLISHED' ? { ...job, status: 'PAUSED' } : job)),
+    );
+    toast.success(`Paused ${ids.length} selected job post${ids.length > 1 ? 's' : ''}.`);
+    setPendingId(null);
+  };
+
+  const bulkExtendJobs = async (ids: string[]) => {
+    if (ids.length === 0) return;
+    setPendingId('bulk');
+    await delay(MOCK_DELAY_MS);
+    const newExpiresAt = new Date(Date.now() + EXTEND_DAYS * 24 * 60 * 60 * 1000).toISOString();
+    setJobs((prev) => prev.map((job) => (ids.includes(job.id) ? { ...job, expiresAt: newExpiresAt } : job)));
+    toast.success(`Extended ${ids.length} job post${ids.length > 1 ? 's' : ''} by ${EXTEND_DAYS} days.`);
+    setPendingId(null);
+  };
+
+  const bulkCloseJobs = async (ids: string[]) => {
+    if (ids.length === 0) return;
+    setPendingId('bulk');
+    await delay(MOCK_DELAY_MS);
+    setJobs((prev) => prev.map((job) => (ids.includes(job.id) ? { ...job, status: 'CLOSED' } : job)));
+    toast.success(`Closed ${ids.length} selected job post${ids.length > 1 ? 's' : ''}.`);
+    setPendingId(null);
+  };
+
+  return {
+    pendingId,
+    pauseJob,
+    reopenJob,
+    toggleJobStatus,
+    closeJob,
+    extendJob,
+    submitForReview,
+    repostJob,
+    duplicateJob,
+    deleteJob,
+    bulkPauseJobs,
+    bulkExtendJobs,
+    bulkCloseJobs,
+  };
 }

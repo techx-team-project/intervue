@@ -1,23 +1,26 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Send, FileText, Upload, Sparkles, CheckCircle2, Bot, Check } from 'lucide-react';
+import { Send, FileText, Upload, Sparkles, CheckCircle2, Bot, Check, HelpCircle } from 'lucide-react';
 import type { JobDetail } from '@/types/job';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
+import { toast } from 'sonner';
 
 interface JobApplyModalProps {
   job: JobDetail;
   isOpen: boolean;
   onClose: () => void;
+  isPreviewMode?: boolean;
 }
 
-export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalProps) {
+export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = false }: JobApplyModalProps) {
   const [selectedCv, setSelectedCv] = useState<'profile' | 'upload'>('profile');
   const [fullName, setFullName] = useState('Lê Minh Trí');
   const [email, setEmail] = useState('minhtri.le@gmail.com');
   const [phone, setPhone] = useState('0912 345 678');
   const [coverLetter, setCoverLetter] = useState('');
+  const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,7 +41,10 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
-    }, 1000);
+      if (isPreviewMode) {
+        toast.success('Mô phỏng nộp hồ sơ thành công! Đây là màn hình thông báo hoàn tất mà ứng viên sẽ nhìn thấy.');
+      }
+    }, 700);
   };
 
   const handleResetAndClose = () => {
@@ -79,6 +85,19 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
             </div>
           </div>
 
+          {isPreviewMode && (
+            <div className="mx-auto max-w-md rounded-xl border border-amber-300 bg-amber-50 p-3.5 text-left text-xs text-amber-900">
+              <div className="mb-1 flex items-center gap-1.5 font-bold text-amber-950">
+                <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+                <span>Ghi chú Chế độ Xem trước:</span>
+              </div>
+              <p className="leading-relaxed text-amber-800">
+                Mô phỏng hoàn tất. Ứng viên thật sau khi nộp sẽ được lưu vào mục <strong>Applications</strong> trong
+                Recruiter Panel của bạn để chấm điểm AI ATS và lọc hồ sơ.
+              </p>
+            </div>
+          )}
+
           <div className="flex justify-center gap-3 pt-4">
             <Button onClick={handleResetAndClose} className="px-6">
               Hoàn tất & Đóng
@@ -87,6 +106,19 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
+          {isPreviewMode && (
+            <div className="flex items-start gap-2.5 rounded-xl border border-amber-300 bg-amber-50/90 p-3 text-xs text-amber-900 shadow-2xs">
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+              <div>
+                <p className="font-bold">Chế độ xem trước (Candidate Preview Mode):</p>
+                <p className="mt-0.5 text-amber-800">
+                  Đây là giao diện nộp CV và câu hỏi tuyển dụng mà ứng viên nhìn thấy. Dữ liệu nộp thử sẽ không được ghi
+                  nhận vào hệ thống.
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-linear-to-r from-emerald-50 to-teal-50 px-4 py-2.5 text-xs">
             <div className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-emerald-600" />
@@ -206,6 +238,67 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
             />
           </div>
 
+          {/* Screening Questions from Recruiter */}
+          {job.screeningQuestions && job.screeningQuestions.length > 0 && (
+            <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+              <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-slate-800 uppercase">
+                <HelpCircle className="h-4 w-4 text-emerald-600" />
+                <span>Câu hỏi sàng lọc ứng viên ({job.screeningQuestions.length})</span>
+              </div>
+
+              <div className="space-y-3.5">
+                {job.screeningQuestions.map((q, idx) => (
+                  <div key={q.id || idx} className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-700">
+                      <span className="mr-1 font-bold text-emerald-700">Q{idx + 1}.</span>
+                      {q.question} {q.required && <span className="text-rose-500">*</span>}
+                    </label>
+
+                    {q.type === 'YES_NO' ? (
+                      <div className="flex items-center gap-4">
+                        {['Có', 'Không'].map((opt) => (
+                          <label key={opt} className="flex cursor-pointer items-center gap-1.5 text-xs text-slate-700">
+                            <input
+                              type="radio"
+                              name={`sq-${q.id}`}
+                              checked={answers[q.id] === opt}
+                              onChange={() => setAnswers((prev) => ({ ...prev, [q.id]: opt }))}
+                              className="text-emerald-600 focus:ring-emerald-500"
+                            />
+                            <span>{opt}</span>
+                          </label>
+                        ))}
+                      </div>
+                    ) : q.type === 'MULTIPLE_CHOICE' && q.options && q.options.length > 0 ? (
+                      <div className="space-y-1.5">
+                        {q.options.map((opt) => (
+                          <label key={opt} className="flex cursor-pointer items-center gap-2 text-xs text-slate-700">
+                            <input
+                              type="radio"
+                              name={`sq-${q.id}`}
+                              checked={answers[q.id] === opt}
+                              onChange={() => setAnswers((prev) => ({ ...prev, [q.id]: opt }))}
+                              className="text-emerald-600 focus:ring-emerald-500"
+                            />
+                            <span>{opt}</span>
+                          </label>
+                        ))}
+                      </div>
+                    ) : (
+                      <input
+                        type="text"
+                        placeholder="Nhập câu trả lời của bạn..."
+                        value={answers[q.id] || ''}
+                        onChange={(e) => setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))}
+                        className="w-full rounded-xl border border-slate-300 px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="text-xs leading-relaxed text-slate-500">
             Bằng việc nhấn &quot;Nộp hồ sơ ứng tuyển&quot;, bạn đồng ý với Điều khoản dịch vụ và Chính sách quyền riêng
             tư của InterVue.
@@ -216,7 +309,7 @@ export default function JobApplyModal({ job, isOpen, onClose }: JobApplyModalPro
               Hủy bỏ
             </Button>
             <Button type="submit" size="sm" isLoading={isSubmitting} leftIcon={<Send className="h-3.5 w-3.5" />}>
-              Nộp hồ sơ ứng tuyển
+              {isPreviewMode ? 'Nộp thử nghiệm (Mô phỏng)' : 'Nộp hồ sơ ứng tuyển'}
             </Button>
           </div>
         </form>

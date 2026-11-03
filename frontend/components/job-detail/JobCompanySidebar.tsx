@@ -2,15 +2,31 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 import { Building2, Users, MapPin, ExternalLink, Plus, Check, CheckCircle2, Briefcase } from 'lucide-react';
 import type { JobDetail } from '@/types/job';
 
 interface JobCompanySidebarProps {
   company: JobDetail['company'];
+  isPreviewMode?: boolean;
 }
 
-export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
+export default function JobCompanySidebar({ company, isPreviewMode = false }: JobCompanySidebarProps) {
   const [isFollowing, setIsFollowing] = useState(false);
+
+  const handleToggleFollow = () => {
+    setIsFollowing((prev) => {
+      const next = !prev;
+      if (isPreviewMode) {
+        toast.info(
+          next
+            ? 'Chế độ xem trước: Đã theo dõi công ty (mô phỏng thao tác của ứng viên).'
+            : 'Chế độ xem trước: Đã hủy theo dõi công ty (mô phỏng thao tác của ứng viên).',
+        );
+      }
+      return next;
+    });
+  };
 
   return (
     <div
@@ -49,7 +65,7 @@ export default function JobCompanySidebar({ company }: JobCompanySidebarProps) {
       <div className="mt-4">
         <button
           type="button"
-          onClick={() => setIsFollowing((prev) => !prev)}
+          onClick={handleToggleFollow}
           className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border py-2 text-xs font-bold transition ${
             isFollowing
               ? 'text-primary border-emerald-200 bg-emerald-50'
