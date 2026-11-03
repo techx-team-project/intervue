@@ -65,6 +65,11 @@ public enum ErrorCode {
             "This company has not signed the data processing agreement yet!"),
     TAX_CODE_ALREADY_USED(HttpStatus.CONFLICT, "This tax code is already registered!"),
     ALREADY_COMPANY_MEMBER(HttpStatus.CONFLICT, "You already belong to this company!"),
+    ALREADY_IN_ANOTHER_COMPANY(
+            HttpStatus.CONFLICT,
+            "You already represent another company. Ask an administrator to move you!"),
+    ONLY_OWNER_CAN_EDIT_LEGAL_FIELDS(
+            HttpStatus.FORBIDDEN, "Only the company owner can change the legal details!"),
     NOT_COMPANY_MEMBER(HttpStatus.FORBIDDEN, "You do not belong to this company!"),
     COMPANY_MEMBERSHIP_REVOKED(
             HttpStatus.FORBIDDEN, "Your membership of this company has been revoked!"),
