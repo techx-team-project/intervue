@@ -479,6 +479,24 @@ public class UserAdminService implements UserAdminServiceInterface {
             case USER_DELETION_CANCELLED -> "deletionCancelled";
             case USER_RESTORED -> "accountRestored";
             case USER_PURGED -> "accountPurged";
+            case PHONE_VERIFIED -> "phoneVerified";
+            case AGREEMENT_ACCEPTED -> "agreementAccepted";
+            case COMPANY_CREATED,
+                    COMPANY_UPDATED,
+                    COMPANY_DELETED,
+                    COMPANY_VERIFIED,
+                    COMPANY_VERIFICATION_REVOKED,
+                    COMPANY_MEMBER_JOINED,
+                    COMPANY_MEMBER_LEFT,
+                    COMPANY_MEMBER_REVOKED,
+                    COMPANY_OWNER_TRANSFERRED,
+                    BUSINESS_DOCUMENT_SUBMITTED,
+                    BUSINESS_DOCUMENT_APPROVED,
+                    BUSINESS_DOCUMENT_REJECTED,
+                    BUSINESS_DOCUMENT_MORE_INFO_REQUESTED,
+                    BUSINESS_DOCUMENT_REVOKED,
+                    BUSINESS_DOCUMENT_EXPIRED ->
+                    "company";
         };
     }
 
@@ -510,6 +528,25 @@ public class UserAdminService implements UserAdminServiceInterface {
             case USER_DELETION_CANCELLED -> "Account deletion request cancelled";
             case USER_RESTORED -> "Account restored";
             case USER_PURGED -> "Account permanently purged and anonymized";
+            case PHONE_VERIFIED -> "Phone number verified";
+            case AGREEMENT_ACCEPTED -> "Data processing agreement accepted";
+            // Targeted at a company or a document, so a user-scoped query never returns these.
+            case COMPANY_CREATED,
+                    COMPANY_UPDATED,
+                    COMPANY_DELETED,
+                    COMPANY_VERIFIED,
+                    COMPANY_VERIFICATION_REVOKED,
+                    COMPANY_MEMBER_JOINED,
+                    COMPANY_MEMBER_LEFT,
+                    COMPANY_MEMBER_REVOKED,
+                    COMPANY_OWNER_TRANSFERRED,
+                    BUSINESS_DOCUMENT_SUBMITTED,
+                    BUSINESS_DOCUMENT_APPROVED,
+                    BUSINESS_DOCUMENT_REJECTED,
+                    BUSINESS_DOCUMENT_MORE_INFO_REQUESTED,
+                    BUSINESS_DOCUMENT_REVOKED,
+                    BUSINESS_DOCUMENT_EXPIRED ->
+                    "Company verification activity";
         };
     }
 

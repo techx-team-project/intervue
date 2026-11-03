@@ -63,6 +63,9 @@ public class User {
     private String image;
     private String address;
 
+    @Column(name = "phone_verified_at")
+    private Instant phoneVerifiedAt;
+
     @Column(name = "email_verified_at")
     private Instant emailVerifiedAt;
 
