@@ -70,7 +70,9 @@ export default function CandidateHeroHeader({ profile, onEdit }: CandidateHeroHe
         </div>
 
         <div className="mt-4 min-w-0 space-y-1">
-          <h1 className="text-2xl font-black tracking-tight break-words text-slate-800 sm:text-3xl">{profile.name}</h1>
+          <h1 className="text-2xl font-black tracking-tight wrap-break-word text-slate-800 sm:text-3xl">
+            {profile.name}
+          </h1>
           {profile.headline ? (
             <p className="text-primary text-base font-semibold">{profile.headline}</p>
           ) : (
