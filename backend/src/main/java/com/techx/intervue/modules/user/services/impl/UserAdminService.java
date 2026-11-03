@@ -483,9 +483,11 @@ public class UserAdminService implements UserAdminServiceInterface {
             case AGREEMENT_ACCEPTED -> "agreementAccepted";
             case COMPANY_CREATED,
                     COMPANY_UPDATED,
+                    COMPANY_DELETED,
                     COMPANY_VERIFIED,
                     COMPANY_VERIFICATION_REVOKED,
                     COMPANY_MEMBER_JOINED,
+                    COMPANY_MEMBER_LEFT,
                     COMPANY_MEMBER_REVOKED,
                     COMPANY_OWNER_TRANSFERRED,
                     BUSINESS_DOCUMENT_SUBMITTED,
@@ -531,9 +533,11 @@ public class UserAdminService implements UserAdminServiceInterface {
             // Targeted at a company or a document, so a user-scoped query never returns these.
             case COMPANY_CREATED,
                     COMPANY_UPDATED,
+                    COMPANY_DELETED,
                     COMPANY_VERIFIED,
                     COMPANY_VERIFICATION_REVOKED,
                     COMPANY_MEMBER_JOINED,
+                    COMPANY_MEMBER_LEFT,
                     COMPANY_MEMBER_REVOKED,
                     COMPANY_OWNER_TRANSFERRED,
                     BUSINESS_DOCUMENT_SUBMITTED,
