@@ -5,13 +5,19 @@ import Breadcrumb from '@/components/ui/Breadcrumb';
 import Button from '@/components/ui/Button';
 import { useCandidateProfile } from '@/hooks/useCandidateProfile';
 import { getErrorMessage } from '@/utils/error';
-import { Award, Briefcase, FileText, FolderGit2, GraduationCap, Wrench } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { useState } from 'react';
 import CandidateAboutSection from './CandidateAboutSection';
+import CandidateCertificationSection from './CandidateCertificationSection';
 import CandidateComingSoonSection from './CandidateComingSoonSection';
 import CandidateEditModal from './CandidateEditModal';
+import CandidateEducationSection from './CandidateEducationSection';
+import CandidateExperienceSection from './CandidateExperienceSection';
 import CandidateHeroHeader from './CandidateHeroHeader';
 import CandidateJobPreferencesSidebar from './CandidateJobPreferencesSidebar';
+import CandidateLanguageSection from './CandidateLanguageSection';
+import CandidateProjectSection from './CandidateProjectSection';
+import CandidateSkillSection from './CandidateSkillSection';
 
 export default function CandidateProfileView() {
   const { data: profile, isPending, isError, error, refetch, isRefetching } = useCandidateProfile();
@@ -52,27 +58,12 @@ export default function CandidateProfileView() {
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
           <div className="space-y-6 lg:col-span-8">
             <CandidateAboutSection bio={profile.bio} onEdit={openEdit} />
-            <CandidateComingSoonSection
-              title="Work experience"
-              description="Add your work history here soon."
-              icon={Briefcase}
-            />
-            <CandidateComingSoonSection
-              title="Education"
-              description="Add your schools and degrees here soon."
-              icon={GraduationCap}
-            />
-            <CandidateComingSoonSection title="Skills" description="Showcase your skills here soon." icon={Wrench} />
-            <CandidateComingSoonSection
-              title="Projects"
-              description="Highlight your best projects here soon."
-              icon={FolderGit2}
-            />
-            <CandidateComingSoonSection
-              title="Certifications and languages"
-              description="List your certificates and languages here soon."
-              icon={Award}
-            />
+            <CandidateExperienceSection items={profile.experiences} />
+            <CandidateEducationSection items={profile.educations} />
+            <CandidateSkillSection items={profile.skills} />
+            <CandidateProjectSection items={profile.projects} />
+            <CandidateCertificationSection items={profile.certifications} />
+            <CandidateLanguageSection items={profile.languages} />
           </div>
 
           <div className="space-y-6 lg:col-span-4">
