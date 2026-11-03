@@ -60,6 +60,9 @@ public enum ErrorCode {
     RECRUITER_NOT_AUTHORIZED_FOR_COMPANY(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "You need an approved authorization document for this company!"),
+    VERIFICATION_INCOMPLETE(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "Finish the remaining verification steps before publishing jobs!"),
     COMPANY_AGREEMENT_MISSING(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "This company has not signed the data processing agreement yet!"),
@@ -78,8 +81,6 @@ public enum ErrorCode {
             "This is the last owner of the company and must stay in place!"),
     ONLY_OWNER_CAN_SUBMIT_LICENSE(
             HttpStatus.FORBIDDEN, "Only the company owner can submit a business license!"),
-    ONLY_OWNER_CAN_SIGN_COMPANY_AGREEMENT(
-            HttpStatus.FORBIDDEN, "Only the company owner can sign on behalf of the company!"),
     COMPANY_LEGAL_FIELDS_LOCKED(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "Legal details cannot be changed once the company is verified!"),
