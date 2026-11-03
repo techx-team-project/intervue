@@ -8,26 +8,10 @@ type AuthProviderProps = { children: ReactNode };
 
 export default function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
-    const { status, startLoading, clearSession, setSession } = useAuthStore.getState();
+    const { status, startLoading, clearSession } = useAuthStore.getState();
     if (status !== 'idle') return;
     startLoading();
-    refreshSession().catch(() => {
-      if (process.env.NODE_ENV === 'development') {
-        setSession({
-          accessToken: 'dev-mock-session-token',
-          user: {
-            id: 838025,
-            name: 'Nguyễn Minh Phúc',
-            email: 'phuc.recruiter@intervue.vn',
-            emailVerified: true,
-            roles: ['RECRUITER', 'ADMIN'],
-            createdAt: '2026-01-01T00:00:00Z',
-          },
-        });
-        return;
-      }
-      clearSession();
-    });
+    refreshSession().catch(() => clearSession());
   }, []);
 
   return children;
