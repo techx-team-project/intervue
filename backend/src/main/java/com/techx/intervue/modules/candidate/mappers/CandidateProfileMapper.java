@@ -1,6 +1,8 @@
 package com.techx.intervue.modules.candidate.mappers;
 
 import com.techx.intervue.common.storage.StorageServiceInterface;
+import com.techx.intervue.modules.candidate.entities.CandidatePreferredIndustry;
+import com.techx.intervue.modules.candidate.entities.CandidatePreferredLocation;
 import com.techx.intervue.modules.candidate.entities.CandidateProfile;
 import com.techx.intervue.modules.candidate.requests.SaveCandidateProfileRequest;
 import com.techx.intervue.modules.candidate.resources.CandidateProfileResource;
@@ -38,7 +40,11 @@ public class CandidateProfileMapper {
         profile.setContractType(request.contractType());
     }
 
-    public CandidateProfileResource toResource(CandidateProfile profile, UserResource user) {
+    public CandidateProfileResource toResource(
+            CandidateProfile profile,
+            UserResource user,
+            List<CandidatePreferredLocation> preferredLocations,
+            List<CandidatePreferredIndustry> preferredIndustries) {
         return CandidateProfileResource.builder()
                 .userId(user.id())
                 .name(user.name())
@@ -67,10 +73,19 @@ public class CandidateProfileMapper {
                 .salaryMax(profile.getSalaryMax())
                 .workMode(profile.getWorkMode())
                 .contractType(profile.getContractType())
-                .preferredLocations(sorted(profile.getPreferredLocations()))
-                .preferredIndustries(sorted(profile.getPreferredIndustries()))
+                .preferredLocations(sorted(preferredLocations.stream().map(this::toCity).toList()))
+                .preferredIndustries(
+                        sorted(preferredIndustries.stream().map(this::toIndustry).toList()))
                 .updatedAt(profile.getUpdatedAt())
                 .build();
+    }
+
+    private String toCity(CandidatePreferredLocation location) {
+        return location.getCity();
+    }
+
+    private String toIndustry(CandidatePreferredIndustry industry) {
+        return industry.getIndustry();
     }
 
     private List<String> sorted(Collection<String> values) {

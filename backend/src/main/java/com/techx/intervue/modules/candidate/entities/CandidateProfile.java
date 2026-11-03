@@ -6,20 +6,14 @@ import com.techx.intervue.modules.candidate.enums.ContractType;
 import com.techx.intervue.modules.candidate.enums.Gender;
 import com.techx.intervue.modules.candidate.enums.JobSearchStatus;
 import com.techx.intervue.modules.candidate.enums.WorkMode;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -110,22 +104,4 @@ public class CandidateProfile extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "contract_type", length = 20)
     private ContractType contractType;
-
-    @ElementCollection
-    @OrderBy
-    @CollectionTable(
-            name = "candidate_preferred_locations",
-            joinColumns = @JoinColumn(name = "candidate_profile_id"))
-    @Column(name = "city", nullable = false, length = 100)
-    @Builder.Default
-    private Set<String> preferredLocations = new LinkedHashSet<>();
-
-    @ElementCollection
-    @OrderBy
-    @CollectionTable(
-            name = "candidate_preferred_industries",
-            joinColumns = @JoinColumn(name = "candidate_profile_id"))
-    @Column(name = "industry", nullable = false, length = 100)
-    @Builder.Default
-    private Set<String> preferredIndustries = new LinkedHashSet<>();
 }
