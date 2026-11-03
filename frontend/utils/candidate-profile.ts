@@ -3,8 +3,8 @@ import { ApiError, isApiError } from '@/lib/api-error';
 import type { CandidateProfileFormData } from '@/schemas/candidate-profile.schema';
 import type { CandidateProfileResponse, SaveCandidateProfileRequest } from '@/types/candidate-profile';
 
-const orNull = (value: string): string | null => (value === '' ? null : value);
-const numberOrNull = (value: string): number | null => (value === '' ? null : Number(value));
+export const orNull = (value: string): string | null => (value === '' ? null : value);
+export const numberOrNull = (value: string): number | null => (value === '' ? null : Number(value));
 
 export function toFormValues(profile: CandidateProfileResponse): CandidateProfileFormData {
   return {

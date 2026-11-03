@@ -1,5 +1,15 @@
 import { RECRUITER_CITY_OPTIONS } from '@/constants/recruiter-onboarding';
-import type { CareerLevel, ContractType, Gender, JobSearchStatus, WorkMode } from '@/types/candidate-profile';
+import type {
+  CandidateSection,
+  CareerLevel,
+  ContractType,
+  Gender,
+  JobSearchStatus,
+  LanguageProficiency,
+  SkillCategory,
+  SkillLevel,
+  WorkMode,
+} from '@/types/candidate-profile';
 
 type Option<T extends string> = { value: T; label: string };
 
@@ -36,6 +46,43 @@ export const CONTRACT_TYPE_OPTIONS: Option<ContractType>[] = [
   { value: 'INTERNSHIP', label: 'Internship' },
 ];
 
+export const SKILL_CATEGORY_OPTIONS: Option<SkillCategory>[] = [
+  { value: 'CORE', label: 'Core skills' },
+  { value: 'AI_DATA', label: 'AI and data' },
+  { value: 'TOOLS_DEVOPS', label: 'Tools and DevOps' },
+  { value: 'SOFT', label: 'Soft skills' },
+];
+
+export const SKILL_LEVEL_OPTIONS: Option<SkillLevel>[] = [
+  { value: 'BASIC', label: 'Basic' },
+  { value: 'INTERMEDIATE', label: 'Intermediate' },
+  { value: 'PROFICIENT', label: 'Proficient' },
+  { value: 'EXPERT', label: 'Expert' },
+];
+
+export const LANGUAGE_PROFICIENCY_OPTIONS: Option<LanguageProficiency>[] = [
+  { value: 'BASIC', label: 'Basic' },
+  { value: 'INTERMEDIATE', label: 'Intermediate' },
+  { value: 'ADVANCED', label: 'Advanced' },
+  { value: 'FLUENT', label: 'Fluent' },
+  { value: 'NATIVE', label: 'Native' },
+];
+
+export const SECTION_TAG_LIMIT = 15;
+export const SECTION_TEXT_LIMIT = 2000;
+export const SECTION_MIN_YEAR = 1950;
+export const SECTION_MAX_YEAR_AHEAD = 10;
+export const SKILL_MAX_YEARS = 50;
+
+export const SECTION_LABELS: Record<CandidateSection, string> = {
+  experiences: 'Work experience',
+  educations: 'Education',
+  projects: 'Project',
+  certifications: 'Certification',
+  languages: 'Language',
+  skills: 'Skill',
+};
+
 export function optionLabel<T extends string>(options: Option<T>[], value: T | null): string | null {
   return options.find((option) => option.value === value)?.label ?? null;
 }
@@ -67,6 +114,9 @@ export const FIELD_ERROR_ALIASES: Record<string, string> = {
   salaryRangeValid: 'salaryMax',
   nameLengthValid: 'name',
   desiredRoleLengthValid: 'desiredRole',
+  dateRangeValid: 'endDate',
+  yearRangeValid: 'endYear',
+  yearBoundsValid: 'startYear',
 };
 
 export const IMAGE_ACCEPTED_TYPES: readonly string[] = ['image/jpeg', 'image/png'];

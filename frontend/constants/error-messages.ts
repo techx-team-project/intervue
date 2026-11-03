@@ -12,6 +12,7 @@ export const ERROR_MESSAGES: Record<string, string> = {
   EMAIL_NOT_VERIFIED: 'Please verify your email before continuing.',
   INVALID_OR_EXPIRED_TOKEN: 'The link is invalid or has expired.',
   IDENTITY_NOT_VERIFIED: 'You need to verify your identity before doing this.',
+  PROFILE_SECTION_LIMIT_REACHED: 'You have reached the maximum number of items for this section.',
   RATE_LIMITED: 'Too many attempts, please try again in a few minutes.',
   AI_IP_QUOTA_EXCEEDED: 'Bạn đã dùng hết 10 câu hỏi/giờ dành cho khách. Vui lòng đăng nhập hoặc thử lại sau.',
   AI_USER_QUOTA_EXCEEDED: 'Bạn đã đạt giới hạn 30 câu hỏi trong ngày hôm nay.',

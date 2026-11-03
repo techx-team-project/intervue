@@ -9,7 +9,7 @@ import { getErrorMessage } from '@/utils/error';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-const PROFILE_KEY = ['candidate-profile'];
+export const PROFILE_KEY = ['candidate-profile'];
 
 export type CandidateImageKind = 'avatar' | 'cover';
 
@@ -22,7 +22,7 @@ function getImageErrorMessage(error: unknown): string {
   return (isApiError(error) && IMAGE_ERROR_MESSAGES[error.code]) || getErrorMessage(error);
 }
 
-function hasFieldErrors(error: unknown): boolean {
+export function hasFieldErrors(error: unknown): boolean {
   return isApiError(error) && error.details.some((detail) => Boolean(detail.field));
 }
 
