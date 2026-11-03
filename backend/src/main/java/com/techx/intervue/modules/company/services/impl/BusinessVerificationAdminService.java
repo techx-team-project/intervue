@@ -12,9 +12,13 @@ import com.techx.intervue.modules.company.entities.BusinessDocument;
 import com.techx.intervue.modules.company.entities.Company;
 import com.techx.intervue.modules.company.entities.CompanyMember;
 import com.techx.intervue.modules.company.enums.BusinessDocumentType;
+import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
 import com.techx.intervue.modules.company.enums.CompanyVerificationStatus;
 import com.techx.intervue.modules.company.enums.DocumentReviewStatus;
+import com.techx.intervue.modules.company.enums.PublishRightLossCause;
+import com.techx.intervue.modules.company.enums.PublishRightLossScope;
 import com.techx.intervue.modules.company.events.BusinessDocumentReviewedEvent;
+import com.techx.intervue.modules.company.events.PublishRightLostEvent;
 import com.techx.intervue.modules.company.mappers.AdminBusinessVerificationMapper;
 import com.techx.intervue.modules.company.mappers.BusinessDocumentMapper;
 import com.techx.intervue.modules.company.repositories.BusinessDocumentRepository;
@@ -23,12 +27,14 @@ import com.techx.intervue.modules.company.repositories.BusinessDocumentSpecifica
 import com.techx.intervue.modules.company.repositories.CompanyMemberRepository;
 import com.techx.intervue.modules.company.requests.ApproveDocumentRequest;
 import com.techx.intervue.modules.company.requests.ReviewDocumentRequest;
+import com.techx.intervue.modules.company.requests.RevokeDocumentRequest;
 import com.techx.intervue.modules.company.requests.SearchBusinessVerificationRequest;
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationDetailResource;
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationListResource;
 import com.techx.intervue.modules.company.resources.BusinessDocumentResource;
 import com.techx.intervue.modules.company.resources.BusinessVerificationSummaryResource;
 import com.techx.intervue.modules.company.resources.CompanyMemberResource;
+import com.techx.intervue.modules.company.services.interfaces.AdminActor;
 import com.techx.intervue.modules.company.services.interfaces.BusinessVerificationAdminServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface.StoredDocumentContent;
@@ -48,6 +54,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +64,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
 
     private static final Sort DEFAULT_SORT = Sort.by(Sort.Direction.ASC, "submittedAt");
     private static final Sort TIE_BREAKER = Sort.by(Sort.Direction.ASC, "id");
+    private static final int SWEEP_BATCH_SIZE = 200;
     private static final Set<DocumentReviewStatus> REVIEWABLE =
             Set.of(DocumentReviewStatus.PENDING_REVIEW, DocumentReviewStatus.MORE_INFO_REQUIRED);
 
@@ -193,6 +201,120 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
                 actor,
                 DocumentReviewStatus.MORE_INFO_REQUIRED,
                 AuditAction.BUSINESS_DOCUMENT_MORE_INFO_REQUESTED);
+    }
+
+    @Override
+    @Transactional
+    public AdminBusinessVerificationDetailResource revoke(
+            Long documentId, RevokeDocumentRequest request, AdminActor actor) {
+        BusinessDocument document = requireDocument(documentId);
+        if (document.getReviewStatus() != DocumentReviewStatus.APPROVED) {
+            throw new AppException(ErrorCode.DOCUMENT_NOT_APPROVED);
+        }
+
+        Company company = document.getCompany();
+        boolean companyWide =
+                document.getDocumentType() == BusinessDocumentType.BUSINESS_LICENSE
+                        && company.isVerified()
+                        && !hasAnotherLicenceInForce(company.getId(), documentId);
+
+        document.setReviewStatus(DocumentReviewStatus.REVOKED);
+        document.setReviewReason(request.reason());
+        stampReview(document, actor);
+
+        if (companyWide) {
+            company.setVerificationStatus(CompanyVerificationStatus.REVOKED);
+            company.setVerifiedAt(null);
+            audit(
+                    actor,
+                    AuditAction.COMPANY_VERIFICATION_REVOKED,
+                    AuditTargetType.COMPANY,
+                    company.getId(),
+                    company.getName(),
+                    request.reason());
+        }
+
+        audit(
+                actor,
+                AuditAction.BUSINESS_DOCUMENT_REVOKED,
+                AuditTargetType.BUSINESS_DOCUMENT,
+                document.getId(),
+                document.getDocumentType().name(),
+                request.reason());
+        notifyRecruiter(document, request.reason());
+        publishLoss(
+                document,
+                companyWide ? PublishRightLossScope.COMPANY_WIDE : PublishRightLossScope.INDIVIDUAL,
+                companyWide
+                        ? PublishRightLossCause.COMPANY_VERIFICATION_REVOKED
+                        : PublishRightLossCause.DOCUMENT_REVOKED);
+        return detailOf(document);
+    }
+
+    // Runs after the restriction sweep so the two never contend for the same rows.
+    @Override
+    @Transactional
+    @Scheduled(cron = "0 15 2 * * *")
+    public int expireLapsedAuthorizations() {
+        List<BusinessDocument> lapsed =
+                businessDocumentRepository
+                        .findByReviewStatusAndExpiresAtLessThanEqualOrderByExpiresAtAsc(
+                                DocumentReviewStatus.APPROVED,
+                                Instant.now(),
+                                PageRequest.of(0, SWEEP_BATCH_SIZE));
+        for (BusinessDocument document : lapsed) {
+            document.setReviewStatus(DocumentReviewStatus.EXPIRED);
+            auditLogService.record(
+                    AuditEntry.builder()
+                            .actorType(AuditActorType.SYSTEM)
+                            .action(AuditAction.BUSINESS_DOCUMENT_EXPIRED)
+                            .targetType(AuditTargetType.BUSINESS_DOCUMENT)
+                            .targetId(document.getId())
+                            .detail(document.getDocumentType().name())
+                            .build());
+            notifyRecruiter(document, null);
+            publishLoss(
+                    document,
+                    PublishRightLossScope.INDIVIDUAL,
+                    PublishRightLossCause.DOCUMENT_EXPIRED);
+        }
+        return lapsed.size();
+    }
+
+    private boolean hasAnotherLicenceInForce(Long companyId, Long excludedDocumentId) {
+        return businessDocumentRepository.findByCompanyIdOrderBySubmittedAtDesc(companyId).stream()
+                .filter(found -> !found.getId().equals(excludedDocumentId))
+                .filter(found -> found.getDocumentType() == BusinessDocumentType.BUSINESS_LICENSE)
+                .anyMatch(BusinessDocument::isEffective);
+    }
+
+    private void publishLoss(
+            BusinessDocument document, PublishRightLossScope scope, PublishRightLossCause cause) {
+        eventPublisher.publishEvent(
+                PublishRightLostEvent.builder()
+                        .userId(
+                                scope == PublishRightLossScope.COMPANY_WIDE
+                                        ? null
+                                        : document.getSubmittedBy())
+                        .companyId(document.getCompany().getId())
+                        .scope(scope)
+                        .cause(cause)
+                        .reassignToUserId(
+                                scope == PublishRightLossScope.COMPANY_WIDE
+                                        ? null
+                                        : ownerIdOf(document.getCompany().getId()))
+                        .occurredAt(Instant.now())
+                        .build());
+    }
+
+    private Long ownerIdOf(Long companyId) {
+        return companyMemberRepository
+                .findByCompanyIdAndStatus(companyId, CompanyMemberStatus.ACTIVE)
+                .stream()
+                .filter(CompanyMember::isOwner)
+                .map(CompanyMember::getUserId)
+                .findFirst()
+                .orElse(null);
     }
 
     private AdminBusinessVerificationDetailResource decide(

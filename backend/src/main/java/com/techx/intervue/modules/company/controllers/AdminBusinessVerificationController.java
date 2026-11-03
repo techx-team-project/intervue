@@ -3,12 +3,13 @@ package com.techx.intervue.modules.company.controllers;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.company.requests.ApproveDocumentRequest;
 import com.techx.intervue.modules.company.requests.ReviewDocumentRequest;
+import com.techx.intervue.modules.company.requests.RevokeDocumentRequest;
 import com.techx.intervue.modules.company.requests.SearchBusinessVerificationRequest;
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationDetailResource;
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationListResource;
 import com.techx.intervue.modules.company.resources.BusinessVerificationSummaryResource;
+import com.techx.intervue.modules.company.services.interfaces.AdminActor;
 import com.techx.intervue.modules.company.services.interfaces.BusinessVerificationAdminServiceInterface;
-import com.techx.intervue.modules.company.services.interfaces.BusinessVerificationAdminServiceInterface.AdminActor;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface.StoredDocumentContent;
 import com.techx.intervue.modules.helpers.IpHelper;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
@@ -110,6 +111,17 @@ public class AdminBusinessVerificationController extends BaseController {
                 verificationAdminService.requestMoreInformation(
                         documentId, request, actor(principal, httpRequest)),
                 "Additional documents requested successfully!");
+    }
+
+    @PostMapping("/{documentId}/revoke")
+    public ResponseEntity<ApiResource<AdminBusinessVerificationDetailResource>> revoke(
+            @PathVariable Long documentId,
+            @Valid @RequestBody RevokeDocumentRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                verificationAdminService.revoke(documentId, request, actor(principal, httpRequest)),
+                "Document approval withdrawn successfully!");
     }
 
     private AdminActor actor(CustomUserDetails principal, HttpServletRequest httpRequest) {

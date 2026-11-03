@@ -48,6 +48,8 @@ public class CompanyVerificationMailListener {
             case APPROVED -> "Your InterVue business document was approved";
             case REJECTED -> "Your InterVue business document was rejected";
             case MORE_INFO_REQUIRED -> "InterVue needs another document from you";
+            case REVOKED -> "Your InterVue business document was withdrawn";
+            case EXPIRED -> "Your InterVue authorization has expired";
             default -> "Update on your InterVue business document";
         };
     }
@@ -63,6 +65,12 @@ public class CompanyVerificationMailListener {
             case MORE_INFO_REQUIRED ->
                     "Our compliance team started reviewing your document and needs something else"
                             + " before a decision can be made.";
+            case REVOKED ->
+                    "Our compliance team withdrew the approval of this document, so publishing is"
+                            + " paused until a valid document is approved again.";
+            case EXPIRED ->
+                    "The authorization period on this document has ended, so publishing is paused"
+                            + " until a renewed document is approved.";
             default -> "The status of your document has changed.";
         };
     }
