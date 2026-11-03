@@ -85,7 +85,14 @@ public class User {
     private Instant updatedAt;
 
     public void addRole(Role role) {
-        userRoles.add(UserRole.builder().user(this).role(role).build());
+        // UserRole equality is the composite id, so the id has to be set here: two grants built
+        // without it would both carry an empty id, compare equal and collapse into one.
+        userRoles.add(
+                UserRole.builder()
+                        .id(new UserRole.UserRoleId(id, role.getId()))
+                        .user(this)
+                        .role(role)
+                        .build());
     }
 
     public Set<RoleType> activeRoleTypes() {
