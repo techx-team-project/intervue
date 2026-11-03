@@ -22,6 +22,7 @@ import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.events.AccountRestrictedEvent;
 import com.techx.intervue.modules.user.events.AccountRestrictionLiftedEvent;
 import com.techx.intervue.modules.user.events.PasswordResetRequestedEvent;
+import com.techx.intervue.modules.user.events.UserPurgedEvent;
 import com.techx.intervue.modules.user.events.UserRolesChangedEvent;
 import com.techx.intervue.modules.user.mappers.AdminUserMapper;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
@@ -891,6 +892,7 @@ public class UserAdminService implements UserAdminServiceInterface {
             userSessionCache.evict(user.getId());
             userTwoFactorRepository.deleteByUserId(user.getId());
             userTwoFactorRecoveryCodeRepository.deleteByUserId(user.getId());
+            eventPublisher.publishEvent(new UserPurgedEvent(user.getId()));
 
             auditLogService.record(
                     AuditEntry.builder()
