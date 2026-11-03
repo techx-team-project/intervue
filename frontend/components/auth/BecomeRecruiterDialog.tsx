@@ -20,13 +20,13 @@ export default function BecomeRecruiterDialog({ isOpen, onClose }: BecomeRecruit
   const footer = emailVerified ? (
     <>
       <Button variant="ghost" onClick={onClose} disabled={becomeRecruiter.isPending}>
-        Later
+        Maybe Later
       </Button>
       <Button
         isLoading={becomeRecruiter.isPending}
         onClick={() => becomeRecruiter.mutate(undefined, { onSuccess: onClose })}
       >
-        Become a recruiter
+        Activate Recruiter Role
       </Button>
     </>
   ) : (
@@ -35,22 +35,22 @@ export default function BecomeRecruiterDialog({ isOpen, onClose }: BecomeRecruit
         Close
       </Button>
       <Button isLoading={resend.isPending} onClick={() => resend.mutate()}>
-        Resend verification email
+        Resend Verification Email
       </Button>
     </>
   );
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Become a recruiter" footer={footer}>
+    <Modal isOpen={isOpen} onClose={onClose} title="Activate Recruiter Privileges" footer={footer}>
       {emailVerified ? (
         <p className="text-sm leading-relaxed text-slate-600">
-          Your account will also get the recruiter role so you can post jobs and manage applications. Your current roles
-          stay the same and you can switch between them anytime.
+          Your account will be granted Recruiter privileges to publish job posts and manage candidate applications. Your
+          existing candidate roles will remain intact and you can switch between roles at any time.
         </p>
       ) : (
         <p className="text-sm leading-relaxed text-slate-600">
-          Verify <strong>{user?.email}</strong> before enabling the recruiter role. Check your inbox or resend the
-          verification email.
+          You need to verify your email address <strong>{user?.email}</strong> before activating the Recruiter role.
+          Please check your inbox or click below to resend the verification email.
         </p>
       )}
     </Modal>
