@@ -1,22 +1,18 @@
-import RecruiterAuthLayout from '@/components/auth/RecruiterAuthLayout';
 import RecruiterGuestRedirect from '@/components/auth/RecruiterGuestRedirect';
-import RecruiterRegisterForm from '@/components/auth/RecruiterRegisterForm';
+import RecruiterRegisterView from '@/components/auth/RecruiterRegisterView';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Đăng ký tài khoản Doanh nghiệp | InterVue AI',
-  description: 'Đăng ký tài khoản nhà tuyển dụng miễn phí trên InterVue để tiếp cận ứng viên IT chất lượng cao.',
+  title: 'Đăng ký tài khoản Nhà tuyển dụng | InterVue AI',
+  description:
+    'Đăng ký tài khoản nhà tuyển dụng miễn phí trên InterVue. Cùng tạo dựng lợi thế cho doanh nghiệp bằng công nghệ tuyển dụng ứng dụng sâu AI & Hiring Funnel.',
 };
 
 export default function RecruiterRegisterPage() {
   return (
-    <RecruiterAuthLayout
-      title="Đăng ký tài khoản Doanh nghiệp"
-      subtitle="Bắt đầu tuyển dụng nhân sự IT nhanh chóng & tối ưu chi phí"
-    >
+    <>
       <RecruiterGuestRedirect />
-      <RecruiterRegisterForm />
-    </RecruiterAuthLayout>
+      <RecruiterRegisterView />
+    </>
   );
 }
-
