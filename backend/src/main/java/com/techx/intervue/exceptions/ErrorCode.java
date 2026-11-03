@@ -49,7 +49,11 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "This account is not pending deletion!"),
     DELETION_BLOCKED(
             HttpStatus.UNPROCESSABLE_CONTENT,
-            "Account cannot be deleted while unresolved operations remain!");
+            "Account cannot be deleted while unresolved operations remain!"),
+    UNSUPPORTED_FILE_TYPE(HttpStatus.BAD_REQUEST, "This file type is not supported!"),
+    FILE_TOO_LARGE(HttpStatus.BAD_REQUEST, "The file exceeds the allowed size!"),
+    STORAGE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "File storage is not available right now!"),
+    SMS_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "SMS delivery is not available right now!");
 
     private final HttpStatus status;
     private final String message;

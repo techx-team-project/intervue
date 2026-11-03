@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
@@ -58,6 +59,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({EntityNotFoundException.class, NoResourceFoundException.class})
     public ResponseEntity<ApiResource<Void>> handleNotFound() {
         return build(ErrorCode.NOT_FOUND, List.of());
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiResource<Void>> handleUploadTooLarge() {
+        return build(ErrorCode.FILE_TOO_LARGE, List.of());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
