@@ -17,6 +17,8 @@ public interface CompanyVerificationServiceInterface {
 
     RecruiterVerificationProfileResource findProfile(Long userId);
 
+    boolean canPublish(Long userId);
+
     void assertCanPublish(Long userId);
 
     BusinessDocumentResource submitDocument(

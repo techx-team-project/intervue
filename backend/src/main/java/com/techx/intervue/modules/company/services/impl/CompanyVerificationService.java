@@ -98,6 +98,13 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
 
     @Override
     @Transactional(readOnly = true)
+    public boolean canPublish(Long userId) {
+        Company company = activeMembership(userId).map(CompanyMember::getCompany).orElse(null);
+        return levelPolicy.canPublish(factsFor(userId, company));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public void assertCanPublish(Long userId) {
         Company company = activeMembership(userId).map(CompanyMember::getCompany).orElse(null);
         ErrorCode blocked = levelPolicy.blockedReason(factsFor(userId, company));
@@ -334,12 +341,15 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
         return steps;
     }
 
+    // An approved document that is still in force decides this step: submitting a replacement and
+    // having it rejected must not make the step contradict the level the recruiter still holds.
     private VerificationStepResource licenseStep(Long userId) {
-        Optional<BusinessDocument> latest = latestDocument(userId);
-        if (latest.isEmpty()) {
+        Optional<BusinessDocument> source =
+                effectiveDocument(userId).or(() -> latestDocument(userId));
+        if (source.isEmpty()) {
             return step(VerificationStepId.LICENSE, VerificationStepStatus.NOT_STARTED);
         }
-        BusinessDocument document = latest.get();
+        BusinessDocument document = source.get();
         return VerificationStepResource.builder()
                 .stepId(VerificationStepId.LICENSE)
                 .status(businessDocumentMapper.toStepStatus(document))
