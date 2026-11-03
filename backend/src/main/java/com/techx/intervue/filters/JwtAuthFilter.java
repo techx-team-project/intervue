@@ -38,7 +38,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtServiceInterface jwtService;
     private final BlacklistServiceInterface blacklistService;
     private final ObjectMapper objectMapper;
-    private final org.springframework.core.env.Environment environment;
     private final UserSessionCacheInterface userSessionCache;
 
     public static final String TOKEN_ATTRIBUTE = "jwt_token";
@@ -63,26 +62,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
-        if ("dev-mock-session-token".equals(token)
-                && environment.matchesProfiles("local", "test", "dev", "default")) {
-            Set<GrantedAuthority> authorities =
-                    Set.of(
-                            new SimpleGrantedAuthority("ROLE_RECRUITER"),
-                            new SimpleGrantedAuthority("ROLE_ADMIN"));
-            CustomUserDetails mockUser =
-                    CustomUserDetails.builder()
-                            .id(838025L)
-                            .email("phuc.recruiter@intervue.vn")
-                            .authorities(authorities)
-                            .build();
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(mockUser, null, authorities);
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-            request.setAttribute(TOKEN_ATTRIBUTE, token);
-            filterChain.doFilter(request, response);
-            return;
-        }
         try {
             String jti = jwtService.extractJti(token);
             if (Boolean.TRUE.equals(blacklistService.isRevoked(jti))) {
