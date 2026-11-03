@@ -2,6 +2,7 @@ package com.techx.intervue.modules.company.services.interfaces;
 
 import com.techx.intervue.modules.company.requests.ApproveDocumentRequest;
 import com.techx.intervue.modules.company.requests.ReviewDocumentRequest;
+import com.techx.intervue.modules.company.requests.RevokeDocumentRequest;
 import com.techx.intervue.modules.company.requests.SearchBusinessVerificationRequest;
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationDetailResource;
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationListResource;
@@ -11,8 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface BusinessVerificationAdminServiceInterface {
-
-    record AdminActor(Long userId, String email, String ip) {}
 
     Page<AdminBusinessVerificationListResource> search(
             SearchBusinessVerificationRequest request, Pageable pageable);
@@ -31,4 +30,9 @@ public interface BusinessVerificationAdminServiceInterface {
 
     AdminBusinessVerificationDetailResource requestMoreInformation(
             Long documentId, ReviewDocumentRequest request, AdminActor actor);
+
+    AdminBusinessVerificationDetailResource revoke(
+            Long documentId, RevokeDocumentRequest request, AdminActor actor);
+
+    int expireLapsedAuthorizations();
 }
