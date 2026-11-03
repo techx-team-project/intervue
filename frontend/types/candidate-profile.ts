@@ -1,0 +1,68 @@
+export const GENDERS = ['MALE', 'FEMALE', 'OTHER'] as const;
+export const JOB_SEARCH_STATUSES = ['ACTIVELY_LOOKING', 'OPEN_TO_OFFERS', 'NOT_LOOKING'] as const;
+export const CAREER_LEVELS = ['INTERN', 'JUNIOR', 'MID', 'SENIOR', 'LEAD'] as const;
+export const WORK_MODES = ['ON_SITE', 'HYBRID', 'REMOTE', 'FLEXIBLE'] as const;
+export const CONTRACT_TYPES = ['FULL_TIME', 'PART_TIME', 'INTERNSHIP'] as const;
+
+export type Gender = (typeof GENDERS)[number];
+export type JobSearchStatus = (typeof JOB_SEARCH_STATUSES)[number];
+export type CareerLevel = (typeof CAREER_LEVELS)[number];
+export type WorkMode = (typeof WORK_MODES)[number];
+export type ContractType = (typeof CONTRACT_TYPES)[number];
+
+export type CandidateProfileResponse = {
+  userId: number;
+  name: string;
+  email: string;
+  contactEmail: string | null;
+  phone: string | null;
+  phoneVerified: boolean;
+  address: string | null;
+  avatarUrl: string | null;
+  coverUrl: string | null;
+  headline: string | null;
+  bio: string | null;
+  gender: Gender | null;
+  birthYear: number | null;
+  showPersonalDetails: boolean;
+  searchableByRecruiters: boolean;
+  jobSearchStatus: JobSearchStatus;
+  githubUrl: string | null;
+  linkedinUrl: string | null;
+  portfolioUrl: string | null;
+  desiredRole: string | null;
+  desiredLevel: CareerLevel | null;
+  salaryNegotiable: boolean;
+  salaryMin: number | null;
+  salaryMax: number | null;
+  workMode: WorkMode | null;
+  contractType: ContractType | null;
+  preferredLocations: string[];
+  preferredIndustries: string[];
+  updatedAt: string | null;
+};
+
+export type SaveCandidateProfileRequest = {
+  name: string;
+  headline: string | null;
+  bio: string | null;
+  contactEmail: string | null;
+  address: string | null;
+  gender: Gender | null;
+  birthYear: number | null;
+  showPersonalDetails: boolean;
+  searchableByRecruiters: boolean;
+  jobSearchStatus: JobSearchStatus;
+  githubUrl: string | null;
+  linkedinUrl: string | null;
+  portfolioUrl: string | null;
+  desiredRole: string;
+  desiredLevel: CareerLevel | null;
+  salaryNegotiable: boolean;
+  salaryMin: number | null;
+  salaryMax: number | null;
+  workMode: WorkMode | null;
+  contractType: ContractType | null;
+  preferredLocations: string[];
+  preferredIndustries: string[];
+};
