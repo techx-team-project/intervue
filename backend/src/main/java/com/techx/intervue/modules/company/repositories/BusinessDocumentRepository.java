@@ -15,6 +15,8 @@ public interface BusinessDocumentRepository
 
     List<BusinessDocument> findByCompanyIdOrderBySubmittedAtDesc(Long companyId);
 
+    boolean existsByCompanyId(Long companyId);
+
     Optional<BusinessDocument> findFirstBySubmittedByAndDocumentTypeOrderBySubmittedAtDesc(
             Long submittedBy, BusinessDocumentType documentType);
 
