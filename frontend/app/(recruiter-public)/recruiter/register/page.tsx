@@ -3,9 +3,9 @@ import RecruiterRegisterView from '@/components/auth/RecruiterRegisterView';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Đăng ký tài khoản Nhà tuyển dụng | InterVue AI',
+  title: 'Create an employer account | InterVue AI',
   description:
-    'Đăng ký tài khoản nhà tuyển dụng miễn phí trên InterVue. Cùng tạo dựng lợi thế cho doanh nghiệp bằng công nghệ tuyển dụng ứng dụng sâu AI & Hiring Funnel.',
+    'Create a free employer account on InterVue and hire IT talent faster with AI-assisted candidate screening.',
 };
 
 export default function RecruiterRegisterPage() {

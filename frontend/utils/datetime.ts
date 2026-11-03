@@ -28,6 +28,13 @@ const weekdayFormatter = new Intl.DateTimeFormat('en-GB', {
   hour12: false,
 });
 
+const isoDatePartsFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: TIME_ZONE,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
 export function formatDate(iso: string): string {
   return dateFormatter.format(new Date(iso));
 }
@@ -38,6 +45,12 @@ export function formatDateTime(iso: string): string {
 
 export function formatInterviewMoment(iso: string): string {
   return weekdayFormatter.format(new Date(iso));
+}
+
+export function todayIsoDate(): string {
+  const parts = isoDatePartsFormatter.formatToParts(new Date());
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value ?? '';
+  return `${part('year')}-${part('month')}-${part('day')}`;
 }
 
 function startOfDayInTimeZone(value: Date): number {

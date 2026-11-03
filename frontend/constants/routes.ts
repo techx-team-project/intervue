@@ -10,6 +10,7 @@ export const ROUTES = {
   RECRUITER_LANDING: '/recruiter',
   RECRUITER_LOGIN: '/recruiter/login',
   RECRUITER_REGISTER: '/recruiter/register',
+  RECRUITER_ONBOARDING: '/recruiter/onboarding',
   RECRUITER_DASHBOARD: '/recruiter/dashboard',
   RECRUITER_CAMPAIGNS: '/recruiter/campaigns',
   RECRUITER_JOBS: '/recruiter/jobs',

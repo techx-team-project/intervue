@@ -39,61 +39,61 @@ export default function RecruiterAuthLayout({ title, subtitle, children }: Recru
                     priority
                     className="h-9 w-auto object-contain"
                   />
-                  <span className="inline-flex items-center gap-1 rounded-md border border-primary/20 bg-primary-light px-2.5 py-0.5 text-xs font-bold text-primary">
+                  <span className="border-primary/20 bg-primary-light text-primary inline-flex items-center gap-1 rounded-md border px-2.5 py-0.5 text-xs font-bold">
                     <Building2 className="h-3.5 w-3.5" />
-                    Cổng Doanh nghiệp
+                    Employer portal
                   </span>
                 </Link>
               </div>
 
               <div className="my-8 space-y-6">
                 <div className="space-y-3">
-                  <div className="text-primary inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary-light px-3 py-1 text-xs font-bold">
+                  <div className="text-primary border-primary/20 bg-primary-light inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-bold">
                     <Sparkles className="h-3.5 w-3.5" />
-                    <span>NỀN TẢNG TUYỂN DỤNG IT ỨNG DỤNG AI</span>
+                    <span>AI-ASSISTED IT RECRUITMENT</span>
                   </div>
-                  <h2 className="text-navy text-2xl font-extrabold leading-tight xl:text-3xl">
-                    Tuyển dụng IT thông minh và chuẩn xác hơn cùng InterVue
+                  <h2 className="text-navy text-2xl leading-tight font-extrabold xl:text-3xl">
+                    Hire IT talent faster and more accurately with InterVue
                   </h2>
                   <p className="text-sm leading-relaxed text-[#4d5965]">
-                    Tiếp cận hơn 150.000+ hồ sơ kỹ sư phần mềm chất lượng cao, tự động hóa quy trình sàng lọc và phỏng vấn
-                    với sự hỗ trợ của công nghệ AI.
+                    Post IT jobs, receive applications and let AI help you screen candidates, while you always make the
+                    final hiring decision.
                   </p>
                 </div>
 
                 <div className="space-y-3">
                   <div className="hover:border-primary/40 flex items-start gap-3 rounded-2xl border border-[#e9eaec] bg-white p-4 shadow-2xs transition">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary-light text-primary">
+                    <div className="bg-primary-light text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl">
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <div>
-                      <h4 className="text-navy text-xs font-bold">AI Sàng lọc CV chuẩn STAR</h4>
+                      <h4 className="text-navy text-xs font-bold">AI resume matching</h4>
                       <p className="mt-0.5 text-xs text-[#6f7882]">
-                        Tự động chấm điểm độ khớp tech stack và kinh nghiệm theo tiêu chuẩn STAR.
+                        Match every resume against your job requirements and get a summary of relevant experience.
                       </p>
                     </div>
                   </div>
 
                   <div className="hover:border-primary/40 flex items-start gap-3 rounded-2xl border border-[#e9eaec] bg-white p-4 shadow-2xs transition">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary-light text-primary">
+                    <div className="bg-primary-light text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl">
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <div>
-                      <h4 className="text-navy text-xs font-bold">Tặng 03 tin tuyển dụng miễn phí</h4>
+                      <h4 className="text-navy text-xs font-bold">Verified company profile</h4>
                       <p className="mt-0.5 text-xs text-[#6f7882]">
-                        Khởi tạo tài khoản nhận ngay 03 tin đăng và 30 lượt AI Screening trải nghiệm nền tảng.
+                        Verify your company once to start posting jobs and earn candidates&apos; trust.
                       </p>
                     </div>
                   </div>
 
                   <div className="hover:border-primary/40 flex items-start gap-3 rounded-2xl border border-[#e9eaec] bg-white p-4 shadow-2xs transition">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary-light text-primary">
+                    <div className="bg-primary-light text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl">
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <div>
-                      <h4 className="text-navy text-xs font-bold">Tư vấn tuyển dụng IT chuyên sâu 24/7</h4>
+                      <h4 className="text-navy text-xs font-bold">Dedicated employer support</h4>
                       <p className="mt-0.5 text-xs text-[#6f7882]">
-                        Hotline riêng cho NTD (0812.665.001) tư vấn tối ưu tin đăng và tìm kiếm ứng viên.
+                        Call our employer hotline (0812.665.001) for help with job posts and candidate search.
                       </p>
                     </div>
                   </div>
@@ -104,7 +104,7 @@ export default function RecruiterAuthLayout({ title, subtitle, children }: Recru
                 <div className="flex items-center gap-1.5">
                   <PhoneCall className="text-primary h-4 w-4" />
                   <span>
-                    Hotline Doanh nghiệp: <strong className="text-navy font-bold">0812.665.001</strong>
+                    Employer hotline: <strong className="text-navy font-bold">0812.665.001</strong>
                   </span>
                 </div>
                 <span>recruiter-support@intervue.vn</span>
@@ -122,8 +122,8 @@ export default function RecruiterAuthLayout({ title, subtitle, children }: Recru
               {children}
 
               <footer className="mt-6 border-t border-[#f4f5f5] pt-4 text-center text-xs text-[#6f7882]">
-                Bằng việc đăng nhập hoặc đăng ký, bạn đồng ý với{' '}
-                <span className="text-navy font-semibold">Điều khoản dịch vụ Doanh nghiệp</span> của InterVue.
+                By signing in or signing up, you agree to InterVue&apos;s{' '}
+                <span className="text-navy font-semibold">Employer Terms of Service</span>.
               </footer>
             </div>
           </div>

@@ -6,6 +6,7 @@ const PUBLIC_RECRUITER_PATHS: readonly string[] = [
   ROUTES.RECRUITER_LANDING,
   ROUTES.RECRUITER_LOGIN,
   ROUTES.RECRUITER_REGISTER,
+  ROUTES.RECRUITER_ONBOARDING,
 ];
 
 export function proxy(request: NextRequest) {
@@ -29,4 +30,3 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: ['/candidate/:path*', '/account/:path*', '/recruiter/:path*', '/admin/:path*'],
 };
-

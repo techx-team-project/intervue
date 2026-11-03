@@ -17,7 +17,7 @@ export function useBecomeRecruiter() {
       return renewSession();
     },
     onSuccess: () => {
-      toast.success('Đã bật vai trò Nhà tuyển dụng.');
+      toast.success('Recruiter role activated.');
       router.push(ROUTES.RECRUITER_DASHBOARD);
     },
     onError: (error) => toast.error(getErrorMessage(error)),

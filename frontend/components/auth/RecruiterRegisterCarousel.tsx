@@ -29,10 +29,10 @@ const SLIDES: SlideItem[] = [
   },
   {
     id: 3,
-    prefix: 'Manage your works with ',
+    prefix: 'Manage your hiring with ',
     highlight: 'Campaigns',
     image: '/auth/recruiter-banner-03@2x.png',
-    alt: 'Manage your works with Campaigns',
+    alt: 'Manage your hiring with Campaigns',
   },
 ];
 
@@ -54,7 +54,7 @@ export default function RecruiterRegisterCarousel() {
 
   return (
     <aside
-      aria-label="Giới thiệu tính năng dành cho Nhà tuyển dụng"
+      aria-label="InterVue features for recruiters"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
@@ -101,7 +101,7 @@ export default function RecruiterRegisterCarousel() {
       <div
         className="absolute inset-x-0 bottom-[65px] z-30 flex items-center justify-center gap-2.5"
         role="tablist"
-        aria-label="Danh sách slide"
+        aria-label="Slides"
       >
         {SLIDES.map((slide, index) => {
           const isActive = index === currentIndex;
@@ -111,7 +111,7 @@ export default function RecruiterRegisterCarousel() {
               type="button"
               role="tab"
               aria-selected={isActive}
-              aria-label={`Chuyển đến slide ${index + 1}: ${slide.prefix}${slide.highlight}`}
+              aria-label={`Go to slide ${index + 1}: ${slide.prefix}${slide.highlight}`}
               onClick={() => setCurrentIndex(index)}
               className={cn(
                 'cursor-pointer transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00b14f]',
@@ -134,7 +134,7 @@ export default function RecruiterRegisterCarousel() {
           className="h-7 w-auto object-contain opacity-95 drop-shadow-md"
         />
         <p className="mt-1 text-[11px] font-medium tracking-wide text-white/80 drop-shadow">
-          Tiếp lợi thế, nối thành công
+          Smarter IT hiring with AI
         </p>
       </div>
     </aside>

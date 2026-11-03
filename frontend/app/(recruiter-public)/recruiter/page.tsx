@@ -2,9 +2,8 @@ import RecruiterLandingView from '@/components/recruiter/public/RecruiterLanding
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'InterVue Tuyển dụng - Nền tảng tuyển dụng IT ứng dụng AI hàng đầu',
-  description:
-    'Đăng tin tuyển dụng IT miễn phí, tiếp cận 100.000+ ứng viên lập trình viên chất lượng cao, tự động sàng lọc hồ sơ với AI.',
+  title: 'InterVue for Employers – AI-assisted IT recruitment',
+  description: 'Post IT jobs, receive applications and screen candidates faster with AI resume matching on InterVue.',
 };
 
 export default function RecruiterLandingPage() {

@@ -39,66 +39,66 @@ import { Modal } from '@/components/ui/Modal';
 const TOUCHPOINTS = [
   {
     step: '01',
-    title: '15.000+ việc làm IT mới cập nhật liên tục',
-    desc: 'Hàng nghìn cơ hội việc làm phong phú từ các tập đoàn công nghệ lớn, MNCs, Tech Unicorns đến các Startups năng động, đáp ứng kỳ vọng đa dạng của ứng viên từ Fresher đến C-Level.',
+    title: 'IT jobs updated every day',
+    desc: 'A wide range of opportunities from large technology groups, multinationals and tech unicorns to fast-growing startups, matching candidates from fresher to C-level.',
   },
   {
     step: '02',
-    title: 'Đưa việc làm đến đúng nơi ứng viên tìm kiếm qua Search & AI',
-    desc: 'Sở hữu độ phủ SEO mạnh mẽ hàng đầu trên Google và tối ưu hiện diện theo thuật toán AI Share of Voice trong ngành tuyển dụng IT, giúp thương hiệu NTD luôn nổi bật.',
+    title: 'Put your jobs where candidates search, on Google and in AI answers',
+    desc: 'Strong SEO presence on Google and optimized visibility in AI answers for IT recruitment, so your employer brand stands out.',
   },
   {
     step: '03',
-    title: 'Ứng dụng & Nền tảng với hàng triệu lượt truy cập',
-    desc: 'Đưa cơ hội việc làm tiếp cận ứng viên ngay trên mọi thiết bị máy tính và ứng dụng di động, rút ngắn chu kỳ phản hồi và tăng tỷ lệ nộp CV lên 3.5 lần.',
+    title: 'Web and mobile app access',
+    desc: 'Bring job opportunities to candidates on every desktop and mobile device, shortening response time and making it easier to apply.',
   },
   {
     step: '04',
-    title: 'Gợi ý việc làm tự động bằng công nghệ AI Matcher',
-    desc: 'Thuật toán AI tự động phân tích hồ sơ năng lực, tech stack và hành vi tìm kiếm để gửi thông báo gợi ý tin tuyển dụng phù hợp nhất tới đúng tệp kỹ sư tiềm năng.',
+    title: 'Automatic job suggestions with AI matching',
+    desc: 'AI analyzes candidate profiles, tech stacks and search behavior to send the most relevant job suggestions to the right engineers.',
   },
 ];
 
 const UNIVERSITIES = [
-  { code: 'FTU', name: 'ĐH Ngoại Thương', logo: '/srp/university/ftu.png' },
-  { code: 'NEU', name: 'ĐH Kinh tế Quốc dân', logo: '/srp/university/neu.png' },
-  { code: 'TMU', name: 'ĐH Thương Mại', logo: '/srp/university/tmu.png' },
-  { code: 'HUST', name: 'ĐH Bách Khoa Hà Nội', logo: '/srp/university/hust.png' },
-  { code: 'VNU', name: 'ĐHQG Hà Nội', logo: '/srp/university/vnu.png' },
-  { code: 'VNUHCM', name: 'ĐHQG TP.HCM', logo: '/srp/university/vnuhcm.png' },
-  { code: 'UEH', name: 'ĐH Kinh tế TP.HCM', logo: '/srp/university/ueh.png' },
+  { code: 'FTU', name: 'Foreign Trade University', logo: '/srp/university/ftu.png' },
+  { code: 'NEU', name: 'National Economics University', logo: '/srp/university/neu.png' },
+  { code: 'TMU', name: 'Thuongmai University', logo: '/srp/university/tmu.png' },
+  { code: 'HUST', name: 'Hanoi University of Science and Technology', logo: '/srp/university/hust.png' },
+  { code: 'VNU', name: 'Vietnam National University, Hanoi', logo: '/srp/university/vnu.png' },
+  { code: 'VNUHCM', name: 'Vietnam National University, Ho Chi Minh City', logo: '/srp/university/vnuhcm.png' },
+  { code: 'UEH', name: 'University of Economics Ho Chi Minh City', logo: '/srp/university/ueh.png' },
 ];
 
 const UNIVERSITY_TABS = [
   {
-    title: 'CỔNG VIỆC LÀM MANG THƯƠNG HIỆU NHÀ TRƯỜNG',
-    subtitle: 'Nền tảng số hóa việc làm thực tập & tốt nghiệp',
+    title: 'UNIVERSITY-BRANDED JOB PORTAL',
+    subtitle: 'Digital platform for internships and graduate jobs',
     description:
-      'Đồng hành cùng ban giám hiệu các trường đại học xây dựng phân hệ cổng việc làm độc quyền mang nhận diện của trường, kết nối trực tiếp sinh viên với mạng lưới 20.000+ doanh nghiệp bảo trợ, số hóa 100% quy trình thực tập.',
-    badge: 'Phân hệ số hóa độc quyền',
+      'Work with university leadership to build an exclusive job portal carrying the university brand, connecting students directly with sponsoring companies and digitizing the internship process.',
+    badge: 'Exclusive digital module',
     image: '/market-bg.jpg',
-    eventTitle: 'Cổng thông tin việc làm số hóa độc quyền Đại học',
-    eventDesc: 'Kết nối mạng lưới hơn 50+ trường đại học với 20.000+ doanh nghiệp công nghệ tuyển dụng.',
+    eventTitle: 'Exclusive digital university job portal',
+    eventDesc: 'Connecting partner universities with technology companies that are hiring.',
   },
   {
-    title: 'CÁC HOẠT ĐỘNG KẾT NỐI NGHỀ NGHIỆP',
-    subtitle: 'Job Fair & Ngày hội việc làm công nghệ quy mô lớn',
+    title: 'CAREER CONNECTION ACTIVITIES',
+    subtitle: 'Job fairs and large-scale tech career days',
     description:
-      'Tài trợ và phối hợp tổ chức các ngày hội Tech Job Fair thường niên tại các trường đại học công nghệ trọng điểm, quy tụ hơn 10.000+ sinh viên ưu tú tham gia phỏng vấn sơ tuyển trực tiếp tại gian hàng doanh nghiệp.',
-    badge: '10.000+ Sinh viên / Sự kiện',
+      'Sponsor and co-organize annual Tech Job Fairs at leading technology universities, where outstanding students join on-site preliminary interviews at company booths.',
+    badge: 'Large-scale student events',
     image: '/banner-recruitment-1.jpg',
-    eventTitle: 'Tech Job Fair & Lễ ký kết hợp tác Đại học',
-    eventDesc: 'Kết nối hơn 80.000+ sinh viên IT với các doanh nghiệp công nghệ hàng đầu tại Việt Nam.',
+    eventTitle: 'Tech Job Fair & university partnership signing',
+    eventDesc: 'Connecting IT students with leading technology companies in Vietnam.',
   },
   {
-    title: 'CÁC HOẠT ĐỘNG ĐÀO TẠO VÀ HỖ TRỢ SINH VIÊN',
-    subtitle: 'Sửa CV 1-1 & Luyện phỏng vấn thử cùng AI',
+    title: 'STUDENT TRAINING AND SUPPORT',
+    subtitle: '1-on-1 resume review & AI mock interviews',
     description:
-      'Tổ chức chuỗi workshop định hướng nghề nghiệp, cung cấp công cụ AI tối ưu CV chuẩn ATS và tổ chức các buổi phỏng vấn giả định (AI Mock Interview) giúp sinh viên năm cuối tự tin ứng tuyển vị trí thực tập sinh & junior.',
-    badge: 'Hỗ trợ 1-1 chuyên sâu',
-    image: '/admin/banner-bot.jpg',
-    eventTitle: 'Chuỗi Workshop Định hướng nghề & AI Mock Interview',
-    eventDesc: 'Trang bị kỹ năng viết CV chuẩn ATS và luyện tập phỏng vấn kỹ thuật cùng AI cho sinh viên.',
+      'Run career-orientation workshops, provide AI tools to optimize ATS-friendly resumes and host AI Mock Interview sessions so final-year students apply for internship and junior roles with confidence.',
+    badge: 'In-depth 1-on-1 support',
+    image: '/landing/banner-bot.jpg',
+    eventTitle: 'Career orientation workshops & AI Mock Interview',
+    eventDesc: 'Equipping students with ATS-friendly resume writing and technical interview practice with AI.',
   },
 ];
 
@@ -119,29 +119,29 @@ const TESTIMONIALS = [
     company: 'FPT Software',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
     tag: 'AI CV Matcher',
-    result: 'Rút ngắn 65% thời gian',
+    result: 'Faster screening',
     content:
-      'Nhờ mô hình AI CV Matcher của InterVue, đội ngũ tuyển dụng chúng tôi rút ngắn 65% thời gian sàng lọc sơ bộ cho các vị trí Senior Fullstack & DevOps. Độ chính xác tech stack rất ấn tượng!',
+      'With the AI CV Matcher from InterVue, our recruiting team significantly shortened initial screening for Senior Fullstack and DevOps roles. The tech stack accuracy is impressive!',
   },
   {
     name: 'Trần Đức Huy',
     role: 'Engineering Manager',
     company: 'Techcombank',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    tag: 'Phỏng vấn chuẩn STAR',
-    result: 'Tuyển đúng người 94%',
+    tag: 'Structured interviews',
+    result: 'Better-fit hires',
     content:
-      'Bộ câu hỏi phỏng vấn STAR gợi ý tự động bám rất sát kinh nghiệm thực tế của ứng viên, giúp các buổi phỏng vấn kỹ thuật diễn ra cực kỳ chuẩn xác, chuyên sâu và tiết kiệm thời gian hội đồng.',
+      'The automatically suggested structured interview questions follow the real experience of each candidate closely, making technical interviews precise, in-depth and time-saving for the panel.',
   },
   {
     name: 'Lê Hoàng Yến',
     role: 'HR Director',
     company: 'VNG Corporation',
     avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-    tag: 'Săn ứng viên chủ động',
-    result: 'Tiếp cận 100+ Senior AI',
+    tag: 'Proactive sourcing',
+    result: 'Reached senior AI talent',
     content:
-      'Tính năng tìm kiếm hồ sơ tech chủ động mang lại nguồn ứng viên chất lượng cao, đặc biệt là các vị trí chuyên gia AI/ML vốn rất khó tuyển trên thị trường. Rất đáng tin cậy!',
+      'The proactive tech profile search brings a high-quality candidate pool, especially for AI/ML experts, who are very hard to hire on the market. Very reliable!',
   },
 ];
 
@@ -149,38 +149,38 @@ const FEATURES = [
   {
     icon: BrainCircuit,
     title: 'AI CV Matcher & Screener',
-    desc: 'Mô hình phân tích sâu tech stack, số năm kinh nghiệm, các dự án thực tế so với JD, tự động xếp hạng độ tương thích từ cao xuống thấp.',
-    tag: 'Tự động hóa',
+    desc: 'Analyzes tech stack, years of experience and real projects against the job description, then ranks compatibility from highest to lowest automatically.',
+    tag: 'Automation',
   },
   {
     icon: FileText,
-    title: 'AI JD Generator chuẩn SEO',
-    desc: 'Trợ lý AI hỗ trợ gợi ý yêu cầu kỹ năng, mô tả trách nhiệm và chế độ đãi ngộ chỉ trong 30 giây. Tối ưu từ khóa tiếp cận đúng tệp ứng viên IT.',
-    tag: 'Soạn thảo nhanh',
+    title: 'SEO-friendly AI JD Generator',
+    desc: 'An AI assistant suggests required skills, responsibilities and benefits in seconds. Keyword optimization helps reach the right IT candidates.',
+    tag: 'Fast drafting',
   },
   {
     icon: BarChart3,
-    title: 'Quản lý ứng viên ATS Kanban',
-    desc: 'Pipeline quản lý ứng viên trực quan với thao tác kéo thả qua các vòng: Mới nộp, Phù hợp, Phỏng vấn, Đề nghị và Tuyển dụng. Ghi chú đồng bộ.',
-    tag: 'Quy trình chuẩn',
+    title: 'ATS Kanban candidate management',
+    desc: 'A visual candidate pipeline with drag-and-drop across stages: New, Matched, Interview, Offer and Hired. Notes stay in sync.',
+    tag: 'Standard workflow',
   },
   {
     icon: Bot,
-    title: 'Gợi ý câu hỏi phỏng vấn STAR',
-    desc: 'Dựa vào tech stack và các dự án trong CV, AI tự động gợi ý bộ câu hỏi đào sâu theo chuẩn STAR giúp đánh giá chính xác năng lực thực chiến.',
-    tag: 'Phỏng vấn sâu',
+    title: 'AI-suggested structured interview questions',
+    desc: 'Based on the tech stack and projects in each resume, AI suggests in-depth structured questions to assess real-world skills accurately.',
+    tag: 'In-depth interviews',
   },
   {
     icon: Code2,
-    title: 'Tìm kiếm tài năng tech chủ động',
-    desc: 'Khám phá kho hồ sơ với bộ lọc chuyên sâu theo: Framework, Ngôn ngữ, Vị trí (Frontend, Backend, DevOps, AI), Mức lương và Trạng thái tìm việc.',
-    tag: 'Kho ứng viên IT',
+    title: 'Proactive tech talent search',
+    desc: 'Browse the profile pool with advanced filters: framework, language, position (Frontend, Backend, DevOps, AI), salary and job-seeking status.',
+    tag: 'IT candidate pool',
   },
   {
     icon: ShieldCheck,
-    title: 'Hồ sơ eKYC xác thực',
-    desc: 'Ứng viên được xác thực danh tính và kinh nghiệm thực tế, hạn chế tối đa hồ sơ ảo hoặc spam, đảm bảo chất lượng tuyển dụng tối ưu cho doanh nghiệp.',
-    tag: 'Hồ sơ thật',
+    title: 'Verified eKYC profiles',
+    desc: 'Candidates are identity-verified, which limits fake or spam profiles and keeps hiring quality high for companies.',
+    tag: 'Real profiles',
   },
 ];
 
@@ -189,7 +189,7 @@ const INITIAL_CONSULT_FORM = {
   phone: '',
   email: '',
   company: '',
-  needs: 'Tư vấn đăng tin tuyển dụng IT & Gói AI Matching',
+  needs: 'IT job posting & AI matching packages',
 };
 
 export default function RecruiterLandingView() {
@@ -232,14 +232,14 @@ export default function RecruiterLandingView() {
       <main className="flex-1">
         <section
           id="introduction-hero"
-          className="relative h-[530px] overflow-hidden bg-white bg-contain md:bg-cover bg-bottom bg-no-repeat lg:h-[665px] lg:bg-[#F5FBF9]"
+          className="relative h-[530px] overflow-hidden bg-white bg-contain bg-bottom bg-no-repeat md:bg-cover lg:h-[665px] lg:bg-[#F5FBF9]"
           style={{
             backgroundImage: "url('/ai-hero-scene-desktop.png')",
           }}
         >
-          <div className="pointer-events-none absolute left-1/2 top-0 z-1 h-[266px] w-[492px] max-w-none -translate-x-1/2 bg-[#F4FBF9] blur-[35px] lg:hidden" />
+          <div className="pointer-events-none absolute top-0 left-1/2 z-1 h-[266px] w-[492px] max-w-none -translate-x-1/2 bg-[#F4FBF9] blur-[35px] lg:hidden" />
 
-          <div className="pointer-events-none absolute left-[5px] top-[128px] z-3 hidden sm:block lg:top-[220px] lg:left-[20px]">
+          <div className="pointer-events-none absolute top-[128px] left-[5px] z-3 hidden sm:block lg:top-[220px] lg:left-[20px]">
             <Image
               src="/hero-left-pattern.png"
               alt=""
@@ -251,15 +251,15 @@ export default function RecruiterLandingView() {
 
           <div className="relative z-4 mx-auto flex w-full max-w-[1075px] flex-col items-center px-4 pt-10 text-center lg:pt-24 xl:pt-28">
             <div className="relative flex w-full flex-col items-center gap-2.5 lg:gap-4">
-              <h1 className="m-0 w-full text-3xl font-bold leading-tight text-[#263A4D] sm:text-4xl lg:text-[42px] lg:leading-[50px]">
-                Tuyển dụng Ứng viên phù hợp{' '}
+              <h1 className="m-0 w-full text-3xl leading-tight font-bold text-[#263A4D] sm:text-4xl lg:text-[42px] lg:leading-[50px]">
+                Hire the right candidates{' '}
                 <span className="relative text-[#0B933E]">
-                  cùng AI
+                  with AI
                   <span className="ml-1 inline-block text-xl lg:text-2xl">✨</span>
                 </span>
               </h1>
-              <p className="m-0 w-full text-base font-semibold leading-normal text-[#0B933E] sm:text-xl lg:text-[28px] lg:leading-[36px]">
-                Tiếp cận hàng triệu ứng viên đang tìm việc
+              <p className="m-0 w-full text-base leading-normal font-semibold text-[#0B933E] sm:text-xl lg:text-[28px] lg:leading-[36px]">
+                Reach IT candidates who are actively looking for jobs
               </p>
             </div>
 
@@ -270,14 +270,14 @@ export default function RecruiterLandingView() {
                 className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#263A4D] px-7 py-3 text-center text-sm font-semibold text-white shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1a2936] hover:shadow-lg sm:w-auto sm:text-base"
               >
                 <Headphones className="h-4 w-4" />
-                <span>Tư vấn tuyển dụng</span>
+                <span>Talk to our team</span>
               </button>
 
               <Link
                 href={postJobUrl}
                 className="flex w-full items-center justify-center gap-2 rounded-full bg-[#009D46] px-8 py-3 text-center text-sm font-semibold text-white shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#00b14f] hover:shadow-lg sm:w-auto sm:text-base"
               >
-                <span>Đăng tin ngay</span>
+                <span>Post a job</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -286,22 +286,24 @@ export default function RecruiterLandingView() {
 
         <section id="analytics-stats" className="border-b border-[#e9eaec] bg-[#F8FAF9] py-8 lg:py-10">
           <div className="container-topcv">
-            <div className="flex flex-col items-center justify-center gap-6 divide-y divide-[#D6E5DC] text-center sm:flex-row sm:justify-between sm:divide-y-0 sm:divide-x">
+            <div className="flex flex-col items-center justify-center gap-6 divide-y divide-[#D6E5DC] text-center sm:flex-row sm:justify-between sm:divide-x sm:divide-y-0">
               <div className="flex w-full flex-col items-center gap-1.5 px-4 sm:w-1/4">
-                <p className="text-3xl font-extrabold tracking-tight text-[#009D46] lg:text-4xl">11M+</p>
-                <p className="text-xs font-semibold text-[#303235] lg:text-sm">Ứng viên tiềm năng</p>
+                <p className="text-3xl font-extrabold tracking-tight text-[#009D46] lg:text-4xl">AI</p>
+                <p className="text-xs font-semibold text-[#303235] lg:text-sm">
+                  Resume matching against your job requirements
+                </p>
               </div>
               <div className="flex w-full flex-col items-center gap-1.5 px-4 sm:w-1/4">
-                <p className="text-3xl font-extrabold tracking-tight text-[#009D46] lg:text-4xl">9M+</p>
-                <p className="text-xs font-semibold text-[#303235] lg:text-sm">Lượt truy cập ứng viên hàng tháng</p>
+                <p className="text-3xl font-extrabold tracking-tight text-[#009D46] lg:text-4xl">eKYC</p>
+                <p className="text-xs font-semibold text-[#303235] lg:text-sm">Identity-verified candidates</p>
               </div>
               <div className="flex w-full flex-col items-center gap-1.5 px-4 sm:w-1/4">
-                <p className="text-3xl font-extrabold tracking-tight text-[#009D46] lg:text-4xl">700K+</p>
-                <p className="text-xs font-semibold text-[#303235] lg:text-sm">Doanh nghiệp tin dùng</p>
+                <p className="text-3xl font-extrabold tracking-tight text-[#009D46] lg:text-4xl">Verified</p>
+                <p className="text-xs font-semibold text-[#303235] lg:text-sm">Companies verified before posting</p>
               </div>
               <div className="flex w-full flex-col items-center gap-1.5 px-4 sm:w-1/4">
-                <p className="text-3xl font-extrabold tracking-tight text-[#009D46] lg:text-4xl">60K+</p>
-                <p className="text-xs font-semibold text-[#303235] lg:text-sm">Tin đăng hiển thị hàng tháng</p>
+                <p className="text-3xl font-extrabold tracking-tight text-[#009D46] lg:text-4xl">Web + App</p>
+                <p className="text-xs font-semibold text-[#303235] lg:text-sm">Job search on web and mobile</p>
               </div>
             </div>
           </div>
@@ -310,16 +312,15 @@ export default function RecruiterLandingView() {
         <section id="ecosystem" className="scroll-mt-20 border-b border-[#e9eaec] bg-white py-16 sm:py-20">
           <div className="container-topcv">
             <div className="mx-auto max-w-3xl text-center">
-              <div className="text-primary inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary-light px-3.5 py-1 text-xs font-bold">
+              <div className="text-primary border-primary/20 bg-primary-light inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-xs font-bold">
                 <Globe className="h-3.5 w-3.5" />
-                <span>HỆ SINH THÁI ĐA KÊNH TIẾP CẬN</span>
+                <span>MULTI-CHANNEL REACH ECOSYSTEM</span>
               </div>
               <h2 className="text-navy mt-3 text-2xl font-black tracking-tight sm:text-4xl">
-                InterVue thu hút ứng viên như thế nào?
+                How does InterVue attract candidates?
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-[#6f7882] sm:text-base">
-                Hơn 500.000+ ứng viên lựa chọn InterVue để tìm việc, phát triển nghề nghiệp và khám phá cơ hội mới mỗi
-                ngày.
+                IT candidates use InterVue to find jobs, grow their careers and discover new opportunities every day.
               </p>
             </div>
 
@@ -327,16 +328,13 @@ export default function RecruiterLandingView() {
               <div className="lg:col-span-5">
                 <div className="relative mx-auto flex max-w-md flex-col items-center justify-center rounded-3xl border border-[#e9eaec] bg-gradient-to-b from-[#f8fafc] to-[#eef9f2] p-8 text-center shadow-xs">
                   <div className="relative flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72">
-                    <Image
-                      src="/srp/analytics/globe-grid.svg"
-                      alt=""
-                      fill
-                      className="object-contain opacity-70"
-                    />
+                    <Image src="/srp/analytics/globe-grid.svg" alt="" fill className="object-contain opacity-70" />
 
                     <div className="absolute inset-0 m-auto flex h-36 w-36 flex-col items-center justify-center rounded-full border border-emerald-300 bg-white/95 p-4 shadow-xl backdrop-blur-xs">
-                      <div className="text-3xl font-extrabold text-[#009D46] sm:text-4xl">11M+</div>
-                      <div className="mt-1 text-center text-xs font-semibold text-[#263a4d]">Ứng viên đang tìm việc</div>
+                      <div className="text-3xl font-extrabold text-[#009D46] sm:text-4xl">IT</div>
+                      <div className="mt-1 text-center text-xs font-semibold text-[#263a4d]">
+                        Candidates focused on IT roles
+                      </div>
                     </div>
                   </div>
 
@@ -345,7 +343,7 @@ export default function RecruiterLandingView() {
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                       <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                     </span>
-                    <span>Dữ liệu hồ sơ cập nhật thời gian thực</span>
+                    <span>Profile data updated in real time</span>
                   </div>
                 </div>
               </div>
@@ -376,11 +374,9 @@ export default function RecruiterLandingView() {
           <div className="container-topcv flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="text-center md:text-left">
               <p className="text-navy text-base font-bold sm:text-lg">
-                Hệ sinh thái ứng viên rộng giúp tin tuyển dụng của doanh nghiệp tiếp cận đúng người, đúng thời điểm.
+                A broad candidate ecosystem helps your job posts reach the right people at the right time.
               </p>
-              <p className="text-xs text-slate-600">
-                Tối ưu chi phí và tăng tốc độ tìm kiếm nhân sự công nghệ chất lượng cao.
-              </p>
+              <p className="text-xs text-slate-600">Reduce costs and speed up hiring of high-quality tech talent.</p>
             </div>
 
             <div className="flex shrink-0 items-center gap-3">
@@ -389,14 +385,14 @@ export default function RecruiterLandingView() {
                 onClick={() => setConsultModalOpen(true)}
                 className="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-xs font-bold text-slate-800 shadow-xs transition hover:bg-slate-50 sm:text-sm"
               >
-                Tư vấn tuyển dụng
+                Talk to our team
               </button>
 
               <Link
                 href={ROUTES.RECRUITER_REGISTER}
                 className="bg-primary hover:bg-primary-hover shadow-primary/20 flex items-center gap-1.5 rounded-full px-6 py-2.5 text-xs font-bold text-white shadow-sm transition sm:text-sm"
               >
-                <span>Đăng ký tài khoản</span>
+                <span>Sign up</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -406,17 +402,16 @@ export default function RecruiterLandingView() {
         <section id="university" className="scroll-mt-20 bg-[#f4f5f5] py-16 sm:py-20">
           <div className="container-topcv">
             <div className="mx-auto max-w-3xl text-center">
-              <div className="text-primary inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary-light px-3.5 py-1 text-xs font-bold">
+              <div className="text-primary border-primary/20 bg-primary-light inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-xs font-bold">
                 <GraduationCap className="h-3.5 w-3.5" />
-                <span>INTERVUE UNIVERSITY • MẠNG LƯỚI ĐẠI HỌC ĐỐI TÁC</span>
+                <span>INTERVUE UNIVERSITY • PARTNER UNIVERSITY NETWORK</span>
               </div>
               <h2 className="text-navy mt-3 text-2xl font-black tracking-tight sm:text-4xl">
-                InterVue University - Mạng lưới trường đại học đối tác
+                InterVue University – Partner university network
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-[#6f7882] sm:text-base">
-                InterVue là đơn vị tiên phong tổ chức hàng nghìn sự kiện, hội thảo lớn tại hơn 50+ trường Đại học, Cao
-                đẳng toàn quốc. Tiếp lợi thế phát triển nghề nghiệp cho sinh viên, kỹ sư trẻ, lực lượng lao động công
-                nghệ chủ chốt trong tương lai.
+                InterVue works with universities and colleges across Vietnam to help students, young engineers and the
+                next generation of tech talent start their careers.
               </p>
             </div>
 
@@ -439,7 +434,7 @@ export default function RecruiterLandingView() {
 
             <div className="mt-10 rounded-3xl border-2 border-emerald-300 bg-white p-6 shadow-sm sm:p-10">
               <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
-                <div role="tablist" aria-label="Phân hệ hợp tác đại học" className="space-y-4 lg:col-span-7">
+                <div role="tablist" aria-label="University partnership modules" className="space-y-4 lg:col-span-7">
                   {UNIVERSITY_TABS.map((tab, idx) => {
                     const isActive = activeUnivTab === idx;
                     return (
@@ -457,7 +452,7 @@ export default function RecruiterLandingView() {
                       >
                         <span className="flex items-center justify-between">
                           <span
-                            className={`text-xs font-extrabold uppercase tracking-wide ${
+                            className={`text-xs font-extrabold tracking-wide uppercase ${
                               isActive ? 'text-primary' : 'text-slate-600'
                             }`}
                           >
@@ -473,7 +468,9 @@ export default function RecruiterLandingView() {
                         </span>
 
                         <span className="text-navy mt-1.5 block text-sm font-bold sm:text-base">{tab.subtitle}</span>
-                        <span className="mt-1.5 block text-xs leading-relaxed text-[#6f7882] sm:text-sm">{tab.description}</span>
+                        <span className="mt-1.5 block text-xs leading-relaxed text-[#6f7882] sm:text-sm">
+                          {tab.description}
+                        </span>
                       </button>
                     );
                   })}
@@ -495,12 +492,8 @@ export default function RecruiterLandingView() {
                         <span className="inline-block rounded-md bg-emerald-500 px-2.5 py-1 text-[11px] font-bold text-white shadow-xs">
                           {currentUnivTab.badge}
                         </span>
-                        <h3 className="mt-2 text-sm font-bold text-white sm:text-base">
-                          {currentUnivTab.eventTitle}
-                        </h3>
-                        <p className="mt-1 text-xs text-slate-200">
-                          {currentUnivTab.eventDesc}
-                        </p>
+                        <h3 className="mt-2 text-sm font-bold text-white sm:text-base">{currentUnivTab.eventTitle}</h3>
+                        <p className="mt-1 text-xs text-slate-200">{currentUnivTab.eventDesc}</p>
                       </div>
                     </div>
                   </div>
@@ -515,14 +508,14 @@ export default function RecruiterLandingView() {
             <div className="mx-auto max-w-3xl text-center">
               <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-50 px-3.5 py-1 text-xs font-bold text-amber-800">
                 <Crown className="h-3.5 w-3.5 text-amber-600" />
-                <span>INTERVUE PRO • KHÔNG GIAN TUYỂN DỤNG CAO CẤP</span>
+                <span>INTERVUE PRO • PREMIUM RECRUITMENT SPACE</span>
               </div>
               <h2 className="text-navy mt-3 text-2xl font-black tracking-tight sm:text-4xl">
-                InterVue Pro - Tiếp cận ứng viên nhiều kinh nghiệm
+                InterVue Pro – Reach experienced candidates
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-[#6f7882] sm:text-base">
-                Không gian tuyển dụng chuyên biệt dành cho Doanh nghiệp hàng đầu và Ứng viên chất (Senior, Tech Lead,
-                System Architect).
+                A dedicated hiring space for leading companies and high-quality candidates (Senior, Tech Lead, System
+                Architect).
               </p>
             </div>
 
@@ -538,25 +531,25 @@ export default function RecruiterLandingView() {
                   </div>
 
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xs transition hover:border-amber-400/50">
-                    <div className="flex items-center gap-2 text-xs font-black text-amber-300 uppercase tracking-wide">
+                    <div className="flex items-center gap-2 text-xs font-black tracking-wide text-amber-300 uppercase">
                       <ShieldCheck className="h-4 w-4" />
-                      <span>NỀN TẢNG DÀNH RIÊNG CHO ỨNG VIÊN NHIỀU NĂM KINH NGHIỆM</span>
+                      <span>PLATFORM FOR HIGHLY EXPERIENCED CANDIDATES</span>
                     </div>
                     <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
-                      Hồ sơ kỹ sư cấp cao được thẩm định qua hệ thống bài test kiến trúc hệ thống (System Design), đánh
-                      giá kỹ năng quản lý và cam kết bảo mật danh tính tuyệt đối hai chiều, giúp ứng viên an tâm tiếp cận
-                      cơ hội mới.
+                      Senior engineer profiles are assessed through system design tests and management skill evaluation,
+                      with strict two-way identity confidentiality so candidates can explore new opportunities with
+                      peace of mind.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xs transition hover:border-amber-400/50">
-                    <div className="flex items-center gap-2 text-xs font-black text-amber-300 uppercase tracking-wide">
+                    <div className="flex items-center gap-2 text-xs font-black tracking-wide text-amber-300 uppercase">
                       <Zap className="h-4 w-4" />
-                      <span>CHIẾN DỊCH TRUYỀN THÔNG ĐẶC THÙ & ĐỘC QUYỀN</span>
+                      <span>EXCLUSIVE TARGETED CAMPAIGNS</span>
                     </div>
                     <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
-                      Tiếp cận nguồn ứng viên qua các sự kiện Tech Summit, hội thảo chuyên đề kiến trúc và kênh truyền
-                      thông thang máy tòa nhà văn phòng hạng A (Elevator Pitch) tại Hà Nội và TP.HCM.
+                      Reach candidates through Tech Summit events, architecture seminars and elevator media in Grade A
+                      office buildings (Elevator Pitch) in Hanoi and Ho Chi Minh City.
                     </p>
                   </div>
 
@@ -566,7 +559,7 @@ export default function RecruiterLandingView() {
                       onClick={() => setConsultModalOpen(true)}
                       className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 px-7 py-3 text-xs font-extrabold text-slate-950 shadow-lg shadow-amber-500/20 transition hover:from-amber-300 hover:to-amber-400 sm:text-sm"
                     >
-                      <span>Tư vấn giải pháp InterVue Pro</span>
+                      <span>Talk to us about InterVue Pro</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
                   </div>
@@ -576,7 +569,7 @@ export default function RecruiterLandingView() {
                   <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-[#1e293b] p-2 shadow-2xl">
                     <div className="relative h-72 w-full overflow-hidden rounded-xl sm:h-80">
                       <Image
-                        src="/admin/banner-company.jpg"
+                        src="/landing/banner-company.jpg"
                         alt="InterVue Pro Executive Talent"
                         fill
                         sizes="(max-width: 1024px) 100vw, 40vw"
@@ -586,15 +579,15 @@ export default function RecruiterLandingView() {
 
                       <div className="absolute right-4 bottom-4 left-4 rounded-xl border border-amber-400/30 bg-slate-950/85 p-3.5 backdrop-blur-md">
                         <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-bold text-amber-300">Senior Tech Lead • 8+ YOE</span>
+                          <span className="text-[11px] font-bold text-amber-300">Senior Tech Lead</span>
                           <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-extrabold text-amber-300">
                             Verified
                           </span>
                         </div>
-                        <p className="mt-1 text-xs text-white">Chuyên gia Kiến trúc Hệ thống Phân tán & AI</p>
+                        <p className="mt-1 text-xs text-white">Distributed systems & AI architect</p>
                         <div className="mt-2 flex items-center gap-1.5 text-[11px] text-emerald-400">
                           <Check className="h-3.5 w-3.5" />
-                          <span>Đã vượt qua thẩm định năng lực InterVue Pro</span>
+                          <span>Passed the InterVue Pro skills assessment</span>
                         </div>
                       </div>
                     </div>
@@ -608,13 +601,13 @@ export default function RecruiterLandingView() {
         <section className="bg-[#f4f5f5] py-16 sm:py-20">
           <div className="container-topcv">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="text-primary text-xs font-bold tracking-widest uppercase">Trụ cột dịch vụ</span>
+              <span className="text-primary text-xs font-bold tracking-widest uppercase">Service pillars</span>
               <h2 className="text-navy mt-2 text-3xl font-black tracking-tight sm:text-4xl">
-                Hai phương thức tuyển dụng chủ lực tại InterVue
+                Two core hiring methods at InterVue
               </h2>
               <p className="mt-3 text-base text-[#6f7882]">
-                Linh hoạt lựa chọn giữa đăng tin thu hút ứng viên nộp hồ sơ hoặc chủ động săn đón nhân tài công nghệ theo
-                tech stack mong muốn.
+                Choose between posting jobs to attract applications or proactively sourcing tech talent by the tech
+                stack you need.
               </p>
             </div>
 
@@ -624,40 +617,40 @@ export default function RecruiterLandingView() {
                 className="scroll-mt-24 rounded-3xl border border-[#e9eaec] bg-white p-8 shadow-xs transition hover:shadow-md sm:p-10"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light text-primary">
+                  <div className="bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-2xl">
                     <Briefcase className="h-6 w-6" />
                   </div>
                   <div>
-                    <span className="text-primary text-xs font-bold uppercase">Giải pháp 01</span>
-                    <h3 className="text-navy text-2xl font-bold">Đăng tin tuyển dụng thông minh</h3>
+                    <span className="text-primary text-xs font-bold uppercase">Solution 01</span>
+                    <h3 className="text-navy text-2xl font-bold">Smart job posting</h3>
                   </div>
                 </div>
 
                 <p className="mt-5 text-sm leading-relaxed text-[#4d5965]">
-                  Tiếp cận hơn 150.000+ lập trình viên đang chủ động tìm việc. Hệ thống phân bổ tin đăng tự động đến các
-                  ứng viên có kỹ năng phù hợp nhất dựa trên thuật toán AI Matching.
+                  Reach developers who are actively looking for jobs. InterVue matches your post with candidates whose
+                  skills fit best.
                 </p>
 
                 <ul className="mt-6 space-y-3.5 text-sm text-[#263a4d]">
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                     <span>
-                      <strong className="text-navy">AI JD Generator:</strong> Soạn thảo bản mô tả công việc IT chuẩn SEO
-                      chỉ trong 30 giây.
+                      <strong className="text-navy">AI JD Generator:</strong> Draft SEO-friendly IT job descriptions in
+                      seconds.
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                     <span>
-                      <strong className="text-navy">Đẩy tin ưu tiên:</strong> Hiển thị vị trí nổi bật tại trang chủ và
-                      danh mục ngành công nghệ.
+                      <strong className="text-navy">Priority posting:</strong> Get featured placement on the home page
+                      and in technology categories.
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                     <span>
-                      <strong className="text-navy">Tự động xếp hạng CV:</strong> Phân loại ứng viên theo % tương thích
-                      ngay khi nhận hồ sơ.
+                      <strong className="text-navy">Automatic CV ranking:</strong> Rank candidates by match score as
+                      soon as applications arrive.
                     </span>
                   </li>
                 </ul>
@@ -667,7 +660,7 @@ export default function RecruiterLandingView() {
                     href={postJobUrl}
                     className="bg-primary hover:bg-primary-hover inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white shadow-sm transition"
                   >
-                    <span>Tạo tin tuyển dụng ngay</span>
+                    <span>Create a job post now</span>
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -678,40 +671,40 @@ export default function RecruiterLandingView() {
                 className="scroll-mt-24 rounded-3xl border border-[#e9eaec] bg-white p-8 shadow-xs transition hover:shadow-md sm:p-10"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light text-primary">
+                  <div className="bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-2xl">
                     <Search className="h-6 w-6" />
                   </div>
                   <div>
-                    <span className="text-primary text-xs font-bold uppercase">Giải pháp 02</span>
-                    <h3 className="text-navy text-2xl font-bold">Tìm kiếm hồ sơ ứng viên chủ động</h3>
+                    <span className="text-primary text-xs font-bold uppercase">Solution 02</span>
+                    <h3 className="text-navy text-2xl font-bold">Proactive candidate search</h3>
                   </div>
                 </div>
 
                 <p className="mt-5 text-sm leading-relaxed text-[#4d5965]">
-                  Chủ động săn đón nhân tài công nghệ mà không cần chờ nộp đơn. Khám phá kho tài năng Tech với bộ lọc
-                  chuyên sâu và chỉ số AI Scoring tương thích.
+                  Proactively find tech talent without waiting for applications. Explore the tech talent pool with
+                  advanced filters and AI match scoring.
                 </p>
 
                 <ul className="mt-6 space-y-3.5 text-sm text-[#263a4d]">
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                     <span>
-                      <strong className="text-navy">Bộ lọc Tech Stack:</strong> Lọc chi tiết theo Framework, Ngôn ngữ,
-                      Vị trí và Mức lương.
+                      <strong className="text-navy">Tech stack filters:</strong> Filter by framework, language, position
+                      and salary.
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                     <span>
-                      <strong className="text-navy">AI Match Scoring:</strong> Chấm điểm mức độ tương thích của ứng viên
-                      đối với yêu cầu dự án.
+                      <strong className="text-navy">AI Match Scoring:</strong> Score how well each candidate fits the
+                      project requirements.
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                     <span>
-                      <strong className="text-navy">Kết nối trực tiếp:</strong> Mở thông tin liên hệ và gửi lời mời
-                      phỏng vấn chỉ với một cú nhấp chuột.
+                      <strong className="text-navy">Direct contact:</strong> View contact details and send interview
+                      invitations with one click.
                     </span>
                   </li>
                 </ul>
@@ -725,7 +718,7 @@ export default function RecruiterLandingView() {
                     }
                     className="border-primary text-primary hover:bg-primary-light inline-flex items-center gap-2 rounded-xl border-2 bg-white px-6 py-3 text-sm font-bold shadow-sm transition"
                   >
-                    <span>Khám phá kho hồ sơ</span>
+                    <span>Explore candidate profiles</span>
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -737,16 +730,16 @@ export default function RecruiterLandingView() {
         <section id="features" className="scroll-mt-20 border-t border-[#e9eaec] bg-white py-16 sm:py-20">
           <div className="container-topcv">
             <div className="mb-12 text-center">
-              <div className="text-primary mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary-light px-3.5 py-1 text-xs font-bold">
+              <div className="text-primary border-primary/20 bg-primary-light mb-3 inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-xs font-bold">
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>HỆ SINH THÁI TUYỂN DỤNG TOÀN DIỆN</span>
+                <span>A COMPLETE RECRUITMENT ECOSYSTEM</span>
               </div>
               <h2 className="text-navy text-2xl font-black tracking-tight sm:text-3xl md:text-4xl">
-                Bộ công cụ thông minh <span className="text-primary">dành cho Tech HR</span>
+                Smart tools <span className="text-primary">for tech HR</span>
               </h2>
               <p className="mt-2 text-sm text-[#6f7882] sm:text-base">
-                InterVue kết hợp sức mạnh của AI và mô hình đánh giá kỹ thuật chuẩn STAR, giúp các Tech Recruiter và
-                Hiring Manager tìm thấy ứng viên hoàn hảo.
+                InterVue combines AI with structured technical assessment to help tech recruiters and hiring managers
+                find the right candidates.
               </p>
             </div>
 
@@ -760,10 +753,10 @@ export default function RecruiterLandingView() {
                   >
                     <div>
                       <div className="mb-4 flex items-center justify-between">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary-light text-primary">
+                        <div className="border-primary/20 bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-2xl border">
                           <IconComponent className="h-6 w-6" />
                         </div>
-                        <span className="rounded-full border border-primary/20 bg-primary-light px-2.5 py-0.5 text-[11px] font-bold text-primary">
+                        <span className="border-primary/20 bg-primary-light text-primary rounded-full border px-2.5 py-0.5 text-[11px] font-bold">
                           {feat.tag}
                         </span>
                       </div>
@@ -780,7 +773,7 @@ export default function RecruiterLandingView() {
                         href={ROUTES.RECRUITER_LOGIN}
                         className="text-primary inline-flex items-center gap-1.5 text-[13px] font-bold transition group-hover:translate-x-1"
                       >
-                        <span>Trải nghiệm ngay</span>
+                        <span>Try it now</span>
                         <ArrowRight className="h-4 w-4" />
                       </Link>
                       <span className="group-hover:bg-primary flex h-7 w-7 items-center justify-center rounded-full bg-[#f4f5f5] text-[#6f7882] transition-colors group-hover:text-white">
@@ -797,45 +790,44 @@ export default function RecruiterLandingView() {
         <section id="pricing" className="scroll-mt-20 border-t border-[#e9eaec] bg-[#f4f5f5] py-16 sm:py-20">
           <div className="container-topcv">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="text-primary text-xs font-bold tracking-widest uppercase">Bảng giá dịch vụ</span>
+              <span className="text-primary text-xs font-bold tracking-widest uppercase">Pricing</span>
               <h2 className="text-navy mt-2 text-3xl font-black tracking-tight sm:text-4xl">
-                Linh hoạt cho mọi quy mô doanh nghiệp
+                Flexible for companies of every size
               </h2>
               <p className="mt-4 text-base text-[#6f7882]">
-                Khởi đầu hoàn toàn miễn phí với 03 tin đăng đầu tiên, nâng cấp gói khi doanh nghiệp có nhu cầu mở rộng quy
-                mô tuyển dụng.
+                Start completely free with your first 3 job posts, then upgrade as your hiring grows.
               </p>
             </div>
 
             <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-3">
-              <div className="flex flex-col justify-between rounded-3xl border-2 border-primary/40 bg-white p-8 shadow-sm">
+              <div className="border-primary/40 flex flex-col justify-between rounded-3xl border-2 bg-white p-8 shadow-sm">
                 <div>
-                  <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary-tag px-3 py-1 text-xs font-bold text-primary">
+                  <div className="border-primary/20 bg-primary-tag text-primary inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold">
                     <Zap className="h-3.5 w-3.5" />
-                    <span>Ưu đãi NTD mới</span>
+                    <span>New employer offer</span>
                   </div>
-                  <h3 className="text-navy mt-3 text-xl font-bold">Khởi đầu (0đ)</h3>
-                  <p className="mt-1 text-xs text-[#6f7882]">Dành cho startup hoặc team nhỏ trải nghiệm nền tảng</p>
+                  <h3 className="text-navy mt-3 text-xl font-bold">Starter (Free)</h3>
+                  <p className="mt-1 text-xs text-[#6f7882]">For startups or small teams trying the platform</p>
                   <div className="mt-5">
-                    <span className="text-navy text-3xl font-extrabold">0đ</span>
-                    <span className="text-xs text-[#6f7882]"> / vĩnh viễn</span>
+                    <span className="text-navy text-3xl font-extrabold">Free</span>
+                    <span className="text-xs text-[#6f7882]"> / forever</span>
                   </div>
                   <ul className="mt-6 space-y-3 text-xs text-[#4d5965]">
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span className="text-navy font-semibold">Tặng ngay 03 tin tuyển dụng miễn phí</span>
+                      <span className="text-navy font-semibold">3 free job posts</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span className="text-navy font-semibold">30 lượt AI Screening tự động</span>
+                      <span className="text-navy font-semibold">30 automated AI screenings</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span>Quản lý ứng viên qua bảng Kanban</span>
+                      <span>Manage candidates with a Kanban board</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span>Duyệt tin nhanh trong 15 phút</span>
+                      <span>Fast job post review</span>
                     </li>
                   </ul>
                 </div>
@@ -843,45 +835,45 @@ export default function RecruiterLandingView() {
                   href={ROUTES.RECRUITER_REGISTER}
                   className="border-primary text-primary hover:bg-primary-light mt-8 block w-full rounded-xl border-2 py-3 text-center text-sm font-bold transition"
                 >
-                  Bắt đầu miễn phí
+                  Get started for free
                 </Link>
               </div>
 
-              <div className="relative flex flex-col justify-between rounded-3xl border-2 border-primary bg-white p-8 shadow-xl">
+              <div className="border-primary relative flex flex-col justify-between rounded-3xl border-2 bg-white p-8 shadow-xl">
                 <span className="bg-primary absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3.5 py-1 text-xs font-bold text-white uppercase shadow-sm">
-                  Phổ biến nhất
+                  Most popular
                 </span>
                 <div>
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-primary-light px-2.5 py-1 text-xs font-semibold text-primary">
+                  <div className="bg-primary-light text-primary inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold">
                     <Sparkles className="h-3.5 w-3.5" />
-                    <span>Doanh nghiệp tăng trưởng</span>
+                    <span>Growing companies</span>
                   </div>
-                  <h3 className="text-navy mt-3 text-xl font-bold">Tech Pro</h3>
-                  <p className="mt-1 text-xs text-[#6f7882]">Dành cho công ty có nhu cầu tuyển dụng tech liên tục</p>
+                  <h3 className="text-navy mt-3 text-xl font-bold">Growth</h3>
+                  <p className="mt-1 text-xs text-[#6f7882]">For companies with continuous tech hiring</p>
                   <div className="mt-5">
-                    <span className="text-primary text-3xl font-extrabold">1.490.000đ</span>
-                    <span className="text-xs text-[#6f7882]"> / tháng</span>
+                    <span className="text-primary text-3xl font-extrabold">1,490,000 VND</span>
+                    <span className="text-xs text-[#6f7882]"> / month</span>
                   </div>
                   <ul className="mt-6 space-y-3 text-xs text-[#4d5965]">
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span className="text-navy font-semibold">Đăng tin tuyển dụng không giới hạn</span>
+                      <span className="text-navy font-semibold">Unlimited job posts</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span className="text-navy font-semibold">AI Sàng lọc CV không giới hạn</span>
+                      <span className="text-navy font-semibold">Unlimited AI resume screening</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span>Tự động gợi ý câu hỏi STAR phỏng vấn</span>
+                      <span>AI-suggested structured interview questions</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span>Huy hiệu Doanh nghiệp uy tín (Top Company)</span>
+                      <span>Trusted company badge (Top Company)</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span>Ưu tiên xuất hiện trên thanh tìm kiếm việc làm</span>
+                      <span>Priority placement in job search</span>
                     </li>
                   </ul>
                 </div>
@@ -889,7 +881,7 @@ export default function RecruiterLandingView() {
                   href={ROUTES.RECRUITER_LOGIN}
                   className="bg-primary hover:bg-primary-hover shadow-primary/20 mt-8 block w-full rounded-xl py-3 text-center text-sm font-bold text-white shadow-md transition"
                 >
-                  Đăng ký gói Pro
+                  Sign up for Growth
                 </Link>
               </div>
 
@@ -897,29 +889,29 @@ export default function RecruiterLandingView() {
                 <div>
                   <div className="inline-flex items-center gap-1.5 rounded-full bg-[#f4f5f5] px-2.5 py-1 text-xs font-semibold text-[#4d5965]">
                     <Users className="h-3.5 w-3.5" />
-                    <span>Quy mô lớn</span>
+                    <span>Large scale</span>
                   </div>
                   <h3 className="text-navy mt-3 text-xl font-bold">Enterprise</h3>
-                  <p className="mt-1 text-xs text-[#6f7882]">Dành cho tập đoàn công nghệ hoặc công ty outsourcing</p>
+                  <p className="mt-1 text-xs text-[#6f7882]">For technology groups or outsourcing companies</p>
                   <div className="mt-5">
-                    <span className="text-navy text-3xl font-extrabold">Liên hệ</span>
+                    <span className="text-navy text-3xl font-extrabold">Contact us</span>
                   </div>
                   <ul className="mt-6 space-y-3 text-xs text-[#4d5965]">
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span>Tích hợp ATS nội bộ qua hệ thống API</span>
+                      <span>Internal ATS integration through API</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span>Mô hình AI huấn luyện riêng theo tiêu chuẩn</span>
+                      <span>AI models trained to your own standards</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span>Chuyên viên tuyển dụng tư vấn và hỗ trợ 24/7</span>
+                      <span>Dedicated recruitment consultant and 24/7 support</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
-                      <span>Hợp đồng dịch vụ & hóa đơn VAT điện tử</span>
+                      <span>Service contract & electronic VAT invoice</span>
                     </li>
                   </ul>
                 </div>
@@ -928,7 +920,7 @@ export default function RecruiterLandingView() {
                   onClick={() => setConsultModalOpen(true)}
                   className="text-navy mt-8 block w-full rounded-xl border border-[#e9eaec] py-3 text-center text-sm font-bold transition hover:bg-[#f4f5f5]"
                 >
-                  Liên hệ tư vấn
+                  Talk to our team
                 </button>
               </div>
             </div>
@@ -938,15 +930,15 @@ export default function RecruiterLandingView() {
         <section id="testimonials" className="scroll-mt-20 border-t border-[#e9eaec] bg-white py-16 sm:py-20">
           <div className="container-topcv">
             <div className="relative mb-12 text-center">
-              <div className="text-primary mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary-light px-3.5 py-1 text-[12px] font-bold">
+              <div className="text-primary border-primary/20 bg-primary-light mb-2.5 inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[12px] font-bold">
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>ĐÁNH GIÁ TỪ DOANH NGHIỆP</span>
+                <span>REVIEWS FROM COMPANIES</span>
               </div>
               <h2 className="text-navy text-2xl font-black tracking-tight md:text-3xl">
-                Khách hàng <span className="text-primary">nói gì về InterVue?</span>
+                What customers <span className="text-primary">say about InterVue</span>
               </h2>
               <p className="mt-1 text-[14px] text-[#6f7882] sm:text-[15px]">
-                Hơn 20.000 doanh nghiệp công nghệ đã bứt phá hiệu suất tuyển dụng cùng InterVue.
+                Hear how technology companies hire with InterVue.
               </p>
             </div>
 
@@ -967,10 +959,10 @@ export default function RecruiterLandingView() {
                     </div>
 
                     <div className="mb-3 flex flex-wrap items-center gap-2">
-                      <span className="rounded-full border border-primary/20 bg-primary-light px-2.5 py-0.5 text-[11px] font-bold text-primary">
+                      <span className="border-primary/20 bg-primary-light text-primary rounded-full border px-2.5 py-0.5 text-[11px] font-bold">
                         {item.tag}
                       </span>
-                      <span className="text-primary inline-flex items-center gap-1 rounded-full bg-primary-tag px-2 py-0.5 text-[11px] font-bold">
+                      <span className="text-primary bg-primary-tag inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold">
                         <Sparkles className="h-3 w-3" />
                         {item.result}
                       </span>
@@ -989,7 +981,7 @@ export default function RecruiterLandingView() {
                         width={44}
                         height={44}
                         unoptimized
-                        className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-primary/20"
+                        className="ring-primary/20 h-11 w-11 shrink-0 rounded-full object-cover ring-2"
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5">
@@ -1008,7 +1000,7 @@ export default function RecruiterLandingView() {
 
             <div className="mt-14 border-t border-[#f4f5f5] pt-10">
               <p className="text-center text-xs font-bold tracking-wider text-[#6f7882] uppercase">
-                Đối tác tuyển dụng tin cậy của các doanh nghiệp công nghệ hàng đầu
+                Trusted recruitment partner of leading technology companies
               </p>
               <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
                 {PARTNERS.map((partner) => (
@@ -1031,28 +1023,25 @@ export default function RecruiterLandingView() {
           <div className="container-topcv text-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1 text-xs font-bold text-white backdrop-blur-xs">
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Ưu đãi thành viên mới: Nhận ngay 03 tin tuyển dụng miễn phí</span>
+              <span>New employer offer: get 3 free job posts</span>
             </div>
-            <h2 className="mt-4 text-2xl font-black sm:text-4xl">
-              Sẵn sàng xây dựng đội ngũ IT bứt phá cùng InterVue?
-            </h2>
+            <h2 className="mt-4 text-2xl font-black sm:text-4xl">Ready to build your IT team with InterVue?</h2>
             <p className="mx-auto mt-3 max-w-2xl text-sm text-white/90 sm:text-base">
-              Hơn 20.000 doanh nghiệp công nghệ đã tìm thấy nhân sự phù hợp. Đăng ký ngay hôm nay để nhận 03 tin tuyển
-              dụng miễn phí và trải nghiệm AI sàng lọc CV.
+              Sign up today to get 3 free job posts and try AI resume screening.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
               <Link
                 href={ROUTES.RECRUITER_LOGIN}
                 className="text-navy flex items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold shadow-lg transition hover:bg-slate-50"
               >
-                <span>Đăng nhập Cổng tuyển dụng</span>
+                <span>Sign in to the employer portal</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href={ROUTES.RECRUITER_REGISTER}
                 className="flex items-center justify-center gap-2 rounded-full border-2 border-white px-8 py-3.5 text-sm font-bold text-white transition hover:bg-white/10"
               >
-                <span>Tạo tài khoản Doanh nghiệp mới</span>
+                <span>Create a new employer account</span>
               </Link>
             </div>
           </div>
@@ -1064,8 +1053,8 @@ export default function RecruiterLandingView() {
       <Modal
         isOpen={consultModalOpen}
         onClose={handleCloseConsultModal}
-        title="Đăng ký Tư vấn Tuyển dụng IT Chuyên sâu"
-        description="Đội ngũ chuyên viên tư vấn InterVue sẽ liên hệ hỗ trợ trong vòng 15 phút làm việc."
+        title="Request IT recruitment consultation"
+        description="Our recruitment consultants will contact you shortly."
         maxWidth="md"
       >
         {consultSubmitted ? (
@@ -1073,10 +1062,10 @@ export default function RecruiterLandingView() {
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
               <CheckCircle2 className="h-8 w-8" />
             </div>
-            <h3 className="text-navy mt-4 text-lg font-bold">Gửi yêu cầu tư vấn thành công!</h3>
+            <h3 className="text-navy mt-4 text-lg font-bold">Request sent!</h3>
             <p className="mt-2 text-xs text-slate-600">
-              Cảm ơn quý doanh nghiệp đã tin tưởng InterVue. Chuyên viên tư vấn tuyển dụng sẽ liên hệ qua số điện thoại{' '}
-              <strong className="text-slate-800">{submittedPhone || consultForm.phone}</strong> sớm nhất.
+              Thank you for choosing InterVue. A recruitment consultant will call you at{' '}
+              <strong className="text-slate-800">{submittedPhone}</strong> soon.
             </p>
             <div className="mt-6 flex justify-center gap-3">
               <a
@@ -1091,7 +1080,7 @@ export default function RecruiterLandingView() {
                 onClick={handleCloseConsultModal}
                 className="rounded-xl border border-slate-300 px-5 py-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100"
               >
-                Đóng
+                Close
               </button>
             </div>
           </div>
@@ -1099,7 +1088,7 @@ export default function RecruiterLandingView() {
           <form onSubmit={handleConsultSubmit} className="space-y-4 pt-2">
             <div>
               <label htmlFor="fullName" className="text-navy block text-xs font-bold">
-                Họ và tên người liên hệ *
+                Contact name *
               </label>
               <input
                 id="fullName"
@@ -1107,15 +1096,15 @@ export default function RecruiterLandingView() {
                 required
                 value={consultForm.fullName}
                 onChange={(e) => setConsultForm({ ...consultForm, fullName: e.target.value })}
-                placeholder="Ví dụ: Nguyễn Văn A (HR Manager)"
-                className="mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                placeholder="e.g. Nguyen Van A (HR Manager)"
+                className="focus:border-primary focus:ring-primary/20 mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:ring-2 focus:outline-none"
               />
             </div>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
                 <label htmlFor="phone" className="text-navy block text-xs font-bold">
-                  Số điện thoại *
+                  Phone number *
                 </label>
                 <input
                   id="phone"
@@ -1124,13 +1113,13 @@ export default function RecruiterLandingView() {
                   value={consultForm.phone}
                   onChange={(e) => setConsultForm({ ...consultForm, phone: e.target.value })}
                   placeholder="0987654321"
-                  className="mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                  className="focus:border-primary focus:ring-primary/20 mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:ring-2 focus:outline-none"
                 />
               </div>
 
               <div>
                 <label htmlFor="email" className="text-navy block text-xs font-bold">
-                  Email doanh nghiệp *
+                  Work email *
                 </label>
                 <input
                   id="email"
@@ -1138,15 +1127,15 @@ export default function RecruiterLandingView() {
                   required
                   value={consultForm.email}
                   onChange={(e) => setConsultForm({ ...consultForm, email: e.target.value })}
-                  placeholder="hr@congty.com"
-                  className="mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                  placeholder="hr@company.com"
+                  className="focus:border-primary focus:ring-primary/20 mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:ring-2 focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
               <label htmlFor="company" className="text-navy block text-xs font-bold">
-                Tên công ty / Doanh nghiệp *
+                Company name *
               </label>
               <input
                 id="company"
@@ -1154,31 +1143,27 @@ export default function RecruiterLandingView() {
                 required
                 value={consultForm.company}
                 onChange={(e) => setConsultForm({ ...consultForm, company: e.target.value })}
-                placeholder="Tên doanh nghiệp của bạn"
-                className="mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                placeholder="Your company name"
+                className="focus:border-primary focus:ring-primary/20 mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:ring-2 focus:outline-none"
               />
             </div>
 
             <div>
               <label htmlFor="needs" className="text-navy block text-xs font-bold">
-                Nhu cầu tuyển dụng
+                Hiring need
               </label>
               <select
                 id="needs"
                 value={consultForm.needs}
                 onChange={(e) => setConsultForm({ ...consultForm, needs: e.target.value })}
-                className="mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                className="focus:border-primary focus:ring-primary/20 mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:ring-2 focus:outline-none"
               >
-                <option value="Tư vấn đăng tin tuyển dụng IT & Gói AI Matching">
-                  Tư vấn đăng tin tuyển dụng IT & Gói AI Matching
+                <option value="IT job posting & AI matching packages">IT job posting & AI matching packages</option>
+                <option value="InterVue Pro (Senior / Tech Lead hiring)">
+                  InterVue Pro (Senior / Tech Lead hiring)
                 </option>
-                <option value="Tư vấn gói InterVue Pro (Senior / Tech Lead)">
-                  Tư vấn gói InterVue Pro (Senior / Tech Lead)
-                </option>
-                <option value="Hợp tác InterVue University kết nối sinh viên IT">
-                  Hợp tác InterVue University kết nối sinh viên IT
-                </option>
-                <option value="Tư vấn tích hợp API & Gói Enterprise">Tư vấn tích hợp API & Gói Enterprise</option>
+                <option value="InterVue University partnership">InterVue University partnership</option>
+                <option value="API integration & Enterprise package">API integration & Enterprise package</option>
               </select>
             </div>
 
@@ -1188,14 +1173,14 @@ export default function RecruiterLandingView() {
                 onClick={handleCloseConsultModal}
                 className="rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-600 transition hover:bg-slate-50"
               >
-                Hủy
+                Cancel
               </button>
               <button
                 type="submit"
                 className="bg-primary hover:bg-primary-hover shadow-primary/20 inline-flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-xs font-bold text-white shadow-sm transition"
               >
                 <Send className="h-3.5 w-3.5" />
-                <span>Gửi đăng ký tư vấn</span>
+                <span>Send request</span>
               </button>
             </div>
           </form>
