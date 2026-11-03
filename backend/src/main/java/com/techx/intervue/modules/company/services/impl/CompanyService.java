@@ -15,7 +15,10 @@ import com.techx.intervue.modules.company.entities.CompanyMember;
 import com.techx.intervue.modules.company.entities.CompanyPhoto;
 import com.techx.intervue.modules.company.enums.CompanyMemberRole;
 import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
+import com.techx.intervue.modules.company.enums.PublishRightLossCause;
+import com.techx.intervue.modules.company.enums.PublishRightLossScope;
 import com.techx.intervue.modules.company.events.CompanyAssetsDiscardedEvent;
+import com.techx.intervue.modules.company.events.PublishRightLostEvent;
 import com.techx.intervue.modules.company.mappers.CompanyMapper;
 import com.techx.intervue.modules.company.repositories.BusinessDocumentRepository;
 import com.techx.intervue.modules.company.repositories.CompanyMemberRepository;
@@ -180,6 +183,15 @@ public class CompanyService implements CompanyServiceInterface {
         membership.setRevokedAt(Instant.now());
         companyMemberRepository.save(membership);
         audit(actor, AuditAction.COMPANY_MEMBER_LEFT, company);
+        eventPublisher.publishEvent(
+                PublishRightLostEvent.builder()
+                        .userId(actor.userId())
+                        .companyId(company.getId())
+                        .scope(PublishRightLossScope.INDIVIDUAL)
+                        .cause(PublishRightLossCause.MEMBERSHIP_LEFT)
+                        .reassignToUserId(ownerIdOf(company.getId()))
+                        .occurredAt(Instant.now())
+                        .build());
     }
 
     // Deliberately not transactional: uploading to Cloudinary is an external call and must not
@@ -250,6 +262,16 @@ public class CompanyService implements CompanyServiceInterface {
         if (companyMemberRepository.existsByUserIdAndStatus(userId, CompanyMemberStatus.ACTIVE)) {
             throw new AppException(ErrorCode.ALREADY_IN_ANOTHER_COMPANY);
         }
+    }
+
+    private Long ownerIdOf(Long companyId) {
+        return companyMemberRepository
+                .findByCompanyIdAndStatus(companyId, CompanyMemberStatus.ACTIVE)
+                .stream()
+                .filter(CompanyMember::isOwner)
+                .map(CompanyMember::getUserId)
+                .findFirst()
+                .orElse(null);
     }
 
     private boolean isLastOwner(Long companyId) {
