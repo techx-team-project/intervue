@@ -6,6 +6,7 @@ import com.techx.intervue.common.audit.enums.AuditTargetType;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.common.storage.StorageServiceInterface;
+import com.techx.intervue.common.storage.StorageTarget;
 import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
@@ -132,7 +133,8 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
         return new StoredDocumentContent(
                 document.getOriginalFileName(),
                 document.getContentType(),
-                storageService.fetchDocument(document.getStoragePublicId()));
+                storageService.fetchDocument(
+                        document.getStoragePublicId(), StorageTarget.LEGAL_DOCUMENT));
     }
 
     @Override

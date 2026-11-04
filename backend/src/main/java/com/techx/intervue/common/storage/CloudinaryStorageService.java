@@ -82,10 +82,10 @@ public class CloudinaryStorageService implements StorageServiceInterface {
     }
 
     @Override
-    public byte[] fetchDocument(String publicId) {
+    public byte[] fetchDocument(String publicId, StorageTarget target) {
         // Streams through the backend on purpose: no Cloudinary URL ever reaches a browser, so a
         // leaked link cannot outlive the authorization check this request already passed.
-        String url = signedDocumentUrl(publicId);
+        String url = signedDocumentUrl(publicId, target);
         try {
             byte[] content = restClient.get().uri(URI.create(url)).retrieve().body(byte[].class);
             if (content == null) {
@@ -123,11 +123,11 @@ public class CloudinaryStorageService implements StorageServiceInterface {
         }
     }
 
-    private String signedDocumentUrl(String publicId) {
+    private String signedDocumentUrl(String publicId, StorageTarget target) {
         return cloudinary()
                 .url()
-                .resourceType(StorageTarget.LEGAL_DOCUMENT.resourceType())
-                .type(StorageTarget.LEGAL_DOCUMENT.deliveryType())
+                .resourceType(target.resourceType())
+                .type(target.deliveryType())
                 .signed(true)
                 .secure(true)
                 .generate(publicId);
@@ -144,7 +144,8 @@ public class CloudinaryStorageService implements StorageServiceInterface {
 
     private long maxBytesFor(StorageTarget target) {
         return switch (target) {
-            case LEGAL_DOCUMENT -> properties.maxDocumentSize().toBytes();
+            case LEGAL_DOCUMENT, RESUME, IDENTITY_DOCUMENT ->
+                    properties.maxDocumentSize().toBytes();
             case IMAGE -> properties.maxImageSize().toBytes();
         };
     }

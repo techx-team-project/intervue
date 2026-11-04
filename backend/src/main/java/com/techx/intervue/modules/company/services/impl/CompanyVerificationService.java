@@ -183,7 +183,9 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
             throw new AppException(ErrorCode.NOT_FOUND);
         }
 
-        byte[] bytes = storageService.fetchDocument(document.getStoragePublicId());
+        byte[] bytes =
+                storageService.fetchDocument(
+                        document.getStoragePublicId(), StorageTarget.LEGAL_DOCUMENT);
         return new StoredDocumentContent(
                 document.getOriginalFileName(), document.getContentType(), bytes);
     }
