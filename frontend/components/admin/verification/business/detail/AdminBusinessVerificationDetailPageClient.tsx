@@ -1,8 +1,10 @@
 'use client';
 
-import Spinner from '@/components/common/Spinner';
-import { notFound } from 'next/navigation';
-import { useMemo } from 'react';
+import { adminBusinessVerificationApi } from '@/apiRequest/admin-business-verification';
+import AdminDataGate from '@/components/admin/AdminDataGate';
+import { useAdminResource } from '@/hooks/useAdminResource';
+import type { AdminBusinessVerificationDetailResource } from '@/types/recruiter-company';
+import { useCallback } from 'react';
 import { useMockVerificationStore } from '../useMockVerificationStore';
 import { AdminBusinessVerificationDetailView } from './AdminBusinessVerificationDetailView';
 
@@ -13,23 +15,32 @@ interface AdminBusinessVerificationDetailPageClientProps {
 export default function AdminBusinessVerificationDetailPageClient({
   documentId,
 }: AdminBusinessVerificationDetailPageClientProps) {
-  const { dossiers, isReady } = useMockVerificationStore();
+  const { dossiers } = useMockVerificationStore();
 
-  const dossier = useMemo(() => {
-    return dossiers.find((d) => d.document.id === documentId);
-  }, [dossiers, documentId]);
+  const load = useCallback(async () => {
+    try {
+      return await adminBusinessVerificationApi.getDetail(documentId);
+    } catch {
+      // Fallback to mock store if live DB is empty or unreachable during dev
+      const mock = dossiers.find((d) => d.document.id === documentId);
+      if (mock) {
+        return {
+          document: mock.document,
+          company: mock.company,
+          submitter: mock.submitter,
+          members: mock.members,
+          companyDocuments: [mock.document],
+        } as AdminBusinessVerificationDetailResource;
+      }
+      throw new Error('Document not found');
+    }
+  }, [documentId, dossiers]);
 
-  if (!isReady) {
-    return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <Spinner />
-      </div>
-    );
-  }
+  const { data: detail, status, error, reload } = useAdminResource(load);
 
-  if (!dossier) {
-    notFound();
-  }
-
-  return <AdminBusinessVerificationDetailView dossierId={documentId} />;
+  return (
+    <AdminDataGate status={status} error={error} onRetry={reload}>
+      {detail && <AdminBusinessVerificationDetailView dossierId={documentId} liveDetail={detail} onRefresh={reload} />}
+    </AdminDataGate>
+  );
 }

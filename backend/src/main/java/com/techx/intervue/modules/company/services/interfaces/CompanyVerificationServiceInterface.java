@@ -24,6 +24,12 @@ public interface CompanyVerificationServiceInterface {
     BusinessDocumentResource submitDocument(
             MultipartFile file, SubmitBusinessDocumentRequest request, RequestActor actor);
 
+    BusinessDocumentResource submitDocument(
+            MultipartFile file,
+            MultipartFile identityFile,
+            SubmitBusinessDocumentRequest request,
+            RequestActor actor);
+
     List<BusinessDocumentResource> findDocuments(Long userId);
 
     StoredDocumentContent readDocument(Long documentId, Long userId);

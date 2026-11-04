@@ -1,12 +1,14 @@
 'use client';
 
+import { adminBusinessVerificationApi } from '@/apiRequest/admin-business-verification';
 import Modal from '@/components/ui/Modal';
 import Textarea from '@/components/ui/Textarea';
+import { isApiError } from '@/lib/api-error';
 import type { BusinessDocumentResource } from '@/types/recruiter-company';
-import { useMockVerificationStore } from '../useMockVerificationStore';
 import { AlertCircle, CheckCircle2, Clock, RotateCcw, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useMockVerificationStore } from '../useMockVerificationStore';
 
 interface AdminBusinessVerificationActionsProps {
   document: BusinessDocumentResource;
@@ -63,12 +65,28 @@ export function AdminBusinessVerificationActions({
   const [revokeReason, setRevokeReason] = useState<string>(REVOKE_PRESETS[0]);
   const [revokeDetail, setRevokeDetail] = useState<string>('');
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Handle Approve
-  const handleApprove = () => {
-    approve(document.id, approveExpiry || undefined);
-    toast.success('Dossier approved successfully! Corporate publishing permissions have been granted.');
-    setIsApproveOpen(false);
-    onActionComplete?.();
+  const handleApprove = async () => {
+    setIsSubmitting(true);
+    try {
+      await adminBusinessVerificationApi.approve(document.id, {
+        expiresAt: approveExpiry ? new Date(approveExpiry).toISOString() : undefined,
+      });
+      approve(document.id, approveExpiry || undefined);
+      toast.success('Dossier approved successfully! Corporate publishing permissions have been granted.');
+      setIsApproveOpen(false);
+      onActionComplete?.();
+    } catch (err) {
+      if (isApiError(err)) {
+        toast.error(err.message || 'Approval failed');
+      } else {
+        toast.error('Failed to approve document');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Quick preset helper for Expiry Date
@@ -80,30 +98,66 @@ export function AdminBusinessVerificationActions({
   };
 
   // Handle Reject
-  const handleReject = () => {
-    const finalReason = rejectDetail ? `${rejectReason}. Notes: ${rejectDetail}` : rejectReason;
-    reject(document.id, finalReason);
-    toast.error('Dossier rejected. Notification dispatched to recruiter.');
-    setIsRejectOpen(false);
-    onActionComplete?.();
+  const handleReject = async () => {
+    setIsSubmitting(true);
+    try {
+      const finalReason = rejectDetail ? `${rejectReason}. Notes: ${rejectDetail}` : rejectReason;
+      await adminBusinessVerificationApi.reject(document.id, { reason: finalReason });
+      reject(document.id, finalReason);
+      toast.error('Dossier rejected. Notification dispatched to recruiter.');
+      setIsRejectOpen(false);
+      onActionComplete?.();
+    } catch (err) {
+      if (isApiError(err)) {
+        toast.error(err.message || 'Rejection failed');
+      } else {
+        toast.error('Failed to reject document');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Handle Request More Info
-  const handleRequestMoreInfo = () => {
-    const finalReason = requestDetail ? `${requestReason}. Guidance: ${requestDetail}` : requestReason;
-    requestInfo(document.id, finalReason);
-    toast.info('Additional information requested from recruiter.');
-    setIsRequestOpen(false);
-    onActionComplete?.();
+  const handleRequestMoreInfo = async () => {
+    setIsSubmitting(true);
+    try {
+      const finalReason = requestDetail ? `${requestReason}. Guidance: ${requestDetail}` : requestReason;
+      await adminBusinessVerificationApi.requestMoreInformation(document.id, { reason: finalReason });
+      requestInfo(document.id, finalReason);
+      toast.info('Additional information requested from recruiter.');
+      setIsRequestOpen(false);
+      onActionComplete?.();
+    } catch (err) {
+      if (isApiError(err)) {
+        toast.error(err.message || 'Request info failed');
+      } else {
+        toast.error('Failed to request additional documents');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Handle Revoke
-  const handleRevoke = () => {
-    const finalReason = revokeDetail ? `${revokeReason}. Details: ${revokeDetail}` : revokeReason;
-    revoke(document.id, finalReason);
-    toast.warning('Publishing rights revoked. Active job posts suspended.');
-    setIsRevokeOpen(false);
-    onActionComplete?.();
+  const handleRevoke = async () => {
+    setIsSubmitting(true);
+    try {
+      const finalReason = revokeDetail ? `${revokeReason}. Details: ${revokeDetail}` : revokeReason;
+      await adminBusinessVerificationApi.revoke(document.id, { reason: finalReason });
+      revoke(document.id, finalReason);
+      toast.warning('Publishing rights revoked. Active job posts suspended.');
+      setIsRevokeOpen(false);
+      onActionComplete?.();
+    } catch (err) {
+      if (isApiError(err)) {
+        toast.error(err.message || 'Revocation failed');
+      } else {
+        toast.error('Failed to revoke document approval');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -300,10 +354,11 @@ export function AdminBusinessVerificationActions({
             </button>
             <button
               type="button"
+              disabled={isSubmitting}
               onClick={handleApprove}
-              className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700 active:scale-95"
+              className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700 active:scale-95 disabled:opacity-50"
             >
-              Confirm Approval
+              {isSubmitting ? 'Approving...' : 'Confirm Approval'}
             </button>
           </div>
         </div>
@@ -357,10 +412,11 @@ export function AdminBusinessVerificationActions({
             </button>
             <button
               type="button"
+              disabled={isSubmitting}
               onClick={handleRequestMoreInfo}
-              className="rounded-xl bg-sky-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-sky-700 active:scale-95"
+              className="rounded-xl bg-sky-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-sky-700 active:scale-95 disabled:opacity-50"
             >
-              Send Request
+              {isSubmitting ? 'Sending...' : 'Send Request'}
             </button>
           </div>
         </div>
@@ -414,10 +470,11 @@ export function AdminBusinessVerificationActions({
             </button>
             <button
               type="button"
+              disabled={isSubmitting}
               onClick={handleReject}
-              className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-rose-700 active:scale-95"
+              className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-rose-700 active:scale-95 disabled:opacity-50"
             >
-              Confirm Rejection
+              {isSubmitting ? 'Rejecting...' : 'Confirm Rejection'}
             </button>
           </div>
         </div>
@@ -471,10 +528,11 @@ export function AdminBusinessVerificationActions({
             </button>
             <button
               type="button"
+              disabled={isSubmitting}
               onClick={handleRevoke}
-              className="dark:bg-forest-700 rounded-xl bg-slate-800 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-black active:scale-95"
+              className="dark:bg-forest-700 rounded-xl bg-slate-800 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-black active:scale-95 disabled:opacity-50"
             >
-              Confirm Revocation
+              {isSubmitting ? 'Revoking...' : 'Confirm Revocation'}
             </button>
           </div>
         </div>

@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.company.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.techx.intervue.modules.company.enums.BusinessType;
 import com.techx.intervue.modules.company.enums.CompanyVerificationStatus;
 import java.time.Instant;
@@ -23,4 +24,11 @@ public record AdminCompanyFactsResource(
         CompanyVerificationStatus verificationStatus,
         Instant verifiedAt,
         boolean profileComplete,
-        Instant createdAt) {}
+        int memberCount,
+        Instant createdAt) {
+
+    @JsonProperty("verified")
+    public boolean verified() {
+        return verificationStatus == CompanyVerificationStatus.VERIFIED;
+    }
+}

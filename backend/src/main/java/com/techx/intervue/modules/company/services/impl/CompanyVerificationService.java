@@ -118,6 +118,15 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     @Override
     public BusinessDocumentResource submitDocument(
             MultipartFile file, SubmitBusinessDocumentRequest request, RequestActor actor) {
+        return submitDocument(file, null, request, actor);
+    }
+
+    @Override
+    public BusinessDocumentResource submitDocument(
+            MultipartFile file,
+            MultipartFile identityFile,
+            SubmitBusinessDocumentRequest request,
+            RequestActor actor) {
         CompanyMember membership = requireMembership(actor.userId());
         Company company = membership.getCompany();
 
@@ -136,6 +145,13 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
 
         StoredFile stored =
                 storageService.upload(file, StorageTarget.LEGAL_DOCUMENT, DOCUMENT_FOLDER);
+        StoredFile identityStored = null;
+        if (identityFile != null && !identityFile.isEmpty()) {
+            identityStored =
+                    storageService.upload(
+                            identityFile, StorageTarget.IDENTITY_DOCUMENT, "identity");
+        }
+
         BusinessDocument document =
                 businessDocumentRepository.save(
                         BusinessDocument.builder()
@@ -148,6 +164,12 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                                 .fileSizeBytes(stored.sizeInBytes())
                                 .contentType(stored.contentType())
                                 .checksumSha256(stored.checksumSha256())
+                                .identityStoragePublicId(
+                                        identityStored == null ? null : identityStored.publicId())
+                                .identityFileName(
+                                        identityStored == null
+                                                ? null
+                                                : identityStored.originalFileName())
                                 .submittedAt(Instant.now())
                                 .build());
 

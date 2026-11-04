@@ -52,11 +52,13 @@ public class RecruiterCompanyVerificationController extends BaseController {
     public ResponseEntity<ApiResource<BusinessDocumentResource>> submitDocument(
             @RequestParam("documentType") BusinessDocumentType documentType,
             @RequestPart("file") MultipartFile file,
+            @RequestPart(value = "identityFile", required = false) MultipartFile identityFile,
             @AuthenticationPrincipal CustomUserDetails principal,
             HttpServletRequest httpRequest) {
         return created(
                 verificationService.submitDocument(
                         file,
+                        identityFile,
                         new SubmitBusinessDocumentRequest(documentType),
                         actor(principal, httpRequest)),
                 "Document submitted successfully! It is now awaiting review.");

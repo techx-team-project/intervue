@@ -18,6 +18,7 @@ import {
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
+import type { AdminBusinessVerificationDetailResource } from '@/types/recruiter-company';
 import type { ExtendedVerificationDetail } from '../mock-verification-data';
 import { useMockVerificationStore } from '../useMockVerificationStore';
 import { AdminBusinessDocumentViewer } from './AdminBusinessDocumentViewer';
@@ -26,20 +27,53 @@ import { AdminBusinessVerificationActions } from './AdminBusinessVerificationAct
 interface AdminBusinessVerificationDetailViewProps {
   dossierId?: number;
   initialDetail?: ExtendedVerificationDetail;
+  liveDetail?: AdminBusinessVerificationDetailResource;
+  onRefresh?: () => void;
 }
 
 export function AdminBusinessVerificationDetailView({
   dossierId,
   initialDetail,
+  liveDetail,
+  onRefresh,
 }: AdminBusinessVerificationDetailViewProps) {
   const { dossiers } = useMockVerificationStore();
 
   const currentDossier = useMemo(() => {
+    if (liveDetail) {
+      const { document, company, submitter, members } = liveDetail;
+      const submittedAtDate = new Date(document.submittedAt);
+      const waitingHours = Math.max(0, Math.round((Date.now() - submittedAtDate.getTime()) / (1000 * 60 * 60)));
+      const isSlaOverdue = waitingHours > 24 && document.reviewStatus === 'PENDING_REVIEW';
+      const totalPages = document.identityStoragePublicId ? 2 : 1;
+      return {
+        document,
+        company,
+        submitter: submitter || {
+          id: 0,
+          userId: 0,
+          email: '',
+          fullName: 'Enterprise Submitter',
+          role: 'MEMBER' as const,
+          status: 'ACTIVE' as const,
+          joinedAt: document.submittedAt,
+          phoneVerified: false,
+          userAgreementAccepted: false,
+          canPublish: false,
+        },
+        members: members || [],
+        auditLogs: [],
+        waitingHours,
+        isSlaOverdue,
+        totalPages,
+        sampleScanUrl: undefined as string | undefined,
+      };
+    }
     if (dossierId) {
       return dossiers.find((d) => d.document.id === dossierId) || null;
     }
     return initialDetail || dossiers[0] || null;
-  }, [dossiers, dossierId, initialDetail]);
+  }, [liveDetail, dossiers, dossierId, initialDetail]);
 
   const [copiedTax, setCopiedTax] = useState(false);
 
@@ -188,7 +222,7 @@ export function AdminBusinessVerificationDetailView({
         {/* Right Column: Actions & Fact Cross-Check Sheet */}
         <div className="space-y-5">
           {/* Decision Hub */}
-          <AdminBusinessVerificationActions document={document} />
+          <AdminBusinessVerificationActions document={document} onActionComplete={onRefresh} />
 
           {/* Governance Role Warning if Member submitted Business License */}
           {isMemberSubmittingLicense && (

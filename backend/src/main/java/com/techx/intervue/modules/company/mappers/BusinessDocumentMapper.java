@@ -21,6 +21,9 @@ public class BusinessDocumentMapper {
                 .reviewedAt(document.getReviewedAt())
                 .reviewReason(document.getReviewReason())
                 .expiresAt(document.getExpiresAt())
+                .storagePublicId(document.getStoragePublicId())
+                .identityStoragePublicId(document.getIdentityStoragePublicId())
+                .identityFileName(document.getIdentityFileName())
                 .build();
     }
 
