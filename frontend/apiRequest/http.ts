@@ -46,7 +46,7 @@ async function execute<T>(
     response = await fetch(`${env.NEXT_PUBLIC_API_URL}${path}`, {
       method,
       headers,
-      body: body === undefined ? undefined : isFormData ? body : JSON.stringify(body),
+      body: body === undefined || isFormData ? (body as BodyInit | undefined) : JSON.stringify(body),
       credentials: 'include',
       signal,
     });

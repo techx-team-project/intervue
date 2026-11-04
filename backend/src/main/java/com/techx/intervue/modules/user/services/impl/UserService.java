@@ -108,6 +108,16 @@ public class UserService extends BaseService implements UserServiceInterface {
 
     @Override
     @Transactional
+    public void updateBasicInfo(Long userId, String name, String address) {
+        User user = findOrThrow(userRepository.findById(userId), "User not found");
+        user.setName(name.trim());
+        String trimmedAddress = address == null ? "" : address.trim();
+        user.setAddress(trimmedAddress.isEmpty() ? null : trimmedAddress);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
     public UserResource becomeRecruiter(Long userId) {
         User user = findOrThrow(userRepository.findByIdWithRoles(userId), "User not found");
         if (!user.isEmailVerified()) {

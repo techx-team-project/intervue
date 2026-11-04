@@ -61,6 +61,38 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 
+## Candidate profile
+
+Owner-only; everything under `/candidate/profile` requires `ROLE_CANDIDATE` (a signed-in non-candidate gets 403 `FORBIDDEN`). `UserResource` also carries optional `address`.
+
+| Status | Method & path | Auth | Request | Response `data` |
+|---|---|---|---|---|
+| ✅ | `GET /candidate/profile` | candidate | – | `CandidateProfileResource`. Read-only: when no profile row exists yet, returns the user data with defaults (`jobSearchStatus` `OPEN_TO_OFFERS`, `searchableByRecruiters` true, `desiredRole` null) without writing |
+| ✅ | `PUT /candidate/profile` | candidate | `SaveCandidateProfileRequest` (full replace; creates the row on first call) | `CandidateProfileResource` |
+| ✅ | `POST /candidate/profile/avatar` | candidate | multipart `file` (JPEG/PNG) | `CandidateProfileResource` (replaces and deletes the previous image) |
+| ✅ | `DELETE /candidate/profile/avatar` | candidate | – | `CandidateProfileResource` |
+| ✅ | `POST /candidate/profile/cover` | candidate | multipart `file` (JPEG/PNG) | `CandidateProfileResource` |
+| ✅ | `DELETE /candidate/profile/cover` | candidate | – | `CandidateProfileResource` |
+| ✅ | `POST /candidate/profile/{section}` | candidate | `SaveCandidate<Section>Request` | `CandidateProfileResource` (creates the profile row on the first item; max items reached gives 409 `PROFILE_SECTION_LIMIT_REACHED`) |
+| ✅ | `PUT /candidate/profile/{section}/{id}` | candidate | `SaveCandidate<Section>Request` (full replace) | `CandidateProfileResource` (an id that is not yours gives 404 `NOT_FOUND`) |
+| ✅ | `DELETE /candidate/profile/{section}/{id}` | candidate | – | `CandidateProfileResource` |
+| ✅ | `POST /candidate/profile/certifications/{id}/image` | candidate | multipart `file` (JPEG/PNG) | `CandidateProfileResource` (replaces and deletes the previous image) |
+| ✅ | `DELETE /candidate/profile/certifications/{id}/image` | candidate | – | `CandidateProfileResource` |
+
+`SaveCandidateProfileRequest`: `name` (2-50 after trimming, required, stored on the user), `headline` (max 120), `bio` (max 2000), `contactEmail` (email, max 255; null = use the login email), `address` (max 255, stored on the user), `gender` (`MALE` `FEMALE` `OTHER`), `birthYear` (1950 to current year minus 16), `showPersonalDetails` (required boolean; birth year and gender visible to recruiters), `searchableByRecruiters` (required boolean), `jobSearchStatus` (required: `ACTIVELY_LOOKING` `OPEN_TO_OFFERS` `NOT_LOOKING`), `githubUrl` / `linkedinUrl` / `portfolioUrl` (empty or http/https URL, max 255), `desiredRole` (required, 1-120 after trimming), `desiredLevel` (`INTERN` `JUNIOR` `MID` `SENIOR` `LEAD`), `salaryNegotiable` (required boolean), `salaryMin` / `salaryMax` (>= 0, min <= max; stored null when negotiable), `workMode` (`ON_SITE` `HYBRID` `REMOTE` `FLEXIBLE`), `contractType` (`FULL_TIME` `PART_TIME` `INTERNSHIP`), `preferredLocations` / `preferredIndustries` (max 5 each in the raw list, 1-100 chars each; the server trims, drops blanks and silently merges duplicates that compare equal ignoring case, accents and width, keeping the first spelling; responses list them sorted case-insensitively). Cross-field failures are reported on the properties `birthYearAllowed`, `salaryRangeValid`, `nameLengthValid`, `desiredRoleLengthValid`.
+
+`CandidateProfileResource`: `userId, name, email, contactEmail, phone, phoneVerified, address, avatarUrl, coverUrl, headline, bio, gender, birthYear, showPersonalDetails, searchableByRecruiters, jobSearchStatus, githubUrl, linkedinUrl, portfolioUrl, desiredRole, desiredLevel, salaryNegotiable, salaryMin, salaryMax, workMode, contractType, preferredLocations, preferredIndustries, experiences, educations, projects, certifications, languages, skills, updatedAt`. `phone` and `phoneVerified` are read-only here; change the phone through `/users/me/phone/*`.
+Upload errors for avatar, cover and certification image: `UNSUPPORTED_FILE_TYPE` (400), `FILE_TOO_LARGE` (400), `STORAGE_UNAVAILABLE` (503).
+
+Profile sections (`{section}` is `experiences` (max 20), `educations` (max 10), `projects` (max 20), `certifications` (max 20), `languages` (max 10) or `skills` (max 50)). Every write returns the full `CandidateProfileResource`, which also carries the lists `experiences, educations, projects, certifications, languages, skills`. Dates are `yyyy-MM-dd` (the client sends the first day of the month); text fields marked "text" below are max 2000 characters; the server trims text and stores blanks as null.
+
+- `SaveCandidateExperienceRequest`: `title` (required, max 120), `companyName` (required, max 150), `location` (max 100), `startDate` (required), `endDate`, `current` (required boolean; `endDate` must be empty when true), `description` (text), `achievements` (text), `skills` (max 15 in the raw list, 1-60 chars each; trimmed, blanks dropped, case/accent-insensitive duplicates merged). Cross-field failure on property `dateRangeValid`. Response items: `id, title, companyName, location, startDate, endDate, current, description, achievements, skills` ordered current first, then `startDate` descending.
+- `SaveCandidateEducationRequest`: `school` (required, max 150), `degree` (max 100), `major` (max 150), `startYear` (required), `endYear`, `gpa` (max 20), `achievements` (text). Years must be 1950 to current year plus 10 (property `yearBoundsValid`); `endYear` >= `startYear` (property `yearRangeValid`). Response items: `id, school, degree, major, startYear, endYear, gpa, achievements` ordered by `startYear` descending.
+- `SaveCandidateProjectRequest`: `name` (required, max 150), `role` (max 100), `startDate` (required), `endDate`, `current` (required boolean), `description` (text), `highlights` (text), `githubUrl` / `demoUrl` (empty or http/https URL, max 255), `technologies` (same rules as experience `skills`). Cross-field failure on property `dateRangeValid`. Response items: `id, name, role, startDate, endDate, current, description, highlights, githubUrl, demoUrl, technologies`, ordered like experiences.
+- `SaveCandidateCertificationRequest`: `name` (required, max 150), `issuer` (required, max 150), `issueDate`, `credentialId` (max 100), `credentialUrl` (empty or http/https URL, max 255). Response items: `id, name, issuer, issueDate, credentialId, credentialUrl, imageUrl`, ordered by `issueDate` descending, undated last. Deleting a certification also discards its image.
+- `SaveCandidateLanguageRequest`: `language` (required, max 60), `proficiency` (required: `BASIC` `INTERMEDIATE` `ADVANCED` `FLUENT` `NATIVE`), `certificate` (max 100). A language that duplicates another one ignoring case and accents gives `VALIDATION_FAILED` on field `language`. Response items: `id, language, proficiency, certificate`, ordered by language.
+- `SaveCandidateSkillRequest`: `name` (required, max 60), `category` (required: `CORE` `AI_DATA` `TOOLS_DEVOPS` `SOFT`), `level` (required: `BASIC` `INTERMEDIATE` `PROFICIENT` `EXPERT`), `years` (required, 0 to 50). A duplicate name (ignoring case and accents) gives `VALIDATION_FAILED` on field `name`. Response items: `id, name, category, level, years`, ordered by name.
+
 ## Admin user management
 
 Everything under `/admin/**` requires `ROLE_ADMIN`; a signed-in non-admin gets 403 `FORBIDDEN`.
@@ -143,6 +175,9 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `UNAUTHENTICATED` | 401 | Missing/expired token → frontend tries refresh once |
 | `FORBIDDEN` | 403 | Role/ownership failure |
 | `NOT_FOUND` | 404 | |
+| `METHOD_NOT_ALLOWED` | 405 | The HTTP method is not supported by this endpoint |
+| `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
+| `INTERNAL_ERROR` | 500 | Unexpected server error; the cause is logged server-side and never returned |
 | `EMAIL_ALREADY_USED` | 409 | |
 | `ACCOUNT_BANNED` | 403 | The account is banned, so signing in and refreshing are both refused. Only raised after the password matches, so it never reveals the state of an account to someone who does not hold its credentials |
 | `ROLE_ALREADY_GRANTED` | 409 | The user already holds an active grant for this role |
@@ -154,6 +189,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `DELETION_BLOCKED` | 422 | Account deletion is blocked while unresolved operations remain |
 | `IDENTITY_NOT_VERIFIED` | 422 | Candidate must complete eKYC to apply |
 | `COMPANY_NOT_VERIFIED` | 422 | Company must be verified to post |
+| `PROFILE_SECTION_LIMIT_REACHED` | 409 | A candidate profile section already holds its maximum number of items |
 | `RATE_LIMITED` | 429 | Honor `Retry-After` |
 | `AI_USER_QUOTA_EXCEEDED` | 429 | Daily AI limit per user reached; honor `Retry-After` |
 | `AI_IP_QUOTA_EXCEEDED` | 429 | Hourly AI limit per IP reached; honor `Retry-After` |

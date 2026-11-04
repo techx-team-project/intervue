@@ -14,6 +14,7 @@ public record UserResource(
         String email,
         String name,
         String phone,
+        String address,
         UserStatus status,
         boolean emailVerified,
         boolean phoneVerified,

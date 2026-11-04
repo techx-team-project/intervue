@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useCallback, useSyncExternalStore } from 'react';
+import React, { useCallback, useEffect, useId, useRef, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { cn } from '@/lib/utils';
 
 const emptySubscribe = () => () => {};
@@ -44,6 +45,12 @@ export function Modal({
     () => false,
   );
 
+  const panelRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+  const descriptionId = useId();
+
+  useFocusTrap(panelRef, isOpen && isClient);
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -70,15 +77,23 @@ export function Modal({
   if (!isOpen || !isClient) return null;
 
   return createPortal(
-    <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={title ? titleId : undefined}
+      aria-describedby={description ? descriptionId : undefined}
+      className="fixed inset-0 z-100 flex items-center justify-center p-4"
+    >
       <div
         onClick={onClose}
         className="fixed inset-0 h-screen w-screen bg-slate-950/60 backdrop-blur-xs transition-opacity duration-200"
       />
 
       <div
+        ref={panelRef}
+        tabIndex={-1}
         className={cn(
-          'relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl transition duration-200 sm:p-7',
+          'relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl transition duration-200 outline-none sm:p-7',
           maxWidthMap[maxWidth],
           className,
         )}
@@ -87,11 +102,17 @@ export function Modal({
           <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
             <div>
               {title && typeof title === 'string' ? (
-                <h3 className="text-lg font-bold text-slate-800 sm:text-xl">{title}</h3>
+                <h3 id={titleId} className="text-lg font-bold text-slate-800 sm:text-xl">
+                  {title}
+                </h3>
               ) : (
-                title
+                title && <div id={titleId}>{title}</div>
               )}
-              {description && <p className="mt-1 text-sm leading-relaxed text-slate-500">{description}</p>}
+              {description && (
+                <p id={descriptionId} className="mt-1 text-sm leading-relaxed text-slate-500">
+                  {description}
+                </p>
+              )}
             </div>
 
             {showCloseButton && (
