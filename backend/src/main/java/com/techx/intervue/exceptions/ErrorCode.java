@@ -106,7 +106,9 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "Please request a verification code first!"),
     AGREEMENT_ALREADY_ACCEPTED(HttpStatus.CONFLICT, "This agreement has already been accepted!"),
     PROFILE_SECTION_LIMIT_REACHED(
-            HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!");
+            HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!"),
+    INVALID_STATUS_TRANSITION(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This status change is not allowed!");
 
     private final HttpStatus status;
     private final String message;

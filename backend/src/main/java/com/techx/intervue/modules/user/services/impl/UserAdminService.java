@@ -7,6 +7,7 @@ import com.techx.intervue.common.audit.enums.AuditTargetType;
 import com.techx.intervue.common.audit.repositories.AuditLogRepository;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.user.entities.RefreshToken;
@@ -203,7 +204,7 @@ public class UserAdminService implements UserAdminServiceInterface {
     @Override
     @Transactional
     public AdminUserDetailResource restrict(
-            Long userId, RestrictUserRequest request, AdminActor actor) {
+            Long userId, RestrictUserRequest request, RequestActor actor) {
         User target = loadWithRoles(userId);
         guardRestriction(target, actor);
 
@@ -215,7 +216,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                                 .reason(request.reason())
                                 .detail(request.detail())
                                 .notifyUser(request.notifyUser())
-                                .createdBy(userRepository.getReferenceById(actor.id()))
+                                .createdBy(userRepository.getReferenceById(actor.userId()))
                                 .expiresAt(request.expiresAt())
                                 .build());
 
@@ -244,7 +245,7 @@ public class UserAdminService implements UserAdminServiceInterface {
     @Override
     @Transactional
     public AdminUserDetailResource liftRestriction(
-            Long userId, LiftRestrictionRequest request, AdminActor actor) {
+            Long userId, LiftRestrictionRequest request, RequestActor actor) {
         User target = loadWithRoles(userId);
         UserRestriction standing =
                 userRestrictionRepository
@@ -252,7 +253,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                         .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_RESTRICTED));
 
         standing.setLiftedAt(Instant.now());
-        standing.setLiftedBy(userRepository.getReferenceById(actor.id()));
+        standing.setLiftedBy(userRepository.getReferenceById(actor.userId()));
         standing.setLiftReason(request.reason());
         userRestrictionRepository.save(standing);
 
@@ -321,8 +322,8 @@ public class UserAdminService implements UserAdminServiceInterface {
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
     }
 
-    private void guardRestriction(User target, AdminActor actor) {
-        if (target.getId().equals(actor.id())) {
+    private void guardRestriction(User target, RequestActor actor) {
+        if (target.getId().equals(actor.userId())) {
             throw new AppException(ErrorCode.CANNOT_RESTRICT_SELF);
         }
         if (userRestrictionRepository
@@ -349,11 +350,11 @@ public class UserAdminService implements UserAdminServiceInterface {
     }
 
     private void audit(
-            AuditAction action, User target, AdminActor actor, String reason, String detail) {
+            AuditAction action, User target, RequestActor actor, String reason, String detail) {
         auditLogService.record(
                 AuditEntry.builder()
                         .actorType(AuditActorType.ADMIN)
-                        .actorId(actor.id())
+                        .actorId(actor.userId())
                         .actorEmail(actor.email())
                         .action(action)
                         .targetType(AuditTargetType.USER)
@@ -587,7 +588,7 @@ public class UserAdminService implements UserAdminServiceInterface {
 
     @Override
     @Transactional
-    public void revokeSession(Long userId, Long sessionId, AdminActor actor) {
+    public void revokeSession(Long userId, Long sessionId, RequestActor actor) {
         User target =
                 userRepository
                         .findById(userId)
@@ -615,7 +616,7 @@ public class UserAdminService implements UserAdminServiceInterface {
 
     @Override
     @Transactional
-    public void revokeAllSessions(Long userId, AdminActor actor) {
+    public void revokeAllSessions(Long userId, RequestActor actor) {
         User target =
                 userRepository
                         .findById(userId)
@@ -659,7 +660,7 @@ public class UserAdminService implements UserAdminServiceInterface {
     @Override
     @Transactional
     public AdminUserDetailResource grantRole(
-            Long userId, GrantUserRoleRequest request, AdminActor actor) {
+            Long userId, GrantUserRoleRequest request, RequestActor actor) {
         User target = loadWithRoles(userId);
 
         RoleType roleType = request.role();
@@ -676,7 +677,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                         .findByName(roleType)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
-        User actorRef = userRepository.findById(actor.id()).orElse(null);
+        User actorRef = userRepository.findById(actor.userId()).orElse(null);
 
         Optional<UserRole> existingGrant =
                 target.getUserRoles().stream()
@@ -717,14 +718,14 @@ public class UserAdminService implements UserAdminServiceInterface {
     @Override
     @Transactional
     public AdminUserDetailResource revokeRole(
-            Long userId, RoleType roleType, RevokeUserRoleRequest request, AdminActor actor) {
+            Long userId, RoleType roleType, RevokeUserRoleRequest request, RequestActor actor) {
         User target = loadWithRoles(userId);
 
         if (!target.activeRoleTypes().contains(roleType)) {
             throw new AppException(ErrorCode.ROLE_NOT_ASSIGNED);
         }
 
-        if (target.getId().equals(actor.id()) && roleType == RoleType.ADMIN) {
+        if (target.getId().equals(actor.userId()) && roleType == RoleType.ADMIN) {
             throw new AppException(ErrorCode.CANNOT_REMOVE_SELF_ADMIN);
         }
 
@@ -772,7 +773,7 @@ public class UserAdminService implements UserAdminServiceInterface {
 
     @Override
     @Transactional
-    public AdminUserDetailResource resetTwoFactor(Long userId, AdminActor actor) {
+    public AdminUserDetailResource resetTwoFactor(Long userId, RequestActor actor) {
         User target = loadWithRoles(userId);
 
         userTwoFactorRepository.deleteByUserId(target.getId());
@@ -790,7 +791,7 @@ public class UserAdminService implements UserAdminServiceInterface {
 
     @Override
     @Transactional
-    public AdminUserDetailResource sendPasswordReset(Long userId, AdminActor actor) {
+    public AdminUserDetailResource sendPasswordReset(Long userId, RequestActor actor) {
         User target = loadWithRoles(userId);
 
         if (!target.isEmailVerified()) {
@@ -813,7 +814,7 @@ public class UserAdminService implements UserAdminServiceInterface {
 
     @Override
     @Transactional
-    public AdminUserDetailResource cancelDeletion(Long userId, AdminActor actor) {
+    public AdminUserDetailResource cancelDeletion(Long userId, RequestActor actor) {
         User target = loadWithRoles(userId);
         if (target.getStatus() != UserStatus.PENDING_DELETION) {
             throw new AppException(ErrorCode.ACCOUNT_NOT_PENDING_DELETION);
@@ -835,7 +836,7 @@ public class UserAdminService implements UserAdminServiceInterface {
 
     @Override
     @Transactional
-    public AdminUserDetailResource restoreUser(Long userId, AdminActor actor) {
+    public AdminUserDetailResource restoreUser(Long userId, RequestActor actor) {
         User target = loadWithRoles(userId);
         if (target.getStatus() == UserStatus.PENDING_DELETION) {
             return cancelDeletion(userId, actor);

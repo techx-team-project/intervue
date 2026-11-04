@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.candidate.mappers;
 
+import com.techx.intervue.common.text.Texts;
 import com.techx.intervue.modules.candidate.entities.CandidateProject;
 import com.techx.intervue.modules.candidate.requests.SaveCandidateProjectRequest;
 import com.techx.intervue.modules.candidate.resources.CandidateProjectResource;
@@ -12,14 +13,14 @@ public class CandidateProjectMapper {
     public void apply(CandidateProject project, SaveCandidateProjectRequest request) {
         boolean current = request.current();
         project.setName(request.name().trim());
-        project.setRole(blankToNull(request.role()));
+        project.setRole(Texts.blankToNull(request.role()));
         project.setStartDate(request.startDate());
         project.setCurrent(current);
         project.setEndDate(current ? null : request.endDate());
-        project.setDescription(blankToNull(request.description()));
-        project.setHighlights(blankToNull(request.highlights()));
-        project.setGithubUrl(blankToNull(request.githubUrl()));
-        project.setDemoUrl(blankToNull(request.demoUrl()));
+        project.setDescription(Texts.blankToNull(request.description()));
+        project.setHighlights(Texts.blankToNull(request.highlights()));
+        project.setGithubUrl(Texts.blankToNull(request.githubUrl()));
+        project.setDemoUrl(Texts.blankToNull(request.demoUrl()));
     }
 
     public CandidateProjectResource toResource(
@@ -37,13 +38,5 @@ public class CandidateProjectMapper {
                 .demoUrl(project.getDemoUrl())
                 .technologies(technologies.stream().sorted(String.CASE_INSENSITIVE_ORDER).toList())
                 .build();
-    }
-
-    private String blankToNull(String value) {
-        if (value == null) {
-            return null;
-        }
-        String trimmed = value.trim();
-        return trimmed.isEmpty() ? null : trimmed;
     }
 }

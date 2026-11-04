@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.user.repositories;
 
+import com.techx.intervue.common.persistence.SpecificationSupport;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.entities.UserRole;
 import com.techx.intervue.modules.user.requests.SearchUsersRequest;
@@ -23,7 +24,7 @@ public final class UserSpecifications {
 
             if (request.q() != null && !request.q().isBlank()) {
                 String keyword = request.q().trim().toLowerCase();
-                String pattern = "%" + keyword + "%";
+                String pattern = SpecificationSupport.containsPattern(keyword);
                 List<Predicate> matches = new ArrayList<>();
                 matches.add(builder.like(builder.lower(root.get("name")), pattern));
                 matches.add(builder.like(builder.lower(root.get("email")), pattern));

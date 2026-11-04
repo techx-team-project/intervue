@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.company.repositories;
 
+import com.techx.intervue.common.persistence.SpecificationSupport;
 import com.techx.intervue.modules.company.entities.BusinessDocument;
 import com.techx.intervue.modules.company.entities.Company;
 import com.techx.intervue.modules.company.requests.SearchBusinessVerificationRequest;
@@ -25,7 +26,7 @@ public final class BusinessDocumentSpecifications {
                 predicates.add(builder.equal(root.get("documentType"), request.documentType()));
             }
             if (request.q() != null && !request.q().isBlank()) {
-                String pattern = "%" + request.q().trim().toLowerCase() + "%";
+                String pattern = SpecificationSupport.containsPattern(request.q());
                 Join<BusinessDocument, Company> company = root.join("company");
                 predicates.add(
                         builder.or(

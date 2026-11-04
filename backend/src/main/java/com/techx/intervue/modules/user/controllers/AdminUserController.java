@@ -1,7 +1,6 @@
 package com.techx.intervue.modules.user.controllers;
 
 import com.techx.intervue.controllers.BaseController;
-import com.techx.intervue.modules.helpers.IpHelper;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.requests.GrantUserRoleRequest;
 import com.techx.intervue.modules.user.requests.LiftRestrictionRequest;
@@ -16,7 +15,6 @@ import com.techx.intervue.modules.user.resources.AdminUserSignInResource;
 import com.techx.intervue.modules.user.resources.AdminUserSummaryResource;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.services.interfaces.UserAdminServiceInterface;
-import com.techx.intervue.modules.user.services.interfaces.UserAdminServiceInterface.AdminActor;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,9 +44,7 @@ public class AdminUserController extends BaseController {
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<AdminUserListResource>>> search(
             @Valid SearchUsersRequest request, Pageable pageable) {
-        return ok(
-                PageResource.of(userAdminService.search(request, pageable)),
-                "Accounts retrieved successfully!");
+        return page(userAdminService.search(request, pageable), "Accounts retrieved successfully!");
     }
 
     @GetMapping("/summary")
@@ -64,8 +60,8 @@ public class AdminUserController extends BaseController {
     @GetMapping("/{id}/activity")
     public ResponseEntity<ApiResource<PageResource<AdminUserActivityResource>>> activity(
             @PathVariable Long id, Pageable pageable) {
-        return ok(
-                PageResource.of(userAdminService.findActivities(id, pageable)),
+        return page(
+                userAdminService.findActivities(id, pageable),
                 "Account activity history retrieved successfully!");
     }
 
@@ -119,8 +115,8 @@ public class AdminUserController extends BaseController {
     @GetMapping("/{id}/sign-ins")
     public ResponseEntity<ApiResource<PageResource<AdminUserSignInResource>>> signIns(
             @PathVariable Long id, Pageable pageable) {
-        return ok(
-                PageResource.of(userAdminService.findSignIns(id, pageable)),
+        return page(
+                userAdminService.findSignIns(id, pageable),
                 "Sign-in history retrieved successfully!");
     }
 
@@ -185,10 +181,5 @@ public class AdminUserController extends BaseController {
         return ok(
                 userAdminService.restoreUser(id, actor(principal, httpRequest)),
                 "Account restored successfully!");
-    }
-
-    private AdminActor actor(CustomUserDetails principal, HttpServletRequest httpRequest) {
-        return new AdminActor(
-                principal.getId(), principal.getEmail(), IpHelper.getClientIp(httpRequest));
     }
 }

@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.user.services.interfaces;
 
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.requests.GrantUserRoleRequest;
 import com.techx.intervue.modules.user.requests.LiftRestrictionRequest;
@@ -18,18 +19,16 @@ import org.springframework.data.domain.Pageable;
 
 public interface UserAdminServiceInterface {
 
-    record AdminActor(Long id, String email, String ip) {}
-
     Page<AdminUserListResource> search(SearchUsersRequest request, Pageable pageable);
 
     AdminUserDetailResource findDetail(Long userId);
 
     AdminUserSummaryResource summarise();
 
-    AdminUserDetailResource restrict(Long userId, RestrictUserRequest request, AdminActor actor);
+    AdminUserDetailResource restrict(Long userId, RestrictUserRequest request, RequestActor actor);
 
     AdminUserDetailResource liftRestriction(
-            Long userId, LiftRestrictionRequest request, AdminActor actor);
+            Long userId, LiftRestrictionRequest request, RequestActor actor);
 
     int liftExpiredRestrictions();
 
@@ -37,26 +36,27 @@ public interface UserAdminServiceInterface {
 
     List<AdminUserSessionResource> findSessions(Long userId);
 
-    void revokeSession(Long userId, Long sessionId, AdminActor actor);
+    void revokeSession(Long userId, Long sessionId, RequestActor actor);
 
-    void revokeAllSessions(Long userId, AdminActor actor);
+    void revokeAllSessions(Long userId, RequestActor actor);
 
     Page<AdminUserSignInResource> findSignIns(Long userId, Pageable pageable);
 
-    AdminUserDetailResource grantRole(Long userId, GrantUserRoleRequest request, AdminActor actor);
+    AdminUserDetailResource grantRole(
+            Long userId, GrantUserRoleRequest request, RequestActor actor);
 
     AdminUserDetailResource revokeRole(
-            Long userId, RoleType role, RevokeUserRoleRequest request, AdminActor actor);
+            Long userId, RoleType role, RevokeUserRoleRequest request, RequestActor actor);
 
     int sweepExpiredRoleGrants();
 
-    AdminUserDetailResource resetTwoFactor(Long userId, AdminActor actor);
+    AdminUserDetailResource resetTwoFactor(Long userId, RequestActor actor);
 
-    AdminUserDetailResource sendPasswordReset(Long userId, AdminActor actor);
+    AdminUserDetailResource sendPasswordReset(Long userId, RequestActor actor);
 
-    AdminUserDetailResource cancelDeletion(Long userId, AdminActor actor);
+    AdminUserDetailResource cancelDeletion(Long userId, RequestActor actor);
 
-    AdminUserDetailResource restoreUser(Long userId, AdminActor actor);
+    AdminUserDetailResource restoreUser(Long userId, RequestActor actor);
 
     int purgeExpiredPendingDeletions();
 }

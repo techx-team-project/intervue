@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.candidate.mappers;
 
 import com.techx.intervue.common.storage.StorageServiceInterface;
+import com.techx.intervue.common.text.Texts;
 import com.techx.intervue.modules.candidate.entities.CandidatePreferredIndustry;
 import com.techx.intervue.modules.candidate.entities.CandidatePreferredLocation;
 import com.techx.intervue.modules.candidate.entities.CandidateProfile;
@@ -21,17 +22,17 @@ public class CandidateProfileMapper {
 
     public void applyUpdate(CandidateProfile profile, SaveCandidateProfileRequest request) {
         boolean negotiable = request.salaryNegotiable();
-        profile.setHeadline(blankToNull(request.headline()));
-        profile.setBio(blankToNull(request.bio()));
-        profile.setContactEmail(blankToNull(request.contactEmail()));
+        profile.setHeadline(Texts.blankToNull(request.headline()));
+        profile.setBio(Texts.blankToNull(request.bio()));
+        profile.setContactEmail(Texts.blankToNull(request.contactEmail()));
         profile.setGender(request.gender());
         profile.setBirthYear(request.birthYear() == null ? null : request.birthYear().shortValue());
         profile.setShowPersonalDetails(request.showPersonalDetails());
         profile.setSearchableByRecruiters(request.searchableByRecruiters());
         profile.setJobSearchStatus(request.jobSearchStatus());
-        profile.setGithubUrl(blankToNull(request.githubUrl()));
-        profile.setLinkedinUrl(blankToNull(request.linkedinUrl()));
-        profile.setPortfolioUrl(blankToNull(request.portfolioUrl()));
+        profile.setGithubUrl(Texts.blankToNull(request.githubUrl()));
+        profile.setLinkedinUrl(Texts.blankToNull(request.linkedinUrl()));
+        profile.setPortfolioUrl(Texts.blankToNull(request.portfolioUrl()));
         profile.setDesiredRole(request.desiredRole().trim());
         profile.setDesiredLevel(request.desiredLevel());
         if (request.totalYoe() != null) {
@@ -114,13 +115,5 @@ public class CandidateProfileMapper {
 
     private String imageUrl(String publicId) {
         return publicId == null ? null : storageService.publicImageUrl(publicId);
-    }
-
-    private String blankToNull(String value) {
-        if (value == null) {
-            return null;
-        }
-        String trimmed = value.trim();
-        return trimmed.isEmpty() ? null : trimmed;
     }
 }
