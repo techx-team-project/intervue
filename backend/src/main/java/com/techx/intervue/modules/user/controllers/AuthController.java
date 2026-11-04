@@ -85,7 +85,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/logout")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and !hasRole('RECRUITER')")
     public ResponseEntity<ApiResource<Void>> logout(
             @RequestAttribute(JwtAuthFilter.TOKEN_ATTRIBUTE) String accessToken,
             @CookieValue(name = CookieHelper.REFRESH_TOKEN_COOKIE, required = false)
@@ -104,7 +104,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/resend-verification")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and !hasRole('RECRUITER')")
     public ResponseEntity<ApiResource<Void>> resendVerification(
             @AuthenticationPrincipal CustomUserDetails principal, HttpServletRequest httpRequest) {
         emailVerificationService.resend(principal.getId(), IpHelper.getClientIp(httpRequest));
