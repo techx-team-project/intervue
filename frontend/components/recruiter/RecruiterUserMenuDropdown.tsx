@@ -12,8 +12,8 @@ interface RecruiterUserMenuDropdownProps {
 const LINKS = [
   { label: 'Notifications', href: ROUTES.RECRUITER_NOTIFICATIONS, icon: Bell },
   { label: 'Company profile', href: '/recruiter/company', icon: Building2 },
-  { label: 'Account security', href: '/account/security', icon: ShieldCheck },
-  { label: 'Change password', href: '/account/password', icon: KeyRound },
+  { label: 'Account security', href: ROUTES.RECRUITER_ACCOUNT_SECURITY, icon: ShieldCheck },
+  { label: 'Change password', href: ROUTES.RECRUITER_ACCOUNT_PASSWORD, icon: KeyRound },
   { label: 'Two-factor authentication', href: '/account/two-factor', icon: Smartphone },
 ];
 

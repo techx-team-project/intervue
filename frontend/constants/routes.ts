@@ -34,6 +34,8 @@ export const ROUTES = {
   RECRUITER_SERVICES_TRANSACTIONS: '/recruiter/services/transactions',
   RECRUITER_REPORTS: '/recruiter/reports',
   RECRUITER_NOTIFICATIONS: '/recruiter/notifications',
+  RECRUITER_ACCOUNT_SECURITY: '/recruiter/account/security',
+  RECRUITER_ACCOUNT_PASSWORD: '/recruiter/account/password',
   ADMIN_DASHBOARD: '/admin/dashboard',
   ADMIN_VERIFICATION_BUSINESS: '/admin/verification/business',
   ADMIN_VERIFICATION_COMPANY_CHANGES: '/admin/verification/company-changes',

@@ -59,22 +59,16 @@ export const resetPasswordSchema = z
 export const changePasswordSchema = z
   .object({
     currentPassword: z.string().min(1, 'Please enter your current password.'),
-    newPassword: z
-      .string()
-      .min(8, 'New password must be at least 8 characters.')
-      .regex(/[A-Z]/, 'Password must include an uppercase letter.')
-      .regex(/[0-9]/, 'Password must include a digit.')
-      .regex(/[^A-Za-z0-9]/, 'Password must include a special character (!@#$).'),
+    password: strongPassword,
     confirmPassword: z.string().min(1, 'Please confirm your new password.'),
-    logoutOtherDevices: z.boolean().default(true),
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: 'Confirmation does not match the new password.',
     path: ['confirmPassword'],
   })
-  .refine((data) => data.currentPassword !== data.newPassword, {
+  .refine((data) => data.currentPassword !== data.password, {
     message: 'New password must differ from the current password.',
-    path: ['newPassword'],
+    path: ['password'],
   });
 
 export type LoginFormData = z.infer<typeof loginSchema>;

@@ -1,98 +1,50 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { AlertCircle, Check, CheckCircle2, Eye, EyeOff, KeyRound, Lock } from 'lucide-react';
-import Input from '@/components/ui/Input';
+import FormErrorAlert from '@/components/auth/FormErrorAlert';
 import Button from '@/components/ui/Button';
-import { changePasswordSchema, ChangePasswordFormData } from '@/schemas/auth.schema';
+import PasswordInput from '@/components/ui/PasswordInput';
+import { useChangePassword } from '@/hooks/useAccountSecurity';
+import { AUTH_PORTAL_ROUTES, type AuthPortal } from '@/lib/auth-portal';
+import { changePasswordSchema, type ChangePasswordFormData } from '@/schemas/auth.schema';
+import { applyFormError } from '@/utils/error';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Info, KeyRound, Lock } from 'lucide-react';
+import Link from 'next/link';
+import { useForm, useWatch } from 'react-hook-form';
+import PasswordRequirements, { PasswordStrengthMeter } from './security/PasswordRequirements';
 
-export default function AccountPasswordView() {
-  const [formData, setFormData] = useState<ChangePasswordFormData>({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
-    logoutOtherDevices: true,
+type AccountPasswordViewProps = { portal?: AuthPortal };
+
+const EMPTY_FORM: ChangePasswordFormData = { currentPassword: '', password: '', confirmPassword: '' };
+
+export default function AccountPasswordView({ portal = 'candidate' }: AccountPasswordViewProps) {
+  const changePassword = useChangePassword(portal);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    reset,
+    clearErrors,
+    control,
+    formState: { errors },
+  } = useForm<ChangePasswordFormData>({
+    resolver: zodResolver(changePasswordSchema),
+    mode: 'onTouched',
+    defaultValues: EMPTY_FORM,
   });
 
-  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof ChangePasswordFormData, string>>>({});
-  const [showCurrent, setShowCurrent] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const password = useWatch({ control, name: 'password' });
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [successMsg, setSuccessMsg] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
+  const onSubmit = handleSubmit((values) =>
+    changePassword.mutate(values, {
+      onSuccess: () => reset(EMPTY_FORM),
+      onError: (error) => applyFormError(error, setError, ['currentPassword', 'password', 'confirmPassword']),
+    }),
+  );
 
-  const newPass = formData.newPassword;
-  const hasMinLength = newPass.length >= 8;
-  const hasUppercase = /[A-Z]/.test(newPass);
-  const hasNumber = /[0-9]/.test(newPass);
-  const hasSpecial = /[^A-Za-z0-9]/.test(newPass);
-
-  const strengthScore = [hasMinLength, hasUppercase, hasNumber, hasSpecial].filter(Boolean).length;
-
-  const getStrengthLabel = () => {
-    if (!newPass) return { text: 'Not entered', color: 'text-slate-400', bar: 'bg-slate-200', width: '0%' };
-    if (strengthScore <= 1) return { text: 'Weak', color: 'text-rose-500', bar: 'bg-rose-500', width: '25%' };
-    if (strengthScore === 2) return { text: 'Medium', color: 'text-amber-500', bar: 'bg-amber-500', width: '50%' };
-    if (strengthScore === 3) return { text: 'Fairly strong', color: 'text-blue-500', bar: 'bg-blue-500', width: '75%' };
-    return { text: 'Very strong', color: 'text-emerald-500', bar: 'bg-primary', width: '100%' };
-  };
-
-  const strength = getStrengthLabel();
-
-  const handleChange = (field: keyof ChangePasswordFormData, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (fieldErrors[field]) {
-      setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
-    }
-    if (errorMsg) setErrorMsg('');
-    if (successMsg) setSuccessMsg('');
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMsg('');
-    setSuccessMsg('');
-
-    const validationResult = changePasswordSchema.safeParse(formData);
-    if (!validationResult.success) {
-      const errors: Partial<Record<keyof ChangePasswordFormData, string>> = {};
-      for (const issue of validationResult.error.issues) {
-        const fieldName = issue.path[0] as keyof ChangePasswordFormData;
-        if (!errors[fieldName]) {
-          errors[fieldName] = issue.message;
-        }
-      }
-      setFieldErrors(errors);
-      return;
-    }
-
-    setFieldErrors({});
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-      setSuccessMsg('Password changed successfully. All other devices have been signed out.');
-      setFormData({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-        logoutOtherDevices: true,
-      });
-    }, 800);
-  };
-
-  const handleReset = () => {
-    setFormData({
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
-      logoutOtherDevices: true,
-    });
-    setFieldErrors({});
-    setErrorMsg('');
+  const handleCancel = () => {
+    reset(EMPTY_FORM);
+    clearErrors();
   };
 
   return (
@@ -107,188 +59,66 @@ export default function AccountPasswordView() {
         </p>
       </div>
 
-      {successMsg && (
-        <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800">
-          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
-          <span>{successMsg}</span>
-        </div>
-      )}
-
-      {errorMsg && (
-        <div className="flex items-center gap-2.5 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-700">
-          <AlertCircle className="h-5 w-5 shrink-0 text-rose-600" />
-          <span>{errorMsg}</span>
-        </div>
-      )}
-
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <FormErrorAlert message={errors.root?.message} />
+
+        <form onSubmit={onSubmit} noValidate className="space-y-5">
           <div>
-            <div className="mb-1 flex items-center justify-between">
-              <span className="text-sm font-bold text-slate-800">Current password</span>
-              <Link href="/forgot-password" className="text-primary text-xs font-semibold hover:underline">
+            <PasswordInput
+              label="Current password"
+              placeholder="Enter your current password"
+              autoComplete="current-password"
+              error={errors.currentPassword?.message}
+              {...register('currentPassword')}
+            />
+            <div className="mt-1.5 text-right">
+              <Link
+                href={AUTH_PORTAL_ROUTES[portal].forgotPassword}
+                className="text-primary text-xs font-semibold hover:underline"
+              >
                 Forgot password?
               </Link>
             </div>
-            <Input
-              id="curr-password"
-              type={showCurrent ? 'text' : 'password'}
-              value={formData.currentPassword}
-              onChange={(e) => handleChange('currentPassword', e.target.value)}
-              placeholder="Enter your current password"
-              error={fieldErrors.currentPassword}
-              rightElement={
-                <button
-                  type="button"
-                  onClick={() => setShowCurrent(!showCurrent)}
-                  aria-label={showCurrent ? 'Hide password' : 'Show password'}
-                  className="cursor-pointer text-slate-400 hover:text-slate-600"
-                >
-                  {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              }
-            />
           </div>
 
           <div>
-            <Input
-              id="new-password"
+            <PasswordInput
               label="New password"
-              type={showNew ? 'text' : 'password'}
-              value={formData.newPassword}
-              onChange={(e) => handleChange('newPassword', e.target.value)}
               placeholder="Enter a new password"
-              error={fieldErrors.newPassword}
-              rightElement={
-                <button
-                  type="button"
-                  onClick={() => setShowNew(!showNew)}
-                  aria-label={showNew ? 'Hide password' : 'Show password'}
-                  className="cursor-pointer text-slate-400 hover:text-slate-600"
-                >
-                  {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              }
+              autoComplete="new-password"
+              error={errors.password?.message}
+              {...register('password')}
             />
-
-            {newPass && (
-              <div className="mt-2.5 space-y-1.5">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-500">Password strength:</span>
-                  <span className={`font-bold ${strength.color}`}>{strength.text}</span>
-                </div>
-                <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
-                  <div className={`h-full transition duration-300 ${strength.bar}`} style={{ width: strength.width }} />
-                </div>
-              </div>
-            )}
+            <PasswordStrengthMeter password={password} />
           </div>
 
-          <div>
-            <Input
-              id="confirm-password"
-              label="Confirm new password"
-              type={showConfirm ? 'text' : 'password'}
-              value={formData.confirmPassword}
-              onChange={(e) => handleChange('confirmPassword', e.target.value)}
-              placeholder="Re-enter the new password"
-              error={fieldErrors.confirmPassword}
-              rightElement={
-                <button
-                  type="button"
-                  onClick={() => setShowConfirm(!showConfirm)}
-                  aria-label={showConfirm ? 'Hide password' : 'Show password'}
-                  className="cursor-pointer text-slate-400 hover:text-slate-600"
-                >
-                  {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              }
-            />
-          </div>
+          <PasswordInput
+            label="Confirm new password"
+            placeholder="Re-enter the new password"
+            autoComplete="new-password"
+            error={errors.confirmPassword?.message}
+            {...register('confirmPassword')}
+          />
 
-          <div className="rounded-xl border border-slate-100 bg-slate-50 p-4 text-xs">
-            <div className="font-bold text-slate-800">Secure password requirements:</div>
-            <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
-              <div
-                className={`flex items-center gap-2 ${
-                  hasMinLength ? 'font-semibold text-emerald-700' : 'text-slate-500'
-                }`}
-              >
-                <div
-                  className={`flex h-4 w-4 items-center justify-center rounded-full text-white ${
-                    hasMinLength ? 'bg-primary' : 'bg-slate-300'
-                  }`}
-                >
-                  <Check className="h-2.5 w-2.5 stroke-3" />
-                </div>
-                <span>At least 8 characters</span>
-              </div>
+          <PasswordRequirements password={password} />
 
-              <div
-                className={`flex items-center gap-2 ${
-                  hasUppercase ? 'font-semibold text-emerald-700' : 'text-slate-500'
-                }`}
-              >
-                <div
-                  className={`flex h-4 w-4 items-center justify-center rounded-full text-white ${
-                    hasUppercase ? 'bg-primary' : 'bg-slate-300'
-                  }`}
-                >
-                  <Check className="h-2.5 w-2.5 stroke-3" />
-                </div>
-                <span>At least 1 uppercase letter (A-Z)</span>
-              </div>
-
-              <div
-                className={`flex items-center gap-2 ${hasNumber ? 'font-semibold text-emerald-700' : 'text-slate-500'}`}
-              >
-                <div
-                  className={`flex h-4 w-4 items-center justify-center rounded-full text-white ${
-                    hasNumber ? 'bg-primary' : 'bg-slate-300'
-                  }`}
-                >
-                  <Check className="h-2.5 w-2.5 stroke-3" />
-                </div>
-                <span>At least 1 digit (0-9)</span>
-              </div>
-
-              <div
-                className={`flex items-center gap-2 ${hasSpecial ? 'font-semibold text-emerald-700' : 'text-slate-500'}`}
-              >
-                <div
-                  className={`flex h-4 w-4 items-center justify-center rounded-full text-white ${
-                    hasSpecial ? 'bg-primary' : 'bg-slate-300'
-                  }`}
-                >
-                  <Check className="h-2.5 w-2.5 stroke-3" />
-                </div>
-                <span>At least 1 special character (!@#$)</span>
-              </div>
-            </div>
-          </div>
-
-          <label className="flex cursor-pointer items-start gap-2.5 text-xs text-slate-600">
-            <input
-              type="checkbox"
-              checked={formData.logoutOtherDevices}
-              onChange={(e) => handleChange('logoutOtherDevices', e.target.checked)}
-              className="mt-0.5 h-4 w-4 rounded accent-emerald-600"
-            />
-            <span>Sign out of all other devices after the password is changed.</span>
-          </label>
+          <p className="flex items-center gap-2 text-xs text-slate-600">
+            <Info className="h-4 w-4 shrink-0 text-slate-400" />
+            <span>Changing your password signs you out of every other device.</span>
+          </p>
 
           <div className="flex items-center gap-3 pt-2">
             <Button
               type="submit"
               variant="primary"
               size="md"
-              isLoading={isLoading}
+              isLoading={changePassword.isPending}
               leftIcon={<Lock className="h-4 w-4" />}
             >
               Update password
             </Button>
 
-            <Button type="button" variant="outline" size="md" onClick={handleReset}>
+            <Button type="button" variant="outline" size="md" onClick={handleCancel}>
               Cancel
             </Button>
           </div>
