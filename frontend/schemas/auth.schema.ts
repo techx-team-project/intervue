@@ -71,11 +71,37 @@ export const changePasswordSchema = z
     path: ['password'],
   });
 
+export const VIETNAM_MOBILE_PATTERN = /^0[35789]\d{8}$/;
+
+export const sendPhoneOtpSchema = z.object({
+  phone: z
+    .string()
+    .trim()
+    .min(1, 'Please enter your phone number.')
+    .regex(VIETNAM_MOBILE_PATTERN, 'Enter a valid Vietnamese mobile number, e.g. 0912345678.'),
+});
+
+export const verifyPhoneOtpSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .regex(/^\d{6}$/, 'Enter the 6-digit code.'),
+});
+
+export const changeEmailSchema = z.object({
+  newEmail: email,
+  currentPassword: z.string().min(1, 'Please enter your current password.'),
+});
+
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+
+export type SendPhoneOtpFormData = z.infer<typeof sendPhoneOtpSchema>;
+export type VerifyPhoneOtpFormData = z.infer<typeof verifyPhoneOtpSchema>;
+export type ChangeEmailFormData = z.infer<typeof changeEmailSchema>;
 
 export type LoginPayload = LoginFormData;
 export type RegisterPayload = RegisterFormData;

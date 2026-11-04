@@ -15,6 +15,8 @@ export const recruiterAuthApi = {
   logout: () => request('/recruiter/auth/logout', { method: 'POST' }),
   verifyEmail: (token: string) =>
     request('/recruiter/auth/verify-email', { method: 'POST', body: { token }, auth: false }),
+  confirmEmailChange: (token: string) =>
+    request('/recruiter/auth/confirm-email-change', { method: 'POST', body: { token }, auth: false }),
   resendVerification: () => request('/recruiter/auth/resend-verification', { method: 'POST' }),
   forgotPassword: (payload: ForgotPasswordPayload) =>
     request('/recruiter/auth/forgot-password', { method: 'POST', body: payload, auth: false }),

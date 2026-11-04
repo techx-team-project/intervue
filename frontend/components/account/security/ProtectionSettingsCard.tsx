@@ -1,51 +1,34 @@
-import { ArrowRight, KeyRound, Mail, Phone, Smartphone } from 'lucide-react';
+import type { AuthPortal } from '@/lib/auth-portal';
+import { ArrowRight, KeyRound, Smartphone } from 'lucide-react';
 import Link from 'next/link';
+import AccountEmailRow from './AccountEmailRow';
+import AccountPhoneRow from './AccountPhoneRow';
 
-type ProtectionSettingsCardProps = { email: string; passwordHref: string };
+type ProtectionSettingsCardProps = {
+  portal: AuthPortal;
+  email: string;
+  emailVerified: boolean;
+  phone: string;
+  phoneVerified: boolean;
+  passwordHref: string;
+};
 
-export default function ProtectionSettingsCard({ email, passwordHref }: ProtectionSettingsCardProps) {
+export default function ProtectionSettingsCard({
+  portal,
+  email,
+  emailVerified,
+  phone,
+  phoneVerified,
+  passwordHref,
+}: ProtectionSettingsCardProps) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
       <h2 className="text-base font-bold text-slate-800">Core protection settings</h2>
 
       <div className="mt-4 divide-y divide-slate-100">
-        <div className="flex items-center justify-between py-4">
-          <div className="flex items-start gap-3.5">
-            <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
-              <Mail className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-slate-800">Account email</span>
-                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800">
-                  Verified
-                </span>
-              </div>
-              <div className="text-xs text-slate-500">{email}</div>
-            </div>
-          </div>
-          <span className="text-xs font-semibold text-slate-400">Default</span>
-        </div>
+        <AccountEmailRow portal={portal} email={email} verified={emailVerified} />
 
-        <div className="flex items-center justify-between py-4">
-          <div className="flex items-start gap-3.5">
-            <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
-              <Phone className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-slate-800">Recovery phone number</span>
-                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800">
-                  Verified
-                </span>
-              </div>
-              <div className="text-xs text-slate-500">0988 ••• 321</div>
-            </div>
-          </div>
-          <button type="button" className="text-primary cursor-pointer text-xs font-semibold hover:underline">
-            Change
-          </button>
-        </div>
+        <AccountPhoneRow portal={portal} phone={phone} verified={phoneVerified} />
 
         <div className="flex items-center justify-between py-4">
           <div className="flex items-start gap-3.5">

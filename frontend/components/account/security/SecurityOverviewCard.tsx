@@ -2,7 +2,13 @@ import Badge from '@/components/ui/Badge';
 import { ArrowRight, Check, CheckCircle2, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
-type SecurityOverviewCardProps = { email: string; passwordHref: string };
+type SecurityOverviewCardProps = {
+  email: string;
+  emailVerified: boolean;
+  phone: string;
+  phoneVerified: boolean;
+  passwordHref: string;
+};
 
 function DoneIcon() {
   return (
@@ -12,7 +18,27 @@ function DoneIcon() {
   );
 }
 
-export default function SecurityOverviewCard({ email, passwordHref }: SecurityOverviewCardProps) {
+function PendingIcon() {
+  return <div className="h-5 w-5 shrink-0 rounded-md border-2 border-slate-300 bg-white" />;
+}
+
+function StatusLabel({ done }: { done: boolean }) {
+  return (
+    <span className={`shrink-0 text-xs font-semibold ${done ? 'text-emerald-700' : 'text-amber-700'}`}>
+      {done ? 'Completed' : 'Pending'}
+    </span>
+  );
+}
+
+export default function SecurityOverviewCard({
+  email,
+  emailVerified,
+  phone,
+  phoneVerified,
+  passwordHref,
+}: SecurityOverviewCardProps) {
+  const completed = [emailVerified, phoneVerified, true, false].filter(Boolean).length;
+
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-7">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -26,31 +52,31 @@ export default function SecurityOverviewCard({ email, passwordHref }: SecurityOv
 
         <Badge variant="success" size="md">
           <CheckCircle2 className="text-primary h-3.5 w-3.5" />
-          <span>3 of 4 security tasks completed</span>
+          <span>{completed} of 4 security tasks completed</span>
         </Badge>
       </div>
 
       <div className="mt-5 grid grid-cols-1 gap-x-8 gap-y-3.5 border-t border-slate-100 pt-5 sm:grid-cols-2">
         <div className="flex items-center justify-between gap-3 py-1">
           <div className="flex min-w-0 items-center gap-2.5">
-            <DoneIcon />
+            {emailVerified ? <DoneIcon /> : <PendingIcon />}
             <div className="min-w-0">
               <div className="truncate text-sm font-semibold text-slate-800">Primary email verified</div>
               <div className="truncate text-xs text-slate-500">{email}</div>
             </div>
           </div>
-          <span className="shrink-0 text-xs font-semibold text-emerald-700">Completed</span>
+          <StatusLabel done={emailVerified} />
         </div>
 
         <div className="flex items-center justify-between gap-3 py-1">
           <div className="flex min-w-0 items-center gap-2.5">
-            <DoneIcon />
+            {phoneVerified ? <DoneIcon /> : <PendingIcon />}
             <div className="min-w-0">
               <div className="truncate text-sm font-semibold text-slate-800">Recovery phone number</div>
-              <div className="truncate text-xs text-slate-500">0988 ••• 321</div>
+              <div className="truncate text-xs text-slate-500">{phone || 'No phone number added'}</div>
             </div>
           </div>
-          <span className="shrink-0 text-xs font-semibold text-emerald-700">Completed</span>
+          <StatusLabel done={phoneVerified} />
         </div>
 
         <div className="flex items-center justify-between gap-3 py-1">
@@ -71,10 +97,10 @@ export default function SecurityOverviewCard({ email, passwordHref }: SecurityOv
 
         <div className="flex items-center justify-between gap-3 py-1">
           <div className="flex min-w-0 items-center gap-2.5">
-            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-slate-300 bg-white" />
+            <PendingIcon />
             <div className="min-w-0">
               <div className="truncate text-sm font-bold text-slate-800">Two-factor authentication</div>
-              <div className="truncate text-xs text-slate-500">Qua Authenticator App</div>
+              <div className="truncate text-xs text-slate-500">Via authenticator app</div>
             </div>
           </div>
           <Link
