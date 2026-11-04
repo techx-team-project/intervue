@@ -6,20 +6,27 @@ import com.techx.intervue.resources.FieldErrorResource;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -84,6 +91,45 @@ public class GlobalExceptionHandler {
         boolean anonymous =
                 authentication == null || authentication instanceof AnonymousAuthenticationToken;
         return build(anonymous ? ErrorCode.UNAUTHENTICATED : ErrorCode.FORBIDDEN, List.of());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResource<Void>> handleUnauthenticated() {
+        return build(ErrorCode.UNAUTHENTICATED, List.of());
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiResource<Void>> handleMethodNotAllowed() {
+        return build(ErrorCode.METHOD_NOT_ALLOWED, List.of());
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ApiResource<Void>> handleUnsupportedMediaType() {
+        return build(ErrorCode.UNSUPPORTED_MEDIA_TYPE, List.of());
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<ApiResource<Void>> handleMissingPart(
+            MissingServletRequestPartException ex) {
+        return missingInput(ex.getRequestPartName());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResource<Void>> handleMissingParameter(
+            MissingServletRequestParameterException ex) {
+        return missingInput(ex.getParameterName());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResource<Void>> handleUnexpected(Exception ex) {
+        log.error("Unhandled exception", ex);
+        return build(ErrorCode.INTERNAL_ERROR, List.of());
+    }
+
+    private ResponseEntity<ApiResource<Void>> missingInput(String name) {
+        FieldErrorResource detail =
+                FieldErrorResource.builder().field(name).message("This field is required").build();
+        return build(ErrorCode.VALIDATION_FAILED, List.of(detail));
     }
 
     private ResponseEntity<ApiResource<Void>> build(

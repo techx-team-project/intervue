@@ -1,51 +1,50 @@
 'use client';
 
-import { Edit2, Sparkles, User } from 'lucide-react';
+import { Edit2, User } from 'lucide-react';
 
-interface CandidateAboutSectionProps {
-  bio: string;
-  isOwner?: boolean;
-  onEdit?: () => void;
-}
+type CandidateAboutSectionProps = {
+  bio: string | null;
+  onEdit: () => void;
+};
 
-export default function CandidateAboutSection({ bio, isOwner = true, onEdit }: CandidateAboutSectionProps) {
+export default function CandidateAboutSection({ bio, onEdit }: CandidateAboutSectionProps) {
   return (
-    <div className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-8">
+    <section className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-8">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50">
             <User className="h-5 w-5" />
           </div>
-          <h2 className="text-navy text-lg font-bold sm:text-xl">Giới thiệu bản thân</h2>
+          <h2 className="text-navy text-lg font-bold sm:text-xl">About me</h2>
         </div>
 
-        {isOwner && onEdit && (
-          <button
-            type="button"
-            onClick={onEdit}
-            className="hover:text-primary flex h-8 w-8 items-center justify-center rounded-lg text-[#6f7882] transition-colors hover:bg-[#f4f5f5]"
-            title="Chỉnh sửa giới thiệu"
-          >
-            <Edit2 className="h-4 w-4" />
-          </button>
+        <button
+          type="button"
+          onClick={onEdit}
+          className="hover:text-primary flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-[#6f7882] transition-colors hover:bg-[#f4f5f5]"
+          title="Edit about"
+          aria-label="Edit about"
+        >
+          <Edit2 className="h-4 w-4" />
+        </button>
+      </div>
+
+      <div className="rounded-2xl bg-[#f8fafc] p-5">
+        {bio ? (
+          <p className="text-[14.5px] leading-relaxed whitespace-pre-line text-[#334155]">{bio}</p>
+        ) : (
+          <p className="text-sm text-slate-500">
+            Tell recruiters about your background and what you are looking for.{' '}
+            <button
+              type="button"
+              onClick={onEdit}
+              className="text-primary cursor-pointer font-semibold hover:underline"
+            >
+              Add a summary
+            </button>
+          </p>
         )}
       </div>
-
-      <div className="relative rounded-2xl bg-[#f8fafc] p-5">
-        <p className="text-[14.5px] leading-relaxed text-[#334155]">{bio}</p>
-
-        <div className="text-primary mt-4 flex flex-wrap items-center gap-2 border-t border-[#e2e8f0]/80 pt-3 text-[12px] font-semibold">
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100/70 px-2.5 py-0.5">
-            <Sparkles className="h-3 w-3" /> 6+ Năm kinh nghiệm
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100/70 px-2.5 py-0.5">
-            <Sparkles className="h-3 w-3" /> Kiến trúc phân tán High-Concurrency
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100/70 px-2.5 py-0.5">
-            <Sparkles className="h-3 w-3" /> Tích hợp GenAI & LLM
-          </span>
-        </div>
-      </div>
-    </div>
+    </section>
   );
 }
