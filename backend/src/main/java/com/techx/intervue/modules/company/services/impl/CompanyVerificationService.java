@@ -8,6 +8,7 @@ import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterf
 import com.techx.intervue.common.storage.StorageServiceInterface;
 import com.techx.intervue.common.storage.StorageTarget;
 import com.techx.intervue.common.storage.StoredFile;
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.entities.BusinessDocument;
@@ -33,7 +34,6 @@ import com.techx.intervue.modules.company.resources.BusinessDocumentResource;
 import com.techx.intervue.modules.company.resources.RecruiterVerificationProfileResource;
 import com.techx.intervue.modules.company.resources.VerificationStepResource;
 import com.techx.intervue.modules.company.services.impl.CompanyVerificationLevelPolicy.Facts;
-import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface.RecruiterActor;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
 import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
@@ -117,7 +117,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     // hold a database transaction open.
     @Override
     public BusinessDocumentResource submitDocument(
-            MultipartFile file, SubmitBusinessDocumentRequest request, RecruiterActor actor) {
+            MultipartFile file, SubmitBusinessDocumentRequest request, RequestActor actor) {
         CompanyMember membership = requireMembership(actor.userId());
         Company company = membership.getCompany();
 
@@ -183,14 +183,16 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
             throw new AppException(ErrorCode.NOT_FOUND);
         }
 
-        byte[] bytes = storageService.fetchDocument(document.getStoragePublicId());
+        byte[] bytes =
+                storageService.fetchDocument(
+                        document.getStoragePublicId(), StorageTarget.LEGAL_DOCUMENT);
         return new StoredDocumentContent(
                 document.getOriginalFileName(), document.getContentType(), bytes);
     }
 
     @Override
     @Transactional
-    public void acceptAgreement(AcceptAgreementRequest request, RecruiterActor actor) {
+    public void acceptAgreement(AcceptAgreementRequest request, RequestActor actor) {
         CompanyMember membership = requireMembership(actor.userId());
         recordAgreements(
                 membership,
@@ -205,7 +207,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     // hold a database transaction open.
     @Override
     public void acceptCustomAgreement(
-            MultipartFile file, AcceptAgreementRequest request, RecruiterActor actor) {
+            MultipartFile file, AcceptAgreementRequest request, RequestActor actor) {
         CompanyMember membership = requireMembership(actor.userId());
         StoredFile stored =
                 storageService.upload(file, StorageTarget.LEGAL_DOCUMENT, AGREEMENT_FOLDER);
@@ -246,7 +248,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
             AgreementAcceptanceMode mode,
             AgreementStatus status,
             String storagePublicId,
-            RecruiterActor actor) {
+            RequestActor actor) {
         Long companyId = companyIdOf(membership);
         if (isAcceptedForUser(actor.userId(), agreementType)) {
             throw new AppException(ErrorCode.AGREEMENT_ALREADY_ACCEPTED);
@@ -286,7 +288,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
             AgreementAcceptanceMode mode,
             AgreementStatus status,
             String storagePublicId,
-            RecruiterActor actor) {
+            RequestActor actor) {
         return CompanyAgreement.builder()
                 .scope(scope)
                 .company(membership.getCompany())
@@ -461,7 +463,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
         return membership.getCompany().getId();
     }
 
-    private void audit(RecruiterActor actor, AuditAction action, Long targetId, String detail) {
+    private void audit(RequestActor actor, AuditAction action, Long targetId, String detail) {
         auditLogService.record(
                 AuditEntry.builder()
                         .actorType(AuditActorType.USER)

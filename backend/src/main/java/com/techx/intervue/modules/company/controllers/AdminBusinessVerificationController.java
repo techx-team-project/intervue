@@ -8,10 +8,8 @@ import com.techx.intervue.modules.company.requests.SearchBusinessVerificationReq
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationDetailResource;
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationListResource;
 import com.techx.intervue.modules.company.resources.BusinessVerificationSummaryResource;
-import com.techx.intervue.modules.company.services.interfaces.AdminActor;
 import com.techx.intervue.modules.company.services.interfaces.BusinessVerificationAdminServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface.StoredDocumentContent;
-import com.techx.intervue.modules.helpers.IpHelper;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
@@ -43,8 +41,8 @@ public class AdminBusinessVerificationController extends BaseController {
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<AdminBusinessVerificationListResource>>> search(
             @Valid SearchBusinessVerificationRequest request, Pageable pageable) {
-        return ok(
-                PageResource.of(verificationAdminService.search(request, pageable)),
+        return page(
+                verificationAdminService.search(request, pageable),
                 "Business verification requests retrieved successfully!");
     }
 
@@ -122,10 +120,5 @@ public class AdminBusinessVerificationController extends BaseController {
         return ok(
                 verificationAdminService.revoke(documentId, request, actor(principal, httpRequest)),
                 "Document approval withdrawn successfully!");
-    }
-
-    private AdminActor actor(CustomUserDetails principal, HttpServletRequest httpRequest) {
-        return new AdminActor(
-                principal.getId(), principal.getEmail(), IpHelper.getClientIp(httpRequest));
     }
 }

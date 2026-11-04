@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.company.services.interfaces;
 
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.modules.company.requests.ApproveDocumentRequest;
 import com.techx.intervue.modules.company.requests.ReviewDocumentRequest;
 import com.techx.intervue.modules.company.requests.RevokeDocumentRequest;
@@ -23,16 +24,16 @@ public interface BusinessVerificationAdminServiceInterface {
     StoredDocumentContent readDocument(Long documentId);
 
     AdminBusinessVerificationDetailResource approve(
-            Long documentId, ApproveDocumentRequest request, AdminActor actor);
+            Long documentId, ApproveDocumentRequest request, RequestActor actor);
 
     AdminBusinessVerificationDetailResource reject(
-            Long documentId, ReviewDocumentRequest request, AdminActor actor);
+            Long documentId, ReviewDocumentRequest request, RequestActor actor);
 
     AdminBusinessVerificationDetailResource requestMoreInformation(
-            Long documentId, ReviewDocumentRequest request, AdminActor actor);
+            Long documentId, ReviewDocumentRequest request, RequestActor actor);
 
     AdminBusinessVerificationDetailResource revoke(
-            Long documentId, RevokeDocumentRequest request, AdminActor actor);
+            Long documentId, RevokeDocumentRequest request, RequestActor actor);
 
     int expireLapsedAuthorizations();
 }

@@ -6,6 +6,8 @@ import com.techx.intervue.common.audit.enums.AuditTargetType;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.common.storage.StorageServiceInterface;
+import com.techx.intervue.common.storage.StorageTarget;
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.entities.BusinessDocument;
@@ -34,7 +36,6 @@ import com.techx.intervue.modules.company.resources.AdminBusinessVerificationLis
 import com.techx.intervue.modules.company.resources.BusinessDocumentResource;
 import com.techx.intervue.modules.company.resources.BusinessVerificationSummaryResource;
 import com.techx.intervue.modules.company.resources.CompanyMemberResource;
-import com.techx.intervue.modules.company.services.interfaces.AdminActor;
 import com.techx.intervue.modules.company.services.interfaces.BusinessVerificationAdminServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface.StoredDocumentContent;
@@ -132,13 +133,14 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
         return new StoredDocumentContent(
                 document.getOriginalFileName(),
                 document.getContentType(),
-                storageService.fetchDocument(document.getStoragePublicId()));
+                storageService.fetchDocument(
+                        document.getStoragePublicId(), StorageTarget.LEGAL_DOCUMENT));
     }
 
     @Override
     @Transactional
     public AdminBusinessVerificationDetailResource approve(
-            Long documentId, ApproveDocumentRequest request, AdminActor actor) {
+            Long documentId, ApproveDocumentRequest request, RequestActor actor) {
         BusinessDocument document = requireReviewable(documentId);
 
         if (document.getDocumentType() == BusinessDocumentType.LETTER_OF_AUTHORIZATION
@@ -182,7 +184,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     @Override
     @Transactional
     public AdminBusinessVerificationDetailResource reject(
-            Long documentId, ReviewDocumentRequest request, AdminActor actor) {
+            Long documentId, ReviewDocumentRequest request, RequestActor actor) {
         return decide(
                 documentId,
                 request,
@@ -194,7 +196,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     @Override
     @Transactional
     public AdminBusinessVerificationDetailResource requestMoreInformation(
-            Long documentId, ReviewDocumentRequest request, AdminActor actor) {
+            Long documentId, ReviewDocumentRequest request, RequestActor actor) {
         return decide(
                 documentId,
                 request,
@@ -206,7 +208,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     @Override
     @Transactional
     public AdminBusinessVerificationDetailResource revoke(
-            Long documentId, RevokeDocumentRequest request, AdminActor actor) {
+            Long documentId, RevokeDocumentRequest request, RequestActor actor) {
         BusinessDocument document = requireDocument(documentId);
         if (document.getReviewStatus() != DocumentReviewStatus.APPROVED) {
             throw new AppException(ErrorCode.DOCUMENT_NOT_APPROVED);
@@ -320,7 +322,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     private AdminBusinessVerificationDetailResource decide(
             Long documentId,
             ReviewDocumentRequest request,
-            AdminActor actor,
+            RequestActor actor,
             DocumentReviewStatus outcome,
             AuditAction action) {
         BusinessDocument document = requireReviewable(documentId);
@@ -339,7 +341,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
         return detailOf(document);
     }
 
-    private void stampReview(BusinessDocument document, AdminActor actor) {
+    private void stampReview(BusinessDocument document, RequestActor actor) {
         document.setReviewedAt(Instant.now());
         document.setReviewedBy(actor.userId());
     }
@@ -424,7 +426,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     }
 
     private void audit(
-            AdminActor actor,
+            RequestActor actor,
             AuditAction action,
             AuditTargetType targetType,
             Long targetId,

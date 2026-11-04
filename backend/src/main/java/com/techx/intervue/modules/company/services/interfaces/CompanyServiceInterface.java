@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.company.services.interfaces;
 
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.modules.company.requests.JoinCompanyRequest;
 import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
@@ -12,19 +13,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface CompanyServiceInterface {
 
-    record RecruiterActor(Long userId, String email, String ip) {}
-
     CompanyResource findMyCompany(Long userId);
 
-    CompanyResource create(SaveCompanyProfileRequest request, RecruiterActor actor);
+    CompanyResource create(SaveCompanyProfileRequest request, RequestActor actor);
 
-    CompanyResource update(SaveCompanyProfileRequest request, RecruiterActor actor);
+    CompanyResource update(SaveCompanyProfileRequest request, RequestActor actor);
 
     Page<CompanySummaryResource> search(SearchCompaniesRequest request, Pageable pageable);
 
-    CompanyResource join(JoinCompanyRequest request, RecruiterActor actor);
+    CompanyResource join(JoinCompanyRequest request, RequestActor actor);
 
-    void leave(RecruiterActor actor);
+    void leave(RequestActor actor);
 
     CompanyResource replaceLogo(MultipartFile file, Long userId);
 

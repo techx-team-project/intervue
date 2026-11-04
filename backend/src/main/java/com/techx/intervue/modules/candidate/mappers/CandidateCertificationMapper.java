@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.candidate.mappers;
 
 import com.techx.intervue.common.storage.StorageServiceInterface;
+import com.techx.intervue.common.text.Texts;
 import com.techx.intervue.modules.candidate.entities.CandidateCertification;
 import com.techx.intervue.modules.candidate.requests.SaveCandidateCertificationRequest;
 import com.techx.intervue.modules.candidate.resources.CandidateCertificationResource;
@@ -18,8 +19,8 @@ public class CandidateCertificationMapper {
         certification.setName(request.name().trim());
         certification.setIssuer(request.issuer().trim());
         certification.setIssueDate(request.issueDate());
-        certification.setCredentialId(blankToNull(request.credentialId()));
-        certification.setCredentialUrl(blankToNull(request.credentialUrl()));
+        certification.setCredentialId(Texts.blankToNull(request.credentialId()));
+        certification.setCredentialUrl(Texts.blankToNull(request.credentialUrl()));
     }
 
     public CandidateCertificationResource toResource(CandidateCertification certification) {
@@ -34,13 +35,5 @@ public class CandidateCertificationMapper {
                 .imageUrl(
                         imagePublicId == null ? null : storageService.publicImageUrl(imagePublicId))
                 .build();
-    }
-
-    private String blankToNull(String value) {
-        if (value == null) {
-            return null;
-        }
-        String trimmed = value.trim();
-        return trimmed.isEmpty() ? null : trimmed;
     }
 }

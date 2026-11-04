@@ -4,9 +4,7 @@ import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.company.requests.RevokeMembershipRequest;
 import com.techx.intervue.modules.company.requests.TransferCompanyOwnerRequest;
 import com.techx.intervue.modules.company.resources.CompanyMemberResource;
-import com.techx.intervue.modules.company.services.interfaces.AdminActor;
 import com.techx.intervue.modules.company.services.interfaces.CompanyAdminServiceInterface;
-import com.techx.intervue.modules.helpers.IpHelper;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,10 +61,5 @@ public class AdminCompanyController extends BaseController {
                 companyAdminService.transferOwner(
                         companyId, request, actor(principal, httpRequest)),
                 "Company ownership transferred successfully!");
-    }
-
-    private AdminActor actor(CustomUserDetails principal, HttpServletRequest httpRequest) {
-        return new AdminActor(
-                principal.getId(), principal.getEmail(), IpHelper.getClientIp(httpRequest));
     }
 }
