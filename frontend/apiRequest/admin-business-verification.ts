@@ -40,6 +40,40 @@ export const adminBusinessVerificationApi = {
   getDetail: (documentId: number) =>
     request<AdminBusinessVerificationDetailResource>(`/admin/business-verification/${documentId}`),
 
+  viewDocumentBlob: (documentId: number) =>
+    request<Blob>(`/admin/business-verification/${documentId}/view`, {
+      responseType: 'blob',
+    }),
+
+  viewIdentityBlob: (documentId: number) =>
+    request<Blob>(`/admin/business-verification/${documentId}/identity/view`, {
+      responseType: 'blob',
+    }),
+
+  searchAgreements: (status?: string, page = 0, size = 10) => {
+    const qs = new URLSearchParams();
+    if (status) qs.set('status', status);
+    qs.set('page', String(page));
+    qs.set('size', String(size));
+    return request<Page<unknown>>(`/admin/business-verification/agreements?${qs.toString()}`);
+  },
+
+  viewAgreementBlob: (agreementId: number) =>
+    request<Blob>(`/admin/business-verification/agreements/${agreementId}/view`, {
+      responseType: 'blob',
+    }),
+
+  approveAgreement: (agreementId: number) =>
+    request<null>(`/admin/business-verification/agreements/${agreementId}/approve`, {
+      method: 'POST',
+    }),
+
+  rejectAgreement: (agreementId: number, data: { reason: string }) =>
+    request<null>(`/admin/business-verification/agreements/${agreementId}/reject`, {
+      method: 'POST',
+      body: data,
+    }),
+
   approve: (documentId: number, data: { expiresAt?: string } = {}) =>
     request<AdminBusinessVerificationDetailResource>(`/admin/business-verification/${documentId}/approve`, {
       method: 'POST',

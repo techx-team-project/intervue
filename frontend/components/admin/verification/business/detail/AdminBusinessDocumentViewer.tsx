@@ -1,9 +1,13 @@
 'use client';
 
+import { adminBusinessVerificationApi } from '@/apiRequest/admin-business-verification';
+import Spinner from '@/components/common/Spinner';
 import type { BusinessDocumentResource } from '@/types/recruiter-company';
 import {
   ChevronLeft,
   ChevronRight,
+  Eye,
+  FileCheck,
   FileText,
   Maximize2,
   Minimize2,
@@ -13,7 +17,7 @@ import {
   ZoomOut,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface AdminBusinessDocumentViewerProps {
   document: BusinessDocumentResource;
@@ -30,13 +34,59 @@ export function AdminBusinessDocumentViewer({
   taxCode,
   submitterName,
   sampleScanUrl,
-  totalPages = 2,
+  totalPages = 1,
 }: AdminBusinessDocumentViewerProps) {
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showOcrOverlay, setShowOcrOverlay] = useState(false);
+  const [viewMode, setViewMode] = useState<'stream' | 'structured'>('stream');
+
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const [blobType, setBlobType] = useState<'pdf' | 'image' | 'unknown'>('unknown');
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+
+  const effectiveTotalPages = document.identityStoragePublicId ? 2 : totalPages;
+  const currentKey = `${document.id}-${currentPage}`;
+  const isLoadingBlob = loadedKey !== currentKey;
+
+  useEffect(() => {
+    let cancelled = false;
+    let url: string | null = null;
+
+    const fetcher =
+      currentPage === 2 && document.identityStoragePublicId
+        ? adminBusinessVerificationApi.viewIdentityBlob(document.id)
+        : adminBusinessVerificationApi.viewDocumentBlob(document.id);
+
+    fetcher
+      .then((blob) => {
+        if (cancelled) return;
+        url = URL.createObjectURL(blob);
+        setBlobUrl(url);
+        const type = blob.type.toLowerCase();
+        if (type.includes('pdf')) {
+          setBlobType('pdf');
+        } else if (type.includes('image')) {
+          setBlobType('image');
+        } else {
+          setBlobType('unknown');
+        }
+        setLoadedKey(currentKey);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setBlobUrl(null);
+        setBlobType('unknown');
+        setLoadedKey(currentKey);
+      });
+
+    return () => {
+      cancelled = true;
+      if (url) URL.revokeObjectURL(url);
+    };
+  }, [document.id, currentPage, document.identityStoragePublicId, currentKey]);
 
   const isErc = document.documentType === 'BUSINESS_LICENSE';
   const defaultScan = isErc ? '/images/recruiter/illustration-erc.png' : '/images/recruiter/illustration-loa.png';
@@ -66,19 +116,50 @@ export function AdminBusinessDocumentViewer({
           <div className="space-y-0.5">
             <p
               className="dark:text-forest-100 max-w-[240px] truncate text-xs font-semibold text-slate-800 sm:max-w-[320px]"
-              title={document.originalFileName}
+              title={currentPage === 2 ? document.identityFileName || 'Citizen_ID.png' : document.originalFileName}
             >
-              {document.originalFileName}
+              {currentPage === 2 ? document.identityFileName || 'Citizen ID / CCCD' : document.originalFileName}
             </p>
             <p className="dark:text-forest-400 text-[11px] text-slate-400">
               {(document.fileSizeBytes / (1024 * 1024)).toFixed(2)} MB ·{' '}
-              {isErc ? 'License (ERC)' : 'Authorization (LOA)'} · Page {currentPage}/{totalPages}
+              {currentPage === 2 ? 'Citizen ID (CCCD)' : isErc ? 'License (ERC)' : 'Authorization (LOA)'} · Page{' '}
+              {currentPage}/{effectiveTotalPages}
             </p>
           </div>
         </div>
 
         {/* Studio Controls */}
         <div className="flex items-center gap-1">
+          {/* Mode Switcher: Stream vs Structured View */}
+          <div className="dark:bg-forest-950 flex items-center rounded-lg bg-slate-100 p-0.5 text-xs">
+            <button
+              type="button"
+              onClick={() => setViewMode('stream')}
+              className={`flex items-center gap-1 rounded-md px-2.5 py-1 font-medium transition ${
+                viewMode === 'stream'
+                  ? 'dark:bg-forest-800 dark:text-forest-100 bg-white text-slate-900 shadow-xs'
+                  : 'dark:text-forest-400 text-slate-500 hover:text-slate-800'
+              }`}
+              title="Stream authentic PDF or image from server"
+            >
+              <Eye className="h-3.5 w-3.5" />
+              <span>Document</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('structured')}
+              className={`flex items-center gap-1 rounded-md px-2.5 py-1 font-medium transition ${
+                viewMode === 'structured'
+                  ? 'dark:bg-forest-800 dark:text-forest-100 bg-white text-slate-900 shadow-xs'
+                  : 'dark:text-forest-400 text-slate-500 hover:text-slate-800'
+              }`}
+              title="Structured certificate preview"
+            >
+              <FileCheck className="h-3.5 w-3.5" />
+              <span>Details</span>
+            </button>
+          </div>
+
           {/* OCR Highlight Toggle */}
           <button
             type="button"
@@ -91,7 +172,7 @@ export function AdminBusinessDocumentViewer({
             title="Toggle OCR extracted information overlay"
           >
             <Sparkles className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-            <span className="hidden sm:inline">OCR Insights</span>
+            <span className="hidden sm:inline">OCR</span>
           </button>
 
           <div className="dark:bg-forest-800 mx-1 h-4 w-px bg-slate-200" />
@@ -148,79 +229,125 @@ export function AdminBusinessDocumentViewer({
 
       {/* Document View Canvas */}
       <div className="dark:bg-forest-950/80 relative flex flex-1 items-center justify-center overflow-auto bg-slate-100/70 p-6">
-        {/* Scanned Document Paper Container */}
-        <div
-          style={{
-            transform: `scale(${zoom}) rotate(${rotation}deg)`,
-            transition: 'transform 0.15s ease-out',
-          }}
-          className="dark:border-forest-700 relative max-h-[560px] max-w-[480px] overflow-hidden rounded-xl border border-slate-200/90 bg-white p-6 shadow-sm dark:bg-slate-900"
-        >
-          {/* Document Header Text */}
-          <div className="dark:border-forest-800 space-y-2 border-b border-slate-100 pb-3 text-center">
-            <p className="dark:text-forest-400 text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
-              SOCIALIST REPUBLIC OF VIETNAM
-            </p>
-            <p className="dark:text-forest-500 text-[9px] text-slate-400">Independence - Freedom - Happiness</p>
-            <div className="dark:bg-forest-700 mx-auto h-0.5 w-12 bg-slate-300" />
-
-            <div className="pt-1">
-              <h4 className="dark:text-forest-100 text-xs font-bold text-slate-900 uppercase">
-                {isErc ? 'ENTERPRISE REGISTRATION CERTIFICATE' : 'LETTER OF AUTHORIZATION FOR RECRUITMENT'}
-              </h4>
-              <p className="dark:text-forest-400 font-mono text-[10px] text-slate-500">
-                BUSINESS CODE / TAX ID: {taxCode}
-              </p>
-            </div>
+        {isLoadingBlob ? (
+          <div className="flex flex-col items-center justify-center gap-3">
+            <Spinner />
+            <p className="dark:text-forest-400 text-xs text-slate-500">Streaming authenticated document...</p>
           </div>
-
-          {/* OCR Extracted Insights Banner if enabled */}
-          {showOcrOverlay && (
-            <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50/70 p-2.5 text-xs text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
-              <p className="flex items-center gap-1.5 font-semibold">
-                <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
-                <span>Extracted OCR Data:</span>
+        ) : viewMode === 'stream' && blobUrl ? (
+          <div
+            style={{
+              transform: `scale(${zoom}) rotate(${rotation}deg)`,
+              transformOrigin: 'center center',
+              transition: 'transform 0.15s ease-out',
+            }}
+            className="flex h-full w-full max-w-3xl items-center justify-center"
+          >
+            {blobType === 'pdf' ? (
+              <object
+                data={blobUrl}
+                type="application/pdf"
+                className="h-[560px] w-full rounded-xl border border-slate-200/80 bg-white shadow-sm dark:bg-slate-900"
+              >
+                <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center">
+                  <FileText className="h-10 w-10 text-slate-400" />
+                  <p className="text-xs text-slate-600">PDF preview is ready.</p>
+                  <a
+                    href={blobUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-lg bg-emerald-600 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700"
+                  >
+                    Open PDF in New Tab
+                  </a>
+                </div>
+              </object>
+            ) : (
+              <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-white p-2 shadow-sm dark:bg-slate-900">
+                <img
+                  src={blobUrl}
+                  alt={document.originalFileName}
+                  className="max-h-[540px] w-auto max-w-full object-contain"
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Structured Scanned Document Paper Container (Details mode / Fallback) */
+          <div
+            style={{
+              transform: `scale(${zoom}) rotate(${rotation}deg)`,
+              transition: 'transform 0.15s ease-out',
+            }}
+            className="dark:border-forest-700 relative max-h-[560px] max-w-[480px] overflow-hidden rounded-xl border border-slate-200/90 bg-white p-6 shadow-sm dark:bg-slate-900"
+          >
+            {/* Document Header Text */}
+            <div className="dark:border-forest-800 space-y-2 border-b border-slate-100 pb-3 text-center">
+              <p className="dark:text-forest-400 text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
+                SOCIALIST REPUBLIC OF VIETNAM
               </p>
-              <div className="mt-1 space-y-1 text-[11px]">
-                <p>
-                  <strong>Company:</strong> {companyName}
-                </p>
-                <p>
-                  <strong>Tax ID:</strong> {taxCode}
-                </p>
-                <p>
-                  <strong>Signatory:</strong> {submitterName}
+              <p className="dark:text-forest-500 text-[9px] text-slate-400">Independence - Freedom - Happiness</p>
+              <div className="dark:bg-forest-700 mx-auto h-0.5 w-12 bg-slate-300" />
+
+              <div className="pt-1">
+                <h4 className="dark:text-forest-100 text-xs font-bold text-slate-900 uppercase">
+                  {currentPage === 2
+                    ? 'CHIP-BASED CITIZEN IDENTITY CARD (CCCD)'
+                    : isErc
+                      ? 'ENTERPRISE REGISTRATION CERTIFICATE'
+                      : 'LETTER OF AUTHORIZATION FOR RECRUITMENT'}
+                </h4>
+                <p className="dark:text-forest-400 font-mono text-[10px] text-slate-500">
+                  {currentPage === 2 ? `AUTHORIZED REPRESENTATIVE: ${submitterName}` : `TAX ID: ${taxCode}`}
                 </p>
               </div>
             </div>
-          )}
 
-          {/* Visual Scanned Document Graphic */}
-          <div className="dark:border-forest-800 dark:bg-forest-950/40 mt-4 flex items-center justify-center overflow-hidden rounded-lg border border-slate-100 bg-slate-50/50 p-2">
-            <Image
-              src={scanImageSrc}
-              alt="Scanned credential document"
-              width={380}
-              height={220}
-              className="max-h-[220px] w-auto object-contain"
-              priority
-            />
-          </div>
+            {/* OCR Extracted Insights Banner if enabled */}
+            {showOcrOverlay && (
+              <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50/70 p-2.5 text-xs text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
+                <p className="flex items-center gap-1.5 font-semibold">
+                  <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+                  <span>Extracted OCR Data:</span>
+                </p>
+                <div className="mt-1 space-y-1 text-[11px]">
+                  <p>
+                    <strong>Company:</strong> {companyName}
+                  </p>
+                  <p>
+                    <strong>Tax ID:</strong> {taxCode}
+                  </p>
+                  <p>
+                    <strong>Signatory:</strong> {submitterName}
+                  </p>
+                </div>
+              </div>
+            )}
 
-          {/* Subtle Document Footer */}
-          <div className="dark:border-forest-800 dark:text-forest-500 mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-[10px] text-slate-400">
-            <span>Submitted: {new Date(document.submittedAt).toLocaleDateString('en-US')}</span>
-            <span className="font-mono">
-              ID:{' '}
-              {'storagePublicId' in document && typeof document.storagePublicId === 'string'
-                ? document.storagePublicId
-                : `DOC-${document.id}`}
-            </span>
+            {/* Visual Scanned Document Graphic */}
+            <div className="dark:border-forest-800 dark:bg-forest-950/40 mt-4 flex items-center justify-center overflow-hidden rounded-lg border border-slate-100 bg-slate-50/50 p-2">
+              <Image
+                src={scanImageSrc}
+                alt="Scanned credential document"
+                width={380}
+                height={220}
+                className="max-h-[220px] w-auto object-contain"
+                priority
+              />
+            </div>
+
+            {/* Subtle Document Footer */}
+            <div className="dark:border-forest-800 dark:text-forest-500 mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-[10px] text-slate-400">
+              <span>Submitted: {new Date(document.submittedAt).toLocaleDateString('en-US')}</span>
+              <span className="font-mono">
+                ID: {document.storagePublicId ? document.storagePublicId : `DOC-${document.id}`}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Floating Page Switcher */}
-        {totalPages > 1 && (
+        {effectiveTotalPages > 1 && (
           <div className="dark:border-forest-800 dark:bg-forest-900/90 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-3 py-1 shadow-sm backdrop-blur-md">
             <button
               type="button"
@@ -232,12 +359,13 @@ export function AdminBusinessDocumentViewer({
               <ChevronLeft className="h-3.5 w-3.5" />
             </button>
             <span className="dark:text-forest-200 text-xs font-medium text-slate-700">
-              {currentPage} / {totalPages}
+              Page {currentPage} of {effectiveTotalPages}
+              {currentPage === 1 ? ' (LOA)' : ' (CCCD)'}
             </span>
             <button
               type="button"
-              disabled={currentPage >= totalPages}
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage >= effectiveTotalPages}
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, effectiveTotalPages))}
               className="dark:text-forest-300 dark:hover:bg-forest-800 rounded-full p-1 text-slate-600 hover:bg-slate-100 disabled:opacity-30"
               title="Next page"
             >
@@ -250,7 +378,7 @@ export function AdminBusinessDocumentViewer({
       {/* Footer Status Bar */}
       <div className="dark:border-forest-800 dark:bg-forest-900 dark:text-forest-400 flex items-center justify-between border-t border-slate-100 bg-slate-50/50 px-4 py-2.5 text-[11px] text-slate-500">
         <span>Sandboxed Internal Document Studio · InterVue Compliance</span>
-        <span className="dark:text-forest-500 font-mono text-slate-400">Verified Secure Preview</span>
+        <span className="dark:text-forest-500 font-mono text-slate-400">Verified Secure Stream</span>
       </div>
     </div>
   );

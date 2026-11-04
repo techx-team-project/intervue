@@ -17,7 +17,7 @@ import {
 } from './AdminBusinessVerificationFilterBar';
 import { AdminBusinessVerificationSummaryRow } from './AdminBusinessVerificationSummaryRow';
 import { AdminBusinessVerificationTable } from './AdminBusinessVerificationTable';
-import { isDocumentExpiringWithinDays } from './mock-verification-data';
+import { isDocumentExpiringWithinDays, type ExtendedVerificationDetail } from './mock-verification-data';
 import { useMockVerificationStore } from './useMockVerificationStore';
 
 export type VerificationTabKey = 'QUEUE' | 'NEED_INFO' | 'APPROVED' | 'EXPIRING' | 'COMPANIES' | 'ALL';
@@ -25,10 +25,92 @@ export type VerificationTabKey = 'QUEUE' | 'NEED_INFO' | 'APPROVED' | 'EXPIRING'
 export interface AdminBusinessVerificationListViewProps {
   initialSummary?: BusinessVerificationSummaryResource;
   initialPage?: Page<AdminBusinessVerificationListResource>;
+  onRefresh?: () => void;
 }
 
-export function AdminBusinessVerificationListView({}: AdminBusinessVerificationListViewProps = {}) {
+function toExtendedDossier(row: AdminBusinessVerificationListResource): ExtendedVerificationDetail {
+  const submittedAtDate = new Date(row.submittedAt);
+  const waitingHours = Math.max(0, Math.round((Date.now() - submittedAtDate.getTime()) / (1000 * 60 * 60)));
+  const isSlaOverdue = waitingHours > 24 && row.reviewStatus === 'PENDING_REVIEW';
+  return {
+    document: {
+      id: row.id,
+      documentType: row.documentType,
+      reviewStatus: row.reviewStatus,
+      originalFileName: row.originalFileName,
+      fileSizeBytes: 280000,
+      contentType: 'application/pdf',
+      submittedAt: row.submittedAt,
+      submittedByMe: false,
+      reviewedAt: row.reviewedAt,
+      expiresAt: row.expiresAt,
+    },
+    company: {
+      id: row.companyId,
+      name: row.companyName,
+      taxCode: row.companyTaxCode,
+      businessType: 'ENTERPRISE',
+      address: 'Vietnam',
+      verificationStatus: row.companyVerificationStatus,
+      verified: row.companyVerificationStatus === 'VERIFIED',
+      memberCount: 2,
+    },
+    submitter: {
+      id: row.submittedByUserId,
+      userId: row.submittedByUserId,
+      fullName: row.submittedByName || 'Authorized Representative',
+      email: row.submittedByEmail || '',
+      role: 'MEMBER',
+      status: 'ACTIVE',
+      joinedAt: row.submittedAt,
+      phoneVerified: true,
+      userAgreementAccepted: true,
+      canPublish: false,
+    },
+    members: [],
+    companyDocuments: [],
+    auditLogs: [],
+    waitingHours,
+    isSlaOverdue,
+    totalPages: 1,
+    sampleScanUrl:
+      row.documentType === 'BUSINESS_LICENSE'
+        ? '/images/recruiter/illustration-erc.png'
+        : '/images/recruiter/illustration-loa.png',
+  };
+}
+
+export function AdminBusinessVerificationListView({
+  initialSummary,
+  initialPage,
+  onRefresh,
+}: AdminBusinessVerificationListViewProps = {}) {
   const { dossiers, companies, summary, isReady, reset } = useMockVerificationStore();
+
+  const isLive = Boolean(initialPage?.items && initialPage.items.length > 0);
+
+  const effectiveDossiers = useMemo(() => {
+    if (initialPage?.items && initialPage.items.length > 0) {
+      return initialPage.items.map(toExtendedDossier);
+    }
+    return dossiers;
+  }, [initialPage, dossiers]);
+
+  const effectiveSummary = useMemo(() => {
+    if (initialSummary) {
+      const overdue = effectiveDossiers.filter(
+        (d: ExtendedVerificationDetail) => d.isSlaOverdue && d.document.reviewStatus === 'PENDING_REVIEW',
+      ).length;
+      return {
+        ...initialSummary,
+        slaOverdueCount: overdue,
+        expiringSoonCount: effectiveDossiers.filter((d: ExtendedVerificationDetail) =>
+          isDocumentExpiringWithinDays(d.document.expiresAt, d.document.reviewStatus, 30),
+        ).length,
+      };
+    }
+    return summary;
+  }, [initialSummary, summary, effectiveDossiers]);
 
   const [activeTab, setActiveTab] = useState<VerificationTabKey>('QUEUE');
   const [filters, setFilters] = useState<AdminVerificationFilterState>({
@@ -41,7 +123,7 @@ export function AdminBusinessVerificationListView({}: AdminBusinessVerificationL
 
   // Filter dossiers based on tab and active filters
   const filteredDossiers = useMemo(() => {
-    return dossiers.filter((d) => {
+    return effectiveDossiers.filter((d: ExtendedVerificationDetail) => {
       // Tab constraint
       if (activeTab === 'QUEUE' && d.document.reviewStatus !== 'PENDING_REVIEW') return false;
       if (activeTab === 'NEED_INFO' && d.document.reviewStatus !== 'MORE_INFO_REQUIRED') return false;
@@ -79,7 +161,7 @@ export function AdminBusinessVerificationListView({}: AdminBusinessVerificationL
 
       return true;
     });
-  }, [dossiers, activeTab, filters]);
+  }, [effectiveDossiers, activeTab, filters]);
 
   // Paginated items
   const paginatedDossiers = useMemo(() => {
@@ -143,30 +225,53 @@ export function AdminBusinessVerificationListView({}: AdminBusinessVerificationL
     );
   }
 
-  const slaOverdue = summary.slaOverdueCount ?? 0;
+  const slaOverdue = effectiveSummary.slaOverdueCount ?? 0;
 
   return (
     <div className="space-y-8 pb-8">
       {/* Page Header with Action Controls */}
       <AdminPageHeader
         description="Review Enterprise Registration Certificates (ERC) and Letters of Authorization (LOA) to authorize corporate recruitment publishing."
-        count={summary.pendingReview}
+        count={effectiveSummary.pendingReview}
         countLabel="awaiting review"
         actions={
           <div className="flex items-center gap-2">
-            <span className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-2xs">
-              <Sparkles className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>Interactive Mock Mode</span>
-            </span>
-            <button
-              type="button"
-              onClick={reset}
-              className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:border-slate-300 hover:bg-slate-50 active:scale-95"
-              title="Reset mock data to the initial 6 corporate dossiers"
-            >
-              <RotateCcw className="h-3.5 w-3.5 text-slate-500" />
-              <span>Reset Data</span>
-            </button>
+            {isLive ? (
+              <>
+                <span className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50/70 px-3 py-1.5 text-xs font-medium text-emerald-700 shadow-2xs dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                  </span>
+                  <span>Live Database</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={onRefresh}
+                  className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:border-slate-300 hover:bg-slate-50 active:scale-95"
+                  title="Reload queue from server"
+                >
+                  <RotateCcw className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Refresh</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <span className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-2xs">
+                  <Sparkles className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span>Interactive Mock Mode</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:border-slate-300 hover:bg-slate-50 active:scale-95"
+                  title="Reset mock data to initial corporate dossiers"
+                >
+                  <RotateCcw className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Reset Data</span>
+                </button>
+              </>
+            )}
           </div>
         }
       />
@@ -181,8 +286,7 @@ export function AdminBusinessVerificationListView({}: AdminBusinessVerificationL
             </span>
             <p className="text-xs font-semibold text-amber-950 dark:text-amber-200">
               <strong className="font-bold">SLA Alert:</strong> {slaOverdue} verification dossier has been waiting for
-              over 24 hours (FPT Software Corporation). Prioritize this review to maintain corporate partner
-              satisfaction.
+              over 24 hours. Prioritize this review to maintain corporate partner satisfaction.
             </p>
           </div>
           <button
@@ -197,7 +301,7 @@ export function AdminBusinessVerificationListView({}: AdminBusinessVerificationL
 
       {/* Summary KPI Command Row */}
       <AdminBusinessVerificationSummaryRow
-        summary={summary}
+        summary={effectiveSummary}
         selectedStatus={
           activeTab === 'QUEUE'
             ? 'PENDING_REVIEW'
@@ -238,9 +342,9 @@ export function AdminBusinessVerificationListView({}: AdminBusinessVerificationL
                     : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
                 }`}
               >
-                {summary.pendingReview}
+                {effectiveSummary.pendingReview}
               </span>
-              {summary.slaOverdueCount > 0 && (
+              {effectiveSummary.slaOverdueCount > 0 && (
                 <span className="flex h-1.5 w-1.5 rounded-full bg-rose-500" title="Overdue >24h" />
               )}
             </button>
@@ -266,7 +370,7 @@ export function AdminBusinessVerificationListView({}: AdminBusinessVerificationL
                     : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
                 }`}
               >
-                {summary.moreInfoRequired}
+                {effectiveSummary.moreInfoRequired}
               </span>
             </button>
 
@@ -291,7 +395,7 @@ export function AdminBusinessVerificationListView({}: AdminBusinessVerificationL
                     : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
                 }`}
               >
-                {summary.approved}
+                {effectiveSummary.approved}
               </span>
             </button>
 
@@ -316,7 +420,7 @@ export function AdminBusinessVerificationListView({}: AdminBusinessVerificationL
                     : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
                 }`}
               >
-                {summary.expiringSoonCount}
+                {effectiveSummary.expiringSoonCount ?? 0}
               </span>
             </button>
 
@@ -358,7 +462,7 @@ export function AdminBusinessVerificationListView({}: AdminBusinessVerificationL
               }`}
             >
               <FileText className="h-4 w-4" />
-              <span>All Requests ({dossiers.length})</span>
+              <span>All Requests ({effectiveDossiers.length})</span>
             </button>
           </div>
         </div>
