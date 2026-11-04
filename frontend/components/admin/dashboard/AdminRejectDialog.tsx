@@ -44,7 +44,7 @@ export default function AdminRejectDialog({ item, onClose, onConfirm }: AdminRej
     >
       <div className="space-y-4">
         <fieldset>
-          <legend className="text-[13px] font-semibold text-slate-700">Reason</legend>
+          <legend className="dark:text-forest-200 text-[13px] font-semibold text-slate-700">Reason</legend>
 
           <div className="mt-2 space-y-1.5">
             {presets.map((preset) => (
@@ -55,8 +55,8 @@ export default function AdminRejectDialog({ item, onClose, onConfirm }: AdminRej
                 className={cn(
                   'flex w-full cursor-pointer items-center rounded-lg border px-3 py-2 text-left text-[13px] transition-colors',
                   reason === preset
-                    ? 'border-rose-300 bg-rose-50 font-semibold text-rose-800'
-                    : 'border-slate-200 text-slate-700 hover:bg-slate-50',
+                    ? 'border-rose-300 bg-rose-50 font-semibold text-rose-800 dark:border-rose-700/60 dark:bg-rose-950/40 dark:text-rose-200'
+                    : 'dark:border-forest-700 dark:bg-forest-900/60 dark:text-forest-200 dark:hover:bg-forest-800/60 border-slate-200 text-slate-700 hover:bg-slate-50',
                 )}
               >
                 {preset}
@@ -67,27 +67,34 @@ export default function AdminRejectDialog({ item, onClose, onConfirm }: AdminRej
           <input type="hidden" {...register('reason')} />
 
           {formState.errors.reason && (
-            <p className="mt-2 text-xs font-medium text-rose-600">{formState.errors.reason.message}</p>
+            <p className="mt-2 text-xs font-medium text-rose-600 dark:text-rose-400">
+              {formState.errors.reason.message}
+            </p>
           )}
         </fieldset>
 
         <div>
-          <label htmlFor="admin-reject-detail" className="text-[13px] font-semibold text-slate-700">
-            Note for the user <span className="font-normal text-slate-400">(optional)</span>
+          <label
+            htmlFor="admin-reject-detail"
+            className="dark:text-forest-200 text-[13px] font-semibold text-slate-700"
+          >
+            Note for the user <span className="dark:text-forest-400 font-normal text-slate-400">(optional)</span>
           </label>
           <Textarea
             id="admin-reject-detail"
             rows={3}
             placeholder="Tell them exactly what to fix so the next attempt can pass."
-            className="mt-2"
+            className="dark:border-forest-700 dark:bg-forest-900 dark:text-forest-100 mt-2"
             {...register('detail')}
           />
           {formState.errors.detail && (
-            <p className="mt-1.5 text-xs font-medium text-rose-600">{formState.errors.detail.message}</p>
+            <p className="mt-1.5 text-xs font-medium text-rose-600 dark:text-rose-400">
+              {formState.errors.detail.message}
+            </p>
           )}
         </div>
 
-        <p className="flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+        <p className="dark:bg-forest-900/80 dark:text-forest-400 flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
           <ScrollText className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           Recorded against your admin account with a timestamp. Rejections cannot be deleted, only superseded.
         </p>

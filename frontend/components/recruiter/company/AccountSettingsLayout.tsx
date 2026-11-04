@@ -16,42 +16,42 @@ interface AccountSettingsLayoutProps {
 export function AccountSettingsLayout({
   children,
   activeTab,
-  pageTitle = 'Cài đặt tài khoản',
+  pageTitle = 'Account Settings',
 }: AccountSettingsLayoutProps) {
   const pathname = usePathname();
 
   const navItems = [
     {
       id: 'password',
-      label: 'Đổi mật khẩu',
+      label: 'Change Password',
       icon: KeyRound,
       href: '#',
       disabled: true,
     },
     {
       id: 'account',
-      label: 'Thông tin tài khoản',
+      label: 'Account Profile',
       icon: User,
       href: '#',
       disabled: true,
     },
     {
       id: 'license',
-      label: 'Giấy đăng ký doanh nghiệp',
+      label: 'Business License & LOA',
       icon: FileText,
       href: ROUTES.RECRUITER_COMPANY_LICENSE,
       isActive: activeTab === 'license' || pathname.includes('/license'),
     },
     {
       id: 'agreements',
-      label: 'Văn bản xử lý Dữ liệu cá nhân',
+      label: 'Personal Data Protection',
       icon: ShieldCheck,
       href: ROUTES.RECRUITER_COMPANY_AGREEMENTS,
       isActive: activeTab === 'agreements' || pathname.includes('/agreements'),
     },
     {
       id: 'company',
-      label: 'Thông tin công ty',
+      label: 'Company Profile',
       icon: Building2,
       href: ROUTES.RECRUITER_COMPANY,
       isActive:
@@ -59,28 +59,29 @@ export function AccountSettingsLayout({
     },
     {
       id: 'needs',
-      label: 'Nhu cầu tuyển dụng',
+      label: 'Hiring Needs',
       icon: Briefcase,
       href: ROUTES.RECRUITER_COMPANY_NEEDS,
-      disabled: true,
+      disabled: false,
+      isActive: activeTab === 'needs' || pathname.includes('/needs'),
     },
     {
       id: 'system',
-      label: 'Kết nối hệ thống',
+      label: 'Integrations & API',
       icon: Share2,
       href: '#',
       disabled: true,
     },
     {
       id: 'sync',
-      label: 'Đồng bộ CV',
+      label: 'Sync Applications',
       icon: RefreshCw,
       href: '#',
       disabled: true,
     },
     {
       id: 'settings',
-      label: 'Cài đặt',
+      label: 'Preferences',
       icon: Settings,
       href: '#',
       disabled: true,
@@ -88,8 +89,8 @@ export function AccountSettingsLayout({
   ];
 
   const breadcrumbItems = [
-    { label: 'Bảng tin', href: ROUTES.RECRUITER_DASHBOARD },
-    { label: 'Cài đặt tài khoản', href: ROUTES.RECRUITER_COMPANY },
+    { label: 'Workspace', href: ROUTES.RECRUITER_DASHBOARD },
+    { label: 'Company Verification', href: ROUTES.RECRUITER_COMPANY_VERIFICATION },
     { label: pageTitle },
   ];
 
@@ -101,10 +102,10 @@ export function AccountSettingsLayout({
       </div>
 
       {/* Main Settings Frame */}
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md">
+      <div className="mx-auto max-w-7xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         {/* Header */}
         <div className="border-b border-slate-200 bg-slate-50/70 px-6 py-4">
-          <h1 className="text-lg font-bold text-slate-900 sm:text-xl">Cài đặt tài khoản</h1>
+          <h1 className="text-lg font-bold text-slate-900 sm:text-xl">{pageTitle}</h1>
         </div>
 
         {/* 2-column settings grid */}
@@ -131,7 +132,7 @@ export function AccountSettingsLayout({
                   href={item.href}
                   className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-medium transition-all sm:text-sm ${
                     item.isActive
-                      ? 'bg-emerald-50 font-semibold text-[#00b14f] shadow-xs'
+                      ? 'bg-emerald-50 font-semibold text-[#00b14f] shadow-2xs'
                       : 'text-slate-700 hover:bg-slate-100/80 hover:text-slate-900'
                   }`}
                 >
