@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.time.Year;
 import java.util.List;
 
@@ -38,9 +39,12 @@ public record SaveCandidateProfileRequest(
                 String portfolioUrl,
         @NotBlank String desiredRole,
         CareerLevel desiredLevel,
+        @PositiveOrZero BigDecimal totalYoe,
         @NotNull Boolean salaryNegotiable,
         @PositiveOrZero Long salaryMin,
         @PositiveOrZero Long salaryMax,
+        @Size(max = 10) String currency,
+        @Size(max = 20) String salaryPeriod,
         WorkMode workMode,
         ContractType contractType,
         @Size(max = 5) List<@NotBlank @Size(max = 100) String> preferredLocations,

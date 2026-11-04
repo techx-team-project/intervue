@@ -5,6 +5,7 @@ import com.techx.intervue.modules.candidate.enums.ContractType;
 import com.techx.intervue.modules.candidate.enums.Gender;
 import com.techx.intervue.modules.candidate.enums.JobSearchStatus;
 import com.techx.intervue.modules.candidate.enums.WorkMode;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import lombok.Builder;
@@ -32,9 +33,12 @@ public record CandidateProfileResource(
         String portfolioUrl,
         String desiredRole,
         CareerLevel desiredLevel,
+        BigDecimal totalYoe,
         boolean salaryNegotiable,
         Long salaryMin,
         Long salaryMax,
+        String currency,
+        String salaryPeriod,
         WorkMode workMode,
         ContractType contractType,
         List<String> preferredLocations,

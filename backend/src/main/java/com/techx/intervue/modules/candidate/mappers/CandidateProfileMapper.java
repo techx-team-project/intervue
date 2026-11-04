@@ -34,9 +34,18 @@ public class CandidateProfileMapper {
         profile.setPortfolioUrl(blankToNull(request.portfolioUrl()));
         profile.setDesiredRole(request.desiredRole().trim());
         profile.setDesiredLevel(request.desiredLevel());
+        if (request.totalYoe() != null) {
+            profile.setTotalYoe(request.totalYoe());
+        }
         profile.setSalaryNegotiable(negotiable);
         profile.setSalaryMin(negotiable ? null : request.salaryMin());
         profile.setSalaryMax(negotiable ? null : request.salaryMax());
+        if (request.currency() != null && !request.currency().isBlank()) {
+            profile.setCurrency(request.currency().trim());
+        }
+        if (request.salaryPeriod() != null && !request.salaryPeriod().isBlank()) {
+            profile.setSalaryPeriod(request.salaryPeriod().trim());
+        }
         profile.setWorkMode(request.workMode());
         profile.setContractType(request.contractType());
     }
@@ -70,9 +79,12 @@ public class CandidateProfileMapper {
                 .portfolioUrl(profile.getPortfolioUrl())
                 .desiredRole(profile.getDesiredRole())
                 .desiredLevel(profile.getDesiredLevel())
+                .totalYoe(profile.getTotalYoe())
                 .salaryNegotiable(profile.isSalaryNegotiable())
                 .salaryMin(profile.getSalaryMin())
                 .salaryMax(profile.getSalaryMax())
+                .currency(profile.getCurrency())
+                .salaryPeriod(profile.getSalaryPeriod())
                 .workMode(profile.getWorkMode())
                 .contractType(profile.getContractType())
                 .preferredLocations(sorted(preferredLocations.stream().map(this::toCity).toList()))

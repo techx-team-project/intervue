@@ -102,9 +102,12 @@ export type CandidateProfileResponse = {
   portfolioUrl: string | null;
   desiredRole: string | null;
   desiredLevel: CareerLevel | null;
+  totalYoe?: number | null;
   salaryNegotiable: boolean;
   salaryMin: number | null;
   salaryMax: number | null;
+  currency?: string | null;
+  salaryPeriod?: string | null;
   workMode: WorkMode | null;
   contractType: ContractType | null;
   preferredLocations: string[];
@@ -134,13 +137,27 @@ export type SaveCandidateProfileRequest = {
   portfolioUrl: string | null;
   desiredRole: string;
   desiredLevel: CareerLevel | null;
+  totalYoe?: number | null;
   salaryNegotiable: boolean;
   salaryMin: number | null;
   salaryMax: number | null;
+  currency?: string | null;
+  salaryPeriod?: string | null;
   workMode: WorkMode | null;
   contractType: ContractType | null;
   preferredLocations: string[];
   preferredIndustries: string[];
+};
+
+export type CandidateResume = {
+  id: number;
+  fileName: string;
+  url: string;
+  fileSizeBytes: number;
+  contentType: string;
+  isDefault: boolean;
+  parsedSummary: string | null;
+  createdAt: string;
 };
 
 export type SaveCandidateExperienceRequest = {

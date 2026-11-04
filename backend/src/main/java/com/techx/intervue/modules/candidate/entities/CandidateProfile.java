@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -87,11 +88,22 @@ public class CandidateProfile extends BaseEntity {
     @Column(name = "desired_level", length = 20)
     private CareerLevel desiredLevel;
 
+    @Column(name = "total_yoe", precision = 3, scale = 1)
+    private BigDecimal totalYoe;
+
     @Column(name = "salary_min")
     private Long salaryMin;
 
     @Column(name = "salary_max")
     private Long salaryMax;
+
+    @Column(length = 10, nullable = false)
+    @Builder.Default
+    private String currency = "VND";
+
+    @Column(name = "salary_period", length = 20, nullable = false)
+    @Builder.Default
+    private String salaryPeriod = "MONTHLY";
 
     @Column(name = "salary_negotiable", nullable = false)
     @Builder.Default
