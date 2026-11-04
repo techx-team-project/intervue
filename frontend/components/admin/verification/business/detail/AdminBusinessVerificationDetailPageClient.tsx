@@ -1,10 +1,9 @@
 'use client';
 
-import { adminBusinessVerificationApi } from '@/apiRequest/admin-business-verification';
-import AdminDataGate from '@/components/admin/AdminDataGate';
-import { useAdminResource } from '@/hooks/useAdminResource';
+import Spinner from '@/components/common/Spinner';
 import { notFound } from 'next/navigation';
-import { useCallback } from 'react';
+import { useMemo } from 'react';
+import { useMockVerificationStore } from '../useMockVerificationStore';
 import { AdminBusinessVerificationDetailView } from './AdminBusinessVerificationDetailView';
 
 interface AdminBusinessVerificationDetailPageClientProps {
@@ -14,17 +13,23 @@ interface AdminBusinessVerificationDetailPageClientProps {
 export default function AdminBusinessVerificationDetailPageClient({
   documentId,
 }: AdminBusinessVerificationDetailPageClientProps) {
-  const load = useCallback(() => adminBusinessVerificationApi.getDetail(documentId), [documentId]);
+  const { dossiers, isReady } = useMockVerificationStore();
 
-  const { data, status, error, reload } = useAdminResource(load);
+  const dossier = useMemo(() => {
+    return dossiers.find((d) => d.document.id === documentId);
+  }, [dossiers, documentId]);
 
-  if (status === 'error' && error?.status === 404) {
+  if (!isReady) {
+    return (
+      <div className="flex min-h-[400px] items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (!dossier) {
     notFound();
   }
 
-  return (
-    <AdminDataGate status={status} error={error} onRetry={reload}>
-      {data && <AdminBusinessVerificationDetailView initialDetail={data} />}
-    </AdminDataGate>
-  );
+  return <AdminBusinessVerificationDetailView dossierId={documentId} />;
 }

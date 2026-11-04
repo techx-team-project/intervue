@@ -1,88 +1,230 @@
 'use client';
 
 import { ROUTES } from '@/constants/routes';
-import type { AdminBusinessVerificationDetailResource } from '@/types/recruiter-company';
-import { AlertTriangle, ArrowLeft, Building2, ExternalLink, FileText, User, Users } from 'lucide-react';
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Building2,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
+  ExternalLink,
+  History,
+  Phone,
+  ShieldCheck,
+  User,
+} from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
+import type { ExtendedVerificationDetail } from '../mock-verification-data';
+import { useMockVerificationStore } from '../useMockVerificationStore';
 import { AdminBusinessDocumentViewer } from './AdminBusinessDocumentViewer';
 import { AdminBusinessVerificationActions } from './AdminBusinessVerificationActions';
 
 interface AdminBusinessVerificationDetailViewProps {
-  initialDetail: AdminBusinessVerificationDetailResource;
+  dossierId?: number;
+  initialDetail?: ExtendedVerificationDetail;
 }
 
-export function AdminBusinessVerificationDetailView({ initialDetail }: AdminBusinessVerificationDetailViewProps) {
-  const [detail, setDetail] = useState(initialDetail);
-  const { document, company, submitter, members, companyDocuments } = detail;
+export function AdminBusinessVerificationDetailView({
+  dossierId,
+  initialDetail,
+}: AdminBusinessVerificationDetailViewProps) {
+  const { dossiers } = useMockVerificationStore();
 
-  const isMemberSubmittingLicense = submitter.role === 'MEMBER' && document.documentType === 'BUSINESS_LICENSE';
+  const currentDossier = useMemo(() => {
+    if (dossierId) {
+      return dossiers.find((d) => d.document.id === dossierId) || null;
+    }
+    return initialDetail || dossiers[0] || null;
+  }, [dossiers, dossierId, initialDetail]);
+
+  const [copiedTax, setCopiedTax] = useState(false);
+
+  // Compliance checklist interactive states
+  const [checkedTax, setCheckedTax] = useState(false);
+  const [checkedRep, setCheckedRep] = useState(false);
+  const [checkedSeal, setCheckedSeal] = useState(false);
+  const [checkedTaxStatus, setCheckedTaxStatus] = useState(false);
+
+  if (!currentDossier) {
+    return (
+      <div className="flex min-h-[300px] flex-col items-center justify-center gap-2">
+        <p className="dark:text-forest-200 text-sm font-semibold text-slate-700">Verification dossier not found.</p>
+        <Link
+          href={ROUTES.ADMIN_VERIFICATION_BUSINESS}
+          className="text-xs font-semibold text-emerald-600 hover:underline"
+        >
+          &larr; Back to Verification Queue
+        </Link>
+      </div>
+    );
+  }
+
+  const { document, company, submitter, members, auditLogs, waitingHours, isSlaOverdue, totalPages, sampleScanUrl } =
+    currentDossier;
+
+  // Next / Previous navigation calculation
+  const currentIndex = dossiers.findIndex((d) => d.document.id === document.id);
+  const prevDossier = currentIndex > 0 ? dossiers[currentIndex - 1] : null;
+  const nextDossier = currentIndex < dossiers.length - 1 ? dossiers[currentIndex + 1] : null;
+
+  const isErc = document.documentType === 'BUSINESS_LICENSE';
+  const isMemberSubmittingLicense = submitter.role === 'MEMBER' && isErc;
+
+  const handleCopyTax = () => {
+    navigator.clipboard.writeText(company.taxCode);
+    setCopiedTax(true);
+    toast.success(`Copied Tax ID: ${company.taxCode}`);
+    setTimeout(() => setCopiedTax(false), 1800);
+  };
+
+  const handleCheckAll = () => {
+    setCheckedTax(true);
+    setCheckedRep(true);
+    setCheckedSeal(true);
+    setCheckedTaxStatus(true);
+    toast.success('Confirmed all 4 legal compliance criteria');
+  };
+
+  const allChecksPassed = checkedTax && checkedRep && checkedSeal && checkedTaxStatus;
 
   return (
-    <div className="space-y-6">
-      {/* Top Bar with Back Link & Title */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-6 pb-8">
+      {/* Top Header Navigation & Stepper */}
+      <div className="dark:border-forest-800 dark:bg-forest-900 flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <Link
             href={ROUTES.ADMIN_VERIFICATION_BUSINESS}
-            className="dark:text-forest-400 dark:hover:text-forest-200 inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800"
+            className="dark:text-forest-400 dark:hover:text-forest-200 inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-800"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Back to Verification Queue</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <h1 className="dark:text-forest-50 text-xl font-extrabold text-slate-900 sm:text-2xl">
-              Verification Dossier #{document.id}
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="dark:text-forest-50 text-lg font-bold text-slate-900 sm:text-xl">
+              Verification Dossier #{document.id}: {company.name}
             </h1>
-            <span className="dark:bg-forest-800 dark:text-forest-200 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
-              {document.documentType}
+            <span
+              className={`rounded-md px-2 py-0.5 text-xs font-semibold ${
+                isErc
+                  ? 'border border-purple-200/60 bg-purple-50 text-purple-700 dark:bg-purple-950/50 dark:text-purple-300'
+                  : 'border border-blue-200/60 bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300'
+              }`}
+            >
+              {isErc ? 'License (ERC)' : 'Authorization (LOA)'}
             </span>
+
+            {/* SLA indicator */}
+            {document.reviewStatus === 'PENDING_REVIEW' &&
+              (isSlaOverdue ? (
+                <span className="inline-flex items-center gap-1 rounded-md border border-rose-200/70 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
+                  SLA Overdue ({waitingHours}h)
+                </span>
+              ) : (
+                <span className="dark:text-forest-400 text-xs font-medium text-slate-500">Waiting {waitingHours}h</span>
+              ))}
           </div>
+        </div>
+
+        {/* Stepper Navigation */}
+        <div className="flex items-center gap-2">
+          {prevDossier ? (
+            <Link
+              href={`${ROUTES.ADMIN_VERIFICATION_BUSINESS}/${prevDossier.document.id}`}
+              className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white p-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+              title={`Previous: #${prevDossier.document.id} (${prevDossier.company.name})`}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Link>
+          ) : (
+            <button
+              disabled
+              className="dark:border-forest-800 dark:text-forest-700 rounded-lg border border-slate-100 p-2 text-slate-300 opacity-40"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+          )}
+
+          <span className="dark:text-forest-400 text-xs font-medium text-slate-500">
+            Dossier {currentIndex + 1} / {dossiers.length}
+          </span>
+
+          {nextDossier ? (
+            <Link
+              href={`${ROUTES.ADMIN_VERIFICATION_BUSINESS}/${nextDossier.document.id}`}
+              className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white p-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+              title={`Next: #${nextDossier.document.id} (${nextDossier.company.name})`}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          ) : (
+            <button
+              disabled
+              className="dark:border-forest-800 dark:text-forest-700 rounded-lg border border-slate-100 p-2 text-slate-300 opacity-40"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Main Split-Screen Studio (7 cols left, 5 cols right on lg) */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* Left Column: Sandboxed Inline Viewer */}
-        <div className="lg:col-span-7">
-          <AdminBusinessDocumentViewer document={document} />
+      {/* Main Studio Balanced 2-Column Layout */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Left Column: Sandboxed Inline Document Viewer */}
+        <div>
+          <AdminBusinessDocumentViewer
+            document={document}
+            companyName={company.name}
+            taxCode={company.taxCode}
+            submitterName={submitter.fullName}
+            sampleScanUrl={sampleScanUrl}
+            totalPages={totalPages}
+          />
         </div>
 
-        {/* Right Column: Fact Cross-Check & Actions */}
-        <div className="space-y-6 lg:col-span-5">
-          {/* Action Hub */}
-          <AdminBusinessVerificationActions detail={detail} onUpdated={(fresh) => setDetail(fresh)} />
+        {/* Right Column: Actions & Fact Cross-Check Sheet */}
+        <div className="space-y-5">
+          {/* Decision Hub */}
+          <AdminBusinessVerificationActions document={document} />
 
-          {/* Warning if Member submitted Business License */}
+          {/* Governance Role Warning if Member submitted Business License */}
           {isMemberSubmittingLicense && (
-            <div className="rounded-2xl border border-rose-300 bg-rose-50/80 p-4 text-rose-950 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200">
+            <div className="rounded-2xl border border-amber-300 bg-amber-50/80 p-4 text-amber-950 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
               <div className="flex items-start gap-2.5">
-                <AlertTriangle className="h-5 w-5 shrink-0 text-rose-600 dark:text-rose-400" />
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
                 <div className="space-y-1 text-xs">
-                  <p className="font-bold">Governance Warning: Role Incompatibility</p>
-                  <p className="leading-relaxed">
-                    The submitter is registered as a <strong>MEMBER</strong>, but submitted an Enterprise Registration
-                    Certificate (ERC). Platform policy restricts ERC submissions to company <strong>OWNERs</strong>.
-                    Members must submit a signed Letter of Authorization (LOA).
+                  <p className="font-semibold text-slate-900 dark:text-amber-100">
+                    Governance Notice: Member submitted Company License
+                  </p>
+                  <p className="leading-relaxed text-slate-600 dark:text-amber-200/90">
+                    The submitter holds a <strong>Member</strong> role but uploaded the company&apos;s Enterprise
+                    Registration Certificate (ERC). By policy, members must submit a{' '}
+                    <strong>Letter of Authorization (LOA)</strong> signed by the authorized legal representative.
+                  </p>
+                  <p className="font-medium text-amber-800 dark:text-amber-300">
+                    Recommendation: Select &quot;Request Info&quot; to guide the recruiter to submit an LOA.
                   </p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Section 1: Company Legal Facts */}
-          <div className="dark:border-forest-800 dark:bg-forest-900 space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xs">
+          {/* Section 1: Company Legal Facts Sheet */}
+          <div className="dark:border-forest-800 dark:bg-forest-900 space-y-3.5 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
             <div className="dark:border-forest-800 flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="dark:text-forest-100 flex items-center gap-2 font-bold text-slate-900">
+              <div className="dark:text-forest-100 flex items-center gap-2 text-xs font-semibold text-slate-900">
                 <Building2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                <span className="text-sm">Company Legal Facts</span>
+                <span>Company Legal Facts</span>
               </div>
               <a
-                href={`https://dangkykinhdoanh.gov.vn/vn/Pages/Trangchu.aspx`}
+                href="https://dangkykinhdoanh.gov.vn/vn/Pages/Trangchu.aspx"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 hover:underline dark:text-emerald-400"
-                title="Cross-check on National Business Registration Portal"
+                className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 hover:underline dark:text-emerald-400"
+                title="Lookup on National Business Portal"
               >
                 <span>dangkykinhdoanh.gov.vn</span>
                 <ExternalLink className="h-3 w-3" />
@@ -90,168 +232,275 @@ export function AdminBusinessVerificationDetailView({ initialDetail }: AdminBusi
             </div>
 
             <div className="space-y-2.5 text-xs">
-              <div>
-                <span className="dark:text-forest-400 text-slate-400">Registered Name:</span>
-                <p className="dark:text-forest-100 font-bold text-slate-900">{company.name}</p>
+              <div className="flex items-start justify-between gap-4">
+                <span className="dark:text-forest-400 shrink-0 text-slate-500">Company Name:</span>
+                <span className="dark:text-forest-100 text-right font-semibold text-slate-900">{company.name}</span>
               </div>
 
               {company.tradingName && (
-                <div>
-                  <span className="dark:text-forest-400 text-slate-400">Trading / Commercial Name:</span>
-                  <p className="dark:text-forest-200 font-semibold text-slate-800">{company.tradingName}</p>
+                <div className="flex items-start justify-between gap-4">
+                  <span className="dark:text-forest-400 shrink-0 text-slate-500">Trading Name:</span>
+                  <span className="dark:text-forest-200 text-right text-slate-700">{company.tradingName}</span>
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-2 pt-1">
-                <div>
-                  <span className="dark:text-forest-400 text-slate-400">Tax Identification:</span>
-                  <p className="dark:text-forest-100 font-mono font-bold text-slate-900">{company.taxCode}</p>
-                </div>
-                <div>
-                  <span className="dark:text-forest-400 text-slate-400">Business Entity:</span>
-                  <p className="dark:text-forest-200 font-semibold text-slate-800">{company.businessType}</p>
+              <div className="flex items-center justify-between">
+                <span className="dark:text-forest-400 text-slate-500">Tax ID (Mã số thuế):</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="dark:text-forest-100 font-mono font-semibold text-slate-900">{company.taxCode}</span>
+                  <button
+                    type="button"
+                    onClick={handleCopyTax}
+                    className="dark:hover:text-forest-200 rounded p-0.5 text-slate-400 hover:text-slate-700"
+                    title="Copy Tax ID"
+                  >
+                    {copiedTax ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
+                  </button>
                 </div>
               </div>
 
-              <div>
-                <span className="dark:text-forest-400 text-slate-400">Headquarters Address:</span>
-                <p className="dark:text-forest-300 font-medium text-slate-700">{company.address}</p>
+              <div className="flex items-center justify-between">
+                <span className="dark:text-forest-400 text-slate-500">Business Entity:</span>
+                <span className="dark:text-forest-200 text-slate-700">
+                  {company.businessType === 'ENTERPRISE' ? 'Enterprise' : 'Household Business'}
+                </span>
+              </div>
+
+              <div className="flex items-start justify-between gap-4">
+                <span className="dark:text-forest-400 shrink-0 text-slate-500">Headquarters Address:</span>
+                <span className="dark:text-forest-300 text-right text-slate-700">{company.address}</span>
               </div>
 
               {company.website && (
-                <div>
-                  <span className="dark:text-forest-400 text-slate-400">Website:</span>
-                  <p>
-                    <a
-                      href={company.website}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-                    >
-                      {company.website}
-                    </a>
-                  </p>
+                <div className="flex items-center justify-between">
+                  <span className="dark:text-forest-400 text-slate-500">Website:</span>
+                  <a
+                    href={company.website}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+                  >
+                    {company.website}
+                  </a>
                 </div>
               )}
+            </div>
 
-              <div className="dark:border-forest-800 flex items-center justify-between border-t border-slate-100 pt-3">
-                <span className="dark:text-forest-400 text-slate-400">Enterprise Status:</span>
-                <span
-                  className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
-                    company.verified
-                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                      : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-                  }`}
-                >
-                  {company.verificationStatus}
+            {/* Compliance Checklist */}
+            <div className="dark:border-forest-800 dark:bg-forest-950/40 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
+              <div className="flex items-center justify-between pb-2.5">
+                <span className="dark:text-forest-200 text-xs font-semibold text-slate-800">
+                  Compliance Audit Checklist
                 </span>
+                <button
+                  type="button"
+                  onClick={handleCheckAll}
+                  className="text-[11px] font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+                >
+                  Check all
+                </button>
               </div>
+
+              <div className="space-y-2 text-xs">
+                <label className="flex cursor-pointer items-center gap-2 select-none">
+                  <input
+                    type="checkbox"
+                    checked={checkedTax}
+                    onChange={(e) => setCheckedTax(e.target.checked)}
+                    className="h-3.5 w-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                  />
+                  <span className="dark:text-forest-300 text-slate-700">
+                    Tax ID matches National Business Registry 100%
+                  </span>
+                </label>
+
+                <label className="flex cursor-pointer items-center gap-2 select-none">
+                  <input
+                    type="checkbox"
+                    checked={checkedRep}
+                    onChange={(e) => setCheckedRep(e.target.checked)}
+                    className="h-3.5 w-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                  />
+                  <span className="dark:text-forest-300 text-slate-700">
+                    Signatory possesses legal authority (Legal rep or holds valid LOA)
+                  </span>
+                </label>
+
+                <label className="flex cursor-pointer items-center gap-2 select-none">
+                  <input
+                    type="checkbox"
+                    checked={checkedSeal}
+                    onChange={(e) => setCheckedSeal(e.target.checked)}
+                    className="h-3.5 w-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                  />
+                  <span className="dark:text-forest-300 text-slate-700">
+                    Round seal and physical signature intact without digital alteration
+                  </span>
+                </label>
+
+                <label className="flex cursor-pointer items-center gap-2 select-none">
+                  <input
+                    type="checkbox"
+                    checked={checkedTaxStatus}
+                    onChange={(e) => setCheckedTaxStatus(e.target.checked)}
+                    className="h-3.5 w-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                  />
+                  <span className="dark:text-forest-300 text-slate-700">
+                    Tax compliance status: Active with National Tax Authority
+                  </span>
+                </label>
+              </div>
+
+              {allChecksPassed && (
+                <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-emerald-100/70 px-2.5 py-1.5 text-[11px] font-semibold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                  <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                  <span>All 4 compliance criteria verified!</span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Section 2: Submitter Profile */}
-          <div className="dark:border-forest-800 dark:bg-forest-900 space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xs">
+          {/* Section 2: Submitter & Governance */}
+          <div className="dark:border-forest-800 dark:bg-forest-900 space-y-3 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
             <div className="dark:border-forest-800 flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="dark:text-forest-100 flex items-center gap-2 font-bold text-slate-900">
+              <div className="dark:text-forest-100 flex items-center gap-2 text-xs font-semibold text-slate-900">
                 <User className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                <span className="text-sm">Submitter &amp; Legal Role</span>
+                <span>Submitter & Access Rights</span>
               </div>
-              <span className="dark:bg-forest-800 dark:text-forest-200 rounded bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-700">
-                Role: {submitter.role}
+              <span
+                className={`rounded px-2 py-0.5 text-[11px] font-medium ${
+                  submitter.role === 'OWNER'
+                    ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                    : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-700'
+                }`}
+              >
+                {submitter.role === 'OWNER' ? 'Owner' : 'Member'}
               </span>
             </div>
 
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="dark:text-forest-400 text-slate-400">Full Name:</span>
-                <span className="dark:text-forest-100 font-bold text-slate-900">{submitter.fullName}</span>
+              <div className="flex items-center justify-between">
+                <span className="dark:text-forest-400 text-slate-500">Full Name:</span>
+                <span className="dark:text-forest-100 font-semibold text-slate-800">{submitter.fullName}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="dark:text-forest-400 text-slate-400">Account Email:</span>
-                <span className="dark:text-forest-300 font-mono text-slate-700">{submitter.email}</span>
+
+              <div className="flex items-center justify-between">
+                <span className="dark:text-forest-400 text-slate-500">Email:</span>
+                <span className="dark:text-forest-200 text-slate-600">{submitter.email}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="dark:text-forest-400 text-slate-400">Joined Company:</span>
-                <span className="dark:text-forest-400 text-slate-600">
-                  {new Date(submitter.joinedAt).toLocaleDateString()}
+
+              <div className="flex items-center justify-between">
+                <span className="dark:text-forest-400 text-slate-500">Phone Verification:</span>
+                <span className="inline-flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400">
+                  <Phone className="h-3 w-3" />
+                  <span>{submitter.phoneVerified ? 'Verified via OTP' : 'Unverified'}</span>
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="dark:text-forest-400 text-slate-400">Phone Verified:</span>
+
+              <div className="flex items-center justify-between">
+                <span className="dark:text-forest-400 text-slate-500">Recruitment Publishing Rights:</span>
                 <span
-                  className={
-                    submitter.phoneVerified ? 'font-bold text-emerald-600 dark:text-emerald-400' : 'text-rose-500'
-                  }
-                >
-                  {submitter.phoneVerified ? 'Yes (Verified)' : 'No'}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="dark:text-forest-400 text-slate-400">Publishing Rights:</span>
-                <span
-                  className={
+                  className={`rounded px-2 py-0.5 text-[11px] font-medium ${
                     submitter.canPublish
-                      ? 'font-bold text-emerald-600 dark:text-emerald-400'
-                      : 'dark:text-forest-400 text-slate-500'
-                  }
+                      ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
+                      : 'dark:bg-forest-800 dark:text-forest-400 bg-slate-100 text-slate-600'
+                  }`}
                 >
-                  {submitter.canPublish ? 'Active (Level 3)' : 'Restricted'}
+                  {submitter.canPublish ? 'Authorized to Publish' : 'Publishing Restricted'}
                 </span>
               </div>
+
+              {members && members.length > 1 && (
+                <div className="dark:border-forest-800 border-t border-slate-100 pt-2.5">
+                  <p className="dark:text-forest-300 pb-1.5 text-[11px] font-semibold text-slate-700">
+                    Other Company Members ({members.length - 1}):
+                  </p>
+                  <div className="space-y-1">
+                    {members
+                      .filter((m) => m.userId !== submitter.userId)
+                      .map((m) => (
+                        <div
+                          key={m.id}
+                          className="dark:bg-forest-950/60 flex items-center justify-between rounded-lg bg-slate-50 px-2.5 py-1 text-[11px]"
+                        >
+                          <span className="dark:text-forest-200 text-slate-700">
+                            {m.fullName} ({m.email})
+                          </span>
+                          <span className="text-slate-500">{m.role}</span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Section 3: Company Members Overview */}
-          {members && members.length > 0 && (
-            <div className="dark:border-forest-800 dark:bg-forest-900 space-y-3 rounded-3xl border border-slate-200 bg-white p-5 shadow-2xs">
-              <div className="dark:text-forest-100 flex items-center justify-between text-xs font-bold text-slate-900">
-                <span className="flex items-center gap-1.5">
-                  <Users className="h-4 w-4 text-slate-400" />
-                  <span>Affiliated Team Members ({members.length})</span>
-                </span>
-              </div>
-
-              <div className="dark:divide-forest-800/60 divide-y divide-slate-100 text-xs">
-                {members.slice(0, 5).map((m) => (
-                  <div key={m.id} className="flex items-center justify-between py-2">
-                    <div className="space-y-0.5">
-                      <p className="dark:text-forest-200 font-semibold text-slate-800">{m.fullName}</p>
-                      <p className="dark:text-forest-400 text-[10px] text-slate-400">{m.email}</p>
-                    </div>
-                    <span className="dark:bg-forest-800 dark:text-forest-300 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
-                      {m.role}
-                    </span>
-                  </div>
-                ))}
-              </div>
+          {/* Section 3: Audit Trail Timeline */}
+          <div className="dark:border-forest-800 dark:bg-forest-900 space-y-3 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
+            <div className="dark:border-forest-800 dark:text-forest-100 flex items-center gap-2 border-b border-slate-100 pb-3 text-xs font-semibold text-slate-900">
+              <History className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              <span>Audit Trail & History</span>
             </div>
-          )}
 
-          {/* Section 4: All Company Documents */}
-          {companyDocuments && companyDocuments.length > 0 && (
-            <div className="dark:border-forest-800 dark:bg-forest-900 space-y-3 rounded-3xl border border-slate-200 bg-white p-5 shadow-2xs">
-              <div className="dark:text-forest-100 flex items-center justify-between text-xs font-bold text-slate-900">
-                <span className="flex items-center gap-1.5">
-                  <FileText className="h-4 w-4 text-slate-400" />
-                  <span>Company Documents ({companyDocuments.length})</span>
-                </span>
-              </div>
+            <div className="dark:before:bg-forest-800 relative space-y-3.5 pt-1 pl-5 before:absolute before:top-2 before:bottom-2 before:left-2 before:w-px before:bg-slate-200">
+              {auditLogs && auditLogs.length > 0 ? (
+                auditLogs.map((log) => {
+                  let dotColor = 'bg-slate-400';
+                  let actionBadge = 'bg-slate-100 text-slate-700';
 
-              <div className="dark:divide-forest-800/60 divide-y divide-slate-100 text-xs">
-                {companyDocuments.map((doc) => (
-                  <div key={doc.id} className="flex items-center justify-between py-2">
-                    <div className="space-y-0.5">
-                      <p className="dark:text-forest-200 font-semibold text-slate-800">{doc.documentType}</p>
-                      <p className="dark:text-forest-400 text-[10px] text-slate-400">{doc.originalFileName}</p>
+                  if (log.action === 'APPROVED') {
+                    dotColor = 'bg-emerald-500';
+                    actionBadge = 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300';
+                  } else if (log.action === 'REJECTED') {
+                    dotColor = 'bg-rose-500';
+                    actionBadge = 'bg-rose-50 text-rose-800 dark:bg-rose-950 dark:text-rose-300';
+                  } else if (log.action === 'INFO_REQUESTED') {
+                    dotColor = 'bg-sky-500';
+                    actionBadge = 'bg-sky-50 text-sky-800 dark:bg-sky-950 dark:text-sky-300';
+                  } else if (log.action === 'REVOKED') {
+                    dotColor = 'bg-orange-500';
+                    actionBadge = 'bg-orange-50 text-orange-800 dark:bg-orange-950 dark:text-orange-300';
+                  }
+
+                  return (
+                    <div key={log.id} className="relative space-y-1 text-xs">
+                      {/* Dot */}
+                      <span
+                        className={`dark:border-forest-900 absolute top-1.5 -left-[19px] h-2 w-2 rounded-full border border-white ${dotColor}`}
+                      />
+
+                      <div className="flex flex-wrap items-center justify-between gap-1">
+                        <span className={`py-0.2 rounded px-1.5 text-[10px] font-semibold ${actionBadge}`}>
+                          {log.action}
+                        </span>
+                        <span className="dark:text-forest-500 text-[10.5px] text-slate-400">
+                          {new Date(log.timestamp).toLocaleString('en-US')}
+                        </span>
+                      </div>
+
+                      <p className="dark:text-forest-100 font-semibold text-slate-800">
+                        {log.actorName} <span className="font-normal text-slate-400">({log.actorRole})</span>
+                      </p>
+
+                      {log.reason && (
+                        <p className="dark:text-forest-300 text-slate-600">
+                          <strong>Reason:</strong> {log.reason}
+                        </p>
+                      )}
+
+                      {log.notes && (
+                        <p className="dark:text-forest-400 dark:bg-forest-950/60 rounded-lg bg-slate-50 p-2 text-[11px] text-slate-500 italic">
+                          &ldquo;{log.notes}&rdquo;
+                        </p>
+                      )}
                     </div>
-                    <span className="dark:bg-forest-800 dark:text-forest-300 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
-                      {doc.reviewStatus}
-                    </span>
-                  </div>
-                ))}
-              </div>
+                  );
+                })
+              ) : (
+                <p className="dark:text-forest-500 text-xs text-slate-400">No audit history recorded.</p>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

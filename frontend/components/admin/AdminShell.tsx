@@ -74,7 +74,7 @@ export default function AdminShell({ children, queueCounts, account, permissions
   }, []);
 
   return (
-    <div className="text-navy dark:bg-forest-950 dark:text-forest-50 flex min-h-screen flex-col overscroll-y-none bg-[#f4f5f5] antialiased">
+    <div className="text-navy dark:bg-forest-950 dark:text-forest-50 flex min-h-screen flex-col overscroll-y-none bg-[#f4f5f5] font-sans antialiased">
       <PanelBrandSplash variant="admin" theme={theme} />
 
       <AdminTopBar
