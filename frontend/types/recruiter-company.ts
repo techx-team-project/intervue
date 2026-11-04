@@ -95,6 +95,9 @@ export interface BusinessDocumentResource {
   reviewedAt?: string;
   reviewReason?: string;
   expiresAt?: string;
+  storagePublicId?: string;
+  identityStoragePublicId?: string;
+  identityFileName?: string;
 }
 
 export interface SaveCompanyProfileRequest {
@@ -149,17 +152,23 @@ export interface AdminCompanyFactsResource {
   taxCode: string;
   businessType: 'ENTERPRISE' | 'HOUSEHOLD';
   industry?: string;
+  size?: string;
   address: string;
+  email?: string;
+  phone?: string;
   website?: string;
   verificationStatus: CompanyVerificationStatus;
   verified: boolean;
   verifiedAt?: string;
+  profileComplete?: boolean;
   memberCount: number;
+  createdAt?: string;
 }
 
 export interface CompanyMemberResource {
   id: number;
   userId: number;
+  name?: string;
   email: string;
   fullName: string;
   role: CompanyMemberRole;
