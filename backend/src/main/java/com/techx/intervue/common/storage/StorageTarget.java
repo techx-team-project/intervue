@@ -6,6 +6,8 @@ import java.util.Set;
 public enum StorageTarget {
     LEGAL_DOCUMENT(
             "authenticated", "raw", EnumSet.of(FileType.PDF, FileType.JPEG, FileType.PNG), true),
+    RESUME("authenticated", "raw", EnumSet.of(FileType.PDF), true),
+    IDENTITY_DOCUMENT("authenticated", "raw", EnumSet.of(FileType.JPEG, FileType.PNG), true),
     IMAGE("upload", "image", EnumSet.of(FileType.JPEG, FileType.PNG), false);
 
     private final String deliveryType;

@@ -6,7 +6,7 @@ public interface StorageServiceInterface {
 
     StoredFile upload(MultipartFile file, StorageTarget target, String folder);
 
-    byte[] fetchDocument(String publicId);
+    byte[] fetchDocument(String publicId, StorageTarget target);
 
     String publicImageUrl(String publicId);
 
