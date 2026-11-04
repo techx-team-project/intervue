@@ -26,7 +26,8 @@ com.techx.intervue
 ├─ common/            Shared helpers & infra services (CookieHelper, IpHelper, TokenHashUtil, BlacklistService)
 │                       Current: modules/helpers + services/{impl,interfaces}. Move to common/ when touched.
 └─ modules/
-   ├─ user/           accounts, roles, auth, sessions (refresh tokens)       [exists]
+   ├─ user/           candidate + admin accounts, roles, auth, sessions (refresh tokens)       [exists]
+   ├─ recruiter/      recruiter accounts, auth, sessions (own tables and refresh tokens)       [exists]
    ├─ candidate/      profile, experience, skills, education, CVs, saved jobs, alerts
    ├─ company/        company profile, verification, followers
    ├─ job/            job posts, search, filters, recommendations
@@ -100,7 +101,8 @@ Error: `success=false`, `data=null`, `error = { code, details?, fieldErrors: [{f
 - **Refresh token:** random opaque value, **stored hashed** (`TokenHashUtil`) in `refresh_tokens`, delivered as **HttpOnly, Secure, SameSite cookie** (`CookieHelper`), 14 days, **rotated on every use**; reuse of an old token revokes the whole family.
 - **Logout / revoke:** delete refresh token(s); access-token `jti` goes to the Redis blacklist until expiry (`BlacklistServiceInterface`).
 - **Session cache:** `UserSessionCache` (Redis) caches user+roles per request path; invalidate on role/ban change.
-- **Roles:** `CANDIDATE`, `RECRUITER`, `ADMIN` (`RoleType`). One user ↔ many roles (`UserRole`). *Differs from the ecommerce base's single-role RBAC.*
+- **Accounts:** two separate account tables. `users` holds Candidate and Admin accounts (`RoleType`: `CANDIDATE`, `ADMIN`; one user ↔ many roles via `UserRole`). `recruiters` holds Recruiter accounts with their own `recruiter_refresh_tokens`. The same email may exist in both tables; there is no upgrade path between them.
+- **Account realm:** the access token carries a `typ` claim (`AccountType.USER` or `RECRUITER`). `JwtAuthFilter` resolves the session from `user:session:{id}` or `recruiter:session:{id}` by that claim; a recruiter principal always gets `ROLE_RECRUITER`. `SecurityConfig` requires `ROLE_RECRUITER` for `/api/v1/recruiter/**` (except `/api/v1/recruiter/auth/{login,register,refresh}`) and rejects recruiter tokens everywhere else. Refresh tokens use separate cookies (`refresh_token`, `recruiter_refresh_token`).
 - **Method security:** `@EnableMethodSecurity`; use `@PreAuthorize("hasRole('RECRUITER')")` on controller methods. URL rules in `SecurityConfig` only for public/permit-all and coarse prefixes (`/api/v1/admin/**`).
 - **Ownership checks (IDOR):** role is not enough. Services must verify the resource belongs to the caller (candidate owns CV; recruiter belongs to the job's company). Pattern: `repository.findByIdAndOwnerId(id, currentUserId)` → 404 if absent.
 - **Gating rules** (from product): candidate must pass identity verification before applying; company must be verified before posting. Enforce in the service with `ErrorCode.IDENTITY_NOT_VERIFIED` / `COMPANY_NOT_VERIFIED`.
@@ -158,7 +160,7 @@ AI is an *assistant*; humans decide.
 
 | Ecommerce base | Here | Why |
 |---|---|---|
-| Single role per user | Many roles per user (`UserRole`) | One email can be Candidate + Recruiter |
+| Single role per user | Candidate/Admin in `users` with roles (`UserRole`), Recruiter in its own `recruiters` table | The same email can be a Candidate and a Recruiter, as two independent accounts |
 | Product / cart / order / payment domain | job / application / company / candidate profile / AI | Different domain |
 | Inventory & payment consistency (locking, idempotency) | Application state machine (`APPLIED → IN_REVIEW → INTERVIEW → OFFER → HIRED / REJECTED / WITHDRAWN`) with allowed transitions in one place | Pipeline correctness matters more |
 | Ownership mostly "own order" | Ownership via **company membership** + candidate ownership; IDOR checks mandatory | Recruiters act for a company |

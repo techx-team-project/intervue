@@ -24,7 +24,7 @@ InterVue connects IT job seekers with companies hiring for IT roles, with AI ass
 | **Recruiter** | HR staff / company representatives | Post jobs, review and evaluate applications, select candidates |
 | **Admin** | Platform operators | Manage accounts, identity verification, moderate listings and reports |
 
-A single account (one email) can hold both the Candidate and Recruiter roles. A company is the entity a Recruiter represents — it is not a separate role.
+Candidate and Recruiter are separate accounts stored in separate tables: the same email can register as both, but a Recruiter signs up and signs in through the employer portal, never by upgrading a candidate account. A company is the entity a Recruiter represents — it is not a separate role.
 
 ### How it works
 
