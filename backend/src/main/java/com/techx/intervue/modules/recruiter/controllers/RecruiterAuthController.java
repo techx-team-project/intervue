@@ -11,7 +11,13 @@ import com.techx.intervue.modules.recruiter.requests.RecruiterRegisterRequest;
 import com.techx.intervue.modules.recruiter.resources.RecruiterAuthResource;
 import com.techx.intervue.modules.recruiter.resources.RecruiterAuthResult;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterAuthServiceInterface;
+import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterEmailVerificationServiceInterface;
+import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterPasswordResetServiceInterface;
+import com.techx.intervue.modules.user.requests.ForgotPasswordRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
+import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
+import com.techx.intervue.modules.user.requests.VerifyEmailRequest;
+import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -20,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -32,7 +39,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RecruiterAuthController extends BaseController {
 
+    private static final String FORGOT_PASSWORD_MESSAGE =
+            "If the email exists, you will receive a password reset link within 5 minutes.";
+
     private final RecruiterAuthServiceInterface recruiterAuthService;
+    private final RecruiterEmailVerificationServiceInterface emailVerificationService;
+    private final RecruiterPasswordResetServiceInterface passwordResetService;
     private final AuthConfig authConfig;
 
     @PostMapping("/register")
@@ -85,6 +97,35 @@ public class RecruiterAuthController extends BaseController {
                         HttpHeaders.SET_COOKIE,
                         CookieHelper.clearRecruiterRefreshTokenCookie().toString())
                 .body(ApiResource.success(null, "Logged out successfully!"));
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<ApiResource<Void>> verifyEmail(
+            @Valid @RequestBody VerifyEmailRequest request) {
+        emailVerificationService.verify(request.token());
+        return ok(null, "Email verified successfully!");
+    }
+
+    @PostMapping("/resend-verification")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<ApiResource<Void>> resendVerification(
+            @AuthenticationPrincipal CustomUserDetails principal, HttpServletRequest httpRequest) {
+        emailVerificationService.resend(principal.getId(), IpHelper.getClientIp(httpRequest));
+        return ok(null, "Verification email sent again!");
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResource<Void>> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request, HttpServletRequest httpRequest) {
+        passwordResetService.forgot(request, IpHelper.getClientIp(httpRequest));
+        return ok(null, FORGOT_PASSWORD_MESSAGE);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResource<Void>> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request) {
+        passwordResetService.reset(request);
+        return ok(null, "Password reset successfully, please log in again!");
     }
 
     private ResponseEntity<ApiResource<RecruiterAuthResource>> withSession(

@@ -7,13 +7,18 @@ import java.util.Set;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "seed")
-public record SeedProperties(Map<String, SeedAccount> accounts) {
+public record SeedProperties(
+        Map<String, SeedAccount> accounts, Map<String, SeedRecruiter> recruiters) {
 
     public SeedProperties {
         accounts =
                 accounts == null
                         ? Map.of()
                         : Collections.unmodifiableMap(new LinkedHashMap<>(accounts));
+        recruiters =
+                recruiters == null
+                        ? Map.of()
+                        : Collections.unmodifiableMap(new LinkedHashMap<>(recruiters));
     }
 
     public record SeedAccount(String email, String name, String password, Set<String> roles) {
@@ -21,6 +26,14 @@ public record SeedProperties(Map<String, SeedAccount> accounts) {
         @Override
         public String toString() {
             return "SeedAccount[email=%s, name=%s, roles=%s]".formatted(email, name, roles);
+        }
+    }
+
+    public record SeedRecruiter(String email, String name, String password) {
+
+        @Override
+        public String toString() {
+            return "SeedRecruiter[email=%s, name=%s]".formatted(email, name);
         }
     }
 }

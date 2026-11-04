@@ -57,6 +57,12 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/recruiter/auth/refresh")
                                         .permitAll()
+                                        .requestMatchers("/api/v1/recruiter/auth/verify-email")
+                                        .permitAll()
+                                        .requestMatchers("/api/v1/recruiter/auth/forgot-password")
+                                        .permitAll()
+                                        .requestMatchers("/api/v1/recruiter/auth/reset-password")
+                                        .permitAll()
                                         // Ping - health check
                                         .requestMatchers("/ping")
                                         .permitAll()

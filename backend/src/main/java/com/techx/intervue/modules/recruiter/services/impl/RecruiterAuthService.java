@@ -6,6 +6,7 @@ import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.helpers.EmailHelper;
 import com.techx.intervue.modules.recruiter.entities.Recruiter;
 import com.techx.intervue.modules.recruiter.enums.RecruiterStatus;
+import com.techx.intervue.modules.recruiter.events.RecruiterEmailVerificationRequestedEvent;
 import com.techx.intervue.modules.recruiter.mappers.RecruiterMapper;
 import com.techx.intervue.modules.recruiter.repositories.RecruiterRepository;
 import com.techx.intervue.modules.recruiter.requests.RecruiterRegisterRequest;
@@ -25,6 +26,7 @@ import java.time.Instant;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +49,7 @@ public class RecruiterAuthService implements RecruiterAuthServiceInterface {
     private final JwtServiceInterface jwtService;
     private final BlacklistServiceInterface blacklistService;
     private final AuthConfig authConfig;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -72,6 +75,9 @@ public class RecruiterAuthService implements RecruiterAuthServiceInterface {
                                 .password(passwordEncoder.encode(request.password()))
                                 .termsAcceptedAt(Instant.now())
                                 .build());
+        eventPublisher.publishEvent(
+                new RecruiterEmailVerificationRequestedEvent(
+                        saved.getId(), saved.getEmail(), saved.getName()));
         return openSession(saved, userAgent, ip);
     }
 

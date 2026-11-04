@@ -119,3 +119,7 @@ seed:
       email: local.candidate@intervue.test
       name: Local Candidate
       roles: [CANDIDATE]
+  recruiters:
+    recruiter:
+      email: local.recruiter@intervue.test
+      name: Local Recruiter
