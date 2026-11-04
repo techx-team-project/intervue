@@ -18,8 +18,6 @@ public interface UserServiceInterface {
 
     List<UserResource> findByIds(Collection<Long> userIds);
 
-    UserResource becomeRecruiter(Long userId);
-
     void requestAccountDeletion(Long userId);
 
     UserResource cancelAccountDeletion(Long userId);

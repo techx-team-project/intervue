@@ -7,14 +7,10 @@ import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterf
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
-import com.techx.intervue.modules.user.entities.Role;
 import com.techx.intervue.modules.user.entities.User;
-import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
-import com.techx.intervue.modules.user.events.UserRolesChangedEvent;
 import com.techx.intervue.modules.user.mappers.UserMapper;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
-import com.techx.intervue.modules.user.repositories.RoleRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.RegisterRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
@@ -29,7 +25,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,11 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService extends BaseService implements UserServiceInterface {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final UserRegistrationServiceInterface userRegistrationService;
     private final AuthSessionServiceInterface authSessionService;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final ApplicationEventPublisher eventPublisher;
     private final UserMapper userMapper;
     private final AuditLogServiceInterface auditLogService;
     private final List<DeletionBlocker> deletionBlockers;
@@ -80,23 +73,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         String trimmedAddress = address == null ? "" : address.trim();
         user.setAddress(trimmedAddress.isEmpty() ? null : trimmedAddress);
         userRepository.save(user);
-    }
-
-    @Override
-    @Transactional
-    public UserResource becomeRecruiter(Long userId) {
-        User user = findOrThrow(userRepository.findByIdWithRoles(userId), "User not found");
-        if (!user.isEmailVerified()) {
-            throw new AppException(ErrorCode.EMAIL_NOT_VERIFIED);
-        }
-        if (user.activeRoleTypes().contains(RoleType.RECRUITER)) {
-            return userMapper.toResource(user);
-        }
-
-        user.addRole(findRole(RoleType.RECRUITER));
-        User saved = userRepository.save(user);
-        eventPublisher.publishEvent(new UserRolesChangedEvent(saved.getId()));
-        return userMapper.toResource(saved);
     }
 
     @Override
@@ -160,11 +136,5 @@ public class UserService extends BaseService implements UserServiceInterface {
                         .build());
 
         return userMapper.toResource(saved);
-    }
-
-    private Role findRole(RoleType type) {
-        return roleRepository
-                .findByName(type)
-                .orElseThrow(() -> new IllegalStateException(type + " role is missing"));
     }
 }

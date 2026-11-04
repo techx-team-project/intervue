@@ -1,6 +1,5 @@
 package com.techx.intervue.modules.user.requests;
 
-import com.techx.intervue.modules.user.enums.RoleType;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -16,14 +15,7 @@ public record RegisterRequest(
                 String email,
         @NotBlank(message = "Password is required!") @StrongPassword String password,
         @NotBlank(message = "Please confirm your password!") String confirmPassword,
-        @AssertTrue(message = "You must accept the Privacy Policy & Terms!") boolean acceptTerms,
-        RoleType targetRole) {
-
-    public RegisterRequest {
-        if (targetRole == null) {
-            targetRole = RoleType.CANDIDATE;
-        }
-    }
+        @AssertTrue(message = "You must accept the Privacy Policy & Terms!") boolean acceptTerms) {
 
     public static RegisterRequest of(
             String name,
@@ -31,11 +23,6 @@ public record RegisterRequest(
             String password,
             String confirmPassword,
             boolean acceptTerms) {
-        return new RegisterRequest(
-                name, email, password, confirmPassword, acceptTerms, RoleType.CANDIDATE);
-    }
-
-    public RoleType resolveRole() {
-        return targetRole != null ? targetRole : RoleType.CANDIDATE;
+        return new RegisterRequest(name, email, password, confirmPassword, acceptTerms);
     }
 }
