@@ -83,7 +83,7 @@ export default function RecruiterLoginForm() {
             <span>Remember me</span>
           </label>
           <Link
-            href={ROUTES.FORGOT_PASSWORD}
+            href={ROUTES.RECRUITER_FORGOT_PASSWORD}
             className="text-primary hover:text-primary-hover text-xs font-bold transition hover:underline"
           >
             Forgot password?

@@ -1,15 +1,16 @@
 'use client';
 
-import { authApi } from '@/apiRequest/auth';
+import { authApiFor } from '@/apiRequest/auth-portal';
 import { refreshSession } from '@/apiRequest/http';
 import { isApiError } from '@/lib/api-error';
+import { isRecruiterPortal } from '@/lib/auth-portal';
 import { getErrorMessage } from '@/utils/error';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 export function useResendVerification() {
   return useMutation({
-    mutationFn: authApi.resendVerification,
+    mutationFn: () => authApiFor(isRecruiterPortal() ? 'recruiter' : 'candidate').resendVerification(),
     onSuccess: () => toast.success('Verification email sent again, please check your inbox.'),
     onError: (error) => {
       toast.error(getErrorMessage(error));

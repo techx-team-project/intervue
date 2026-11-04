@@ -7,9 +7,15 @@ type InvalidLinkNoticeProps = {
   message: string;
   actionHref: string;
   actionLabel: string;
+  loginHref?: string;
 };
 
-export default function InvalidLinkNotice({ message, actionHref, actionLabel }: InvalidLinkNoticeProps) {
+export default function InvalidLinkNotice({
+  message,
+  actionHref,
+  actionLabel,
+  loginHref = ROUTES.LOGIN,
+}: InvalidLinkNoticeProps) {
   return (
     <div className="space-y-4 text-center">
       <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-rose-100 text-rose-600">
@@ -19,7 +25,7 @@ export default function InvalidLinkNotice({ message, actionHref, actionLabel }: 
       <Link href={actionHref} className="block">
         <Button className="w-full rounded-xl py-3 text-sm font-bold">{actionLabel}</Button>
       </Link>
-      <Link href={ROUTES.LOGIN} className="inline-block text-sm font-semibold text-emerald-600 hover:underline">
+      <Link href={loginHref} className="inline-block text-sm font-semibold text-emerald-600 hover:underline">
         Back to sign in
       </Link>
     </div>

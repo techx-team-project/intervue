@@ -2,18 +2,19 @@
 
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
-import { ROUTES } from '@/constants/routes';
 import { useVerifyEmail } from '@/hooks/useVerifyEmail';
+import { AUTH_PORTAL_ROUTES, type AuthPortal } from '@/lib/auth-portal';
 import { getErrorMessage } from '@/utils/error';
 import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import InvalidLinkNotice from './InvalidLinkNotice';
 
-type VerifyEmailStatusProps = { token?: string };
+type VerifyEmailStatusProps = { token?: string; portal?: AuthPortal };
 
-export default function VerifyEmailStatus({ token }: VerifyEmailStatusProps) {
-  const verifyEmail = useVerifyEmail();
+export default function VerifyEmailStatus({ token, portal = 'candidate' }: VerifyEmailStatusProps) {
+  const routes = AUTH_PORTAL_ROUTES[portal];
+  const verifyEmail = useVerifyEmail(portal);
   const { mutate } = verifyEmail;
   const submittedRef = useRef(false);
 
@@ -28,7 +29,8 @@ export default function VerifyEmailStatus({ token }: VerifyEmailStatusProps) {
     return (
       <InvalidLinkNotice
         message="The email verification link is invalid."
-        actionHref={ROUTES.HOME}
+        actionHref={routes.home}
+        loginHref={routes.login}
         actionLabel="Back to home"
       />
     );
@@ -38,7 +40,8 @@ export default function VerifyEmailStatus({ token }: VerifyEmailStatusProps) {
     return (
       <InvalidLinkNotice
         message={getErrorMessage(verifyEmail.error)}
-        actionHref={ROUTES.HOME}
+        actionHref={routes.home}
+        loginHref={routes.login}
         actionLabel="Back to home"
       />
     );
@@ -54,7 +57,7 @@ export default function VerifyEmailStatus({ token }: VerifyEmailStatusProps) {
           <h3 className="text-base font-bold text-slate-800">Email verified</h3>
           <p className="mt-1 text-sm leading-relaxed text-slate-600">Your account is ready to use.</p>
         </div>
-        <Link href={ROUTES.LOGIN} className="block">
+        <Link href={routes.login} className="block">
           <Button className="w-full rounded-xl py-3 text-sm font-bold">Continue</Button>
         </Link>
       </div>

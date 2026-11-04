@@ -2,8 +2,8 @@
 
 import Button from '@/components/ui/Button';
 import PasswordInput from '@/components/ui/PasswordInput';
-import { ROUTES } from '@/constants/routes';
 import { useResetPassword } from '@/hooks/useResetPassword';
+import { AUTH_PORTAL_ROUTES, type AuthPortal } from '@/lib/auth-portal';
 import { ResetPasswordFormData, resetPasswordSchema } from '@/schemas/auth.schema';
 import { applyFormError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,10 +12,11 @@ import { useForm } from 'react-hook-form';
 import FormErrorAlert from './FormErrorAlert';
 import InvalidLinkNotice from './InvalidLinkNotice';
 
-type ResetPasswordFormProps = { token?: string };
+type ResetPasswordFormProps = { token?: string; portal?: AuthPortal };
 
-export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
-  const resetPassword = useResetPassword();
+export default function ResetPasswordForm({ token, portal = 'candidate' }: ResetPasswordFormProps) {
+  const routes = AUTH_PORTAL_ROUTES[portal];
+  const resetPassword = useResetPassword(portal);
   const {
     register,
     handleSubmit,
@@ -31,7 +32,8 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     return (
       <InvalidLinkNotice
         message="The password reset link is invalid. Please request a new one."
-        actionHref={ROUTES.FORGOT_PASSWORD}
+        actionHref={routes.forgotPassword}
+        loginHref={routes.login}
         actionLabel="Request a new link"
       />
     );
