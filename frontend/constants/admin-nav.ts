@@ -41,7 +41,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: ShieldCheck,
         queue: 'businessVerification',
         permission: 'verification.business',
-        comingSoon: true,
+        comingSoon: false,
         children: [
           {
             label: 'Company info changes',
