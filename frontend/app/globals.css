@@ -46,6 +46,7 @@ body {
   background-color: var(--bg-page);
   color: var(--text-dark);
   font-family:
+    var(--font-inter),
     'Inter',
     -apple-system,
     BlinkMacSystemFont,
