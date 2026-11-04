@@ -1,17 +1,16 @@
 'use client';
 
-import type { RecruiterVerificationProfile, VerificationLevelNumber } from '@/types/recruiter-company';
-import { ShieldCheck, Tag } from 'lucide-react';
+import type { RecruiterVerificationProfile } from '@/types/recruiter-company';
+import { Building2, ShieldCheck, Tag } from 'lucide-react';
 
 interface CompanyVerificationHeroProps {
   profile: RecruiterVerificationProfile;
-  onPresetLevelChange?: (level: VerificationLevelNumber) => void;
 }
 
-export function CompanyVerificationHero({ profile, onPresetLevelChange }: CompanyVerificationHeroProps) {
+export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProps) {
   return (
     <div className="relative flex h-full flex-col justify-between bg-[#009647] p-3.5 select-none sm:p-4 lg:p-5">
-      {/* Inner curved forest-emerald container matching TopCV */}
+      {/* Inner curved forest-emerald container */}
       <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b from-[#005c38] via-[#004e30] to-[#003722] p-5 text-white shadow-inner sm:p-6">
         {/* Decorative Cityscape / Tech Towers Silhouette at the bottom */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-48 items-end justify-center overflow-hidden opacity-25">
@@ -52,44 +51,37 @@ export function CompanyVerificationHero({ profile, onPresetLevelChange }: Compan
         <div className="pointer-events-none absolute top-1/2 -left-16 h-64 w-64 rounded-full bg-teal-400/10 blur-3xl" />
 
         <div className="relative z-10 space-y-5">
-          {/* Top category highlight box matching TopCV */}
+          {/* Top category highlight box */}
           <div className="flex items-center gap-3.5 rounded-2xl border border-white/15 bg-white/10 p-3.5 shadow-sm backdrop-blur-md">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#00b14f] text-white shadow-md shadow-emerald-950/30">
               <Tag className="h-6 w-6 stroke-[2.2]" />
             </div>
             <div>
-              <div className="text-xs font-normal text-emerald-100/90">Bạn đang tuyển dụng vị trí thuộc nhóm nghề:</div>
-              <div className="text-base font-bold tracking-wide text-white">Công nghệ thông tin / Phần mềm</div>
+              <div className="text-xs font-normal text-emerald-100/90">Hiring target industry sector:</div>
+              <div className="text-base font-bold tracking-wide text-white">Information Technology / Software</div>
             </div>
           </div>
 
           {/* Headline */}
           <div className="space-y-1 pt-1">
             <h2 className="text-xl font-extrabold tracking-tight text-white sm:text-2xl">
-              Đăng tin trên InterVue ngay
+              Post Jobs & Hire Top Tech Talent
             </h2>
-            <p className="text-sm font-semibold text-emerald-200">Hiệu quả vượt trội - Đáp ứng nhanh chóng</p>
+            <p className="text-sm font-semibold text-emerald-200">High Trust Verification · AI-Powered ATS Pipelines</p>
           </div>
 
           {/* Feature Card 1: 3D Stacked Application documents */}
           <div className="group flex items-center gap-4 rounded-2xl bg-white p-4 text-slate-800 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center">
-              {/* Rich 3D Isometric Document Stack SVG */}
               <svg className="h-12 w-12" viewBox="0 0 48 48" fill="none">
-                {/* Bottom page shadow */}
                 <path d="M12 14L34 8L40 32L18 38L12 14Z" fill="#A7F3D0" />
-                {/* Middle page */}
                 <path d="M9 16L31 10L37 34L15 40L9 16Z" fill="#34D399" />
-                {/* Top main CV document */}
                 <rect x="6" y="14" width="28" height="26" rx="4" fill="#00b14f" />
                 <rect x="8" y="16" width="24" height="22" rx="3" fill="#E6F9F0" />
-                {/* Green header banner on document */}
                 <rect x="11" y="19" width="18" height="4" rx="1.5" fill="#00b14f" />
-                {/* Lines of text on document */}
                 <rect x="11" y="26" width="14" height="2" rx="1" fill="#10B981" />
                 <rect x="11" y="30" width="18" height="2" rx="1" fill="#6EE7B7" />
                 <rect x="11" y="34" width="10" height="2" rx="1" fill="#A7F3D0" />
-                {/* Floating 3D Check Badge */}
                 <circle cx="34" cy="36" r="6" fill="#00b14f" />
                 <path
                   d="M31.5 36L33.5 38L37 34"
@@ -101,27 +93,22 @@ export function CompanyVerificationHero({ profile, onPresetLevelChange }: Compan
               </svg>
             </div>
             <div className="text-xs leading-relaxed text-slate-700 sm:text-sm">
-              <span className="font-extrabold text-[#00b14f]">143.135+</span> lượt ứng tuyển vị trí thuộc nhóm nghề{' '}
-              <span className="font-bold text-[#00b14f]">Công nghệ thông tin</span> mỗi tháng
+              <span className="font-extrabold text-[#00b14f]">140,000+</span> verified engineer & developer application
+              views per month
             </div>
           </div>
 
-          {/* Feature Card 2: 3D Magnifying Glass & Candidate profiles */}
+          {/* Feature Card 2: 3D Magnifying Glass */}
           <div className="group flex items-center gap-4 rounded-2xl bg-white p-4 text-slate-800 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center">
-              {/* Rich 3D Magnifying Glass SVG */}
               <svg className="h-12 w-12" viewBox="0 0 48 48" fill="none">
-                {/* Floating gold candidate coins/chips */}
                 <ellipse cx="32" cy="16" rx="6" ry="3.5" fill="#FBBF24" />
                 <ellipse cx="32" cy="14" rx="6" ry="3.5" fill="#FDE68A" />
                 <ellipse cx="34" cy="24" rx="7" ry="4" fill="#F59E0B" />
                 <ellipse cx="34" cy="22" rx="7" ry="4" fill="#FBBF24" />
                 <ellipse cx="34" cy="20" rx="7" ry="4" fill="#FEF08A" />
-
-                {/* 3D Magnifying Glass Rim & Lens */}
                 <circle cx="20" cy="22" r="13" fill="#D1FAE5" fillOpacity="0.8" />
                 <circle cx="20" cy="22" r="13" stroke="#00b14f" strokeWidth="3" />
-                {/* Glass reflection streak */}
                 <path
                   d="M13 18C15 14 20 13 24 15"
                   stroke="white"
@@ -129,29 +116,24 @@ export function CompanyVerificationHero({ profile, onPresetLevelChange }: Compan
                   strokeLinecap="round"
                   opacity="0.8"
                 />
-                {/* Handle */}
                 <path d="M29 31L39 41" stroke="#008b3e" strokeWidth="5" strokeLinecap="round" />
                 <path d="M31 33L38 40" stroke="#34D399" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </div>
             <div className="text-xs leading-relaxed text-slate-700 sm:text-sm">
-              Tiếp cận ứng viên tiềm năng trong <span className="font-extrabold text-[#00b14f]">347.849+</span> hồ sơ
-              nhóm nghề <span className="font-bold text-[#00b14f]">Công nghệ thông tin</span>
+              Direct access to over <span className="font-extrabold text-[#00b14f]">350,000+</span> curated tech
+              candidate profiles
             </div>
           </div>
 
-          {/* Feature Card 3: 3D Trophy Star & Leading Tech Recruiters */}
+          {/* Feature Card 3: Enterprise Trust Badges */}
           <div className="group rounded-2xl bg-white p-4 text-slate-800 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
             <div className="mb-3 flex items-start gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center">
-                {/* Rich 3D Golden Star on Podium SVG */}
                 <svg className="h-12 w-12" viewBox="0 0 48 48" fill="none">
-                  {/* Podium Base */}
                   <ellipse cx="24" cy="39" rx="14" ry="4" fill="#34D399" />
                   <ellipse cx="24" cy="37" rx="12" ry="3" fill="#E6F9F0" />
-                  {/* Glowing 3D Star */}
                   <path d="M24 7L28 17L38 18L30 25L32 35L24 29L16 35L18 25L10 18L20 17L24 7Z" fill="url(#goldGrad)" />
-                  {/* Star Highlight facet */}
                   <path d="M24 7L28 17L38 18L30 25L24 29L24 7Z" fill="#FDE047" opacity="0.5" />
                   <defs>
                     <linearGradient id="goldGrad" x1="10" y1="7" x2="38" y2="35" gradientUnits="userSpaceOnUse">
@@ -163,13 +145,11 @@ export function CompanyVerificationHero({ profile, onPresetLevelChange }: Compan
                 </svg>
               </div>
               <div className="text-xs leading-relaxed text-slate-700 sm:text-sm">
-                Các <span className="font-bold text-[#00b14f]">nhà tuyển dụng tiêu biểu</span> lựa chọn đăng tin cho vị
-                trí thuộc nhóm nghề <span className="font-bold text-[#00b14f]">Công nghệ thông tin</span> trên InterVue:
-                FPT, Viettel, Misa, ...
+                Trusted by leading tech employers across Vietnam: FPT, Viettel, MISA, VNG and high-growth engineering
+                startups.
               </div>
             </div>
 
-            {/* Enterprise Client Badges matching TopCV */}
             <div className="grid grid-cols-4 gap-2 pt-1">
               <div className="flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-2 text-xs font-black tracking-wider text-orange-600 shadow-xs">
                 FPT
@@ -187,45 +167,19 @@ export function CompanyVerificationHero({ profile, onPresetLevelChange }: Compan
           </div>
         </div>
 
-        {/* Demo level switcher */}
-        {onPresetLevelChange && (
-          <div className="relative z-10 mt-6 flex items-center justify-between border-t border-white/10 pt-3 text-xs text-emerald-200/90">
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="h-4 w-4 text-emerald-300" />
-              <span>Mã NTD: {profile.recruiterCode}</span>
+        {/* Recruiter Trust Footer Info */}
+        <div className="relative z-10 mt-6 flex items-center justify-between border-t border-white/10 pt-3 text-xs text-emerald-200/90">
+          <span className="flex items-center gap-1.5">
+            <ShieldCheck className="h-4 w-4 text-emerald-300" />
+            <span>Verification Status: {profile.levelLabel}</span>
+          </span>
+          {profile.company && (
+            <span className="flex items-center gap-1 text-[11px] text-emerald-100">
+              <Building2 className="h-3.5 w-3.5" />
+              <span>{profile.company.name}</span>
             </span>
-            <div className="flex items-center gap-1">
-              <span className="mr-1 text-[10px] text-emerald-200/80">Demo Cấp:</span>
-              <button
-                type="button"
-                onClick={() => onPresetLevelChange(1)}
-                className={`rounded px-1.5 py-0.5 text-[11px] font-semibold transition ${
-                  profile.level === 1 ? 'bg-white text-[#008b3e]' : 'bg-white/10 text-white hover:bg-white/20'
-                }`}
-              >
-                1
-              </button>
-              <button
-                type="button"
-                onClick={() => onPresetLevelChange(2)}
-                className={`rounded px-1.5 py-0.5 text-[11px] font-semibold transition ${
-                  profile.level === 2 ? 'bg-white text-[#008b3e]' : 'bg-white/10 text-white hover:bg-white/20'
-                }`}
-              >
-                2
-              </button>
-              <button
-                type="button"
-                onClick={() => onPresetLevelChange(3)}
-                className={`rounded px-1.5 py-0.5 text-[11px] font-semibold transition ${
-                  profile.level === 3 ? 'bg-white text-[#008b3e]' : 'bg-white/10 text-white hover:bg-white/20'
-                }`}
-              >
-                3
-              </button>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
