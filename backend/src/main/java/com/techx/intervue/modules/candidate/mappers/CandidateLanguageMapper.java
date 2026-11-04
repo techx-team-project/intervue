@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.candidate.mappers;
 
+import com.techx.intervue.common.text.Texts;
 import com.techx.intervue.modules.candidate.entities.CandidateLanguage;
 import com.techx.intervue.modules.candidate.requests.SaveCandidateLanguageRequest;
 import com.techx.intervue.modules.candidate.resources.CandidateLanguageResource;
@@ -11,7 +12,7 @@ public class CandidateLanguageMapper {
     public void apply(CandidateLanguage language, SaveCandidateLanguageRequest request) {
         language.setLanguage(request.language().trim());
         language.setProficiency(request.proficiency());
-        language.setCertificate(blankToNull(request.certificate()));
+        language.setCertificate(Texts.blankToNull(request.certificate()));
     }
 
     public CandidateLanguageResource toResource(CandidateLanguage language) {
@@ -21,13 +22,5 @@ public class CandidateLanguageMapper {
                 .proficiency(language.getProficiency())
                 .certificate(language.getCertificate())
                 .build();
-    }
-
-    private String blankToNull(String value) {
-        if (value == null) {
-            return null;
-        }
-        String trimmed = value.trim();
-        return trimmed.isEmpty() ? null : trimmed;
     }
 }
