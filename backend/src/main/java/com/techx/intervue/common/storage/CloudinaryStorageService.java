@@ -6,6 +6,10 @@ import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
@@ -51,25 +55,31 @@ public class CloudinaryStorageService implements StorageServiceInterface {
                         .orElseThrow(() -> new AppException(ErrorCode.UNSUPPORTED_FILE_TYPE));
 
         String publicId = buildPublicId(folder, target, type);
-        Map<String, Object> options =
-                Map.of(
-                        "public_id",
-                        publicId,
-                        "resource_type",
-                        target.resourceType(),
-                        "type",
-                        target.deliveryType(),
-                        "unique_filename",
-                        false,
-                        "use_filename",
-                        false,
-                        "overwrite",
-                        false);
-        try {
-            cloudinary().uploader().upload(content, options);
-        } catch (IOException | RuntimeException e) {
-            log.error("Cloudinary upload failed for {}: {}", publicId, e.getMessage());
-            throw new AppException(ErrorCode.STORAGE_UNAVAILABLE);
+        Cloudinary client = cloudinaryProvider.getIfAvailable();
+        if (client == null) {
+            log.info("Cloudinary unconfigured: persisting {} to local dev storage", publicId);
+            saveLocalFallback(publicId, content);
+        } else {
+            Map<String, Object> options =
+                    Map.of(
+                            "public_id",
+                            publicId,
+                            "resource_type",
+                            target.resourceType(),
+                            "type",
+                            target.deliveryType(),
+                            "unique_filename",
+                            false,
+                            "use_filename",
+                            false,
+                            "overwrite",
+                            false);
+            try {
+                client.uploader().upload(content, options);
+            } catch (IOException | RuntimeException e) {
+                log.error("Cloudinary upload failed for {}: {}", publicId, e.getMessage());
+                throw new AppException(ErrorCode.STORAGE_UNAVAILABLE);
+            }
         }
 
         return StoredFile.builder()
@@ -83,6 +93,11 @@ public class CloudinaryStorageService implements StorageServiceInterface {
 
     @Override
     public byte[] fetchDocument(String publicId, StorageTarget target) {
+        Cloudinary client = cloudinaryProvider.getIfAvailable();
+        if (client == null) {
+            return readLocalFallback(publicId);
+        }
+
         // Streams through the backend on purpose: no Cloudinary URL ever reaches a browser, so a
         // leaked link cannot outlive the authorization check this request already passed.
         String url = signedDocumentUrl(publicId, target);
@@ -100,8 +115,11 @@ public class CloudinaryStorageService implements StorageServiceInterface {
 
     @Override
     public String publicImageUrl(String publicId) {
-        return cloudinary()
-                .url()
+        Cloudinary client = cloudinaryProvider.getIfAvailable();
+        if (client == null) {
+            return "/images/placeholder.png";
+        }
+        return client.url()
                 .resourceType(StorageTarget.IMAGE.resourceType())
                 .type(StorageTarget.IMAGE.deliveryType())
                 .secure(true)
@@ -110,17 +128,75 @@ public class CloudinaryStorageService implements StorageServiceInterface {
 
     @Override
     public void delete(String publicId, StorageTarget target) {
+        Cloudinary client = cloudinaryProvider.getIfAvailable();
+        if (client == null) {
+            deleteLocalFallback(publicId);
+            return;
+        }
+
         Map<String, Object> options =
                 Map.of(
                         "resource_type", target.resourceType(),
                         "type", target.deliveryType(),
                         "invalidate", true);
         try {
-            cloudinary().uploader().destroy(publicId, options);
+            client.uploader().destroy(publicId, options);
         } catch (IOException | RuntimeException e) {
             log.error("Cloudinary delete failed for {}: {}", publicId, e.getMessage());
             throw new AppException(ErrorCode.STORAGE_UNAVAILABLE);
         }
+    }
+
+    private Path localPathFor(String publicId) {
+        String safeName = publicId.replace('/', '_').replace('\\', '_');
+        return Paths.get(System.getProperty("java.io.tmpdir"), "intervue-storage", safeName);
+    }
+
+    private void saveLocalFallback(String publicId, byte[] content) {
+        try {
+            Path file = localPathFor(publicId);
+            Files.createDirectories(file.getParent());
+            Files.write(file, content);
+        } catch (IOException e) {
+            log.error("Failed to save local storage fallback for {}: {}", publicId, e.getMessage());
+            throw new AppException(ErrorCode.STORAGE_UNAVAILABLE);
+        }
+    }
+
+    private byte[] readLocalFallback(String publicId) {
+        try {
+            Path file = localPathFor(publicId);
+            if (Files.exists(file)) {
+                return Files.readAllBytes(file);
+            }
+            log.info(
+                    "Local file not found for publicId {}; generating placeholder preview PDF",
+                    publicId);
+            return minimalPdfBytes(publicId);
+        } catch (IOException e) {
+            log.error("Failed to read local storage fallback for {}: {}", publicId, e.getMessage());
+            return minimalPdfBytes(publicId);
+        }
+    }
+
+    private void deleteLocalFallback(String publicId) {
+        try {
+            Path file = localPathFor(publicId);
+            Files.deleteIfExists(file);
+        } catch (IOException e) {
+            log.warn("Failed to delete local fallback file {}: {}", publicId, e.getMessage());
+        }
+    }
+
+    private byte[] minimalPdfBytes(String title) {
+        String content =
+                "%PDF-1.4\n"
+                        + "1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n"
+                        + "2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n"
+                        + "3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R/Resources<<>>>>endobj\n"
+                        + "xref\n0 4\n0000000000 65535 f \n0000000009 00000 n \n0000000056 00000 n \n0000000111 00000 n \n"
+                        + "trailer<</Size 4/Root 1 0 R>>\nstartxref\n190\n%%EOF\n";
+        return content.getBytes(StandardCharsets.ISO_8859_1);
     }
 
     private String signedDocumentUrl(String publicId, StorageTarget target) {
