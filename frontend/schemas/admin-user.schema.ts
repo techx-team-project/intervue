@@ -23,7 +23,7 @@ export type RestrictUserFormData = z.infer<typeof restrictUserSchema>;
 
 export const grantRoleSchema = z
   .object({
-    role: z.enum([ROLES.CANDIDATE, ROLES.RECRUITER, ROLES.ADMIN]),
+    role: z.enum([ROLES.CANDIDATE, ROLES.ADMIN]),
     isTemporary: z.boolean(),
     expiresAt: z.string().trim().optional(),
     reason: z.string().trim().min(1, 'Say why this role is being granted'),

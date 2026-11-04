@@ -17,4 +17,9 @@ export type AuthSession = {
   user: User;
 };
 
+export type RecruiterAuthPayload = {
+  accessToken: string;
+  recruiter: Omit<User, 'roles'>;
+};
+
 export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated';

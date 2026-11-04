@@ -1,6 +1,6 @@
 'use client';
 
-import { authApi } from '@/apiRequest/auth';
+import { recruiterAuthApi } from '@/apiRequest/recruiter-auth';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import PasswordInput from '@/components/ui/PasswordInput';
@@ -95,13 +95,12 @@ export default function RecruiterRegisterForm() {
   const onSubmit = handleSubmit(async (values) => {
     setIsLoading(true);
     try {
-      await authApi.register({
+      await recruiterAuthApi.register({
         name: values.name,
         email: values.email,
         password: values.password,
         confirmPassword: values.confirmPassword,
         acceptTerms: values.acceptTerms,
-        targetRole: 'RECRUITER',
       });
 
       setRegistered({ email: values.email, name: values.name });

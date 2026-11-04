@@ -4,6 +4,7 @@ import Spinner from '@/components/common/Spinner';
 import NotFoundView from '@/components/common/NotFoundView';
 import { REDIRECT_PARAM, ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
+import { isRecruiterPortal } from '@/lib/auth-portal';
 import type { RoleType } from '@/types/auth';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
@@ -21,7 +22,8 @@ export default function RequireAuth({ roles, forbiddenFallback, children }: Requ
   useEffect(() => {
     if (status !== 'unauthenticated') return;
     const current = window.location.pathname + window.location.search;
-    router.replace(`${ROUTES.LOGIN}?${REDIRECT_PARAM}=${encodeURIComponent(current)}`);
+    const loginRoute = isRecruiterPortal() ? ROUTES.RECRUITER_LOGIN : ROUTES.LOGIN;
+    router.replace(`${loginRoute}?${REDIRECT_PARAM}=${encodeURIComponent(current)}`);
   }, [status, router]);
 
   if (status !== 'authenticated') {
