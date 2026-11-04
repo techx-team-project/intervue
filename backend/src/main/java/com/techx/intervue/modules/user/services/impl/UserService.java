@@ -26,6 +26,7 @@ import com.techx.intervue.modules.user.services.interfaces.DeletionBlocker;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.services.impl.BaseService;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -74,10 +75,28 @@ public class UserService extends BaseService implements UserServiceInterface {
         user.addRole(candidateRole);
         User saved = userRepository.save(user);
 
+        auditLogService.record(
+                AuditEntry.builder()
+                        .actorType(AuditActorType.USER)
+                        .actorId(saved.getId())
+                        .actorEmail(saved.getEmail())
+                        .action(AuditAction.USER_REGISTERED)
+                        .targetType(AuditTargetType.USER)
+                        .targetId(saved.getId())
+                        .reason("Account self-registered")
+                        .ip(ip)
+                        .build());
+
         eventPublisher.publishEvent(
                 new EmailVerificationRequestedEvent(
                         saved.getId(), saved.getEmail(), saved.getName()));
         return authSessionService.open(saved, userAgent, ip);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserResource> findByIds(Collection<Long> userIds) {
+        return userRepository.findAllById(userIds).stream().map(userMapper::toResource).toList();
     }
 
     @Override

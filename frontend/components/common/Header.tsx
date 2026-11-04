@@ -3,7 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Bot, ChevronDown, Menu, X } from 'lucide-react';
+import { ArrowLeft, Bot, ChevronDown, Menu, PhoneCall, PlusCircle, X } from 'lucide-react';
+import { ROUTES } from '@/constants/routes';
+import { ROLES } from '@/constants/auth';
+import { useAuth } from '@/hooks/useAuth';
 import EmailVerificationBanner from '@/components/auth/EmailVerificationBanner';
 import JobsDropdown from './header/JobsDropdown';
 import CvDropdown from './header/CvDropdown';
@@ -13,9 +16,103 @@ import HeaderAccountActions from './header/HeaderAccountActions';
 import MobileNavDrawer from './header/MobileNavDrawer';
 import RecruiterEntryButton from './header/RecruiterEntryButton';
 
-export default function Header() {
+interface HeaderProps {
+  portal?: 'candidate' | 'recruiter';
+}
+
+export default function Header({ portal = 'candidate' }: HeaderProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, hasRole } = useAuth();
+
+  const recruiterPostJobHref =
+    user && hasRole(ROLES.RECRUITER)
+      ? ROUTES.RECRUITER_JOBS_CREATE
+      : `${ROUTES.RECRUITER_LOGIN}?redirect=${encodeURIComponent(ROUTES.RECRUITER_JOBS_CREATE)}`;
+
+  if (portal === 'recruiter') {
+    return (
+      <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white shadow-xs">
+        <EmailVerificationBanner />
+        <div className="flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-12">
+          <div className="flex items-center gap-6 lg:gap-8">
+            <Link href={ROUTES.RECRUITER_LANDING} className="group flex shrink-0 items-center gap-2.5 py-1">
+              <Image
+                src="/intervue-logo.png"
+                alt="InterVue"
+                width={140}
+                height={40}
+                priority
+                className="h-10 w-auto object-contain transition-transform duration-200"
+              />
+              <span className="border-primary/20 bg-primary-light text-primary rounded-md border px-2 py-0.5 text-xs font-bold">
+                Nhà tuyển dụng
+              </span>
+            </Link>
+
+            <nav className="hidden items-center gap-5 text-sm font-semibold text-slate-800 lg:flex xl:gap-6">
+              <Link href="/recruiter#features" className="transition-colors hover:text-emerald-600">
+                Giải pháp AI
+              </Link>
+              <Link href="/recruiter#job-posting" className="transition-colors hover:text-emerald-600">
+                Đăng tin tuyển dụng
+              </Link>
+              <Link href="/recruiter#candidate-sourcing" className="transition-colors hover:text-emerald-600">
+                Tìm kiếm hồ sơ
+              </Link>
+              <Link href="/recruiter#pricing" className="transition-colors hover:text-emerald-600">
+                Bảng giá dịch vụ
+              </Link>
+              <Link href="/recruiter#testimonials" className="transition-colors hover:text-emerald-600">
+                Khách hàng
+              </Link>
+            </nav>
+          </div>
+
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <a
+              href="tel:0812665001"
+              className="hover:text-primary hidden items-center gap-1.5 text-xs font-bold text-slate-600 transition xl:flex"
+            >
+              <PhoneCall className="text-primary h-3.5 w-3.5" />
+              <span>0812.665.001</span>
+            </a>
+
+            <Link
+              href={ROUTES.HOME}
+              className="hover:text-primary hidden items-center gap-1.5 text-xs font-semibold text-slate-600 transition sm:flex"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              <span>Dành cho Người tìm việc</span>
+            </Link>
+
+            <div className="hidden h-5 w-px bg-slate-200 sm:block" />
+
+            <HeaderAccountActions portal="recruiter" />
+
+            <Link
+              href={recruiterPostJobHref}
+              className="bg-primary hover:bg-primary-hover hidden items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors sm:flex"
+            >
+              <PlusCircle className="h-4 w-4" />
+              <span>Đăng tin ngay</span>
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="cursor-pointer p-2 text-slate-800 hover:text-emerald-600 lg:hidden"
+              aria-label="Menu"
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
+        </div>
+
+        <MobileNavDrawer portal={portal} isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+      </header>
+    );
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white shadow-xs">
@@ -120,7 +217,7 @@ export default function Header() {
         </div>
       </div>
 
-      <MobileNavDrawer isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+      <MobileNavDrawer portal={portal} isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
     </header>
   );
 }

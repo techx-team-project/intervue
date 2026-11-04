@@ -37,6 +37,7 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /auth/forgot-password` | public | `{ email }` | – (same message whether or not the email exists; 60s cooldown, 3 per 15 min by email and IP) |
 | ✅ | `POST /auth/reset-password` | public | `{ token, password, confirmPassword }` | – (link valid 15 min, single use; logs out all devices) |
 | ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, roles, createdAt }` |
+| ✅ | `POST /ai/chat` | public / optional user | `{ message, sessionId? }` | `{ answer, sources, remainingQuota }` |
 | ✅ | `POST /users/me/roles/recruiter` | user | – | `UserResource` with `RECRUITER` in `roles`. `EMAIL_NOT_VERIFIED` if the email is not verified. Idempotent when already a recruiter. Evicts the user's session cache after commit: call `POST /auth/refresh` (or let the next 401 trigger it) to rebuild the session and receive the new `user.roles`. ADMIN can never be self-assigned (no endpoint). |
 | ✅ | `GET /admin/users` | admin | query `q`, `role`, `status`, `emailVerified` + pagination | `PageResource<AdminUserListResource>` |
 | ✅ | `GET /admin/users/summary` | admin | – | `AdminUserSummaryResource` |
@@ -57,7 +58,6 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /users/me/cancel-deletion` | user | – | `UserResource` (cancels pending deletion) |
 | ✅ | `POST /admin/users/{id}/cancel-deletion` | admin | – | `AdminUserDetailResource` (cancels deletion request) |
 | ✅ | `POST /admin/users/{id}/restore` | admin | – | `AdminUserDetailResource` (restores account from PENDING_DELETION or lifts BANNED) |
-| ✅ | `POST /ai/chat` | public / optional user | `{ message, sessionId? }` | `{ answer, sources, remainingQuota }` |
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
 

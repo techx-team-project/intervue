@@ -50,8 +50,6 @@ public class SecurityConfig {
                                         // Ping - health check
                                         .requestMatchers("/ping")
                                         .permitAll()
-                                        .requestMatchers("/uploads/**")
-                                        .permitAll()
                                         // 2. Public API
                                         .requestMatchers("/api/v1/ai/chat")
                                         .permitAll()

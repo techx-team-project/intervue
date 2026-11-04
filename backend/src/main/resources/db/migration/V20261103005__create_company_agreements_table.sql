@@ -1,0 +1,20 @@
+CREATE TABLE company_agreements (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    scope VARCHAR(20) NOT NULL,
+    company_id BIGINT UNSIGNED NOT NULL,
+    user_id BIGINT UNSIGNED NULL,
+    signed_by BIGINT UNSIGNED NOT NULL,
+    agreement_type VARCHAR(30) NOT NULL,
+    acceptance_mode VARCHAR(30) NOT NULL,
+    version VARCHAR(20) NOT NULL,
+    status VARCHAR(30) NOT NULL,
+    accepted_at TIMESTAMP NOT NULL,
+    storage_public_id VARCHAR(255) NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    CONSTRAINT fk_company_agreements_company FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE,
+    CONSTRAINT fk_company_agreements_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT fk_company_agreements_signed_by FOREIGN KEY (signed_by) REFERENCES users (id) ON DELETE CASCADE,
+    INDEX idx_company_agreements_company_scope (company_id, scope, agreement_type, version),
+    INDEX idx_company_agreements_user (user_id, agreement_type, version)
+);

@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-const email = z
+export const email = z
   .string()
   .min(1, 'Please enter your email.')
   .max(100, 'Email must be at most 100 characters.')
   .pipe(z.email('Email address is invalid.'));
 
-const strongPassword = z
+export const strongPassword = z
   .string()
   .min(1, 'Please enter your password.')
   .min(8, 'Password must be at least 8 characters.')

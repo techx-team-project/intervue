@@ -3,19 +3,7 @@
 import { ROUTES } from '@/constants/routes';
 import type { AdminUserConfirmKind } from '@/hooks/useAdminUserActions';
 import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-user';
-import {
-  Ban,
-  CircleCheck,
-  Eye,
-  KeyRound,
-  Lock,
-  LogOut,
-  MoreVertical,
-  RotateCcw,
-  ShieldCheck,
-  ShieldOff,
-  Unlock,
-} from 'lucide-react';
+import { Ban, CircleCheck, Eye, KeyRound, LogOut, MoreVertical, RotateCcw, ShieldCheck, ShieldOff } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -23,7 +11,6 @@ import { createPortal } from 'react-dom';
 
 interface AdminUserRowActionsMenuProps {
   user: AdminUserListItem;
-  lockBlockedReason: string | null;
   banBlockedReason: string | null;
   onRestrict: (kind: AdminUserRestrictionKind, user: AdminUserListItem) => void;
   onConfirm: (kind: AdminUserConfirmKind, user: AdminUserListItem) => void;
@@ -46,7 +33,6 @@ const ITEM_HEIGHT = 36;
 
 export default function AdminUserRowActionsMenu({
   user,
-  lockBlockedReason,
   banBlockedReason,
   onRestrict,
   onConfirm,
@@ -110,18 +96,6 @@ export default function AdminUserRowActionsMenu({
       label: 'Restore account',
       icon: RotateCcw,
       onClick: () => onConfirm('restore', user),
-    });
-  }
-
-  if (user.status === 'LOCKED') {
-    actions.push({ key: 'unlock', label: 'Unlock account', icon: Unlock, onClick: () => onConfirm('unlock', user) });
-  } else if (user.status !== 'BANNED') {
-    actions.push({
-      key: 'lock',
-      label: 'Lock account',
-      icon: Lock,
-      onClick: () => onRestrict('lock', user),
-      disabledReason: lockBlockedReason ?? undefined,
     });
   }
 

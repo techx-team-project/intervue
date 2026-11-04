@@ -1,16 +1,23 @@
 package com.techx.intervue.modules.user.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.helpers.IpHelper;
+import com.techx.intervue.modules.user.requests.SendPhoneOtpRequest;
+import com.techx.intervue.modules.user.requests.VerifyPhoneOtpRequest;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.resources.UserResource;
+import com.techx.intervue.modules.user.services.interfaces.PhoneVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.resources.ApiResource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController extends BaseController {
 
     private final UserServiceInterface userService;
+    private final PhoneVerificationServiceInterface phoneVerificationService;
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
@@ -37,6 +45,29 @@ public class UserController extends BaseController {
         return ok(
                 userService.becomeRecruiter(principal.getId()),
                 "Recruiter role enabled successfully!");
+    }
+
+    @PostMapping("/me/phone/send-otp")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResource<Void>> sendPhoneOtp(
+            @Valid @RequestBody SendPhoneOtpRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        phoneVerificationService.sendOtp(
+                principal.getId(), request, IpHelper.getClientIp(httpRequest));
+        return ok(null, "Verification code sent successfully!");
+    }
+
+    @PostMapping("/me/phone/verify")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResource<UserResource>> verifyPhoneOtp(
+            @Valid @RequestBody VerifyPhoneOtpRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                phoneVerificationService.verifyOtp(
+                        principal.getId(), request, IpHelper.getClientIp(httpRequest)),
+                "Phone number verified successfully!");
     }
 
     @PostMapping("/me/delete-request")

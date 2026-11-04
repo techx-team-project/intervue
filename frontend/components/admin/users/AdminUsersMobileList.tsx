@@ -19,6 +19,7 @@ interface AdminUsersMobileListProps {
   allUsers: AdminUserListItem[];
   currentAdminId: number;
   selectedIds: number[];
+  activeAdminCount?: number;
   onToggleSelect: (id: number) => void;
   onRestrict: (kind: AdminUserRestrictionKind, user: AdminUserListItem) => void;
   onConfirm: (kind: AdminUserConfirmKind, user: AdminUserListItem) => void;
@@ -29,6 +30,7 @@ export default function AdminUsersMobileList({
   allUsers,
   currentAdminId,
   selectedIds,
+  activeAdminCount,
   onToggleSelect,
   onRestrict,
   onConfirm,
@@ -72,8 +74,7 @@ export default function AdminUsersMobileList({
 
               <AdminUserRowActionsMenu
                 user={user}
-                lockBlockedReason={restrictBlockedReason(user, 'lock', currentAdminId, allUsers)}
-                banBlockedReason={restrictBlockedReason(user, 'ban', currentAdminId, allUsers)}
+                banBlockedReason={restrictBlockedReason(user, 'ban', currentAdminId, allUsers, activeAdminCount)}
                 onRestrict={onRestrict}
                 onConfirm={onConfirm}
               />

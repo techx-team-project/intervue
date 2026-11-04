@@ -17,6 +17,7 @@ import com.techx.intervue.modules.user.entities.UserRole;
 import com.techx.intervue.modules.user.entities.UserRole.UserRoleId;
 import com.techx.intervue.modules.user.enums.RestrictionKind;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.enums.TokenOrigin;
 import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.events.AccountRestrictedEvent;
 import com.techx.intervue.modules.user.events.AccountRestrictionLiftedEvent;
@@ -48,6 +49,7 @@ import com.techx.intervue.modules.user.services.interfaces.UserSessionCacheInter
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -56,6 +58,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -83,8 +86,6 @@ public class UserAdminService implements UserAdminServiceInterface {
     private static final Duration STALE_WINDOW = Duration.ofDays(7);
     private static final Duration EXPIRING_GRANT_WINDOW = Duration.ofDays(14);
     private static final int SWEEP_BATCH_SIZE = 200;
-    private static final String DUMMY_PASSWORD_HASH =
-            "$2a$10$eM4EXOxqLsBgw6Tq.SA/4uIAlNcwCwXwH.1Pk/0NXTeaEo7AyQ82O";
 
     private final UserRepository userRepository;
     private final UserRestrictionRepository userRestrictionRepository;
@@ -145,11 +146,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                         .findByIdWithRoles(userId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
-        return detailOf(
-                user,
-                userRestrictionRepository
-                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(userId)
-                        .orElse(null));
+        return detailOf(user);
     }
 
     @Override
@@ -380,6 +377,14 @@ public class UserAdminService implements UserAdminServiceInterface {
                 restriction);
     }
 
+    private AdminUserDetailResource detailOf(User target) {
+        UserRestriction standing =
+                userRestrictionRepository
+                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
+                        .orElse(null);
+        return detailOf(target, standing);
+    }
+
     private void verifySortable(Sort sort) {
         sort.forEach(
                 order -> {
@@ -462,8 +467,6 @@ public class UserAdminService implements UserAdminServiceInterface {
         return switch (action) {
             case USER_BANNED -> "banned";
             case USER_UNBANNED, USER_RESTRICTION_EXPIRED -> "unbanned";
-            case USER_LOCKED -> "locked";
-            case USER_UNLOCKED -> "unlocked";
             case USER_REGISTERED -> "accountCreated";
             case EMAIL_VERIFIED -> "emailVerified";
             case ROLE_GRANTED -> "roleGranted";
@@ -476,6 +479,24 @@ public class UserAdminService implements UserAdminServiceInterface {
             case USER_DELETION_CANCELLED -> "deletionCancelled";
             case USER_RESTORED -> "accountRestored";
             case USER_PURGED -> "accountPurged";
+            case PHONE_VERIFIED -> "phoneVerified";
+            case AGREEMENT_ACCEPTED -> "agreementAccepted";
+            case COMPANY_CREATED,
+                    COMPANY_UPDATED,
+                    COMPANY_DELETED,
+                    COMPANY_VERIFIED,
+                    COMPANY_VERIFICATION_REVOKED,
+                    COMPANY_MEMBER_JOINED,
+                    COMPANY_MEMBER_LEFT,
+                    COMPANY_MEMBER_REVOKED,
+                    COMPANY_OWNER_TRANSFERRED,
+                    BUSINESS_DOCUMENT_SUBMITTED,
+                    BUSINESS_DOCUMENT_APPROVED,
+                    BUSINESS_DOCUMENT_REJECTED,
+                    BUSINESS_DOCUMENT_MORE_INFO_REQUESTED,
+                    BUSINESS_DOCUMENT_REVOKED,
+                    BUSINESS_DOCUMENT_EXPIRED ->
+                    "company";
         };
     }
 
@@ -487,8 +508,6 @@ public class UserAdminService implements UserAdminServiceInterface {
                             : "Account banned";
             case USER_UNBANNED -> "Account unbanned";
             case USER_RESTRICTION_EXPIRED -> "Account ban expired";
-            case USER_LOCKED -> "Account locked";
-            case USER_UNLOCKED -> "Account unlocked";
             case USER_REGISTERED -> "Account registered";
             case EMAIL_VERIFIED -> "Email address verified";
             case ROLE_GRANTED ->
@@ -509,6 +528,25 @@ public class UserAdminService implements UserAdminServiceInterface {
             case USER_DELETION_CANCELLED -> "Account deletion request cancelled";
             case USER_RESTORED -> "Account restored";
             case USER_PURGED -> "Account permanently purged and anonymized";
+            case PHONE_VERIFIED -> "Phone number verified";
+            case AGREEMENT_ACCEPTED -> "Data processing agreement accepted";
+            // Targeted at a company or a document, so a user-scoped query never returns these.
+            case COMPANY_CREATED,
+                    COMPANY_UPDATED,
+                    COMPANY_DELETED,
+                    COMPANY_VERIFIED,
+                    COMPANY_VERIFICATION_REVOKED,
+                    COMPANY_MEMBER_JOINED,
+                    COMPANY_MEMBER_LEFT,
+                    COMPANY_MEMBER_REVOKED,
+                    COMPANY_OWNER_TRANSFERRED,
+                    BUSINESS_DOCUMENT_SUBMITTED,
+                    BUSINESS_DOCUMENT_APPROVED,
+                    BUSINESS_DOCUMENT_REJECTED,
+                    BUSINESS_DOCUMENT_MORE_INFO_REQUESTED,
+                    BUSINESS_DOCUMENT_REVOKED,
+                    BUSINESS_DOCUMENT_EXPIRED ->
+                    "Company verification activity";
         };
     }
 
@@ -520,26 +558,30 @@ public class UserAdminService implements UserAdminServiceInterface {
                         .findById(userId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
-        return refreshTokenRepository
-                .findByUserIdAndRevokedFalseAndExpiryDateAfterOrderByCreatedAtDesc(
-                        target.getId(), Instant.now())
-                .stream()
-                .map(
-                        r ->
-                                AdminUserSessionResource.builder()
-                                        .id(r.getId())
-                                        .createdAt(r.getCreatedAt())
-                                        .expiresAt(r.getExpiryDate())
-                                        .revoked(r.isRevoked())
-                                        .replacedByTokenId(r.getReplacedByTokenId())
-                                        .deviceLabel(
-                                                r.getDeviceLabel() != null
-                                                        ? r.getDeviceLabel()
-                                                        : "Unknown Device")
-                                        .ipAddress(r.getIp() != null ? r.getIp() : "Unknown")
-                                        .isCurrent(false)
-                                        .build())
-                .toList();
+        List<RefreshToken> activeTokens =
+                refreshTokenRepository
+                        .findByUserIdAndRevokedFalseAndExpiryDateAfterOrderByCreatedAtDesc(
+                                target.getId(), Instant.now());
+
+        List<AdminUserSessionResource> sessions = new ArrayList<>(activeTokens.size());
+        for (int i = 0; i < activeTokens.size(); i++) {
+            RefreshToken r = activeTokens.get(i);
+            sessions.add(
+                    AdminUserSessionResource.builder()
+                            .id(r.getId())
+                            .createdAt(r.getCreatedAt())
+                            .expiresAt(r.getExpiryDate())
+                            .revoked(r.isRevoked())
+                            .replacedByTokenId(r.getReplacedByTokenId())
+                            .deviceLabel(
+                                    r.getDeviceLabel() != null
+                                            ? r.getDeviceLabel()
+                                            : "Unknown Device")
+                            .ipAddress(r.getIp() != null ? r.getIp() : "Unknown")
+                            .isCurrent(i == 0)
+                            .build());
+        }
+        return sessions;
     }
 
     @Override
@@ -594,7 +636,7 @@ public class UserAdminService implements UserAdminServiceInterface {
 
         Pageable ordered = withStableOrder(pageable);
         return refreshTokenRepository
-                .findByUserId(target.getId(), ordered)
+                .findByUserIdAndOrigin(target.getId(), TokenOrigin.SIGN_IN, ordered)
                 .map(
                         r ->
                                 AdminUserSignInResource.builder()
@@ -668,11 +710,7 @@ public class UserAdminService implements UserAdminServiceInterface {
 
         eventPublisher.publishEvent(new UserRolesChangedEvent(target.getId()));
 
-        UserRestriction standing =
-                userRestrictionRepository
-                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
-                        .orElse(null);
-        return detailOf(target, standing);
+        return detailOf(target);
     }
 
     @Override
@@ -709,11 +747,7 @@ public class UserAdminService implements UserAdminServiceInterface {
 
         eventPublisher.publishEvent(new UserRolesChangedEvent(target.getId()));
 
-        UserRestriction standing =
-                userRestrictionRepository
-                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
-                        .orElse(null);
-        return detailOf(target, standing);
+        return detailOf(target);
     }
 
     @Override
@@ -750,11 +784,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                 "Two-factor authentication reset by admin",
                 null);
 
-        UserRestriction standing =
-                userRestrictionRepository
-                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
-                        .orElse(null);
-        return detailOf(target, standing);
+        return detailOf(target);
     }
 
     @Override
@@ -777,11 +807,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                 "Password reset email sent by admin",
                 null);
 
-        UserRestriction standing =
-                userRestrictionRepository
-                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
-                        .orElse(null);
-        return detailOf(target, standing);
+        return detailOf(target);
     }
 
     @Override
@@ -803,11 +829,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                 "Cancelled account deletion request by admin",
                 null);
 
-        UserRestriction standing =
-                userRestrictionRepository
-                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
-                        .orElse(null);
-        return detailOf(target, standing);
+        return detailOf(target);
     }
 
     @Override
@@ -820,11 +842,7 @@ public class UserAdminService implements UserAdminServiceInterface {
         if (target.getStatus() == UserStatus.BANNED) {
             return liftRestriction(userId, new LiftRestrictionRequest("Restored by admin"), actor);
         }
-        UserRestriction standing =
-                userRestrictionRepository
-                        .findFirstByUserIdAndLiftedAtIsNullOrderByCreatedAtDesc(target.getId())
-                        .orElse(null);
-        return detailOf(target, standing);
+        return detailOf(target);
     }
 
     @Override
@@ -866,7 +884,7 @@ public class UserAdminService implements UserAdminServiceInterface {
             user.setPhone(null);
             user.setAddress(null);
             user.setImage(null);
-            user.setPassword(DUMMY_PASSWORD_HASH);
+            user.setPassword("$disabled$" + UUID.randomUUID());
             userRepository.save(user);
 
             refreshTokenRepository.revokeAllRefreshTokenByUser(user.getId());
@@ -882,7 +900,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                             .action(AuditAction.USER_PURGED)
                             .targetType(AuditTargetType.USER)
                             .targetId(user.getId())
-                            .reason("Account permanently purged after 7-day grace period")
+                            .reason("Account anonymized and deactivated after 7-day grace period")
                             .build());
             purgedCount++;
         }

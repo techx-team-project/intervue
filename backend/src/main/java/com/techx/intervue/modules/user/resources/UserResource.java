@@ -16,5 +16,6 @@ public record UserResource(
         String phone,
         UserStatus status,
         boolean emailVerified,
+        boolean phoneVerified,
         Set<RoleType> roles,
         Instant createdAt) {}

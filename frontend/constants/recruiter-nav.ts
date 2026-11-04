@@ -57,7 +57,7 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
         href: ROUTES.RECRUITER_COMPANY_VERIFICATION,
         icon: ShieldCheck,
       },
-      { label: 'Hiring needs', href: ROUTES.RECRUITER_COMPANY_NEEDS, icon: ClipboardList, comingSoon: true },
+      { label: 'Hiring needs', href: ROUTES.RECRUITER_COMPANY_NEEDS, icon: ClipboardList },
     ],
   },
   {

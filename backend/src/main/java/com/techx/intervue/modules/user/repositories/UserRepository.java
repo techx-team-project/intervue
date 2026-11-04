@@ -18,6 +18,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+
+    boolean existsByPhoneAndIdNot(String phone, Long id);
+
     Optional<User> findByEmail(String email);
 
     @Query(

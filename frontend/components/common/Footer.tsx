@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, FileCheck, Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
+import { ROUTES } from '@/constants/routes';
 
 const SEO_KEYWORDS = [
   { name: 'Việc làm', link: 'https://www.topcv.vn/viec-lam' },
@@ -435,14 +436,14 @@ export default function Footer() {
                 <div className="mb-2.5 text-[12px] text-[#6f7882]">
                   Đăng tin tuyển dụng và tìm hồ sơ ứng viên nhanh chóng.
                 </div>
-                <a
-                  href="https://www.topcv.vn"
+                <Link
+                  href={ROUTES.RECRUITER_LANDING}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="bg-primary hover:bg-primary-hover block rounded-lg py-1.5 text-center text-[12.5px] font-semibold text-white transition-colors"
                 >
                   Đăng tin ngay
-                </a>
+                </Link>
               </div>
             </div>
           </div>

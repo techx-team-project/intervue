@@ -35,7 +35,6 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
   const isTemporary = useWatch({ control, name: 'isTemporary' });
 
   const meta = RESTRICTION_META[kind];
-  const isBan = kind === 'ban';
   const isBulk = users.length > 1;
   const subject = isBulk ? `${users.length} accounts` : users[0].name;
 
@@ -51,20 +50,14 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
   ];
 
   if (jobPostCount > 0) {
-    consequences.push(
-      isBan
-        ? `Hides ${plural(jobPostCount, 'published job post')} from the public site — confirm the policy`
-        : `${plural(jobPostCount, 'published job post')} stay visible — confirm the policy`,
-    );
+    consequences.push(`Hides ${plural(jobPostCount, 'published job post')} from the public site — confirm the policy`);
   }
 
   if (applicationCount > 0) {
     consequences.push(`${plural(applicationCount, 'application')} in progress are not withdrawn`);
   }
 
-  if (isBan) {
-    consequences.push('Recorded as a policy decision — unbanning does not erase it');
-  }
+  consequences.push('Recorded as a policy decision — unbanning does not erase it');
 
   const selectReason = (preset: string) => {
     setIsCustomReason(false);
@@ -134,7 +127,7 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
           {isCustomReason ? (
             <Input
               autoFocus
-              placeholder={`State the reason this account is being ${isBan ? 'banned' : 'locked'}`}
+              placeholder="State the reason this account is being banned"
               className="mt-2"
               {...register('reason')}
             />
@@ -166,7 +159,7 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-3.5">
           <p className="flex items-center gap-2 text-[12.5px] font-bold text-amber-900">
             <AlertTriangle className="h-4 w-4 shrink-0" />
-            What this {isBan ? 'ban' : 'lock'} does
+            What this ban does
           </p>
           <ul className="mt-2 space-y-1 text-[12.5px] text-amber-800">
             {consequences.map((consequence) => (

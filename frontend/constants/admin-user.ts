@@ -36,7 +36,6 @@ import type { LucideIcon } from 'lucide-react';
 export const USER_STATUS_META: Record<AdminUserStatus, { label: string; variant: NonNullable<BadgeProps['variant']> }> =
   {
     ACTIVE: { label: 'Active', variant: 'success' },
-    LOCKED: { label: 'Locked', variant: 'warning' },
     BANNED: { label: 'Banned', variant: 'danger' },
     PENDING_DELETION: { label: 'Pending deletion', variant: 'warning' },
     DELETED: { label: 'Deleted', variant: 'default' },
@@ -46,12 +45,6 @@ export const RESTRICTION_META: Record<
   AdminUserRestrictionKind,
   { verb: string; liftVerb: string; status: AdminUserStatus; blurb: string }
 > = {
-  lock: {
-    verb: 'Lock',
-    liftVerb: 'Unlock',
-    status: 'LOCKED',
-    blurb: 'A reversible security hold. Sign-in is blocked, public content stays up.',
-  },
   ban: {
     verb: 'Ban',
     liftVerb: 'Unban',
@@ -71,7 +64,6 @@ export const USER_SEGMENTS: { segment: AdminUserSegment; label: string }[] = [
   { segment: 'candidates', label: 'Candidates' },
   { segment: 'recruiters', label: 'Recruiters' },
   { segment: 'admins', label: 'Admins' },
-  { segment: 'locked', label: 'Locked' },
   { segment: 'banned', label: 'Banned' },
   { segment: 'unverified', label: 'Unverified email' },
   { segment: 'pendingDeletion', label: 'Pending deletion' },
@@ -93,13 +85,6 @@ export const USER_SORT_OPTIONS: { value: AdminUserSort; label: string }[] = [
 ];
 
 export const RESTRICTION_REASON_PRESETS: Record<AdminUserRestrictionKind, string[]> = {
-  lock: [
-    'Security incident — credentials compromised',
-    'Fraudulent or fake identity documents',
-    'Spam or mass unsolicited contact',
-    'Suspicious sign-in activity under review',
-    'Requested by the account owner',
-  ],
   ban: [
     'Fake or impersonated account',
     'Recruitment scam or fraudulent job posting',
