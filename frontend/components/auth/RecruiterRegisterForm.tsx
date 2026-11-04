@@ -101,6 +101,7 @@ export default function RecruiterRegisterForm() {
         password: values.password,
         confirmPassword: values.confirmPassword,
         acceptTerms: values.acceptTerms,
+        targetRole: 'RECRUITER',
       });
 
       setRegistered({ email: values.email, name: values.name });
