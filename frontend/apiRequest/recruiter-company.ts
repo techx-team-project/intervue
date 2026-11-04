@@ -72,9 +72,12 @@ export const recruiterCompanyApi = {
     }),
 
   // Legal documents
-  submitDocument: (documentType: BusinessDocumentType, file: File) => {
+  submitDocument: (documentType: BusinessDocumentType, file: File, identityFile?: File | null) => {
     const formData = new FormData();
     formData.append('file', file);
+    if (identityFile) {
+      formData.append('identityFile', identityFile);
+    }
     return request<BusinessDocumentResource>(
       `/recruiter/company/documents?documentType=${encodeURIComponent(documentType)}`,
       {

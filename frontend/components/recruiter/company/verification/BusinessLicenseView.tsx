@@ -286,6 +286,7 @@ export function BusinessLicenseView() {
         await handleSubmitLicense({
           documentType: 'LETTER_OF_AUTHORIZATION',
           file: fileToSubmit,
+          identityFile: idCardFile,
         });
         setLoaFile(null);
         setIdCardFile(null);
