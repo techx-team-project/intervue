@@ -88,6 +88,9 @@ public class RecruiterRefreshTokenService implements RecruiterRefreshTokenServic
     }
 
     private void ensureUsable(RecruiterRefreshToken token) {
+        if (token.isRevoked() && token.getReplacedByTokenId() == null) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
         if (token.isRevoked()) {
             repository.revokeAllByRecruiterId(token.getRecruiterId(), Instant.now(), "TOKEN_REUSE");
             sessionCache.evict(token.getRecruiterId());
