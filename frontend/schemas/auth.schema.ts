@@ -84,6 +84,6 @@ export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
 export type LoginPayload = LoginFormData;
-export type RegisterPayload = RegisterFormData & { targetRole?: 'CANDIDATE' | 'RECRUITER' };
+export type RegisterPayload = RegisterFormData;
 export type ForgotPasswordPayload = ForgotPasswordFormData;
 export type ResetPasswordPayload = ResetPasswordFormData & { token: string };

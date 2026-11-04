@@ -177,7 +177,6 @@ public class UserAdminService implements UserAdminServiceInterface {
                 .newLast7Days(userRepository.countByCreatedAtAfter(staleBefore))
                 .activeLast7Days(userRepository.countByLastLoginAtAfter(staleBefore))
                 .candidates(byRole.getOrDefault(RoleType.CANDIDATE, 0L))
-                .recruiters(byRole.getOrDefault(RoleType.RECRUITER, 0L))
                 .admins(byRole.getOrDefault(RoleType.ADMIN, 0L))
                 .activeAdminCount(
                         userRepository.countByStatusAndActiveRole(

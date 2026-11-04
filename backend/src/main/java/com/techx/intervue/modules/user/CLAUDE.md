@@ -4,7 +4,7 @@ Loaded only when working inside `modules/user`. This is the **reference module**
 
 ## Contents
 
-- Entities: `User`, `Role`, `UserRole` (many-to-many, a user can be Candidate + Recruiter), `RefreshToken`. Enum `RoleType`.
+- Entities: `User`, `Role`, `UserRole` (many-to-many; roles are `CANDIDATE` and `ADMIN`), `RefreshToken`. Enums `RoleType`, `AccountType`. Recruiters are NOT here: they live in `modules/recruiter` with their own tables.
 - Services (`services/impl`): `UserService`, `JwtService`, `RefreshTokenService`, `UserSessionCache` (Redis). Interfaces in `services/interfaces`.
 - Controller: `AuthController` → `/api/v1/auth/*`.
 

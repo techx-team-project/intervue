@@ -38,7 +38,6 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /auth/reset-password` | public | `{ token, password, confirmPassword }` | – (link valid 15 min, single use; logs out all devices) |
 | ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, roles, createdAt }` |
 | ✅ | `POST /ai/chat` | public / optional user | `{ message, sessionId? }` | `{ answer, sources, remainingQuota }` |
-| ✅ | `POST /users/me/roles/recruiter` | user | – | `UserResource` with `RECRUITER` in `roles`. `EMAIL_NOT_VERIFIED` if the email is not verified. Idempotent when already a recruiter. Evicts the user's session cache after commit: call `POST /auth/refresh` (or let the next 401 trigger it) to rebuild the session and receive the new `user.roles`. ADMIN can never be self-assigned (no endpoint). |
 | ✅ | `GET /admin/users` | admin | query `q`, `role`, `status`, `emailVerified` + pagination | `PageResource<AdminUserListResource>` |
 | ✅ | `GET /admin/users/summary` | admin | – | `AdminUserSummaryResource` |
 | ✅ | `GET /admin/users/{id}` | admin | – | `AdminUserDetailResource` |
@@ -116,7 +115,7 @@ type AdminUserDetailResource = AdminUserListResource & {
 type AdminUserSummaryResource = {
   total: number; active: number; banned: number; unverified: number;
   newLast7Days: number; activeLast7Days: number;
-  candidates: number; recruiters: number; admins: number;
+  candidates: number; admins: number;
   activeAdminCount: number;
   bannedOverAWeek: number; unverifiedOverAWeek: number; grantsExpiringIn14Days: number;
 };
@@ -171,7 +170,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `INVALID_CREDENTIALS` | 401 | Wrong email or password; `error.meta.captchaRequired` is true after 3 failures |
 | `INVALID_OR_EXPIRED_TOKEN` | 400 | Verification or reset link is invalid, expired or already used |
 | `EMAIL_ALREADY_VERIFIED` | 409 | |
-| `EMAIL_NOT_VERIFIED` | 422 | The action requires a verified email (e.g. enabling the Recruiter role) |
+| `EMAIL_NOT_VERIFIED` | 422 | The action requires a verified email (e.g. publishing a job) |
 | `UNAUTHENTICATED` | 401 | Missing/expired token → frontend tries refresh once |
 | `FORBIDDEN` | 403 | Role/ownership failure |
 | `NOT_FOUND` | 404 | |
@@ -200,6 +199,20 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `AI_REQUEST_REFUSED` | 422 | AI provider declined to process the content |
 | `AI_PROMPT_NOT_FOUND` | 500 | Server prompt file is missing |
 | `LAST_COMPANY_OWNER` | 422 | Cannot leave company as the sole owner while company is verified or has active members/documents |
+
+## Recruiter Account
+
+Recruiters are a separate account type stored in `recruiters`; the same email may also exist as a candidate. The access token carries the claim `typ=RECRUITER`; the refresh token is the `recruiter_refresh_token` cookie.
+
+| Status | Endpoint | Auth | Body | Notes |
+|---|---|---|---|---|
+| ✅ | `POST /recruiter/auth/register` | public | `RecruiterRegisterRequest` (`name`, `email`, `password`, `confirmPassword`, `acceptTerms`) | `RecruiterAuthResource { accessToken, recruiter }` + refresh cookie. `EMAIL_ALREADY_USED` only checks `recruiters`. |
+| ✅ | `POST /recruiter/auth/login` | public | `LoginRequest` | Same response; `INVALID_CREDENTIALS`, `ACCOUNT_BANNED`, `ACCOUNT_DELETED`. |
+| ✅ | `POST /recruiter/auth/refresh` | cookie | – | Rotates the refresh token. |
+| ✅ | `POST /recruiter/auth/logout` | recruiter | – | Blacklists the access token, revokes the refresh token. |
+| ✅ | `GET /recruiter/me` | recruiter | – | `RecruiterResource { id, email, name, phone, status, emailVerified, createdAt }` |
+
+Not built yet: email verification, forgot/reset password, phone verification, 2FA, account deletion, admin management of recruiters. Company endpoints still key members by the principal id; point `company_members` and the other recruiter-owned columns at `recruiters.id`.
 
 ## Recruiter Company Membership & Leave Contract
 

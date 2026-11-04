@@ -8,14 +8,13 @@ import Textarea from '@/components/ui/Textarea';
 import { USER_ROLE_META } from '@/constants/admin-user';
 import { ROLES } from '@/constants/auth';
 import { grantRoleSchema, type GrantRoleFormData } from '@/schemas/admin-user.schema';
-import type { RoleType } from '@/types/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ScrollText, ShieldAlert } from 'lucide-react';
 import { useForm, useWatch } from 'react-hook-form';
 
 interface AdminUserGrantRoleDialogProps {
   userName: string;
-  grantableRoles: RoleType[];
+  grantableRoles: GrantRoleFormData['role'][];
   onClose: () => void;
   onConfirm: (data: GrantRoleFormData) => void;
 }

@@ -1,6 +1,6 @@
 # InterVue — Project Context (Claude Code)
 
-AI-assisted IT recruitment platform (TopCV-like). Roles: **Candidate**, **Recruiter**, **Admin**; one account may hold several roles.
+AI-assisted IT recruitment platform (TopCV-like). Roles: **Candidate**, **Recruiter**, **Admin**. Recruiters have their own account (table `recruiters`), separate from candidate/admin accounts (`users`); the same email may exist in both.
 AI assists; **recruiters make the final decision** — AI never auto-accepts or auto-rejects a candidate.
 Product docs: `README.md`, `docs/product-overview.md`, `docs/candidate-features.md`, `FUNCTION_REQUIRMENT.md`.
 

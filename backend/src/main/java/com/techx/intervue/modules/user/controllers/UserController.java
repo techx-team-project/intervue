@@ -38,15 +38,6 @@ public class UserController extends BaseController {
                 "Account information retrieved successfully!");
     }
 
-    @PostMapping("/me/roles/recruiter")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiResource<UserResource>> becomeRecruiter(
-            @AuthenticationPrincipal CustomUserDetails principal) {
-        return ok(
-                userService.becomeRecruiter(principal.getId()),
-                "Recruiter role enabled successfully!");
-    }
-
     @PostMapping("/me/phone/send-otp")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResource<Void>> sendPhoneOtp(

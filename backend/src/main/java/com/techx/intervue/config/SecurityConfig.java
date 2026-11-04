@@ -14,6 +14,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
+import org.springframework.security.authorization.AuthorityAuthorizationManager;
+import org.springframework.security.authorization.AuthorizationManagers;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,6 +51,12 @@ public class SecurityConfig {
                                         // 1. Route AUTH - No JWT
                                         .requestMatchers("/api/v1/auth/**")
                                         .permitAll()
+                                        .requestMatchers("/api/v1/recruiter/auth/login")
+                                        .permitAll()
+                                        .requestMatchers("/api/v1/recruiter/auth/register")
+                                        .permitAll()
+                                        .requestMatchers("/api/v1/recruiter/auth/refresh")
+                                        .permitAll()
                                         // Ping - health check
                                         .requestMatchers("/ping")
                                         .permitAll()
@@ -59,8 +68,18 @@ public class SecurityConfig {
                                         // 2. Admin area
                                         .requestMatchers("/api/v1/admin/**")
                                         .hasRole("ADMIN")
+                                        .requestMatchers("/api/v1/recruiter/**")
+                                        .hasRole("RECRUITER")
+                                        // Recruiter tokens must never reach candidate/user
+                                        // endpoints
                                         .anyRequest()
-                                        .authenticated())
+                                        .access(
+                                                AuthorizationManagers.allOf(
+                                                        AuthenticatedAuthorizationManager
+                                                                .authenticated(),
+                                                        AuthorizationManagers.not(
+                                                                AuthorityAuthorizationManager
+                                                                        .hasRole("RECRUITER")))))
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(

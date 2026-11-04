@@ -62,7 +62,6 @@ export const USER_ROLE_META: Record<RoleType, { label: string; chipClassName: st
 export const USER_SEGMENTS: { segment: AdminUserSegment; label: string }[] = [
   { segment: 'all', label: 'All' },
   { segment: 'candidates', label: 'Candidates' },
-  { segment: 'recruiters', label: 'Recruiters' },
   { segment: 'admins', label: 'Admins' },
   { segment: 'banned', label: 'Banned' },
   { segment: 'unverified', label: 'Unverified email' },
