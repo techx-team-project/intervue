@@ -59,6 +59,9 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/recruiter/auth/verify-email")
                                         .permitAll()
+                                        .requestMatchers(
+                                                "/api/v1/recruiter/auth/confirm-email-change")
+                                        .permitAll()
                                         .requestMatchers("/api/v1/recruiter/auth/forgot-password")
                                         .permitAll()
                                         .requestMatchers("/api/v1/recruiter/auth/reset-password")

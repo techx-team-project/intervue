@@ -3,6 +3,7 @@ package com.techx.intervue.modules.user.controllers;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.helpers.CookieHelper;
 import com.techx.intervue.modules.helpers.IpHelper;
+import com.techx.intervue.modules.user.requests.ChangeEmailRequest;
 import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
 import com.techx.intervue.modules.user.requests.SendPhoneOtpRequest;
 import com.techx.intervue.modules.user.requests.VerifyPhoneOtpRequest;
@@ -10,6 +11,7 @@ import com.techx.intervue.modules.user.resources.AccountSessionResource;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.interfaces.AccountSecurityServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.EmailChangeServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.PhoneVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.resources.ApiResource;
@@ -37,6 +39,7 @@ public class UserController extends BaseController {
     private final UserServiceInterface userService;
     private final PhoneVerificationServiceInterface phoneVerificationService;
     private final AccountSecurityServiceInterface accountSecurityService;
+    private final EmailChangeServiceInterface emailChangeService;
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
@@ -85,6 +88,16 @@ public class UserController extends BaseController {
         return ok(
                 userService.cancelAccountDeletion(principal.getId()),
                 "Account deletion request cancelled successfully!");
+    }
+
+    @PostMapping("/me/email/change-request")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResource<Void>> requestEmailChange(
+            @Valid @RequestBody ChangeEmailRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        emailChangeService.request(principal.getId(), request, IpHelper.getClientIp(httpRequest));
+        return ok(null, "We sent a confirmation link to your new email.");
     }
 
     @PostMapping("/me/change-password")

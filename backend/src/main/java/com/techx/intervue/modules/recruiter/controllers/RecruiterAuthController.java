@@ -11,6 +11,7 @@ import com.techx.intervue.modules.recruiter.requests.RecruiterRegisterRequest;
 import com.techx.intervue.modules.recruiter.resources.RecruiterAuthResource;
 import com.techx.intervue.modules.recruiter.resources.RecruiterAuthResult;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterAuthServiceInterface;
+import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterEmailChangeServiceInterface;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterEmailVerificationServiceInterface;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterPasswordResetServiceInterface;
 import com.techx.intervue.modules.user.requests.ForgotPasswordRequest;
@@ -45,6 +46,7 @@ public class RecruiterAuthController extends BaseController {
     private final RecruiterAuthServiceInterface recruiterAuthService;
     private final RecruiterEmailVerificationServiceInterface emailVerificationService;
     private final RecruiterPasswordResetServiceInterface passwordResetService;
+    private final RecruiterEmailChangeServiceInterface emailChangeService;
     private final AuthConfig authConfig;
 
     @PostMapping("/register")
@@ -104,6 +106,13 @@ public class RecruiterAuthController extends BaseController {
             @Valid @RequestBody VerifyEmailRequest request) {
         emailVerificationService.verify(request.token());
         return ok(null, "Email verified successfully!");
+    }
+
+    @PostMapping("/confirm-email-change")
+    public ResponseEntity<ApiResource<Void>> confirmEmailChange(
+            @Valid @RequestBody VerifyEmailRequest request) {
+        emailChangeService.confirm(request.token());
+        return ok(null, "Email changed successfully, please log in again!");
     }
 
     @PostMapping("/resend-verification")

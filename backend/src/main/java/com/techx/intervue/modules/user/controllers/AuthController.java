@@ -16,6 +16,7 @@ import com.techx.intervue.modules.user.resources.AuthResource;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.services.interfaces.AuthServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.EmailChangeServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.EmailVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserRegistrationServiceInterface;
@@ -48,6 +49,7 @@ public class AuthController extends BaseController {
     private final AuthServiceInterface authService;
     private final EmailVerificationServiceInterface emailVerificationService;
     private final PasswordResetServiceInterface passwordResetService;
+    private final EmailChangeServiceInterface emailChangeService;
     private final AuthConfig authConfig;
 
     @PostMapping("/register")
@@ -101,6 +103,13 @@ public class AuthController extends BaseController {
             @Valid @RequestBody VerifyEmailRequest request) {
         emailVerificationService.verify(request.token());
         return ok(null, "Email verified successfully!");
+    }
+
+    @PostMapping("/confirm-email-change")
+    public ResponseEntity<ApiResource<Void>> confirmEmailChange(
+            @Valid @RequestBody VerifyEmailRequest request) {
+        emailChangeService.confirm(request.token());
+        return ok(null, "Email changed successfully, please log in again!");
     }
 
     @PostMapping("/resend-verification")
