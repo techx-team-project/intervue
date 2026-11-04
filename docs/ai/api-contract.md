@@ -163,3 +163,15 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `AI_PROVIDER_ERROR` | 502 | AI provider returned an error or an unreadable response |
 | `AI_REQUEST_REFUSED` | 422 | AI provider declined to process the content |
 | `AI_PROMPT_NOT_FOUND` | 500 | Server prompt file is missing |
+| `LAST_COMPANY_OWNER` | 422 | Cannot leave company as the sole owner while company is verified or has active members/documents |
+
+## Recruiter Company Membership & Leave Contract
+
+- Endpoint: `POST /recruiter/company/leave`
+- Behavior:
+  - If user is a `MEMBER` → membership status changes to `LEFT`, `PublishRightLostEvent` is emitted.
+  - If user is the sole `OWNER` and company is unverified with no members/documents → company draft is discarded (`discardCompany`).
+  - If user is the sole `OWNER` of a **VERIFIED** company or has submitted legal documents/active members → rejected with HTTP 422 `LAST_COMPANY_OWNER`.
+- **Frontend Real Integration Requirement**:
+  - When wiring real backend, if user is sole `OWNER` of a verified company, the UI must display a **Transfer Ownership Dialog** allowing the owner to delegate ownership to another verified recruiter before leaving, or prompt them to contact Compliance to archive the entity.
+  - Temporary session-level unbind in `CompanyProfileView.tsx` was implemented to enable local dev testing and must be replaced by the Transfer Ownership modal once ownership transfer API is connected.
