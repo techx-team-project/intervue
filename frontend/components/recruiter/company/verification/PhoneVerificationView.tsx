@@ -3,113 +3,47 @@
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { ROUTES } from '@/constants/routes';
 import { useCompanyVerification } from '@/hooks/useCompanyVerification';
-import { isApiError } from '@/lib/api-error';
-import { BarChart3, CheckCircle2, Lock, ShieldCheck, Smartphone } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { CheckCircle2, Headphones, Phone, ShieldCheck, TrendingUp } from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
 import { toast } from 'sonner';
-
-const VIETNAM_MOBILE_REGEX = /^0[35789]\d{8}$/;
+import { formatPhoneNumber, PhoneVerificationModal, VIETNAM_MOBILE_REGEX } from './PhoneVerificationModal';
 
 export function PhoneVerificationView() {
-  const { profile, handleSendPhoneOtp, handleVerifyPhone } = useCompanyVerification();
+  const { profile } = useCompanyVerification();
 
-  const [phoneNumber, setPhoneNumber] = useState(profile.phone.phoneNumber || '');
-  const [isOtpSent, setIsOtpSent] = useState(false);
-  const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
-  const [countdown, setCountdown] = useState(60);
-  const [isSending, setIsSending] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isEditingPhone, setIsEditingPhone] = useState(!profile.phone.isVerified);
+  // Local state for phone number and verification status
+  const [phoneNumber, setPhoneNumber] = useState(profile.phone.phoneNumber || '0894334343');
+  const [isVerified, setIsVerified] = useState(profile.phone.isVerified);
 
-  const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  // Modal states: Initial verification vs. Change existing phone
+  const [isInitialModalOpen, setIsInitialModalOpen] = useState(false);
+  const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
 
-  // Timer countdown
-  useEffect(() => {
-    if (!isOtpSent || countdown <= 0) return;
-    const timer = setInterval(() => {
-      setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [isOtpSent, countdown]);
-
-  const handleSendOtp = async () => {
+  // Click "Send verification code" -> validates input and opens Initial Modal
+  const handleInitiateVerification = () => {
     const trimmed = phoneNumber.trim();
     if (!trimmed || !VIETNAM_MOBILE_REGEX.test(trimmed)) {
-      toast.error('Please enter a valid 10-digit Vietnamese mobile number (e.g., 0901234567).');
+      toast.error('Please enter a valid 10-digit Vietnamese mobile number (e.g. 0901234567 or 0894334343).');
       return;
     }
-
-    setIsSending(true);
-    try {
-      await handleSendPhoneOtp(trimmed);
-      setIsOtpSent(true);
-      setCountdown(60);
-      setOtpDigits(['', '', '', '', '', '']);
-      setTimeout(() => otpInputRefs.current[0]?.focus(), 100);
-    } catch (err) {
-      if (isApiError(err)) {
-        toast.error(err.message || 'Could not send SMS verification code.');
-      } else {
-        toast.error('Failed to send verification code. Please try again.');
-      }
-    } finally {
-      setIsSending(false);
-    }
+    setIsInitialModalOpen(true);
   };
 
-  const handleOtpChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return;
-    const newDigits = [...otpDigits];
-    newDigits[index] = value.slice(-1);
-    setOtpDigits(newDigits);
-
-    // Auto-focus next input
-    if (value && index < 5) {
-      otpInputRefs.current[index + 1]?.focus();
-    }
+  const handleInitialSuccess = (verifiedPhone: string) => {
+    setPhoneNumber(verifiedPhone);
+    setIsVerified(true);
+    setIsInitialModalOpen(false);
   };
 
-  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && !otpDigits[index] && index > 0) {
-      otpInputRefs.current[index - 1]?.focus();
-    }
-  };
-
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData('text').trim();
-    if (/^\d{6}$/.test(pasted)) {
-      const digits = pasted.split('');
-      setOtpDigits(digits);
-      otpInputRefs.current[5]?.focus();
-    }
-  };
-
-  const handleConfirmOtp = async () => {
-    const otp = otpDigits.join('');
-    if (otp.length !== 6) {
-      toast.error('Please enter all 6 digits of the verification code.');
-      return;
-    }
-
-    setIsVerifying(true);
-    try {
-      await handleVerifyPhone(otp);
-      setIsEditingPhone(false);
-      setIsOtpSent(false);
-    } catch (err) {
-      if (isApiError(err)) {
-        toast.error(err.message || 'Invalid or expired OTP code.');
-      } else {
-        toast.error('Failed to verify OTP code.');
-      }
-    } finally {
-      setIsVerifying(false);
-    }
+  const handleChangeSuccess = (newVerifiedPhone: string) => {
+    setPhoneNumber(newVerifiedPhone);
+    setIsVerified(true);
+    setIsChangeModalOpen(false);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Breadcrumb Navigation */}
       <Breadcrumb
         items={[
@@ -119,165 +53,155 @@ export function PhoneVerificationView() {
         ]}
       />
 
-      {/* Main Verification Card */}
-      <div className="space-y-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
-        <div className="space-y-2">
-          <h2 className="text-xl font-bold text-slate-900">Mobile Phone Authentication</h2>
-          <p className="text-xs text-slate-500">
-            A 6-digit OTP code will be sent via SMS to your Vietnamese mobile number to verify your recruiter identity.
-          </p>
+      {/* Top Banner (Exact TopCV widescreen ratio ~ 3.6:1, sharp professional border-radius) */}
+      <div className="relative overflow-hidden rounded-lg border border-slate-200/90 bg-white shadow-2xs">
+        <Image
+          src="/images/recruiter/banner-phone-verify-final.jpg"
+          alt="InterVue Employer Phone Verification"
+          width={1200}
+          height={330}
+          priority
+          unoptimized
+          className="block h-auto w-full object-contain"
+        />
+      </div>
+
+      {/* Main Verification Card (TopCV Clean Structure) */}
+      <div className="space-y-6 rounded-lg border border-slate-200 bg-white p-6 shadow-2xs">
+        <div className="space-y-1">
+          <h2 className="text-base font-semibold text-slate-800">Update and verify phone number</h2>
         </div>
 
         {/* Verification Status or Form */}
-        {profile.phone.isVerified && !isEditingPhone ? (
-          <div className="space-y-3 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-5">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#00b14f] text-white">
-                  <CheckCircle2 className="h-6 w-6" />
+        {isVerified ? (
+          <div className="space-y-3">
+            {/* Input display & Change button row */}
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              {/* Phone display field with subtle verified badge */}
+              <div className="relative w-full sm:max-w-md">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                  <Phone className="h-4 w-4" />
                 </div>
-                <div>
-                  <div className="text-sm font-bold text-emerald-950">
-                    Verified phone number: <span className="font-mono text-base">{profile.phone.phoneNumber}</span>
-                  </div>
-                  <div className="text-xs text-emerald-700">
-                    Your recruiter identity is secured. Reached Level 2 standard prerequisites.
-                  </div>
+                <input
+                  type="text"
+                  readOnly
+                  value={formatPhoneNumber(phoneNumber)}
+                  className="h-11 w-full cursor-default rounded-md border border-slate-200 bg-slate-50/70 pr-28 pl-10 text-sm font-medium text-slate-800 select-all focus:outline-none"
+                />
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <span className="inline-flex items-center gap-1 rounded border border-emerald-200/80 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-[#00b14f]" />
+                    <span>Verified</span>
+                  </span>
                 </div>
               </div>
 
+              {/* Action Button: Change Phone Number */}
               <button
                 type="button"
-                onClick={() => setIsEditingPhone(true)}
-                className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-xs font-bold text-emerald-800 transition hover:bg-emerald-100"
+                onClick={() => setIsChangeModalOpen(true)}
+                className="flex h-11 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-5 text-sm font-medium text-slate-700 shadow-2xs transition hover:bg-slate-50 hover:text-slate-900 active:scale-98"
               >
-                Change Phone Number
+                Change phone number
               </button>
             </div>
+
+            <p className="text-xs text-slate-500">
+              This verified phone number is used for candidate contact and dedicated support from InterVue.
+            </p>
           </div>
         ) : (
-          <div className="max-w-xl space-y-6">
-            {/* Input + Send OTP Button */}
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <div className="relative flex-1">
+          <div className="space-y-5">
+            {/* Input + Send OTP Button (TopCV style - perfectly balanced h-11) */}
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+              <div className="relative w-full sm:max-w-md">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                  <Smartphone className="h-5 w-5" />
+                  <Phone className="h-4 w-4" />
                 </div>
                 <input
                   type="tel"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="Enter phone number (e.g. 0901234567)"
-                  className="w-full rounded-xl border border-slate-300 bg-white py-3 pr-4 pl-11 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:border-[#00b14f] focus:ring-2 focus:ring-emerald-200 focus:outline-none"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleInitiateVerification();
+                    }
+                  }}
+                  placeholder="0896465810"
+                  className="h-11 w-full rounded-md border border-slate-300 bg-white pr-4 pl-10 text-sm text-slate-900 placeholder-slate-400 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none"
                 />
               </div>
 
               <button
                 type="button"
-                onClick={handleSendOtp}
-                disabled={isSending}
-                className="shrink-0 rounded-xl bg-[#00b14f] px-6 py-3 text-sm font-bold text-white shadow-md shadow-emerald-700/20 transition hover:bg-emerald-600 active:scale-95 disabled:opacity-60"
+                onClick={handleInitiateVerification}
+                className="flex h-11 shrink-0 cursor-pointer items-center justify-center rounded-md bg-[#00b14f] px-6 text-sm font-medium text-white shadow-2xs transition hover:bg-emerald-600 active:scale-98"
               >
-                {isSending ? 'Sending...' : isOtpSent ? 'Resend Code' : 'Send Verification Code'}
+                Send verification code
               </button>
             </div>
-
-            {/* OTP Section (Shown after clicking Send OTP) */}
-            {isOtpSent && (
-              <div className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-5">
-                <div className="flex items-center justify-between text-xs text-slate-600">
-                  <span>Enter the 6-digit code sent to {phoneNumber}</span>
-                  {countdown > 0 ? (
-                    <span className="font-semibold text-emerald-700">Resend in {countdown}s</span>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={handleSendOtp}
-                      disabled={isSending}
-                      className="font-bold text-[#00b14f] hover:underline"
-                    >
-                      Resend code now
-                    </button>
-                  )}
-                </div>
-
-                {/* 6 Digit Input Boxes */}
-                <div className="flex justify-center gap-2 sm:gap-3" onPaste={handlePaste}>
-                  {otpDigits.map((digit, idx) => (
-                    <input
-                      key={idx}
-                      ref={(el) => {
-                        otpInputRefs.current[idx] = el;
-                      }}
-                      type="text"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleOtpChange(idx, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(idx, e)}
-                      className="h-12 w-11 rounded-xl border border-slate-300 bg-white text-center text-lg font-bold text-slate-900 shadow-2xs focus:border-[#00b14f] focus:ring-2 focus:ring-emerald-200 focus:outline-none"
-                    />
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-[11px] text-slate-500">Security code expires in 5 minutes.</span>
-                  <button
-                    type="button"
-                    onClick={handleConfirmOtp}
-                    disabled={isVerifying}
-                    className="rounded-xl bg-[#035942] px-6 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-[#024a37] disabled:opacity-50"
-                  >
-                    {isVerifying ? 'Verifying...' : 'Confirm OTP'}
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         )}
 
-        {/* Benefits Section */}
-        <div className="space-y-4 border-t border-slate-100 pt-6">
-          <h3 className="text-sm font-bold text-slate-800">Why verify your mobile number?</h3>
+        {/* Benefits Section (TopCV Exact Layout with Red-Boxed Icons) */}
+        <div className="space-y-3.5 border-t border-slate-100 pt-5">
+          <h3 className="text-xs font-medium text-slate-700">Benefits of phone verification:</h3>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <div className="flex gap-3.5 rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-[#00b14f]">
+          <div className="grid grid-cols-1 gap-x-10 gap-y-3.5 md:grid-cols-2">
+            {/* Benefit 1: Identity Security (Top Left) */}
+            <div className="flex items-start gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-emerald-100 bg-emerald-50 text-[#00b14f]">
                 <ShieldCheck className="h-5 w-5" />
               </div>
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-slate-900">Identity Security</div>
-                <div className="text-[11px] leading-relaxed text-slate-500">
-                  Protects your recruiter account against unauthorized access and account takeovers.
-                </div>
-              </div>
+              <p className="pt-0.5 text-xs leading-relaxed text-slate-600">
+                Enhance recruiter account security, shield against fraudulent impersonation and unauthorized takeovers.
+              </p>
             </div>
 
-            <div className="flex gap-3.5 rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
-                <BarChart3 className="h-5 w-5" />
+            {/* Benefit 3: Fast Support (Top Right - Matches TopCV position) */}
+            <div className="flex items-start gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-emerald-100 bg-emerald-50 text-[#00b14f]">
+                <Headphones className="h-5 w-5" />
               </div>
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-slate-900">Unlock Level 2 Tier</div>
-                <div className="text-[11px] leading-relaxed text-slate-500">
-                  Enables unlimited job drafts, AI job description assistance, and candidate directory browsing.
-                </div>
-              </div>
+              <p className="pt-0.5 text-xs leading-relaxed text-slate-600">
+                Receive rapid dedicated support from the InterVue team via verified phone line for urgent hiring
+                queries.
+              </p>
             </div>
 
-            <div className="flex gap-3.5 rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
-                <Lock className="h-5 w-5" />
+            {/* Benefit 2: Recruitment Credibility (Bottom Left) */}
+            <div className="flex items-start gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-emerald-100 bg-emerald-50 text-[#00b14f]">
+                <TrendingUp className="h-5 w-5" />
               </div>
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-slate-900">Anti-Impersonation</div>
-                <div className="text-[11px] leading-relaxed text-slate-500">
-                  Guarantees that recruitment activities are tied to a verified human hiring representative.
-                </div>
-              </div>
+              <p className="pt-0.5 text-xs leading-relaxed text-slate-600">
+                Elevate employer branding trust, increase job listing visibility with relevant tech candidates, and
+                boost application rates.
+              </p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Initial Phone Verification Modal (Initial Flow) */}
+      <PhoneVerificationModal
+        isOpen={isInitialModalOpen}
+        onClose={() => setIsInitialModalOpen(false)}
+        currentPhoneNumber={phoneNumber}
+        mode="INITIAL"
+        onSuccess={handleInitialSuccess}
+        onChangePhoneNumber={() => setIsInitialModalOpen(false)}
+      />
+
+      {/* Change Verified Phone Modal (Change Flow - Keeps old phone safe until new phone OTP is verified) */}
+      <PhoneVerificationModal
+        isOpen={isChangeModalOpen}
+        onClose={() => setIsChangeModalOpen(false)}
+        currentPhoneNumber={phoneNumber}
+        mode="CHANGE"
+        onSuccess={handleChangeSuccess}
+      />
     </div>
   );
 }
