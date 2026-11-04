@@ -2,6 +2,7 @@ package com.techx.intervue.common.audit.specifications;
 
 import com.techx.intervue.common.audit.entities.AuditLog;
 import com.techx.intervue.common.audit.requests.SearchAuditLogRequest;
+import com.techx.intervue.common.persistence.SpecificationSupport;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public final class AuditLogSpecifications {
                 predicates.add(cb.lessThanOrEqualTo(root.get("createdAt"), request.to()));
             }
             if (request.q() != null && !request.q().isBlank()) {
-                String pattern = "%" + request.q().trim().toLowerCase() + "%";
+                String pattern = SpecificationSupport.containsPattern(request.q());
                 Predicate emailMatch = cb.like(cb.lower(root.get("actorEmail")), pattern);
                 Predicate reasonMatch = cb.like(cb.lower(root.get("reason")), pattern);
                 Predicate detailMatch = cb.like(cb.lower(root.get("detail")), pattern);
