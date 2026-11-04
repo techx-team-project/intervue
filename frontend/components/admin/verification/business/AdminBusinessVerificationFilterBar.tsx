@@ -3,9 +3,11 @@
 import type { BusinessDocumentType, DocumentReviewStatus } from '@/types/recruiter-company';
 import { RotateCcw, Search, X } from 'lucide-react';
 
+export type ExtendedFilterStatus = DocumentReviewStatus | 'ALL' | 'EXPIRING_SOON' | 'SLA_OVERDUE';
+
 export interface AdminVerificationFilterState {
   keyword: string;
-  reviewStatus: DocumentReviewStatus | 'ALL';
+  reviewStatus: ExtendedFilterStatus;
   documentType: BusinessDocumentType | 'ALL';
 }
 
@@ -24,7 +26,7 @@ export function AdminBusinessVerificationFilterBar({
     filters.keyword.trim().length > 0 || filters.reviewStatus !== 'ALL' || filters.documentType !== 'ALL';
 
   return (
-    <div className="dark:border-forest-800 dark:bg-forest-900 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+    <div className="dark:border-forest-800 dark:bg-forest-900 flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
       {/* Search Input */}
       <div className="relative flex-1">
         <Search className="dark:text-forest-400 pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -32,7 +34,7 @@ export function AdminBusinessVerificationFilterBar({
           type="text"
           value={filters.keyword}
           onChange={(e) => onChange({ keyword: e.target.value })}
-          placeholder="Search by company name, Tax ID, or submitter..."
+          placeholder="Search by company name, Tax ID, or submitter email..."
           className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 dark:placeholder-forest-500 w-full rounded-xl border border-slate-200 bg-slate-50/70 py-2 pr-9 pl-9 text-xs font-medium text-slate-900 placeholder-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none"
         />
         {filters.keyword && (
@@ -60,25 +62,26 @@ export function AdminBusinessVerificationFilterBar({
 
         <select
           value={filters.reviewStatus}
-          onChange={(e) => onChange({ reviewStatus: e.target.value as DocumentReviewStatus | 'ALL' })}
+          onChange={(e) => onChange({ reviewStatus: e.target.value as ExtendedFilterStatus })}
           className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-200 rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2 text-xs font-semibold text-slate-700 focus:border-emerald-500 focus:bg-white focus:outline-none"
         >
-          <option value="ALL">All Statuses</option>
+          <option value="ALL">All Review Statuses</option>
           <option value="PENDING_REVIEW">Pending Review</option>
-          <option value="MORE_INFO_REQUIRED">More Info Needed</option>
+          <option value="SLA_OVERDUE">SLA Overdue (&gt;24h)</option>
+          <option value="MORE_INFO_REQUIRED">Needs Action</option>
           <option value="APPROVED">Approved</option>
+          <option value="EXPIRING_SOON">Expiring Soon (&lt;30d)</option>
           <option value="REJECTED">Rejected</option>
           <option value="REVOKED">Revoked</option>
-          <option value="EXPIRED">Expired</option>
         </select>
 
         {hasActiveFilters && (
           <button
             type="button"
             onClick={onReset}
-            className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-2.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900"
           >
-            <RotateCcw className="h-3 w-3" />
+            <RotateCcw className="h-3.5 w-3.5" />
             <span>Reset</span>
           </button>
         )}
