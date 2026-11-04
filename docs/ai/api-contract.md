@@ -55,6 +55,10 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /admin/users/{id}/send-password-reset` | admin | – | `AdminUserDetailResource` (sends a single-use 15-minute reset link; requires verified email) |
 | ✅ | `POST /users/me/delete-request` | user | – | – (starts 7-day grace period, sets status PENDING_DELETION, evicts session) |
 | ✅ | `POST /users/me/cancel-deletion` | user | – | `UserResource` (cancels pending deletion) |
+| ✅ | `POST /users/me/change-password` | user | `ChangePasswordRequest` (`currentPassword`, `password`, `confirmPassword`) | – (signs out every other device, evicts session cache; field errors on `currentPassword` / `password` / `confirmPassword`; `RATE_LIMITED` 429 with `Retry-After` after 3 attempts per 15 min) |
+| ✅ | `GET /users/me/sessions` | user | – | `AccountSessionResource[] { id, deviceLabel, ipAddress, location?, createdAt, lastUsedAt, current }` (`current` marks the device making the request) |
+| ✅ | `DELETE /users/me/sessions/{sessionId}` | user | – | – (signs out one device; the current session cannot be revoked here, use logout (`VALIDATION_FAILED` on `sessionId`); `NOT_FOUND` for another user's session) |
+| ✅ | `POST /users/me/sessions/revoke-others` | user | – | – (signs out every other device; like change-password and `DELETE /users/me/sessions/{id}`, only refresh tokens are revoked, so an access token the device already holds keeps working until it expires, up to 15 min) |
 | ✅ | `POST /admin/users/{id}/cancel-deletion` | admin | – | `AdminUserDetailResource` (cancels deletion request) |
 | ✅ | `POST /admin/users/{id}/restore` | admin | – | `AdminUserDetailResource` (restores account from PENDING_DELETION or lifts BANNED) |
 
@@ -211,6 +215,10 @@ Recruiters are a separate account type stored in `recruiters`; the same email ma
 | ✅ | `POST /recruiter/auth/refresh` | cookie | – | Rotates the refresh token. |
 | ✅ | `POST /recruiter/auth/logout` | recruiter | – | Blacklists the access token, revokes the refresh token. |
 | ✅ | `GET /recruiter/me` | recruiter | – | `RecruiterResource { id, email, name, phone, status, emailVerified, createdAt }` |
+| ✅ | `POST /recruiter/me/change-password` | recruiter | `ChangePasswordRequest` (`currentPassword`, `password`, `confirmPassword`) | Signs out every other device. Field errors on `currentPassword` / `password` / `confirmPassword`. `RATE_LIMITED` (429, `Retry-After`) after 3 attempts per 15 min. |
+| ✅ | `GET /recruiter/me/sessions` | recruiter | – | `AccountSessionResource[] { id, deviceLabel, ipAddress, location?, createdAt, lastUsedAt, current }`; `location` is always null; `current` marks the device making the request. |
+| ✅ | `DELETE /recruiter/me/sessions/{sessionId}` | recruiter | – | Signs out one device. The current session cannot be revoked here; use logout (`VALIDATION_FAILED` on `sessionId`). `NOT_FOUND` for another recruiter's session. |
+| ✅ | `POST /recruiter/me/sessions/revoke-others` | recruiter | – | Signs out every other device (its access token keeps working until it expires, up to 15 min). |
 | ✅ | `POST /recruiter/auth/verify-email` | public | `VerifyEmailRequest` (`token`) | Marks the recruiter email verified. `INVALID_OR_EXPIRED_TOKEN`. The mailed link is `{frontendUrl}/recruiter/verify-email?token=…` (valid 24h, single use). |
 | ✅ | `POST /recruiter/auth/resend-verification` | recruiter | – | Mails a new verification link. `EMAIL_ALREADY_VERIFIED`; `RATE_LIMITED` (429, `Retry-After`; 60s cooldown, 3 per 15 min by email and IP). |
 | ✅ | `POST /recruiter/auth/forgot-password` | public | `ForgotPasswordRequest` (`email`) | Always returns the same generic message; mails `{frontendUrl}/recruiter/reset-password?token=…` only when the recruiter exists. `RATE_LIMITED` (429, `Retry-After`; 60s cooldown, 3 per 15 min by email and IP). |

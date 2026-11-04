@@ -3,6 +3,7 @@ package com.techx.intervue.modules.recruiter.repositories;
 import com.techx.intervue.modules.recruiter.entities.RecruiterRefreshToken;
 import jakarta.persistence.LockModeType;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -32,4 +33,23 @@ public interface RecruiterRefreshTokenRepository
             @Param("recruiterId") Long recruiterId,
             @Param("now") Instant now,
             @Param("reason") String reason);
+
+    @Modifying
+    @Query(
+            """
+                UPDATE RecruiterRefreshToken t
+                SET t.revoked = true, t.revokedAt = :now, t.revokedReason = :reason
+                WHERE t.recruiterId = :recruiterId AND t.revoked = false AND t.id <> :keepId
+            """)
+    int revokeAllByRecruiterIdExcept(
+            @Param("recruiterId") Long recruiterId,
+            @Param("keepId") Long keepId,
+            @Param("now") Instant now,
+            @Param("reason") String reason);
+
+    Optional<RecruiterRefreshToken> findByIdAndRecruiterId(Long id, Long recruiterId);
+
+    List<RecruiterRefreshToken>
+            findByRecruiterIdAndRevokedFalseAndExpiryDateAfterOrderByLastUsedAtDesc(
+                    Long recruiterId, Instant now);
 }
