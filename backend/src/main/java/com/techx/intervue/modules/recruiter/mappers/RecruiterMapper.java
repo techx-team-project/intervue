@@ -15,6 +15,8 @@ public class RecruiterMapper {
                 .phone(recruiter.getPhone())
                 .status(recruiter.getStatus())
                 .emailVerified(recruiter.isEmailVerified())
+                .phoneVerified(recruiter.isPhoneVerified())
+                .deleteRequestedAt(recruiter.getDeleteRequestedAt())
                 .createdAt(recruiter.getCreatedAt())
                 .build();
     }

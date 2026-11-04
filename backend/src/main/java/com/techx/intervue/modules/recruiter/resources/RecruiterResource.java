@@ -14,4 +14,6 @@ public record RecruiterResource(
         String phone,
         RecruiterStatus status,
         boolean emailVerified,
+        boolean phoneVerified,
+        Instant deleteRequestedAt,
         Instant createdAt) {}

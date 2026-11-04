@@ -23,6 +23,7 @@ import com.techx.intervue.modules.user.services.interfaces.LoginAttemptServiceIn
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -141,6 +142,17 @@ public class RecruiterAuthService implements RecruiterAuthServiceInterface {
     private void ensureSignInAllowed(Recruiter recruiter) {
         if (recruiter.getStatus() == RecruiterStatus.SUSPENDED) {
             throw new AppException(ErrorCode.ACCOUNT_BANNED);
+        }
+        if (recruiter.getStatus() == RecruiterStatus.PENDING_DELETION) {
+            Instant requestedAt = recruiter.getDeleteRequestedAt();
+            if (requestedAt != null
+                    && Instant.now().isBefore(requestedAt.plus(7, ChronoUnit.DAYS))) {
+                recruiter.setStatus(RecruiterStatus.ACTIVE);
+                recruiter.setDeleteRequestedAt(null);
+                recruiterRepository.save(recruiter);
+                return;
+            }
+            throw new AppException(ErrorCode.ACCOUNT_DELETED);
         }
         if (recruiter.getStatus() == RecruiterStatus.DELETED) {
             throw new AppException(ErrorCode.ACCOUNT_DELETED);

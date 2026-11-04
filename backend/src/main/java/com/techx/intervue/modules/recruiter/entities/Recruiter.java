@@ -46,6 +46,9 @@ public class Recruiter extends BaseEntity {
     @Column(unique = true, length = 20)
     private String phone;
 
+    @Column(name = "phone_verified_at")
+    private Instant phoneVerifiedAt;
+
     private String image;
 
     @Column(name = "email_verified_at")
@@ -57,10 +60,17 @@ public class Recruiter extends BaseEntity {
     @Column(name = "last_login_at")
     private Instant lastLoginAt;
 
+    @Column(name = "delete_requested_at")
+    private Instant deleteRequestedAt;
+
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
     public boolean isEmailVerified() {
         return emailVerifiedAt != null;
+    }
+
+    public boolean isPhoneVerified() {
+        return phoneVerifiedAt != null;
     }
 }
