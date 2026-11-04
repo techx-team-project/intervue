@@ -18,7 +18,7 @@ import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.services.interfaces.AuthServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.EmailVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
-import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.UserRegistrationServiceInterface;
 import com.techx.intervue.resources.ApiResource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -44,7 +44,7 @@ public class AuthController extends BaseController {
     private static final String FORGOT_PASSWORD_MESSAGE =
             "If the email exists, you will receive a password reset link within 5 minutes.";
 
-    private final UserServiceInterface userService;
+    private final UserRegistrationServiceInterface userRegistrationService;
     private final AuthServiceInterface authService;
     private final EmailVerificationServiceInterface emailVerificationService;
     private final PasswordResetServiceInterface passwordResetService;
@@ -56,7 +56,8 @@ public class AuthController extends BaseController {
         String userAgent = httpRequest.getHeader(HttpHeaders.USER_AGENT);
         String ip = IpHelper.getClientIp(httpRequest);
         return withSession(
-                userService.register(request, userAgent, ip), "Account registered successfully!");
+                userRegistrationService.register(request, userAgent, ip),
+                "Account registered successfully!");
     }
 
     @PostMapping("/login")
