@@ -1,6 +1,12 @@
 import { env } from '@/config/env';
 import { ApiError, isApiError } from '@/lib/api-error';
-import { isAdminPortal, isRecruiterPortal, toAdminSession, toRecruiterSession } from '@/lib/auth-portal';
+import {
+  getActivePortal,
+  isAdminPortal,
+  isRecruiterPortal,
+  toAdminSession,
+  toRecruiterSession,
+} from '@/lib/auth-portal';
 import { useAuthStore } from '@/store/auth.store';
 import type { ApiResponse } from '@/types/api';
 import type { AdminAuthPayload, AuthSession, RecruiterAuthPayload } from '@/types/auth';
@@ -90,7 +96,8 @@ function requestRefresh(): Promise<AuthSession> {
 export function refreshSession(): Promise<AuthSession> {
   refreshInFlight ??= requestRefresh()
     .then((session) => {
-      useAuthStore.getState().setSession(session);
+      const portal = getActivePortal();
+      useAuthStore.getState().setSession(session, portal);
       return session;
     })
     .finally(() => {
@@ -104,23 +111,26 @@ export async function renewSession(): Promise<AuthSession> {
   try {
     return await refreshSession();
   } catch (error) {
-    if (isApiError(error) && error.status === UNAUTHORIZED) useAuthStore.getState().clearSession();
+    if (isApiError(error) && error.status === UNAUTHORIZED) {
+      useAuthStore.getState().clearSession(getActivePortal());
+    }
     throw error;
   }
 }
 
 export async function request<T = null>(path: string, options: RequestOptions = {}): Promise<T> {
   const { auth = true } = options;
+  const portal = getActivePortal();
   try {
-    return await execute<T>(path, options, auth ? useAuthStore.getState().accessToken : null);
+    return await execute<T>(path, options, auth ? useAuthStore.getState()[portal].accessToken : null);
   } catch (error) {
     if (!auth || !isApiError(error) || error.status !== UNAUTHORIZED) throw error;
     try {
       await refreshSession();
     } catch {
-      useAuthStore.getState().clearSession();
+      useAuthStore.getState().clearSession(portal);
       throw error;
     }
-    return execute<T>(path, options, useAuthStore.getState().accessToken);
+    return execute<T>(path, options, useAuthStore.getState()[portal].accessToken);
   }
 }
