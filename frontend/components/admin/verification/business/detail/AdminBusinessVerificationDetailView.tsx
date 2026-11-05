@@ -7,7 +7,6 @@ import {
   Building2,
   Check,
   ChevronLeft,
-  ChevronRight,
   Copy,
   ExternalLink,
   History,
@@ -20,7 +19,6 @@ import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import type { AdminBusinessVerificationDetailResource } from '@/types/recruiter-company';
 import type { ExtendedVerificationDetail } from '../mock-verification-data';
-import { useMockVerificationStore } from '../useMockVerificationStore';
 import { AdminBusinessDocumentViewer } from './AdminBusinessDocumentViewer';
 import { AdminBusinessVerificationActions } from './AdminBusinessVerificationActions';
 
@@ -32,13 +30,10 @@ interface AdminBusinessVerificationDetailViewProps {
 }
 
 export function AdminBusinessVerificationDetailView({
-  dossierId,
   initialDetail,
   liveDetail,
   onRefresh,
 }: AdminBusinessVerificationDetailViewProps) {
-  const { dossiers } = useMockVerificationStore();
-
   const currentDossier = useMemo(() => {
     if (liveDetail) {
       const { document, company, submitter, members } = liveDetail;
@@ -69,11 +64,8 @@ export function AdminBusinessVerificationDetailView({
         sampleScanUrl: undefined as string | undefined,
       };
     }
-    if (dossierId) {
-      return dossiers.find((d) => d.document.id === dossierId) || null;
-    }
-    return initialDetail || dossiers[0] || null;
-  }, [liveDetail, dossiers, dossierId, initialDetail]);
+    return initialDetail || null;
+  }, [liveDetail, initialDetail]);
 
   const [copiedTax, setCopiedTax] = useState(false);
 
@@ -99,11 +91,6 @@ export function AdminBusinessVerificationDetailView({
 
   const { document, company, submitter, members, auditLogs, waitingHours, isSlaOverdue, totalPages, sampleScanUrl } =
     currentDossier;
-
-  // Next / Previous navigation calculation
-  const currentIndex = dossiers.findIndex((d) => d.document.id === document.id);
-  const prevDossier = currentIndex > 0 ? dossiers[currentIndex - 1] : null;
-  const nextDossier = currentIndex < dossiers.length - 1 ? dossiers[currentIndex + 1] : null;
 
   const isErc = document.documentType === 'BUSINESS_LICENSE';
   const isMemberSubmittingLicense = submitter.role === 'MEMBER' && isErc;
@@ -165,43 +152,13 @@ export function AdminBusinessVerificationDetailView({
 
         {/* Stepper Navigation */}
         <div className="flex items-center gap-2">
-          {prevDossier ? (
-            <Link
-              href={`${ROUTES.ADMIN_VERIFICATION_BUSINESS}/${prevDossier.document.id}`}
-              className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white p-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
-              title={`Previous: #${prevDossier.document.id} (${prevDossier.company.name})`}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Link>
-          ) : (
-            <button
-              disabled
-              className="dark:border-forest-800 dark:text-forest-700 rounded-lg border border-slate-100 p-2 text-slate-300 opacity-40"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-          )}
-
-          <span className="dark:text-forest-400 text-xs font-medium text-slate-500">
-            Dossier {currentIndex + 1} / {dossiers.length}
-          </span>
-
-          {nextDossier ? (
-            <Link
-              href={`${ROUTES.ADMIN_VERIFICATION_BUSINESS}/${nextDossier.document.id}`}
-              className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white p-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
-              title={`Next: #${nextDossier.document.id} (${nextDossier.company.name})`}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-          ) : (
-            <button
-              disabled
-              className="dark:border-forest-800 dark:text-forest-700 rounded-lg border border-slate-100 p-2 text-slate-300 opacity-40"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          )}
+          <Link
+            href={ROUTES.ADMIN_VERIFICATION_BUSINESS}
+            className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span>Back to Queue</span>
+          </Link>
         </div>
       </div>
 

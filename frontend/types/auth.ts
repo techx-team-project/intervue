@@ -8,6 +8,7 @@ export type User = {
   name: string;
   phone?: string;
   emailVerified: boolean;
+  phoneVerified?: boolean;
   roles: RoleType[];
   createdAt: string;
 };
