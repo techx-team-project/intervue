@@ -20,10 +20,21 @@ public class UserSessionCache implements UserSessionCacheInterface {
 
     @Override
     public void set(Long userId, String email, Set<RoleType> roles, Duration ttl) {
+        set(userId, email, roles, 1, ttl);
+    }
+
+    @Override
+    public void set(
+            Long userId, String email, Set<RoleType> roles, Integer tokenVersion, Duration ttl) {
         String key = KEY_PREFIX + userId;
         try {
             redis.opsForValue()
-                    .set(key, objectMapper.writeValueAsString(new SessionData(email, roles)), ttl);
+                    .set(
+                            key,
+                            objectMapper.writeValueAsString(
+                                    new SessionData(
+                                            email, roles, tokenVersion != null ? tokenVersion : 1)),
+                            ttl);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Không thể lưu session vào redis!", e);
         }

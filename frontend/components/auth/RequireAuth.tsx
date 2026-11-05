@@ -22,7 +22,11 @@ export default function RequireAuth({ roles, forbiddenFallback, children }: Requ
   useEffect(() => {
     if (status !== 'unauthenticated') return;
     const current = window.location.pathname + window.location.search;
-    const loginRoute = isRecruiterPortal() ? ROUTES.RECRUITER_LOGIN : ROUTES.LOGIN;
+    const loginRoute = current.startsWith('/admin')
+      ? '/admin/login'
+      : isRecruiterPortal()
+        ? ROUTES.RECRUITER_LOGIN
+        : ROUTES.LOGIN;
     router.replace(`${loginRoute}?${REDIRECT_PARAM}=${encodeURIComponent(current)}`);
   }, [status, router]);
 

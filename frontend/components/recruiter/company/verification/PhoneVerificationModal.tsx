@@ -4,7 +4,7 @@ import { accountSecurityApiFor } from '@/apiRequest/account-security';
 import { authApi } from '@/apiRequest/auth';
 import { recruiterAuthApi } from '@/apiRequest/recruiter-auth';
 import { isApiError } from '@/lib/api-error';
-import { isRecruiterPortal } from '@/lib/auth-portal';
+import { isRecruiterPortal, toRecruiterSession } from '@/lib/auth-portal';
 import { useAuthStore } from '@/store/auth.store';
 import {
   AlertTriangle,
@@ -140,11 +140,16 @@ function PhoneVerificationModalDialog({
     const currentUser = useAuthStore.getState().user;
     if (currentUser?.email) {
       try {
-        const session = isRecruiterPortal()
-          ? await recruiterAuthApi.login({ email: currentUser.email, password: trimmedPw })
-          : await authApi.login({ email: currentUser.email, password: trimmedPw });
-        if (session) {
-          useAuthStore.getState().setSession(session);
+        if (isRecruiterPortal()) {
+          const res = await recruiterAuthApi.login({ email: currentUser.email, password: trimmedPw });
+          if (res.accessToken && res.recruiter) {
+            useAuthStore.getState().setSession(toRecruiterSession(res), 'recruiter');
+          }
+        } else {
+          const res = await authApi.login({ email: currentUser.email, password: trimmedPw });
+          if (res.accessToken && res.user) {
+            useAuthStore.getState().setSession({ accessToken: res.accessToken, user: res.user }, 'candidate');
+          }
         }
       } catch (err) {
         if (isApiError(err)) {

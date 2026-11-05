@@ -14,7 +14,7 @@ const LINKS = [
   { label: 'Company profile', href: '/recruiter/company', icon: Building2 },
   { label: 'Account security', href: ROUTES.RECRUITER_ACCOUNT_SECURITY, icon: ShieldCheck },
   { label: 'Change password', href: ROUTES.RECRUITER_ACCOUNT_PASSWORD, icon: KeyRound },
-  { label: 'Two-factor authentication', href: '/account/two-factor', icon: Smartphone },
+  { label: 'Two-factor authentication', href: ROUTES.RECRUITER_ACCOUNT_TWO_FACTOR, icon: Smartphone },
 ];
 
 export default function RecruiterUserMenuDropdown({ onClose }: RecruiterUserMenuDropdownProps) {

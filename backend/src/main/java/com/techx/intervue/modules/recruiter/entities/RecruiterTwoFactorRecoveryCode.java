@@ -1,0 +1,50 @@
+package com.techx.intervue.modules.recruiter.entities;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import java.time.Instant;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "recruiter_two_factor_recovery_codes")
+public class RecruiterTwoFactorRecoveryCode {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "recruiter_id", nullable = false)
+    private Long recruiterId;
+
+    @Column(name = "code_hash", nullable = false, length = 64)
+    private String codeHash;
+
+    @Column(name = "used_at")
+    private Instant usedAt;
+
+    @Column(name = "created_at", updatable = false)
+    private Instant createdAt;
+
+    public boolean isUsed() {
+        return usedAt != null;
+    }
+
+    @PrePersist
+    protected void onCreated() {
+        createdAt = Instant.now();
+    }
+}

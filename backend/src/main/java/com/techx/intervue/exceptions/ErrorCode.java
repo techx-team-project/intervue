@@ -11,6 +11,8 @@ public enum ErrorCode {
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Incorrect login credentials"),
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Your session is invalid or has expired!"),
     FORBIDDEN(HttpStatus.FORBIDDEN, "You do not have permission to perform this action!"),
+    ADMIN_ACCESS_REQUIRED(
+            HttpStatus.FORBIDDEN, "Access restricted to authorized administrators only."),
     NOT_FOUND(HttpStatus.NOT_FOUND, "Resource not found!"),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "This method is not allowed here!"),
     UNSUPPORTED_MEDIA_TYPE(

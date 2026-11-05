@@ -6,6 +6,8 @@ public interface RecruiterServiceInterface {
 
     RecruiterResource getMe(Long recruiterId);
 
+    java.util.List<RecruiterResource> findByIds(java.util.Collection<Long> recruiterIds);
+
     void requestAccountDeletion(Long recruiterId);
 
     RecruiterResource cancelAccountDeletion(Long recruiterId);

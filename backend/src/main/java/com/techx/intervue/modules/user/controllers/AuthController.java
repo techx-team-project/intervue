@@ -71,6 +71,17 @@ public class AuthController extends BaseController {
         return withSession(result, "Logged in successfully!");
     }
 
+    @PostMapping("/verify-2fa")
+    public ResponseEntity<ApiResource<AuthResource>> verifyTwoFactor(
+            @Valid @RequestBody
+                    com.techx.intervue.modules.user.requests.TwoFactorChallengeRequest request,
+            HttpServletRequest httpRequest) {
+        String userAgent = httpRequest.getHeader(HttpHeaders.USER_AGENT);
+        String ip = IpHelper.getClientIp(httpRequest);
+        AuthResult result = authService.verifyTwoFactor(request, userAgent, ip);
+        return withSession(result, "Two-factor authentication verified successfully!");
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<ApiResource<AuthResource>> refresh(
             @CookieValue(name = CookieHelper.REFRESH_TOKEN_COOKIE, required = false)
@@ -136,6 +147,12 @@ public class AuthController extends BaseController {
 
     private ResponseEntity<ApiResource<AuthResource>> withSession(
             AuthResult result, String message) {
+        if (Boolean.TRUE.equals(result.requiresTwoFactor())) {
+            return ResponseEntity.ok(
+                    ApiResource.success(
+                            AuthResource.challenge(result.tempToken()),
+                            "Two-factor authentication required."));
+        }
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
                         result.refreshToken(),

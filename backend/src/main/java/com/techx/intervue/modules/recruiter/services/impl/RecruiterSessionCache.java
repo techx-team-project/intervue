@@ -19,11 +19,18 @@ public class RecruiterSessionCache implements RecruiterSessionCacheInterface {
 
     @Override
     public void set(Long recruiterId, String email, Duration ttl) {
+        set(recruiterId, email, 1, ttl);
+    }
+
+    @Override
+    public void set(Long recruiterId, String email, Integer tokenVersion, Duration ttl) {
         try {
             redis.opsForValue()
                     .set(
                             KEY_PREFIX + recruiterId,
-                            objectMapper.writeValueAsString(new SessionData(email)),
+                            objectMapper.writeValueAsString(
+                                    new SessionData(
+                                            email, tokenVersion != null ? tokenVersion : 1)),
                             ttl);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Unable to store recruiter session in redis", e);

@@ -7,6 +7,7 @@ import type { UserProfilePatch } from '@/types/auth';
 const BASE_PATHS: Record<AuthPortal, string> = {
   candidate: '/users/me',
   recruiter: '/recruiter/me',
+  admin: '/admin/auth',
 };
 
 export function accountSecurityApiFor(portal: AuthPortal) {
