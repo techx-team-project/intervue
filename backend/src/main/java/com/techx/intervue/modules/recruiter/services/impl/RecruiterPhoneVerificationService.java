@@ -95,7 +95,6 @@ public class RecruiterPhoneVerificationService
 
         if (!matches(parts[0], request.code())) {
             registerFailedAttempt(recruiterId, parts);
-            throw new AppException(ErrorCode.PHONE_OTP_INVALID);
         }
 
         Recruiter recruiter = requireRecruiter(recruiterId);
@@ -115,18 +114,20 @@ public class RecruiterPhoneVerificationService
         int attempts = Integer.parseInt(parts[2]) + 1;
         if (attempts >= properties.phoneOtpMaxAttempts()) {
             redis.delete(key(recruiterId));
-            return;
+            throw AppException.phoneOtpAttemptsExceeded();
         }
         Long remaining = redis.getExpire(key(recruiterId), TimeUnit.SECONDS);
         if (remaining == null || remaining <= 0) {
             redis.delete(key(recruiterId));
-            return;
+            throw AppException.phoneOtpAttemptsExceeded();
         }
         redis.opsForValue()
                 .set(
                         key(recruiterId),
                         parts[0] + FIELD_SEPARATOR + parts[1] + FIELD_SEPARATOR + attempts,
                         Duration.ofSeconds(remaining));
+        int remainingAttempts = properties.phoneOtpMaxAttempts() - attempts;
+        throw AppException.phoneOtpInvalid(remainingAttempts);
     }
 
     private boolean matches(String storedHash, String code) {
