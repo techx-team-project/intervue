@@ -161,6 +161,22 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     }
 
     @Override
+    public StoredDocumentContent readIdentityBackDocument(Long documentId) {
+        BusinessDocument document = requireDocument(documentId);
+        if (document.getIdentityBackStoragePublicId() == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return new StoredDocumentContent(
+                document.getIdentityBackFileName() == null
+                        ? "identity_card_back.png"
+                        : document.getIdentityBackFileName(),
+                "image/png",
+                storageService.fetchDocument(
+                        document.getIdentityBackStoragePublicId(),
+                        StorageTarget.IDENTITY_DOCUMENT));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Page<AdminCompanyAgreementResource> searchAgreements(
             AgreementStatus status, Pageable pageable) {

@@ -127,6 +127,16 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
             MultipartFile identityFile,
             SubmitBusinessDocumentRequest request,
             RequestActor actor) {
+        return submitDocument(file, identityFile, null, request, actor);
+    }
+
+    @Override
+    public BusinessDocumentResource submitDocument(
+            MultipartFile file,
+            MultipartFile identityFile,
+            MultipartFile identityBackFile,
+            SubmitBusinessDocumentRequest request,
+            RequestActor actor) {
         CompanyMember membership = requireMembership(actor.userId());
         Company company = membership.getCompany();
 
@@ -151,6 +161,12 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                     storageService.upload(
                             identityFile, StorageTarget.IDENTITY_DOCUMENT, "identity");
         }
+        StoredFile identityBackStored = null;
+        if (identityBackFile != null && !identityBackFile.isEmpty()) {
+            identityBackStored =
+                    storageService.upload(
+                            identityBackFile, StorageTarget.IDENTITY_DOCUMENT, "identity");
+        }
 
         BusinessDocument document =
                 businessDocumentRepository.save(
@@ -170,6 +186,14 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                                         identityStored == null
                                                 ? null
                                                 : identityStored.originalFileName())
+                                .identityBackStoragePublicId(
+                                        identityBackStored == null
+                                                ? null
+                                                : identityBackStored.publicId())
+                                .identityBackFileName(
+                                        identityBackStored == null
+                                                ? null
+                                                : identityBackStored.originalFileName())
                                 .submittedAt(Instant.now())
                                 .build());
 
@@ -210,6 +234,60 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                         document.getStoragePublicId(), StorageTarget.LEGAL_DOCUMENT);
         return new StoredDocumentContent(
                 document.getOriginalFileName(), document.getContentType(), bytes);
+    }
+
+    @Override
+    public StoredDocumentContent readIdentityDocument(Long documentId, Long userId) {
+        CompanyMember membership = requireMembership(userId);
+        BusinessDocument document =
+                businessDocumentRepository
+                        .findById(documentId)
+                        .filter(found -> found.getCompany().getId().equals(companyIdOf(membership)))
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        if (!membership.isOwner() && !document.getSubmittedBy().equals(userId)) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        if (document.getIdentityStoragePublicId() == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+        byte[] bytes =
+                storageService.fetchDocument(
+                        document.getIdentityStoragePublicId(), StorageTarget.IDENTITY_DOCUMENT);
+        return new StoredDocumentContent(
+                document.getIdentityFileName() == null
+                        ? "identity_card_front.png"
+                        : document.getIdentityFileName(),
+                "image/png",
+                bytes);
+    }
+
+    @Override
+    public StoredDocumentContent readIdentityBackDocument(Long documentId, Long userId) {
+        CompanyMember membership = requireMembership(userId);
+        BusinessDocument document =
+                businessDocumentRepository
+                        .findById(documentId)
+                        .filter(found -> found.getCompany().getId().equals(companyIdOf(membership)))
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        if (!membership.isOwner() && !document.getSubmittedBy().equals(userId)) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        if (document.getIdentityBackStoragePublicId() == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+        byte[] bytes =
+                storageService.fetchDocument(
+                        document.getIdentityBackStoragePublicId(), StorageTarget.IDENTITY_DOCUMENT);
+        return new StoredDocumentContent(
+                document.getIdentityBackFileName() == null
+                        ? "identity_card_back.png"
+                        : document.getIdentityBackFileName(),
+                "image/png",
+                bytes);
     }
 
     @Override
