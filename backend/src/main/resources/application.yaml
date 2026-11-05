@@ -109,6 +109,11 @@ spring:
     activate:
       on-profile: local
 
+auth:
+  resend-cooldown: 2s
+  resend-max-attempts: 100
+  resend-window: 15m
+
 seed:
   accounts:
     admin:
