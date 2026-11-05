@@ -3,11 +3,10 @@
 import { RECRUITER_NAV_SECTIONS } from '@/constants/recruiter-nav';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
+import { useCompanyVerification } from '@/hooks/useCompanyVerification';
 import { useNotificationCount } from '@/hooks/useNotifications';
 import { cn } from '@/lib/utils';
-import { MOCK_RECRUITER_DASHBOARD } from '@/mocks/recruiter-dashboard.mock';
-import type { VerificationLevel } from '@/types/recruiter';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -17,17 +16,13 @@ interface RecruiterSidebarProps {
   onNavigate?: () => void;
 }
 
-const VERIFICATION_TEXT_COLOR: Record<VerificationLevel, string> = {
-  unverified: 'text-rose-600',
-  basic: 'text-amber-600',
-  verified: 'text-[#00873c]',
-};
-
 export default function RecruiterSidebar({ isCollapsed, className, onNavigate }: RecruiterSidebarProps) {
   const pathname = usePathname();
   const { user } = useAuth();
-  const { company, verification } = MOCK_RECRUITER_DASHBOARD;
+  const { profile, company } = useCompanyVerification();
   const unreadNotificationsCount = useNotificationCount('recruiter');
+
+  const isVerified = profile.canPublish || profile.level === 3;
 
   return (
     <aside className={cn('scrollbar-on-hover shrink-0 bg-white', isCollapsed ? 'lg:w-20' : 'lg:w-72', className)}>
@@ -45,7 +40,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
             <div className="min-w-0 flex-1">
               <p className="text-[11.5px] text-[#64748b]">Recruiter</p>
               <h3 className="text-navy truncate text-[15px] font-bold">{user?.name}</h3>
-              <p className="truncate text-[12px] text-[#64748b]">{company.name}</p>
+              <p className="truncate text-[12px] text-[#64748b]">{company?.name || 'No company linked'}</p>
             </div>
           )}
         </div>
@@ -53,8 +48,13 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
         {!isCollapsed && (
           <div className="mt-3 flex items-center gap-1.5 text-[12.5px]">
             <span className="text-[#64748b]">Account verification:</span>
-            <span className={`font-bold ${VERIFICATION_TEXT_COLOR[verification.level]}`}>
-              Level {verification.stepsCompleted}/{verification.stepsTotal}
+            <span
+              className={cn(
+                'font-bold',
+                isVerified ? 'text-[#00873c]' : profile.level === 2 ? 'text-blue-600' : 'text-amber-600',
+              )}
+            >
+              Level {profile.level}/3
             </span>
             <span title="Finish verification to publish job posts and reach candidates more effectively">
               <HelpCircle className="h-3.5 w-3.5 text-[#94a3b8]" />
@@ -62,13 +62,27 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
           </div>
         )}
 
-        {!isCollapsed && verification.level !== 'verified' && (
+        {!isCollapsed && isVerified && (
           <Link
             href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
             onClick={onNavigate}
-            className="mt-3 flex w-full items-center justify-center rounded-full bg-amber-600 px-3 py-2 text-[12.5px] font-bold text-white transition-colors hover:bg-amber-700"
+            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full bg-[#00b14f] px-3 py-2 text-[12.5px] font-bold text-white shadow-xs transition-colors hover:bg-[#009b45]"
           >
-            Your account is not secure enough
+            <ShieldCheck className="h-4 w-4 text-white" />
+            <span>Verified Enterprise</span>
+          </Link>
+        )}
+
+        {!isCollapsed && !isVerified && (
+          <Link
+            href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
+            onClick={onNavigate}
+            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full bg-[#00b14f] px-3 py-2 text-[12.5px] font-bold text-white shadow-xs transition-colors hover:bg-[#009b45]"
+          >
+            <ShieldCheck className="h-4 w-4" />
+            <span>
+              Verify Account ({profile.stepsCompleted}/{profile.stepsTotal})
+            </span>
           </Link>
         )}
       </div>
