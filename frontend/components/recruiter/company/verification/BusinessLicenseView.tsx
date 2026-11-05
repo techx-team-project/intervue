@@ -758,7 +758,7 @@ function UnifiedVerificationStatusTracker({
   const isRejected = status === 'REJECTED';
   const isMoreInfo = status === 'MORE_INFO_REQUIRED';
 
-  const latestDoc = documents[0];
+  const latestDoc = documents.find((d) => d.submittedByMe) || documents[0];
   const effectiveFileName = fileName || latestDoc?.originalFileName || 'Legal_Document.pdf';
   const effectiveDocId = documentId || latestDoc?.id;
   const effectiveSubmittedAt = submittedAt || latestDoc?.submittedAt;

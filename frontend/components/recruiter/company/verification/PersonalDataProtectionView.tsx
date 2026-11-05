@@ -163,7 +163,12 @@ export function PersonalDataProtectionView() {
       setShowUpdateForm(false);
     } catch (err) {
       if (isApiError(err)) {
-        toast.error(err.message || 'Could not confirm candidate data agreement.');
+        if (err.code === 'AGREEMENT_ALREADY_ACCEPTED') {
+          toast.success('Candidate data agreement has been recorded.');
+          setShowUpdateForm(false);
+        } else {
+          toast.error(err.message || 'Could not confirm candidate data agreement.');
+        }
       } else {
         toast.error('Failed to confirm agreement. Please try again.');
       }
@@ -302,7 +307,11 @@ export function PersonalDataProtectionView() {
       await handleAgreePlatform();
     } catch (err) {
       if (isApiError(err)) {
-        toast.error(err.message || 'Could not accept platform agreement.');
+        if (err.code === 'AGREEMENT_ALREADY_ACCEPTED') {
+          toast.success('Platform agreement has been recorded.');
+        } else {
+          toast.error(err.message || 'Could not accept platform agreement.');
+        }
       } else {
         toast.error('Failed to confirm platform agreement.');
       }
