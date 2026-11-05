@@ -38,6 +38,7 @@ export const ROUTES = {
   RECRUITER_NOTIFICATIONS: '/recruiter/notifications',
   RECRUITER_ACCOUNT_SECURITY: '/recruiter/account/security',
   RECRUITER_ACCOUNT_PASSWORD: '/recruiter/account/password',
+  RECRUITER_ACCOUNT_TWO_FACTOR: '/recruiter/account/two-factor',
   ADMIN_LOGIN: '/admin/login',
   ADMIN_TWO_FACTOR_SETUP: '/admin/two-factor/setup',
   ADMIN_ACCOUNT_SECURITY: '/admin/account/security',

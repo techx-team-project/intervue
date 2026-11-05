@@ -61,6 +61,16 @@ export type AdminAuthPayload = {
 export type TwoFactorChallengePayload = {
   tempToken: string;
   code: string;
+  trustDevice?: boolean;
+};
+
+export type TrustedDevice = {
+  id: number;
+  deviceName: string;
+  ipAddress: string;
+  lastUsedAt: string;
+  expiresAt: string;
+  current: boolean;
 };
 
 export type TwoFactorStatus = {

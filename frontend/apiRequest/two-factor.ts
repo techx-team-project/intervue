@@ -2,6 +2,7 @@ import { request } from '@/apiRequest/http';
 import type {
   AuthResponsePayload,
   RecruiterAuthPayload,
+  TrustedDevice,
   TwoFactorChallengePayload,
   TwoFactorSetup,
   TwoFactorStatus,
@@ -64,6 +65,45 @@ export const recruiterTwoFactorApi = {
   disable: (password?: string) =>
     request<void>(`/recruiter/two-factor/disable${password ? `?password=${encodeURIComponent(password)}` : ''}`, {
       method: 'POST',
+      auth: true,
+    }),
+
+  getTrustedDevices: () =>
+    request<TrustedDevice[]>('/recruiter/two-factor/devices', {
+      method: 'GET',
+      auth: true,
+    }),
+
+  revokeTrustedDevice: (id: number) =>
+    request<void>(`/recruiter/two-factor/devices/${id}`, {
+      method: 'DELETE',
+      auth: true,
+    }),
+
+  revokeAllTrustedDevices: () =>
+    request<void>('/recruiter/two-factor/devices', {
+      method: 'DELETE',
+      auth: true,
+    }),
+
+  regenerateRecoveryCodes: (password: string) =>
+    request<string[]>('/recruiter/two-factor/recovery-codes/regenerate', {
+      method: 'POST',
+      body: { password },
+      auth: true,
+    }),
+
+  initiateReconfigure: (password: string) =>
+    request<TwoFactorSetup>('/recruiter/two-factor/reconfigure/initiate', {
+      method: 'POST',
+      body: { password },
+      auth: true,
+    }),
+
+  confirmReconfigure: (code: string) =>
+    request<TwoFactorStatus>('/recruiter/two-factor/reconfigure/confirm', {
+      method: 'POST',
+      body: { code },
       auth: true,
     }),
 
