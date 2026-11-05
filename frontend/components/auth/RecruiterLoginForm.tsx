@@ -1,21 +1,16 @@
 'use client';
 
-import { authApi } from '@/apiRequest/auth';
-import { renewSession } from '@/apiRequest/http';
-import { userApi } from '@/apiRequest/user';
+import { recruiterAuthApi } from '@/apiRequest/recruiter-auth';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import Modal from '@/components/ui/Modal';
 import PasswordInput from '@/components/ui/PasswordInput';
-import { ROLES } from '@/constants/auth';
 import { REDIRECT_PARAM, ROUTES } from '@/constants/routes';
-import { isApiError } from '@/lib/api-error';
 import { LoginFormData, loginSchema } from '@/schemas/auth.schema';
 import { useAuthStore } from '@/store/auth.store';
-import { applyFormError, getErrorMessage } from '@/utils/error';
+import { applyFormError } from '@/utils/error';
 import { sanitizeRedirect } from '@/utils/redirect';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowRight, UserCheck } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
@@ -28,8 +23,6 @@ export default function RecruiterLoginForm() {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [showRoleModal, setShowRoleModal] = useState(false);
-  const [isActivating, setIsActivating] = useState(false);
 
   const {
     register,
@@ -45,53 +38,16 @@ export default function RecruiterLoginForm() {
   const onSubmit = handleSubmit(async (values) => {
     setIsLoading(true);
     try {
-      // Step 1: Login and update auth session
-      const session = await authApi.login(values);
+      const session = await recruiterAuthApi.login(values);
       useAuthStore.getState().setSession(session);
-
-      const targetRedirect = searchParams?.get(REDIRECT_PARAM);
-
-      // Step 2: Role check
-      if (session.user.roles.includes(ROLES.RECRUITER)) {
-        toast.success('Signed in to the employer portal.');
-        router.replace(sanitizeRedirect(targetRedirect, ROUTES.RECRUITER_DASHBOARD));
-        return;
-      }
-
-      // Candidate login into Recruiter portal -> confirm role activation
-      setShowRoleModal(true);
+      toast.success('Signed in to the employer portal.');
+      router.replace(sanitizeRedirect(searchParams?.get(REDIRECT_PARAM), ROUTES.RECRUITER_DASHBOARD));
     } catch (error: unknown) {
       applyFormError(error, setError, ['email', 'password']);
     } finally {
       setIsLoading(false);
     }
   });
-
-  const handleActivateRecruiter = async () => {
-    setIsActivating(true);
-    try {
-      await userApi.becomeRecruiter();
-      await renewSession();
-      toast.success('Recruiter role activated.');
-      setShowRoleModal(false);
-      const targetRedirect = searchParams?.get(REDIRECT_PARAM);
-      router.replace(sanitizeRedirect(targetRedirect, ROUTES.RECRUITER_DASHBOARD));
-    } catch (err: unknown) {
-      if (isApiError(err) && err.code === 'EMAIL_NOT_VERIFIED') {
-        toast.warning('Your email is not verified yet. Verify your email before activating the recruiter role.');
-      } else {
-        toast.error(getErrorMessage(err));
-      }
-    } finally {
-      setIsActivating(false);
-    }
-  };
-
-  const handleCancelRoleModal = () => {
-    if (isActivating) return;
-    setShowRoleModal(false);
-    router.replace(ROUTES.HOME);
-  };
 
   return (
     <div className="w-full">
@@ -127,7 +83,7 @@ export default function RecruiterLoginForm() {
             <span>Remember me</span>
           </label>
           <Link
-            href={ROUTES.FORGOT_PASSWORD}
+            href={ROUTES.RECRUITER_FORGOT_PASSWORD}
             className="text-primary hover:text-primary-hover text-xs font-bold transition hover:underline"
           >
             Forgot password?
@@ -162,45 +118,6 @@ export default function RecruiterLoginForm() {
           Candidate sign in
         </Link>
       </div>
-
-      <Modal
-        isOpen={showRoleModal}
-        onClose={handleCancelRoleModal}
-        showCloseButton={!isActivating}
-        title={
-          <div className="text-navy flex items-center gap-2 text-lg font-bold sm:text-xl">
-            <UserCheck className="text-primary h-5 w-5" />
-            <span>Activate the recruiter role</span>
-          </div>
-        }
-        maxWidth="md"
-        footer={
-          <div className="flex w-full flex-col-reverse gap-2.5 sm:flex-row sm:justify-end">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleCancelRoleModal}
-              disabled={isActivating}
-              className="w-full sm:w-auto"
-            >
-              No, go back
-            </Button>
-            <Button
-              type="button"
-              onClick={handleActivateRecruiter}
-              isLoading={isActivating}
-              className="bg-primary hover:bg-primary-hover w-full text-white sm:w-auto"
-            >
-              Activate recruiter role
-            </Button>
-          </div>
-        }
-      >
-        <p className="text-sm leading-relaxed text-[#4d5965]">
-          Your account is currently a candidate account. Do you want to activate the recruiter role to access the
-          employer portal and post jobs?
-        </p>
-      </Modal>
     </div>
   );
 }

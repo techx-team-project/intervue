@@ -1,8 +1,9 @@
 import { env } from '@/config/env';
 import { ApiError, isApiError } from '@/lib/api-error';
+import { isRecruiterPortal, toRecruiterSession } from '@/lib/auth-portal';
 import { useAuthStore } from '@/store/auth.store';
 import type { ApiResponse } from '@/types/api';
-import type { AuthSession } from '@/types/auth';
+import type { AuthSession, RecruiterAuthPayload } from '@/types/auth';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -76,8 +77,15 @@ async function execute<T>(
   return payload.data as T;
 }
 
+function requestRefresh(): Promise<AuthSession> {
+  if (isRecruiterPortal()) {
+    return execute<RecruiterAuthPayload>('/recruiter/auth/refresh', { method: 'POST' }, null).then(toRecruiterSession);
+  }
+  return execute<AuthSession>('/auth/refresh', { method: 'POST' }, null);
+}
+
 export function refreshSession(): Promise<AuthSession> {
-  refreshInFlight ??= execute<AuthSession>('/auth/refresh', { method: 'POST' }, null)
+  refreshInFlight ??= requestRefresh()
     .then((session) => {
       useAuthStore.getState().setSession(session);
       return session;

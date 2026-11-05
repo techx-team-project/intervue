@@ -19,7 +19,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useLogout } from '@/hooks/useLogout';
 import { ROLES } from '@/constants/auth';
 import { ROUTES } from '@/constants/routes';
-import RoleSwitcher from './RoleSwitcher';
 
 interface UserMenuDropdownProps {
   portal?: 'candidate' | 'recruiter';
@@ -72,12 +71,10 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
         </div>
       </Link>
 
-      <RoleSwitcher onNavigate={onClose} className="mt-2" />
-
       {isRecruiter && (
         <div className="mt-2.5 rounded-xl border border-emerald-200/80 bg-emerald-50/50 p-2.5">
           <div className="flex items-center justify-between pb-1.5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800">
+            <span className="text-[11px] font-bold tracking-wider text-emerald-800 uppercase">
               Dành cho Nhà tuyển dụng
             </span>
           </div>

@@ -27,7 +27,6 @@ export interface AdminUserSummary {
   newLast7Days: number;
   activeLast7Days: number;
   candidates: number;
-  recruiters: number;
   admins: number;
   activeAdminCount: number;
   bannedOverAWeek: number;

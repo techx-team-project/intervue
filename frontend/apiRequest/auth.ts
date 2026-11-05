@@ -8,6 +8,8 @@ export const authApi = {
   login: (payload: LoginPayload) => request<AuthSession>('/auth/login', { method: 'POST', body: payload, auth: false }),
   logout: () => request('/auth/logout', { method: 'POST' }),
   verifyEmail: (token: string) => request('/auth/verify-email', { method: 'POST', body: { token }, auth: false }),
+  confirmEmailChange: (token: string) =>
+    request('/auth/confirm-email-change', { method: 'POST', body: { token }, auth: false }),
   resendVerification: () => request('/auth/resend-verification', { method: 'POST' }),
   forgotPassword: (payload: ForgotPasswordPayload) =>
     request('/auth/forgot-password', { method: 'POST', body: payload, auth: false }),

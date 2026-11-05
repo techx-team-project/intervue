@@ -6,9 +6,9 @@ Use these terms consistently in code, DB, API and UI. English identifier first; 
 
 | Term | Meaning |
 |---|---|
-| **User / Account** | One email login. Can hold several roles. |
+| **User / Account** | A Candidate or Admin login (table `users`). A Recruiter is a separate account (table `recruiters`); the same email may exist in both. |
 | **Candidate** (Ứng viên) | IT job seeker or intern. Must pass **identity verification** before applying. |
-| **Recruiter** (Nhà tuyển dụng) | Person hiring for a company. A role, not a company. |
+| **Recruiter** (Nhà tuyển dụng) | Person hiring for a company. Has its own account (table `recruiters`), registered through the employer portal; never an upgrade of a Candidate account. |
 | **Admin** (Quản trị viên) | Platform operator: accounts, verification review, moderation, reports. |
 | **Company** (Doanh nghiệp) | Entity a Recruiter represents. **Not a role.** Must be **verified** before posting jobs. |
 | **Guest** (Khách) | Not logged in. |

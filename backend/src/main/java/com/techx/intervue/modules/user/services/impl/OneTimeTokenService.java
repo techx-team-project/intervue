@@ -64,8 +64,12 @@ public class OneTimeTokenService implements OneTimeTokenServiceInterface {
 
     private Duration ttlOf(OneTimeTokenPurpose purpose) {
         return switch (purpose) {
-            case EMAIL_VERIFICATION -> properties.emailVerificationTtl();
-            case PASSWORD_RESET -> properties.passwordResetTtl();
+            case EMAIL_VERIFICATION,
+                    RECRUITER_EMAIL_VERIFICATION,
+                    EMAIL_CHANGE,
+                    RECRUITER_EMAIL_CHANGE ->
+                    properties.emailVerificationTtl();
+            case PASSWORD_RESET, RECRUITER_PASSWORD_RESET -> properties.passwordResetTtl();
         };
     }
 

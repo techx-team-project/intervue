@@ -1,6 +1,9 @@
 package com.techx.intervue.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterSessionCacheInterface;
+import com.techx.intervue.modules.user.enums.AccountType;
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserSessionCacheInterface;
@@ -20,6 +23,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -39,6 +43,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final BlacklistServiceInterface blacklistService;
     private final ObjectMapper objectMapper;
     private final UserSessionCacheInterface userSessionCache;
+    private final RecruiterSessionCacheInterface recruiterSessionCache;
+
+    private static final String RECRUITER_ROLE = "RECRUITER";
 
     public static final String TOKEN_ATTRIBUTE = "jwt_token";
 
@@ -77,7 +84,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                UserSessionCacheInterface.SessionData session = userSessionCache.get(userId);
+                SessionIdentity session =
+                        resolveSession(jwtService.extractAccountType(token), userId);
 
                 if (session == null) {
                     if ("/api/v1/ai/chat".equals(request.getRequestURI())) {
@@ -125,6 +133,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+
+    private SessionIdentity resolveSession(AccountType accountType, Long accountId) {
+        if (accountType == AccountType.RECRUITER) {
+            RecruiterSessionCacheInterface.SessionData session =
+                    recruiterSessionCache.get(accountId);
+            return session == null
+                    ? null
+                    : new SessionIdentity(session.email(), Set.of(RECRUITER_ROLE));
+        }
+        UserSessionCacheInterface.SessionData session = userSessionCache.get(accountId);
+        return session == null
+                ? null
+                : new SessionIdentity(
+                        session.email(),
+                        session.roles().stream().map(RoleType::name).collect(Collectors.toSet()));
+    }
+
+    private record SessionIdentity(String email, Set<String> roles) {}
 
     private void writeErrorResponse(HttpServletResponse response, String message)
             throws IOException {

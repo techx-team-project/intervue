@@ -21,7 +21,7 @@ interface AdminUserRolesTabProps {
   onRevoke: (role: RoleType) => void;
 }
 
-const ALL_ROLES: RoleType[] = [ROLES.CANDIDATE, ROLES.RECRUITER, ROLES.ADMIN];
+const ALL_ROLES: GrantRoleFormData['role'][] = [ROLES.CANDIDATE, ROLES.ADMIN];
 
 function grantSource(grant: AdminUserRoleGrant): string {
   return grant.grantedByName ?? 'Self-service';

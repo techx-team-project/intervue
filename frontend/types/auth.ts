@@ -9,6 +9,7 @@ export type User = {
   phone?: string;
   emailVerified: boolean;
   phoneVerified?: boolean;
+  deleteRequestedAt?: string | null;
   roles: RoleType[];
   createdAt: string;
 };
@@ -17,5 +18,12 @@ export type AuthSession = {
   accessToken: string;
   user: User;
 };
+
+export type RecruiterAuthPayload = {
+  accessToken: string;
+  recruiter: Omit<User, 'roles'>;
+};
+
+export type UserProfilePatch = Omit<User, 'roles'>;
 
 export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated';

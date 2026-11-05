@@ -78,8 +78,8 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
   {
     title: 'Account',
     items: [
-      { label: 'Account security', href: '/account/security', icon: ShieldCheck },
-      { label: 'Change password', href: '/account/password', icon: KeyRound },
+      { label: 'Account security', href: ROUTES.RECRUITER_ACCOUNT_SECURITY, icon: ShieldCheck },
+      { label: 'Change password', href: ROUTES.RECRUITER_ACCOUNT_PASSWORD, icon: KeyRound },
       { label: 'Two-factor authentication', href: '/account/two-factor', icon: Smartphone },
     ],
   },

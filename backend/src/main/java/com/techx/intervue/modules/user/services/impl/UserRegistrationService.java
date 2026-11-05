@@ -64,12 +64,6 @@ public class UserRegistrationService implements UserRegistrationServiceInterface
             throw new AppException(ErrorCode.EMAIL_ALREADY_USED);
         }
 
-        RoleType initialRoleType = request.resolveRole();
-        if (initialRoleType == RoleType.ADMIN) {
-            throw new AppException(ErrorCode.FORBIDDEN);
-        }
-
-        Role assignedRole = findRole(initialRoleType);
         User user =
                 User.builder()
                         .name(request.name().trim())
@@ -77,7 +71,7 @@ public class UserRegistrationService implements UserRegistrationServiceInterface
                         .password(passwordEncoder.encode(request.password()))
                         .termsAcceptedAt(Instant.now())
                         .build();
-        user.addRole(assignedRole);
+        user.addRole(findCandidateRole());
         User saved = userRepository.save(user);
 
         auditLogService.record(
@@ -88,7 +82,7 @@ public class UserRegistrationService implements UserRegistrationServiceInterface
                         .action(AuditAction.USER_REGISTERED)
                         .targetType(AuditTargetType.USER)
                         .targetId(saved.getId())
-                        .reason("Account self-registered with role: " + initialRoleType)
+                        .reason("Account self-registered as candidate")
                         .ip(ip)
                         .build());
 
@@ -99,9 +93,9 @@ public class UserRegistrationService implements UserRegistrationServiceInterface
         return authSessionService.open(saved, userAgent, ip);
     }
 
-    private Role findRole(RoleType roleType) {
+    private Role findCandidateRole() {
         return roleRepository
-                .findByName(roleType)
-                .orElseThrow(() -> new IllegalStateException(roleType + " role is missing"));
+                .findByName(RoleType.CANDIDATE)
+                .orElseThrow(() -> new IllegalStateException("CANDIDATE role is missing"));
     }
 }

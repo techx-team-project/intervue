@@ -30,7 +30,7 @@ export default function AdminUserStatsRow({ stats, activeSegment, onSelectSegmen
       key: 'total',
       label: 'Total accounts',
       value: stats.total,
-      caption: `${stats.candidates} candidates · ${stats.recruiters} recruiters · ${stats.admins} admins`,
+      caption: `${stats.candidates} candidates · ${stats.admins} admins`,
       icon: Users,
       tone: 'bg-slate-100 text-slate-600',
       segment: 'all',

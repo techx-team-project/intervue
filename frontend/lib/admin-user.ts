@@ -47,8 +47,6 @@ export function matchesSegment(user: AdminUserListItem, segment: AdminUserSegmen
   switch (segment) {
     case 'candidates':
       return hasActiveRole(user, ROLES.CANDIDATE);
-    case 'recruiters':
-      return hasActiveRole(user, ROLES.RECRUITER);
     case 'admins':
       return hasActiveRole(user, ROLES.ADMIN);
     case 'banned':
@@ -179,7 +177,6 @@ export interface AdminUserStats {
   newLast7Days: number;
   activeLast7Days: number;
   candidates: number;
-  recruiters: number;
   admins: number;
 }
 
@@ -197,7 +194,6 @@ export function buildUserStats(users: AdminUserListItem[]): AdminUserStats {
     newLast7Days: users.filter((user) => within7Days(user.createdAt)).length,
     activeLast7Days: users.filter((user) => within7Days(user.lastSignInAt)).length,
     candidates: countSegment(users, 'candidates'),
-    recruiters: countSegment(users, 'recruiters'),
     admins: countSegment(users, 'admins'),
   };
 }

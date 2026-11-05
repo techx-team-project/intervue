@@ -1,11 +1,12 @@
 'use client';
 
-import { authApi } from '@/apiRequest/auth';
+import { recruiterAuthApi } from '@/apiRequest/recruiter-auth';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { ROUTES } from '@/constants/routes';
 import { recruiterRegisterSchema, type RecruiterRegisterFormData } from '@/schemas/recruiter.schema';
+import { useAuthStore } from '@/store/auth.store';
 import { applyFormError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronDown, ChevronUp, Lock, Mail, PhoneCall, ShieldCheck } from 'lucide-react';
@@ -14,6 +15,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import FormErrorAlert from './FormErrorAlert';
+import RecruiterGuestRedirect from './RecruiterGuestRedirect';
 import RecruiterOnboarding from './RecruiterOnboarding';
 import RecruiterProfileFields from './RecruiterProfileFields';
 import RecruiterVerifyEmailNotice from './RecruiterVerifyEmailNotice';
@@ -95,14 +97,14 @@ export default function RecruiterRegisterForm() {
   const onSubmit = handleSubmit(async (values) => {
     setIsLoading(true);
     try {
-      await authApi.register({
+      const session = await recruiterAuthApi.register({
         name: values.name,
         email: values.email,
         password: values.password,
         confirmPassword: values.confirmPassword,
         acceptTerms: values.acceptTerms,
-        targetRole: 'RECRUITER',
       });
+      useAuthStore.getState().setSession(session);
 
       setRegistered({ email: values.email, name: values.name });
     } catch (error: unknown) {
@@ -128,6 +130,7 @@ export default function RecruiterRegisterForm() {
 
   return (
     <div className="w-full">
+      <RecruiterGuestRedirect />
       <div className="mb-6 sm:mb-8">
         <Link href={ROUTES.RECRUITER_LANDING} aria-label="Back to InterVue for Employers" className="inline-block">
           <Image

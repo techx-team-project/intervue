@@ -7,8 +7,7 @@ export type AdminUserStatus = 'ACTIVE' | 'BANNED' | 'PENDING_DELETION' | 'DELETE
 
 export type AdminUserRestrictionKind = 'ban';
 
-export type AdminUserSegment =
-  'all' | 'candidates' | 'recruiters' | 'admins' | 'banned' | 'unverified' | 'pendingDeletion';
+export type AdminUserSegment = 'all' | 'candidates' | 'admins' | 'banned' | 'unverified' | 'pendingDeletion';
 
 export type AdminUserSort = 'newest' | 'oldest' | 'name' | 'lastRestricted' | 'lastSignIn';
 

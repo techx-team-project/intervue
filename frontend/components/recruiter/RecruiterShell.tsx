@@ -1,5 +1,6 @@
 'use client';
 
+import EmailVerificationBanner from '@/components/auth/EmailVerificationBanner';
 import PanelBrandSplash from '@/components/common/PanelBrandSplash';
 import { ReactNode, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import RecruiterBottomCta from './RecruiterBottomCta';
@@ -72,6 +73,7 @@ export default function RecruiterShell({ children }: { children: ReactNode }) {
 
       {/* Notice + header scroll as one block so both stay pinned to the top. */}
       <div ref={stickyTopRef} className="sticky top-0 z-40">
+        <EmailVerificationBanner />
         <RecruiterTopNotice />
 
         <RecruiterHeader

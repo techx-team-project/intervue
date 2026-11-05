@@ -24,7 +24,7 @@ InterVue connects IT job seekers with companies hiring for IT roles, with AI ass
 | **Recruiter** | HR staff / company representatives | Post jobs, review and evaluate applications, select candidates |
 | **Admin** | Platform operators | Manage accounts, identity verification, moderate listings and reports |
 
-A single account (one email) can hold both the Candidate and Recruiter roles. A company is the entity a Recruiter represents — it is not a separate role.
+Candidate and Recruiter are separate accounts stored in separate tables: the same email can register as both, but a Recruiter signs up and signs in through the employer portal, never by upgrading a candidate account. A company is the entity a Recruiter represents — it is not a separate role.
 
 ### How it works
 
@@ -204,19 +204,19 @@ seed:
   accounts:
     admin:
       password: <password-for-local-admin>
-    recruiter:
-      password: <password-for-local-recruiter>
     candidate:
       password: <password-for-local-candidate>
-    multi-role:
-      password: <password-for-local-multirole>
+  recruiters:
+    recruiter:
+      password: <password-for-local-recruiter-account>
 ```
 
 | Key | Value |
 |---|---|
 | `spring.datasource.password` | Exactly the same as `MYSQL_PASSWORD` in the root `.env` (Step 3) |
 | `jwt.secret` | A **Base64-encoded** key of at least 32 bytes (256 bits), used to sign JWT tokens. Generate one with the command below |
-| `seed.accounts.<key>.password` | Optional. Password (at most 72 bytes) for a local test account created at startup when the `local` profile is active; existing accounts are never changed. An account without a password is skipped with a `WARN` log. Emails, names and roles live in the `local`-only section at the end of `application.yaml`: `local.admin@intervue.test` (ADMIN), `local.recruiter@intervue.test` (RECRUITER), `local.candidate@intervue.test` (CANDIDATE), `local.multirole@intervue.test` (CANDIDATE + RECRUITER) |
+| `seed.accounts.<key>.password` | Optional. Password (at most 72 bytes) for a local test account created at startup when the `local` profile is active; existing accounts are never changed. An account without a password is skipped with a `WARN` log. Emails, names and roles live in the `local`-only section at the end of `application.yaml`: `local.admin@intervue.test` (ADMIN), `local.candidate@intervue.test` (CANDIDATE) |
+| `seed.recruiters.<key>.password` | Optional. Password for a local recruiter account created at startup in `recruiters` when the `local` profile is active: `local.recruiter@intervue.test`, email already verified. Existing accounts are never changed. A recruiter without a password is skipped with a `WARN` log |
 
 Generate a JWT secret:
 
