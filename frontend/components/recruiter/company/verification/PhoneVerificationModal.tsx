@@ -265,15 +265,11 @@ function PhoneVerificationModalDialog({
     setIsVerifyingOtp(true);
     setOtpError(null);
     const api = accountSecurityApiFor(isRecruiterPortal() ? 'recruiter' : 'candidate');
-    const startTime = Date.now();
-    const MIN_LOADING_MS = 600;
+    const minDelay = new Promise((resolve) => setTimeout(resolve, 600));
 
     try {
       const patch = await api.verifyPhoneOtp(code);
-      const elapsed = Date.now() - startTime;
-      if (elapsed < MIN_LOADING_MS) {
-        await new Promise((resolve) => setTimeout(resolve, MIN_LOADING_MS - elapsed));
-      }
+      await minDelay;
 
       const store = useAuthStore.getState();
       if (store.accessToken && store.user) {
@@ -290,10 +286,7 @@ function PhoneVerificationModalDialog({
       onSuccess(targetPhone);
       onClose();
     } catch (err) {
-      const elapsed = Date.now() - startTime;
-      if (elapsed < MIN_LOADING_MS) {
-        await new Promise((resolve) => setTimeout(resolve, MIN_LOADING_MS - elapsed));
-      }
+      await minDelay;
 
       // Clear all 6 digits so the user starts fresh
       setOtpDigits(['', '', '', '', '', '']);
