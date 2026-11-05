@@ -1,11 +1,13 @@
 'use client';
 
-import { ArrowLeft, CheckCircle2, Eye, EyeOff, Headphones, Lock, Mail, Phone, ShieldCheck, X } from 'lucide-react';
+import { phoneVerificationApi } from '@/apiRequest/phone-verification';
+import { isApiError } from '@/lib/api-error';
+import { useAuthStore } from '@/store/auth.store';
+import { ArrowLeft, CheckCircle2, Headphones, Mail, Phone, ShieldCheck, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 export const VIETNAM_MOBILE_REGEX = /^0[35789]\d{8}$/;
-const DEMO_OTP_CODE = '123456';
 
 export function formatPhoneNumber(phone: string): string {
   const digits = phone.replace(/\D/g, '');
@@ -31,17 +33,12 @@ function PhoneVerificationModalDialog({
   onSuccess,
   onChangePhoneNumber,
 }: Omit<PhoneVerificationModalProps, 'isOpen'>) {
-  // Step state: 'INPUT' (Password / New Phone) -> 'OTP'
-  const [step, setStep] = useState<'INPUT' | 'OTP'>('INPUT');
+  // In INITIAL mode we arrive having already requested OTP on the page
+  const [step, setStep] = useState<'INPUT' | 'OTP'>(mode === 'CHANGE' ? 'INPUT' : 'OTP');
 
-  // Form Inputs
+  // Form Inputs for CHANGE mode
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-
-  // Errors & Loading
   const [phoneError, setPhoneError] = useState<string | null>(null);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [isSubmittingInput, setIsSubmittingInput] = useState(false);
 
   // OTP State
@@ -54,22 +51,17 @@ function PhoneVerificationModalDialog({
   // Target phone receiving the SMS
   const targetPhone = mode === 'CHANGE' ? newPhoneNumber : currentPhoneNumber;
 
-  const passwordInputRef = useRef<HTMLInputElement>(null);
   const newPhoneInputRef = useRef<HTMLInputElement>(null);
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Auto-focus on step change
   useEffect(() => {
     if (step === 'INPUT') {
-      if (mode === 'CHANGE') {
-        setTimeout(() => newPhoneInputRef.current?.focus(), 80);
-      } else {
-        setTimeout(() => passwordInputRef.current?.focus(), 80);
-      }
+      setTimeout(() => newPhoneInputRef.current?.focus(), 80);
     } else {
       setTimeout(() => otpInputRefs.current[0]?.focus(), 80);
     }
-  }, [step, mode]);
+  }, [step]);
 
   // Timer countdown for OTP
   useEffect(() => {
@@ -80,69 +72,64 @@ function PhoneVerificationModalDialog({
     return () => clearInterval(timer);
   }, [step, countdown]);
 
-  // Submit Step 1: Validate input & Send SMS
+  // Submit Step 1 (CHANGE mode): Validate new phone & Send SMS
   const handleInputSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let hasError = false;
+    const cleanPhone = newPhoneNumber.trim();
 
-    // Validate new phone if in CHANGE mode
-    if (mode === 'CHANGE') {
-      const cleanPhone = newPhoneNumber.trim();
-      if (!cleanPhone) {
-        setPhoneError('Please enter a new mobile phone number.');
-        hasError = true;
-      } else if (!VIETNAM_MOBILE_REGEX.test(cleanPhone)) {
-        setPhoneError('Please enter a valid 10-digit Vietnamese mobile number.');
-        hasError = true;
-      } else if (cleanPhone === currentPhoneNumber.replace(/\D/g, '')) {
-        setPhoneError('New phone number must be different from your current phone.');
-        hasError = true;
-      } else {
-        setPhoneError(null);
-      }
+    if (!cleanPhone) {
+      setPhoneError('Please enter a new mobile phone number.');
+      return;
+    }
+    if (!VIETNAM_MOBILE_REGEX.test(cleanPhone)) {
+      setPhoneError('Please enter a valid 10-digit Vietnamese mobile number (e.g. 0901234567).');
+      return;
+    }
+    if (cleanPhone === currentPhoneNumber.replace(/\D/g, '')) {
+      setPhoneError('New phone number must be different from your current phone.');
+      return;
     }
 
-    // Validate password
-    const trimmedPw = password.trim();
-    if (!trimmedPw) {
-      setPasswordError('Please enter your account password.');
-      hasError = true;
-    } else if (trimmedPw.length < 6) {
-      setPasswordError('Password must be at least 6 characters.');
-      hasError = true;
-    } else {
-      setPasswordError(null);
-    }
-
-    if (hasError) return;
-
+    setPhoneError(null);
     setIsSubmittingInput(true);
-    // Mock Step-up verification
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    setIsSubmittingInput(false);
-
-    // Transition to Step 2: OTP
-    setStep('OTP');
-    setCountdown(60);
-    setOtpDigits(['', '', '', '', '', '']);
-    setOtpError(null);
-
-    toast.success(`Verification code sent to ${targetPhone}! (Demo OTP: ${DEMO_OTP_CODE})`, { duration: 8000 });
+    try {
+      await phoneVerificationApi.sendOtp(cleanPhone);
+      setStep('OTP');
+      setCountdown(60);
+      setOtpDigits(['', '', '', '', '', '']);
+      setOtpError(null);
+      toast.success(`Verification code sent to ${cleanPhone}!`);
+    } catch (err) {
+      if (isApiError(err)) {
+        setPhoneError(err.message || 'Could not send verification code.');
+      } else {
+        setPhoneError('Failed to send verification code. Please try again.');
+      }
+    } finally {
+      setIsSubmittingInput(false);
+    }
   };
 
   // Handle Resend OTP
   const handleResendOtp = async () => {
     if (countdown > 0 || isResending) return;
     setIsResending(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setIsResending(false);
-
-    setCountdown(60);
-    setOtpDigits(['', '', '', '', '', '']);
-    setOtpError(null);
-    otpInputRefs.current[0]?.focus();
-
-    toast.success(`New verification code sent to ${targetPhone}! (Demo OTP: ${DEMO_OTP_CODE})`, { duration: 8000 });
+    try {
+      await phoneVerificationApi.sendOtp(targetPhone);
+      setCountdown(60);
+      setOtpDigits(['', '', '', '', '', '']);
+      setOtpError(null);
+      otpInputRefs.current[0]?.focus();
+      toast.success(`New verification code sent to ${targetPhone}!`);
+    } catch (err) {
+      if (isApiError(err)) {
+        toast.error(err.message || 'Could not resend code.');
+      } else {
+        toast.error('Failed to resend code. Please try again.');
+      }
+    } finally {
+      setIsResending(false);
+    }
   };
 
   // Handle OTP digit changes
@@ -183,21 +170,23 @@ function PhoneVerificationModalDialog({
     }
   };
 
-  // Submit Step 2: Confirm OTP
+  // Submit Step 2: Confirm OTP with backend
   const handleOtpSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    const otp = otpDigits.join('');
-    if (otp.length !== 6) {
+    const code = otpDigits.join('');
+    if (code.length !== 6) {
       setOtpError('Please enter all 6 digits of the verification code.');
       return;
     }
 
     setIsVerifyingOtp(true);
     setOtpError(null);
-    await new Promise((resolve) => setTimeout(resolve, 700));
-    setIsVerifyingOtp(false);
-
-    if (otp === DEMO_OTP_CODE) {
+    try {
+      const updatedUser = await phoneVerificationApi.verifyOtp(code);
+      const store = useAuthStore.getState();
+      if (store.accessToken && updatedUser) {
+        store.setSession({ accessToken: store.accessToken, user: updatedUser });
+      }
       toast.success(
         mode === 'CHANGE'
           ? 'Mobile phone number updated and verified successfully!'
@@ -205,8 +194,14 @@ function PhoneVerificationModalDialog({
       );
       onSuccess(targetPhone);
       onClose();
-    } else {
-      setOtpError(`Invalid code. Please try again (Demo OTP: ${DEMO_OTP_CODE}).`);
+    } catch (err) {
+      if (isApiError(err)) {
+        setOtpError(err.message || 'Invalid verification code. Please check and try again.');
+      } else {
+        setOtpError('Failed to verify code. Please try again.');
+      }
+    } finally {
+      setIsVerifyingOtp(false);
     }
   };
 
@@ -219,7 +214,7 @@ function PhoneVerificationModalDialog({
         aria-hidden="true"
       />
 
-      {/* Modal Card (TopCV Style - sharp rounded-lg, crisp borders) */}
+      {/* Modal Card */}
       <div className="animate-in fade-in zoom-in-95 relative w-full max-w-lg rounded-lg border border-slate-200 bg-white p-6 shadow-2xl transition-all duration-150 sm:p-8">
         {/* Close Button */}
         <button
@@ -231,100 +226,51 @@ function PhoneVerificationModalDialog({
           <X className="h-4 w-4" />
         </button>
 
-        {/* ================= STEP 1: PASSWORD (AND NEW PHONE IF CHANGE MODE) ================= */}
+        {/* ================= STEP 1: NEW PHONE (CHANGE MODE) ================= */}
         {step === 'INPUT' && (
           <div className="space-y-5">
             {/* Header Title */}
             <div className="space-y-1.5 text-center">
-              <h3 className="text-base font-semibold text-[#00b14f] sm:text-lg">
-                {mode === 'CHANGE' ? 'Change verified phone number' : 'Please confirm this action'}
-              </h3>
+              <h3 className="text-base font-semibold text-[#00b14f] sm:text-lg">Change verified phone number</h3>
               <p className="mx-auto max-w-md text-xs leading-relaxed text-slate-600 sm:text-[13px]">
-                {mode === 'CHANGE' ? (
-                  'To protect your recruiter account, please confirm your password and enter your new phone number.'
-                ) : (
-                  <>
-                    To ensure your recruiter account security and verify{' '}
-                    <strong className="text-slate-900">{formatPhoneNumber(currentPhoneNumber)}</strong>, please enter
-                    your password to proceed.
-                  </>
-                )}
+                Enter your new mobile phone number. We will send an SMS verification code to confirm ownership.
               </p>
             </div>
 
-            {/* In CHANGE mode: Show current phone info box */}
-            {mode === 'CHANGE' && (
-              <div className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-xs">
-                <span className="text-slate-600">Current verified phone:</span>
-                <span className="flex items-center gap-1.5 font-semibold text-slate-900">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-[#00b14f]" />
-                  {formatPhoneNumber(currentPhoneNumber)}
-                </span>
-              </div>
-            )}
+            {/* Current phone info box */}
+            <div className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-xs">
+              <span className="text-slate-600">Current verified phone:</span>
+              <span className="flex items-center gap-1.5 font-semibold text-slate-900">
+                <CheckCircle2 className="h-3.5 w-3.5 text-[#00b14f]" />
+                {formatPhoneNumber(currentPhoneNumber)}
+              </span>
+            </div>
 
             {/* Input Form */}
             <form onSubmit={handleInputSubmit} className="space-y-4">
-              {/* Field: New Phone Number (Only in CHANGE mode) */}
-              {mode === 'CHANGE' && (
-                <div className="space-y-1.5 text-left">
-                  <label className="text-xs font-semibold text-slate-700">New Mobile Phone Number</label>
-                  <div className="relative">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                      <Phone className="h-4 w-4" />
-                    </div>
-                    <input
-                      ref={newPhoneInputRef}
-                      type="tel"
-                      value={newPhoneNumber}
-                      onChange={(e) => {
-                        setNewPhoneNumber(e.target.value);
-                        if (phoneError) setPhoneError(null);
-                      }}
-                      placeholder="e.g. 0912345678"
-                      className={`h-11 w-full rounded-md border bg-white py-2.5 pr-4 pl-10 text-sm text-slate-900 placeholder-slate-400 focus:ring-1 focus:outline-none ${
-                        phoneError
-                          ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                          : 'border-slate-300 focus:border-[#00b14f] focus:ring-emerald-200'
-                      }`}
-                    />
-                  </div>
-                  {phoneError && <p className="pt-0.5 text-xs font-medium text-red-600">{phoneError}</p>}
-                </div>
-              )}
-
-              {/* Field: Account Password */}
               <div className="space-y-1.5 text-left">
-                {mode === 'CHANGE' && <label className="text-xs font-semibold text-slate-700">Account Password</label>}
+                <label className="text-xs font-semibold text-slate-700">New Mobile Phone Number</label>
                 <div className="relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                    <Lock className="h-4 w-4" />
+                    <Phone className="h-4 w-4" />
                   </div>
                   <input
-                    ref={passwordInputRef}
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
+                    ref={newPhoneInputRef}
+                    type="tel"
+                    value={newPhoneNumber}
                     onChange={(e) => {
-                      setPassword(e.target.value);
-                      if (passwordError) setPasswordError(null);
+                      setNewPhoneNumber(e.target.value);
+                      if (phoneError) setPhoneError(null);
                     }}
-                    placeholder="Enter your account password"
-                    className={`h-11 w-full rounded-md border bg-white py-2.5 pr-11 pl-10 text-sm text-slate-900 placeholder-slate-400 focus:ring-1 focus:outline-none ${
-                      passwordError
+                    placeholder="e.g. 0912345678"
+                    className={`h-11 w-full rounded-md border bg-white py-2.5 pr-4 pl-10 text-sm text-slate-900 placeholder-slate-400 focus:ring-1 focus:outline-none ${
+                      phoneError
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
                         : 'border-slate-300 focus:border-[#00b14f] focus:ring-emerald-200'
                     }`}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3.5 text-slate-400 transition hover:text-slate-600"
-                    tabIndex={-1}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
                 </div>
-                {passwordError && <p className="pt-0.5 text-xs font-medium text-red-600">{passwordError}</p>}
+                {phoneError && <p className="pt-0.5 text-xs font-medium text-red-600">{phoneError}</p>}
               </div>
 
               {/* Action Buttons */}
@@ -345,12 +291,10 @@ function PhoneVerificationModalDialog({
                   {isSubmittingInput ? (
                     <>
                       <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                      <span>Verifying...</span>
+                      <span>Sending code...</span>
                     </>
-                  ) : mode === 'CHANGE' ? (
-                    'Send code to new phone'
                   ) : (
-                    'Confirm'
+                    'Send verification code'
                   )}
                 </button>
               </div>
@@ -382,6 +326,11 @@ function PhoneVerificationModalDialog({
                   </button>
                 )}
               </p>
+              {/* Development note for local environment */}
+              <div className="inline-block rounded border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] text-emerald-800">
+                💡 Local Dev Tip: In local mode, OTP is logged in your Spring Boot console (
+                <code className="font-mono text-emerald-900">[LOCAL SMS - not delivered]</code>).
+              </div>
             </div>
 
             {/* OTP Form */}
@@ -395,6 +344,7 @@ function PhoneVerificationModalDialog({
                       otpInputRefs.current[idx] = el;
                     }}
                     type="text"
+                    inputMode="numeric"
                     maxLength={1}
                     value={digit}
                     onChange={(e) => handleOtpDigitChange(idx, e.target.value)}
@@ -432,7 +382,13 @@ function PhoneVerificationModalDialog({
               <div className="flex items-center justify-center gap-3.5 pt-2">
                 <button
                   type="button"
-                  onClick={() => setStep('INPUT')}
+                  onClick={() => {
+                    if (mode === 'CHANGE') {
+                      setStep('INPUT');
+                    } else {
+                      onClose();
+                    }
+                  }}
                   disabled={isVerifyingOtp}
                   className="flex h-10 cursor-pointer items-center gap-1.5 rounded-md bg-slate-100 px-4 text-xs font-medium text-slate-700 transition hover:bg-slate-200 sm:text-sm"
                 >
@@ -461,7 +417,7 @@ function PhoneVerificationModalDialog({
           </div>
         )}
 
-        {/* Contact Support Hotline / Email Box (Synchronized with NotificationDetailView) */}
+        {/* Contact Support Hotline / Email Box */}
         <div className="mt-7 rounded-lg border border-slate-100 bg-slate-50/80 p-3.5 text-left sm:p-4">
           <p className="text-xs font-semibold text-slate-600">
             For any inquiries or assistance, please contact our official support desk:
