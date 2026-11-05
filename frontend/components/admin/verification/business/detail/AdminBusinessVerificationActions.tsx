@@ -8,7 +8,6 @@ import type { BusinessDocumentResource } from '@/types/recruiter-company';
 import { AlertCircle, CheckCircle2, Clock, RotateCcw, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useMockVerificationStore } from '../useMockVerificationStore';
 
 interface AdminBusinessVerificationActionsProps {
   document: BusinessDocumentResource;
@@ -42,8 +41,6 @@ export function AdminBusinessVerificationActions({
   document,
   onActionComplete,
 }: AdminBusinessVerificationActionsProps) {
-  const { approve, reject, requestInfo, revoke } = useMockVerificationStore();
-
   const isErc = document.documentType === 'BUSINESS_LICENSE';
   const isApproved = document.reviewStatus === 'APPROVED';
   const isRejected = document.reviewStatus === 'REJECTED';
@@ -74,7 +71,6 @@ export function AdminBusinessVerificationActions({
       await adminBusinessVerificationApi.approve(document.id, {
         expiresAt: approveExpiry ? new Date(approveExpiry).toISOString() : undefined,
       });
-      approve(document.id, approveExpiry || undefined);
       toast.success('Dossier approved successfully! Corporate publishing permissions have been granted.');
       setIsApproveOpen(false);
       onActionComplete?.();
@@ -103,7 +99,6 @@ export function AdminBusinessVerificationActions({
     try {
       const finalReason = rejectDetail ? `${rejectReason}. Notes: ${rejectDetail}` : rejectReason;
       await adminBusinessVerificationApi.reject(document.id, { reason: finalReason });
-      reject(document.id, finalReason);
       toast.error('Dossier rejected. Notification dispatched to recruiter.');
       setIsRejectOpen(false);
       onActionComplete?.();
@@ -124,7 +119,6 @@ export function AdminBusinessVerificationActions({
     try {
       const finalReason = requestDetail ? `${requestReason}. Guidance: ${requestDetail}` : requestReason;
       await adminBusinessVerificationApi.requestMoreInformation(document.id, { reason: finalReason });
-      requestInfo(document.id, finalReason);
       toast.info('Additional information requested from recruiter.');
       setIsRequestOpen(false);
       onActionComplete?.();
@@ -145,7 +139,6 @@ export function AdminBusinessVerificationActions({
     try {
       const finalReason = revokeDetail ? `${revokeReason}. Details: ${revokeDetail}` : revokeReason;
       await adminBusinessVerificationApi.revoke(document.id, { reason: finalReason });
-      revoke(document.id, finalReason);
       toast.warning('Publishing rights revoked. Active job posts suspended.');
       setIsRevokeOpen(false);
       onActionComplete?.();

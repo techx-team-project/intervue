@@ -87,10 +87,10 @@ export function AdminBusinessVerificationListView({
 }: AdminBusinessVerificationListViewProps = {}) {
   const { dossiers, companies, summary, isReady, reset } = useMockVerificationStore();
 
-  const isLive = Boolean(initialPage?.items && initialPage.items.length > 0);
+  const isLive = Boolean(initialPage !== undefined && initialPage !== null);
 
   const effectiveDossiers = useMemo(() => {
-    if (initialPage?.items && initialPage.items.length > 0) {
+    if (initialPage?.items) {
       return initialPage.items.map(toExtendedDossier);
     }
     return dossiers;
