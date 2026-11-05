@@ -1,11 +1,14 @@
 'use client';
 
+import { authApi } from '@/apiRequest/auth';
+import { phoneVerificationApi } from '@/apiRequest/phone-verification';
+import { isApiError } from '@/lib/api-error';
+import { useAuthStore } from '@/store/auth.store';
 import { ArrowLeft, CheckCircle2, Eye, EyeOff, Headphones, Lock, Mail, Phone, ShieldCheck, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 export const VIETNAM_MOBILE_REGEX = /^0[35789]\d{8}$/;
-const DEMO_OTP_CODE = '123456';
 
 export function formatPhoneNumber(phone: string): string {
   const digits = phone.replace(/\D/g, '');
@@ -31,7 +34,7 @@ function PhoneVerificationModalDialog({
   onSuccess,
   onChangePhoneNumber,
 }: Omit<PhoneVerificationModalProps, 'isOpen'>) {
-  // Step state: 'INPUT' (Password / New Phone) -> 'OTP'
+  // Step state: 'INPUT' (Confirm Password & optional New Phone) -> 'OTP'
   const [step, setStep] = useState<'INPUT' | 'OTP'>('INPUT');
 
   // Form Inputs
@@ -80,19 +83,19 @@ function PhoneVerificationModalDialog({
     return () => clearInterval(timer);
   }, [step, countdown]);
 
-  // Submit Step 1: Validate input & Send SMS
+  // Submit Step 1: Validate Password (& New Phone if CHANGE) -> Authenticate -> Send SMS OTP
   const handleInputSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     let hasError = false;
 
-    // Validate new phone if in CHANGE mode
+    // Validate new phone in CHANGE mode
     if (mode === 'CHANGE') {
       const cleanPhone = newPhoneNumber.trim();
       if (!cleanPhone) {
         setPhoneError('Please enter a new mobile phone number.');
         hasError = true;
       } else if (!VIETNAM_MOBILE_REGEX.test(cleanPhone)) {
-        setPhoneError('Please enter a valid 10-digit Vietnamese mobile number.');
+        setPhoneError('Please enter a valid 10-digit Vietnamese mobile number (e.g. 0901234567).');
         hasError = true;
       } else if (cleanPhone === currentPhoneNumber.replace(/\D/g, '')) {
         setPhoneError('New phone number must be different from your current phone.');
@@ -102,7 +105,7 @@ function PhoneVerificationModalDialog({
       }
     }
 
-    // Validate password
+    // Validate password input
     const trimmedPw = password.trim();
     if (!trimmedPw) {
       setPasswordError('Please enter your account password.');
@@ -117,32 +120,69 @@ function PhoneVerificationModalDialog({
     if (hasError) return;
 
     setIsSubmittingInput(true);
-    // Mock Step-up verification
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    setIsSubmittingInput(false);
 
-    // Transition to Step 2: OTP
-    setStep('OTP');
-    setCountdown(60);
-    setOtpDigits(['', '', '', '', '', '']);
-    setOtpError(null);
+    // 1. Step-up password verification against backend
+    const currentUser = useAuthStore.getState().user;
+    if (currentUser?.email) {
+      try {
+        const session = await authApi.login({ email: currentUser.email, password: trimmedPw });
+        if (session) {
+          useAuthStore.getState().setSession(session);
+        }
+      } catch (err) {
+        if (isApiError(err)) {
+          setPasswordError(err.message || 'Incorrect account password. Please try again.');
+        } else {
+          setPasswordError('Failed to verify account password. Please try again.');
+        }
+        setIsSubmittingInput(false);
+        return;
+      }
+    }
 
-    toast.success(`Verification code sent to ${targetPhone}! (Demo OTP: ${DEMO_OTP_CODE})`, { duration: 8000 });
+    // 2. Dispatch live SMS verification code to backend
+    try {
+      await phoneVerificationApi.sendOtp(targetPhone);
+      setStep('OTP');
+      setCountdown(60);
+      setOtpDigits(['', '', '', '', '', '']);
+      setOtpError(null);
+      toast.success(`Verification code sent to ${targetPhone}!`);
+    } catch (err) {
+      if (isApiError(err)) {
+        if (mode === 'CHANGE') {
+          setPhoneError(err.message);
+        } else {
+          setPasswordError(err.message);
+        }
+      } else {
+        toast.error('Failed to send verification code. Please try again.');
+      }
+    } finally {
+      setIsSubmittingInput(false);
+    }
   };
 
   // Handle Resend OTP
   const handleResendOtp = async () => {
     if (countdown > 0 || isResending) return;
     setIsResending(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setIsResending(false);
-
-    setCountdown(60);
-    setOtpDigits(['', '', '', '', '', '']);
-    setOtpError(null);
-    otpInputRefs.current[0]?.focus();
-
-    toast.success(`New verification code sent to ${targetPhone}! (Demo OTP: ${DEMO_OTP_CODE})`, { duration: 8000 });
+    try {
+      await phoneVerificationApi.sendOtp(targetPhone);
+      setCountdown(60);
+      setOtpDigits(['', '', '', '', '', '']);
+      setOtpError(null);
+      otpInputRefs.current[0]?.focus();
+      toast.success(`New verification code sent to ${targetPhone}!`);
+    } catch (err) {
+      if (isApiError(err)) {
+        toast.error(err.message || 'Could not resend code.');
+      } else {
+        toast.error('Failed to resend code. Please try again.');
+      }
+    } finally {
+      setIsResending(false);
+    }
   };
 
   // Handle OTP digit changes
@@ -183,21 +223,23 @@ function PhoneVerificationModalDialog({
     }
   };
 
-  // Submit Step 2: Confirm OTP
+  // Submit Step 2: Confirm OTP with backend
   const handleOtpSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    const otp = otpDigits.join('');
-    if (otp.length !== 6) {
+    const code = otpDigits.join('');
+    if (code.length !== 6) {
       setOtpError('Please enter all 6 digits of the verification code.');
       return;
     }
 
     setIsVerifyingOtp(true);
     setOtpError(null);
-    await new Promise((resolve) => setTimeout(resolve, 700));
-    setIsVerifyingOtp(false);
-
-    if (otp === DEMO_OTP_CODE) {
+    try {
+      const updatedUser = await phoneVerificationApi.verifyOtp(code);
+      const store = useAuthStore.getState();
+      if (store.accessToken && updatedUser) {
+        store.setSession({ accessToken: store.accessToken, user: updatedUser });
+      }
       toast.success(
         mode === 'CHANGE'
           ? 'Mobile phone number updated and verified successfully!'
@@ -205,8 +247,14 @@ function PhoneVerificationModalDialog({
       );
       onSuccess(targetPhone);
       onClose();
-    } else {
-      setOtpError(`Invalid code. Please try again (Demo OTP: ${DEMO_OTP_CODE}).`);
+    } catch (err) {
+      if (isApiError(err)) {
+        setOtpError(err.message || 'Invalid verification code. Please check and try again.');
+      } else {
+        setOtpError('Failed to verify code. Please try again.');
+      }
+    } finally {
+      setIsVerifyingOtp(false);
     }
   };
 
@@ -219,7 +267,7 @@ function PhoneVerificationModalDialog({
         aria-hidden="true"
       />
 
-      {/* Modal Card (TopCV Style - sharp rounded-lg, crisp borders) */}
+      {/* Modal Card */}
       <div className="animate-in fade-in zoom-in-95 relative w-full max-w-lg rounded-lg border border-slate-200 bg-white p-6 shadow-2xl transition-all duration-150 sm:p-8">
         {/* Close Button */}
         <button
@@ -231,7 +279,7 @@ function PhoneVerificationModalDialog({
           <X className="h-4 w-4" />
         </button>
 
-        {/* ================= STEP 1: PASSWORD (AND NEW PHONE IF CHANGE MODE) ================= */}
+        {/* ================= STEP 1: PASSWORD CONFIRMATION (AND NEW PHONE IF CHANGE MODE) ================= */}
         {step === 'INPUT' && (
           <div className="space-y-5">
             {/* Header Title */}
@@ -382,6 +430,11 @@ function PhoneVerificationModalDialog({
                   </button>
                 )}
               </p>
+              {/* Development note for local environment */}
+              <div className="inline-block rounded border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] text-emerald-800">
+                💡 Local Dev Tip: In local mode, OTP is logged in your Spring Boot console (
+                <code className="font-mono text-emerald-900">[LOCAL SMS - not delivered]</code>).
+              </div>
             </div>
 
             {/* OTP Form */}
@@ -395,6 +448,7 @@ function PhoneVerificationModalDialog({
                       otpInputRefs.current[idx] = el;
                     }}
                     type="text"
+                    inputMode="numeric"
                     maxLength={1}
                     value={digit}
                     onChange={(e) => handleOtpDigitChange(idx, e.target.value)}
@@ -461,7 +515,7 @@ function PhoneVerificationModalDialog({
           </div>
         )}
 
-        {/* Contact Support Hotline / Email Box (Synchronized with NotificationDetailView) */}
+        {/* Contact Support Hotline / Email Box */}
         <div className="mt-7 rounded-lg border border-slate-100 bg-slate-50/80 p-3.5 text-left sm:p-4">
           <p className="text-xs font-semibold text-slate-600">
             For any inquiries or assistance, please contact our official support desk:

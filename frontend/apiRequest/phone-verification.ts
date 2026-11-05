@@ -8,9 +8,9 @@ export const phoneVerificationApi = {
       body: { phone },
     }),
 
-  verifyOtp: (otp: string) =>
+  verifyOtp: (code: string) =>
     request<User>('/users/me/phone/verify', {
       method: 'POST',
-      body: { otp },
+      body: { code },
     }),
 };
