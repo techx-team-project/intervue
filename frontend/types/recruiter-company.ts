@@ -78,9 +78,22 @@ export interface CompanySummaryResource {
   name: string;
   tradingName?: string;
   taxCode: string;
+  industry?: string;
+  size?: string;
+  address?: string;
   logoUrl?: string;
   verified: boolean;
-  memberCount: number;
+  memberCount?: number;
+}
+
+export interface TaxLookupResource {
+  taxCode: string;
+  name: string;
+  tradingName?: string;
+  address: string;
+  status?: string;
+  existingOnPlatform: boolean;
+  existingCompanyId?: number;
 }
 
 export interface BusinessDocumentResource {

@@ -8,6 +8,7 @@ import type {
   CompanySummaryResource,
   RecruiterVerificationProfileResource,
   SaveCompanyProfileRequest,
+  TaxLookupResource,
 } from '@/types/recruiter-company';
 
 export const recruiterCompanyApi = {
@@ -31,10 +32,16 @@ export const recruiterCompanyApi = {
 
   searchCompanies: (keyword?: string, page = 0, size = 10) => {
     const params = new URLSearchParams();
-    if (keyword?.trim()) params.set('keyword', keyword.trim());
+    if (keyword?.trim()) params.set('q', keyword.trim());
     params.set('page', String(page));
     params.set('size', String(size));
     return request<Page<CompanySummaryResource>>(`/recruiter/company/search?${params.toString()}`);
+  },
+
+  lookupTax: (taxCode: string) => {
+    const params = new URLSearchParams();
+    params.set('taxCode', taxCode.trim());
+    return request<TaxLookupResource>(`/recruiter/company/lookup-tax?${params.toString()}`);
   },
 
   joinCompany: (companyId: number) =>
