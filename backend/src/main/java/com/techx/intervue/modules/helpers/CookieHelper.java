@@ -9,27 +9,39 @@ public class CookieHelper {
     public static final String ADMIN_REFRESH_TOKEN_COOKIE = "admin_refresh_token";
 
     public static ResponseCookie buildRefreshTokenCookie(String token, Duration maxAge) {
-        return buildCookie(REFRESH_TOKEN_COOKIE, token, "/api/v1", maxAge);
+        return buildCookie(REFRESH_TOKEN_COOKIE, token, "/", maxAge);
     }
 
     public static ResponseCookie clearRefreshTokenCookie() {
         return buildRefreshTokenCookie("", Duration.ZERO);
     }
 
+    public static ResponseCookie clearLegacyRefreshTokenCookie() {
+        return buildCookie(REFRESH_TOKEN_COOKIE, "", "/api/v1", Duration.ZERO);
+    }
+
     public static ResponseCookie buildRecruiterRefreshTokenCookie(String token, Duration maxAge) {
-        return buildCookie(RECRUITER_REFRESH_TOKEN_COOKIE, token, "/api/v1/recruiter", maxAge);
+        return buildCookie(RECRUITER_REFRESH_TOKEN_COOKIE, token, "/", maxAge);
     }
 
     public static ResponseCookie clearRecruiterRefreshTokenCookie() {
         return buildRecruiterRefreshTokenCookie("", Duration.ZERO);
     }
 
+    public static ResponseCookie clearLegacyRecruiterRefreshTokenCookie() {
+        return buildCookie(RECRUITER_REFRESH_TOKEN_COOKIE, "", "/api/v1/recruiter", Duration.ZERO);
+    }
+
     public static ResponseCookie buildAdminRefreshTokenCookie(String token, Duration maxAge) {
-        return buildCookie(ADMIN_REFRESH_TOKEN_COOKIE, token, "/api/v1/admin", maxAge);
+        return buildCookie(ADMIN_REFRESH_TOKEN_COOKIE, token, "/", maxAge);
     }
 
     public static ResponseCookie clearAdminRefreshTokenCookie() {
         return buildAdminRefreshTokenCookie("", Duration.ZERO);
+    }
+
+    public static ResponseCookie clearLegacyAdminRefreshTokenCookie() {
+        return buildCookie(ADMIN_REFRESH_TOKEN_COOKIE, "", "/api/v1/admin", Duration.ZERO);
     }
 
     private static ResponseCookie buildCookie(

@@ -15,9 +15,12 @@ import com.techx.intervue.modules.user.resources.AdminProfileResource;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.services.interfaces.AdminAuthServiceInterface;
 import com.techx.intervue.resources.ApiResource;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -63,12 +66,39 @@ public class AdminAuthController extends BaseController {
             @CookieValue(name = CookieHelper.ADMIN_REFRESH_TOKEN_COOKIE, required = false)
                     String refreshToken,
             HttpServletRequest httpRequest) {
-        if (refreshToken == null) {
+        List<String> tokens = new ArrayList<>();
+        if (refreshToken != null) {
+            tokens.add(refreshToken);
+        }
+        if (httpRequest.getCookies() != null) {
+            for (Cookie c : httpRequest.getCookies()) {
+                if (CookieHelper.ADMIN_REFRESH_TOKEN_COOKIE.equals(c.getName())
+                        && !tokens.contains(c.getValue())) {
+                    tokens.add(c.getValue());
+                }
+            }
+        }
+        if (tokens.isEmpty()) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
+
         String userAgent = httpRequest.getHeader(HttpHeaders.USER_AGENT);
         String ip = IpHelper.getClientIp(httpRequest);
-        AdminAuthResult result = adminAuthService.refresh(refreshToken, userAgent, ip);
+        AdminAuthResult result = null;
+        AppException lastException = null;
+        for (String token : tokens) {
+            try {
+                result = adminAuthService.refresh(token, userAgent, ip);
+                break;
+            } catch (AppException ex) {
+                lastException = ex;
+            }
+        }
+        if (result == null) {
+            throw lastException != null
+                    ? lastException
+                    : new AppException(ErrorCode.UNAUTHENTICATED);
+        }
         return withSession(result, "Admin session refreshed successfully!");
     }
 
@@ -83,6 +113,9 @@ public class AdminAuthController extends BaseController {
                 .header(
                         HttpHeaders.SET_COOKIE,
                         CookieHelper.clearAdminRefreshTokenCookie().toString())
+                .header(
+                        HttpHeaders.SET_COOKIE,
+                        CookieHelper.clearLegacyAdminRefreshTokenCookie().toString())
                 .body(ApiResource.success(null, "Admin logged out successfully!"));
     }
 
@@ -106,9 +139,11 @@ public class AdminAuthController extends BaseController {
                 CookieHelper.buildAdminRefreshTokenCookie(
                         result.refreshToken(),
                         Duration.ofDays(authConfig.getRefreshTokenTTLDays()));
+        ResponseCookie legacyClearCookie = CookieHelper.clearLegacyAdminRefreshTokenCookie();
         AdminAuthResource body = new AdminAuthResource(result.accessToken(), result.admin());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, legacyClearCookie.toString())
                 .body(ApiResource.success(body, message));
     }
 }
