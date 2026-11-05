@@ -102,6 +102,7 @@ export function CompanyProfileView() {
   const {
     company,
     profile,
+    refreshProfile,
     handleSaveCompany,
     handleChooseCompany,
     handleLeaveCompany,
@@ -167,7 +168,7 @@ export function CompanyProfileView() {
       tradingName: company?.tradingName || '',
       taxCode: company?.taxCode || '',
       businessType: company?.businessType || 'ENTERPRISE',
-      industry: company?.industry || '',
+      industry: company?.industry || 'Software & Information Technology',
       website: company?.website || '',
       market: company?.market || 'Domestic',
       targetCustomers: company?.targetCustomers || 'B2B (Enterprise clients)',
@@ -200,7 +201,7 @@ export function CompanyProfileView() {
         tradingName: company.tradingName || '',
         taxCode: company.taxCode || '',
         businessType: company.businessType || 'ENTERPRISE',
-        industry: company.industry || '',
+        industry: company.industry || 'Software & Information Technology',
         website: company.website || '',
         market: company.market || 'Domestic',
         targetCustomers: company.targetCustomers || 'B2B (Enterprise clients)',
@@ -366,7 +367,7 @@ export function CompanyProfileView() {
 
   const onSubmitForm = async (data: CompanyFormData) => {
     try {
-      await handleSaveCompany(data as SaveCompanyProfileRequest);
+      const saved = await handleSaveCompany(data as SaveCompanyProfileRequest);
 
       // If a pending logo was selected prior to company creation, upload it now
       if (pendingLogoFile) {
@@ -388,8 +389,27 @@ export function CompanyProfileView() {
         }
       }
 
-      toast.success('Hồ sơ công ty đã được lưu thành công!');
+      setHasExplicitlyLeft(false);
+      if (saved) {
+        setSelectedLinkedCompany({
+          id: saved.id,
+          name: saved.name,
+          tradingName: saved.tradingName,
+          taxCode: saved.taxCode,
+          address: saved.address || '',
+          size: saved.size || '',
+          industry: saved.industry || '',
+          initials: saved.name.substring(0, 2).toUpperCase(),
+          avatarBg: 'bg-emerald-600',
+          logoUrl: saved.logoUrl,
+          verified: saved.verified,
+        });
+      }
       setIsEditingProfile(false);
+      setActiveTab('search');
+      refreshProfile();
+
+      toast.success('Hồ sơ công ty đã được lưu thành công!');
     } catch (err) {
       if (isApiError(err)) {
         toast.error(err.message);
@@ -477,7 +497,7 @@ export function CompanyProfileView() {
   const allPhotos = useMemo(() => {
     const existing = (company?.photos || []).map((p) => ({
       id: String(p.id),
-      url: p.photoUrl,
+      url: p.url || p.photoUrl || '',
       isPending: false,
     }));
     const pending = pendingPhotoFiles.map((p) => ({
@@ -998,7 +1018,7 @@ export function CompanyProfileView() {
                             className="group relative aspect-video overflow-hidden rounded-md border border-slate-200 bg-slate-50 shadow-2xs"
                           >
                             <img
-                              src={photo.photoUrl}
+                              src={photo.url || photo.photoUrl}
                               alt="Workplace"
                               className="h-full w-full object-cover transition group-hover:scale-105"
                             />
@@ -1229,9 +1249,9 @@ export function CompanyProfileView() {
                 </div>
                 <select
                   {...register('industry')}
+                  defaultValue="Software & Information Technology"
                   className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 >
-                  <option value="">-- Not specified --</option>
                   <option value="Software & Information Technology">Software & Information Technology</option>
                   <option value="E-Commerce & Online Services">E-Commerce & Online Services</option>
                   <option value="Financial Services & FinTech">Financial Services & FinTech</option>

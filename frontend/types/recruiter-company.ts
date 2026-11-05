@@ -39,9 +39,11 @@ export interface RecruiterVerificationProfileResource {
 
 export interface CompanyPhotoResource {
   id: number;
-  photoUrl: string;
+  url: string;
+  photoUrl?: string;
   caption?: string;
-  displayOrder: number;
+  sortOrder?: number;
+  displayOrder?: number;
 }
 
 export interface CompanyResource {
