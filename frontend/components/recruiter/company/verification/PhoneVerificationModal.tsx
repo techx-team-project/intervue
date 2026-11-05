@@ -1,9 +1,10 @@
 'use client';
 
+import { authApi } from '@/apiRequest/auth';
 import { phoneVerificationApi } from '@/apiRequest/phone-verification';
 import { isApiError } from '@/lib/api-error';
 import { useAuthStore } from '@/store/auth.store';
-import { ArrowLeft, CheckCircle2, Headphones, Mail, Phone, ShieldCheck, X } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Eye, EyeOff, Headphones, Lock, Mail, Phone, ShieldCheck, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -33,12 +34,17 @@ function PhoneVerificationModalDialog({
   onSuccess,
   onChangePhoneNumber,
 }: Omit<PhoneVerificationModalProps, 'isOpen'>) {
-  // In INITIAL mode we arrive having already requested OTP on the page
-  const [step, setStep] = useState<'INPUT' | 'OTP'>(mode === 'CHANGE' ? 'INPUT' : 'OTP');
+  // Step state: 'INPUT' (Confirm Password & optional New Phone) -> 'OTP'
+  const [step, setStep] = useState<'INPUT' | 'OTP'>('INPUT');
 
-  // Form Inputs for CHANGE mode
+  // Form Inputs
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Errors & Loading
   const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [isSubmittingInput, setIsSubmittingInput] = useState(false);
 
   // OTP State
@@ -51,17 +57,22 @@ function PhoneVerificationModalDialog({
   // Target phone receiving the SMS
   const targetPhone = mode === 'CHANGE' ? newPhoneNumber : currentPhoneNumber;
 
+  const passwordInputRef = useRef<HTMLInputElement>(null);
   const newPhoneInputRef = useRef<HTMLInputElement>(null);
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Auto-focus on step change
   useEffect(() => {
     if (step === 'INPUT') {
-      setTimeout(() => newPhoneInputRef.current?.focus(), 80);
+      if (mode === 'CHANGE') {
+        setTimeout(() => newPhoneInputRef.current?.focus(), 80);
+      } else {
+        setTimeout(() => passwordInputRef.current?.focus(), 80);
+      }
     } else {
       setTimeout(() => otpInputRefs.current[0]?.focus(), 80);
     }
-  }, [step]);
+  }, [step, mode]);
 
   // Timer countdown for OTP
   useEffect(() => {
@@ -72,38 +83,80 @@ function PhoneVerificationModalDialog({
     return () => clearInterval(timer);
   }, [step, countdown]);
 
-  // Submit Step 1 (CHANGE mode): Validate new phone & Send SMS
+  // Submit Step 1: Validate Password (& New Phone if CHANGE) -> Authenticate -> Send SMS OTP
   const handleInputSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanPhone = newPhoneNumber.trim();
+    let hasError = false;
 
-    if (!cleanPhone) {
-      setPhoneError('Please enter a new mobile phone number.');
-      return;
-    }
-    if (!VIETNAM_MOBILE_REGEX.test(cleanPhone)) {
-      setPhoneError('Please enter a valid 10-digit Vietnamese mobile number (e.g. 0901234567).');
-      return;
-    }
-    if (cleanPhone === currentPhoneNumber.replace(/\D/g, '')) {
-      setPhoneError('New phone number must be different from your current phone.');
-      return;
+    // Validate new phone in CHANGE mode
+    if (mode === 'CHANGE') {
+      const cleanPhone = newPhoneNumber.trim();
+      if (!cleanPhone) {
+        setPhoneError('Please enter a new mobile phone number.');
+        hasError = true;
+      } else if (!VIETNAM_MOBILE_REGEX.test(cleanPhone)) {
+        setPhoneError('Please enter a valid 10-digit Vietnamese mobile number (e.g. 0901234567).');
+        hasError = true;
+      } else if (cleanPhone === currentPhoneNumber.replace(/\D/g, '')) {
+        setPhoneError('New phone number must be different from your current phone.');
+        hasError = true;
+      } else {
+        setPhoneError(null);
+      }
     }
 
-    setPhoneError(null);
+    // Validate password input
+    const trimmedPw = password.trim();
+    if (!trimmedPw) {
+      setPasswordError('Please enter your account password.');
+      hasError = true;
+    } else if (trimmedPw.length < 6) {
+      setPasswordError('Password must be at least 6 characters.');
+      hasError = true;
+    } else {
+      setPasswordError(null);
+    }
+
+    if (hasError) return;
+
     setIsSubmittingInput(true);
+
+    // 1. Step-up password verification against backend
+    const currentUser = useAuthStore.getState().user;
+    if (currentUser?.email) {
+      try {
+        const session = await authApi.login({ email: currentUser.email, password: trimmedPw });
+        if (session) {
+          useAuthStore.getState().setSession(session);
+        }
+      } catch (err) {
+        if (isApiError(err)) {
+          setPasswordError(err.message || 'Incorrect account password. Please try again.');
+        } else {
+          setPasswordError('Failed to verify account password. Please try again.');
+        }
+        setIsSubmittingInput(false);
+        return;
+      }
+    }
+
+    // 2. Dispatch live SMS verification code to backend
     try {
-      await phoneVerificationApi.sendOtp(cleanPhone);
+      await phoneVerificationApi.sendOtp(targetPhone);
       setStep('OTP');
       setCountdown(60);
       setOtpDigits(['', '', '', '', '', '']);
       setOtpError(null);
-      toast.success(`Verification code sent to ${cleanPhone}!`);
+      toast.success(`Verification code sent to ${targetPhone}!`);
     } catch (err) {
       if (isApiError(err)) {
-        setPhoneError(err.message || 'Could not send verification code.');
+        if (mode === 'CHANGE') {
+          setPhoneError(err.message);
+        } else {
+          setPasswordError(err.message);
+        }
       } else {
-        setPhoneError('Failed to send verification code. Please try again.');
+        toast.error('Failed to send verification code. Please try again.');
       }
     } finally {
       setIsSubmittingInput(false);
@@ -226,51 +279,100 @@ function PhoneVerificationModalDialog({
           <X className="h-4 w-4" />
         </button>
 
-        {/* ================= STEP 1: NEW PHONE (CHANGE MODE) ================= */}
+        {/* ================= STEP 1: PASSWORD CONFIRMATION (AND NEW PHONE IF CHANGE MODE) ================= */}
         {step === 'INPUT' && (
           <div className="space-y-5">
             {/* Header Title */}
             <div className="space-y-1.5 text-center">
-              <h3 className="text-base font-semibold text-[#00b14f] sm:text-lg">Change verified phone number</h3>
+              <h3 className="text-base font-semibold text-[#00b14f] sm:text-lg">
+                {mode === 'CHANGE' ? 'Change verified phone number' : 'Please confirm this action'}
+              </h3>
               <p className="mx-auto max-w-md text-xs leading-relaxed text-slate-600 sm:text-[13px]">
-                Enter your new mobile phone number. We will send an SMS verification code to confirm ownership.
+                {mode === 'CHANGE' ? (
+                  'To protect your recruiter account, please confirm your password and enter your new phone number.'
+                ) : (
+                  <>
+                    To ensure your recruiter account security and verify{' '}
+                    <strong className="text-slate-900">{formatPhoneNumber(currentPhoneNumber)}</strong>, please enter
+                    your password to proceed.
+                  </>
+                )}
               </p>
             </div>
 
-            {/* Current phone info box */}
-            <div className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-xs">
-              <span className="text-slate-600">Current verified phone:</span>
-              <span className="flex items-center gap-1.5 font-semibold text-slate-900">
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#00b14f]" />
-                {formatPhoneNumber(currentPhoneNumber)}
-              </span>
-            </div>
+            {/* In CHANGE mode: Show current phone info box */}
+            {mode === 'CHANGE' && (
+              <div className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-xs">
+                <span className="text-slate-600">Current verified phone:</span>
+                <span className="flex items-center gap-1.5 font-semibold text-slate-900">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-[#00b14f]" />
+                  {formatPhoneNumber(currentPhoneNumber)}
+                </span>
+              </div>
+            )}
 
             {/* Input Form */}
             <form onSubmit={handleInputSubmit} className="space-y-4">
+              {/* Field: New Phone Number (Only in CHANGE mode) */}
+              {mode === 'CHANGE' && (
+                <div className="space-y-1.5 text-left">
+                  <label className="text-xs font-semibold text-slate-700">New Mobile Phone Number</label>
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                      <Phone className="h-4 w-4" />
+                    </div>
+                    <input
+                      ref={newPhoneInputRef}
+                      type="tel"
+                      value={newPhoneNumber}
+                      onChange={(e) => {
+                        setNewPhoneNumber(e.target.value);
+                        if (phoneError) setPhoneError(null);
+                      }}
+                      placeholder="e.g. 0912345678"
+                      className={`h-11 w-full rounded-md border bg-white py-2.5 pr-4 pl-10 text-sm text-slate-900 placeholder-slate-400 focus:ring-1 focus:outline-none ${
+                        phoneError
+                          ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
+                          : 'border-slate-300 focus:border-[#00b14f] focus:ring-emerald-200'
+                      }`}
+                    />
+                  </div>
+                  {phoneError && <p className="pt-0.5 text-xs font-medium text-red-600">{phoneError}</p>}
+                </div>
+              )}
+
+              {/* Field: Account Password */}
               <div className="space-y-1.5 text-left">
-                <label className="text-xs font-semibold text-slate-700">New Mobile Phone Number</label>
+                {mode === 'CHANGE' && <label className="text-xs font-semibold text-slate-700">Account Password</label>}
                 <div className="relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                    <Phone className="h-4 w-4" />
+                    <Lock className="h-4 w-4" />
                   </div>
                   <input
-                    ref={newPhoneInputRef}
-                    type="tel"
-                    value={newPhoneNumber}
+                    ref={passwordInputRef}
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
                     onChange={(e) => {
-                      setNewPhoneNumber(e.target.value);
-                      if (phoneError) setPhoneError(null);
+                      setPassword(e.target.value);
+                      if (passwordError) setPasswordError(null);
                     }}
-                    placeholder="e.g. 0912345678"
-                    className={`h-11 w-full rounded-md border bg-white py-2.5 pr-4 pl-10 text-sm text-slate-900 placeholder-slate-400 focus:ring-1 focus:outline-none ${
-                      phoneError
+                    placeholder="Enter your account password"
+                    className={`h-11 w-full rounded-md border bg-white py-2.5 pr-11 pl-10 text-sm text-slate-900 placeholder-slate-400 focus:ring-1 focus:outline-none ${
+                      passwordError
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
                         : 'border-slate-300 focus:border-[#00b14f] focus:ring-emerald-200'
                     }`}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3.5 text-slate-400 transition hover:text-slate-600"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
-                {phoneError && <p className="pt-0.5 text-xs font-medium text-red-600">{phoneError}</p>}
+                {passwordError && <p className="pt-0.5 text-xs font-medium text-red-600">{passwordError}</p>}
               </div>
 
               {/* Action Buttons */}
@@ -291,10 +393,12 @@ function PhoneVerificationModalDialog({
                   {isSubmittingInput ? (
                     <>
                       <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                      <span>Sending code...</span>
+                      <span>Verifying...</span>
                     </>
+                  ) : mode === 'CHANGE' ? (
+                    'Send code to new phone'
                   ) : (
-                    'Send verification code'
+                    'Confirm'
                   )}
                 </button>
               </div>
@@ -382,13 +486,7 @@ function PhoneVerificationModalDialog({
               <div className="flex items-center justify-center gap-3.5 pt-2">
                 <button
                   type="button"
-                  onClick={() => {
-                    if (mode === 'CHANGE') {
-                      setStep('INPUT');
-                    } else {
-                      onClose();
-                    }
-                  }}
+                  onClick={() => setStep('INPUT')}
                   disabled={isVerifyingOtp}
                   className="flex h-10 cursor-pointer items-center gap-1.5 rounded-md bg-slate-100 px-4 text-xs font-medium text-slate-700 transition hover:bg-slate-200 sm:text-sm"
                 >
