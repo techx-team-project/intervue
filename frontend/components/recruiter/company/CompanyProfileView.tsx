@@ -1,10 +1,11 @@
 'use client';
 
+import { recruiterCompanyApi } from '@/apiRequest/recruiter-company';
 import Modal from '@/components/ui/Modal';
 import { ROUTES } from '@/constants/routes';
 import { useCompanyVerification } from '@/hooks/useCompanyVerification';
 import { isApiError } from '@/lib/api-error';
-import type { SaveCompanyProfileRequest } from '@/types/recruiter-company';
+import type { CompanySummaryResource, SaveCompanyProfileRequest } from '@/types/recruiter-company';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ArrowRight,
@@ -46,6 +47,31 @@ export interface MarketCompany {
   avatarBg: string;
   logoUrl?: string;
   verified?: boolean;
+}
+
+const BG_COLORS = ['bg-emerald-600', 'bg-blue-600', 'bg-slate-700', 'bg-amber-600', 'bg-teal-600', 'bg-purple-600'];
+
+function toMarketCompany(c: CompanySummaryResource, idx = 0): MarketCompany {
+  const initials =
+    c.name
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((w) => w[0]?.toUpperCase() || '')
+      .join('') || 'CP';
+
+  return {
+    id: c.id,
+    name: c.name,
+    tradingName: c.tradingName,
+    taxCode: c.taxCode,
+    address: 'Vietnam',
+    size: '25-99 employees',
+    industry: 'Technology & Software',
+    initials,
+    avatarBg: BG_COLORS[idx % BG_COLORS.length],
+    logoUrl: c.logoUrl,
+    verified: c.verified,
+  };
 }
 
 const MARKET_COMPANIES: MarketCompany[] = [
@@ -325,7 +351,31 @@ export function CompanyProfileView() {
     }
   }, [company, hasExplicitlyLeft, reset]);
 
-  // Filtered companies based on search query
+  const [liveCompanies, setLiveCompanies] = useState<CompanySummaryResource[] | null>(null);
+  const [liveTotal, setLiveTotal] = useState(0);
+
+  useEffect(() => {
+    if (activeTab !== 'search') return;
+    let cancelled = false;
+
+    recruiterCompanyApi
+      .searchCompanies(searchQuery.trim() || undefined, currentPage - 1, ITEMS_PER_PAGE)
+      .then((res) => {
+        if (cancelled) return;
+        setLiveCompanies(res.items || []);
+        setLiveTotal(res.totalItems || 0);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setLiveCompanies(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab, searchQuery, currentPage]);
+
+  // Filtered companies based on search query (fallback)
   const filteredCompanies = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return MARKET_COMPANIES;
@@ -337,12 +387,22 @@ export function CompanyProfileView() {
     );
   }, [searchQuery]);
 
-  // Paginated companies
-  const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / ITEMS_PER_PAGE));
-  const displayedCompanies = useMemo(() => {
+  // Displayed companies (prefers live database companies)
+  const displayedCompanies: MarketCompany[] = useMemo(() => {
+    if (liveCompanies !== null) {
+      return liveCompanies.map(toMarketCompany);
+    }
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredCompanies.slice(start, start + ITEMS_PER_PAGE);
-  }, [filteredCompanies, currentPage]);
+  }, [liveCompanies, filteredCompanies, currentPage]);
+
+  // Paginated companies
+  const totalPages =
+    liveCompanies !== null
+      ? Math.max(1, Math.ceil(liveTotal / ITEMS_PER_PAGE))
+      : Math.max(1, Math.ceil(filteredCompanies.length / ITEMS_PER_PAGE));
+
+  const totalResultsCount = liveCompanies !== null ? liveTotal : filteredCompanies.length;
 
   const handleSearchSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -599,7 +659,7 @@ export function CompanyProfileView() {
                 <div className="space-y-3 pt-2">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-slate-800">
-                      {searchQuery ? `Search Results (${filteredCompanies.length})` : 'Recently Created Companies'}
+                      {searchQuery ? `Search Results (${totalResultsCount})` : 'Recently Created Companies'}
                     </h3>
                     {searchQuery && (
                       <button
