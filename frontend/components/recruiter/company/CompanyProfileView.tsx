@@ -8,6 +8,7 @@ import { isApiError } from '@/lib/api-error';
 import type { CompanySummaryResource, SaveCompanyProfileRequest } from '@/types/recruiter-company';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  ArrowLeft,
   ArrowRight,
   Bold,
   Camera,
@@ -18,8 +19,10 @@ import {
   Italic,
   List,
   ListOrdered,
+  Loader2,
   Lock,
   LogOut,
+  Pencil,
   Plus,
   Search,
   ShieldCheck,
@@ -64,166 +67,15 @@ function toMarketCompany(c: CompanySummaryResource, idx = 0): MarketCompany {
     name: c.name,
     tradingName: c.tradingName,
     taxCode: c.taxCode,
-    address: 'Vietnam',
-    size: '25-99 employees',
-    industry: 'Technology & Software',
+    address: c.address || 'Vietnam',
+    size: c.size || 'Technology & Enterprise',
+    industry: c.industry || 'Software & Information Technology',
     initials,
     avatarBg: BG_COLORS[idx % BG_COLORS.length],
     logoUrl: c.logoUrl,
     verified: c.verified,
   };
 }
-
-const MARKET_COMPANIES: MarketCompany[] = [
-  {
-    id: 1,
-    name: 'CÔNG TY TNHH PHÂN PHỐI KIẾN VÀNG',
-    tradingName: 'BÁN THỰC PHẨM',
-    taxCode: '4201977226',
-    address: '01A Yết Kiêu, NHA TRANG, KHÁNH HÒA',
-    size: '1-9 employees',
-    industry: 'Retail & FMCG',
-    website: 'https://kienvangfood.vn',
-    initials: 'CT',
-    avatarBg: 'bg-emerald-600',
-  },
-  {
-    id: 2,
-    name: 'CÔNG TY TNHH KIRA LIGHT & SOUND',
-    tradingName: 'Kira Light & Sound',
-    taxCode: '0319721609',
-    address: 'Phường An Lạc, Quận Bình Tân, TP. Hồ Chí Minh',
-    size: '1-9 employees',
-    industry: 'Electronics & Audio Equipment',
-    website: 'https://kiralightsound.com',
-    initials: 'CN',
-    avatarBg: 'bg-slate-700',
-  },
-  {
-    id: 3,
-    name: 'HỘ KINH DOANH NGUYỄN THỊ MƠ',
-    tradingName: 'Hộ Kinh Doanh Nguyễn Thị Mơ (Manu)',
-    taxCode: '001176053010',
-    address: '193/2F/2 Đỗ Văn Thi, P. Hiệp Hòa, TP. Biên Hòa, Đồng Nai',
-    size: '25-99 employees',
-    industry: 'Fashion & Apparel',
-    initials: 'MN',
-    avatarBg: 'bg-amber-600',
-  },
-  {
-    id: 4,
-    name: 'CÔNG TY TNHH PICKLE LAB VIỆT NAM',
-    tradingName: 'Pickle Lab Việt Nam',
-    taxCode: '0111533349',
-    address: '129D Nguyễn Trãi, Phường Khương Trung, Quận Thanh Xuân, Hà Nội',
-    size: '10-24 employees',
-    industry: 'Software & Information Technology',
-    website: 'https://picklelab.vn',
-    initials: 'PL',
-    avatarBg: 'bg-teal-600',
-  },
-  {
-    id: 5,
-    name: 'CÔNG TY CỔ PHẦN BỆNH VIỆN MẮT HÀ NỘI',
-    tradingName: 'Bệnh Viện Mắt Hà Nội',
-    taxCode: '0700908823',
-    address: '38 Đường Cửu Long, Phường 2, Quận Tân Bình, TP. Hồ Chí Minh',
-    size: '25-99 employees',
-    industry: 'Healthcare & Pharmaceuticals',
-    website: 'https://mathanoi.vn',
-    initials: 'HC',
-    avatarBg: 'bg-blue-600',
-  },
-  {
-    id: 6,
-    name: 'CÔNG TY TNHH BAMBU MRO',
-    tradingName: 'Bambu Mro',
-    taxCode: '0318155809',
-    address: 'Số 7 Lô E, Đường số 13, Xã Bình Hưng, Huyện Bình Chánh, TP. Hồ Chí Minh',
-    size: '25-99 employees',
-    industry: 'Industrial Supplies & MRO',
-    initials: 'CM',
-    avatarBg: 'bg-yellow-700',
-  },
-  {
-    id: 7,
-    name: 'CÔNG TY CỔ PHẦN CÔNG NGHỆ TECHX GLOBAL',
-    tradingName: 'TechX Global',
-    taxCode: '0318928391',
-    address: 'Tầng 12, Tòa nhà Keangnam Landmark 72, Đường Phạm Hùng, Nam Từ Liêm, Hà Nội',
-    size: '100-499 employees',
-    industry: 'Software & Information Technology',
-    website: 'https://techx.com.vn',
-    initials: 'TX',
-    avatarBg: 'bg-[#00b14f]',
-    verified: true,
-  },
-  {
-    id: 8,
-    name: 'CÔNG TY CỔ PHẦN VNG',
-    tradingName: 'VNG Corporation',
-    taxCode: '0303502809',
-    address: 'Z06 Đường số 13, Khu Chế Xuất Tân Thuận, Phường Tân Thuận Đông, Quận 7, TP. Hồ Chí Minh',
-    size: '1000+ employees',
-    industry: 'Software & Information Technology',
-    website: 'https://vng.com.vn',
-    initials: 'VNG',
-    avatarBg: 'bg-orange-600',
-    verified: true,
-  },
-  {
-    id: 9,
-    name: 'CÔNG TY TNHH PHẦN MỀM FPT (FPT SOFTWARE)',
-    tradingName: 'FPT Software',
-    taxCode: '0101601092',
-    address: 'Tòa nhà FPT, Phố Duy Tân, Phường Dịch Vọng Hậu, Cầu Giấy, Hà Nội',
-    size: '1000+ employees',
-    industry: 'Software & Information Technology',
-    website: 'https://fptsoftware.com',
-    initials: 'FPT',
-    avatarBg: 'bg-blue-700',
-    verified: true,
-  },
-  {
-    id: 10,
-    name: 'CÔNG TY CỔ PHẦN DỊCH VỤ DI ĐỘNG TRỰC TUYẾN (MOMO)',
-    tradingName: 'MoMo',
-    taxCode: '0305391698',
-    address: 'Tầng M, Tòa nhà PetroVietnam, Số 1-5 Lê Duẩn, Bến Nghé, Quận 1, TP. Hồ Chí Minh',
-    size: '500-1000 employees',
-    industry: 'Financial Services & FinTech',
-    website: 'https://momo.vn',
-    initials: 'MM',
-    avatarBg: 'bg-pink-600',
-    verified: true,
-  },
-  {
-    id: 11,
-    name: 'TẬP ĐOÀN CÔNG NGHIỆP - VIỄN THÔNG QUÂN ĐỘI (VIETTEL)',
-    tradingName: 'Viettel Telecom',
-    taxCode: '0100109106',
-    address: 'Số 1 Trần Hữu Dực, Phường Mỹ Đình 2, Quận Nam Từ Liêm, Hà Nội',
-    size: '1000+ employees',
-    industry: 'Telecommunications & IT',
-    website: 'https://viettel.vn',
-    initials: 'VT',
-    avatarBg: 'bg-red-600',
-    verified: true,
-  },
-  {
-    id: 12,
-    name: 'CÔNG TY TNHH TI KI (TIKI VIETNAM)',
-    tradingName: 'Tiki',
-    taxCode: '0309532909',
-    address: '52 Út Tịch, Phường 4, Quận Tân Bình, TP. Hồ Chí Minh',
-    size: '500-1000 employees',
-    industry: 'E-Commerce & Online Services',
-    website: 'https://tiki.vn',
-    initials: 'TK',
-    avatarBg: 'bg-cyan-600',
-    verified: true,
-  },
-];
 
 const companyFormSchema = z.object({
   name: z.string().min(2, 'Official company name is required'),
@@ -249,6 +101,7 @@ const ITEMS_PER_PAGE = 6;
 export function CompanyProfileView() {
   const {
     company,
+    profile,
     handleSaveCompany,
     handleChooseCompany,
     handleLeaveCompany,
@@ -266,11 +119,15 @@ export function CompanyProfileView() {
 
   // Tab 1: 'search' | Tab 2: 'create'
   const [activeTab, setActiveTab] = useState<'search' | 'create'>('search');
+  // Edit mode toggle when company is linked (defaults to Showcase View mode like TopCV)
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   // Search & Pagination state
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoadingCompanies, setIsLoadingCompanies] = useState(false);
+  const [isLookingUpTax, setIsLookingUpTax] = useState(false);
 
   // Form options state
   const [noLogo, setNoLogo] = useState(false);
@@ -290,11 +147,17 @@ export function CompanyProfileView() {
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [isUploadingPhotos, setIsUploadingPhotos] = useState(false);
 
+  // Instant thumbnail previews and pending upload files (for new company creation before record exists)
+  const [pendingLogoFile, setPendingLogoFile] = useState<File | null>(null);
+  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
+  const [pendingPhotoFiles, setPendingPhotoFiles] = useState<{ id: string; file: File; previewUrl: string }[]>([]);
+
   const {
     register,
     handleSubmit,
     reset,
     setValue,
+    getValues,
     watch,
     formState: { errors, isSubmitting },
   } = useForm<CompanyFormData>({
@@ -351,12 +214,13 @@ export function CompanyProfileView() {
     }
   }, [company, hasExplicitlyLeft, reset]);
 
-  const [liveCompanies, setLiveCompanies] = useState<CompanySummaryResource[] | null>(null);
+  const [liveCompanies, setLiveCompanies] = useState<CompanySummaryResource[]>([]);
   const [liveTotal, setLiveTotal] = useState(0);
 
   useEffect(() => {
     if (activeTab !== 'search') return;
     let cancelled = false;
+    setIsLoadingCompanies(true);
 
     recruiterCompanyApi
       .searchCompanies(searchQuery.trim() || undefined, currentPage - 1, ITEMS_PER_PAGE)
@@ -367,7 +231,12 @@ export function CompanyProfileView() {
       })
       .catch(() => {
         if (cancelled) return;
-        setLiveCompanies(null);
+        setLiveCompanies([]);
+        setLiveTotal(0);
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setIsLoadingCompanies(false);
       });
 
     return () => {
@@ -375,40 +244,55 @@ export function CompanyProfileView() {
     };
   }, [activeTab, searchQuery, currentPage]);
 
-  // Filtered companies based on search query (fallback)
-  const filteredCompanies = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    if (!q) return MARKET_COMPANIES;
-    return MARKET_COMPANIES.filter(
-      (c) =>
-        c.name.toLowerCase().includes(q) ||
-        c.taxCode.includes(q) ||
-        (c.tradingName && c.tradingName.toLowerCase().includes(q)),
-    );
-  }, [searchQuery]);
-
-  // Displayed companies (prefers live database companies)
+  // Displayed companies (live database companies)
   const displayedCompanies: MarketCompany[] = useMemo(() => {
-    if (liveCompanies !== null) {
-      return liveCompanies.map(toMarketCompany);
-    }
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredCompanies.slice(start, start + ITEMS_PER_PAGE);
-  }, [liveCompanies, filteredCompanies, currentPage]);
+    return liveCompanies.map(toMarketCompany);
+  }, [liveCompanies]);
 
   // Paginated companies
-  const totalPages =
-    liveCompanies !== null
-      ? Math.max(1, Math.ceil(liveTotal / ITEMS_PER_PAGE))
-      : Math.max(1, Math.ceil(filteredCompanies.length / ITEMS_PER_PAGE));
-
-  const totalResultsCount = liveCompanies !== null ? liveTotal : filteredCompanies.length;
+  const totalPages = Math.max(1, Math.ceil(liveTotal / ITEMS_PER_PAGE));
+  const totalResultsCount = liveTotal;
 
   const handleSearchSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setIsSearching(true);
     setCurrentPage(1);
     setTimeout(() => setIsSearching(false), 200);
+  };
+
+  // Tra cứu mã số thuế (Tab 2: Create New Company)
+  const handleLookupTax = async () => {
+    const rawTax = getValues('taxCode')?.trim();
+    if (!rawTax || !/^\d{10}(\d{3})?$/.test(rawTax)) {
+      toast.error('Vui lòng nhập Mã số thuế hợp lệ (10 hoặc 13 chữ số) để tra cứu.');
+      return;
+    }
+    setIsLookingUpTax(true);
+    try {
+      const res = await recruiterCompanyApi.lookupTax(rawTax);
+      if (res) {
+        if (res.name) setValue('name', res.name, { shouldValidate: true });
+        if (res.tradingName) setValue('tradingName', res.tradingName, { shouldValidate: true });
+        if (res.address) setValue('address', res.address, { shouldValidate: true });
+
+        if (res.existingOnPlatform) {
+          toast.info(
+            `Doanh nghiệp "${res.name}" đã có trên InterVue! Bạn có thể chọn doanh nghiệp này ở Tab "Tìm kiếm thông tin doanh nghiệp" để tham gia.`,
+            { duration: 6000 },
+          );
+        } else {
+          toast.success(`Đã tự động lấy dữ liệu Tổng cục Thuế cho "${res.name}".`);
+        }
+      }
+    } catch (err) {
+      if (isApiError(err)) {
+        toast.error(err.message);
+      } else {
+        toast.error('Không tìm thấy thông tin doanh nghiệp theo mã số thuế này.');
+      }
+    } finally {
+      setIsLookingUpTax(false);
+    }
   };
 
   // When recruiter clicks "Select" on a company card in Tab 1
@@ -422,34 +306,23 @@ export function CompanyProfileView() {
     if (!pendingCompanyToSelect) return;
     setIsSelecting(true);
     try {
-      setValue('name', pendingCompanyToSelect.name);
-      setValue('taxCode', pendingCompanyToSelect.taxCode);
-      setValue('address', pendingCompanyToSelect.address);
-      if (pendingCompanyToSelect.tradingName) {
-        setValue('tradingName', pendingCompanyToSelect.tradingName);
-      }
-      if (pendingCompanyToSelect.industry) {
-        setValue('industry', pendingCompanyToSelect.industry);
-      }
-      if (pendingCompanyToSelect.size) {
-        setValue('size', pendingCompanyToSelect.size);
-      }
-      if (pendingCompanyToSelect.website) {
-        setValue('website', pendingCompanyToSelect.website);
-      }
-
-      await handleChooseCompany(pendingCompanyToSelect.id).catch(() => null);
+      await handleChooseCompany(pendingCompanyToSelect.id);
 
       setSelectedLinkedCompany(pendingCompanyToSelect);
       setHasExplicitlyLeft(false);
       setIsSelectModalOpen(false);
       setPendingCompanyToSelect(null);
+      setIsEditingProfile(false);
 
       toast.success(
-        `Selected "${pendingCompanyToSelect.name}". Company profile is now linked to your recruiter account.`,
+        `Đã liên kết với "${pendingCompanyToSelect.name}". Hồ sơ công ty hiện đã được gắn kết với tài khoản của bạn.`,
       );
-    } catch {
-      toast.error('Could not select company.');
+    } catch (err) {
+      if (isApiError(err)) {
+        toast.error(err.message);
+      } else {
+        toast.error('Không thể liên kết với công ty này.');
+      }
     } finally {
       setIsSelecting(false);
     }
@@ -463,6 +336,7 @@ export function CompanyProfileView() {
       setHasExplicitlyLeft(true);
       setSelectedLinkedCompany(null);
       setIsLeaveModalOpen(false);
+      setIsEditingProfile(false);
       setActiveTab('search');
       toast.success('Successfully left company profile.');
     } catch (err) {
@@ -493,12 +367,34 @@ export function CompanyProfileView() {
   const onSubmitForm = async (data: CompanyFormData) => {
     try {
       await handleSaveCompany(data as SaveCompanyProfileRequest);
-      toast.success('Company profile saved successfully!');
+
+      // If a pending logo was selected prior to company creation, upload it now
+      if (pendingLogoFile) {
+        try {
+          await handleUploadLogo(pendingLogoFile);
+          setPendingLogoFile(null);
+        } catch (logoErr) {
+          console.error('Deferred logo upload error:', logoErr);
+        }
+      }
+
+      // If pending workplace photos were selected prior to company creation, upload them now
+      if (pendingPhotoFiles.length > 0) {
+        try {
+          await handleUploadPhotos(pendingPhotoFiles.map((p) => p.file));
+          setPendingPhotoFiles([]);
+        } catch (photoErr) {
+          console.error('Deferred photos upload error:', photoErr);
+        }
+      }
+
+      toast.success('Hồ sơ công ty đã được lưu thành công!');
+      setIsEditingProfile(false);
     } catch (err) {
       if (isApiError(err)) {
         toast.error(err.message);
       } else {
-        toast.success('Company profile saved successfully!');
+        toast.error('Không thể lưu hồ sơ công ty.');
       }
     }
   };
@@ -510,37 +406,143 @@ export function CompanyProfileView() {
       toast.error('Logo file size must not exceed 2MB.');
       return;
     }
-    setIsUploadingLogo(true);
-    try {
-      await handleUploadLogo(file);
-      toast.success('Logo uploaded successfully!');
-    } catch (err) {
-      if (isApiError(err)) toast.error(err.message);
-      else toast.success('Logo uploaded successfully.');
-    } finally {
-      setIsUploadingLogo(false);
+
+    // Instant local thumbnail preview
+    const preview = URL.createObjectURL(file);
+    setLogoPreviewUrl(preview);
+    setPendingLogoFile(file);
+    setNoLogo(false);
+
+    // If company is already established in backend, upload immediately
+    if (company && !hasExplicitlyLeft) {
+      setIsUploadingLogo(true);
+      try {
+        await handleUploadLogo(file);
+        toast.success('Logo uploaded successfully!');
+      } catch (err) {
+        if (isApiError(err)) toast.error(err.message);
+        else toast.error('Could not upload logo.');
+      } finally {
+        setIsUploadingLogo(false);
+      }
+    } else {
+      toast.info('Logo selected! It will be saved with your company profile.');
     }
   };
 
   const onPhotosSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
-    setIsUploadingPhotos(true);
-    try {
-      await handleUploadPhotos(files);
-      toast.success(`Added ${files.length} workplace photos!`);
-    } catch (err) {
-      if (isApiError(err)) toast.error(err.message);
-      else toast.success('Added workplace photos.');
-    } finally {
-      setIsUploadingPhotos(false);
+
+    // Instant local thumbnail previews
+    const newItems = files.map((file) => ({
+      id: `pending-${Math.random().toString(36).slice(2, 8)}`,
+      file,
+      previewUrl: URL.createObjectURL(file),
+    }));
+
+    // If company is already established in backend, upload immediately
+    if (company && !hasExplicitlyLeft) {
+      setIsUploadingPhotos(true);
+      try {
+        await handleUploadPhotos(files);
+        toast.success(`Added ${files.length} workplace photos!`);
+      } catch (err) {
+        if (isApiError(err)) toast.error(err.message);
+        else toast.error('Could not upload photos.');
+      } finally {
+        setIsUploadingPhotos(false);
+      }
+    } else {
+      setPendingPhotoFiles((prev) => [...prev, ...newItems].slice(0, 5));
+      toast.info(`Selected ${files.length} photo(s). They will be saved with your profile.`);
     }
   };
+
+  const onRemovePhotoItem = async (photoItem: { id: string; isPending: boolean }) => {
+    if (photoItem.isPending) {
+      setPendingPhotoFiles((prev) => prev.filter((p) => p.id !== photoItem.id));
+      toast.success('Workplace photo removed.');
+    } else {
+      try {
+        await handleRemovePhoto(Number(photoItem.id));
+        toast.success('Workplace photo removed.');
+      } catch (err) {
+        if (isApiError(err)) toast.error(err.message);
+        else toast.error('Could not remove photo.');
+      }
+    }
+  };
+
+  const allPhotos = useMemo(() => {
+    const existing = (company?.photos || []).map((p) => ({
+      id: String(p.id),
+      url: p.photoUrl,
+      isPending: false,
+    }));
+    const pending = pendingPhotoFiles.map((p) => ({
+      id: p.id,
+      url: p.previewUrl,
+      isPending: true,
+    }));
+    return [...existing, ...pending];
+  }, [company?.photos, pendingPhotoFiles]);
+
+  const displayedLogoUrl = !noLogo ? logoPreviewUrl || company?.logoUrl : null;
 
   const isLegalLocked = company?.legalFieldsLocked === true && !hasExplicitlyLeft;
   const currentDisplayedCompanyName =
     selectedLinkedCompany?.name || company?.name || watchedName || 'Your Enterprise Profile';
   const currentRole = company?.myRole || 'OWNER';
+
+  const companyInitials = useMemo(() => {
+    const name = currentDisplayedCompanyName || 'InterVue';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }, [currentDisplayedCompanyName]);
+
+  const formattedUpdatedAt = useMemo(() => {
+    const ts = company?.updatedAt || company?.createdAt;
+    if (!ts) return '--:-- --/--/----';
+    try {
+      const d = new Date(ts);
+      if (isNaN(d.getTime())) return '--:-- --/--/----';
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${hours}:${minutes} ${day}/${month}/${year}`;
+    } catch {
+      return '--:-- --/--/----';
+    }
+  }, [company?.updatedAt, company?.createdAt]);
+
+  const nextCta = useMemo(() => {
+    if (!profile.phone.isVerified) {
+      return {
+        label: 'Next: Phone Verification',
+        url: ROUTES.RECRUITER_COMPANY_PHONE_VERIFY,
+      };
+    }
+    if (profile.license.status === 'NOT_SUBMITTED' || profile.license.status === 'REJECTED') {
+      return {
+        label: 'Next: Business License',
+        url: ROUTES.RECRUITER_COMPANY_LICENSE,
+      };
+    }
+    if (profile.candidateAgreement.status !== 'APPROVED' || profile.platformAgreement.status !== 'APPROVED') {
+      return {
+        label: 'Next: Data Agreements',
+        url: ROUTES.RECRUITER_COMPANY_AGREEMENTS,
+      };
+    }
+    return {
+      label: 'Next: Post a Job',
+      url: ROUTES.RECRUITER_JOBS_CREATE,
+    };
+  }, [profile]);
 
   return (
     <AccountSettingsLayout activeTab="company" pageTitle="Account Settings">
@@ -677,20 +679,31 @@ export function CompanyProfileView() {
 
                   {/* 2-column Grid of Company Cards (TopCV EXACT Horizontal Layout) */}
                   <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
-                    {displayedCompanies.length > 0 ? (
+                    {isLoadingCompanies ? (
+                      <div className="col-span-1 flex items-center justify-center gap-2.5 rounded-md border border-slate-200 bg-slate-50/70 p-12 text-xs font-medium text-slate-500 md:col-span-2">
+                        <Loader2 className="h-4 w-4 animate-spin text-[#00b14f]" />
+                        <span>Đang tải danh sách doanh nghiệp...</span>
+                      </div>
+                    ) : displayedCompanies.length > 0 ? (
                       displayedCompanies.map((item) => (
                         <div
                           key={item.id}
                           className="flex items-center justify-between rounded-md border border-slate-200 bg-white p-4 shadow-2xs transition-all hover:border-[#00b14f] hover:shadow-xs"
                         >
-                          {/* Left: Avatar + Details */}
+                          {/* Left: Avatar / Logo + Details */}
                           <div className="flex min-w-0 flex-1 items-start gap-3.5 pr-3">
-                            {/* Circle Avatar (TopCV 48x48) */}
-                            <div
-                              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white shadow-2xs ${item.avatarBg}`}
-                            >
-                              {item.initials}
-                            </div>
+                            {/* Company Logo or Initials Avatar */}
+                            {item.logoUrl ? (
+                              <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-white p-1.5 shadow-2xs">
+                                <img src={item.logoUrl} alt={item.name} className="h-full w-full object-contain" />
+                              </div>
+                            ) : (
+                              <div
+                                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white shadow-2xs ${item.avatarBg}`}
+                              >
+                                {item.initials}
+                              </div>
+                            )}
 
                             {/* Company Details */}
                             <div className="min-w-0 flex-1 space-y-1">
@@ -736,22 +749,22 @@ export function CompanyProfileView() {
                       ))
                     ) : (
                       <div className="col-span-1 rounded-md border border-slate-200 bg-slate-50/70 p-8 text-center text-xs text-slate-500 md:col-span-2">
-                        No company found matching &ldquo;{searchQuery}&rdquo;. You can switch to the &ldquo;Create New
-                        Company&rdquo; tab to register your organization.
+                        Không tìm thấy công ty nào phù hợp với từ khóa &ldquo;{searchQuery}&rdquo;. Bạn có thể chuyển
+                        sang tab &ldquo;Create New Company&rdquo; để đăng ký thông tin doanh nghiệp.
                       </div>
                     )}
                   </div>
 
                   {/* UI Pagination Bar (TopCV Clean Style) */}
-                  {filteredCompanies.length > ITEMS_PER_PAGE && (
+                  {totalResultsCount > ITEMS_PER_PAGE && (
                     <div className="flex flex-col items-center justify-between gap-3 border-t border-slate-100 pt-4 text-xs text-slate-500 sm:flex-row">
                       <div>
                         Showing{' '}
                         <strong className="text-slate-800">
                           {(currentPage - 1) * ITEMS_PER_PAGE + 1}–
-                          {Math.min(currentPage * ITEMS_PER_PAGE, filteredCompanies.length)}
+                          {Math.min(currentPage * ITEMS_PER_PAGE, totalResultsCount)}
                         </strong>{' '}
-                        of <strong className="text-slate-800">{filteredCompanies.length}</strong> companies
+                        of <strong className="text-slate-800">{totalResultsCount}</strong> companies
                       </div>
 
                       <div className="flex items-center gap-1.5">
@@ -792,41 +805,236 @@ export function CompanyProfileView() {
               </div>
             )}
           </div>
-        ) : (
-          /* ================= CONDITION 2: RECRUITER HAS A LINKED COMPANY ================= */
-          /* Only the Company Profile is shown, Tabs are hidden! */
-          <div className="flex flex-col gap-3 rounded-md border border-slate-200 bg-slate-50/70 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <h2 className="text-sm font-bold text-slate-900 sm:text-base">{currentDisplayedCompanyName}</h2>
-                <span className="rounded bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-800">
-                  Role: {currentRole}
-                </span>
-                {company?.verified && (
-                  <span className="flex items-center gap-1 rounded border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
-                    <ShieldCheck className="h-3 w-3 text-[#00b14f]" /> Verified
-                  </span>
-                )}
+        ) : null}
+
+        {/* ================= CONDITION 2: RECRUITER HAS A LINKED COMPANY & VIEW MODE ================= */}
+        {hasLinkedCompany && !isEditingProfile ? (
+          /* ================= SHOWCASE VIEW MODE (TopCV Standard) ================= */
+          <div className="space-y-5">
+            {/* Action Bar (TopCV: Yêu cầu cập nhật thông tin công ty) */}
+            <div className="flex flex-col gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1">
+                <h3 className="text-sm font-bold text-slate-900 sm:text-base">Yêu cầu cập nhật thông tin công ty</h3>
+                <p className="text-xs text-slate-500">
+                  Ngày yêu cầu gần nhất: <span className="font-semibold text-slate-700">{formattedUpdatedAt}</span>
+                </p>
               </div>
-              <p className="text-xs text-slate-500">
-                You are managing recruitment under this official corporate profile.
-              </p>
+
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setIsEditingProfile(true)}
+                  className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-[#00b14f] bg-white px-4 py-2 text-xs font-semibold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50 active:scale-98"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  <span>Tạo yêu cầu</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsLeaveModalOpen(true)}
+                  className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-600 shadow-2xs transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  <span>Rời công ty</span>
+                </button>
+              </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setIsLeaveModalOpen(true)}
-              className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-rose-300 bg-white px-3.5 py-2 text-xs font-semibold text-rose-700 shadow-2xs transition hover:bg-rose-50"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              <span>Leave Company</span>
-            </button>
-          </div>
-        )}
+            {/* Showcase Card (TopCV 2-Column Key-Value Display) */}
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-2xs">
+              {/* Header: Logo, Company Name, Badges, Short Address/Size */}
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                {displayedLogoUrl ? (
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-white p-2 shadow-2xs">
+                    <img
+                      src={displayedLogoUrl}
+                      alt={currentDisplayedCompanyName}
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white shadow-2xs">
+                    {companyInitials}
+                  </div>
+                )}
 
-        {/* ================= COMPANY PROFILE FORM (Shown when on Tab 'create' OR when company is linked) ================= */}
-        {(!hasLinkedCompany && activeTab === 'create') || hasLinkedCompany ? (
+                <div className="min-w-0 flex-1 space-y-1">
+                  <h2 className="text-base font-bold tracking-tight text-slate-900 sm:text-lg">
+                    {currentDisplayedCompanyName}
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    {company?.address || 'Vietnam'} | {company?.size || 'Technology & Enterprise'}
+                  </p>
+                </div>
+              </div>
+
+              <hr className="my-5 border-slate-100" />
+
+              {/* Detail 2-Column Key-Value List */}
+              <div className="divide-y divide-slate-100">
+                {/* Row: Mã số thuế */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Mã số thuế:</div>
+                  <div className="font-mono font-semibold text-slate-900 sm:col-span-9">{company?.taxCode || '--'}</div>
+                </div>
+
+                {/* Row: Tên thương mại */}
+                {company?.tradingName && (
+                  <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                    <div className="font-medium text-slate-500 sm:col-span-3">Tên thương mại:</div>
+                    <div className="font-medium text-slate-900 sm:col-span-9">{company.tradingName}</div>
+                  </div>
+                )}
+
+                {/* Row: Website */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Website:</div>
+                  <div className="text-slate-800 sm:col-span-9">
+                    {company?.website ? (
+                      <a
+                        href={company.website.startsWith('http') ? company.website : `https://${company.website}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 font-medium text-[#00b14f] hover:underline"
+                      >
+                        <span>{company.website}</span>
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    ) : (
+                      <span className="text-slate-400">Tôi không có website</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Row: Loại hình doanh nghiệp */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Loại hình doanh nghiệp:</div>
+                  <div className="text-slate-800 sm:col-span-9">
+                    {company?.businessType === 'ENTERPRISE'
+                      ? 'Doanh nghiệp (Công ty Cổ phần / TNHH)'
+                      : 'Hộ kinh doanh cá thể'}
+                  </div>
+                </div>
+
+                {/* Row: Ngành nghề kinh doanh */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Ngành nghề kinh doanh:</div>
+                  <div className="space-y-1 sm:col-span-9">
+                    <div className="text-slate-800">
+                      {company?.industry || 'Công nghệ thông tin & Dịch vụ phần mềm'}
+                    </div>
+                    <p className="flex items-center gap-1 text-xs text-slate-400">
+                      <Info className="h-3 w-3 shrink-0" />
+                      <span>
+                        InterVue sẽ cập nhật danh mục ngành nghề theo Giấy phép ĐKKD của MST bạn đã nhập ở trên trong
+                        vòng 24h làm việc.
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Row: Thị trường hoạt động */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Thị trường hoạt động:</div>
+                  <div className="text-slate-800 sm:col-span-9">{company?.market || '--'}</div>
+                </div>
+
+                {/* Row: Khách hàng mục tiêu */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Khách hàng mục tiêu:</div>
+                  <div className="text-slate-800 sm:col-span-9">{company?.targetCustomers || '--'}</div>
+                </div>
+
+                {/* Row: Quy mô */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Quy mô:</div>
+                  <div className="text-slate-800 sm:col-span-9">{company?.size || '--'}</div>
+                </div>
+
+                {/* Row: Email */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Email:</div>
+                  <div className="text-slate-800 sm:col-span-9">{company?.email || '--'}</div>
+                </div>
+
+                {/* Row: Số điện thoại */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Số điện thoại:</div>
+                  <div className="text-slate-800 sm:col-span-9">{company?.phone || '--'}</div>
+                </div>
+
+                {/* Row: Địa chỉ */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Địa chỉ:</div>
+                  <div className="leading-relaxed text-slate-800 sm:col-span-9">{company?.address || '--'}</div>
+                </div>
+
+                {/* Row: Mô tả công ty */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Mô tả công ty:</div>
+                  <div className="leading-relaxed whitespace-pre-line text-slate-800 sm:col-span-9">
+                    {company?.description || '--'}
+                  </div>
+                </div>
+
+                {/* Row: Phúc lợi nhân viên */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Phúc lợi nhân viên:</div>
+                  <div className="leading-relaxed whitespace-pre-line text-slate-800 sm:col-span-9">
+                    {company?.benefits || '--'}
+                  </div>
+                </div>
+
+                {/* Row: Hình ảnh công ty */}
+                <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
+                  <div className="font-medium text-slate-500 sm:col-span-3">Hình ảnh công ty:</div>
+                  <div className="sm:col-span-9">
+                    {company?.photos && company.photos.length > 0 ? (
+                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                        {company.photos.map((photo) => (
+                          <div
+                            key={photo.id}
+                            className="group relative aspect-video overflow-hidden rounded-md border border-slate-200 bg-slate-50 shadow-2xs"
+                          >
+                            <img
+                              src={photo.photoUrl}
+                              alt="Workplace"
+                              className="h-full w-full object-cover transition group-hover:scale-105"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-slate-400">--</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {/* ================= CONDITION 3: EDIT MODE OR NEW COMPANY CREATION ================= */}
+        {(!hasLinkedCompany && activeTab === 'create') || (hasLinkedCompany && isEditingProfile) ? (
           <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6 pt-1">
+            {/* Header when editing linked company */}
+            {hasLinkedCompany && isEditingProfile && (
+              <div className="flex flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Yêu cầu cập nhật thông tin công ty</h3>
+                  <p className="text-xs text-slate-500">Chỉnh sửa thông tin hồ sơ doanh nghiệp hiển thị tới ứng viên</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsEditingProfile(false)}
+                  className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" />
+                  <span>Quay lại xem thông tin</span>
+                </button>
+              </div>
+            )}
             {/* Legal Status Notice (If enterprise already verified & locked) */}
             {isLegalLocked && (
               <div className="flex items-start gap-3 rounded-md border border-emerald-200 bg-emerald-50/80 p-4 text-emerald-950">
@@ -846,8 +1054,8 @@ export function CompanyProfileView() {
             <div className="flex flex-col items-center justify-center gap-3 rounded-md border border-slate-200 bg-slate-50/50 p-6 text-center">
               <div className="group relative">
                 <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-dashed border-slate-300 bg-white text-slate-400 shadow-2xs">
-                  {company?.logoUrl ? (
-                    <img src={company.logoUrl} alt="Logo" className="h-full w-full object-contain p-1" />
+                  {displayedLogoUrl ? (
+                    <img src={displayedLogoUrl} alt="Logo" className="h-full w-full object-contain p-1" />
                   ) : (
                     <div className="flex flex-col items-center gap-1">
                       <Camera className="h-6 w-6 text-slate-400" />
@@ -863,7 +1071,7 @@ export function CompanyProfileView() {
                     disabled={isUploadingLogo}
                     className="mt-2 cursor-pointer text-xs font-semibold text-[#00b14f] hover:underline"
                   >
-                    {isUploadingLogo ? 'Uploading...' : company?.logoUrl ? 'Change Logo' : '+ Upload Logo'}
+                    {isUploadingLogo ? 'Uploading...' : displayedLogoUrl ? 'Change Logo' : '+ Upload Logo'}
                   </button>
                 )}
                 <input ref={logoInputRef} type="file" accept="image/*" onChange={onLogoSelected} className="sr-only" />
@@ -874,7 +1082,13 @@ export function CompanyProfileView() {
                 <input
                   type="checkbox"
                   checked={noLogo}
-                  onChange={(e) => setNoLogo(e.target.checked)}
+                  onChange={(e) => {
+                    setNoLogo(e.target.checked);
+                    if (e.target.checked) {
+                      setPendingLogoFile(null);
+                      setLogoPreviewUrl(null);
+                    }
+                  }}
                   className="h-4 w-4 rounded border-slate-300 text-[#00b14f] focus:ring-emerald-400"
                 />
                 <span>I don&apos;t have a logo</span>
@@ -946,21 +1160,47 @@ export function CompanyProfileView() {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Field 1: Tax Identification Number */}
               <div className="space-y-1.5">
-                <div className="flex items-center gap-1.5">
-                  <label className="text-xs font-bold text-slate-700">
-                    Tax Identification Number (Tax ID) <span className="text-rose-500">*</span>
-                  </label>
-                  <span title="10 or 13-digit Tax Identification Number on business license">
-                    <HelpCircle className="h-3.5 w-3.5 text-slate-400" />
-                  </span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <label className="text-xs font-bold text-slate-700">
+                      Tax Identification Number (Tax ID) <span className="text-rose-500">*</span>
+                    </label>
+                    <span title="10 or 13-digit Tax Identification Number on business license">
+                      <HelpCircle className="h-3.5 w-3.5 text-slate-400" />
+                    </span>
+                  </div>
+                  {!isLegalLocked && <span className="text-[11px] text-slate-500">Tra cứu tự động dữ liệu Thuế</span>}
                 </div>
-                <input
-                  type="text"
-                  disabled={isLegalLocked}
-                  {...register('taxCode')}
-                  placeholder="Enter 10 or 13-digit Tax ID"
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 font-mono text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500 sm:text-sm"
-                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    disabled={isLegalLocked || isLookingUpTax}
+                    {...register('taxCode')}
+                    placeholder="Enter 10 or 13-digit Tax ID"
+                    className="h-11 flex-1 rounded-md border border-slate-300 bg-white px-3.5 font-mono text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500 sm:text-sm"
+                  />
+                  {!isLegalLocked && (
+                    <button
+                      type="button"
+                      onClick={handleLookupTax}
+                      disabled={isLookingUpTax}
+                      title="Tra cứu thông tin pháp lý từ Tổng cục Thuế / Masothue"
+                      className="flex h-11 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-[#00b14f] bg-white px-3.5 text-xs font-semibold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50 active:scale-98 disabled:opacity-50"
+                    >
+                      {isLookingUpTax ? (
+                        <>
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          <span>Đang tra cứu...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Search className="h-3.5 w-3.5" />
+                          <span>Tra cứu MST</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
                 {errors.taxCode && <p className="text-xs text-rose-600">{errors.taxCode.message}</p>}
               </div>
 
@@ -1269,17 +1509,17 @@ export function CompanyProfileView() {
 
               {/* Photo grid preview */}
               <div className="grid grid-cols-2 gap-3 pt-1 sm:grid-cols-4">
-                {company?.photos && company.photos.length > 0 ? (
-                  company.photos.map((p) => (
+                {allPhotos.length > 0 ? (
+                  allPhotos.map((p) => (
                     <div
                       key={p.id}
                       className="group relative h-28 overflow-hidden rounded-md border border-slate-200 bg-slate-100"
                     >
-                      <img src={p.photoUrl} alt="Workplace" className="h-full w-full object-cover" />
+                      <img src={p.url} alt="Workplace" className="h-full w-full object-cover" />
                       <button
                         type="button"
-                        onClick={() => handleRemovePhoto(p.id)}
-                        className="absolute top-1.5 right-1.5 rounded bg-black/60 p-1 text-white opacity-0 transition group-hover:opacity-100 hover:bg-rose-600"
+                        onClick={() => onRemovePhotoItem(p)}
+                        className="absolute top-1.5 right-1.5 cursor-pointer rounded bg-black/60 p-1 text-white opacity-0 transition group-hover:opacity-100 hover:bg-rose-600"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -1301,6 +1541,15 @@ export function CompanyProfileView() {
               </div>
 
               <div className="flex items-center gap-3">
+                {hasLinkedCompany && (
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingProfile(false)}
+                    className="flex h-11 cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-6 text-sm font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50"
+                  >
+                    Hủy bỏ
+                  </button>
+                )}
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -1313,13 +1562,13 @@ export function CompanyProfileView() {
           </form>
         ) : null}
 
-        {/* Floating / Sticky Bottom Navigation: Next: Phone Verification -> (TopCV Style) */}
+        {/* Floating / Sticky Bottom Navigation (TopCV Dynamic Funnel Step) */}
         <div className="fixed right-6 bottom-4 z-40">
           <Link
-            href={ROUTES.RECRUITER_COMPANY_PHONE_VERIFY}
+            href={nextCta.url}
             className="flex items-center gap-2 rounded-full bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-white shadow-lg backdrop-blur-xs transition hover:scale-102 hover:bg-slate-900"
           >
-            <span>Next: Phone Verification</span>
+            <span>{nextCta.label}</span>
             <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00b14f] text-white">
               <ArrowRight className="h-3 w-3" />
             </div>
