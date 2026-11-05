@@ -1,9 +1,13 @@
 'use client';
 
+import { adminAuthApi } from '@/apiRequest/admin-auth';
 import PanelBrandSplash from '@/components/common/PanelBrandSplash';
+import Button from '@/components/ui/Button';
 import { useAdminTheme } from '@/hooks/useAdminTheme';
 import { useAuth } from '@/hooks/useAuth';
 import type { AdminAccountState, AdminPermission, AdminQueueCounts } from '@/types/admin';
+import { useQuery } from '@tanstack/react-query';
+import { Lock, ShieldCheck } from 'lucide-react';
 import { ReactNode, useEffect, useState, useSyncExternalStore } from 'react';
 import AdminCommandPalette from './AdminCommandPalette';
 import AdminMobileNavDrawer from './AdminMobileNavDrawer';
@@ -45,6 +49,46 @@ export default function AdminShell({ children, queueCounts, account, permissions
   const isCollapsed = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [isPaletteOpen, setPaletteOpen] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+
+  // Real Admin profile & queue counts
+  const { data: profile } = useQuery({
+    queryKey: ['admin', 'me'],
+    queryFn: () => adminAuthApi.getMe(),
+    staleTime: 60_000,
+    retry: false,
+  });
+
+  const liveQueueCounts: AdminQueueCounts = {
+    ...queueCounts,
+    businessVerification: profile?.queueCounts?.pendingVerifications ?? queueCounts?.businessVerification ?? 0,
+  };
+
+  const liveAccount: AdminAccountState = {
+    twoFactorEnabled: profile?.twoFactorEnabled ?? account.twoFactorEnabled,
+  };
+
+  // 15-minute idle lock
+  useEffect(() => {
+    const IDLE_TIMEOUT_MS = 15 * 60 * 1000;
+    let timer: ReturnType<typeof setTimeout>;
+
+    const resetTimer = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        setIsLocked(true);
+      }, IDLE_TIMEOUT_MS);
+    };
+
+    const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
+    events.forEach((event) => window.addEventListener(event, resetTimer, { passive: true }));
+    resetTimer();
+
+    return () => {
+      clearTimeout(timer);
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+    };
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -78,7 +122,7 @@ export default function AdminShell({ children, queueCounts, account, permissions
       <PanelBrandSplash variant="admin" theme={theme} />
 
       <AdminTopBar
-        queueCounts={queueCounts}
+        queueCounts={liveQueueCounts}
         onToggleSidebar={() => setSidebarCollapsed(!isCollapsed)}
         onOpenMobileNav={() => setMobileNavOpen(true)}
       />
@@ -86,10 +130,10 @@ export default function AdminShell({ children, queueCounts, account, permissions
       <div className="flex w-full flex-1 flex-col lg:flex-row">
         <AdminSidebar
           isCollapsed={isCollapsed}
-          queueCounts={queueCounts}
-          twoFactorEnabled={account.twoFactorEnabled}
-          adminName={user?.name}
-          adminEmail={user?.email}
+          queueCounts={liveQueueCounts}
+          twoFactorEnabled={liveAccount.twoFactorEnabled}
+          adminName={profile?.name || user?.name}
+          adminEmail={profile?.email || user?.email}
           permissions={permissions}
           onExpand={() => setSidebarCollapsed(false)}
           className="dark:border-forest-800 hidden border-[#e2e8f0] transition-[width] duration-200 lg:sticky lg:top-18 lg:block lg:h-[calc(100vh-4.5rem)] lg:overflow-y-auto lg:overscroll-contain lg:border-r"
@@ -101,6 +145,31 @@ export default function AdminShell({ children, queueCounts, account, permissions
           <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8">{children}</div>
         </main>
       </div>
+
+      {/* Idle Lock Overlay */}
+      {isLocked && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md">
+          <div className="mx-4 max-w-sm rounded-3xl border border-slate-700 bg-slate-900 p-8 text-center text-white shadow-2xl">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-950 text-emerald-400">
+              <Lock className="h-7 w-7" />
+            </div>
+            <h3 className="mt-4 text-lg font-bold">Phiên làm việc tạm khóa</h3>
+            <p className="mt-1.5 text-xs text-slate-400">
+              Hệ thống đã tự động khóa giao diện sau 15 phút không có tương tác để bảo vệ dữ liệu nội bộ.
+            </p>
+            <div className="mt-6">
+              <Button
+                type="button"
+                className="w-full bg-emerald-600 font-bold hover:bg-emerald-500"
+                onClick={() => setIsLocked(false)}
+                leftIcon={<ShieldCheck className="h-4 w-4" />}
+              >
+                Mở khóa tiếp tục
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isMobileNavOpen && (
         <AdminMobileNavDrawer
