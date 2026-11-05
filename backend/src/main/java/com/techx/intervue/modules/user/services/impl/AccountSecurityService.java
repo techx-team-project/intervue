@@ -61,6 +61,8 @@ public class AccountSecurityService implements AccountSecurityServiceInterface {
         PasswordPolicy.verify(request.password(), request.confirmPassword(), user.getEmail());
 
         user.setPassword(passwordEncoder.encode(request.password()));
+        user.setTokenVersion((user.getTokenVersion() != null ? user.getTokenVersion() : 1) + 1);
+        userRepository.save(user);
         revokeOthers(userId, currentTokenId(userId, refreshToken), PASSWORD_CHANGED_REASON);
         userSessionCache.evict(userId);
     }
@@ -113,6 +115,12 @@ public class AccountSecurityService implements AccountSecurityServiceInterface {
     @Override
     @Transactional
     public void revokeOtherSessions(Long userId, String refreshToken) {
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        user.setTokenVersion((user.getTokenVersion() != null ? user.getTokenVersion() : 1) + 1);
+        userRepository.save(user);
         revokeOthers(userId, currentTokenId(userId, refreshToken), USER_REVOKED_REASON);
         userSessionCache.evict(userId);
     }

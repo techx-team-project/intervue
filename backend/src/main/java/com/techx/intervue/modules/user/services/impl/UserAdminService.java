@@ -344,6 +344,15 @@ public class UserAdminService implements UserAdminServiceInterface {
     // Dropping the Redis session entry rejects the live access token on the next
     // request, so the account is out immediately instead of after the token expires.
     private void endEverySession(Long userId) {
+        userRepository
+                .findById(userId)
+                .ifPresent(
+                        user -> {
+                            user.setTokenVersion(
+                                    (user.getTokenVersion() != null ? user.getTokenVersion() : 1)
+                                            + 1);
+                            userRepository.save(user);
+                        });
         userSessionCache.evict(userId);
         refreshTokenRepository.revokeAllRefreshTokenByUser(userId);
     }

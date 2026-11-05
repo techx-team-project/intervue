@@ -68,6 +68,9 @@ public class RecruiterAccountSecurityService implements RecruiterAccountSecurity
         }
 
         recruiter.setPassword(passwordEncoder.encode(request.password()));
+        recruiter.setTokenVersion(
+                (recruiter.getTokenVersion() != null ? recruiter.getTokenVersion() : 1) + 1);
+        recruiterRepository.save(recruiter);
         revokeOthers(
                 recruiterId, currentTokenId(recruiterId, refreshToken), PASSWORD_CHANGED_REASON);
         sessionCache.evict(recruiterId);
@@ -121,6 +124,13 @@ public class RecruiterAccountSecurityService implements RecruiterAccountSecurity
     @Override
     @Transactional
     public void revokeOtherSessions(Long recruiterId, String refreshToken) {
+        Recruiter recruiter =
+                recruiterRepository
+                        .findById(recruiterId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        recruiter.setTokenVersion(
+                (recruiter.getTokenVersion() != null ? recruiter.getTokenVersion() : 1) + 1);
+        recruiterRepository.save(recruiter);
         revokeOthers(recruiterId, currentTokenId(recruiterId, refreshToken), USER_REVOKED_REASON);
         sessionCache.evict(recruiterId);
     }

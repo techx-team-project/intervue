@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService implements JwtServiceInterface {
     private static final String ACCOUNT_TYPE_CLAIM = "typ";
+    private static final String TOKEN_VERSION_CLAIM = "v";
+    private static final String PURPOSE_CLAIM = "purp";
+    private static final String PURPOSE_2FA = "2FA_PREAUTH";
+    private static final long TEMP_TOKEN_DURATION_MS = 5 * 60 * 1000L; // 5 minutes
 
     private final Long expirationTime;
     private final String issuer;
@@ -26,22 +30,43 @@ public class JwtService implements JwtServiceInterface {
         this.key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(authConfig.getSecretKey()));
     }
 
+    @Override
+    public String generateTwoFactorTempToken(Long accountId, AccountType accountType) {
+        Date now = new Date();
+        Date expiredAt = new Date(now.getTime() + TEMP_TOKEN_DURATION_MS);
+
+        return Jwts.builder()
+                .subject(accountId.toString())
+                .claim(ACCOUNT_TYPE_CLAIM, accountType.name())
+                .claim(PURPOSE_CLAIM, PURPOSE_2FA)
+                .claim("jti", UUID.randomUUID().toString())
+                .issuer(issuer)
+                .issuedAt(now)
+                .expiration(expiredAt)
+                .signWith(key)
+                .compact();
+    }
+
     // tạo ra jwt
     @Override
     public String generateToken(Long accountId, AccountType accountType) {
+        return generateToken(accountId, accountType, 1);
+    }
+
+    @Override
+    public String generateToken(Long accountId, AccountType accountType, Integer tokenVersion) {
         Date now = new Date();
         Date expiredAt = new Date(now.getTime() + expirationTime);
 
         return Jwts.builder()
                 .subject(accountId.toString())
                 .claim(ACCOUNT_TYPE_CLAIM, accountType.name())
+                .claim(TOKEN_VERSION_CLAIM, tokenVersion != null ? tokenVersion : 1)
                 .claim("jti", UUID.randomUUID().toString())
                 .issuer(issuer)
                 .issuedAt(now)
                 .expiration(expiredAt)
-                .signWith(key) // tự động chọn thuật toán HS256, HS384, ... theo độ dài key của mình
-                // cho phù
-                // hợp với đầu vào của từng thuật toán
+                .signWith(key)
                 .compact();
     }
 
@@ -67,6 +92,15 @@ public class JwtService implements JwtServiceInterface {
     public AccountType extractAccountType(String token) {
         String raw = extractAllClaims(token).get(ACCOUNT_TYPE_CLAIM, String.class);
         return raw == null ? AccountType.USER : AccountType.valueOf(raw);
+    }
+
+    @Override
+    public Integer extractTokenVersion(String token) {
+        Object val = extractAllClaims(token).get(TOKEN_VERSION_CLAIM);
+        if (val instanceof Number n) {
+            return n.intValue();
+        }
+        return null;
     }
 
     @Override
