@@ -41,6 +41,15 @@ public class TwoFactorService implements TwoFactorServiceInterface {
     @Override
     @Transactional
     public TwoFactorSetupResource setup(Long userId, String email) {
+        UserTwoFactor existing = userTwoFactorRepository.findById(userId).orElse(null);
+        if (existing != null && existing.isConfirmed()) {
+            throw AppException.validation(
+                    "twoFactor", "Two-factor authentication is already active.");
+        }
+        return setupInternal(userId, email);
+    }
+
+    private TwoFactorSetupResource setupInternal(Long userId, String email) {
         String secret = TotpUtil.generateSecretKey();
         String encryptedSecret = CryptoUtil.encrypt(secret, authConfig.getSecretKey());
 
