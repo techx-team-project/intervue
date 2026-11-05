@@ -115,6 +115,14 @@ public class CloudinaryStorageService implements StorageServiceInterface {
 
     @Override
     public String publicImageUrl(String publicId) {
+        if (publicId == null) {
+            return null;
+        }
+        if (publicId.startsWith("http://")
+                || publicId.startsWith("https://")
+                || publicId.startsWith("/")) {
+            return publicId;
+        }
         Cloudinary client = cloudinaryProvider.getIfAvailable();
         if (client == null) {
             return "/images/placeholder.png";
