@@ -150,11 +150,13 @@ export function useCompanyVerification() {
             ? 'APPROVED'
             : candidateAgreementStep?.status || 'NOT_SUBMITTED',
         agreedAt: candidateAgreementStep?.completedAt,
+        reviewReason: candidateAgreementStep?.reviewReason,
       },
       platformAgreement: {
         status:
           platformAgreementStep?.status === 'APPROVED' ? 'APPROVED' : platformAgreementStep?.status || 'NOT_SUBMITTED',
         agreedAt: platformAgreementStep?.completedAt,
+        reviewReason: platformAgreementStep?.reviewReason,
       },
       checklist,
       nextStepLabel,

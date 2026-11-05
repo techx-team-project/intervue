@@ -3,6 +3,7 @@ import type { Page } from '@/types/api';
 import type {
   AdminBusinessVerificationDetailResource,
   AdminBusinessVerificationListResource,
+  AdminCompanyAgreementResource,
   BusinessDocumentType,
   BusinessVerificationSummaryResource,
   CompanyMemberResource,
@@ -60,7 +61,7 @@ export const adminBusinessVerificationApi = {
     if (status) qs.set('status', status);
     qs.set('page', String(page));
     qs.set('size', String(size));
-    return request<Page<unknown>>(`/admin/business-verification/agreements?${qs.toString()}`);
+    return request<Page<AdminCompanyAgreementResource>>(`/admin/business-verification/agreements?${qs.toString()}`);
   },
 
   viewAgreementBlob: (agreementId: number) =>
