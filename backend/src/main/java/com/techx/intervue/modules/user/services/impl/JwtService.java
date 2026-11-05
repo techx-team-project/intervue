@@ -18,7 +18,9 @@ public class JwtService implements JwtServiceInterface {
     private static final String TOKEN_VERSION_CLAIM = "v";
     private static final String PURPOSE_CLAIM = "purp";
     private static final String PURPOSE_2FA = "2FA_PREAUTH";
+    public static final String PURPOSE_2FA_SETUP = "2FA_SETUP";
     private static final long TEMP_TOKEN_DURATION_MS = 5 * 60 * 1000L; // 5 minutes
+    private static final long SETUP_TOKEN_DURATION_MS = 10 * 60 * 1000L; // 10 minutes
 
     private final Long expirationTime;
     private final String issuer;
@@ -39,6 +41,23 @@ public class JwtService implements JwtServiceInterface {
                 .subject(accountId.toString())
                 .claim(ACCOUNT_TYPE_CLAIM, accountType.name())
                 .claim(PURPOSE_CLAIM, PURPOSE_2FA)
+                .claim("jti", UUID.randomUUID().toString())
+                .issuer(issuer)
+                .issuedAt(now)
+                .expiration(expiredAt)
+                .signWith(key)
+                .compact();
+    }
+
+    @Override
+    public String generateTwoFactorSetupToken(Long accountId, AccountType accountType) {
+        Date now = new Date();
+        Date expiredAt = new Date(now.getTime() + SETUP_TOKEN_DURATION_MS);
+
+        return Jwts.builder()
+                .subject(accountId.toString())
+                .claim(ACCOUNT_TYPE_CLAIM, accountType.name())
+                .claim(PURPOSE_CLAIM, PURPOSE_2FA_SETUP)
                 .claim("jti", UUID.randomUUID().toString())
                 .issuer(issuer)
                 .issuedAt(now)

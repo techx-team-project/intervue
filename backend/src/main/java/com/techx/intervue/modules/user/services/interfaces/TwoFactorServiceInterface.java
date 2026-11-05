@@ -16,4 +16,6 @@ public interface TwoFactorServiceInterface {
     boolean verifyCodeOrRecoveryCode(Long userId, String code);
 
     boolean isTwoFactorEnabled(Long userId);
+
+    java.util.List<String> regenerateRecoveryCodes(Long userId);
 }

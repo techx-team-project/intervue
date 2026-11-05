@@ -18,6 +18,8 @@ import com.techx.intervue.modules.user.resources.AdminAuthResult;
 import com.techx.intervue.modules.user.resources.AdminProfileResource;
 import com.techx.intervue.modules.user.resources.AdminQueueCountsResource;
 import com.techx.intervue.modules.user.resources.AuthResult;
+import com.techx.intervue.modules.user.resources.TwoFactorSetupResource;
+import com.techx.intervue.modules.user.resources.TwoFactorStatusResource;
 import com.techx.intervue.modules.user.services.interfaces.AdminAuthServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.AuthSessionServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
@@ -27,6 +29,7 @@ import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceIn
 import com.techx.intervue.modules.user.services.interfaces.TwoFactorServiceInterface;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -89,10 +92,101 @@ public class AdminAuthService implements AdminAuthServiceInterface {
             return AdminAuthResult.challenge(tempToken);
         }
 
+        // Enforced 2FA Policy: Mandatory onboarding for all administrators
+        String setupToken = jwtService.generateTwoFactorSetupToken(user.getId(), AccountType.USER);
+        return AdminAuthResult.setupRequired(setupToken);
+    }
+
+    @Override
+    @Transactional
+    public TwoFactorSetupResource initiateTwoFactorSetup(String tempToken) {
+        Long userId = validatePreAuthToken(tempToken, JwtService.PURPOSE_2FA_SETUP);
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        if (!user.hasRole(RoleType.ADMIN)) {
+            throw new AppException(ErrorCode.ADMIN_ACCESS_REQUIRED);
+        }
+        return twoFactorService.setup(userId, user.getEmail());
+    }
+
+    @Override
+    @Transactional
+    public AdminAuthResult confirmTwoFactorSetup(
+            TwoFactorChallengeRequest request, String userAgent, String ip) {
+        Long userId = validatePreAuthToken(request.tempToken(), JwtService.PURPOSE_2FA_SETUP);
+        User user =
+                userRepository
+                        .findByIdWithRoles(userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        if (!user.hasRole(RoleType.ADMIN)) {
+            throw new AppException(ErrorCode.ADMIN_ACCESS_REQUIRED);
+        }
+
+        twoFactorService.confirm(userId, request.code());
+
         AuthResult session = authSessionService.open(user, userAgent, ip);
         userRepository.touchLastLogin(user.getId(), Instant.now());
         AdminProfileResource profile = buildProfile(user);
         return new AdminAuthResult(session.accessToken(), session.refreshToken(), profile);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean verifyPassword(Long adminUserId, String password) {
+        User user =
+                userRepository
+                        .findById(adminUserId)
+                        .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TwoFactorStatusResource getTwoFactorStatus(Long adminUserId) {
+        return twoFactorService.getStatus(adminUserId);
+    }
+
+    @Override
+    @Transactional
+    public TwoFactorSetupResource reconfigureTwoFactor(Long adminUserId, String password) {
+        if (!verifyPassword(adminUserId, password)) {
+            throw AppException.validation("password", "Incorrect password.");
+        }
+        User user =
+                userRepository
+                        .findById(adminUserId)
+                        .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        return twoFactorService.setup(adminUserId, user.getEmail());
+    }
+
+    @Override
+    @Transactional
+    public TwoFactorStatusResource confirmTwoFactorReconfigure(Long adminUserId, String code) {
+        return twoFactorService.confirm(adminUserId, code);
+    }
+
+    @Override
+    @Transactional
+    public List<String> regenerateRecoveryCodes(Long adminUserId, String password) {
+        if (!verifyPassword(adminUserId, password)) {
+            throw AppException.validation("password", "Incorrect password.");
+        }
+        return twoFactorService.regenerateRecoveryCodes(adminUserId);
+    }
+
+    private Long validatePreAuthToken(String token, String expectedPurpose) {
+        try {
+            String purpose = jwtService.extractAllClaims(token).get("purp", String.class);
+            if (!expectedPurpose.equals(purpose)) {
+                throw new AppException(ErrorCode.UNAUTHENTICATED);
+            }
+            return jwtService.extractSubject(token);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
     }
 
     @Override

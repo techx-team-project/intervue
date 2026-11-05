@@ -8,11 +8,14 @@ import com.techx.intervue.filters.JwtAuthFilter;
 import com.techx.intervue.modules.helpers.CookieHelper;
 import com.techx.intervue.modules.helpers.IpHelper;
 import com.techx.intervue.modules.user.requests.LoginRequest;
+import com.techx.intervue.modules.user.requests.PasswordVerifyRequest;
 import com.techx.intervue.modules.user.requests.TwoFactorChallengeRequest;
+import com.techx.intervue.modules.user.requests.TwoFactorSetupInitiateRequest;
 import com.techx.intervue.modules.user.resources.AdminAuthResource;
 import com.techx.intervue.modules.user.resources.AdminAuthResult;
 import com.techx.intervue.modules.user.resources.AdminProfileResource;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
+import com.techx.intervue.modules.user.resources.TwoFactorSetupResource;
 import com.techx.intervue.modules.user.services.interfaces.AdminAuthServiceInterface;
 import com.techx.intervue.resources.ApiResource;
 import jakarta.servlet.http.Cookie;
@@ -59,6 +62,35 @@ public class AdminAuthController extends BaseController {
         String ip = IpHelper.getClientIp(httpRequest);
         AdminAuthResult result = adminAuthService.verifyTwoFactor(request, userAgent, ip);
         return withSession(result, "Admin two-factor verification successful!");
+    }
+
+    @PostMapping("/2fa/setup")
+    public ResponseEntity<ApiResource<TwoFactorSetupResource>> setupTwoFactor(
+            @Valid @RequestBody TwoFactorSetupInitiateRequest request) {
+        TwoFactorSetupResource resource =
+                adminAuthService.initiateTwoFactorSetup(request.tempToken());
+        return ok(resource, "Admin two-factor setup initiated successfully!");
+    }
+
+    @PostMapping("/2fa/confirm")
+    public ResponseEntity<ApiResource<AdminAuthResource>> confirmTwoFactor(
+            @Valid @RequestBody TwoFactorChallengeRequest request, HttpServletRequest httpRequest) {
+        String userAgent = httpRequest.getHeader(HttpHeaders.USER_AGENT);
+        String ip = IpHelper.getClientIp(httpRequest);
+        AdminAuthResult result = adminAuthService.confirmTwoFactorSetup(request, userAgent, ip);
+        return withSession(result, "Admin two-factor authentication confirmed successfully!");
+    }
+
+    @PostMapping("/verify-password")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResource<Boolean>> verifyPassword(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @Valid @RequestBody PasswordVerifyRequest request) {
+        boolean valid = adminAuthService.verifyPassword(user.getId(), request.password());
+        if (!valid) {
+            throw AppException.validation("password", "Incorrect administrator password.");
+        }
+        return ok(true, "Password verified successfully.");
     }
 
     @PostMapping("/refresh")
@@ -133,6 +165,12 @@ public class AdminAuthController extends BaseController {
                     ApiResource.success(
                             AdminAuthResource.challenge(result.tempToken()),
                             "Two-factor authentication required."));
+        }
+        if (Boolean.TRUE.equals(result.requiresTwoFactorSetup())) {
+            return ResponseEntity.ok(
+                    ApiResource.success(
+                            AdminAuthResource.setupRequired(result.tempToken()),
+                            "Two-factor authentication setup is required for administrator access."));
         }
 
         ResponseCookie refreshCookie =

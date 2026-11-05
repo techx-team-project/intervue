@@ -71,7 +71,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
         try {
             String purpose = jwtService.extractAllClaims(token).get("purp", String.class);
-            if ("2FA_PREAUTH".equals(purpose)) {
+            if ("2FA_PREAUTH".equals(purpose) || "2FA_SETUP".equals(purpose)) {
                 writeErrorResponse(
                         response,
                         "Pre-authentication token cannot be used to access protected resources.");

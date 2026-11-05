@@ -79,6 +79,8 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/admin/auth/verify-2fa")
                                         .permitAll()
+                                        .requestMatchers("/api/v1/admin/auth/2fa/**")
+                                        .permitAll()
                                         .requestMatchers("/api/v1/admin/auth/refresh")
                                         .permitAll()
                                         .requestMatchers("/api/v1/admin/auth/logout")

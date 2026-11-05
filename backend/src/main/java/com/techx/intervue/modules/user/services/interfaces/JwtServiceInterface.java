@@ -12,6 +12,8 @@ public interface JwtServiceInterface {
 
     public String generateTwoFactorTempToken(Long accountId, AccountType accountType);
 
+    public String generateTwoFactorSetupToken(Long accountId, AccountType accountType);
+
     public boolean isTokenValid(String token, CustomUserDetails userDetails);
 
     public boolean isTokenExpired(String token);

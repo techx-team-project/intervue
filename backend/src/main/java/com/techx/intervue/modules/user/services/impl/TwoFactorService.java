@@ -167,4 +167,20 @@ public class TwoFactorService implements TwoFactorServiceInterface {
                 .map(UserTwoFactor::isConfirmed)
                 .orElse(false);
     }
+
+    @Override
+    @Transactional
+    public List<String> regenerateRecoveryCodes(Long userId) {
+        recoveryCodeRepository.deleteByUserId(userId);
+        List<String> rawBackupCodes = TotpUtil.generateBackupCodes(BACKUP_CODES_COUNT);
+        for (String rawCode : rawBackupCodes) {
+            String clean = rawCode.replaceAll("\\s+|-", "");
+            recoveryCodeRepository.save(
+                    UserTwoFactorRecoveryCode.builder()
+                            .userId(userId)
+                            .codeHash(TokenHashUtil.sha256(clean))
+                            .build());
+        }
+        return rawBackupCodes;
+    }
 }
