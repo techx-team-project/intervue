@@ -11,6 +11,9 @@ public final class CompanySpecifications {
 
     public static Specification<Company> matching(SearchCompaniesRequest request) {
         return (root, query, builder) -> {
+            if (request == null || request.q() == null || request.q().isBlank()) {
+                return builder.conjunction();
+            }
             String pattern = SpecificationSupport.containsPattern(request.q());
             return builder.or(
                     builder.like(builder.lower(root.get("name")), pattern),

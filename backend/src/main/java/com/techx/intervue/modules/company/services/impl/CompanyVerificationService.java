@@ -35,8 +35,8 @@ import com.techx.intervue.modules.company.resources.RecruiterVerificationProfile
 import com.techx.intervue.modules.company.resources.VerificationStepResource;
 import com.techx.intervue.modules.company.services.impl.CompanyVerificationLevelPolicy.Facts;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
-import com.techx.intervue.modules.user.resources.UserResource;
-import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
+import com.techx.intervue.modules.recruiter.resources.RecruiterResource;
+import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterServiceInterface;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -70,7 +70,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     private final BusinessDocumentMapper businessDocumentMapper;
     private final CompanyProfileCompleteness completeness;
     private final CompanyVerificationLevelPolicy levelPolicy;
-    private final UserServiceInterface userService;
+    private final RecruiterServiceInterface recruiterService;
     private final AuditLogServiceInterface auditLogService;
 
     @Override
@@ -325,17 +325,17 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                 .build();
     }
 
-    private Facts factsFor(Long userId, Company company) {
-        UserResource user = userService.getMe(userId);
+    private Facts factsFor(Long recruiterId, Company company) {
+        RecruiterResource recruiter = recruiterService.getMe(recruiterId);
         return Facts.builder()
-                .emailVerified(user.emailVerified())
-                .phoneVerified(user.phoneVerified())
+                .emailVerified(recruiter.emailVerified())
+                .phoneVerified(recruiter.phoneVerified())
                 .companyLinked(company != null)
                 .companyAgreementSigned(
                         company != null && allAgreementsAcceptedForCompany(company.getId()))
-                .personalAgreementsAccepted(allAgreementsAcceptedForUser(userId))
+                .personalAgreementsAccepted(allAgreementsAcceptedForUser(recruiterId))
                 .companyVerified(company != null && company.isVerified())
-                .ownDocumentEffective(effectiveDocument(userId).isPresent())
+                .ownDocumentEffective(effectiveDocument(recruiterId).isPresent())
                 .build();
     }
 

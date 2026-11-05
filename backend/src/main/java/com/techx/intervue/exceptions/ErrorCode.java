@@ -104,6 +104,9 @@ public enum ErrorCode {
     PHONE_OTP_INVALID(HttpStatus.BAD_REQUEST, "The verification code is invalid or has expired!"),
     PHONE_OTP_NOT_REQUESTED(
             HttpStatus.UNPROCESSABLE_CONTENT, "Please request a verification code first!"),
+    PHONE_OTP_ATTEMPTS_EXCEEDED(
+            HttpStatus.BAD_REQUEST,
+            "You have exceeded the maximum verification attempts. This code is now invalid. Please request a new one."),
     AGREEMENT_ALREADY_ACCEPTED(HttpStatus.CONFLICT, "This agreement has already been accepted!"),
     PROFILE_SECTION_LIMIT_REACHED(
             HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!"),

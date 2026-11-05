@@ -1,10 +1,24 @@
 'use client';
 
+import { accountSecurityApiFor } from '@/apiRequest/account-security';
 import { authApi } from '@/apiRequest/auth';
-import { phoneVerificationApi } from '@/apiRequest/phone-verification';
+import { recruiterAuthApi } from '@/apiRequest/recruiter-auth';
 import { isApiError } from '@/lib/api-error';
+import { isRecruiterPortal } from '@/lib/auth-portal';
 import { useAuthStore } from '@/store/auth.store';
-import { ArrowLeft, CheckCircle2, Eye, EyeOff, Headphones, Lock, Mail, Phone, ShieldCheck, X } from 'lucide-react';
+import {
+  AlertTriangle,
+  ArrowLeft,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  Headphones,
+  Lock,
+  Mail,
+  Phone,
+  ShieldCheck,
+  X,
+} from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -50,6 +64,7 @@ function PhoneVerificationModalDialog({
   // OTP State
   const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
   const [otpError, setOtpError] = useState<string | null>(null);
+  const [isOtpLocked, setIsOtpLocked] = useState(false);
   const [countdown, setCountdown] = useState(60);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -69,10 +84,10 @@ function PhoneVerificationModalDialog({
       } else {
         setTimeout(() => passwordInputRef.current?.focus(), 80);
       }
-    } else {
+    } else if (!isOtpLocked) {
       setTimeout(() => otpInputRefs.current[0]?.focus(), 80);
     }
-  }, [step, mode]);
+  }, [step, mode, isOtpLocked]);
 
   // Timer countdown for OTP
   useEffect(() => {
@@ -125,7 +140,9 @@ function PhoneVerificationModalDialog({
     const currentUser = useAuthStore.getState().user;
     if (currentUser?.email) {
       try {
-        const session = await authApi.login({ email: currentUser.email, password: trimmedPw });
+        const session = isRecruiterPortal()
+          ? await recruiterAuthApi.login({ email: currentUser.email, password: trimmedPw })
+          : await authApi.login({ email: currentUser.email, password: trimmedPw });
         if (session) {
           useAuthStore.getState().setSession(session);
         }
@@ -141,12 +158,14 @@ function PhoneVerificationModalDialog({
     }
 
     // 2. Dispatch live SMS verification code to backend
+    const api = accountSecurityApiFor(isRecruiterPortal() ? 'recruiter' : 'candidate');
     try {
-      await phoneVerificationApi.sendOtp(targetPhone);
+      await api.sendPhoneOtp(targetPhone);
       setStep('OTP');
       setCountdown(60);
       setOtpDigits(['', '', '', '', '', '']);
       setOtpError(null);
+      setIsOtpLocked(false);
       toast.success(`Verification code sent to ${targetPhone}!`);
     } catch (err) {
       if (isApiError(err)) {
@@ -167,11 +186,13 @@ function PhoneVerificationModalDialog({
   const handleResendOtp = async () => {
     if (countdown > 0 || isResending) return;
     setIsResending(true);
+    const api = accountSecurityApiFor(isRecruiterPortal() ? 'recruiter' : 'candidate');
     try {
-      await phoneVerificationApi.sendOtp(targetPhone);
+      await api.sendPhoneOtp(targetPhone);
       setCountdown(60);
       setOtpDigits(['', '', '', '', '', '']);
       setOtpError(null);
+      setIsOtpLocked(false);
       otpInputRefs.current[0]?.focus();
       toast.success(`New verification code sent to ${targetPhone}!`);
     } catch (err) {
@@ -187,7 +208,7 @@ function PhoneVerificationModalDialog({
 
   // Handle OTP digit changes
   const handleOtpDigitChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return;
+    if (isOtpLocked || !/^\d*$/.test(value)) return;
     const newDigits = [...otpDigits];
     newDigits[index] = value.slice(-1);
     setOtpDigits(newDigits);
@@ -197,9 +218,16 @@ function PhoneVerificationModalDialog({
     if (value && index < 5) {
       otpInputRefs.current[index + 1]?.focus();
     }
+
+    // Auto-submit when all 6 digits are entered
+    const fullCode = newDigits.join('');
+    if (fullCode.length === 6) {
+      triggerVerifyOtp(fullCode);
+    }
   };
 
   const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isOtpLocked) return;
     if (e.key === 'Backspace' && !otpDigits[index] && index > 0) {
       otpInputRefs.current[index - 1]?.focus();
     } else if (e.key === 'ArrowLeft' && index > 0) {
@@ -213,6 +241,7 @@ function PhoneVerificationModalDialog({
 
   const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
+    if (isOtpLocked) return;
     const raw = e.clipboardData.getData('text').trim();
     const digitsOnly = raw.replace(/\D/g, '');
     if (digitsOnly.length === 6) {
@@ -220,13 +249,14 @@ function PhoneVerificationModalDialog({
       setOtpDigits(digits);
       if (otpError) setOtpError(null);
       otpInputRefs.current[5]?.focus();
+      triggerVerifyOtp(digitsOnly);
     }
   };
 
   // Submit Step 2: Confirm OTP with backend
-  const handleOtpSubmit = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    const code = otpDigits.join('');
+  const triggerVerifyOtp = async (codeToVerify?: string) => {
+    if (isOtpLocked || isVerifyingOtp) return;
+    const code = codeToVerify ?? otpDigits.join('');
     if (code.length !== 6) {
       setOtpError('Please enter all 6 digits of the verification code.');
       return;
@@ -234,11 +264,19 @@ function PhoneVerificationModalDialog({
 
     setIsVerifyingOtp(true);
     setOtpError(null);
+    const api = accountSecurityApiFor(isRecruiterPortal() ? 'recruiter' : 'candidate');
+    const minDelay = new Promise((resolve) => setTimeout(resolve, 600));
+
     try {
-      const updatedUser = await phoneVerificationApi.verifyOtp(code);
+      const patch = await api.verifyPhoneOtp(code);
+      await minDelay;
+
       const store = useAuthStore.getState();
-      if (store.accessToken && updatedUser) {
-        store.setSession({ accessToken: store.accessToken, user: updatedUser });
+      if (store.accessToken && store.user) {
+        store.setSession({
+          accessToken: store.accessToken,
+          user: { ...store.user, ...patch, phone: targetPhone, phoneVerified: true },
+        });
       }
       toast.success(
         mode === 'CHANGE'
@@ -248,14 +286,34 @@ function PhoneVerificationModalDialog({
       onSuccess(targetPhone);
       onClose();
     } catch (err) {
+      await minDelay;
+
+      // Clear all 6 digits so the user starts fresh
+      setOtpDigits(['', '', '', '', '', '']);
       if (isApiError(err)) {
-        setOtpError(err.message || 'Invalid verification code. Please check and try again.');
+        if (err.code === 'PHONE_OTP_ATTEMPTS_EXCEEDED' || err.code === 'PHONE_OTP_NOT_REQUESTED') {
+          setIsOtpLocked(true);
+          setOtpError(
+            err.code === 'PHONE_OTP_ATTEMPTS_EXCEEDED'
+              ? 'You have exceeded the maximum verification attempts (3/3). This code has been invalidated. Please request a new code below.'
+              : err.message || 'Verification session expired. Please request a new code.',
+          );
+        } else {
+          setOtpError(err.message || 'Invalid verification code. Please check and try again.');
+          setTimeout(() => otpInputRefs.current[0]?.focus(), 10);
+        }
       } else {
         setOtpError('Failed to verify code. Please try again.');
+        setTimeout(() => otpInputRefs.current[0]?.focus(), 10);
       }
     } finally {
       setIsVerifyingOtp(false);
     }
+  };
+
+  const handleOtpSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    triggerVerifyOtp();
   };
 
   return (
@@ -430,11 +488,6 @@ function PhoneVerificationModalDialog({
                   </button>
                 )}
               </p>
-              {/* Development note for local environment */}
-              <div className="inline-block rounded border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] text-emerald-800">
-                💡 Local Dev Tip: In local mode, OTP is logged in your Spring Boot console (
-                <code className="font-mono text-emerald-900">[LOCAL SMS - not delivered]</code>).
-              </div>
             </div>
 
             {/* OTP Form */}
@@ -451,16 +504,34 @@ function PhoneVerificationModalDialog({
                     inputMode="numeric"
                     maxLength={1}
                     value={digit}
+                    disabled={isVerifyingOtp || isOtpLocked}
                     onChange={(e) => handleOtpDigitChange(idx, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(idx, e)}
                     onPaste={handleOtpPaste}
-                    className="h-12 w-11 rounded-md border border-slate-300 bg-white text-center font-mono text-lg font-bold text-slate-900 shadow-2xs transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:h-12 sm:w-12"
+                    className={`h-12 w-11 rounded-md border text-center font-mono text-lg font-bold shadow-2xs transition sm:h-12 sm:w-12 ${
+                      isOtpLocked
+                        ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400'
+                        : isVerifyingOtp
+                          ? 'border-emerald-400 bg-emerald-50/60 text-emerald-950 ring-1 ring-emerald-200'
+                          : 'border-slate-300 bg-white text-slate-900 focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none'
+                    }`}
                   />
                 ))}
               </div>
 
               {/* Inline OTP Error */}
-              {otpError && <p className="text-center text-xs font-semibold text-red-600">{otpError}</p>}
+              {otpError && (
+                <div
+                  className={`flex items-start gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${
+                    isOtpLocked
+                      ? 'border border-red-200 bg-red-50 text-red-700'
+                      : 'justify-center text-center text-red-600'
+                  }`}
+                >
+                  {isOtpLocked && <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-red-600" />}
+                  <span>{otpError}</span>
+                </div>
+              )}
 
               {/* Resend & Expiry Info */}
               <div className="flex flex-col items-center justify-center gap-1 pt-1 text-xs text-slate-500">
@@ -486,7 +557,11 @@ function PhoneVerificationModalDialog({
               <div className="flex items-center justify-center gap-3.5 pt-2">
                 <button
                   type="button"
-                  onClick={() => setStep('INPUT')}
+                  onClick={() => {
+                    setStep('INPUT');
+                    setIsOtpLocked(false);
+                    setOtpError(null);
+                  }}
                   disabled={isVerifyingOtp}
                   className="flex h-10 cursor-pointer items-center gap-1.5 rounded-md bg-slate-100 px-4 text-xs font-medium text-slate-700 transition hover:bg-slate-200 sm:text-sm"
                 >
@@ -495,7 +570,7 @@ function PhoneVerificationModalDialog({
                 </button>
                 <button
                   type="submit"
-                  disabled={isVerifyingOtp || otpDigits.join('').length !== 6}
+                  disabled={isVerifyingOtp || isOtpLocked || otpDigits.join('').length !== 6}
                   className="flex h-10 min-w-36 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-[#00b14f] px-5 text-xs font-medium text-white shadow-xs transition hover:bg-emerald-600 disabled:opacity-50 sm:text-sm"
                 >
                   {isVerifyingOtp ? (

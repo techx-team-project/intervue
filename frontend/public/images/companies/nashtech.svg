@@ -1,0 +1,966 @@
+<!doctype html><html lang="en"><head>
+    <meta charset="utf-8">
+    <title>Error 404 | Page not found</title>
+    <link rel="shortcut icon" href="https://www.nashtechglobal.com/hubfs/NTfavicon.png">
+    <meta name="description" content="">
+    
+    
+    
+      
+    
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&amp;display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,400,0..1,0&amp;display=swap" rel="stylesheet">
+
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:description" content="">
+    <meta property="og:title" content="">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:title" content="">
+
+    
+
+    
+
+    <style>
+a.cta_button{-moz-box-sizing:content-box !important;-webkit-box-sizing:content-box !important;box-sizing:content-box !important;vertical-align:middle}.hs-breadcrumb-menu{list-style-type:none;margin:0px 0px 0px 0px;padding:0px 0px 0px 0px}.hs-breadcrumb-menu-item{float:left;padding:10px 0px 10px 10px}.hs-breadcrumb-menu-divider:before{content:'›';padding-left:10px}.hs-featured-image-link{border:0}.hs-featured-image{float:right;margin:0 0 20px 20px;max-width:50%}@media (max-width: 568px){.hs-featured-image{float:none;margin:0;width:100%;max-width:100%}}.hs-screen-reader-text{clip:rect(1px, 1px, 1px, 1px);height:1px;overflow:hidden;position:absolute !important;width:1px}
+</style>
+
+<link rel="stylesheet" href="https://www.nashtechglobal.com/hubfs/hub_generated/template_assets/1059/497001540799/1793633302188/template_main.min.css">
+<link rel="stylesheet" href="https://www.nashtechglobal.com/hubfs/hub_generated/template_assets/1059/497001539829/1793633299668/template_system.min.css">
+<link rel="stylesheet" href="https://www.nashtechglobal.com/hubfs/hub_generated/template_assets/1059/497001540805/1793633300076/template_theme-overrides.min.css">
+<link rel="stylesheet" href="https://www.nashtechglobal.com/hubfs/hub_generated/module_assets/1059/497001540803/1792665532997/module_sticky-ribbon-top.min.css">
+<link rel="preload" as="style" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/index-BhcCNHOx.css">
+
+<link rel="preload" as="style" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/index-DG8m4Qn6.css">
+
+<link rel="preload" as="style" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/index-DYbswq7O.css">
+
+<link rel="preload" as="style" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/index-KaMAMj_y.css">
+
+<link rel="preload" as="style" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/listing-filter-dropdown-DiHOQTGh.css">
+
+<link rel="preload" as="style" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/hubspot-form-select-dropdown-C30gFpvG.css">
+
+<link rel="preload" as="style" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/index-BNwzR_h3.css">
+<style>
+  @font-face {
+    font-family: "Mulish";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Mulish/regular.woff2") format("woff2"), url("/_hcms/googlefonts/Mulish/regular.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Mulish";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url("/_hcms/googlefonts/Mulish/700.woff2") format("woff2"), url("/_hcms/googlefonts/Mulish/700.woff") format("woff");
+  }
+</style>
+
+    
+
+
+    
+    <link rel="canonical" href="https://www.nashtechglobal.com/404">
+
+<script nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+(function () {
+  function domReady(callback) {
+    if (['interactive', 'complete'].indexOf(document.readyState) >= 0) {
+      callback();
+    } else {
+      document.addEventListener('DOMContentLoaded', callback);
+    }
+  }
+
+  function readCookie(name) {
+    var cookies = document.cookie ? document.cookie.split(';') : [];
+
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].replace(/^\s+/, '');
+
+      if (cookie.indexOf(name + '=') === 0) {
+        try {
+          return decodeURIComponent(cookie.substring(name.length + 1));
+        } catch (error) {
+          return cookie.substring(name.length + 1);
+        }
+      }
+    }
+
+    return '';
+  }
+
+  function hasCategoryConsent(categories, names) {
+    if (!categories) {
+      return false;
+    }
+
+    for (var i = 0; i < names.length; i++) {
+      if (typeof categories === 'string' && categories.indexOf(names[i] + ':true') !== -1) {
+        return true;
+      }
+
+      if (typeof categories !== 'string' && categories[names[i]]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function getStoredHubSpotConsent() {
+    var preference = readCookie('__hs_cookie_cat_pref');
+
+    if (!preference) {
+      return null;
+    }
+
+    return {
+      analytics: hasCategoryConsent(preference, ['1', 'analytics', 'analytical']),
+      advertisement: hasCategoryConsent(preference, ['2', 'advertisement', 'advertising']),
+      marketing: hasCategoryConsent(preference, ['3', 'marketing', 'performance'])
+    };
+  }
+
+  var lastHubSpotConsentSignature = '';
+  var lastStoredHubSpotConsentCookie = '';
+  var hubSpotConsentEventDelay = 100;
+  var gtmContainerId = 'GTM-TQ9GT6MJ';
+  var isGtmLoading = false;
+  var isGtmLoaded = false;
+  var hasQueuedGtmEvent = false;
+  var latestGtmConsentState = {
+    analytics: false,
+    advertisement: false,
+    marketing: false
+  };
+
+  function gtag() {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(arguments);
+  }
+
+  function updateGoogleConsentMode(analytics, advertisement) {
+    gtag('consent', 'default', {
+      analytics_storage: 'denied',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      wait_for_update: 1000
+    });
+
+    gtag('consent', 'update', {
+      analytics_storage: analytics ? 'granted' : 'denied',
+      ad_storage: advertisement ? 'granted' : 'denied',
+      ad_user_data: advertisement ? 'granted' : 'denied',
+      ad_personalization: advertisement ? 'granted' : 'denied'
+    });
+  }
+
+  function pushHubSpotConsentEvent(analytics, advertisement, marketing) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'hubspot_consent_update',
+      hubspot_consent_analytics: analytics,
+      hubspot_consent_advertisement: advertisement,
+      hubspot_consent_marketing: marketing
+    });
+  }
+
+  function loadGoogleTagManager(analytics, advertisement, marketing) {
+    var shouldLoadGtm = analytics || advertisement || marketing;
+
+    latestGtmConsentState = {
+      analytics: analytics,
+      advertisement: advertisement,
+      marketing: marketing
+    };
+
+    updateGoogleConsentMode(analytics, advertisement);
+
+    if (!shouldLoadGtm) {
+      pushHubSpotConsentEvent(analytics, advertisement, marketing);
+      return;
+    }
+
+    if (isGtmLoaded) {
+      pushHubSpotConsentEvent(analytics, advertisement, marketing);
+      return;
+    }
+
+    hasQueuedGtmEvent = true;
+
+    if (isGtmLoading) {
+      return;
+    }
+
+    isGtmLoading = true;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      'gtm.start': new Date().getTime(),
+      event: 'gtm.js'
+    });
+
+    var firstScript = document.getElementsByTagName('script')[0];
+    var gtmScript = document.createElement('script');
+
+    gtmScript.async = true;
+    gtmScript.src = 'https://www.googletagmanager.com/gtm.js?id=' + gtmContainerId;
+    gtmScript.onload = function () {
+      isGtmLoaded = true;
+
+      if (hasQueuedGtmEvent) {
+        hasQueuedGtmEvent = false;
+        pushHubSpotConsentEvent(
+          latestGtmConsentState.analytics,
+          latestGtmConsentState.advertisement,
+          latestGtmConsentState.marketing
+        );
+      }
+    };
+
+    window.setTimeout(function () {
+      if (hasQueuedGtmEvent) {
+        hasQueuedGtmEvent = false;
+        pushHubSpotConsentEvent(
+          latestGtmConsentState.analytics,
+          latestGtmConsentState.advertisement,
+          latestGtmConsentState.marketing
+        );
+      }
+    }, 1500);
+
+    if (firstScript && firstScript.parentNode) {
+      firstScript.parentNode.insertBefore(gtmScript, firstScript);
+    } else if (document.head) {
+      document.head.appendChild(gtmScript);
+    }
+  }
+
+  function pushHubSpotConsentUpdate(consentState) {
+    var analytics = !!(consentState && consentState.analytics);
+    var advertisement = !!(consentState && consentState.advertisement);
+    var marketing = !!(consentState && consentState.marketing);
+    var signature = analytics + ':' + advertisement + ':' + marketing;
+
+    if (signature === lastHubSpotConsentSignature) {
+      return;
+    }
+
+    lastHubSpotConsentSignature = signature;
+
+    window.setTimeout(function () {
+      loadGoogleTagManager(analytics, advertisement, marketing);
+    }, hubSpotConsentEventDelay);
+  }
+
+  function syncStoredHubSpotConsent() {
+    var preference = readCookie('__hs_cookie_cat_pref');
+
+    if (!preference || preference === lastStoredHubSpotConsentCookie) {
+      return;
+    }
+
+    lastStoredHubSpotConsentCookie = preference;
+    pushHubSpotConsentUpdate(getStoredHubSpotConsent());
+  }
+
+  window._hsp = window._hsp || [];
+  window._hsp.push([
+    'addPrivacyConsentListener',
+    function (consent) {
+      var allowed = !!(consent && consent.allowed);
+      var categories = (consent && consent.categories) || {};
+
+      pushHubSpotConsentUpdate({
+        analytics: allowed || hasCategoryConsent(categories, ['1', 'analytics', 'analytical']),
+        advertisement: allowed || hasCategoryConsent(categories, ['2', 'advertisement', 'advertising']),
+        marketing: allowed || hasCategoryConsent(categories, ['3', 'marketing', 'performance'])
+      });
+    }
+  ]);
+
+  domReady(function () {
+    window.setTimeout(function () {
+      syncStoredHubSpotConsent();
+    }, 1500);
+
+    window.setInterval(syncStoredHubSpotConsent, 1000);
+  });
+})();
+</script>
+<meta property="og:url" content="https://www.nashtechglobal.com/404">
+<meta name="twitter:card" content="summary">
+<meta http-equiv="content-language" content="en">
+
+
+
+
+
+
+  <meta name="generator" content="HubSpot"></head>
+  <body>
+<!-- 9 usages of hubdb_table_rows over the budget of 10 per page may not be executed. Please contact a developer to reduce the number of hubdb_table_rows used. -->
+
+<!-- 9 usages of hubdb_table_rows over the budget of 10 per page may not be executed. Please contact a developer to reduce the number of hubdb_table_rows used. -->
+
+    <div class="body-wrapper   hs-content-id-0 hs-site-page page ">
+      
+      <div id="hs_cos_wrapper_sticky_ribbon_top" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module">
+
+
+
+  
+
+  <div class="sticky-ribbon-top" data-sticky-ribbon-top>
+    <div class="sticky-ribbon-top__track" data-sticky-ribbon-track>
+      
+    
+    
+    
+    
+    
+
+    <div class="sticky-ribbon-top__message">
+      <span class="sticky-ribbon-top__body">Not seeing results from your AI initiatives? Discover the obstacles that could be standing in the way. </span>
+      
+      
+        <a class="sticky-ribbon-top__cta button button--secondary button--link" href="https://www.nashtechglobal.com/insights/resources/ai-execution-overcoming-common-barriers-to-success">
+          <span class="sticky-ribbon-top__cta-label button__label">Learn more</span>
+          <span class="sticky-ribbon-top__cta-icon button__icon" aria-hidden="true">arrow_forward</span>
+        </a>
+      
+    </div>
+  
+    
+    
+    
+    
+    
+
+    <div class="sticky-ribbon-top__message">
+      <span class="sticky-ribbon-top__body">Not seeing results from your AI initiatives? Discover the obstacles that could be standing in the way. </span>
+      
+      
+        <a class="sticky-ribbon-top__cta button button--secondary button--link" href="https://www.nashtechglobal.com/insights/resources/ai-execution-overcoming-common-barriers-to-success">
+          <span class="sticky-ribbon-top__cta-label button__label">Learn more</span>
+          <span class="sticky-ribbon-top__cta-icon button__icon" aria-hidden="true">arrow_forward</span>
+        </a>
+      
+    </div>
+  
+      
+    
+    
+    
+    
+    
+
+    <div class="sticky-ribbon-top__message" aria-hidden="true">
+      <span class="sticky-ribbon-top__body">Not seeing results from your AI initiatives? Discover the obstacles that could be standing in the way. </span>
+      
+      
+        <a class="sticky-ribbon-top__cta button button--secondary button--link" href="https://www.nashtechglobal.com/insights/resources/ai-execution-overcoming-common-barriers-to-success" tabindex="-1">
+          <span class="sticky-ribbon-top__cta-label button__label">Learn more</span>
+          <span class="sticky-ribbon-top__cta-icon button__icon" aria-hidden="true">arrow_forward</span>
+        </a>
+      
+    </div>
+  
+    
+    
+    
+    
+    
+
+    <div class="sticky-ribbon-top__message" aria-hidden="true">
+      <span class="sticky-ribbon-top__body">Not seeing results from your AI initiatives? Discover the obstacles that could be standing in the way. </span>
+      
+      
+        <a class="sticky-ribbon-top__cta button button--secondary button--link" href="https://www.nashtechglobal.com/insights/resources/ai-execution-overcoming-common-barriers-to-success" tabindex="-1">
+          <span class="sticky-ribbon-top__cta-label button__label">Learn more</span>
+          <span class="sticky-ribbon-top__cta-icon button__icon" aria-hidden="true">arrow_forward</span>
+        </a>
+      
+    </div>
+  
+    </div>
+  </div>
+
+</div>
+      <div id="hs_cos_wrapper_megamenu" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><link rel="stylesheet" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/index-BhcCNHOx.css">
+<header class="megamenu megamenu--transparent" data-megamenu="true"><nav class="megamenu__nav" aria-label="Main navigation"><div class="megamenu__bar"><div class="content-wrapper megamenu__bar-inner"><a href="https://www.nashtechglobal.com" class="megamenu__logo" aria-label="Go to homepage"><img src="https://www.nashtechglobal.com/hubfs/Website/NashTech%20Logo/nashtech-logo-red.svg" alt="nashtech-logo-red" width="60" height="60" class="megamenu__logo-img megamenu__logo-img--default" loading="eager"><img src="https://www.nashtechglobal.com/hubfs/website_theme_2026/logo-nt.svg" alt="logo-nt" width="60" height="60" class="megamenu__logo-img megamenu__logo-img--dark" loading="eager"></a><div class="megamenu__items"><button type="button" class="megamenu__item megamenu__item--has-dropdown" data-dropdown-trigger="0" aria-expanded="false" aria-controls="megamenu-dropdown-0"><span class="megamenu__item-label">What we do</span><svg class="megamenu__icon megamenu__item-icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 15.375L6 9.375L7.075 8.3L12 13.225L16.925 8.3L18 9.375L12 15.375Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__item megamenu__item--has-dropdown" data-dropdown-trigger="1" aria-expanded="false" aria-controls="megamenu-dropdown-1"><span class="megamenu__item-label">AI-first approach</span><svg class="megamenu__icon megamenu__item-icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 15.375L6 9.375L7.075 8.3L12 13.225L16.925 8.3L18 9.375L12 15.375Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__item megamenu__item--has-dropdown" data-dropdown-trigger="2" aria-expanded="false" aria-controls="megamenu-dropdown-2"><span class="megamenu__item-label">Industries</span><svg class="megamenu__icon megamenu__item-icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 15.375L6 9.375L7.075 8.3L12 13.225L16.925 8.3L18 9.375L12 15.375Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__item megamenu__item--has-dropdown" data-dropdown-trigger="3" aria-expanded="false" aria-controls="megamenu-dropdown-3"><span class="megamenu__item-label">Our thinking</span><svg class="megamenu__icon megamenu__item-icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 15.375L6 9.375L7.075 8.3L12 13.225L16.925 8.3L18 9.375L12 15.375Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__item megamenu__item--has-dropdown" data-dropdown-trigger="4" aria-expanded="false" aria-controls="megamenu-dropdown-4"><span class="megamenu__item-label">About us</span><svg class="megamenu__icon megamenu__item-icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 15.375L6 9.375L7.075 8.3L12 13.225L16.925 8.3L18 9.375L12 15.375Z" fill="currentColor"></path></svg></button></div><div class="megamenu__actions"><button type="button" class="megamenu__search-toggle" data-search-toggle="true" aria-label="Toggle search" aria-expanded="false"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19.55 20.575L13.25 14.275C12.75 14.675 12.175 14.9917 11.525 15.225C10.875 15.4583 10.1833 15.575 9.45 15.575C7.73333 15.575 6.27917 14.9808 5.0875 13.7925C3.89583 12.6042 3.3 11.1583 3.3 9.455C3.3 7.73833 3.89417 6.28333 5.0825 5.09C6.27083 3.89667 7.71667 3.3 9.42 3.3C11.1367 3.3 12.5942 3.895 13.7925 5.085C14.9908 6.275 15.59 7.72667 15.59 9.44C15.59 10.2067 15.4692 10.9183 15.2275 11.575C14.9858 12.2317 14.6733 12.7933 14.29 13.26L20.6 19.55L19.55 20.575ZM9.45 14.075C10.7333 14.075 11.8292 13.6292 12.7375 12.7375C13.6458 11.8458 14.1 10.755 14.1 9.465C14.1 8.17167 13.6467 7.075 12.74 6.175C11.8333 5.275 10.7367 4.825 9.45 4.825C8.15 4.825 7.04583 5.275 6.1375 6.175C5.22917 7.075 4.775 8.17167 4.775 9.465C4.775 10.755 5.22917 11.8458 6.1375 12.7375C7.04583 13.6292 8.15 14.075 9.45 14.075Z" fill="currentColor"></path></svg></button><a class="button megamenu__cta" href="https://www.nashtechglobal.com/contact-us"><span class="button__label">Contact us</span></a></div></div></div><div class="megamenu__search-panel" data-search-panel="true" aria-hidden="true"><div class="content-wrapper megamenu__search-panel-inner"><form action="/hs-search-results" method="GET" class="megamenu__search-form"><svg class="megamenu__icon megamenu__search-icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19.55 20.575L13.25 14.275C12.75 14.675 12.175 14.9917 11.525 15.225C10.875 15.4583 10.1833 15.575 9.45 15.575C7.73333 15.575 6.27917 14.9808 5.0875 13.7925C3.89583 12.6042 3.3 11.1583 3.3 9.455C3.3 7.73833 3.89417 6.28333 5.0825 5.09C6.27083 3.89667 7.71667 3.3 9.42 3.3C11.1367 3.3 12.5942 3.895 13.7925 5.085C14.9908 6.275 15.59 7.72667 15.59 9.44C15.59 10.2067 15.4692 10.9183 15.2275 11.575C14.9858 12.2317 14.6733 12.7933 14.29 13.26L20.6 19.55L19.55 20.575ZM9.45 14.075C10.7333 14.075 11.8292 13.6292 12.7375 12.7375C13.6458 11.8458 14.1 10.755 14.1 9.465C14.1 8.17167 13.6467 7.075 12.74 6.175C11.8333 5.275 10.7367 4.825 9.45 4.825C8.15 4.825 7.04583 5.275 6.1375 6.175C5.22917 7.075 4.775 8.17167 4.775 9.465C4.775 10.755 5.22917 11.8458 6.1375 12.7375C7.04583 13.6292 8.15 14.075 9.45 14.075Z" fill="currentColor"></path></svg><input type="text" name="q" class="megamenu__search-input" placeholder="Search" autoComplete="off" aria-label="Search the site"><button type="button" class="megamenu__search-close" data-search-close="true" aria-label="Close search"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6.4 18.65L5.35 17.6L10.95 12L5.35 6.4L6.4 5.35L12 10.95L17.6 5.35L18.65 6.4L13.05 12L18.65 17.6L17.6 18.65L12 13.05L6.4 18.65Z" fill="currentColor"></path></svg></button></form></div></div><div class="megamenu__dropdown" id="megamenu-dropdown-0" data-dropdown-panel="0" aria-hidden="true"><div class="content-wrapper megamenu__dropdown-inner"><div class="megamenu__dropdown-main"><p class="megamenu__dropdown-title">What we do</p><div class="megamenu__dropdown-links"><a href="https://www.nashtechglobal.com/strategic-innovation" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Drive strategic innovation</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/digital-experiences" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Build digital experiences</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/modernise-technology" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Modernise technology</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/data" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Realise value from data</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/assure-quality" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Run, optimise and assure quality</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></div></div><aside class="megamenu__dropdown-sidebar" aria-label="Featured insights"><p class="megamenu__dropdown-sidebar-title">Featured insights</p><div class="megamenu__dropdown-cards"><a href="https://www.nashtechglobal.com/insights/resources/ai-execution-overcoming-common-barriers-to-success" class="megamenu__article-card megamenu__article-card--dropdown"><div class="megamenu__article-card-img"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg" alt="Graphic_Menu_Feature_Thumbnail_Flagship report" width="550" height="734" loading="lazy" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=275&amp;height=367&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 275w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 550w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=825&amp;height=1101&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 825w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1100&amp;height=1468&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1100w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1375&amp;height=1835&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1375w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1650&amp;height=2202&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1650w" sizes="(max-width: 550px) 100vw, 550px"></div><div class="megamenu__article-card-body"><div class="megamenu__article-card-text"><span class="megamenu__article-card-badge">Resource</span><p class="megamenu__article-card-title">Closing the gap: AI ambition to execution</p></div><div class="megamenu__article-card-footer"><span class="megamenu__article-card-icon-hit" aria-hidden="true"><svg class="megamenu__icon megamenu__article-card-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></span></div></div></a></div></aside></div></div><div class="megamenu__dropdown" id="megamenu-dropdown-1" data-dropdown-panel="1" aria-hidden="true"><div class="content-wrapper megamenu__dropdown-inner"><div class="megamenu__dropdown-main"><p class="megamenu__dropdown-title">AI-first approach</p><div class="megamenu__dropdown-links"><a href="https://www.nashtechglobal.com/artificial-intelligence" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Overview</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/artificial-intelligence/ai-powered-software-delivery" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">NashTech Orchestrate</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></div></div></div></div><div class="megamenu__dropdown" id="megamenu-dropdown-2" data-dropdown-panel="2" aria-hidden="true"><div class="content-wrapper megamenu__dropdown-inner"><div class="megamenu__dropdown-main"><p class="megamenu__dropdown-title">Industries</p><div class="megamenu__dropdown-links"><a href="https://www.nashtechglobal.com/industries/insurance" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Insurance</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/industries/banking" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Banking and finance</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/industries/retail-and-consumer" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Retail and consumer</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/industries/supply-chain-logistics" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Logistics and supply chain</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/industries/education" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Education</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/industries/technology-and-saas" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Technology and SaaS</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></div></div><aside class="megamenu__dropdown-sidebar" aria-label="Featured insights"><p class="megamenu__dropdown-sidebar-title">Featured insights</p><div class="megamenu__dropdown-cards"><a href="https://www.nashtechglobal.com/insights/resources/ai-execution-overcoming-common-barriers-to-success" class="megamenu__article-card megamenu__article-card--dropdown"><div class="megamenu__article-card-img"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg" alt="Graphic_Menu_Feature_Thumbnail_Flagship report" width="550" height="734" loading="lazy" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=275&amp;height=367&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 275w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 550w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=825&amp;height=1101&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 825w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1100&amp;height=1468&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1100w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1375&amp;height=1835&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1375w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1650&amp;height=2202&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1650w" sizes="(max-width: 550px) 100vw, 550px"></div><div class="megamenu__article-card-body"><div class="megamenu__article-card-text"><span class="megamenu__article-card-badge">Resource</span><p class="megamenu__article-card-title">Closing the gap: AI ambition to execution</p></div><div class="megamenu__article-card-footer"><span class="megamenu__article-card-icon-hit" aria-hidden="true"><svg class="megamenu__icon megamenu__article-card-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></span></div></div></a></div></aside></div></div><div class="megamenu__dropdown" id="megamenu-dropdown-3" data-dropdown-panel="3" aria-hidden="true"><div class="content-wrapper megamenu__dropdown-inner"><div class="megamenu__dropdown-main"><p class="megamenu__dropdown-title">Our thinking</p><div class="megamenu__dropdown-links"><a href="https://www.nashtechglobal.com/insights" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Articles</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/insights/resources" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Resources</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/insights/case-studies" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Case studies</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/leaders-lab" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">NashTech Leaders Lab</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></div></div><aside class="megamenu__dropdown-sidebar" aria-label="Featured insights"><p class="megamenu__dropdown-sidebar-title">Featured insights</p><div class="megamenu__dropdown-cards"><a href="https://www.nashtechglobal.com/insights/resources/ai-execution-overcoming-common-barriers-to-success" class="megamenu__article-card megamenu__article-card--dropdown"><div class="megamenu__article-card-img"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg" alt="Graphic_Menu_Feature_Thumbnail_Flagship report" width="550" height="734" loading="lazy" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=275&amp;height=367&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 275w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 550w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=825&amp;height=1101&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 825w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1100&amp;height=1468&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1100w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1375&amp;height=1835&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1375w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1650&amp;height=2202&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1650w" sizes="(max-width: 550px) 100vw, 550px"></div><div class="megamenu__article-card-body"><div class="megamenu__article-card-text"><span class="megamenu__article-card-badge">Resource</span><p class="megamenu__article-card-title">Closing the gap: AI ambition to execution</p></div><div class="megamenu__article-card-footer"><span class="megamenu__article-card-icon-hit" aria-hidden="true"><svg class="megamenu__icon megamenu__article-card-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></span></div></div></a><a href="https://www.nashtechglobal.com/insights/why-custom-software-development-is-now-strategically-important" class="megamenu__article-card megamenu__article-card--dropdown"><div class="megamenu__article-card-img"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=1920&amp;height=675&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg" alt="Head banner - CSD - CIOs competitive edge" width="1920" height="675" loading="lazy" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=960&amp;height=338&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 960w, https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=1920&amp;height=675&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 1920w, https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=2880&amp;height=1013&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 2880w, https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=3840&amp;height=1350&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 3840w, https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=4800&amp;height=1688&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 4800w, https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=5760&amp;height=2025&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 5760w" sizes="(max-width: 1920px) 100vw, 1920px"></div><div class="megamenu__article-card-body"><div class="megamenu__article-card-text"><span class="megamenu__article-card-badge">Article</span><p class="megamenu__article-card-title">Why custom software development is now strategically important</p></div><div class="megamenu__article-card-footer"><span class="megamenu__article-card-icon-hit" aria-hidden="true"><svg class="megamenu__icon megamenu__article-card-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></span></div></div></a></div></aside></div></div><div class="megamenu__dropdown" id="megamenu-dropdown-4" data-dropdown-panel="4" aria-hidden="true"><div class="content-wrapper megamenu__dropdown-inner"><div class="megamenu__dropdown-main"><p class="megamenu__dropdown-title">About us</p><div class="megamenu__dropdown-links"><a href="https://www.nashtechglobal.com/about-us" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">About us</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/our-culture" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Our culture</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/our-locations" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Our locations</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://careers.nashtechglobal.com/" class="megamenu__dropdown-link" target="_blank" rel="noopener"><span class="megamenu__dropdown-link-label">Careers</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/dei" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Diversity, equality and inclusion</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/esg" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Environmental, social and governance</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/partners-and-certifications" class="megamenu__dropdown-link"><span class="megamenu__dropdown-link-label">Partners and certifications</span><svg class="megamenu__icon megamenu__dropdown-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></div></div></div></div></nav><nav class="megamenu__mobile-nav" aria-label="Mobile navigation"><div class="megamenu__mobile-bar"><div class="content-wrapper megamenu__mobile-bar-inner"><a href="https://www.nashtechglobal.com" class="megamenu__logo megamenu__logo--mobile" aria-label="Go to homepage"><img src="https://www.nashtechglobal.com/hubfs/Website/NashTech%20Logo/nashtech-logo-red.svg" alt="nashtech-logo-red" width="60" height="60" class="megamenu__logo-img megamenu__logo-img--default" loading="eager"><img src="https://www.nashtechglobal.com/hubfs/website_theme_2026/logo-nt.svg" alt="logo-nt" width="60" height="60" class="megamenu__logo-img megamenu__logo-img--dark" loading="eager"></a><div class="megamenu__mobile-actions"><a class="button megamenu__cta megamenu__cta--mobile" href="https://www.nashtechglobal.com/contact-us"><span class="button__label">Contact us</span></a><button type="button" class="megamenu__hamburger" data-mobile-toggle="true" aria-label="Open menu" aria-expanded="false"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 18V16.5H21V18H3ZM3 12.75V11.25H21V12.75H3ZM3 7.5V6H21V7.5H3Z" fill="currentColor"></path></svg></button></div></div></div><div class="megamenu__mobile-menu" data-mobile-menu="true" aria-hidden="true"><div class="megamenu__mobile-menu-header"><a href="https://www.nashtechglobal.com" class="megamenu__logo megamenu__logo--mobile" aria-label="Go to homepage"><img src="https://www.nashtechglobal.com/hubfs/Website/NashTech%20Logo/nashtech-logo-red.svg" alt="nashtech-logo-red" width="60" height="60" class="megamenu__logo-img" loading="eager"></a><button type="button" class="megamenu__mobile-close" data-mobile-close="true" aria-label="Close menu"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6.4 18.65L5.35 17.6L10.95 12L5.35 6.4L6.4 5.35L12 10.95L17.6 5.35L18.65 6.4L13.05 12L18.65 17.6L17.6 18.65L12 13.05L6.4 18.65Z" fill="currentColor"></path></svg></button></div><div class="megamenu__mobile-menu-body"><form action="/hs-search-results" method="GET" class="megamenu__mobile-search"><svg class="megamenu__icon megamenu__mobile-search-icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19.55 20.575L13.25 14.275C12.75 14.675 12.175 14.9917 11.525 15.225C10.875 15.4583 10.1833 15.575 9.45 15.575C7.73333 15.575 6.27917 14.9808 5.0875 13.7925C3.89583 12.6042 3.3 11.1583 3.3 9.455C3.3 7.73833 3.89417 6.28333 5.0825 5.09C6.27083 3.89667 7.71667 3.3 9.42 3.3C11.1367 3.3 12.5942 3.895 13.7925 5.085C14.9908 6.275 15.59 7.72667 15.59 9.44C15.59 10.2067 15.4692 10.9183 15.2275 11.575C14.9858 12.2317 14.6733 12.7933 14.29 13.26L20.6 19.55L19.55 20.575ZM9.45 14.075C10.7333 14.075 11.8292 13.6292 12.7375 12.7375C13.6458 11.8458 14.1 10.755 14.1 9.465C14.1 8.17167 13.6467 7.075 12.74 6.175C11.8333 5.275 10.7367 4.825 9.45 4.825C8.15 4.825 7.04583 5.275 6.1375 6.175C5.22917 7.075 4.775 8.17167 4.775 9.465C4.775 10.755 5.22917 11.8458 6.1375 12.7375C7.04583 13.6292 8.15 14.075 9.45 14.075Z" fill="currentColor"></path></svg><input type="text" name="q" class="megamenu__mobile-search-input" placeholder="Search" autoComplete="off" aria-label="Search the site"></form><div class="megamenu__mobile-items"><button type="button" class="megamenu__mobile-item megamenu__mobile-item--has-dropdown" data-mobile-nav-trigger="0" aria-expanded="false"><span class="megamenu__mobile-item-label">What we do</span><svg class="megamenu__icon megamenu__mobile-item-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__mobile-item megamenu__mobile-item--has-dropdown" data-mobile-nav-trigger="1" aria-expanded="false"><span class="megamenu__mobile-item-label">AI-first approach</span><svg class="megamenu__icon megamenu__mobile-item-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__mobile-item megamenu__mobile-item--has-dropdown" data-mobile-nav-trigger="2" aria-expanded="false"><span class="megamenu__mobile-item-label">Industries</span><svg class="megamenu__icon megamenu__mobile-item-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__mobile-item megamenu__mobile-item--has-dropdown" data-mobile-nav-trigger="3" aria-expanded="false"><span class="megamenu__mobile-item-label">Our thinking</span><svg class="megamenu__icon megamenu__mobile-item-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__mobile-item megamenu__mobile-item--has-dropdown" data-mobile-nav-trigger="4" aria-expanded="false"><span class="megamenu__mobile-item-label">About us</span><svg class="megamenu__icon megamenu__mobile-item-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></button></div></div><div class="megamenu__mobile-menu-footer"><a class="button megamenu__cta megamenu__cta--mobile-full" href="https://www.nashtechglobal.com/contact-us"><span class="button__label">Contact us</span></a></div><div class="megamenu__mobile-subpanel" data-mobile-subpanel="0" aria-hidden="true"><div class="megamenu__mobile-subpanel-header"><button type="button" class="megamenu__mobile-back" data-mobile-back="true" aria-label="Go back"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 18L4 12L10 6L11.075 7.075L6.15 12L11.075 16.925L10 18Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__mobile-close" data-mobile-close="true" aria-label="Close menu"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6.4 18.65L5.35 17.6L10.95 12L5.35 6.4L6.4 5.35L12 10.95L17.6 5.35L18.65 6.4L13.05 12L18.65 17.6L17.6 18.65L12 13.05L6.4 18.65Z" fill="currentColor"></path></svg></button></div><div class="megamenu__mobile-subpanel-body"><div class="megamenu__mobile-subpanel-section"><p class="megamenu__mobile-subpanel-title">What we do</p><div class="megamenu__mobile-subpanel-links"><a href="https://www.nashtechglobal.com/strategic-innovation" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Drive strategic innovation</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/digital-experiences" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Build digital experiences</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/modernise-technology" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Modernise technology</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/data" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Realise value from data</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/assure-quality" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Run, optimise and assure quality</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></div></div><div class="megamenu__mobile-subpanel-section"><p class="megamenu__mobile-subpanel-section-title">Featured insights</p><div class="megamenu__mobile-subpanel-cards"><a href="https://www.nashtechglobal.com/insights/resources/ai-execution-overcoming-common-barriers-to-success" class="megamenu__article-card"><div class="megamenu__article-card-img"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg" alt="Graphic_Menu_Feature_Thumbnail_Flagship report" width="550" height="734" loading="lazy" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=275&amp;height=367&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 275w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 550w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=825&amp;height=1101&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 825w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1100&amp;height=1468&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1100w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1375&amp;height=1835&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1375w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1650&amp;height=2202&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1650w" sizes="(max-width: 550px) 100vw, 550px"></div><div class="megamenu__article-card-body"><div class="megamenu__article-card-text"><span class="megamenu__article-card-badge">Resource</span><p class="megamenu__article-card-title">Closing the gap: AI ambition to execution</p></div><div class="megamenu__article-card-footer"><svg class="megamenu__icon megamenu__article-card-arrow" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 18L12.925 16.925L17.85 12L12.925 7.075L14 6L20 12L14 18Z" fill="currentColor"></path></svg></div></div></a></div></div></div><div class="megamenu__mobile-subpanel-footer"><a class="button megamenu__cta megamenu__cta--mobile-full" href="https://www.nashtechglobal.com/contact-us"><span class="button__label">Contact us</span></a></div></div><div class="megamenu__mobile-subpanel" data-mobile-subpanel="1" aria-hidden="true"><div class="megamenu__mobile-subpanel-header"><button type="button" class="megamenu__mobile-back" data-mobile-back="true" aria-label="Go back"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 18L4 12L10 6L11.075 7.075L6.15 12L11.075 16.925L10 18Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__mobile-close" data-mobile-close="true" aria-label="Close menu"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6.4 18.65L5.35 17.6L10.95 12L5.35 6.4L6.4 5.35L12 10.95L17.6 5.35L18.65 6.4L13.05 12L18.65 17.6L17.6 18.65L12 13.05L6.4 18.65Z" fill="currentColor"></path></svg></button></div><div class="megamenu__mobile-subpanel-body"><div class="megamenu__mobile-subpanel-section"><p class="megamenu__mobile-subpanel-title">AI-first approach</p><div class="megamenu__mobile-subpanel-links"><a href="https://www.nashtechglobal.com/artificial-intelligence" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Overview</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/artificial-intelligence/ai-powered-software-delivery" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">NashTech Orchestrate</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></div></div></div><div class="megamenu__mobile-subpanel-footer"><a class="button megamenu__cta megamenu__cta--mobile-full" href="https://www.nashtechglobal.com/contact-us"><span class="button__label">Contact us</span></a></div></div><div class="megamenu__mobile-subpanel" data-mobile-subpanel="2" aria-hidden="true"><div class="megamenu__mobile-subpanel-header"><button type="button" class="megamenu__mobile-back" data-mobile-back="true" aria-label="Go back"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 18L4 12L10 6L11.075 7.075L6.15 12L11.075 16.925L10 18Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__mobile-close" data-mobile-close="true" aria-label="Close menu"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6.4 18.65L5.35 17.6L10.95 12L5.35 6.4L6.4 5.35L12 10.95L17.6 5.35L18.65 6.4L13.05 12L18.65 17.6L17.6 18.65L12 13.05L6.4 18.65Z" fill="currentColor"></path></svg></button></div><div class="megamenu__mobile-subpanel-body"><div class="megamenu__mobile-subpanel-section"><p class="megamenu__mobile-subpanel-title">Industries</p><div class="megamenu__mobile-subpanel-links"><a href="https://www.nashtechglobal.com/industries/insurance" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Insurance</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/industries/banking" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Banking and finance</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/industries/retail-and-consumer" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Retail and consumer</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/industries/supply-chain-logistics" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Logistics and supply chain</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/industries/education" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Education</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/industries/technology-and-saas" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Technology and SaaS</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></div></div><div class="megamenu__mobile-subpanel-section"><p class="megamenu__mobile-subpanel-section-title">Featured insights</p><div class="megamenu__mobile-subpanel-cards"><a href="https://www.nashtechglobal.com/insights/resources/ai-execution-overcoming-common-barriers-to-success" class="megamenu__article-card"><div class="megamenu__article-card-img"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg" alt="Graphic_Menu_Feature_Thumbnail_Flagship report" width="550" height="734" loading="lazy" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=275&amp;height=367&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 275w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 550w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=825&amp;height=1101&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 825w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1100&amp;height=1468&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1100w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1375&amp;height=1835&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1375w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1650&amp;height=2202&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1650w" sizes="(max-width: 550px) 100vw, 550px"></div><div class="megamenu__article-card-body"><div class="megamenu__article-card-text"><span class="megamenu__article-card-badge">Resource</span><p class="megamenu__article-card-title">Closing the gap: AI ambition to execution</p></div><div class="megamenu__article-card-footer"><svg class="megamenu__icon megamenu__article-card-arrow" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 18L12.925 16.925L17.85 12L12.925 7.075L14 6L20 12L14 18Z" fill="currentColor"></path></svg></div></div></a></div></div></div><div class="megamenu__mobile-subpanel-footer"><a class="button megamenu__cta megamenu__cta--mobile-full" href="https://www.nashtechglobal.com/contact-us"><span class="button__label">Contact us</span></a></div></div><div class="megamenu__mobile-subpanel" data-mobile-subpanel="3" aria-hidden="true"><div class="megamenu__mobile-subpanel-header"><button type="button" class="megamenu__mobile-back" data-mobile-back="true" aria-label="Go back"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 18L4 12L10 6L11.075 7.075L6.15 12L11.075 16.925L10 18Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__mobile-close" data-mobile-close="true" aria-label="Close menu"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6.4 18.65L5.35 17.6L10.95 12L5.35 6.4L6.4 5.35L12 10.95L17.6 5.35L18.65 6.4L13.05 12L18.65 17.6L17.6 18.65L12 13.05L6.4 18.65Z" fill="currentColor"></path></svg></button></div><div class="megamenu__mobile-subpanel-body"><div class="megamenu__mobile-subpanel-section"><p class="megamenu__mobile-subpanel-title">Our thinking</p><div class="megamenu__mobile-subpanel-links"><a href="https://www.nashtechglobal.com/insights" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Articles</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/insights/resources" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Resources</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/insights/case-studies" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Case studies</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/leaders-lab" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">NashTech Leaders Lab</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></div></div><div class="megamenu__mobile-subpanel-section"><p class="megamenu__mobile-subpanel-section-title">Featured insights</p><div class="megamenu__mobile-subpanel-cards"><a href="https://www.nashtechglobal.com/insights/resources/ai-execution-overcoming-common-barriers-to-success" class="megamenu__article-card"><div class="megamenu__article-card-img"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg" alt="Graphic_Menu_Feature_Thumbnail_Flagship report" width="550" height="734" loading="lazy" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=275&amp;height=367&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 275w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=550&amp;height=734&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 550w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=825&amp;height=1101&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 825w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1100&amp;height=1468&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1100w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1375&amp;height=1835&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1375w, https://www.nashtechglobal.com/hs-fs/hubfs/Graphic/Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg?width=1650&amp;height=2202&amp;name=Graphic_Menu_Feature_Thumbnail_Flagship%20report.jpg 1650w" sizes="(max-width: 550px) 100vw, 550px"></div><div class="megamenu__article-card-body"><div class="megamenu__article-card-text"><span class="megamenu__article-card-badge">Resource</span><p class="megamenu__article-card-title">Closing the gap: AI ambition to execution</p></div><div class="megamenu__article-card-footer"><svg class="megamenu__icon megamenu__article-card-arrow" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 18L12.925 16.925L17.85 12L12.925 7.075L14 6L20 12L14 18Z" fill="currentColor"></path></svg></div></div></a><a href="https://www.nashtechglobal.com/insights/why-custom-software-development-is-now-strategically-important" class="megamenu__article-card"><div class="megamenu__article-card-img"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=1920&amp;height=675&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg" alt="Head banner - CSD - CIOs competitive edge" width="1920" height="675" loading="lazy" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=960&amp;height=338&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 960w, https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=1920&amp;height=675&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 1920w, https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=2880&amp;height=1013&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 2880w, https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=3840&amp;height=1350&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 3840w, https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=4800&amp;height=1688&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 4800w, https://www.nashtechglobal.com/hs-fs/hubfs/Website/Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg?width=5760&amp;height=2025&amp;name=Head%20banner%20-%20CSD%20-%20CIOs%20competitive%20edge.jpg 5760w" sizes="(max-width: 1920px) 100vw, 1920px"></div><div class="megamenu__article-card-body"><div class="megamenu__article-card-text"><span class="megamenu__article-card-badge">Article</span><p class="megamenu__article-card-title">Why custom software development is now strategically important</p></div><div class="megamenu__article-card-footer"><svg class="megamenu__icon megamenu__article-card-arrow" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 18L12.925 16.925L17.85 12L12.925 7.075L14 6L20 12L14 18Z" fill="currentColor"></path></svg></div></div></a></div></div></div><div class="megamenu__mobile-subpanel-footer"><a class="button megamenu__cta megamenu__cta--mobile-full" href="https://www.nashtechglobal.com/contact-us"><span class="button__label">Contact us</span></a></div></div><div class="megamenu__mobile-subpanel" data-mobile-subpanel="4" aria-hidden="true"><div class="megamenu__mobile-subpanel-header"><button type="button" class="megamenu__mobile-back" data-mobile-back="true" aria-label="Go back"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 18L4 12L10 6L11.075 7.075L6.15 12L11.075 16.925L10 18Z" fill="currentColor"></path></svg></button><button type="button" class="megamenu__mobile-close" data-mobile-close="true" aria-label="Close menu"><svg class="megamenu__icon" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6.4 18.65L5.35 17.6L10.95 12L5.35 6.4L6.4 5.35L12 10.95L17.6 5.35L18.65 6.4L13.05 12L18.65 17.6L17.6 18.65L12 13.05L6.4 18.65Z" fill="currentColor"></path></svg></button></div><div class="megamenu__mobile-subpanel-body"><div class="megamenu__mobile-subpanel-section"><p class="megamenu__mobile-subpanel-title">About us</p><div class="megamenu__mobile-subpanel-links"><a href="https://www.nashtechglobal.com/about-us" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">About us</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/our-culture" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Our culture</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/our-locations" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Our locations</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://careers.nashtechglobal.com/" class="megamenu__mobile-subpanel-link" target="_blank" rel="noopener"><span class="megamenu__mobile-subpanel-link-label">Careers</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/dei" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Diversity, equality and inclusion</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/esg" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Environmental, social and governance</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a><a href="https://www.nashtechglobal.com/partners-and-certifications" class="megamenu__mobile-subpanel-link"><span class="megamenu__mobile-subpanel-link-label">Partners and certifications</span><svg class="megamenu__icon megamenu__mobile-subpanel-link-arrow" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></div></div></div><div class="megamenu__mobile-subpanel-footer"><a class="button megamenu__cta megamenu__cta--mobile-full" href="https://www.nashtechglobal.com/contact-us"><span class="button__label">Contact us</span></a></div></div></div></nav><!--$--><div data-hs-island="true" id="island-54ebcanf0a2eeR2"><!--$--><span class="megamenu__island-mount" aria-hidden="true"></span><!--/$--></div><!--/$--></header>
+    <script type="text/javascript" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+      window.__hsEnvConfig = {"hsDeployed":true,"hsEnv":"prod","hsJSRGates":["CMS:JSRenderer:GetServerSideProps","CMS:JSRenderer:EnvAllowlistRenderTime","CMS:JSRenderer:EnvAllowlist","CMS:JSRenderer:RemoveMockClientEntryPlugin"],"hublet":"eu1","portalID":143134609};
+      window.__hsServerPageUrl = "https:\u002F\u002Fwww.nashtechglobal.com\u002Fcontent-rendering\u002Fv1\u002Fpublic\u002F_hcms\u002F404";
+      window.__hsBasePath = "\u002Fcontent-rendering\u002Fv1\u002Fpublic\u002F_hcms\u002F404";
+    </script>
+      
+  <script type="text/javascript" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+    var newIslands = [{"clientOnly":false,"hydrateOn":"load","id":"island-54ebcanf0a2eeR2","moduleId":"components\u002Fmodules\u002FMegamenu\u002FMegamenuIsland.jsx?client-entry","moduleName":"MegamenuIsland","priority":0,"props":{},"supplementalFieldValues":{"contact_button_link":{},"contact_button_text":{},"logo":{},"logo_dark":{},"logo_link":{},"nav_items":[{"dropdown_items":[{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}}],"enable_featured_insights":{},"featured_insights":[{"category":{},"image":{},"item_link":{},"item_title":{}}],"has_dropdown":{},"item_label":{},"item_link":{}},{"dropdown_items":[{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}}],"enable_featured_insights":{},"enable_useful_links":{},"featured_insights":[],"has_dropdown":{},"item_label":{},"item_link":{},"useful_links":[]},{"dropdown_items":[{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}}],"enable_featured_insights":{},"enable_useful_links":{},"featured_insights":[{"category":{},"image":{},"item_link":{},"item_title":{}}],"has_dropdown":{},"item_label":{},"item_link":{},"useful_links":[]},{"dropdown_items":[{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}}],"enable_featured_insights":{},"enable_useful_links":{},"featured_insights":[{"category":{},"image":{},"item_link":{},"item_title":{}},{"category":{},"image":{},"item_link":{},"item_title":{}}],"has_dropdown":{},"item_label":{},"item_link":{},"useful_links":[]},{"dropdown_items":[{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}},{"item_label":{},"item_link":{}}],"enable_featured_insights":{},"enable_useful_links":{},"featured_insights":[],"has_dropdown":{},"item_label":{},"item_link":{},"useful_links":[{"item_link":{},"item_text":{}},{"item_link":{},"item_text":{}},{"item_link":{},"item_text":{}},{"item_link":{},"item_text":{}}]}]},"url":"https:\u002F\u002F143134609.fs1.hubspotusercontent-eu1.net\u002Fhubfs\u002F143134609\u002Fraw_assets\u002Fnashtech_theme_project\u002F1059\u002Fjs_client_assets\u002Fassets\u002FMegamenuIsland-BTMEHdeL.js"}];
+    if (Array.isArray(window.__islands)) {
+      window.__islands.push(...newIslands);
+    } else {
+      window.__islands = newIslands;
+    }
+  </script>
+  <link rel="modulepreload" crossorigin href="https://static.hsappstatic.net/cms-js-static/ex/js/react/v18/react-combined.mjs">
+  <script type="module" crossorigin nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+    import { initConfigSingletonFromJSON, setupIslandHydration, unmountIslandsForModule } from "https://static.hsappstatic.net/cms-js-static/ex/js/island-runtime/v1/island-runtime.mjs"
+    initConfigSingletonFromJSON(window.__hsEnvConfig)
+    setupIslandHydration();
+    window.__islandRuntime = { ...window.__islandRuntime, unmountIslandsForModule };
+  </script>
+      </div>
+      <script nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+(function () {
+  var megamenu = document.querySelector('[data-megamenu]');
+  if (!megamenu) return;
+
+  function applyStickyTop() {
+    megamenu.classList.add('megamenu--sticky');
+    megamenu.classList.remove('megamenu--transparent');
+  }
+
+  /* Loading with an anchor hash: the page jumps to the target section, so keep
+     the nav hidden rather than flashing the sticky bar over it. initMegamenu
+     re-seats the section flush once it hydrates. */
+  if (window.location.hash && window.location.hash.length > 1) {
+    megamenu.classList.add('megamenu--hidden');
+    megamenu.classList.remove('megamenu--transparent');
+    return;
+  }
+
+  if (window.scrollY > 0) {
+    applyStickyTop();
+    return;
+  }
+
+  megamenu.classList.add('megamenu--transparent');
+
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.scrollY > 0) return;
+    if (document.querySelector('[data-subservice-page-hero], [data-megamenu-light]')) {
+      applyStickyTop();
+    }
+  });
+})();
+</script>
+      
+
+      
+
+      <main id="main-content" class="body-container-wrapper">
+        
+<section class="error-404-hero" data-megamenu-light>
+  <div class="content-wrapper error-404-hero__inner">
+    <p class="error-404-hero__eyebrow">Oops!</p>
+    <h1 class="error-404-hero__title">404 page not found </h1>
+    <p class="error-404-hero__description">
+      Hmmm, it looks like we can’t find the page you were looking for right now.<br>Let’s get you back on track&nbsp;
+    </p>
+
+    <div class="error-404-hero__actions">
+      <a class="button error-404-hero__button" href="/#what_we_do">
+        <span class="button__label">Explore what we do</span>
+      </a>
+      <a class="button button--secondary error-404-hero__button" href="/contact">
+        <span class="button__label">Ask us anything</span>
+      </a>
+    </div>
+
+    <form class="error-404-hero__search" action="/hs-search-results" method="GET" role="search">
+      <label class="error-404-hero__search-label" for="error-404-search">What are you looking for?</label>
+      <div class="error-404-hero__search-field">
+        <svg class="error-404-hero__search-icon" width="20" height="20" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M14.938 14L9.958 9.021A4.95 4.95 0 0 1 8.583 9.75 4.7 4.7 0 0 1 7 10c-1.389 0-2.569-.486-3.542-1.458C2.486 7.569 2 6.389 2 5s.486-2.569 1.458-3.542C4.431.486 5.611 0 7 0s2.569.486 3.542 1.458C11.514 2.431 12 3.611 12 5c0 .556-.09 1.083-.271 1.583A4.7 4.7 0 0 1 11.021 7.958L16 12.937zM7 8.5c.972 0 1.799-.34 2.479-1.021A3.39 3.39 0 0 0 10.5 5c0-.972-.34-1.799-1.021-2.479A3.39 3.39 0 0 0 7 1.5c-.972 0-1.799.34-2.479 1.021A3.39 3.39 0 0 0 3.5 5c0 .972.34 1.799 1.021 2.479A3.39 3.39 0 0 0 7 8.5z" fill="currentColor" />
+        </svg>
+        <input id="error-404-search" type="text" name="q" class="error-404-hero__search-input" placeholder="Search" autocomplete="off">
+      </div>
+      <button type="submit" class="button button--secondary error-404-hero__search-submit">
+        <span class="button__label">Search</span>
+      </button>
+    </form>
+  </div>
+</section>
+<div id="hs_cos_wrapper_error_page_cta_banner" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><link rel="stylesheet" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/index-DG8m4Qn6.css">
+<section class="error-page-cta-banner"><div class="error-page-cta-banner__frame"><div class="error-page-cta-banner__media" aria-hidden="true"><div class="error-page-cta-banner__image error-page-cta-banner__image--fallback"></div></div><div class="error-page-cta-banner__overlay" aria-hidden="true"></div><div class="content-wrapper error-page-cta-banner__inner"><div class="error-page-cta-banner__copy"><div class="error-page-cta-banner__heading-block"><p class="error-page-cta-banner__eyebrow">Need something specific?</p><h2 class="error-page-cta-banner__title">We'll help you find the answer</h2></div><p class="error-page-cta-banner__description">This page might be missing, but the right answer isn't. Get in touch and we'll help you find exactly what you came for.</p><a class="button error-page-cta-banner__button" href="/contact"><span class="button__label">Talk to our team</span></a></div></div></div></section>
+    <script type="text/javascript" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+      window.__hsEnvConfig = {"hsDeployed":true,"hsEnv":"prod","hsJSRGates":["CMS:JSRenderer:GetServerSideProps","CMS:JSRenderer:EnvAllowlistRenderTime","CMS:JSRenderer:EnvAllowlist","CMS:JSRenderer:RemoveMockClientEntryPlugin"],"hublet":"eu1","portalID":143134609};
+      window.__hsServerPageUrl = "https:\u002F\u002Fwww.nashtechglobal.com\u002Fcontent-rendering\u002Fv1\u002Fpublic\u002F_hcms\u002F404";
+      window.__hsBasePath = "\u002Fcontent-rendering\u002Fv1\u002Fpublic\u002F_hcms\u002F404";
+    </script>
+      </div>
+<div class="dnd-section">
+<div class="row-fluid">
+  <div id="hs_cos_wrapper_recent_blog" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><link rel="stylesheet" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/index-DYbswq7O.css">
+<div class="recent-blog"><div class="recent-blog__inner"><div class="recent-blog__deco recent-blog__deco--desktop" aria-hidden="true"></div><header class="recent-blog__header"><div class="recent-blog__header-row"><div class="recent-blog__heading"><p class="recent-blog__overline">Insights</p><h2 class="recent-blog__title">Expert insights, practical value</h2></div></div><a class="button button--link is-small recent-blog__explore recent-blog__explore--desktop" href="https://www.nashtechglobal.com/insights"><span class="button__label">Explore all insights</span><svg class="button__icon button__icon--trailing" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></header><div class="recent-blog__grid"><article class="recent-blog__card"><a class="recent-blog__card-link" href="https://www.nashtechglobal.com/insights/ai-is-speeding-up-software-delivery-now-technology-leaders-need-to-rethink-everything-around-it"><div class="recent-blog__card-media"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Consumer%20webinar%202026.png?width=1500&amp;height=813&amp;name=Article%20Banner_Consumer%20webinar%202026.png" alt="" width="1500" height="813" class="recent-blog__card-image" loading="lazy" decoding="async" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Consumer%20webinar%202026.png?width=750&amp;height=407&amp;name=Article%20Banner_Consumer%20webinar%202026.png 750w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Consumer%20webinar%202026.png?width=1500&amp;height=813&amp;name=Article%20Banner_Consumer%20webinar%202026.png 1500w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Consumer%20webinar%202026.png?width=2250&amp;height=1220&amp;name=Article%20Banner_Consumer%20webinar%202026.png 2250w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Consumer%20webinar%202026.png?width=3000&amp;height=1626&amp;name=Article%20Banner_Consumer%20webinar%202026.png 3000w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Consumer%20webinar%202026.png?width=3750&amp;height=2033&amp;name=Article%20Banner_Consumer%20webinar%202026.png 3750w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Consumer%20webinar%202026.png?width=4500&amp;height=2439&amp;name=Article%20Banner_Consumer%20webinar%202026.png 4500w" sizes="(max-width: 1500px) 100vw, 1500px"></div><div class="recent-blog__card-body"><div class="recent-blog__category-slot"><span class="recent-blog__pill" style="color:#6A1F7A;background:#FAEBFE">Article</span><span class="recent-blog__card-reading"><span class="recent-blog__card-reading-label">Reading time:</span><span class="recent-blog__card-reading-value">6<!-- --> <!-- -->min</span></span></div><h3 class="recent-blog__card-title">AI is speeding up software delivery. Now technology leaders need to rethink everything around it</h3><p class="recent-blog__card-desc">For consumer and retail technology leaders, the conversation around AI-assisted software development is moving quickly beyond experimentation.</p><span class="button button--secondary is-small recent-blog__card-cta"><span class="button__label">Read more</span><svg class="button__icon button__icon--trailing" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></span></div></a></article><article class="recent-blog__card"><a class="recent-blog__card-link" href="https://www.nashtechglobal.com/insights/replacing-university-azure-lab-services-build-buy-or-blend-nashtech"><div class="recent-blog__card-media"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Article-banner_CAUDIT-webinar.jpg?width=1500&amp;height=813&amp;name=Article-banner_CAUDIT-webinar.jpg" alt="Two colleagues discuss a computer lab management dashboard displayed on a monitor in a modern university workspace." width="1500" height="813" class="recent-blog__card-image" loading="lazy" decoding="async" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Article-banner_CAUDIT-webinar.jpg?width=750&amp;height=407&amp;name=Article-banner_CAUDIT-webinar.jpg 750w, https://www.nashtechglobal.com/hs-fs/hubfs/Article-banner_CAUDIT-webinar.jpg?width=1500&amp;height=813&amp;name=Article-banner_CAUDIT-webinar.jpg 1500w, https://www.nashtechglobal.com/hs-fs/hubfs/Article-banner_CAUDIT-webinar.jpg?width=2250&amp;height=1220&amp;name=Article-banner_CAUDIT-webinar.jpg 2250w, https://www.nashtechglobal.com/hs-fs/hubfs/Article-banner_CAUDIT-webinar.jpg?width=3000&amp;height=1626&amp;name=Article-banner_CAUDIT-webinar.jpg 3000w, https://www.nashtechglobal.com/hs-fs/hubfs/Article-banner_CAUDIT-webinar.jpg?width=3750&amp;height=2033&amp;name=Article-banner_CAUDIT-webinar.jpg 3750w, https://www.nashtechglobal.com/hs-fs/hubfs/Article-banner_CAUDIT-webinar.jpg?width=4500&amp;height=2439&amp;name=Article-banner_CAUDIT-webinar.jpg 4500w" sizes="(max-width: 1500px) 100vw, 1500px"></div><div class="recent-blog__card-body"><div class="recent-blog__category-slot"><span class="recent-blog__pill" style="color:#6A1F7A;background:#FAEBFE">Article</span><span class="recent-blog__card-reading"><span class="recent-blog__card-reading-label">Reading time:</span><span class="recent-blog__card-reading-value">10<!-- --> <!-- -->min</span></span></div><h3 class="recent-blog__card-title">Azure Lab Services retirement: build, buy or blend your replacement?</h3><p class="recent-blog__card-desc">Microsoft will retire Azure Lab Services globally on 28 June 2027. For universities using the service, the practical deadline may arrive much sooner, depending on their academic calendar, procurement process and change windows. The next step is to decide which workloads to build, which to buy and where a blended model makes sense.</p><span class="button button--secondary is-small recent-blog__card-cta"><span class="button__label">Read more</span><svg class="button__icon button__icon--trailing" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></span></div></a></article><article class="recent-blog__card"><a class="recent-blog__card-link" href="https://www.nashtechglobal.com/insights/the-hidden-cost-of-review-time-in-lending-operations"><div class="recent-blog__card-media"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Bridging%20soup.png?width=1500&amp;height=813&amp;name=Article%20Banner_Bridging%20soup.png" alt="" width="1500" height="813" class="recent-blog__card-image" loading="lazy" decoding="async" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Bridging%20soup.png?width=750&amp;height=407&amp;name=Article%20Banner_Bridging%20soup.png 750w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Bridging%20soup.png?width=1500&amp;height=813&amp;name=Article%20Banner_Bridging%20soup.png 1500w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Bridging%20soup.png?width=2250&amp;height=1220&amp;name=Article%20Banner_Bridging%20soup.png 2250w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Bridging%20soup.png?width=3000&amp;height=1626&amp;name=Article%20Banner_Bridging%20soup.png 3000w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Bridging%20soup.png?width=3750&amp;height=2033&amp;name=Article%20Banner_Bridging%20soup.png 3750w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Article%20Banner_Bridging%20soup.png?width=4500&amp;height=2439&amp;name=Article%20Banner_Bridging%20soup.png 4500w" sizes="(max-width: 1500px) 100vw, 1500px"></div><div class="recent-blog__card-body"><div class="recent-blog__category-slot"><span class="recent-blog__pill" style="color:#6A1F7A;background:#FAEBFE">Article</span><span class="recent-blog__card-reading"><span class="recent-blog__card-reading-label">Reading time:</span><span class="recent-blog__card-reading-value">4<!-- --> <!-- -->min</span></span></div><h3 class="recent-blog__card-title">The hidden cost of review time in lending operations</h3><p class="recent-blog__card-desc">As lending markets become increasingly competitive, operational efficiency is becoming as important as risk management.</p><span class="button button--secondary is-small recent-blog__card-cta"><span class="button__label">Read more</span><svg class="button__icon button__icon--trailing" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></span></div></a></article><article class="recent-blog__card"><a class="recent-blog__card-link" href="https://www.nashtechglobal.com/insights/lessons-learned-from-the-leaders-lab-london"><div class="recent-blog__card-media"><img src="https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg?width=1500&amp;height=813&amp;name=Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg" alt="" width="1500" height="813" class="recent-blog__card-image" loading="lazy" decoding="async" srcset="https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg?width=750&amp;height=407&amp;name=Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg 750w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg?width=1500&amp;height=813&amp;name=Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg 1500w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg?width=2250&amp;height=1220&amp;name=Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg 2250w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg?width=3000&amp;height=1626&amp;name=Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg 3000w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg?width=3750&amp;height=2033&amp;name=Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg 3750w, https://www.nashtechglobal.com/hs-fs/hubfs/Banner/Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg?width=4500&amp;height=2439&amp;name=Banner-Leaders%20Lab%20-%20LONDON%20290926%20-%20post%20event.jpg 4500w" sizes="(max-width: 1500px) 100vw, 1500px"></div><div class="recent-blog__card-body"><div class="recent-blog__category-slot"><span class="recent-blog__pill" style="color:#0371A0;background:#DFF2FA">Event takeaway</span><span class="recent-blog__card-reading"><span class="recent-blog__card-reading-label">Reading time:</span><span class="recent-blog__card-reading-value">14<!-- --> <!-- -->min</span></span></div><h3 class="recent-blog__card-title">Listening in at the Leaders Lab London</h3><p class="recent-blog__card-desc">Boards are increasingly expecting results from AI, but technology leaders are still working out which bets to make, where to invest, how to govern them and what readiness looks like when the technology changes every few months. This tension shaped the latest NashTech Leaders Lab roundtable in London, where 20 senior technology leaders from across the UK shared their experiences. This article captures just some of the discussion, which may help other CIOs and CTOs navigate the same decisions. Let’s dive into it.</p><span class="button button--secondary is-small recent-blog__card-cta"><span class="button__label">Read more</span><svg class="button__icon button__icon--trailing" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></span></div></a></article></div><a class="button button--link is-small recent-blog__explore recent-blog__explore--compact" href="https://www.nashtechglobal.com/insights"><span class="button__label">Explore all insights</span><svg class="button__icon button__icon--trailing" width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path></svg></a></div></div>
+    <script type="text/javascript" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+      window.__hsEnvConfig = {"hsDeployed":true,"hsEnv":"prod","hsJSRGates":["CMS:JSRenderer:GetServerSideProps","CMS:JSRenderer:EnvAllowlistRenderTime","CMS:JSRenderer:EnvAllowlist","CMS:JSRenderer:RemoveMockClientEntryPlugin"],"hublet":"eu1","portalID":143134609};
+      window.__hsServerPageUrl = "https:\u002F\u002Fwww.nashtechglobal.com\u002Fcontent-rendering\u002Fv1\u002Fpublic\u002F_hcms\u002F404";
+      window.__hsBasePath = "\u002Fcontent-rendering\u002Fv1\u002Fpublic\u002F_hcms\u002F404";
+    </script>
+      </div>
+</div>
+</div>
+
+
+    <div id="hs_cos_wrapper_subscription_form" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><link rel="stylesheet" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/index-KaMAMj_y.css">
+<link rel="stylesheet" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/listing-filter-dropdown-DiHOQTGh.css">
+<link rel="stylesheet" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/hubspot-form-select-dropdown-C30gFpvG.css">
+<div class="subscription-form subscription-form--overlap-bottom content-wrapper" id="subscription-form-root-31b742nf57ed3R0" data-subscription-form="true"><div class="subscription-form__inner"><div class="subscription-form__layout"><div class="subscription-form__intro"><h4 class="subscription-form__title">Get insights straight to your inbox with our newsletter</h4></div><div class="subscription-form__form-wrap"><div id="subscription-form-mount-31b742nf57ed3R0" class="subscription-form__mount hs-form-select-mount"><span id="hs_cos_wrapper_subscription_form_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_form" style="" data-hs-cos-general-type="widget" data-hs-cos-type="form">
+<div id="hs_form_target_subscription_form_"></div>
+
+
+
+
+
+
+
+
+</span></div></div></div></div><!--$--><div data-hs-island="true" id="island-31b742nf57ed3R5"><!--$--><!--/$--></div><!--/$--></div>
+    <script type="text/javascript" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+      window.__hsEnvConfig = {"hsDeployed":true,"hsEnv":"prod","hsJSRGates":["CMS:JSRenderer:GetServerSideProps","CMS:JSRenderer:EnvAllowlistRenderTime","CMS:JSRenderer:EnvAllowlist","CMS:JSRenderer:RemoveMockClientEntryPlugin"],"hublet":"eu1","portalID":143134609};
+      window.__hsServerPageUrl = "https:\u002F\u002Fwww.nashtechglobal.com\u002Fcontent-rendering\u002Fv1\u002Fpublic\u002F_hcms\u002F404";
+      window.__hsBasePath = "\u002Fcontent-rendering\u002Fv1\u002Fpublic\u002F_hcms\u002F404";
+    </script>
+      
+  <script type="text/javascript" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+    var newIslands = [{"clientOnly":false,"hydrateOn":"load","id":"island-31b742nf57ed3R5","moduleId":"components\u002FHubSpotFormSelectEnhanceIsland.jsx?client-entry","moduleName":"HubSpotFormSelectEnhanceIsland","priority":0,"props":{"data":{"moduleRootId":"subscription-form-root-31b742nf57ed3R0"}},"supplementalFieldValues":{"form_settings":{"form_load_timing":{},"form_v2":{"type":"form","value":{"content":"\u003Cspan id=\"hs_cos_wrapper_subscription_form_\" class=\"hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_form\" style=\"\" data-hs-cos-general-type=\"widget\" data-hs-cos-type=\"form\" \u003E\u003Ch3 id=\"hs_cos_wrapper_subscription_form_-1_title\" class=\"hs_cos_wrapper form-title\" data-hs-cos-general-type=\"widget_field\" data-hs-cos-type=\"text\"\u003E\u003C\u002Fh3\u003E\n\n\u003Cdiv id='hs_form_target_subscription_form_-1'\u003E\u003C\u002Fdiv\u003E\n\n\n\n\n\n\n\n\n\n\u003C\u002Fspan\u003E"}},"render_mode":{}},"layout":{"overlap_position":{}},"section_content":{"heading":{}}},"url":"https:\u002F\u002F143134609.fs1.hubspotusercontent-eu1.net\u002Fhubfs\u002F143134609\u002Fraw_assets\u002Fnashtech_theme_project\u002F1059\u002Fjs_client_assets\u002Fassets\u002FHubSpotFormSelectEnhanceIsland-mj8ATJ6P.js"}];
+    if (Array.isArray(window.__islands)) {
+      window.__islands.push(...newIslands);
+    } else {
+      window.__islands = newIslands;
+    }
+  </script>
+  <link rel="modulepreload" crossorigin href="https://static.hsappstatic.net/cms-js-static/ex/js/react/v18/react-combined.mjs">
+  <script type="module" crossorigin nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+    import { initConfigSingletonFromJSON, setupIslandHydration, unmountIslandsForModule } from "https://static.hsappstatic.net/cms-js-static/ex/js/island-runtime/v1/island-runtime.mjs"
+    initConfigSingletonFromJSON(window.__hsEnvConfig)
+    setupIslandHydration();
+    window.__islandRuntime = { ...window.__islandRuntime, unmountIslandsForModule };
+  </script>
+      </div>
+
+
+
+
+      </main>
+
+      
+        <div id="hs_cos_wrapper_footer" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="" data-hs-cos-general-type="widget" data-hs-cos-type="module"><link rel="stylesheet" href="https://www.nashtechglobal.com/hubfs/raw_assets/nashtech_theme_project/1059/js_client_assets/assets/index-BNwzR_h3.css">
+<footer class="site-footer" data-site-footer="true"><div class="site-footer__shell"><div class="content-wrapper site-footer__inner"><div class="site-footer__top"><div class="site-footer__company"><a href="/" class="site-footer__logo" aria-label="Go to homepage"><img src="https://www.nashtechglobal.com/hubfs/website_theme_2026/logo-nt.svg" alt="logo-nt" width="80" height="80" loading="lazy"></a><p class="site-footer__description">We deliver and operate high quality technology solutions that solve our clients’ most critical business challenges and bring lasting, quantified value.</p><div class="site-footer__social" aria-label="Social links"><a class="site-footer__social-link" href="https://www.linkedin.com/company/nashtech-global/" target="_blank" rel="noopener nofollow" aria-label="LinkedIn"><span class="site-footer__social-icon" aria-hidden="true"><span id="hs_cos_wrapper_footer_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512" aria-hidden="true"><g id="LinkedIn In1_layer"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z" /></g></svg></span></span></a><a class="site-footer__social-link" href="https://www.youtube.com/@NashTechGlobal" target="_blank" rel="noopener nofollow" aria-label="YouTube"><span class="site-footer__social-icon" aria-hidden="true"><span id="hs_cos_wrapper_footer_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_icon" style="" data-hs-cos-general-type="widget" data-hs-cos-type="icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 576 512" aria-hidden="true"><g id="YouTube2_layer"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z" /></g></svg></span></span></a></div></div><div class="site-footer__sections site-footer__sections--desktop" aria-label="Footer navigation"><div class="site-footer__section"><p class="site-footer__section-title">Our solutions</p><div class="site-footer__links"><a class="site-footer__link" href="https://www.nashtechglobal.com/strategic-innovation">Drive strategic innovation</a><a class="site-footer__link" href="https://www.nashtechglobal.com/digital-experiences">Build digital experiences</a><a class="site-footer__link" href="https://www.nashtechglobal.com/modernise-technology">Modernise technology</a><a class="site-footer__link" href="https://www.nashtechglobal.com/data">Realise value from data</a><a class="site-footer__link" href="https://www.nashtechglobal.com/assure-quality">Run, optimise and assure quality</a></div></div><div class="site-footer__section"><p class="site-footer__section-title">Industries</p><div class="site-footer__links"><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/insurance">Insurance</a><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/banking">Banking and finance</a><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/retail-and-consumer">Retail and consumer</a><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/supply-chain-logistics">Logistics and supply chain</a><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/education">Education</a><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/technology-and-saas">Technology and SaaS</a></div></div><div class="site-footer__section"><p class="site-footer__section-title">Our thinking</p><div class="site-footer__links"><a class="site-footer__link" href="https://www.nashtechglobal.com/insights">Insights</a><a class="site-footer__link" href="https://www.nashtechglobal.com/insights/resources">Resources</a><a class="site-footer__link" href="https://www.nashtechglobal.com/insights/case-studies">Case studies</a><a class="site-footer__link" href="https://www.nashtechglobal.com/artificial-intelligence">AI-first approach</a><a class="site-footer__link" href="https://www.nashtechglobal.com/leaders-lab">Leaders Lab</a></div></div><div class="site-footer__section"><p class="site-footer__section-title">About us</p><div class="site-footer__links"><a class="site-footer__link" href="https://www.nashtechglobal.com/about-us">Who we are</a><a class="site-footer__link" href="https://www.nashtechglobal.com/our-locations">Our locations</a><a class="site-footer__link" href="https://careers.nashtechglobal.com/" target="_blank" rel="noopener">Careers</a><a class="site-footer__link" href="https://www.nashtechglobal.com/partners-and-certifications">Partners and certifications</a></div></div></div><div class="site-footer__sections site-footer__sections--mobile" aria-label="Footer navigation"><div class="site-footer__accordion"><button type="button" class="site-footer__accordion-trigger" data-footer-accordion-trigger="0" aria-expanded="false" aria-controls="site-footer-panel-0"><span class="site-footer__accordion-title">Our solutions</span><svg class="site-footer__icon site-footer__accordion-icon" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 15.375L6 9.375L7.075 8.3L12 13.225L16.925 8.3L18 9.375L12 15.375Z" fill="currentColor"></path></svg></button><div class="site-footer__accordion-panel" id="site-footer-panel-0" data-footer-accordion-panel="0" aria-hidden="true"><div class="site-footer__accordion-links"><a class="site-footer__link" href="https://www.nashtechglobal.com/strategic-innovation" tabindex="-1">Drive strategic innovation</a><a class="site-footer__link" href="https://www.nashtechglobal.com/digital-experiences" tabindex="-1">Build digital experiences</a><a class="site-footer__link" href="https://www.nashtechglobal.com/modernise-technology" tabindex="-1">Modernise technology</a><a class="site-footer__link" href="https://www.nashtechglobal.com/data" tabindex="-1">Realise value from data</a><a class="site-footer__link" href="https://www.nashtechglobal.com/assure-quality" tabindex="-1">Run, optimise and assure quality</a></div></div></div><div class="site-footer__accordion"><button type="button" class="site-footer__accordion-trigger" data-footer-accordion-trigger="1" aria-expanded="false" aria-controls="site-footer-panel-1"><span class="site-footer__accordion-title">Industries</span><svg class="site-footer__icon site-footer__accordion-icon" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 15.375L6 9.375L7.075 8.3L12 13.225L16.925 8.3L18 9.375L12 15.375Z" fill="currentColor"></path></svg></button><div class="site-footer__accordion-panel" id="site-footer-panel-1" data-footer-accordion-panel="1" aria-hidden="true"><div class="site-footer__accordion-links"><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/insurance" tabindex="-1">Insurance</a><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/banking" tabindex="-1">Banking and finance</a><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/retail-and-consumer" tabindex="-1">Retail and consumer</a><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/supply-chain-logistics" tabindex="-1">Logistics and supply chain</a><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/education" tabindex="-1">Education</a><a class="site-footer__link" href="https://www.nashtechglobal.com/industries/technology-and-saas" tabindex="-1">Technology and SaaS</a></div></div></div><div class="site-footer__accordion"><button type="button" class="site-footer__accordion-trigger" data-footer-accordion-trigger="2" aria-expanded="false" aria-controls="site-footer-panel-2"><span class="site-footer__accordion-title">Our thinking</span><svg class="site-footer__icon site-footer__accordion-icon" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 15.375L6 9.375L7.075 8.3L12 13.225L16.925 8.3L18 9.375L12 15.375Z" fill="currentColor"></path></svg></button><div class="site-footer__accordion-panel" id="site-footer-panel-2" data-footer-accordion-panel="2" aria-hidden="true"><div class="site-footer__accordion-links"><a class="site-footer__link" href="https://www.nashtechglobal.com/insights" tabindex="-1">Insights</a><a class="site-footer__link" href="https://www.nashtechglobal.com/insights/resources" tabindex="-1">Resources</a><a class="site-footer__link" href="https://www.nashtechglobal.com/insights/case-studies" tabindex="-1">Case studies</a><a class="site-footer__link" href="https://www.nashtechglobal.com/artificial-intelligence" tabindex="-1">AI-first approach</a><a class="site-footer__link" href="https://www.nashtechglobal.com/leaders-lab" tabindex="-1">Leaders Lab</a></div></div></div><div class="site-footer__accordion"><button type="button" class="site-footer__accordion-trigger" data-footer-accordion-trigger="3" aria-expanded="false" aria-controls="site-footer-panel-3"><span class="site-footer__accordion-title">About us</span><svg class="site-footer__icon site-footer__accordion-icon" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 15.375L6 9.375L7.075 8.3L12 13.225L16.925 8.3L18 9.375L12 15.375Z" fill="currentColor"></path></svg></button><div class="site-footer__accordion-panel" id="site-footer-panel-3" data-footer-accordion-panel="3" aria-hidden="true"><div class="site-footer__accordion-links"><a class="site-footer__link" href="https://www.nashtechglobal.com/about-us" tabindex="-1">Who we are</a><a class="site-footer__link" href="https://www.nashtechglobal.com/our-locations" tabindex="-1">Our locations</a><a class="site-footer__link" href="https://careers.nashtechglobal.com/" target="_blank" rel="noopener" tabindex="-1">Careers</a><a class="site-footer__link" href="https://www.nashtechglobal.com/partners-and-certifications" tabindex="-1">Partners and certifications</a></div></div></div></div></div><div class="site-footer__divider"></div><div class="site-footer__bottom"><div class="site-footer__copyright">NashTech © 2026. All rights reserved.</div><div class="site-footer__legal site-footer__legal--desktop" aria-label="Legal links"><div class="site-footer__legal-item"><a class="site-footer__legal-link" href="https://www.nashtechglobal.com/privacy-policy">Privacy policy</a></div><div class="site-footer__legal-item"><span class="site-footer__legal-dot" aria-hidden="true"></span><a class="site-footer__legal-link" href="https://www.nashtechglobal.com/cookie-policy">Cookie policy</a></div><div class="site-footer__legal-item"><span class="site-footer__legal-dot" aria-hidden="true"></span><a class="site-footer__legal-link" href="https://www.nashtechglobal.com/accessibility-statement">Accessibility statement</a></div><div class="site-footer__legal-item"><span class="site-footer__legal-dot" aria-hidden="true"></span><a class="site-footer__legal-link" href="https://www.nashtechglobal.com/modern-slavery-policy">Modern slavery policy</a></div></div><div class="site-footer__legal-mobile" aria-label="Legal links"><div class="site-footer__legal-row"><div class="site-footer__legal-item"><a class="site-footer__legal-link" href="https://www.nashtechglobal.com/privacy-policy">Privacy policy</a></div><div class="site-footer__legal-item"><span class="site-footer__legal-dot" aria-hidden="true"></span><a class="site-footer__legal-link" href="https://www.nashtechglobal.com/cookie-policy">Cookie policy</a></div></div><div class="site-footer__legal-row"><div class="site-footer__legal-item"><a class="site-footer__legal-link" href="https://www.nashtechglobal.com/accessibility-statement">Accessibility statement</a></div><div class="site-footer__legal-item"><span class="site-footer__legal-dot" aria-hidden="true"></span><a class="site-footer__legal-link" href="https://www.nashtechglobal.com/modern-slavery-policy">Modern slavery policy</a></div></div></div></div></div></div><!--$--><div data-hs-island="true" id="island-f41fddn251d16R2"><!--$--><span hidden aria-hidden="true"></span><!--/$--></div><!--/$--></footer>
+    <script type="text/javascript" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+      window.__hsEnvConfig = {"hsDeployed":true,"hsEnv":"prod","hsJSRGates":["CMS:JSRenderer:GetServerSideProps","CMS:JSRenderer:EnvAllowlistRenderTime","CMS:JSRenderer:EnvAllowlist","CMS:JSRenderer:RemoveMockClientEntryPlugin"],"hublet":"eu1","portalID":143134609};
+      window.__hsServerPageUrl = "https:\u002F\u002Fwww.nashtechglobal.com\u002Fcontent-rendering\u002Fv1\u002Fpublic\u002F_hcms\u002F404";
+      window.__hsBasePath = "\u002Fcontent-rendering\u002Fv1\u002Fpublic\u002F_hcms\u002F404";
+    </script>
+      
+  <script type="text/javascript" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+    var newIslands = [{"clientOnly":false,"hydrateOn":"load","id":"island-f41fddn251d16R2","moduleId":"components\u002Fmodules\u002FFooter\u002FFooterIsland.jsx?client-entry","moduleName":"FooterIsland","priority":0,"props":{},"supplementalFieldValues":{"company_description":{},"copyright_text":{},"legal_links":[{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}}],"logo":{},"sections":[{"links":[{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}}],"title":{}},{"links":[{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}}],"title":{}},{"links":[{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}}],"title":{}},{"links":[{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}},{"link":{},"link_text":{}}],"title":{}}],"social_links":[{"social_icon":{"type":"icon","value":{"aliases":[],"altIconName":"linkedin-in","categories":["BRAND"],"icon_set":"fontawesome-6.4.2","name":"LinkedIn In","styles":["REGULAR"],"svg":{"REGULAR":"M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"},"type":"REGULAR","unicode":"f0e1","viewPort":[0,0,448,512]}},"social_link":{},"social_name":{}},{"social_icon":{"type":"icon","value":{"aliases":[],"altIconName":null,"categories":["BRAND"],"icon_set":"fontawesome-6.4.2","name":"YouTube","styles":["REGULAR"],"svg":{"REGULAR":"M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"},"type":"REGULAR","unicode":"f167","viewPort":[0,0,576,512]}},"social_link":{},"social_name":{}}]},"url":"https:\u002F\u002F143134609.fs1.hubspotusercontent-eu1.net\u002Fhubfs\u002F143134609\u002Fraw_assets\u002Fnashtech_theme_project\u002F1059\u002Fjs_client_assets\u002Fassets\u002FFooterIsland-BPWuAKJ4.js"}];
+    if (Array.isArray(window.__islands)) {
+      window.__islands.push(...newIslands);
+    } else {
+      window.__islands = newIslands;
+    }
+  </script>
+  <link rel="modulepreload" crossorigin href="https://static.hsappstatic.net/cms-js-static/ex/js/react/v18/react-combined.mjs">
+  <script type="module" crossorigin nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+    import { initConfigSingletonFromJSON, setupIslandHydration, unmountIslandsForModule } from "https://static.hsappstatic.net/cms-js-static/ex/js/island-runtime/v1/island-runtime.mjs"
+    initConfigSingletonFromJSON(window.__hsEnvConfig)
+    setupIslandHydration();
+    window.__islandRuntime = { ...window.__islandRuntime, unmountIslandsForModule };
+  </script>
+      </div>
+      
+    </div>
+    
+    
+    
+    
+<!-- HubSpot performance collection script -->
+<script defer src="/hs/hsstatic/content-cwv-embed/static-1.1293/embed.js" nonce="/keiJfs8LKk9jBJ5mO84bQ=="></script>
+<script src="https://www.nashtechglobal.com/hubfs/hub_generated/template_assets/1059/497001539813/1793633305420/template_hubspot-form-a11y.min.js" nonce="/keiJfs8LKk9jBJ5mO84bQ=="></script>
+<script src="https://www.nashtechglobal.com/hubfs/hub_generated/template_assets/1059/497001539810/1793633303492/template_main.min.js" nonce="/keiJfs8LKk9jBJ5mO84bQ=="></script>
+<script nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+var hsVars = hsVars || {}; hsVars['language'] = 'en';
+</script>
+
+<script src="/hs/hsstatic/cos-i18n/static-1.53/bundles/project.js" nonce="/keiJfs8LKk9jBJ5mO84bQ=="></script>
+<script src="https://www.nashtechglobal.com/hubfs/hub_generated/module_assets/1059/497001540803/1792665532997/module_sticky-ribbon-top.min.js" nonce="/keiJfs8LKk9jBJ5mO84bQ=="></script>
+
+    <!--[if lte IE 8]>
+    <script charset="utf-8" src="https://js-eu1.hsforms.net/forms/v2-legacy.js"></script>
+    <![endif]-->
+
+<script data-hs-allowed="true" src="/_hcms/forms/v2.js" nonce="/keiJfs8LKk9jBJ5mO84bQ=="></script>
+
+    <script data-hs-allowed="true" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+        var options = {
+            portalId: '143134609',
+            formId: '537d7bc3-1928-4c96-b3bc-01f479bea492',
+            formInstanceId: '4155',
+            
+            pageId: 'null',
+            
+            region: 'eu1',
+            
+            
+            
+            
+            
+            
+            inlineMessage: "Thanks for submitting the form.",
+            
+            
+            rawInlineMessage: "Thanks for submitting the form.",
+            
+            
+            hsFormKey: "57db93ee1558a49e139a4d49a40210b1",
+            
+            
+            css: '',
+            target: '#hs_form_target_subscription_form_',
+            
+            
+            
+            
+            
+            
+            
+            contentType: "standard-page",
+            
+            
+            
+            formsBaseUrl: '/_hcms/forms/',
+            
+            
+            
+            formData: {
+                cssClass: 'hs-form stacked hs-custom-form'
+            }
+        };
+
+        options.getExtraMetaDataBeforeSubmit = function() {
+            var metadata = {};
+            
+
+            if (hbspt.targetedContentMetadata) {
+                var count = hbspt.targetedContentMetadata.length;
+                var targetedContentData = [];
+                for (var i = 0; i < count; i++) {
+                    var tc = hbspt.targetedContentMetadata[i];
+                     if ( tc.length !== 3) {
+                        continue;
+                     }
+                     targetedContentData.push({
+                        definitionId: tc[0],
+                        criterionId: tc[1],
+                        smartTypeId: tc[2]
+                     });
+                }
+                metadata["targetedContentMetadata"] = JSON.stringify(targetedContentData);
+            }
+
+            return metadata;
+        };
+
+        hbspt.forms.create(options);
+    </script>
+
+
+    <script data-hs-allowed="true" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+        var options = {
+            portalId: '143134609',
+            formId: '537d7bc3-1928-4c96-b3bc-01f479bea492',
+            formInstanceId: '8',
+            
+            pageId: 'null',
+            
+            region: 'eu1',
+            
+            
+            
+            
+            
+            
+            inlineMessage: "Thanks for submitting the form.",
+            
+            
+            rawInlineMessage: "Thanks for submitting the form.",
+            
+            
+            hsFormKey: "eda93e4f23b154f8d8c2376af506567f",
+            
+            
+            css: '',
+            target: '#hs_form_target_subscription_form_-1',
+            
+            
+            
+            
+            
+            
+            
+            contentType: "standard-page",
+            
+            
+            
+            formsBaseUrl: '/_hcms/forms/',
+            
+            
+            
+            formData: {
+                cssClass: 'hs-form stacked hs-custom-form'
+            }
+        };
+
+        options.getExtraMetaDataBeforeSubmit = function() {
+            var metadata = {};
+            
+
+            if (hbspt.targetedContentMetadata) {
+                var count = hbspt.targetedContentMetadata.length;
+                var targetedContentData = [];
+                for (var i = 0; i < count; i++) {
+                    var tc = hbspt.targetedContentMetadata[i];
+                     if ( tc.length !== 3) {
+                        continue;
+                     }
+                     targetedContentData.push({
+                        definitionId: tc[0],
+                        criterionId: tc[1],
+                        smartTypeId: tc[2]
+                     });
+                }
+                metadata["targetedContentMetadata"] = JSON.stringify(targetedContentData);
+            }
+
+            return metadata;
+        };
+
+        hbspt.forms.create(options);
+    </script>
+
+<script nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+var hsVars = hsVars || {}; hsVars['language'] = 'en';
+</script>
+
+
+    <script data-hs-allowed="true" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+        var options = {
+            portalId: '143134609',
+            formId: '537d7bc3-1928-4c96-b3bc-01f479bea492',
+            formInstanceId: '8288',
+            
+            pageId: 'null',
+            
+            region: 'eu1',
+            
+            
+            
+            
+            
+            
+            inlineMessage: "Thanks for submitting the form.",
+            
+            
+            rawInlineMessage: "Thanks for submitting the form.",
+            
+            
+            hsFormKey: "57db93ee1558a49e139a4d49a40210b1",
+            
+            
+            css: '',
+            target: '#hs_form_target_subscription_form_',
+            
+            
+            
+            
+            
+            
+            
+            contentType: "standard-page",
+            
+            
+            
+            formsBaseUrl: '/_hcms/forms/',
+            
+            
+            
+            formData: {
+                cssClass: 'hs-form stacked hs-custom-form'
+            }
+        };
+
+        options.getExtraMetaDataBeforeSubmit = function() {
+            var metadata = {};
+            
+
+            if (hbspt.targetedContentMetadata) {
+                var count = hbspt.targetedContentMetadata.length;
+                var targetedContentData = [];
+                for (var i = 0; i < count; i++) {
+                    var tc = hbspt.targetedContentMetadata[i];
+                     if ( tc.length !== 3) {
+                        continue;
+                     }
+                     targetedContentData.push({
+                        definitionId: tc[0],
+                        criterionId: tc[1],
+                        smartTypeId: tc[2]
+                     });
+                }
+                metadata["targetedContentMetadata"] = JSON.stringify(targetedContentData);
+            }
+
+            return metadata;
+        };
+
+        hbspt.forms.create(options);
+    </script>
+
+
+    <script data-hs-allowed="true" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+        var options = {
+            portalId: '143134609',
+            formId: '537d7bc3-1928-4c96-b3bc-01f479bea492',
+            formInstanceId: '3152',
+            
+            pageId: 'null',
+            
+            region: 'eu1',
+            
+            
+            
+            
+            
+            
+            inlineMessage: "Thanks for submitting the form.",
+            
+            
+            rawInlineMessage: "Thanks for submitting the form.",
+            
+            
+            hsFormKey: "eda93e4f23b154f8d8c2376af506567f",
+            
+            
+            css: '',
+            target: '#hs_form_target_subscription_form_-1',
+            
+            
+            
+            
+            
+            
+            
+            contentType: "standard-page",
+            
+            
+            
+            formsBaseUrl: '/_hcms/forms/',
+            
+            
+            
+            formData: {
+                cssClass: 'hs-form stacked hs-custom-form'
+            }
+        };
+
+        options.getExtraMetaDataBeforeSubmit = function() {
+            var metadata = {};
+            
+
+            if (hbspt.targetedContentMetadata) {
+                var count = hbspt.targetedContentMetadata.length;
+                var targetedContentData = [];
+                for (var i = 0; i < count; i++) {
+                    var tc = hbspt.targetedContentMetadata[i];
+                     if ( tc.length !== 3) {
+                        continue;
+                     }
+                     targetedContentData.push({
+                        definitionId: tc[0],
+                        criterionId: tc[1],
+                        smartTypeId: tc[2]
+                     });
+                }
+                metadata["targetedContentMetadata"] = JSON.stringify(targetedContentData);
+            }
+
+            return metadata;
+        };
+
+        hbspt.forms.create(options);
+    </script>
+
+
+<!-- Start of HubSpot Analytics Code -->
+<script type="text/javascript" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+var _hsq = _hsq || [];
+_hsq.push(["setContentType", "standard-page"]);
+_hsq.push(["setCanonicalUrl", "https:\/\/www.nashtechglobal.com\/404"]);
+_hsq.push(["setPageId", ""]);
+_hsq.push(["setContentMetadata", {
+    "contentPageId": null,
+    "legacyPageId": null,
+    "contentFolderId": null,
+    "contentGroupId": null,
+    "abTestId": null,
+    "languageVariantId": null,
+    "languageCode": "en",
+    
+    
+}]);
+</script>
+
+<script type="text/javascript" id="hs-script-loader" async defer src="/hs/scriptloader/143134609.js" nonce="/keiJfs8LKk9jBJ5mO84bQ=="></script>
+<!-- End of HubSpot Analytics Code -->
+
+
+<script type="text/javascript" nonce="/keiJfs8LKk9jBJ5mO84bQ==">
+var hsVars = {
+    render_id: "cee28270-35c9-4efb-95e9-7984d31f52f7",
+    ticks: 1793763967409,
+    page_id: 0,
+    
+    content_group_id: 0,
+    portal_id: 143134609,
+    app_hs_base_url: "https://app-eu1.hubspot.com",
+    cp_hs_base_url: "https://cp-eu1.hubspot.com",
+    language: "en",
+    analytics_page_type: "standard-page",
+    scp_content_type: "",
+    
+    analytics_page_id: "null",
+    category_id: 1,
+    folder_id: 0,
+    is_hubspot_user: false
+}
+</script>
+
+
+<script defer src="/hs/hsstatic/HubspotToolsMenu/static-1.640/js/index.js" nonce="/keiJfs8LKk9jBJ5mO84bQ=="></script>
+
+
+
+
+    <!-- Start of HubSpot code snippet -->
+<button type="button" id="hs_show_banner_button" class="cookie-settings-button" aria-label="Cookie Settings">
+<span class="cookie-settings-button__icon" aria-hidden="true">cookie</span>
+</button>
+
+<!-- End of HubSpot code snippet -->
+  
+</body></html>

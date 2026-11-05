@@ -1,6 +1,6 @@
 'use client';
 
-import { phoneVerificationApi } from '@/apiRequest/phone-verification';
+import { accountSecurityApiFor } from '@/apiRequest/account-security';
 import { recruiterCompanyApi } from '@/apiRequest/recruiter-company';
 import { VERIFICATION_STEPS_META } from '@/constants/company-verification';
 import { ROUTES } from '@/constants/routes';
@@ -160,16 +160,19 @@ export function useCompanyVerification() {
 
   // Actions
   const handleSendPhoneOtp = useCallback(async (phone: string) => {
-    await phoneVerificationApi.sendOtp(phone);
+    await accountSecurityApiFor('recruiter').sendPhoneOtp(phone);
     toast.success(`Verification OTP sent to ${phone}`);
   }, []);
 
   const handleVerifyPhone = useCallback(
     async (otp: string) => {
-      const updatedUser = await phoneVerificationApi.verifyOtp(otp);
+      const patch = await accountSecurityApiFor('recruiter').verifyPhoneOtp(otp);
       const store = useAuthStore.getState();
-      if (store.accessToken) {
-        store.setSession({ accessToken: store.accessToken, user: updatedUser });
+      if (store.accessToken && store.user) {
+        store.setSession({
+          accessToken: store.accessToken,
+          user: { ...store.user, ...patch, phoneVerified: true },
+        });
       }
       toast.success('Phone number verified successfully!');
       reload();
