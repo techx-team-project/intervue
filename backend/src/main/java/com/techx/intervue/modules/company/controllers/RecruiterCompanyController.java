@@ -6,6 +6,7 @@ import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.resources.CompanySummaryResource;
+import com.techx.intervue.modules.company.resources.TaxLookupResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,6 +72,12 @@ public class RecruiterCompanyController extends BaseController {
     public ResponseEntity<ApiResource<PageResource<CompanySummaryResource>>> search(
             @Valid SearchCompaniesRequest request, Pageable pageable) {
         return page(companyService.search(request, pageable), "Companies retrieved successfully!");
+    }
+
+    @GetMapping("/lookup-tax")
+    public ResponseEntity<ApiResource<TaxLookupResource>> lookupTax(
+            @RequestParam("taxCode") String taxCode) {
+        return ok(companyService.lookupTax(taxCode), "Tax information retrieved successfully!");
     }
 
     @PostMapping("/join")
