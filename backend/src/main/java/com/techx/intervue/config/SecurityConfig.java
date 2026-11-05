@@ -53,6 +53,8 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/recruiter/auth/login")
                                         .permitAll()
+                                        .requestMatchers("/api/v1/recruiter/auth/verify-2fa")
+                                        .permitAll()
                                         .requestMatchers("/api/v1/recruiter/auth/register")
                                         .permitAll()
                                         .requestMatchers("/api/v1/recruiter/auth/refresh")

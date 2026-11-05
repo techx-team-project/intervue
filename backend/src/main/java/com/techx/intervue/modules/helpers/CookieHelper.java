@@ -44,6 +44,17 @@ public class CookieHelper {
         return buildCookie(ADMIN_REFRESH_TOKEN_COOKIE, "", "/api/v1/admin", Duration.ZERO);
     }
 
+    public static final String RECRUITER_DEVICE_TRUST_COOKIE = "recruiter_device_trust";
+    public static final Duration DEVICE_TRUST_MAX_AGE = Duration.ofDays(30);
+
+    public static ResponseCookie buildRecruiterDeviceTrustCookie(String token, Duration maxAge) {
+        return buildCookie(RECRUITER_DEVICE_TRUST_COOKIE, token, "/", maxAge);
+    }
+
+    public static ResponseCookie clearRecruiterDeviceTrustCookie() {
+        return buildRecruiterDeviceTrustCookie("", Duration.ZERO);
+    }
+
     private static ResponseCookie buildCookie(
             String name, String token, String path, Duration maxAge) {
         return ResponseCookie.from(name, token)

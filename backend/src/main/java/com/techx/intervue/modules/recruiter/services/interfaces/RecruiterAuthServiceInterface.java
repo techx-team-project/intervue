@@ -8,7 +8,12 @@ public interface RecruiterAuthServiceInterface {
 
     RecruiterAuthResult register(RecruiterRegisterRequest request, String userAgent, String ip);
 
-    RecruiterAuthResult login(LoginRequest request, String userAgent, String ip);
+    RecruiterAuthResult login(
+            LoginRequest request, String userAgent, String ip, String rawDeviceToken);
+
+    default RecruiterAuthResult login(LoginRequest request, String userAgent, String ip) {
+        return login(request, userAgent, ip, null);
+    }
 
     RecruiterAuthResult verifyTwoFactor(
             com.techx.intervue.modules.user.requests.TwoFactorChallengeRequest request,

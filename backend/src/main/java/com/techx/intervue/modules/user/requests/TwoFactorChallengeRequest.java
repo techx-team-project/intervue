@@ -4,4 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 
 public record TwoFactorChallengeRequest(
         @NotBlank(message = "Session token is required") String tempToken,
-        @NotBlank(message = "Verification code is required") String code) {}
+        @NotBlank(message = "Verification code is required") String code,
+        Boolean trustDevice) {
+
+    public TwoFactorChallengeRequest(String tempToken, String code) {
+        this(tempToken, code, Boolean.FALSE);
+    }
+}

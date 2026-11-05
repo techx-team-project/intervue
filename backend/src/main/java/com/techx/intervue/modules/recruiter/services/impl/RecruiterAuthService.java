@@ -86,7 +86,8 @@ public class RecruiterAuthService implements RecruiterAuthServiceInterface {
 
     @Override
     @Transactional
-    public RecruiterAuthResult login(LoginRequest request, String userAgent, String ip) {
+    public RecruiterAuthResult login(
+            LoginRequest request, String userAgent, String ip, String rawDeviceToken) {
         String email = EmailHelper.normalize(request.email());
         String attemptKey = ATTEMPT_KEY_PREFIX + email;
         Recruiter recruiter = recruiterRepository.findByEmail(email).orElse(null);
@@ -104,6 +105,17 @@ public class RecruiterAuthService implements RecruiterAuthServiceInterface {
         ensureSignInAllowed(recruiter);
 
         if (recruiterTwoFactorService.isTwoFactorEnabled(recruiter.getId())) {
+            if (rawDeviceToken != null
+                    && recruiterTwoFactorService.isDeviceTrusted(
+                            recruiter.getId(), rawDeviceToken)) {
+                log.info(
+                        "Recruiter {} bypassed 2FA challenge via trusted device",
+                        recruiter.getId());
+                RecruiterAuthResult result = openSession(recruiter, userAgent, ip);
+                recruiterRepository.touchLastLogin(recruiter.getId(), Instant.now());
+                return result;
+            }
+
             String tempToken =
                     jwtService.generateTwoFactorTempToken(recruiter.getId(), AccountType.RECRUITER);
             return RecruiterAuthResult.challenge(tempToken);
@@ -142,9 +154,20 @@ public class RecruiterAuthService implements RecruiterAuthServiceInterface {
                         .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
         ensureSignInAllowed(recruiter);
 
-        RecruiterAuthResult result = openSession(recruiter, userAgent, ip);
+        String deviceTrustToken = null;
+        if (Boolean.TRUE.equals(request.trustDevice())) {
+            deviceTrustToken =
+                    recruiterTwoFactorService.registerTrustedDevice(
+                            recruiter.getId(), userAgent, ip);
+        }
+
+        RecruiterAuthResult session = openSession(recruiter, userAgent, ip);
         recruiterRepository.touchLastLogin(recruiter.getId(), Instant.now());
-        return result;
+        return new RecruiterAuthResult(
+                session.accessToken(),
+                session.refreshToken(),
+                session.recruiter(),
+                deviceTrustToken);
     }
 
     @Override
