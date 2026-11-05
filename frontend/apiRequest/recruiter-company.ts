@@ -79,11 +79,19 @@ export const recruiterCompanyApi = {
     }),
 
   // Legal documents
-  submitDocument: (documentType: BusinessDocumentType, file: File, identityFile?: File | null) => {
+  submitDocument: (
+    documentType: BusinessDocumentType,
+    file: File,
+    identityFile?: File | null,
+    identityBackFile?: File | null,
+  ) => {
     const formData = new FormData();
     formData.append('file', file);
     if (identityFile) {
       formData.append('identityFile', identityFile);
+    }
+    if (identityBackFile) {
+      formData.append('identityBackFile', identityBackFile);
     }
     return request<BusinessDocumentResource>(
       `/recruiter/company/documents?documentType=${encodeURIComponent(documentType)}`,
@@ -95,6 +103,21 @@ export const recruiterCompanyApi = {
   },
 
   getDocuments: () => request<BusinessDocumentResource[]>('/recruiter/company/documents'),
+
+  viewDocumentBlob: (documentId: number) =>
+    request<Blob>(`/recruiter/company/documents/${documentId}/view`, {
+      responseType: 'blob',
+    }),
+
+  viewIdentityBlob: (documentId: number) =>
+    request<Blob>(`/recruiter/company/documents/${documentId}/identity/view`, {
+      responseType: 'blob',
+    }),
+
+  viewIdentityBackBlob: (documentId: number) =>
+    request<Blob>(`/recruiter/company/documents/${documentId}/identity-back/view`, {
+      responseType: 'blob',
+    }),
 
   // Agreements
   acceptAgreement: (agreementType: AgreementType) =>

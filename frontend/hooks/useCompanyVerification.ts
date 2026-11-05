@@ -139,6 +139,10 @@ export function useCompanyVerification() {
         reviewReason: latestDoc?.reviewReason || licenseStep?.reviewReason,
         expiresAt: latestDoc?.expiresAt || licenseStep?.expiresAt,
         documentId: latestDoc?.id,
+        identityFileName: latestDoc?.identityFileName,
+        identityBackFileName: latestDoc?.identityBackFileName,
+        hasIdentity: Boolean(latestDoc?.identityStoragePublicId),
+        hasIdentityBack: Boolean(latestDoc?.identityBackStoragePublicId),
       },
       candidateAgreement: {
         status:
@@ -216,8 +220,18 @@ export function useCompanyVerification() {
   }, [reload]);
 
   const handleSubmitLicense = useCallback(
-    async (params: { documentType: BusinessDocumentType; file: File; identityFile?: File | null }) => {
-      const doc = await recruiterCompanyApi.submitDocument(params.documentType, params.file, params.identityFile);
+    async (params: {
+      documentType: BusinessDocumentType;
+      file: File;
+      identityFile?: File | null;
+      identityBackFile?: File | null;
+    }) => {
+      const doc = await recruiterCompanyApi.submitDocument(
+        params.documentType,
+        params.file,
+        params.identityFile,
+        params.identityBackFile,
+      );
       toast.success('Document uploaded successfully! It is now under review.');
       reload();
       return doc;

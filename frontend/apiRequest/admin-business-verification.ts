@@ -50,6 +50,11 @@ export const adminBusinessVerificationApi = {
       responseType: 'blob',
     }),
 
+  viewIdentityBackBlob: (documentId: number) =>
+    request<Blob>(`/admin/business-verification/${documentId}/identity-back/view`, {
+      responseType: 'blob',
+    }),
+
   searchAgreements: (status?: string, page = 0, size = 10) => {
     const qs = new URLSearchParams();
     if (status) qs.set('status', status);

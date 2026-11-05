@@ -113,6 +113,8 @@ export interface BusinessDocumentResource {
   storagePublicId?: string;
   identityStoragePublicId?: string;
   identityFileName?: string;
+  identityBackStoragePublicId?: string;
+  identityBackFileName?: string;
 }
 
 export interface SaveCompanyProfileRequest {
@@ -219,6 +221,10 @@ export interface BusinessLicenseState {
   reviewReason?: string;
   expiresAt?: string;
   documentId?: number;
+  identityFileName?: string;
+  identityBackFileName?: string;
+  hasIdentity?: boolean;
+  hasIdentityBack?: boolean;
 }
 
 export interface CandidateAgreementState {
