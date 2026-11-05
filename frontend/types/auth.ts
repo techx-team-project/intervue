@@ -19,9 +19,60 @@ export type AuthSession = {
   user: User;
 };
 
+export type AuthResponsePayload = {
+  accessToken?: string;
+  user?: User;
+  requiresTwoFactor?: boolean;
+  tempToken?: string;
+};
+
 export type RecruiterAuthPayload = {
-  accessToken: string;
-  recruiter: Omit<User, 'roles'>;
+  accessToken?: string;
+  recruiter?: Omit<User, 'roles'>;
+  requiresTwoFactor?: boolean;
+  tempToken?: string;
+};
+
+export type AdminQueueCounts = {
+  pendingVerifications: number;
+  totalUsers: number;
+  totalRecruiters: number;
+  activeCompanies: number;
+};
+
+export type AdminProfile = {
+  id: number;
+  name: string;
+  email: string;
+  roles: RoleType[];
+  twoFactorEnabled: boolean;
+  lastLoginAt?: string | null;
+  queueCounts?: AdminQueueCounts;
+};
+
+export type AdminAuthPayload = {
+  accessToken?: string;
+  admin?: AdminProfile;
+  requiresTwoFactor?: boolean;
+  tempToken?: string;
+};
+
+export type TwoFactorChallengePayload = {
+  tempToken: string;
+  code: string;
+};
+
+export type TwoFactorStatus = {
+  enabled: boolean;
+  confirmedAt?: string | null;
+  remainingBackupCodes: number;
+};
+
+export type TwoFactorSetup = {
+  secret: string;
+  totpUri: string;
+  qrCodeDataUrl: string;
+  backupCodes: string[];
 };
 
 export type UserProfilePatch = Omit<User, 'roles'>;

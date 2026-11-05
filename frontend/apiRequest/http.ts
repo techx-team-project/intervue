@@ -1,9 +1,9 @@
 import { env } from '@/config/env';
 import { ApiError, isApiError } from '@/lib/api-error';
-import { isRecruiterPortal, toRecruiterSession } from '@/lib/auth-portal';
+import { isAdminPortal, isRecruiterPortal, toAdminSession, toRecruiterSession } from '@/lib/auth-portal';
 import { useAuthStore } from '@/store/auth.store';
 import type { ApiResponse } from '@/types/api';
-import type { AuthSession, RecruiterAuthPayload } from '@/types/auth';
+import type { AdminAuthPayload, AuthSession, RecruiterAuthPayload } from '@/types/auth';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -78,6 +78,9 @@ async function execute<T>(
 }
 
 function requestRefresh(): Promise<AuthSession> {
+  if (isAdminPortal()) {
+    return execute<AdminAuthPayload>('/admin/auth/refresh', { method: 'POST' }, null).then(toAdminSession);
+  }
   if (isRecruiterPortal()) {
     return execute<RecruiterAuthPayload>('/recruiter/auth/refresh', { method: 'POST' }, null).then(toRecruiterSession);
   }
