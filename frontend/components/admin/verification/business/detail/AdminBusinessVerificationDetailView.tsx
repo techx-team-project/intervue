@@ -40,7 +40,7 @@ export function AdminBusinessVerificationDetailView({
       const submittedAtDate = new Date(document.submittedAt);
       const waitingHours = Math.max(0, Math.round((Date.now() - submittedAtDate.getTime()) / (1000 * 60 * 60)));
       const isSlaOverdue = waitingHours > 24 && document.reviewStatus === 'PENDING_REVIEW';
-      const totalPages = document.identityStoragePublicId ? 2 : 1;
+      const totalPages = document.identityBackStoragePublicId ? 3 : document.identityStoragePublicId ? 2 : 1;
       return {
         document,
         company,
