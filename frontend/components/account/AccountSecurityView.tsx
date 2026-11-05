@@ -14,6 +14,7 @@ type AccountSecurityViewProps = { portal?: AuthPortal };
 const PASSWORD_HREFS: Record<AuthPortal, string> = {
   candidate: '/account/password',
   recruiter: ROUTES.RECRUITER_ACCOUNT_PASSWORD,
+  admin: '/admin/login',
 };
 
 export default function AccountSecurityView({ portal = 'candidate' }: AccountSecurityViewProps) {

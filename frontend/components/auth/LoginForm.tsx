@@ -6,16 +6,22 @@ import PasswordInput from '@/components/ui/PasswordInput';
 import { ROUTES } from '@/constants/routes';
 import { useLogin } from '@/hooks/useLogin';
 import { LoginFormData, loginSchema } from '@/schemas/auth.schema';
+import { useAuthStore } from '@/store/auth.store';
 import { applyFormError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import FormErrorAlert from './FormErrorAlert';
 import SocialAuthButtons from './SocialAuthButtons';
+import TwoFactorChallengeModal from './TwoFactorChallengeModal';
 
 export default function LoginForm() {
   const login = useLogin();
+  const [challengeToken, setChallengeToken] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -28,7 +34,14 @@ export default function LoginForm() {
   });
 
   const onSubmit = handleSubmit((values) =>
-    login.mutate(values, { onError: (error) => applyFormError(error, setError, ['email', 'password']) }),
+    login.mutate(values, {
+      onSuccess: (res) => {
+        if (res.requiresTwoFactor && res.tempToken) {
+          setChallengeToken(res.tempToken);
+        }
+      },
+      onError: (error) => applyFormError(error, setError, ['email', 'password']),
+    }),
   );
 
   return (
@@ -89,6 +102,20 @@ export default function LoginForm() {
           Sign up now
         </Link>
       </div>
+
+      {challengeToken && (
+        <TwoFactorChallengeModal
+          isOpen={true}
+          tempToken={challengeToken}
+          portal="candidate"
+          onSuccess={(session) => {
+            useAuthStore.getState().setSession(session, 'candidate');
+            toast.success('Đăng nhập thành công!');
+            setChallengeToken(null);
+          }}
+          onCancel={() => setChallengeToken(null)}
+        />
+      )}
     </div>
   );
 }
