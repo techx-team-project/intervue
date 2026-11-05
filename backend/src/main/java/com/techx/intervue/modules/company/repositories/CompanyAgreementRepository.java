@@ -28,5 +28,14 @@ public interface CompanyAgreementRepository extends JpaRepository<CompanyAgreeme
     Page<CompanyAgreement> findByAcceptanceModeAndStatus(
             AgreementAcceptanceMode acceptanceMode, AgreementStatus status, Pageable pageable);
 
+    Page<CompanyAgreement> findByScopeAndAcceptanceMode(
+            AgreementScope scope, AgreementAcceptanceMode acceptanceMode, Pageable pageable);
+
+    Page<CompanyAgreement> findByScopeAndAcceptanceModeAndStatus(
+            AgreementScope scope,
+            AgreementAcceptanceMode acceptanceMode,
+            AgreementStatus status,
+            Pageable pageable);
+
     void deleteByCompanyId(Long companyId);
 }

@@ -74,9 +74,10 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     private final AuditLogServiceInterface auditLogService;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public RecruiterVerificationProfileResource findProfile(Long userId) {
         Optional<CompanyMember> membership = activeMembership(userId);
+        membership.ifPresent(this::ensureOwnerAgreementsInherited);
         Company company = membership.map(CompanyMember::getCompany).orElse(null);
         Facts facts = factsFor(userId, company);
         List<VerificationStepResource> steps = buildSteps(userId, company, facts);
@@ -97,16 +98,20 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public boolean canPublish(Long userId) {
-        Company company = activeMembership(userId).map(CompanyMember::getCompany).orElse(null);
+        Optional<CompanyMember> membership = activeMembership(userId);
+        membership.ifPresent(this::ensureOwnerAgreementsInherited);
+        Company company = membership.map(CompanyMember::getCompany).orElse(null);
         return levelPolicy.canPublish(factsFor(userId, company));
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public void assertCanPublish(Long userId) {
-        Company company = activeMembership(userId).map(CompanyMember::getCompany).orElse(null);
+        Optional<CompanyMember> membership = activeMembership(userId);
+        membership.ifPresent(this::ensureOwnerAgreementsInherited);
+        Company company = membership.map(CompanyMember::getCompany).orElse(null);
         ErrorCode blocked = levelPolicy.blockedReason(factsFor(userId, company));
         if (blocked != null) {
             throw new AppException(blocked);
@@ -209,9 +214,21 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     @Transactional(readOnly = true)
     public List<BusinessDocumentResource> findDocuments(Long userId) {
         CompanyMember membership = requireMembership(userId);
-        return businessDocumentRepository
-                .findByCompanyIdOrderBySubmittedAtDesc(membership.getCompany().getId())
-                .stream()
+        List<BusinessDocument> documents =
+                businessDocumentRepository.findByCompanyIdOrderBySubmittedAtDesc(
+                        membership.getCompany().getId());
+        if (!membership.isOwner()) {
+            documents =
+                    documents.stream()
+                            .filter(
+                                    doc ->
+                                            doc.getSubmittedBy().equals(userId)
+                                                    || doc.getDocumentType()
+                                                            == BusinessDocumentType
+                                                                    .BUSINESS_LICENSE)
+                            .toList();
+        }
+        return documents.stream()
                 .map(document -> businessDocumentMapper.toResource(document, userId))
                 .toList();
     }
@@ -354,7 +371,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
             throw new AppException(ErrorCode.AGREEMENT_ALREADY_ACCEPTED);
         }
 
-        if (membership.isOwner() && !isAcceptedForCompany(companyId, agreementType)) {
+        if (!isAcceptedForCompany(companyId, agreementType)) {
             companyAgreementRepository.save(
                     agreementOf(
                             membership,
@@ -474,10 +491,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
         CompanyAgreement agreement = personal.get();
         VerificationStepStatus status =
                 switch (agreement.getStatus()) {
-                    case ACCEPTED ->
-                            company != null && isAcceptedForCompany(company.getId(), type)
-                                    ? VerificationStepStatus.APPROVED
-                                    : VerificationStepStatus.ACTION_REQUIRED;
+                    case ACCEPTED -> VerificationStepStatus.APPROVED;
                     case PENDING_REVIEW -> VerificationStepStatus.IN_REVIEW;
                     case REJECTED -> VerificationStepStatus.REJECTED;
                 };
@@ -514,12 +528,70 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     }
 
     private boolean isAcceptedForCompany(Long companyId, AgreementType agreementType) {
+        boolean hasCompanyScope =
+                companyAgreementRepository
+                        .findFirstByCompanyIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
+                                companyId, AgreementScope.COMPANY, agreementType)
+                        .filter(
+                                agreement ->
+                                        CURRENT_AGREEMENT_VERSION.equals(agreement.getVersion()))
+                        .filter(CompanyAgreement::isAccepted)
+                        .isPresent();
+        if (hasCompanyScope) {
+            return true;
+        }
         return companyAgreementRepository
                 .findFirstByCompanyIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
-                        companyId, AgreementScope.COMPANY, agreementType)
+                        companyId, AgreementScope.USER, agreementType)
                 .filter(agreement -> CURRENT_AGREEMENT_VERSION.equals(agreement.getVersion()))
                 .filter(CompanyAgreement::isAccepted)
                 .isPresent();
+    }
+
+    private void ensureOwnerAgreementsInherited(CompanyMember membership) {
+        if (!membership.isOwner() || membership.getCompany() == null) {
+            return;
+        }
+        Long companyId = membership.getCompany().getId();
+        Long ownerId = membership.getUserId();
+        for (AgreementType type : AgreementType.values()) {
+            if (!isAcceptedForCompany(companyId, type)) {
+                companyAgreementRepository
+                        .findFirstByUserIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
+                                ownerId, AgreementScope.USER, type)
+                        .filter(ag -> CURRENT_AGREEMENT_VERSION.equals(ag.getVersion()))
+                        .filter(CompanyAgreement::isAccepted)
+                        .ifPresent(
+                                accepted -> {
+                                    companyAgreementRepository.save(
+                                            CompanyAgreement.builder()
+                                                    .scope(AgreementScope.COMPANY)
+                                                    .company(membership.getCompany())
+                                                    .userId(null)
+                                                    .signedBy(ownerId)
+                                                    .agreementType(type)
+                                                    .acceptanceMode(accepted.getAcceptanceMode())
+                                                    .version(CURRENT_AGREEMENT_VERSION)
+                                                    .status(AgreementStatus.ACCEPTED)
+                                                    .acceptedAt(accepted.getAcceptedAt())
+                                                    .storagePublicId(accepted.getStoragePublicId())
+                                                    .build());
+                                    companyAgreementRepository.save(
+                                            CompanyAgreement.builder()
+                                                    .scope(AgreementScope.USER)
+                                                    .company(membership.getCompany())
+                                                    .userId(ownerId)
+                                                    .signedBy(ownerId)
+                                                    .agreementType(type)
+                                                    .acceptanceMode(accepted.getAcceptanceMode())
+                                                    .version(CURRENT_AGREEMENT_VERSION)
+                                                    .status(AgreementStatus.ACCEPTED)
+                                                    .acceptedAt(accepted.getAcceptedAt())
+                                                    .storagePublicId(accepted.getStoragePublicId())
+                                                    .build());
+                                });
+            }
+        }
     }
 
     private Optional<CompanyAgreement> currentUserAgreement(
