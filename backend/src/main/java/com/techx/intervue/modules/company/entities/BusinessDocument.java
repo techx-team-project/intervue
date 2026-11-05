@@ -56,11 +56,17 @@ public class BusinessDocument extends BaseEntity {
     @Column(name = "identity_storage_public_id")
     private String identityStoragePublicId;
 
+    @Column(name = "identity_back_storage_public_id")
+    private String identityBackStoragePublicId;
+
     @Column(name = "original_file_name", nullable = false)
     private String originalFileName;
 
     @Column(name = "identity_file_name")
     private String identityFileName;
+
+    @Column(name = "identity_back_file_name")
+    private String identityBackFileName;
 
     @Column(name = "file_size_bytes", nullable = false)
     private long fileSizeBytes;

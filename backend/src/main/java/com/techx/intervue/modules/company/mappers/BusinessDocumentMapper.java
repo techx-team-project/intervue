@@ -24,6 +24,8 @@ public class BusinessDocumentMapper {
                 .storagePublicId(document.getStoragePublicId())
                 .identityStoragePublicId(document.getIdentityStoragePublicId())
                 .identityFileName(document.getIdentityFileName())
+                .identityBackStoragePublicId(document.getIdentityBackStoragePublicId())
+                .identityBackFileName(document.getIdentityBackFileName())
                 .build();
     }
 
