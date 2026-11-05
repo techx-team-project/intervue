@@ -54,6 +54,13 @@ function AdminLoginForm() {
     try {
       const res = await adminAuthApi.login({ email, password });
 
+      if (res.requiresTwoFactorSetup && res.tempToken) {
+        toast.info('Mandatory Two-Factor Authentication setup required. Redirecting to security setup...');
+        sessionStorage.setItem('admin_2fa_setup_token', res.tempToken);
+        window.location.assign(`/admin/two-factor/setup?redirect=${encodeURIComponent(redirectUrl)}`);
+        return;
+      }
+
       if (res.requiresTwoFactor && res.tempToken) {
         setTempToken(res.tempToken);
         setIs2FAStage(true);

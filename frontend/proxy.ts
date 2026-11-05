@@ -12,6 +12,7 @@ const PUBLIC_PATHS: readonly string[] = [
   ROUTES.RECRUITER_VERIFY_EMAIL,
   ROUTES.RECRUITER_CONFIRM_EMAIL_CHANGE,
   ROUTES.ADMIN_LOGIN,
+  ROUTES.ADMIN_TWO_FACTOR_SETUP,
 ];
 
 const STATIC_FILE_REGEX = /\.(png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|css|js)$/i;

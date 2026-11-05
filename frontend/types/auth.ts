@@ -54,6 +54,7 @@ export type AdminAuthPayload = {
   accessToken?: string;
   admin?: AdminProfile;
   requiresTwoFactor?: boolean;
+  requiresTwoFactorSetup?: boolean;
   tempToken?: string;
 };
 

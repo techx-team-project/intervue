@@ -3,12 +3,16 @@
 import { adminAuthApi } from '@/apiRequest/admin-auth';
 import PanelBrandSplash from '@/components/common/PanelBrandSplash';
 import Button from '@/components/ui/Button';
+import PasswordInput from '@/components/ui/PasswordInput';
 import { useAdminTheme } from '@/hooks/useAdminTheme';
 import { useAuth } from '@/hooks/useAuth';
+import { useLogout } from '@/hooks/useLogout';
+import { isApiError } from '@/lib/api-error';
 import type { AdminAccountState, AdminPermission, AdminQueueCounts } from '@/types/admin';
 import { useQuery } from '@tanstack/react-query';
-import { Lock, ShieldCheck } from 'lucide-react';
+import { Lock, LogOut, ShieldCheck } from 'lucide-react';
 import { ReactNode, useEffect, useState, useSyncExternalStore } from 'react';
+import { toast } from 'sonner';
 import AdminCommandPalette from './AdminCommandPalette';
 import AdminMobileNavDrawer from './AdminMobileNavDrawer';
 import AdminPageBar from './AdminPageBar';
@@ -50,6 +54,34 @@ export default function AdminShell({ children, queueCounts, account, permissions
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [isPaletteOpen, setPaletteOpen] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
+  const [unlockPassword, setUnlockPassword] = useState('');
+  const [unlockError, setUnlockError] = useState('');
+  const [isUnlocking, setIsUnlocking] = useState(false);
+  const logout = useLogout();
+
+  const handleUnlock = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setUnlockError('');
+    if (!unlockPassword) {
+      setUnlockError('Please enter your administrator password.');
+      return;
+    }
+    setIsUnlocking(true);
+    try {
+      await adminAuthApi.verifyPassword(unlockPassword);
+      setIsLocked(false);
+      setUnlockPassword('');
+      toast.success('Session unlocked. Workspace resumed.');
+    } catch (err) {
+      if (isApiError(err)) {
+        setUnlockError(err.message || 'Incorrect password.');
+      } else {
+        setUnlockError('Verification failed. Please try again.');
+      }
+    } finally {
+      setIsUnlocking(false);
+    }
+  };
 
   // Real Admin profile & queue counts
   const { data: profile } = useQuery({
@@ -148,25 +180,48 @@ export default function AdminShell({ children, queueCounts, account, permissions
 
       {/* Idle Lock Overlay */}
       {isLocked && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md">
-          <div className="mx-4 max-w-sm rounded-3xl border border-slate-700 bg-slate-900 p-8 text-center text-white shadow-2xl">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-950 text-emerald-400">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 antialiased backdrop-blur-md">
+          <div className="mx-4 w-full max-w-sm rounded-3xl border border-slate-700/80 bg-slate-900 p-8 text-white shadow-2xl">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-950/80 text-emerald-400">
               <Lock className="h-7 w-7" />
             </div>
-            <h3 className="mt-4 text-lg font-bold">Phiên làm việc tạm khóa</h3>
-            <p className="mt-1.5 text-xs text-slate-400">
-              Hệ thống đã tự động khóa giao diện sau 15 phút không có tương tác để bảo vệ dữ liệu nội bộ.
+            <h3 className="mt-4 text-center text-lg font-bold">Session Auto-Locked</h3>
+            <p className="mt-1.5 text-center text-xs leading-relaxed text-slate-400">
+              Console access was locked after 15 minutes of inactivity to protect sensitive platform data. Enter your
+              password to resume.
             </p>
-            <div className="mt-6">
+
+            <form onSubmit={handleUnlock} className="mt-6 space-y-4">
+              <div>
+                <PasswordInput
+                  placeholder="Enter administrator password"
+                  value={unlockPassword}
+                  onChange={(e) => setUnlockPassword(e.target.value)}
+                  className="border-slate-700 bg-slate-800 text-white placeholder-slate-500 focus:border-emerald-500"
+                  autoFocus
+                />
+                {unlockError && <p className="mt-1.5 text-left text-xs text-rose-400">{unlockError}</p>}
+              </div>
+
               <Button
-                type="button"
-                className="w-full bg-emerald-600 font-bold hover:bg-emerald-500"
-                onClick={() => setIsLocked(false)}
+                type="submit"
+                isLoading={isUnlocking}
+                disabled={isUnlocking || !unlockPassword}
+                className="w-full bg-emerald-600 font-bold shadow-lg shadow-emerald-600/20 hover:bg-emerald-500"
                 leftIcon={<ShieldCheck className="h-4 w-4" />}
               >
-                Mở khóa tiếp tục
+                Unlock Session
               </Button>
-            </div>
+
+              <button
+                type="button"
+                onClick={() => logout.mutate()}
+                className="inline-flex w-full cursor-pointer items-center justify-center gap-1.5 text-xs font-semibold text-slate-400 transition hover:text-rose-400"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                Sign out of console
+              </button>
+            </form>
           </div>
         </div>
       )}
