@@ -31,14 +31,13 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /auth/register` | public | `{ name, email, password, confirmPassword, acceptTerms }` | `{ accessToken, user }` + refresh cookie; sends verification email |
 | ✅ | `POST /auth/login` | public | `{ email, password }` | `{ accessToken, user }` + cookie. Failure: `INVALID_CREDENTIALS` with `error.meta.captchaRequired`, or `ACCOUNT_BANNED` once the password is correct |
 | ✅ | `POST /auth/refresh` | cookie | – | `{ accessToken, user }` (rotates cookie) |
-| ✅ | `POST /auth/logout` | user | – | – (clears cookie, blacklists access token) |
+| ✅ | `POST /auth/logout` | user | – | – (clears cookie, blacklists access token; recruiter tokens get 403) |
 | ✅ | `POST /auth/verify-email` | public | `{ token }` | – (link valid 24h, single use) |
-| ✅ | `POST /auth/resend-verification` | user | – | – (60s cooldown, 3 per 15 min by email and IP) |
+| ✅ | `POST /auth/resend-verification` | user | – | – (60s cooldown, 3 per 15 min by email and IP; recruiter tokens get 403) |
 | ✅ | `POST /auth/forgot-password` | public | `{ email }` | – (same message whether or not the email exists; 60s cooldown, 3 per 15 min by email and IP) |
 | ✅ | `POST /auth/reset-password` | public | `{ token, password, confirmPassword }` | – (link valid 15 min, single use; logs out all devices) |
 | ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, roles, createdAt }` |
 | ✅ | `POST /ai/chat` | public / optional user | `{ message, sessionId? }` | `{ answer, sources, remainingQuota }` |
-| ✅ | `POST /users/me/roles/recruiter` | user | – | `UserResource` with `RECRUITER` in `roles`. `EMAIL_NOT_VERIFIED` if the email is not verified. Idempotent when already a recruiter. Evicts the user's session cache after commit: call `POST /auth/refresh` (or let the next 401 trigger it) to rebuild the session and receive the new `user.roles`. ADMIN can never be self-assigned (no endpoint). |
 | ✅ | `GET /admin/users` | admin | query `q`, `role`, `status`, `emailVerified` + pagination | `PageResource<AdminUserListResource>` |
 | ✅ | `GET /admin/users/summary` | admin | – | `AdminUserSummaryResource` |
 | ✅ | `GET /admin/users/{id}` | admin | – | `AdminUserDetailResource` |
@@ -56,10 +55,48 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /admin/users/{id}/send-password-reset` | admin | – | `AdminUserDetailResource` (sends a single-use 15-minute reset link; requires verified email) |
 | ✅ | `POST /users/me/delete-request` | user | – | – (starts 7-day grace period, sets status PENDING_DELETION, evicts session) |
 | ✅ | `POST /users/me/cancel-deletion` | user | – | `UserResource` (cancels pending deletion) |
+| ✅ | `POST /users/me/email/change-request` | user | `ChangeEmailRequest` (`newEmail`, `currentPassword`) | – (mails a confirmation link to the new email and a notice to the old one; field errors on `currentPassword` / `newEmail` (same as current email); `EMAIL_ALREADY_USED` for an email already in `users`; `RATE_LIMITED` 429 with `Retry-After`: 3 attempts per 15 min per account, and mails limited like resend-verification (60s cooldown, 3 per 15 min by email and IP) only when a mail is actually sent; the confirmation link is bound to the requested new email) |
+| ✅ | `POST /auth/confirm-email-change` | public | `VerifyEmailRequest` (`token`) | – (sets the new email, marks it verified, signs out every device; link `{frontendUrl}/confirm-email-change?token=…` valid 24h, single use; `INVALID_OR_EXPIRED_TOKEN`, `EMAIL_ALREADY_USED` if the email was taken meanwhile) |
+| ✅ | `POST /users/me/change-password` | user | `ChangePasswordRequest` (`currentPassword`, `password`, `confirmPassword`) | – (signs out every other device, evicts session cache; field errors on `currentPassword` / `password` / `confirmPassword`; `RATE_LIMITED` 429 with `Retry-After` after 3 attempts per 15 min) |
+| ✅ | `GET /users/me/sessions` | user | – | `AccountSessionResource[] { id, deviceLabel, ipAddress, location?, createdAt, lastUsedAt, current }` (`current` marks the device making the request) |
+| ✅ | `DELETE /users/me/sessions/{sessionId}` | user | – | – (signs out one device; the current session cannot be revoked here, use logout (`VALIDATION_FAILED` on `sessionId`); `NOT_FOUND` for another user's session) |
+| ✅ | `POST /users/me/sessions/revoke-others` | user | – | – (signs out every other device; like change-password and `DELETE /users/me/sessions/{id}`, only refresh tokens are revoked, so an access token the device already holds keeps working until it expires, up to 15 min) |
 | ✅ | `POST /admin/users/{id}/cancel-deletion` | admin | – | `AdminUserDetailResource` (cancels deletion request) |
 | ✅ | `POST /admin/users/{id}/restore` | admin | – | `AdminUserDetailResource` (restores account from PENDING_DELETION or lifts BANNED) |
 
 Add rows as endpoints are built. Keep ✅ = implemented, ⬜ = planned.
+
+## Candidate profile
+
+Owner-only; everything under `/candidate/profile` requires `ROLE_CANDIDATE` (a signed-in non-candidate gets 403 `FORBIDDEN`). `UserResource` also carries optional `address`.
+
+| Status | Method & path | Auth | Request | Response `data` |
+|---|---|---|---|---|
+| ✅ | `GET /candidate/profile` | candidate | – | `CandidateProfileResource`. Read-only: when no profile row exists yet, returns the user data with defaults (`jobSearchStatus` `OPEN_TO_OFFERS`, `searchableByRecruiters` true, `desiredRole` null) without writing |
+| ✅ | `PUT /candidate/profile` | candidate | `SaveCandidateProfileRequest` (full replace; creates the row on first call) | `CandidateProfileResource` |
+| ✅ | `POST /candidate/profile/avatar` | candidate | multipart `file` (JPEG/PNG) | `CandidateProfileResource` (replaces and deletes the previous image) |
+| ✅ | `DELETE /candidate/profile/avatar` | candidate | – | `CandidateProfileResource` |
+| ✅ | `POST /candidate/profile/cover` | candidate | multipart `file` (JPEG/PNG) | `CandidateProfileResource` |
+| ✅ | `DELETE /candidate/profile/cover` | candidate | – | `CandidateProfileResource` |
+| ✅ | `POST /candidate/profile/{section}` | candidate | `SaveCandidate<Section>Request` | `CandidateProfileResource` (creates the profile row on the first item; max items reached gives 409 `PROFILE_SECTION_LIMIT_REACHED`) |
+| ✅ | `PUT /candidate/profile/{section}/{id}` | candidate | `SaveCandidate<Section>Request` (full replace) | `CandidateProfileResource` (an id that is not yours gives 404 `NOT_FOUND`) |
+| ✅ | `DELETE /candidate/profile/{section}/{id}` | candidate | – | `CandidateProfileResource` |
+| ✅ | `POST /candidate/profile/certifications/{id}/image` | candidate | multipart `file` (JPEG/PNG) | `CandidateProfileResource` (replaces and deletes the previous image) |
+| ✅ | `DELETE /candidate/profile/certifications/{id}/image` | candidate | – | `CandidateProfileResource` |
+
+`SaveCandidateProfileRequest`: `name` (2-50 after trimming, required, stored on the user), `headline` (max 120), `bio` (max 2000), `contactEmail` (email, max 255; null = use the login email), `address` (max 255, stored on the user), `gender` (`MALE` `FEMALE` `OTHER`), `birthYear` (1950 to current year minus 16), `showPersonalDetails` (required boolean; birth year and gender visible to recruiters), `searchableByRecruiters` (required boolean), `jobSearchStatus` (required: `ACTIVELY_LOOKING` `OPEN_TO_OFFERS` `NOT_LOOKING`), `githubUrl` / `linkedinUrl` / `portfolioUrl` (empty or http/https URL, max 255), `desiredRole` (required, 1-120 after trimming), `desiredLevel` (`INTERN` `JUNIOR` `MID` `SENIOR` `LEAD`), `salaryNegotiable` (required boolean), `salaryMin` / `salaryMax` (>= 0, min <= max; stored null when negotiable), `workMode` (`ON_SITE` `HYBRID` `REMOTE` `FLEXIBLE`), `contractType` (`FULL_TIME` `PART_TIME` `INTERNSHIP`), `preferredLocations` / `preferredIndustries` (max 5 each in the raw list, 1-100 chars each; the server trims, drops blanks and silently merges duplicates that compare equal ignoring case, accents and width, keeping the first spelling; responses list them sorted case-insensitively). Cross-field failures are reported on the properties `birthYearAllowed`, `salaryRangeValid`, `nameLengthValid`, `desiredRoleLengthValid`.
+
+`CandidateProfileResource`: `userId, name, email, contactEmail, phone, phoneVerified, address, avatarUrl, coverUrl, headline, bio, gender, birthYear, showPersonalDetails, searchableByRecruiters, jobSearchStatus, githubUrl, linkedinUrl, portfolioUrl, desiredRole, desiredLevel, salaryNegotiable, salaryMin, salaryMax, workMode, contractType, preferredLocations, preferredIndustries, experiences, educations, projects, certifications, languages, skills, updatedAt`. `phone` and `phoneVerified` are read-only here; change the phone through `/users/me/phone/*`.
+Upload errors for avatar, cover and certification image: `UNSUPPORTED_FILE_TYPE` (400), `FILE_TOO_LARGE` (400), `STORAGE_UNAVAILABLE` (503).
+
+Profile sections (`{section}` is `experiences` (max 20), `educations` (max 10), `projects` (max 20), `certifications` (max 20), `languages` (max 10) or `skills` (max 50)). Every write returns the full `CandidateProfileResource`, which also carries the lists `experiences, educations, projects, certifications, languages, skills`. Dates are `yyyy-MM-dd` (the client sends the first day of the month); text fields marked "text" below are max 2000 characters; the server trims text and stores blanks as null.
+
+- `SaveCandidateExperienceRequest`: `title` (required, max 120), `companyName` (required, max 150), `location` (max 100), `startDate` (required), `endDate`, `current` (required boolean; `endDate` must be empty when true), `description` (text), `achievements` (text), `skills` (max 15 in the raw list, 1-60 chars each; trimmed, blanks dropped, case/accent-insensitive duplicates merged). Cross-field failure on property `dateRangeValid`. Response items: `id, title, companyName, location, startDate, endDate, current, description, achievements, skills` ordered current first, then `startDate` descending.
+- `SaveCandidateEducationRequest`: `school` (required, max 150), `degree` (max 100), `major` (max 150), `startYear` (required), `endYear`, `gpa` (max 20), `achievements` (text). Years must be 1950 to current year plus 10 (property `yearBoundsValid`); `endYear` >= `startYear` (property `yearRangeValid`). Response items: `id, school, degree, major, startYear, endYear, gpa, achievements` ordered by `startYear` descending.
+- `SaveCandidateProjectRequest`: `name` (required, max 150), `role` (max 100), `startDate` (required), `endDate`, `current` (required boolean), `description` (text), `highlights` (text), `githubUrl` / `demoUrl` (empty or http/https URL, max 255), `technologies` (same rules as experience `skills`). Cross-field failure on property `dateRangeValid`. Response items: `id, name, role, startDate, endDate, current, description, highlights, githubUrl, demoUrl, technologies`, ordered like experiences.
+- `SaveCandidateCertificationRequest`: `name` (required, max 150), `issuer` (required, max 150), `issueDate`, `credentialId` (max 100), `credentialUrl` (empty or http/https URL, max 255). Response items: `id, name, issuer, issueDate, credentialId, credentialUrl, imageUrl`, ordered by `issueDate` descending, undated last. Deleting a certification also discards its image.
+- `SaveCandidateLanguageRequest`: `language` (required, max 60), `proficiency` (required: `BASIC` `INTERMEDIATE` `ADVANCED` `FLUENT` `NATIVE`), `certificate` (max 100). A language that duplicates another one ignoring case and accents gives `VALIDATION_FAILED` on field `language`. Response items: `id, language, proficiency, certificate`, ordered by language.
+- `SaveCandidateSkillRequest`: `name` (required, max 60), `category` (required: `CORE` `AI_DATA` `TOOLS_DEVOPS` `SOFT`), `level` (required: `BASIC` `INTERMEDIATE` `PROFICIENT` `EXPERT`), `years` (required, 0 to 50). A duplicate name (ignoring case and accents) gives `VALIDATION_FAILED` on field `name`. Response items: `id, name, category, level, years`, ordered by name.
 
 ## Admin user management
 
@@ -84,7 +121,7 @@ type AdminUserDetailResource = AdminUserListResource & {
 type AdminUserSummaryResource = {
   total: number; active: number; banned: number; unverified: number;
   newLast7Days: number; activeLast7Days: number;
-  candidates: number; recruiters: number; admins: number;
+  candidates: number; admins: number;
   activeAdminCount: number;
   bannedOverAWeek: number; unverifiedOverAWeek: number; grantsExpiringIn14Days: number;
 };
@@ -139,10 +176,13 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `INVALID_CREDENTIALS` | 401 | Wrong email or password; `error.meta.captchaRequired` is true after 3 failures |
 | `INVALID_OR_EXPIRED_TOKEN` | 400 | Verification or reset link is invalid, expired or already used |
 | `EMAIL_ALREADY_VERIFIED` | 409 | |
-| `EMAIL_NOT_VERIFIED` | 422 | The action requires a verified email (e.g. enabling the Recruiter role) |
+| `EMAIL_NOT_VERIFIED` | 422 | The action requires a verified email (e.g. publishing a job) |
 | `UNAUTHENTICATED` | 401 | Missing/expired token → frontend tries refresh once |
 | `FORBIDDEN` | 403 | Role/ownership failure |
 | `NOT_FOUND` | 404 | |
+| `METHOD_NOT_ALLOWED` | 405 | The HTTP method is not supported by this endpoint |
+| `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
+| `INTERNAL_ERROR` | 500 | Unexpected server error; the cause is logged server-side and never returned |
 | `EMAIL_ALREADY_USED` | 409 | |
 | `ACCOUNT_BANNED` | 403 | The account is banned, so signing in and refreshing are both refused. Only raised after the password matches, so it never reveals the state of an account to someone who does not hold its credentials |
 | `ROLE_ALREADY_GRANTED` | 409 | The user already holds an active grant for this role |
@@ -154,6 +194,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `DELETION_BLOCKED` | 422 | Account deletion is blocked while unresolved operations remain |
 | `IDENTITY_NOT_VERIFIED` | 422 | Candidate must complete eKYC to apply |
 | `COMPANY_NOT_VERIFIED` | 422 | Company must be verified to post |
+| `PROFILE_SECTION_LIMIT_REACHED` | 409 | A candidate profile section already holds its maximum number of items |
 | `RATE_LIMITED` | 429 | Honor `Retry-After` |
 | `AI_USER_QUOTA_EXCEEDED` | 429 | Daily AI limit per user reached; honor `Retry-After` |
 | `AI_IP_QUOTA_EXCEEDED` | 429 | Hourly AI limit per IP reached; honor `Retry-After` |
@@ -163,3 +204,43 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `AI_PROVIDER_ERROR` | 502 | AI provider returned an error or an unreadable response |
 | `AI_REQUEST_REFUSED` | 422 | AI provider declined to process the content |
 | `AI_PROMPT_NOT_FOUND` | 500 | Server prompt file is missing |
+| `LAST_COMPANY_OWNER` | 422 | Cannot leave company as the sole owner while company is verified or has active members/documents |
+
+## Recruiter Account
+
+Recruiters are a separate account type stored in `recruiters`; the same email may also exist as a candidate. The access token carries the claim `typ=RECRUITER`; the refresh token is the `recruiter_refresh_token` cookie.
+
+| Status | Endpoint | Auth | Body | Notes |
+|---|---|---|---|---|
+| ✅ | `POST /recruiter/auth/register` | public | `RecruiterRegisterRequest` (`name`, `email`, `password`, `confirmPassword`, `acceptTerms`) | `RecruiterAuthResource { accessToken, recruiter }` + refresh cookie. `EMAIL_ALREADY_USED` only checks `recruiters`. |
+| ✅ | `POST /recruiter/auth/login` | public | `LoginRequest` | Same response; `INVALID_CREDENTIALS`, `ACCOUNT_BANNED`, `ACCOUNT_DELETED`. |
+| ✅ | `POST /recruiter/auth/refresh` | cookie | – | Rotates the refresh token. |
+| ✅ | `POST /recruiter/auth/logout` | recruiter | – | Blacklists the access token, revokes the refresh token. |
+| ✅ | `GET /recruiter/me` | recruiter | – | `RecruiterResource { id, email, name, phone, status, emailVerified, phoneVerified, deleteRequestedAt?, createdAt }` |
+| ✅ | `POST /recruiter/me/phone/send-otp` | recruiter | `SendPhoneOtpRequest` (`phone`) | Sends a 6-digit code by SMS. `PHONE_ALREADY_VERIFIED`, `PHONE_ALREADY_USED`; `RATE_LIMITED` (429, `Retry-After`) per recruiter and per IP. |
+| ✅ | `POST /recruiter/me/phone/verify` | recruiter | `VerifyPhoneOtpRequest` (`code`) | Returns `RecruiterResource` with `phoneVerified: true`. `PHONE_OTP_NOT_REQUESTED`, `PHONE_OTP_INVALID`, `PHONE_ALREADY_USED`. |
+| ✅ | `POST /recruiter/me/delete-request` | recruiter | – | Sets `status` `PENDING_DELETION`, revokes every refresh token and the session; data null. Idempotent while pending; `ACCOUNT_DELETED` if already deleted; `ACCOUNT_BANNED` if suspended. Signing in again within 7 days cancels the deletion and restores `ACTIVE`; after 7 days the account is anonymized and sign-in returns `ACCOUNT_DELETED`. Not yet blocked by company ownership. |
+| ✅ | `POST /recruiter/me/cancel-deletion` | recruiter | – | Returns `RecruiterResource` with `status` `ACTIVE`. `ACCOUNT_NOT_PENDING_DELETION`. |
+| ✅ | `POST /recruiter/me/email/change-request` | recruiter | `ChangeEmailRequest` (`newEmail`, `currentPassword`) | Mails a confirmation link to the new email and a notice to the old one. Field errors on `currentPassword` / `newEmail` (same as current email). `EMAIL_ALREADY_USED` for an email already in `recruiters` (an email that exists only as a candidate is allowed). `RATE_LIMITED` (429, `Retry-After`): 3 attempts per 15 min per account, and mails limited like resend-verification (60s cooldown, 3 per 15 min by email and IP) only when a mail is actually sent. The confirmation link is bound to the requested new email. |
+| ✅ | `POST /recruiter/auth/confirm-email-change` | public | `VerifyEmailRequest` (`token`) | Sets the new email, marks it verified and signs out every device. `INVALID_OR_EXPIRED_TOKEN`, `EMAIL_ALREADY_USED`. The mailed link is `{frontendUrl}/recruiter/confirm-email-change?token=…` (valid 24h, single use). |
+| ✅ | `POST /recruiter/me/change-password` | recruiter | `ChangePasswordRequest` (`currentPassword`, `password`, `confirmPassword`) | Signs out every other device. Field errors on `currentPassword` / `password` / `confirmPassword`. `RATE_LIMITED` (429, `Retry-After`) after 3 attempts per 15 min. |
+| ✅ | `GET /recruiter/me/sessions` | recruiter | – | `AccountSessionResource[] { id, deviceLabel, ipAddress, location?, createdAt, lastUsedAt, current }`; `location` is always null; `current` marks the device making the request. |
+| ✅ | `DELETE /recruiter/me/sessions/{sessionId}` | recruiter | – | Signs out one device. The current session cannot be revoked here; use logout (`VALIDATION_FAILED` on `sessionId`). `NOT_FOUND` for another recruiter's session. |
+| ✅ | `POST /recruiter/me/sessions/revoke-others` | recruiter | – | Signs out every other device (its access token keeps working until it expires, up to 15 min). |
+| ✅ | `POST /recruiter/auth/verify-email` | public | `VerifyEmailRequest` (`token`) | Marks the recruiter email verified. `INVALID_OR_EXPIRED_TOKEN`. The mailed link is `{frontendUrl}/recruiter/verify-email?token=…` (valid 24h, single use). |
+| ✅ | `POST /recruiter/auth/resend-verification` | recruiter | – | Mails a new verification link. `EMAIL_ALREADY_VERIFIED`; `RATE_LIMITED` (429, `Retry-After`; 60s cooldown, 3 per 15 min by email and IP). |
+| ✅ | `POST /recruiter/auth/forgot-password` | public | `ForgotPasswordRequest` (`email`) | Always returns the same generic message; mails `{frontendUrl}/recruiter/reset-password?token=…` only when the recruiter exists. `RATE_LIMITED` (429, `Retry-After`; 60s cooldown, 3 per 15 min by email and IP). |
+| ✅ | `POST /recruiter/auth/reset-password` | public | `ResetPasswordRequest` (`token`, `password`, `confirmPassword`) | Revokes every recruiter refresh token and the recruiter session. `INVALID_OR_EXPIRED_TOKEN` (link valid 15 min, single use). |
+
+Not built yet: 2FA, admin management of recruiters. Company endpoints still key members by the principal id; point `company_members` and the other recruiter-owned columns at `recruiters.id`.
+
+## Recruiter Company Membership & Leave Contract
+
+- Endpoint: `POST /recruiter/company/leave`
+- Behavior:
+  - If user is a `MEMBER` → membership status changes to `LEFT`, `PublishRightLostEvent` is emitted.
+  - If user is the sole `OWNER` and company is unverified with no members/documents → company draft is discarded (`discardCompany`).
+  - If user is the sole `OWNER` of a **VERIFIED** company or has submitted legal documents/active members → rejected with HTTP 422 `LAST_COMPANY_OWNER`.
+- **Frontend Real Integration Requirement**:
+  - When wiring real backend, if user is sole `OWNER` of a verified company, the UI must display a **Transfer Ownership Dialog** allowing the owner to delegate ownership to another verified recruiter before leaving, or prompt them to contact Compliance to archive the entity.
+  - Temporary session-level unbind in `CompanyProfileView.tsx` was implemented to enable local dev testing and must be replaced by the Transfer Ownership modal once ownership transfer API is connected.

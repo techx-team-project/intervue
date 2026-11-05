@@ -16,9 +16,10 @@ import com.techx.intervue.modules.user.resources.AuthResource;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.services.interfaces.AuthServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.EmailChangeServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.EmailVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
-import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.UserRegistrationServiceInterface;
 import com.techx.intervue.resources.ApiResource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -44,10 +45,11 @@ public class AuthController extends BaseController {
     private static final String FORGOT_PASSWORD_MESSAGE =
             "If the email exists, you will receive a password reset link within 5 minutes.";
 
-    private final UserServiceInterface userService;
+    private final UserRegistrationServiceInterface userRegistrationService;
     private final AuthServiceInterface authService;
     private final EmailVerificationServiceInterface emailVerificationService;
     private final PasswordResetServiceInterface passwordResetService;
+    private final EmailChangeServiceInterface emailChangeService;
     private final AuthConfig authConfig;
 
     @PostMapping("/register")
@@ -56,7 +58,8 @@ public class AuthController extends BaseController {
         String userAgent = httpRequest.getHeader(HttpHeaders.USER_AGENT);
         String ip = IpHelper.getClientIp(httpRequest);
         return withSession(
-                userService.register(request, userAgent, ip), "Account registered successfully!");
+                userRegistrationService.register(request, userAgent, ip),
+                "Account registered successfully!");
     }
 
     @PostMapping("/login")
@@ -84,7 +87,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/logout")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and !hasRole('RECRUITER')")
     public ResponseEntity<ApiResource<Void>> logout(
             @RequestAttribute(JwtAuthFilter.TOKEN_ATTRIBUTE) String accessToken,
             @CookieValue(name = CookieHelper.REFRESH_TOKEN_COOKIE, required = false)
@@ -102,8 +105,15 @@ public class AuthController extends BaseController {
         return ok(null, "Email verified successfully!");
     }
 
+    @PostMapping("/confirm-email-change")
+    public ResponseEntity<ApiResource<Void>> confirmEmailChange(
+            @Valid @RequestBody VerifyEmailRequest request) {
+        emailChangeService.confirm(request.token());
+        return ok(null, "Email changed successfully, please log in again!");
+    }
+
     @PostMapping("/resend-verification")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and !hasRole('RECRUITER')")
     public ResponseEntity<ApiResource<Void>> resendVerification(
             @AuthenticationPrincipal CustomUserDetails principal, HttpServletRequest httpRequest) {
         emailVerificationService.resend(principal.getId(), IpHelper.getClientIp(httpRequest));

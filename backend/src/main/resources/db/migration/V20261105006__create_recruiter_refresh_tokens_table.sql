@@ -1,0 +1,20 @@
+CREATE TABLE recruiter_refresh_tokens (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    recruiter_id BIGINT UNSIGNED NOT NULL,
+    token_hash VARCHAR(64) NOT NULL,
+    expiry_date TIMESTAMP NOT NULL,
+    revoked TINYINT(1) NOT NULL DEFAULT 0,
+    replaced_by_token_id BIGINT UNSIGNED NULL,
+    user_agent VARCHAR(255) NULL,
+    ip VARCHAR(45) NULL,
+    device_label VARCHAR(100) NULL,
+    last_used_at TIMESTAMP NULL,
+    revoked_at TIMESTAMP NULL,
+    revoked_reason VARCHAR(32) NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT uk_recruiter_refresh_tokens_hash UNIQUE (token_hash),
+    CONSTRAINT fk_recruiter_refresh_tokens_recruiter FOREIGN KEY (recruiter_id) REFERENCES recruiters(id) ON DELETE CASCADE,
+    CONSTRAINT fk_recruiter_refresh_tokens_replaced_by FOREIGN KEY (replaced_by_token_id) REFERENCES recruiter_refresh_tokens(id) ON DELETE SET NULL,
+    INDEX idx_recruiter_refresh_tokens_active (recruiter_id, revoked, expiry_date)
+);

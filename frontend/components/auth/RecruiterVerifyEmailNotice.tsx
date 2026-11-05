@@ -17,7 +17,8 @@ export default function RecruiterVerifyEmailNotice({ email }: RecruiterVerifyEma
         <h2 className="text-navy text-2xl font-bold">Verify your email</h2>
         <p className="text-sm leading-relaxed text-[#4d5965]">
           We sent a verification link to <strong className="text-navy font-semibold">{email}</strong>. Check your inbox
-          (or spam folder) and open the link to activate your employer account.
+          (or spam folder) and open the link to activate your employer account. You can verify later; you are already
+          signed in.
         </p>
       </div>
 
@@ -34,10 +35,10 @@ export default function RecruiterVerifyEmailNotice({ email }: RecruiterVerifyEma
       </div>
 
       <Link
-        href={ROUTES.RECRUITER_LOGIN}
+        href={ROUTES.RECRUITER_DASHBOARD}
         className="bg-primary hover:bg-primary-hover shadow-primary/20 inline-flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold text-white shadow-md transition"
       >
-        <span>Go to employer sign in</span>
+        <span>Go to dashboard</span>
         <ArrowRight className="h-4 w-4" />
       </Link>
     </div>

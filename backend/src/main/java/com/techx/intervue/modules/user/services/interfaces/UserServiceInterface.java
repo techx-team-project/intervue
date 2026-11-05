@@ -14,9 +14,9 @@ public interface UserServiceInterface {
 
     UserResource getMe(Long userId);
 
-    List<UserResource> findByIds(Collection<Long> userIds);
+    void updateBasicInfo(Long userId, String name, String address);
 
-    UserResource becomeRecruiter(Long userId);
+    List<UserResource> findByIds(Collection<Long> userIds);
 
     void requestAccountDeletion(Long userId);
 

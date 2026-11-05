@@ -41,15 +41,7 @@ export interface AdminUsersListViewProps {
   currentAdminId: number;
 }
 
-const SEGMENT_VALUES: AdminUserSegment[] = [
-  'all',
-  'candidates',
-  'recruiters',
-  'admins',
-  'banned',
-  'unverified',
-  'pendingDeletion',
-];
+const SEGMENT_VALUES: AdminUserSegment[] = ['all', 'candidates', 'admins', 'banned', 'unverified', 'pendingDeletion'];
 const SORT_VALUES = USER_SORT_OPTIONS.map((option) => option.value);
 const ROLE_VALUES = Object.keys(USER_ROLE_META) as RoleType[];
 const STATUS_VALUES = Object.keys(USER_STATUS_META) as AdminUserStatus[];
@@ -66,9 +58,6 @@ export function toServerParams(filters: AdminUserFilters, page: number): AdminUs
   switch (filters.segment) {
     case 'candidates':
       role = 'CANDIDATE';
-      break;
-    case 'recruiters':
-      role = 'RECRUITER';
       break;
     case 'admins':
       role = 'ADMIN';
@@ -228,7 +217,6 @@ export default function AdminUsersListView({
       newLast7Days: summary.newLast7Days,
       activeLast7Days: summary.activeLast7Days,
       candidates: summary.candidates,
-      recruiters: summary.recruiters,
       admins: summary.admins,
     }),
     [summary],
@@ -240,7 +228,6 @@ export default function AdminUsersListView({
     () => [
       { segment: 'all' as const, count: summary.total },
       { segment: 'candidates' as const, count: summary.candidates },
-      { segment: 'recruiters' as const, count: summary.recruiters },
       { segment: 'admins' as const, count: summary.admins },
       { segment: 'banned' as const, count: summary.banned },
       { segment: 'unverified' as const, count: summary.unverified },

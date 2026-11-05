@@ -59,29 +59,49 @@ export const resetPasswordSchema = z
 export const changePasswordSchema = z
   .object({
     currentPassword: z.string().min(1, 'Please enter your current password.'),
-    newPassword: z
-      .string()
-      .min(8, 'New password must be at least 8 characters.')
-      .regex(/[A-Z]/, 'Password must include an uppercase letter.')
-      .regex(/[0-9]/, 'Password must include a digit.')
-      .regex(/[^A-Za-z0-9]/, 'Password must include a special character (!@#$).'),
+    password: strongPassword,
     confirmPassword: z.string().min(1, 'Please confirm your new password.'),
-    logoutOtherDevices: z.boolean().default(true),
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: 'Confirmation does not match the new password.',
     path: ['confirmPassword'],
   })
-  .refine((data) => data.currentPassword !== data.newPassword, {
+  .refine((data) => data.currentPassword !== data.password, {
     message: 'New password must differ from the current password.',
-    path: ['newPassword'],
+    path: ['password'],
   });
+
+export const VIETNAM_MOBILE_PATTERN = /^0[35789]\d{8}$/;
+
+export const sendPhoneOtpSchema = z.object({
+  phone: z
+    .string()
+    .trim()
+    .min(1, 'Please enter your phone number.')
+    .regex(VIETNAM_MOBILE_PATTERN, 'Enter a valid Vietnamese mobile number, e.g. 0912345678.'),
+});
+
+export const verifyPhoneOtpSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .regex(/^\d{6}$/, 'Enter the 6-digit code.'),
+});
+
+export const changeEmailSchema = z.object({
+  newEmail: email,
+  currentPassword: z.string().min(1, 'Please enter your current password.'),
+});
 
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+
+export type SendPhoneOtpFormData = z.infer<typeof sendPhoneOtpSchema>;
+export type VerifyPhoneOtpFormData = z.infer<typeof verifyPhoneOtpSchema>;
+export type ChangeEmailFormData = z.infer<typeof changeEmailSchema>;
 
 export type LoginPayload = LoginFormData;
 export type RegisterPayload = RegisterFormData;

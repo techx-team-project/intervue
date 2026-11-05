@@ -19,4 +19,7 @@ public record BusinessDocumentResource(
         boolean submittedByMe,
         Instant reviewedAt,
         String reviewReason,
-        Instant expiresAt) {}
+        Instant expiresAt,
+        String storagePublicId,
+        String identityStoragePublicId,
+        String identityFileName) {}

@@ -109,21 +109,22 @@ spring:
     activate:
       on-profile: local
 
+auth:
+  resend-cooldown: 2s
+  resend-max-attempts: 100
+  resend-window: 15m
+
 seed:
   accounts:
     admin:
       email: local.admin@intervue.test
       name: Local Admin
       roles: [ADMIN]
-    recruiter:
-      email: local.recruiter@intervue.test
-      name: Local Recruiter
-      roles: [RECRUITER]
     candidate:
       email: local.candidate@intervue.test
       name: Local Candidate
       roles: [CANDIDATE]
-    multi-role:
-      email: local.multirole@intervue.test
-      name: Local Multi Role
-      roles: [CANDIDATE, RECRUITER]
+  recruiters:
+    recruiter:
+      email: local.recruiter@intervue.test
+      name: Local Recruiter

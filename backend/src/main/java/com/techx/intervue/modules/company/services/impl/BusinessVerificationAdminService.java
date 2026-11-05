@@ -6,11 +6,18 @@ import com.techx.intervue.common.audit.enums.AuditTargetType;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.common.storage.StorageServiceInterface;
+import com.techx.intervue.common.storage.StorageTarget;
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.entities.BusinessDocument;
 import com.techx.intervue.modules.company.entities.Company;
+import com.techx.intervue.modules.company.entities.CompanyAgreement;
 import com.techx.intervue.modules.company.entities.CompanyMember;
+import com.techx.intervue.modules.company.enums.AgreementAcceptanceMode;
+import com.techx.intervue.modules.company.enums.AgreementScope;
+import com.techx.intervue.modules.company.enums.AgreementStatus;
+import com.techx.intervue.modules.company.enums.AgreementType;
 import com.techx.intervue.modules.company.enums.BusinessDocumentType;
 import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
 import com.techx.intervue.modules.company.enums.CompanyVerificationStatus;
@@ -24,6 +31,7 @@ import com.techx.intervue.modules.company.mappers.BusinessDocumentMapper;
 import com.techx.intervue.modules.company.repositories.BusinessDocumentRepository;
 import com.techx.intervue.modules.company.repositories.BusinessDocumentRepository.ReviewStatusCount;
 import com.techx.intervue.modules.company.repositories.BusinessDocumentSpecifications;
+import com.techx.intervue.modules.company.repositories.CompanyAgreementRepository;
 import com.techx.intervue.modules.company.repositories.CompanyMemberRepository;
 import com.techx.intervue.modules.company.requests.ApproveDocumentRequest;
 import com.techx.intervue.modules.company.requests.ReviewDocumentRequest;
@@ -31,10 +39,10 @@ import com.techx.intervue.modules.company.requests.RevokeDocumentRequest;
 import com.techx.intervue.modules.company.requests.SearchBusinessVerificationRequest;
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationDetailResource;
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationListResource;
+import com.techx.intervue.modules.company.resources.AdminCompanyAgreementResource;
 import com.techx.intervue.modules.company.resources.BusinessDocumentResource;
 import com.techx.intervue.modules.company.resources.BusinessVerificationSummaryResource;
 import com.techx.intervue.modules.company.resources.CompanyMemberResource;
-import com.techx.intervue.modules.company.services.interfaces.AdminActor;
 import com.techx.intervue.modules.company.services.interfaces.BusinessVerificationAdminServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface.StoredDocumentContent;
@@ -70,6 +78,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
 
     private final BusinessDocumentRepository businessDocumentRepository;
     private final CompanyMemberRepository companyMemberRepository;
+    private final CompanyAgreementRepository companyAgreementRepository;
     private final StorageServiceInterface storageService;
     private final AdminBusinessVerificationMapper adminMapper;
     private final BusinessDocumentMapper businessDocumentMapper;
@@ -132,13 +141,126 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
         return new StoredDocumentContent(
                 document.getOriginalFileName(),
                 document.getContentType(),
-                storageService.fetchDocument(document.getStoragePublicId()));
+                storageService.fetchDocument(
+                        document.getStoragePublicId(), StorageTarget.LEGAL_DOCUMENT));
+    }
+
+    @Override
+    public StoredDocumentContent readIdentityDocument(Long documentId) {
+        BusinessDocument document = requireDocument(documentId);
+        if (document.getIdentityStoragePublicId() == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return new StoredDocumentContent(
+                document.getIdentityFileName() == null
+                        ? "identity_card.png"
+                        : document.getIdentityFileName(),
+                "image/png",
+                storageService.fetchDocument(
+                        document.getIdentityStoragePublicId(), StorageTarget.IDENTITY_DOCUMENT));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<AdminCompanyAgreementResource> searchAgreements(
+            AgreementStatus status, Pageable pageable) {
+        Page<CompanyAgreement> page =
+                status == null
+                        ? companyAgreementRepository.findByAcceptanceMode(
+                                AgreementAcceptanceMode.CUSTOM_UPLOAD, pageable)
+                        : companyAgreementRepository.findByAcceptanceModeAndStatus(
+                                AgreementAcceptanceMode.CUSTOM_UPLOAD, status, pageable);
+
+        Map<Long, UserResource> signers =
+                usersById(page.getContent().stream().map(CompanyAgreement::getSignedBy).toList());
+
+        List<AdminCompanyAgreementResource> items =
+                page.getContent().stream()
+                        .map(
+                                agreement -> {
+                                    UserResource signer = signers.get(agreement.getSignedBy());
+                                    Company company = agreement.getCompany();
+                                    return AdminCompanyAgreementResource.builder()
+                                            .id(agreement.getId())
+                                            .scope(agreement.getScope())
+                                            .companyId(company.getId())
+                                            .companyName(company.getName())
+                                            .companyTaxCode(company.getTaxCode())
+                                            .signedByUserId(agreement.getSignedBy())
+                                            .signedByName(signer == null ? null : signer.name())
+                                            .signedByEmail(signer == null ? null : signer.email())
+                                            .agreementType(agreement.getAgreementType())
+                                            .acceptanceMode(agreement.getAcceptanceMode())
+                                            .version(agreement.getVersion())
+                                            .status(agreement.getStatus())
+                                            .acceptedAt(agreement.getAcceptedAt())
+                                            .storagePublicId(agreement.getStoragePublicId())
+                                            .build();
+                                })
+                        .toList();
+
+        return new PageImpl<>(items, pageable, page.getTotalElements());
+    }
+
+    @Override
+    public StoredDocumentContent readAgreement(Long agreementId) {
+        CompanyAgreement agreement =
+                companyAgreementRepository
+                        .findById(agreementId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        if (agreement.getStoragePublicId() == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return new StoredDocumentContent(
+                "custom_agreement_" + agreement.getId() + ".pdf",
+                "application/pdf",
+                storageService.fetchDocument(
+                        agreement.getStoragePublicId(), StorageTarget.LEGAL_DOCUMENT));
+    }
+
+    @Override
+    @Transactional
+    public void approveAgreement(Long agreementId, RequestActor actor) {
+        CompanyAgreement agreement =
+                companyAgreementRepository
+                        .findById(agreementId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        agreement.setStatus(AgreementStatus.ACCEPTED);
+        companyAgreementRepository.save(agreement);
+
+        audit(
+                actor,
+                AuditAction.AGREEMENT_ACCEPTED,
+                AuditTargetType.COMPANY,
+                agreement.getCompany().getId(),
+                "Approved custom agreement: " + agreement.getAgreementType(),
+                null);
+    }
+
+    @Override
+    @Transactional
+    public void rejectAgreement(
+            Long agreementId, ReviewDocumentRequest request, RequestActor actor) {
+        CompanyAgreement agreement =
+                companyAgreementRepository
+                        .findById(agreementId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        agreement.setStatus(AgreementStatus.REJECTED);
+        companyAgreementRepository.save(agreement);
+
+        audit(
+                actor,
+                AuditAction.BUSINESS_DOCUMENT_REJECTED,
+                AuditTargetType.COMPANY,
+                agreement.getCompany().getId(),
+                "Rejected custom agreement: " + agreement.getAgreementType(),
+                request == null ? null : request.reason());
     }
 
     @Override
     @Transactional
     public AdminBusinessVerificationDetailResource approve(
-            Long documentId, ApproveDocumentRequest request, AdminActor actor) {
+            Long documentId, ApproveDocumentRequest request, RequestActor actor) {
         BusinessDocument document = requireReviewable(documentId);
 
         if (document.getDocumentType() == BusinessDocumentType.LETTER_OF_AUTHORIZATION
@@ -182,7 +304,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     @Override
     @Transactional
     public AdminBusinessVerificationDetailResource reject(
-            Long documentId, ReviewDocumentRequest request, AdminActor actor) {
+            Long documentId, ReviewDocumentRequest request, RequestActor actor) {
         return decide(
                 documentId,
                 request,
@@ -194,7 +316,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     @Override
     @Transactional
     public AdminBusinessVerificationDetailResource requestMoreInformation(
-            Long documentId, ReviewDocumentRequest request, AdminActor actor) {
+            Long documentId, ReviewDocumentRequest request, RequestActor actor) {
         return decide(
                 documentId,
                 request,
@@ -206,7 +328,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     @Override
     @Transactional
     public AdminBusinessVerificationDetailResource revoke(
-            Long documentId, RevokeDocumentRequest request, AdminActor actor) {
+            Long documentId, RevokeDocumentRequest request, RequestActor actor) {
         BusinessDocument document = requireDocument(documentId);
         if (document.getReviewStatus() != DocumentReviewStatus.APPROVED) {
             throw new AppException(ErrorCode.DOCUMENT_NOT_APPROVED);
@@ -320,7 +442,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     private AdminBusinessVerificationDetailResource decide(
             Long documentId,
             ReviewDocumentRequest request,
-            AdminActor actor,
+            RequestActor actor,
             DocumentReviewStatus outcome,
             AuditAction action) {
         BusinessDocument document = requireReviewable(documentId);
@@ -339,7 +461,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
         return detailOf(document);
     }
 
-    private void stampReview(BusinessDocument document, AdminActor actor) {
+    private void stampReview(BusinessDocument document, RequestActor actor) {
         document.setReviewedAt(Instant.now());
         document.setReviewedBy(actor.userId());
     }
@@ -366,13 +488,28 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
         List<CompanyMemberResource> memberResources =
                 members.stream()
                         .map(
-                                member ->
-                                        adminMapper.toMemberResource(
-                                                member,
-                                                users.get(member.getUserId()),
-                                                member.isActive()
-                                                        && companyVerificationService.canPublish(
-                                                                member.getUserId())))
+                                member -> {
+                                    UserResource user = users.get(member.getUserId());
+                                    boolean phoneVerified = user != null && user.phoneVerified();
+                                    boolean userAgreementAccepted =
+                                            companyAgreementRepository
+                                                    .findFirstByUserIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
+                                                            member.getUserId(),
+                                                            AgreementScope.USER,
+                                                            AgreementType.CANDIDATE_DATA)
+                                                    .map(CompanyAgreement::isAccepted)
+                                                    .orElse(false);
+                                    boolean canPublish =
+                                            member.isActive()
+                                                    && companyVerificationService.canPublish(
+                                                            member.getUserId());
+                                    return adminMapper.toMemberResource(
+                                            member,
+                                            user,
+                                            canPublish,
+                                            phoneVerified,
+                                            userAgreementAccepted);
+                                })
                         .toList();
 
         List<BusinessDocumentResource> companyDocuments =
@@ -384,7 +521,9 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
 
         return AdminBusinessVerificationDetailResource.builder()
                 .document(businessDocumentMapper.toResource(document, null))
-                .company(adminMapper.toCompanyFacts(company, completeness.isComplete(company)))
+                .company(
+                        adminMapper.toCompanyFacts(
+                                company, completeness.isComplete(company), members.size()))
                 .submitter(
                         memberResources.stream()
                                 .filter(member -> member.userId().equals(document.getSubmittedBy()))
@@ -424,7 +563,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     }
 
     private void audit(
-            AdminActor actor,
+            RequestActor actor,
             AuditAction action,
             AuditTargetType targetType,
             Long targetId,

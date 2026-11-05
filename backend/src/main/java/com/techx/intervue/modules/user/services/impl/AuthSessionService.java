@@ -2,6 +2,7 @@ package com.techx.intervue.modules.user.services.impl;
 
 import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.modules.user.entities.User;
+import com.techx.intervue.modules.user.enums.AccountType;
 import com.techx.intervue.modules.user.mappers.UserMapper;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.services.interfaces.AuthSessionServiceInterface;
@@ -52,6 +53,6 @@ public class AuthSessionService implements AuthSessionServiceInterface {
                 user.getEmail(),
                 user.activeRoleTypes(),
                 Duration.ofMillis(authConfig.getExpirationTime()));
-        return jwtService.generateToken(user.getId());
+        return jwtService.generateToken(user.getId(), AccountType.USER);
     }
 }

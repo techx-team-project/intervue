@@ -3,8 +3,8 @@
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { RESEND_COOLDOWN_SECONDS } from '@/constants/auth';
-import { ROUTES } from '@/constants/routes';
 import { useForgotPassword } from '@/hooks/useForgotPassword';
+import { AUTH_PORTAL_ROUTES, type AuthPortal } from '@/lib/auth-portal';
 import { ForgotPasswordFormData, forgotPasswordSchema } from '@/schemas/auth.schema';
 import { applyFormError, getErrorMessage } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,8 +15,10 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import FormErrorAlert from './FormErrorAlert';
 
-export default function ForgotPasswordForm() {
-  const forgotPassword = useForgotPassword();
+type ForgotPasswordFormProps = { portal?: AuthPortal };
+
+export default function ForgotPasswordForm({ portal = 'candidate' }: ForgotPasswordFormProps) {
+  const forgotPassword = useForgotPassword(portal);
   const [sentEmail, setSentEmail] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(0);
   const {
@@ -117,7 +119,7 @@ export default function ForgotPasswordForm() {
 
       <div className="mt-5 text-center">
         <Link
-          href={ROUTES.LOGIN}
+          href={AUTH_PORTAL_ROUTES[portal].login}
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 transition-colors hover:underline"
         >
           <ArrowLeft className="h-4 w-4 stroke-[2.5]" />

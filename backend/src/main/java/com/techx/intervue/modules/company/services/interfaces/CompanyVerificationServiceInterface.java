@@ -1,11 +1,11 @@
 package com.techx.intervue.modules.company.services.interfaces;
 
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.modules.company.enums.AgreementType;
 import com.techx.intervue.modules.company.requests.AcceptAgreementRequest;
 import com.techx.intervue.modules.company.requests.SubmitBusinessDocumentRequest;
 import com.techx.intervue.modules.company.resources.BusinessDocumentResource;
 import com.techx.intervue.modules.company.resources.RecruiterVerificationProfileResource;
-import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface.RecruiterActor;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,16 +22,22 @@ public interface CompanyVerificationServiceInterface {
     void assertCanPublish(Long userId);
 
     BusinessDocumentResource submitDocument(
-            MultipartFile file, SubmitBusinessDocumentRequest request, RecruiterActor actor);
+            MultipartFile file, SubmitBusinessDocumentRequest request, RequestActor actor);
+
+    BusinessDocumentResource submitDocument(
+            MultipartFile file,
+            MultipartFile identityFile,
+            SubmitBusinessDocumentRequest request,
+            RequestActor actor);
 
     List<BusinessDocumentResource> findDocuments(Long userId);
 
     StoredDocumentContent readDocument(Long documentId, Long userId);
 
-    void acceptAgreement(AcceptAgreementRequest request, RecruiterActor actor);
+    void acceptAgreement(AcceptAgreementRequest request, RequestActor actor);
 
     void acceptCustomAgreement(
-            MultipartFile file, AcceptAgreementRequest request, RecruiterActor actor);
+            MultipartFile file, AcceptAgreementRequest request, RequestActor actor);
 
     AgreementTemplate findTemplate(AgreementType agreementType);
 }

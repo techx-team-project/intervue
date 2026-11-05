@@ -8,6 +8,7 @@ import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterf
 import com.techx.intervue.common.storage.StorageServiceInterface;
 import com.techx.intervue.common.storage.StorageTarget;
 import com.techx.intervue.common.storage.StoredFile;
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.entities.Company;
@@ -71,7 +72,7 @@ public class CompanyService implements CompanyServiceInterface {
 
     @Override
     @Transactional
-    public CompanyResource create(SaveCompanyProfileRequest request, RecruiterActor actor) {
+    public CompanyResource create(SaveCompanyProfileRequest request, RequestActor actor) {
         requireNoMembership(actor.userId());
         if (companyRepository.existsByTaxCode(request.taxCode())) {
             throw new AppException(ErrorCode.TAX_CODE_ALREADY_USED);
@@ -93,7 +94,7 @@ public class CompanyService implements CompanyServiceInterface {
 
     @Override
     @Transactional
-    public CompanyResource update(SaveCompanyProfileRequest request, RecruiterActor actor) {
+    public CompanyResource update(SaveCompanyProfileRequest request, RequestActor actor) {
         CompanyMember membership = requireMembership(actor.userId());
         Company company = membership.getCompany();
 
@@ -125,7 +126,7 @@ public class CompanyService implements CompanyServiceInterface {
 
     @Override
     @Transactional
-    public CompanyResource join(JoinCompanyRequest request, RecruiterActor actor) {
+    public CompanyResource join(JoinCompanyRequest request, RequestActor actor) {
         Company company =
                 companyRepository
                         .findById(request.companyId())
@@ -165,7 +166,7 @@ public class CompanyService implements CompanyServiceInterface {
 
     @Override
     @Transactional
-    public void leave(RecruiterActor actor) {
+    public void leave(RequestActor actor) {
         CompanyMember membership = requireMembership(actor.userId());
         Company company = membership.getCompany();
 
@@ -289,7 +290,7 @@ public class CompanyService implements CompanyServiceInterface {
     // The owner is leaving a company nobody else uses and no document was ever filed for, so the
     // record is a mistake: removing it frees the tax code instead of leaving an unreachable
     // company.
-    private void discardCompany(Company company, RecruiterActor actor) {
+    private void discardCompany(Company company, RequestActor actor) {
         List<CompanyPhoto> photos =
                 companyPhotoRepository.findByCompanyIdOrderBySortOrderAsc(company.getId());
         List<String> storedImages = new ArrayList<>();
@@ -324,7 +325,7 @@ public class CompanyService implements CompanyServiceInterface {
                 company, myRole, photos, completeness.missingFields(company));
     }
 
-    private void audit(RecruiterActor actor, AuditAction action, Company company) {
+    private void audit(RequestActor actor, AuditAction action, Company company) {
         auditLogService.record(
                 AuditEntry.builder()
                         .actorType(AuditActorType.USER)

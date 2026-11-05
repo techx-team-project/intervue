@@ -1,6 +1,5 @@
 'use client';
 
-import RoleSwitcher from '@/components/common/header/RoleSwitcher';
 import { ROUTES } from '@/constants/routes';
 import { useLogout } from '@/hooks/useLogout';
 import { Bell, Building2, KeyRound, LogOut, ShieldCheck, Smartphone } from 'lucide-react';
@@ -13,8 +12,8 @@ interface RecruiterUserMenuDropdownProps {
 const LINKS = [
   { label: 'Notifications', href: ROUTES.RECRUITER_NOTIFICATIONS, icon: Bell },
   { label: 'Company profile', href: '/recruiter/company', icon: Building2 },
-  { label: 'Account security', href: '/account/security', icon: ShieldCheck },
-  { label: 'Change password', href: '/account/password', icon: KeyRound },
+  { label: 'Account security', href: ROUTES.RECRUITER_ACCOUNT_SECURITY, icon: ShieldCheck },
+  { label: 'Change password', href: ROUTES.RECRUITER_ACCOUNT_PASSWORD, icon: KeyRound },
   { label: 'Two-factor authentication', href: '/account/two-factor', icon: Smartphone },
 ];
 
@@ -26,8 +25,6 @@ export default function RecruiterUserMenuDropdown({ onClose }: RecruiterUserMenu
       className="absolute top-12 right-0 z-50 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 text-slate-800 shadow-2xl"
       onClick={(e) => e.stopPropagation()}
     >
-      <RoleSwitcher onNavigate={onClose} />
-
       <nav className="space-y-0.5">
         {LINKS.map((link) => {
           const Icon = link.icon;

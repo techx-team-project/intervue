@@ -1,4 +1,3 @@
-import RecruiterGuestRedirect from '@/components/auth/RecruiterGuestRedirect';
 import RecruiterRegisterView from '@/components/auth/RecruiterRegisterView';
 import { Metadata } from 'next';
 
@@ -9,10 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function RecruiterRegisterPage() {
-  return (
-    <>
-      <RecruiterGuestRedirect />
-      <RecruiterRegisterView />
-    </>
-  );
+  return <RecruiterRegisterView />;
 }

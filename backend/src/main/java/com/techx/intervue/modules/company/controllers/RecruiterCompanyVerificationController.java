@@ -7,11 +7,9 @@ import com.techx.intervue.modules.company.requests.AcceptAgreementRequest;
 import com.techx.intervue.modules.company.requests.SubmitBusinessDocumentRequest;
 import com.techx.intervue.modules.company.resources.BusinessDocumentResource;
 import com.techx.intervue.modules.company.resources.RecruiterVerificationProfileResource;
-import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface.RecruiterActor;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface.AgreementTemplate;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface.StoredDocumentContent;
-import com.techx.intervue.modules.helpers.IpHelper;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,11 +52,13 @@ public class RecruiterCompanyVerificationController extends BaseController {
     public ResponseEntity<ApiResource<BusinessDocumentResource>> submitDocument(
             @RequestParam("documentType") BusinessDocumentType documentType,
             @RequestPart("file") MultipartFile file,
+            @RequestPart(value = "identityFile", required = false) MultipartFile identityFile,
             @AuthenticationPrincipal CustomUserDetails principal,
             HttpServletRequest httpRequest) {
         return created(
                 verificationService.submitDocument(
                         file,
+                        identityFile,
                         new SubmitBusinessDocumentRequest(documentType),
                         actor(principal, httpRequest)),
                 "Document submitted successfully! It is now awaiting review.");
@@ -119,10 +119,5 @@ public class RecruiterCompanyVerificationController extends BaseController {
                                 .build()
                                 .toString())
                 .body(template.content());
-    }
-
-    private RecruiterActor actor(CustomUserDetails principal, HttpServletRequest httpRequest) {
-        return new RecruiterActor(
-                principal.getId(), principal.getEmail(), IpHelper.getClientIp(httpRequest));
     }
 }

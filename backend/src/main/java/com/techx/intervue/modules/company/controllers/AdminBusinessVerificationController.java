@@ -1,17 +1,17 @@
 package com.techx.intervue.modules.company.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.company.enums.AgreementStatus;
 import com.techx.intervue.modules.company.requests.ApproveDocumentRequest;
 import com.techx.intervue.modules.company.requests.ReviewDocumentRequest;
 import com.techx.intervue.modules.company.requests.RevokeDocumentRequest;
 import com.techx.intervue.modules.company.requests.SearchBusinessVerificationRequest;
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationDetailResource;
 import com.techx.intervue.modules.company.resources.AdminBusinessVerificationListResource;
+import com.techx.intervue.modules.company.resources.AdminCompanyAgreementResource;
 import com.techx.intervue.modules.company.resources.BusinessVerificationSummaryResource;
-import com.techx.intervue.modules.company.services.interfaces.AdminActor;
 import com.techx.intervue.modules.company.services.interfaces.BusinessVerificationAdminServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface.StoredDocumentContent;
-import com.techx.intervue.modules.helpers.IpHelper;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,8 +44,8 @@ public class AdminBusinessVerificationController extends BaseController {
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<AdminBusinessVerificationListResource>>> search(
             @Valid SearchBusinessVerificationRequest request, Pageable pageable) {
-        return ok(
-                PageResource.of(verificationAdminService.search(request, pageable)),
+        return page(
+                verificationAdminService.search(request, pageable),
                 "Business verification requests retrieved successfully!");
     }
 
@@ -74,6 +75,60 @@ public class AdminBusinessVerificationController extends BaseController {
                         HttpHeaders.CONTENT_DISPOSITION,
                         ContentDisposition.inline().filename(content.fileName()).build().toString())
                 .body(content.bytes());
+    }
+
+    @GetMapping("/{documentId}/identity/view")
+    public ResponseEntity<byte[]> viewIdentityDocument(@PathVariable Long documentId) {
+        StoredDocumentContent content = verificationAdminService.readIdentityDocument(documentId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(content.contentType()))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.inline().filename(content.fileName()).build().toString())
+                .body(content.bytes());
+    }
+
+    @GetMapping("/agreements")
+    public ResponseEntity<ApiResource<PageResource<AdminCompanyAgreementResource>>>
+            searchAgreements(
+                    @RequestParam(value = "status", required = false) AgreementStatus status,
+                    Pageable pageable) {
+        return page(
+                verificationAdminService.searchAgreements(status, pageable),
+                "Custom agreements retrieved successfully!");
+    }
+
+    @GetMapping("/agreements/{agreementId}/view")
+    public ResponseEntity<byte[]> viewAgreementDocument(@PathVariable Long agreementId) {
+        StoredDocumentContent content = verificationAdminService.readAgreement(agreementId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(content.contentType()))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.inline().filename(content.fileName()).build().toString())
+                .body(content.bytes());
+    }
+
+    @PostMapping("/agreements/{agreementId}/approve")
+    public ResponseEntity<ApiResource<Void>> approveAgreement(
+            @PathVariable Long agreementId,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        verificationAdminService.approveAgreement(agreementId, actor(principal, httpRequest));
+        return ok(null, "Custom agreement approved successfully!");
+    }
+
+    @PostMapping("/agreements/{agreementId}/reject")
+    public ResponseEntity<ApiResource<Void>> rejectAgreement(
+            @PathVariable Long agreementId,
+            @Valid @RequestBody(required = false) ReviewDocumentRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        ReviewDocumentRequest payload =
+                request == null ? new ReviewDocumentRequest("Custom agreement rejected") : request;
+        verificationAdminService.rejectAgreement(
+                agreementId, payload, actor(principal, httpRequest));
+        return ok(null, "Custom agreement rejected successfully!");
     }
 
     @PostMapping("/{documentId}/approve")
@@ -122,10 +177,5 @@ public class AdminBusinessVerificationController extends BaseController {
         return ok(
                 verificationAdminService.revoke(documentId, request, actor(principal, httpRequest)),
                 "Document approval withdrawn successfully!");
-    }
-
-    private AdminActor actor(CustomUserDetails principal, HttpServletRequest httpRequest) {
-        return new AdminActor(
-                principal.getId(), principal.getEmail(), IpHelper.getClientIp(httpRequest));
     }
 }

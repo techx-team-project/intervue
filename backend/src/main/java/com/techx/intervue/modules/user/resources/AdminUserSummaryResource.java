@@ -11,7 +11,6 @@ public record AdminUserSummaryResource(
         long newLast7Days,
         long activeLast7Days,
         long candidates,
-        long recruiters,
         long admins,
         long activeAdminCount,
         long bannedOverAWeek,

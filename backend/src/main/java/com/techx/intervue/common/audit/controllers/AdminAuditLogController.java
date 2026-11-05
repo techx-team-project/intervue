@@ -30,8 +30,7 @@ public class AdminAuditLogController extends BaseController {
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<AdminAuditLogResource>>> list(
             @Valid SearchAuditLogRequest request, Pageable pageable) {
-        return ok(
-                PageResource.of(auditLogService.search(request, pageable)),
-                "Audit logs retrieved successfully!");
+        return page(
+                auditLogService.search(request, pageable), "Audit logs retrieved successfully!");
     }
 }

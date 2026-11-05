@@ -44,6 +44,20 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
     @Query(
             """
                 UPDATE RefreshToken r
+                SET r.revoked = true, r.revokedAt = :now, r.revokedReason = :reason
+                WHERE r.userId = :userId AND r.revoked = false AND r.id <> :keepId
+            """)
+    int revokeAllByUserIdExcept(
+            @Param("userId") Long userId,
+            @Param("keepId") Long keepId,
+            @Param("now") Instant now,
+            @Param("reason") String reason);
+
+    @Modifying
+    @Transactional
+    @Query(
+            """
+                UPDATE RefreshToken r
                 SET r.revoked = true, r.revokedAt = CURRENT_TIMESTAMP, r.revokedReason = 'REVOKED'
                 WHERE r.userId = :userId AND r.revoked = false
             """)
@@ -57,6 +71,9 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
     Optional<RefreshToken> findByIdAndUserId(Long id, Long userId);
 
     List<RefreshToken> findByUserIdAndRevokedFalseAndExpiryDateAfterOrderByCreatedAtDesc(
+            Long userId, Instant now);
+
+    List<RefreshToken> findByUserIdAndRevokedFalseAndExpiryDateAfterOrderByLastUsedAtDesc(
             Long userId, Instant now);
 
     Page<RefreshToken> findByUserId(Long userId, Pageable pageable);

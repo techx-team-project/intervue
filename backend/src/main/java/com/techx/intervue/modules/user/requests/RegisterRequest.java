@@ -15,4 +15,14 @@ public record RegisterRequest(
                 String email,
         @NotBlank(message = "Password is required!") @StrongPassword String password,
         @NotBlank(message = "Please confirm your password!") String confirmPassword,
-        @AssertTrue(message = "You must accept the Privacy Policy & Terms!") boolean acceptTerms) {}
+        @AssertTrue(message = "You must accept the Privacy Policy & Terms!") boolean acceptTerms) {
+
+    public static RegisterRequest of(
+            String name,
+            String email,
+            String password,
+            String confirmPassword,
+            boolean acceptTerms) {
+        return new RegisterRequest(name, email, password, confirmPassword, acceptTerms);
+    }
+}

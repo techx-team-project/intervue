@@ -7,8 +7,6 @@ import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.resources.CompanySummaryResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
-import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface.RecruiterActor;
-import com.techx.intervue.modules.helpers.IpHelper;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
@@ -71,9 +69,7 @@ public class RecruiterCompanyController extends BaseController {
     @GetMapping("/search")
     public ResponseEntity<ApiResource<PageResource<CompanySummaryResource>>> search(
             @Valid SearchCompaniesRequest request, Pageable pageable) {
-        return ok(
-                PageResource.of(companyService.search(request, pageable)),
-                "Companies retrieved successfully!");
+        return page(companyService.search(request, pageable), "Companies retrieved successfully!");
     }
 
     @PostMapping("/join")
@@ -117,10 +113,5 @@ public class RecruiterCompanyController extends BaseController {
         return ok(
                 companyService.removePhoto(photoId, principal.getId()),
                 "Company photo removed successfully!");
-    }
-
-    private RecruiterActor actor(CustomUserDetails principal, HttpServletRequest httpRequest) {
-        return new RecruiterActor(
-                principal.getId(), principal.getEmail(), IpHelper.getClientIp(httpRequest));
     }
 }

@@ -7,22 +7,17 @@ import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterf
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
-import com.techx.intervue.modules.helpers.EmailHelper;
-import com.techx.intervue.modules.user.entities.Role;
 import com.techx.intervue.modules.user.entities.User;
-import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
-import com.techx.intervue.modules.user.events.EmailVerificationRequestedEvent;
-import com.techx.intervue.modules.user.events.UserRolesChangedEvent;
 import com.techx.intervue.modules.user.mappers.UserMapper;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
-import com.techx.intervue.modules.user.repositories.RoleRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.RegisterRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.interfaces.AuthSessionServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.DeletionBlocker;
+import com.techx.intervue.modules.user.services.interfaces.UserRegistrationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.services.impl.BaseService;
 import java.time.Instant;
@@ -30,8 +25,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,11 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService extends BaseService implements UserServiceInterface {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserRegistrationServiceInterface userRegistrationService;
     private final AuthSessionServiceInterface authSessionService;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final ApplicationEventPublisher eventPublisher;
     private final UserMapper userMapper;
     private final AuditLogServiceInterface auditLogService;
     private final List<DeletionBlocker> deletionBlockers;
@@ -52,45 +43,13 @@ public class UserService extends BaseService implements UserServiceInterface {
     @Override
     @Transactional
     public AuthResult register(RegisterRequest request) {
-        return register(request, null, null);
+        return userRegistrationService.register(request);
     }
 
     @Override
     @Transactional
     public AuthResult register(RegisterRequest request, String userAgent, String ip) {
-        String email = EmailHelper.normalize(request.email());
-        PasswordPolicy.verify(request.password(), request.confirmPassword(), email);
-        if (userRepository.existsByEmail(email)) {
-            throw new AppException(ErrorCode.EMAIL_ALREADY_USED);
-        }
-
-        Role candidateRole = findRole(RoleType.CANDIDATE);
-        User user =
-                User.builder()
-                        .name(request.name().trim())
-                        .email(email)
-                        .password(passwordEncoder.encode(request.password()))
-                        .termsAcceptedAt(Instant.now())
-                        .build();
-        user.addRole(candidateRole);
-        User saved = userRepository.save(user);
-
-        auditLogService.record(
-                AuditEntry.builder()
-                        .actorType(AuditActorType.USER)
-                        .actorId(saved.getId())
-                        .actorEmail(saved.getEmail())
-                        .action(AuditAction.USER_REGISTERED)
-                        .targetType(AuditTargetType.USER)
-                        .targetId(saved.getId())
-                        .reason("Account self-registered")
-                        .ip(ip)
-                        .build());
-
-        eventPublisher.publishEvent(
-                new EmailVerificationRequestedEvent(
-                        saved.getId(), saved.getEmail(), saved.getName()));
-        return authSessionService.open(saved, userAgent, ip);
+        return userRegistrationService.register(request, userAgent, ip);
     }
 
     @Override
@@ -108,19 +67,12 @@ public class UserService extends BaseService implements UserServiceInterface {
 
     @Override
     @Transactional
-    public UserResource becomeRecruiter(Long userId) {
-        User user = findOrThrow(userRepository.findByIdWithRoles(userId), "User not found");
-        if (!user.isEmailVerified()) {
-            throw new AppException(ErrorCode.EMAIL_NOT_VERIFIED);
-        }
-        if (user.activeRoleTypes().contains(RoleType.RECRUITER)) {
-            return userMapper.toResource(user);
-        }
-
-        user.addRole(findRole(RoleType.RECRUITER));
-        User saved = userRepository.save(user);
-        eventPublisher.publishEvent(new UserRolesChangedEvent(saved.getId()));
-        return userMapper.toResource(saved);
+    public void updateBasicInfo(Long userId, String name, String address) {
+        User user = findOrThrow(userRepository.findById(userId), "User not found");
+        user.setName(name.trim());
+        String trimmedAddress = address == null ? "" : address.trim();
+        user.setAddress(trimmedAddress.isEmpty() ? null : trimmedAddress);
+        userRepository.save(user);
     }
 
     @Override
@@ -184,11 +136,5 @@ public class UserService extends BaseService implements UserServiceInterface {
                         .build());
 
         return userMapper.toResource(saved);
-    }
-
-    private Role findRole(RoleType type) {
-        return roleRepository
-                .findByName(type)
-                .orElseThrow(() -> new IllegalStateException(type + " role is missing"));
     }
 }

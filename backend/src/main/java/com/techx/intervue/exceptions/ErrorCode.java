@@ -12,6 +12,11 @@ public enum ErrorCode {
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Your session is invalid or has expired!"),
     FORBIDDEN(HttpStatus.FORBIDDEN, "You do not have permission to perform this action!"),
     NOT_FOUND(HttpStatus.NOT_FOUND, "Resource not found!"),
+    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "This method is not allowed here!"),
+    UNSUPPORTED_MEDIA_TYPE(
+            HttpStatus.UNSUPPORTED_MEDIA_TYPE, "This content type is not supported!"),
+    INTERNAL_ERROR(
+            HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong, please try again later!"),
     EMAIL_ALREADY_USED(HttpStatus.CONFLICT, "This email is already registered!"),
     EMAIL_ALREADY_VERIFIED(HttpStatus.CONFLICT, "Email is already verified!"),
     EMAIL_NOT_VERIFIED(
@@ -99,7 +104,11 @@ public enum ErrorCode {
     PHONE_OTP_INVALID(HttpStatus.BAD_REQUEST, "The verification code is invalid or has expired!"),
     PHONE_OTP_NOT_REQUESTED(
             HttpStatus.UNPROCESSABLE_CONTENT, "Please request a verification code first!"),
-    AGREEMENT_ALREADY_ACCEPTED(HttpStatus.CONFLICT, "This agreement has already been accepted!");
+    AGREEMENT_ALREADY_ACCEPTED(HttpStatus.CONFLICT, "This agreement has already been accepted!"),
+    PROFILE_SECTION_LIMIT_REACHED(
+            HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!"),
+    INVALID_STATUS_TRANSITION(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This status change is not allowed!");
 
     private final HttpStatus status;
     private final String message;

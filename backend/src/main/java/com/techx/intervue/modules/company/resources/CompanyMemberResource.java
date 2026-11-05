@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.company.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.techx.intervue.modules.company.enums.CompanyMemberRole;
 import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
 import java.time.Instant;
@@ -15,4 +16,17 @@ public record CompanyMemberResource(
         CompanyMemberRole role,
         CompanyMemberStatus status,
         Instant joinedAt,
-        boolean canPublish) {}
+        boolean canPublish,
+        boolean phoneVerified,
+        boolean userAgreementAccepted) {
+
+    @JsonProperty("fullName")
+    public String fullName() {
+        return name;
+    }
+
+    @JsonProperty("id")
+    public Long id() {
+        return userId;
+    }
+}

@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.user.services.impl;
 
 import com.techx.intervue.config.AuthConfig;
+import com.techx.intervue.modules.user.enums.AccountType;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
 import io.jsonwebtoken.Claims;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JwtService implements JwtServiceInterface {
+    private static final String ACCOUNT_TYPE_CLAIM = "typ";
+
     private final Long expirationTime;
     private final String issuer;
     private final SecretKey key;
@@ -25,12 +28,13 @@ public class JwtService implements JwtServiceInterface {
 
     // tạo ra jwt
     @Override
-    public String generateToken(Long userId) {
+    public String generateToken(Long accountId, AccountType accountType) {
         Date now = new Date();
         Date expiredAt = new Date(now.getTime() + expirationTime);
 
         return Jwts.builder()
-                .subject(userId.toString())
+                .subject(accountId.toString())
+                .claim(ACCOUNT_TYPE_CLAIM, accountType.name())
                 .claim("jti", UUID.randomUUID().toString())
                 .issuer(issuer)
                 .issuedAt(now)
@@ -57,6 +61,12 @@ public class JwtService implements JwtServiceInterface {
     @Override
     public Long extractSubject(String token) {
         return Long.valueOf(extractClaim(token, Claims::getSubject));
+    }
+
+    @Override
+    public AccountType extractAccountType(String token) {
+        String raw = extractAllClaims(token).get(ACCOUNT_TYPE_CLAIM, String.class);
+        return raw == null ? AccountType.USER : AccountType.valueOf(raw);
     }
 
     @Override

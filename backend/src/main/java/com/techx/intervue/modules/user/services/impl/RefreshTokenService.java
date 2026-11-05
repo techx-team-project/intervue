@@ -138,6 +138,9 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
     }
 
     private void checkIsRevoked(RefreshToken entity) {
+        if (entity.isRevoked() && entity.getReplacedByTokenId() == null) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
         if (entity.isRevoked()) {
             repository.revokeAllByUserId(entity.getUserId(), Instant.now(), "TOKEN_REUSE");
             userSessionCache.evict(entity.getUserId());

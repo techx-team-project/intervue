@@ -1,292 +1,83 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Award, Briefcase, Eye, FolderGit2, ShieldCheck, Sparkles } from 'lucide-react';
-import type { CandidateProfile } from '@/types/candidate';
-import CandidateHeroHeader from './CandidateHeroHeader';
-import CandidateAiScoreCard from './CandidateAiScoreCard';
-import CandidateAboutSection from './CandidateAboutSection';
-import CandidateExperienceSection from './CandidateExperienceSection';
-import CandidateSkillsSection from './CandidateSkillsSection';
-import CandidateProjectsSection from './CandidateProjectsSection';
-import CandidateEducationSection from './CandidateEducationSection';
-import CandidateCertificationsSection from './CandidateCertificationsSection';
-import CandidateJobPreferencesSidebar from './CandidateJobPreferencesSidebar';
-import CandidateAttachedCvSidebar from './CandidateAttachedCvSidebar';
-import CandidateActivityStatsSidebar from './CandidateActivityStatsSidebar';
-import CandidateEditModal from './CandidateEditModal';
-import CandidateShareModal from './CandidateShareModal';
+import Spinner from '@/components/common/Spinner';
 import Breadcrumb from '@/components/ui/Breadcrumb';
+import Button from '@/components/ui/Button';
+import { useCandidateProfile } from '@/hooks/useCandidateProfile';
+import { getErrorMessage } from '@/utils/error';
+import { FileText } from 'lucide-react';
+import { useState } from 'react';
+import CandidateAboutSection from './CandidateAboutSection';
+import CandidateCertificationSection from './CandidateCertificationSection';
+import CandidateComingSoonSection from './CandidateComingSoonSection';
+import CandidateEditModal from './CandidateEditModal';
+import CandidateEducationSection from './CandidateEducationSection';
+import CandidateExperienceSection from './CandidateExperienceSection';
+import CandidateHeroHeader from './CandidateHeroHeader';
+import CandidateJobPreferencesSidebar from './CandidateJobPreferencesSidebar';
+import CandidateLanguageSection from './CandidateLanguageSection';
+import CandidateProjectSection from './CandidateProjectSection';
+import CandidateSkillSection from './CandidateSkillSection';
 
-interface CandidateProfileViewProps {
-  initialCandidate: CandidateProfile;
-  initialIsOwner?: boolean;
-}
-
-export default function CandidateProfileView({ initialCandidate, initialIsOwner = true }: CandidateProfileViewProps) {
-  const [candidate, setCandidate] = useState<CandidateProfile>(initialCandidate);
-  const [isOwner, setIsOwner] = useState<boolean>(initialIsOwner);
+export default function CandidateProfileView() {
+  const { data: profile, isPending, isError, error, refetch, isRefetching } = useCandidateProfile();
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isShareOpen, setIsShareOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'experience' | 'skills_projects' | 'ai_assessment' | 'certifications'>(
-    'experience',
-  );
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const view = params.get('view');
-    if (view === 'guest' || view === 'visitor') {
-      const timer = setTimeout(() => setIsOwner(false), 0);
-      return () => clearTimeout(timer);
-    } else if (view === 'owner') {
-      const timer = setTimeout(() => setIsOwner(true), 0);
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  if (isPending) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
-  const handleToggleMode = () => {
-    const nextMode = !isOwner;
-    setIsOwner(nextMode);
-    if (typeof window !== 'undefined') {
-      const url = new URL(window.location.href);
-      if (nextMode) {
-        url.searchParams.delete('view');
-      } else {
-        url.searchParams.set('view', 'guest');
-      }
-      window.history.replaceState({}, '', url.toString());
-    }
-  };
+  if (isError) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
+        <p className="text-sm text-slate-600">{getErrorMessage(error)}</p>
+        <Button type="button" variant="outline" isLoading={isRefetching} onClick={() => refetch()}>
+          Try again
+        </Button>
+      </div>
+    );
+  }
 
-  const tabs = [
-    {
-      id: 'experience' as const,
-      label: 'Kinh nghiệm & Học vấn',
-      icon: Briefcase,
-      badge: `${candidate.experiences.length} nơi làm`,
-    },
-    {
-      id: 'skills_projects' as const,
-      label: 'Kỹ năng & Dự án',
-      icon: FolderGit2,
-      badge: `${candidate.projects.length} dự án`,
-    },
-    {
-      id: 'ai_assessment' as const,
-      label: 'Đánh giá InterVue AI',
-      icon: Sparkles,
-      highlight: `${candidate.aiScore.overallScore}/100`,
-    },
-    {
-      id: 'certifications' as const,
-      label: 'Chứng chỉ & Ngoại ngữ',
-      icon: Award,
-      badge: `${candidate.certifications.length + candidate.languages.length}`,
-    },
-  ];
-
-  const handleSaveProfile = (updated: Partial<CandidateProfile>) => {
-    setCandidate((prev) => ({
-      ...prev,
-      ...updated,
-    }));
-  };
+  const openEdit = () => setIsEditOpen(true);
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
       <div className="border-b border-slate-200 bg-white">
         <div className="container-topcv py-3">
-          <Breadcrumb items={[{ label: 'Ứng viên' }, { label: candidate.fullName }]} showHome className="text-xs" />
+          <Breadcrumb items={[{ label: 'Candidate' }, { label: 'My profile' }]} showHome className="text-xs" />
         </div>
       </div>
 
-      <div className="container-topcv pt-5">
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-2xs sm:px-4.5">
-          <div className="flex items-center gap-3">
-            <span
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white ${
-                isOwner ? 'bg-primary' : 'bg-blue-600'
-              }`}
-            >
-              {isOwner ? <ShieldCheck className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-            </span>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-slate-500">Chế độ xem:</span>
-                <span
-                  className={`rounded-md px-2 py-0.5 text-xs font-bold ${
-                    isOwner ? 'bg-emerald-50 text-emerald-700' : 'bg-blue-50 text-blue-700'
-                  }`}
-                >
-                  {isOwner ? 'Chủ sở hữu hồ sơ (Bạn)' : 'Khách / Nhà tuyển dụng xem'}
-                </span>
-              </div>
-              <p className="text-xs text-slate-600">
-                {isOwner
-                  ? 'Bạn có toàn quyền chỉnh sửa thông tin, thêm kinh nghiệm, quản lý CV và xem số liệu phân tích riêng tư.'
-                  : 'Chế độ khách: Chỉ hiển thị nội dung công khai, các nút chỉnh sửa & quyền quản lý đã được ẩn hoàn toàn.'}
-              </p>
-            </div>
-          </div>
+      <div className="container-topcv space-y-6 pt-5">
+        <CandidateHeroHeader profile={profile} onEdit={openEdit} />
 
-          <button
-            type="button"
-            onClick={handleToggleMode}
-            className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold shadow-2xs transition ${
-              isOwner
-                ? 'border border-slate-300 bg-slate-50 text-slate-700 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600'
-                : 'border-primary hover:bg-primary border bg-emerald-50 text-emerald-700 hover:text-white'
-            }`}
-          >
-            {isOwner ? (
-              <>
-                <Eye className="h-4 w-4 text-blue-600" />
-                <span>Xem với tư cách Khách</span>
-              </>
-            ) : (
-              <>
-                <ShieldCheck className="h-4 w-4" />
-                <span>Quay lại chế độ của Bạn (Chủ sở hữu)</span>
-              </>
-            )}
-          </button>
-        </div>
-
-        <CandidateHeroHeader
-          candidate={candidate}
-          isOwner={isOwner}
-          onEdit={() => setIsEditOpen(true)}
-          onShare={() => setIsShareOpen(true)}
-          onContact={() => alert(`Đã gửi yêu cầu phỏng vấn & tin nhắn tuyển dụng đến ${candidate.fullName}!`)}
-          onBookmark={() => alert(`Đã lưu hồ sơ của ${candidate.fullName} vào danh sách ứng viên tiềm năng!`)}
-        />
-
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-2">
-          <div className="flex flex-wrap items-center gap-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold whitespace-nowrap transition ${
-                    isActive
-                      ? 'text-primary bg-white shadow-xs ring-1 ring-slate-200'
-                      : 'text-slate-500 hover:bg-white/60 hover:text-slate-800'
-                  }`}
-                >
-                  <Icon className={`h-4 w-4 ${isActive ? 'text-primary' : 'text-slate-500'}`} />
-                  <span>{tab.label}</span>
-                  {tab.highlight ? (
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-                        isActive ? 'bg-primary text-white' : 'bg-emerald-100 text-emerald-800'
-                      }`}
-                    >
-                      {tab.highlight}
-                    </span>
-                  ) : (
-                    tab.badge && (
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-                          isActive ? 'text-primary bg-emerald-50' : 'bg-slate-100 text-slate-500'
-                        }`}
-                      >
-                        {tab.badge}
-                      </span>
-                    )
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="hidden text-xs text-slate-500 lg:block">
-            Cập nhật lần cuối: <strong className="text-slate-800">Hôm nay, 15:30</strong>
-          </div>
-        </div>
-
-        <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
           <div className="space-y-6 lg:col-span-8">
-            {activeTab === 'experience' && (
-              <div className="space-y-6">
-                <CandidateAboutSection bio={candidate.bio} isOwner={isOwner} onEdit={() => setIsEditOpen(true)} />
-                <CandidateExperienceSection
-                  experiences={candidate.experiences}
-                  isOwner={isOwner}
-                  onAddExperience={() => setIsEditOpen(true)}
-                />
-                <CandidateEducationSection
-                  educations={candidate.educations}
-                  isOwner={isOwner}
-                  onAddEducation={() => setIsEditOpen(true)}
-                />
-              </div>
-            )}
-
-            {activeTab === 'skills_projects' && (
-              <div className="space-y-6">
-                <CandidateSkillsSection
-                  skills={candidate.skills}
-                  isOwner={isOwner}
-                  onEditSkills={() => setIsEditOpen(true)}
-                />
-                <CandidateProjectsSection
-                  projects={candidate.projects}
-                  isOwner={isOwner}
-                  onAddProject={() => setIsEditOpen(true)}
-                />
-              </div>
-            )}
-
-            {activeTab === 'ai_assessment' && (
-              <div className="space-y-6">
-                <CandidateAiScoreCard aiScore={candidate.aiScore} />
-              </div>
-            )}
-
-            {activeTab === 'certifications' && (
-              <div className="space-y-6">
-                <CandidateCertificationsSection
-                  certifications={candidate.certifications}
-                  languages={candidate.languages}
-                  isOwner={isOwner}
-                  onAddCertification={() => setIsEditOpen(true)}
-                />
-              </div>
-            )}
+            <CandidateAboutSection bio={profile.bio} onEdit={openEdit} />
+            <CandidateExperienceSection items={profile.experiences} />
+            <CandidateEducationSection items={profile.educations} />
+            <CandidateSkillSection items={profile.skills} />
+            <CandidateProjectSection items={profile.projects} />
+            <CandidateCertificationSection items={profile.certifications} />
+            <CandidateLanguageSection items={profile.languages} />
           </div>
 
           <div className="space-y-6 lg:col-span-4">
-            <CandidateJobPreferencesSidebar
-              preferences={candidate.preferences}
-              isOwner={isOwner}
-              onEdit={() => setIsEditOpen(true)}
-            />
-
-            <CandidateAttachedCvSidebar resumes={candidate.resumes} isOwner={isOwner} />
-
-            <CandidateActivityStatsSidebar
-              stats={candidate.stats}
-              isOwner={isOwner}
-              candidateName={candidate.fullName}
-              onContact={() => alert(`Đã gửi yêu cầu kết nối & mời phỏng vấn đến ${candidate.fullName}!`)}
-              onBookmark={() => alert(`Đã lưu hồ sơ của ${candidate.fullName} vào danh sách theo dõi!`)}
+            <CandidateJobPreferencesSidebar profile={profile} onEdit={openEdit} />
+            <CandidateComingSoonSection
+              title="Attached CVs"
+              description="Upload and manage your CVs here soon."
+              icon={FileText}
             />
           </div>
         </div>
       </div>
 
-      <CandidateEditModal
-        candidate={candidate}
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
-        onSave={handleSaveProfile}
-      />
-
-      <CandidateShareModal fullName={candidate.fullName} isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
+      <CandidateEditModal profile={profile} isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} />
     </div>
   );
 }

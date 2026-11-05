@@ -33,7 +33,8 @@ public class AdminBusinessVerificationMapper {
                 .build();
     }
 
-    public AdminCompanyFactsResource toCompanyFacts(Company company, boolean profileComplete) {
+    public AdminCompanyFactsResource toCompanyFacts(
+            Company company, boolean profileComplete, int memberCount) {
         return AdminCompanyFactsResource.builder()
                 .id(company.getId())
                 .name(company.getName())
@@ -49,12 +50,21 @@ public class AdminBusinessVerificationMapper {
                 .verificationStatus(company.getVerificationStatus())
                 .verifiedAt(company.getVerifiedAt())
                 .profileComplete(profileComplete)
+                .memberCount(memberCount)
                 .createdAt(company.getCreatedAt())
                 .build();
     }
 
+    public AdminCompanyFactsResource toCompanyFacts(Company company, boolean profileComplete) {
+        return toCompanyFacts(company, profileComplete, 1);
+    }
+
     public CompanyMemberResource toMemberResource(
-            CompanyMember member, UserResource user, boolean canPublish) {
+            CompanyMember member,
+            UserResource user,
+            boolean canPublish,
+            boolean phoneVerified,
+            boolean userAgreementAccepted) {
         return CompanyMemberResource.builder()
                 .userId(member.getUserId())
                 .name(user == null ? null : user.name())
@@ -63,6 +73,14 @@ public class AdminBusinessVerificationMapper {
                 .status(member.getStatus())
                 .joinedAt(member.getJoinedAt())
                 .canPublish(canPublish)
+                .phoneVerified(phoneVerified)
+                .userAgreementAccepted(userAgreementAccepted)
                 .build();
+    }
+
+    public CompanyMemberResource toMemberResource(
+            CompanyMember member, UserResource user, boolean canPublish) {
+        return toMemberResource(
+                member, user, canPublish, user != null && user.phoneVerified(), false);
     }
 }

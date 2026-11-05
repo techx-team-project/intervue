@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.company.services.interfaces;
 
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.modules.company.requests.RevokeMembershipRequest;
 import com.techx.intervue.modules.company.requests.TransferCompanyOwnerRequest;
 import com.techx.intervue.modules.company.resources.CompanyMemberResource;
@@ -10,8 +11,8 @@ public interface CompanyAdminServiceInterface {
     List<CompanyMemberResource> findMembers(Long companyId);
 
     List<CompanyMemberResource> revokeMembership(
-            Long companyId, Long userId, RevokeMembershipRequest request, AdminActor actor);
+            Long companyId, Long userId, RevokeMembershipRequest request, RequestActor actor);
 
     List<CompanyMemberResource> transferOwner(
-            Long companyId, TransferCompanyOwnerRequest request, AdminActor actor);
+            Long companyId, TransferCompanyOwnerRequest request, RequestActor actor);
 }

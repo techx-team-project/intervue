@@ -5,6 +5,7 @@ import com.techx.intervue.common.audit.enums.AuditActorType;
 import com.techx.intervue.common.audit.enums.AuditTargetType;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.entities.CompanyMember;
@@ -19,7 +20,6 @@ import com.techx.intervue.modules.company.repositories.CompanyRepository;
 import com.techx.intervue.modules.company.requests.RevokeMembershipRequest;
 import com.techx.intervue.modules.company.requests.TransferCompanyOwnerRequest;
 import com.techx.intervue.modules.company.resources.CompanyMemberResource;
-import com.techx.intervue.modules.company.services.interfaces.AdminActor;
 import com.techx.intervue.modules.company.services.interfaces.CompanyAdminServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
 import com.techx.intervue.modules.user.resources.UserResource;
@@ -56,7 +56,7 @@ public class CompanyAdminService implements CompanyAdminServiceInterface {
     @Override
     @Transactional
     public List<CompanyMemberResource> revokeMembership(
-            Long companyId, Long userId, RevokeMembershipRequest request, AdminActor actor) {
+            Long companyId, Long userId, RevokeMembershipRequest request, RequestActor actor) {
         requireCompany(companyId);
         CompanyMember member =
                 companyMemberRepository
@@ -96,7 +96,7 @@ public class CompanyAdminService implements CompanyAdminServiceInterface {
     @Override
     @Transactional
     public List<CompanyMemberResource> transferOwner(
-            Long companyId, TransferCompanyOwnerRequest request, AdminActor actor) {
+            Long companyId, TransferCompanyOwnerRequest request, RequestActor actor) {
         requireCompany(companyId);
         List<CompanyMember> active =
                 companyMemberRepository.findByCompanyIdAndStatus(
@@ -170,7 +170,7 @@ public class CompanyAdminService implements CompanyAdminServiceInterface {
     }
 
     private void audit(
-            AdminActor actor,
+            RequestActor actor,
             AuditAction action,
             AuditTargetType targetType,
             Long targetId,
