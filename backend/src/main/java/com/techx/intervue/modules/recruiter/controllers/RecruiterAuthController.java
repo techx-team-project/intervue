@@ -71,6 +71,19 @@ public class RecruiterAuthController extends BaseController {
                 "Logged in successfully!");
     }
 
+    @PostMapping("/verify-2fa")
+    public ResponseEntity<ApiResource<RecruiterAuthResource>> verifyTwoFactor(
+            @Valid @RequestBody
+                    com.techx.intervue.modules.user.requests.TwoFactorChallengeRequest request,
+            HttpServletRequest httpRequest) {
+        return withSession(
+                recruiterAuthService.verifyTwoFactor(
+                        request,
+                        httpRequest.getHeader(HttpHeaders.USER_AGENT),
+                        IpHelper.getClientIp(httpRequest)),
+                "Two-factor authentication verified successfully!");
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<ApiResource<RecruiterAuthResource>> refresh(
             @CookieValue(name = CookieHelper.RECRUITER_REFRESH_TOKEN_COOKIE, required = false)
@@ -139,6 +152,12 @@ public class RecruiterAuthController extends BaseController {
 
     private ResponseEntity<ApiResource<RecruiterAuthResource>> withSession(
             RecruiterAuthResult result, String message) {
+        if (Boolean.TRUE.equals(result.requiresTwoFactor())) {
+            return ResponseEntity.ok(
+                    ApiResource.success(
+                            RecruiterAuthResource.challenge(result.tempToken()),
+                            "Two-factor authentication required."));
+        }
         String cookie =
                 CookieHelper.buildRecruiterRefreshTokenCookie(
                                 result.refreshToken(),

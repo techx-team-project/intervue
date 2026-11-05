@@ -10,6 +10,11 @@ public interface RecruiterAuthServiceInterface {
 
     RecruiterAuthResult login(LoginRequest request, String userAgent, String ip);
 
+    RecruiterAuthResult verifyTwoFactor(
+            com.techx.intervue.modules.user.requests.TwoFactorChallengeRequest request,
+            String userAgent,
+            String ip);
+
     RecruiterAuthResult refresh(String refreshToken, String userAgent, String ip);
 
     void logout(String accessToken, String refreshToken);

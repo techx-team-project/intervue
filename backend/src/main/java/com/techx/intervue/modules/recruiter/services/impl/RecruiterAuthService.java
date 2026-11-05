@@ -16,6 +16,7 @@ import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterRefresh
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterRefreshTokenServiceInterface.IssuedToken;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterRefreshTokenServiceInterface.RefreshResult;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterSessionCacheInterface;
+import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterTwoFactorServiceInterface;
 import com.techx.intervue.modules.user.enums.AccountType;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
@@ -46,6 +47,7 @@ public class RecruiterAuthService implements RecruiterAuthServiceInterface {
     private final RecruiterMapper recruiterMapper;
     private final RecruiterRefreshTokenServiceInterface refreshTokenService;
     private final RecruiterSessionCacheInterface sessionCache;
+    private final RecruiterTwoFactorServiceInterface recruiterTwoFactorService;
     private final LoginAttemptServiceInterface loginAttemptService;
     private final JwtServiceInterface jwtService;
     private final BlacklistServiceInterface blacklistService;
@@ -100,6 +102,46 @@ public class RecruiterAuthService implements RecruiterAuthServiceInterface {
 
         loginAttemptService.reset(attemptKey, ip);
         ensureSignInAllowed(recruiter);
+
+        if (recruiterTwoFactorService.isTwoFactorEnabled(recruiter.getId())) {
+            String tempToken =
+                    jwtService.generateTwoFactorTempToken(recruiter.getId(), AccountType.RECRUITER);
+            return RecruiterAuthResult.challenge(tempToken);
+        }
+
+        RecruiterAuthResult result = openSession(recruiter, userAgent, ip);
+        recruiterRepository.touchLastLogin(recruiter.getId(), Instant.now());
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public RecruiterAuthResult verifyTwoFactor(
+            com.techx.intervue.modules.user.requests.TwoFactorChallengeRequest request,
+            String userAgent,
+            String ip) {
+        Long recruiterId;
+        try {
+            String purpose =
+                    jwtService.extractAllClaims(request.tempToken()).get("purp", String.class);
+            if (!"2FA_PREAUTH".equals(purpose)) {
+                throw new AppException(ErrorCode.UNAUTHENTICATED);
+            }
+            recruiterId = jwtService.extractSubject(request.tempToken());
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        if (!recruiterTwoFactorService.verifyCodeOrRecoveryCode(recruiterId, request.code())) {
+            throw AppException.validation("code", "Invalid verification code or recovery code!");
+        }
+
+        Recruiter recruiter =
+                recruiterRepository
+                        .findById(recruiterId)
+                        .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        ensureSignInAllowed(recruiter);
+
         RecruiterAuthResult result = openSession(recruiter, userAgent, ip);
         recruiterRepository.touchLastLogin(recruiter.getId(), Instant.now());
         return result;
@@ -167,10 +209,12 @@ public class RecruiterAuthService implements RecruiterAuthServiceInterface {
     }
 
     private String grantAccess(Recruiter recruiter) {
+        int tokenVersion = recruiter.getTokenVersion() != null ? recruiter.getTokenVersion() : 1;
         sessionCache.set(
                 recruiter.getId(),
                 recruiter.getEmail(),
+                tokenVersion,
                 Duration.ofMillis(authConfig.getExpirationTime()));
-        return jwtService.generateToken(recruiter.getId(), AccountType.RECRUITER);
+        return jwtService.generateToken(recruiter.getId(), AccountType.RECRUITER, tokenVersion);
     }
 }

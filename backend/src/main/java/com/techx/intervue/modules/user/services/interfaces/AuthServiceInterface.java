@@ -9,6 +9,11 @@ public interface AuthServiceInterface {
 
     AuthResult login(LoginRequest request, String userAgent, String ip);
 
+    AuthResult verifyTwoFactor(
+            com.techx.intervue.modules.user.requests.TwoFactorChallengeRequest request,
+            String userAgent,
+            String ip);
+
     AuthResult refresh(String refreshToken);
 
     AuthResult refresh(String refreshToken, String userAgent, String ip);
