@@ -47,7 +47,11 @@ export function AdminBusinessDocumentViewer({
   const [blobType, setBlobType] = useState<'pdf' | 'image' | 'unknown'>('unknown');
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
 
-  const effectiveTotalPages = document.identityStoragePublicId ? 2 : totalPages;
+  const effectiveTotalPages = document.identityBackStoragePublicId
+    ? 3
+    : document.identityStoragePublicId
+      ? 2
+      : totalPages;
   const currentKey = `${document.id}-${currentPage}`;
   const isLoadingBlob = loadedKey !== currentKey;
 
@@ -55,10 +59,12 @@ export function AdminBusinessDocumentViewer({
     let cancelled = false;
     let url: string | null = null;
 
-    const fetcher =
-      currentPage === 2 && document.identityStoragePublicId
-        ? adminBusinessVerificationApi.viewIdentityBlob(document.id)
-        : adminBusinessVerificationApi.viewDocumentBlob(document.id);
+    let fetcher = adminBusinessVerificationApi.viewDocumentBlob(document.id);
+    if (currentPage === 2 && document.identityStoragePublicId) {
+      fetcher = adminBusinessVerificationApi.viewIdentityBlob(document.id);
+    } else if (currentPage === 3 && document.identityBackStoragePublicId) {
+      fetcher = adminBusinessVerificationApi.viewIdentityBackBlob(document.id);
+    }
 
     fetcher
       .then((blob) => {
@@ -86,7 +92,7 @@ export function AdminBusinessDocumentViewer({
       cancelled = true;
       if (url) URL.revokeObjectURL(url);
     };
-  }, [document.id, currentPage, document.identityStoragePublicId, currentKey]);
+  }, [document.id, currentPage, document.identityStoragePublicId, document.identityBackStoragePublicId, currentKey]);
 
   const isErc = document.documentType === 'BUSINESS_LICENSE';
   const defaultScan = isErc ? '/images/recruiter/illustration-erc.png' : '/images/recruiter/illustration-loa.png';
@@ -116,14 +122,30 @@ export function AdminBusinessDocumentViewer({
           <div className="space-y-0.5">
             <p
               className="dark:text-forest-100 max-w-[240px] truncate text-xs font-semibold text-slate-800 sm:max-w-[320px]"
-              title={currentPage === 2 ? document.identityFileName || 'Citizen_ID.png' : document.originalFileName}
+              title={
+                currentPage === 3
+                  ? document.identityBackFileName || 'Citizen_ID_Back.png'
+                  : currentPage === 2
+                    ? document.identityFileName || 'Citizen_ID_Front.png'
+                    : document.originalFileName
+              }
             >
-              {currentPage === 2 ? document.identityFileName || 'Citizen ID / CCCD' : document.originalFileName}
+              {currentPage === 3
+                ? document.identityBackFileName || 'Citizen ID Back / CCCD Mặt sau'
+                : currentPage === 2
+                  ? document.identityFileName || 'Citizen ID Front / CCCD Mặt trước'
+                  : document.originalFileName}
             </p>
             <p className="dark:text-forest-400 text-[11px] text-slate-400">
               {(document.fileSizeBytes / (1024 * 1024)).toFixed(2)} MB ·{' '}
-              {currentPage === 2 ? 'Citizen ID (CCCD)' : isErc ? 'License (ERC)' : 'Authorization (LOA)'} · Page{' '}
-              {currentPage}/{effectiveTotalPages}
+              {currentPage === 3
+                ? 'Citizen ID Back (CCCD Mặt sau)'
+                : currentPage === 2
+                  ? 'Citizen ID Front (CCCD Mặt trước)'
+                  : isErc
+                    ? 'License (ERC)'
+                    : 'Authorization (LOA)'}{' '}
+              · Page {currentPage}/{effectiveTotalPages}
             </p>
           </div>
         </div>

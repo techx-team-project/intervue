@@ -3,6 +3,7 @@ import type { Page } from '@/types/api';
 import type {
   AdminBusinessVerificationDetailResource,
   AdminBusinessVerificationListResource,
+  AdminCompanyAgreementResource,
   BusinessDocumentType,
   BusinessVerificationSummaryResource,
   CompanyMemberResource,
@@ -50,12 +51,17 @@ export const adminBusinessVerificationApi = {
       responseType: 'blob',
     }),
 
+  viewIdentityBackBlob: (documentId: number) =>
+    request<Blob>(`/admin/business-verification/${documentId}/identity-back/view`, {
+      responseType: 'blob',
+    }),
+
   searchAgreements: (status?: string, page = 0, size = 10) => {
     const qs = new URLSearchParams();
     if (status) qs.set('status', status);
     qs.set('page', String(page));
     qs.set('size', String(size));
-    return request<Page<unknown>>(`/admin/business-verification/agreements?${qs.toString()}`);
+    return request<Page<AdminCompanyAgreementResource>>(`/admin/business-verification/agreements?${qs.toString()}`);
   },
 
   viewAgreementBlob: (agreementId: number) =>

@@ -22,4 +22,6 @@ public record BusinessDocumentResource(
         Instant expiresAt,
         String storagePublicId,
         String identityStoragePublicId,
-        String identityFileName) {}
+        String identityFileName,
+        String identityBackStoragePublicId,
+        String identityBackFileName) {}

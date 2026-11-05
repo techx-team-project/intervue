@@ -86,7 +86,9 @@ export function useCompanyVerification() {
       3: 'Level 3: Verified Enterprise',
     };
 
-    const latestDoc = documents[0] || null;
+    const myDoc = documents.find((d) => d.submittedByMe) || null;
+    const companyLicense = documents.find((d) => d.documentType === 'BUSINESS_LICENSE') || null;
+    const effectiveDoc = myDoc || (company?.myRole === 'OWNER' ? companyLicense : null);
     const phoneStep = profileResource?.steps.find((s) => s.stepId === 'PHONE');
     const licenseStep = profileResource?.steps.find((s) => s.stepId === 'LICENSE');
     const candidateAgreementStep = profileResource?.steps.find((s) => s.stepId === 'CANDIDATE_AGREEMENT');
@@ -130,27 +132,41 @@ export function useCompanyVerification() {
         verifiedAt: phoneStep?.completedAt,
       },
       license: {
-        status: latestDoc ? latestDoc.reviewStatus : licenseStep?.status === 'APPROVED' ? 'APPROVED' : 'NOT_SUBMITTED',
-        documentType: latestDoc?.documentType,
-        fileName: latestDoc?.originalFileName,
-        fileSize: latestDoc ? `${(latestDoc.fileSizeBytes / (1024 * 1024)).toFixed(1)} MB` : undefined,
-        submittedAt: latestDoc?.submittedAt,
-        reviewedAt: latestDoc?.reviewedAt,
-        reviewReason: latestDoc?.reviewReason || licenseStep?.reviewReason,
-        expiresAt: latestDoc?.expiresAt || licenseStep?.expiresAt,
-        documentId: latestDoc?.id,
+        status: effectiveDoc
+          ? effectiveDoc.reviewStatus
+          : licenseStep?.status === 'APPROVED'
+            ? 'APPROVED'
+            : 'NOT_SUBMITTED',
+        documentType: effectiveDoc?.documentType,
+        fileName: effectiveDoc?.originalFileName,
+        fileSize: effectiveDoc ? `${(effectiveDoc.fileSizeBytes / (1024 * 1024)).toFixed(1)} MB` : undefined,
+        submittedAt: effectiveDoc?.submittedAt,
+        reviewedAt: effectiveDoc?.reviewedAt,
+        reviewReason: effectiveDoc?.reviewReason || licenseStep?.reviewReason,
+        expiresAt: effectiveDoc?.expiresAt || licenseStep?.expiresAt,
+        documentId: effectiveDoc?.id,
+        identityFileName: effectiveDoc?.identityFileName,
+        identityBackFileName: effectiveDoc?.identityBackFileName,
+        hasIdentity: Boolean(effectiveDoc?.identityStoragePublicId),
+        hasIdentityBack: Boolean(effectiveDoc?.identityBackStoragePublicId),
       },
       candidateAgreement: {
         status:
-          candidateAgreementStep?.status === 'APPROVED'
+          candidateAgreementStep?.status === 'APPROVED' ||
+          (candidateAgreementStep?.status === 'ACTION_REQUIRED' && Boolean(candidateAgreementStep?.completedAt))
             ? 'APPROVED'
             : candidateAgreementStep?.status || 'NOT_SUBMITTED',
         agreedAt: candidateAgreementStep?.completedAt,
+        reviewReason: candidateAgreementStep?.reviewReason,
       },
       platformAgreement: {
         status:
-          platformAgreementStep?.status === 'APPROVED' ? 'APPROVED' : platformAgreementStep?.status || 'NOT_SUBMITTED',
+          platformAgreementStep?.status === 'APPROVED' ||
+          (platformAgreementStep?.status === 'ACTION_REQUIRED' && Boolean(platformAgreementStep?.completedAt))
+            ? 'APPROVED'
+            : platformAgreementStep?.status || 'NOT_SUBMITTED',
         agreedAt: platformAgreementStep?.completedAt,
+        reviewReason: platformAgreementStep?.reviewReason,
       },
       checklist,
       nextStepLabel,
@@ -216,8 +232,18 @@ export function useCompanyVerification() {
   }, [reload]);
 
   const handleSubmitLicense = useCallback(
-    async (params: { documentType: BusinessDocumentType; file: File; identityFile?: File | null }) => {
-      const doc = await recruiterCompanyApi.submitDocument(params.documentType, params.file, params.identityFile);
+    async (params: {
+      documentType: BusinessDocumentType;
+      file: File;
+      identityFile?: File | null;
+      identityBackFile?: File | null;
+    }) => {
+      const doc = await recruiterCompanyApi.submitDocument(
+        params.documentType,
+        params.file,
+        params.identityFile,
+        params.identityBackFile,
+      );
       toast.success('Document uploaded successfully! It is now under review.');
       reload();
       return doc;

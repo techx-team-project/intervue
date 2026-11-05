@@ -18,6 +18,29 @@ export type CompanyMemberStatus = 'ACTIVE' | 'LEFT' | 'REVOKED';
 
 export type AgreementType = 'CANDIDATE_DATA' | 'PLATFORM_DATA';
 
+export type AgreementScope = 'COMPANY' | 'USER';
+
+export type AgreementAcceptanceMode = 'STANDARD_TEMPLATE' | 'CUSTOM_UPLOAD';
+
+export type AgreementStatus = 'ACCEPTED' | 'PENDING_REVIEW' | 'REJECTED';
+
+export interface AdminCompanyAgreementResource {
+  id: number;
+  scope: AgreementScope;
+  companyId: number;
+  companyName: string;
+  companyTaxCode: string;
+  signedByUserId: number;
+  signedByName?: string | null;
+  signedByEmail?: string | null;
+  agreementType: AgreementType;
+  acceptanceMode: AgreementAcceptanceMode;
+  version: string;
+  status: AgreementStatus;
+  acceptedAt: string;
+  storagePublicId?: string | null;
+}
+
 export interface VerificationStepResource {
   stepId: VerificationStepId;
   status: VerificationStepStatus;
@@ -113,6 +136,8 @@ export interface BusinessDocumentResource {
   storagePublicId?: string;
   identityStoragePublicId?: string;
   identityFileName?: string;
+  identityBackStoragePublicId?: string;
+  identityBackFileName?: string;
 }
 
 export interface SaveCompanyProfileRequest {
@@ -219,16 +244,22 @@ export interface BusinessLicenseState {
   reviewReason?: string;
   expiresAt?: string;
   documentId?: number;
+  identityFileName?: string;
+  identityBackFileName?: string;
+  hasIdentity?: boolean;
+  hasIdentityBack?: boolean;
 }
 
 export interface CandidateAgreementState {
   status: VerificationStepStatus | 'NOT_SUBMITTED';
   agreedAt?: string;
+  reviewReason?: string;
 }
 
 export interface PlatformAgreementState {
   status: VerificationStepStatus | 'NOT_SUBMITTED';
   agreedAt?: string;
+  reviewReason?: string;
 }
 
 export interface VerificationChecklistItem {

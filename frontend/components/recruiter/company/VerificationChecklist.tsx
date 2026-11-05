@@ -90,6 +90,24 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
           </div>
         </div>
 
+        {/* Verification Success Callout */}
+        {profile.canPublish && (
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 text-emerald-950 shadow-2xs">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#00b14f]" />
+              <div className="space-y-0.5">
+                <p className="text-sm font-bold text-emerald-950">
+                  Verification Complete — Level 3 Verified Enterprise
+                </p>
+                <p className="text-xs text-emerald-800">
+                  Your business credentials and data protection agreements have been fully verified. You have full job
+                  posting privileges across the platform.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Blocked Reason Callout */}
         {blockedNotice && !profile.canPublish && (
           <div className="rounded-xl border border-amber-200 bg-amber-50/80 p-4 text-amber-900">

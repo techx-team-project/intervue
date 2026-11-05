@@ -88,6 +88,18 @@ public class AdminBusinessVerificationController extends BaseController {
                 .body(content.bytes());
     }
 
+    @GetMapping("/{documentId}/identity-back/view")
+    public ResponseEntity<byte[]> viewIdentityBackDocument(@PathVariable Long documentId) {
+        StoredDocumentContent content =
+                verificationAdminService.readIdentityBackDocument(documentId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(content.contentType()))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.inline().filename(content.fileName()).build().toString())
+                .body(content.bytes());
+    }
+
     @GetMapping("/agreements")
     public ResponseEntity<ApiResource<PageResource<AdminCompanyAgreementResource>>>
             searchAgreements(

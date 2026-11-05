@@ -161,15 +161,36 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     }
 
     @Override
+    public StoredDocumentContent readIdentityBackDocument(Long documentId) {
+        BusinessDocument document = requireDocument(documentId);
+        if (document.getIdentityBackStoragePublicId() == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return new StoredDocumentContent(
+                document.getIdentityBackFileName() == null
+                        ? "identity_card_back.png"
+                        : document.getIdentityBackFileName(),
+                "image/png",
+                storageService.fetchDocument(
+                        document.getIdentityBackStoragePublicId(),
+                        StorageTarget.IDENTITY_DOCUMENT));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Page<AdminCompanyAgreementResource> searchAgreements(
             AgreementStatus status, Pageable pageable) {
         Page<CompanyAgreement> page =
                 status == null
-                        ? companyAgreementRepository.findByAcceptanceMode(
-                                AgreementAcceptanceMode.CUSTOM_UPLOAD, pageable)
-                        : companyAgreementRepository.findByAcceptanceModeAndStatus(
-                                AgreementAcceptanceMode.CUSTOM_UPLOAD, status, pageable);
+                        ? companyAgreementRepository.findByScopeAndAcceptanceMode(
+                                AgreementScope.COMPANY,
+                                AgreementAcceptanceMode.CUSTOM_UPLOAD,
+                                pageable)
+                        : companyAgreementRepository.findByScopeAndAcceptanceModeAndStatus(
+                                AgreementScope.COMPANY,
+                                AgreementAcceptanceMode.CUSTOM_UPLOAD,
+                                status,
+                                pageable);
 
         Map<Long, UserResource> signers =
                 usersById(page.getContent().stream().map(CompanyAgreement::getSignedBy).toList());
@@ -228,6 +249,19 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
         agreement.setStatus(AgreementStatus.ACCEPTED);
         companyAgreementRepository.save(agreement);
 
+        if (agreement.getScope() == AgreementScope.COMPANY && agreement.getSignedBy() != null) {
+            companyAgreementRepository
+                    .findFirstByUserIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
+                            agreement.getSignedBy(),
+                            AgreementScope.USER,
+                            agreement.getAgreementType())
+                    .ifPresent(
+                            userAgreement -> {
+                                userAgreement.setStatus(AgreementStatus.ACCEPTED);
+                                companyAgreementRepository.save(userAgreement);
+                            });
+        }
+
         audit(
                 actor,
                 AuditAction.AGREEMENT_ACCEPTED,
@@ -247,6 +281,19 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         agreement.setStatus(AgreementStatus.REJECTED);
         companyAgreementRepository.save(agreement);
+
+        if (agreement.getScope() == AgreementScope.COMPANY && agreement.getSignedBy() != null) {
+            companyAgreementRepository
+                    .findFirstByUserIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
+                            agreement.getSignedBy(),
+                            AgreementScope.USER,
+                            agreement.getAgreementType())
+                    .ifPresent(
+                            userAgreement -> {
+                                userAgreement.setStatus(AgreementStatus.REJECTED);
+                                companyAgreementRepository.save(userAgreement);
+                            });
+        }
 
         audit(
                 actor,
