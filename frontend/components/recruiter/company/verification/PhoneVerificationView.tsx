@@ -1,10 +1,8 @@
 'use client';
 
-import { phoneVerificationApi } from '@/apiRequest/phone-verification';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { ROUTES } from '@/constants/routes';
 import { useCompanyVerification } from '@/hooks/useCompanyVerification';
-import { isApiError } from '@/lib/api-error';
 import { useAuthStore } from '@/store/auth.store';
 import { CheckCircle2, Headphones, Phone, ShieldCheck, TrendingUp } from 'lucide-react';
 import Image from 'next/image';
@@ -24,34 +22,18 @@ export function PhoneVerificationView() {
   const [inputPhone, setInputPhone] = useState<string | null>(null);
   const phoneNumber = inputPhone !== null ? inputPhone : serverPhone;
 
-  const [isSending, setIsSending] = useState(false);
-
   // Modal states: Initial verification vs. Change existing phone
   const [isInitialModalOpen, setIsInitialModalOpen] = useState(false);
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
 
-  // Click "Send verification code" -> dispatches OTP to live backend and opens modal on success
-  const handleInitiateVerification = async () => {
+  // Click "Send verification code" -> validates input and opens Step-up confirmation modal
+  const handleInitiateVerification = () => {
     const trimmed = phoneNumber.trim();
     if (!trimmed || !VIETNAM_MOBILE_REGEX.test(trimmed)) {
       toast.error('Please enter a valid 10-digit Vietnamese mobile number (e.g. 0901234567).');
       return;
     }
-
-    setIsSending(true);
-    try {
-      await phoneVerificationApi.sendOtp(trimmed);
-      toast.success(`Verification code sent to ${trimmed}!`);
-      setIsInitialModalOpen(true);
-    } catch (err) {
-      if (isApiError(err)) {
-        toast.error(err.message || 'Could not send verification code.');
-      } else {
-        toast.error('Failed to send verification code. Please try again.');
-      }
-    } finally {
-      setIsSending(false);
-    }
+    setIsInitialModalOpen(true);
   };
 
   const handleInitialSuccess = (verifiedPhone: string) => {
@@ -153,25 +135,16 @@ export function PhoneVerificationView() {
                     }
                   }}
                   placeholder="e.g. 0912345678"
-                  disabled={isSending}
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white pr-4 pl-10 text-sm text-slate-900 placeholder-slate-400 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none disabled:bg-slate-50"
+                  className="h-11 w-full rounded-md border border-slate-300 bg-white pr-4 pl-10 text-sm text-slate-900 placeholder-slate-400 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none"
                 />
               </div>
 
               <button
                 type="button"
                 onClick={handleInitiateVerification}
-                disabled={isSending}
-                className="flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md bg-[#00b14f] px-6 text-sm font-medium text-white shadow-2xs transition hover:bg-emerald-600 active:scale-98 disabled:opacity-60"
+                className="flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md bg-[#00b14f] px-6 text-sm font-medium text-white shadow-2xs transition hover:bg-emerald-600 active:scale-98"
               >
-                {isSending ? (
-                  <>
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                    <span>Sending code...</span>
-                  </>
-                ) : (
-                  'Send verification code'
-                )}
+                Send verification code
               </button>
             </div>
           </div>
