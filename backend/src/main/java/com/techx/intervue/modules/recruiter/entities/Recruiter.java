@@ -43,6 +43,10 @@ public class Recruiter extends BaseEntity {
     @Builder.Default
     private RecruiterStatus status = RecruiterStatus.ACTIVE;
 
+    @Column(name = "token_version", nullable = false)
+    @Builder.Default
+    private Integer tokenVersion = 1;
+
     @Column(unique = true, length = 20)
     private String phone;
 

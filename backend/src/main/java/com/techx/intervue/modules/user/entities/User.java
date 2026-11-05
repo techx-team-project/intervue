@@ -57,6 +57,10 @@ public class User {
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
+    @Column(name = "token_version", nullable = false)
+    @Builder.Default
+    private Integer tokenVersion = 1;
+
     @Column(unique = true)
     private String phone;
 
@@ -103,6 +107,10 @@ public class User {
                 .filter(UserRole::isActive)
                 .map(userRole -> userRole.getRole().getName())
                 .collect(Collectors.toSet());
+    }
+
+    public boolean hasRole(RoleType roleType) {
+        return activeRoleTypes().contains(roleType);
     }
 
     public boolean isEmailVerified() {
