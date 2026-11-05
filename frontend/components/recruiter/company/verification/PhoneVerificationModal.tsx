@@ -1,8 +1,10 @@
 'use client';
 
+import { accountSecurityApiFor } from '@/apiRequest/account-security';
 import { authApi } from '@/apiRequest/auth';
-import { phoneVerificationApi } from '@/apiRequest/phone-verification';
+import { recruiterAuthApi } from '@/apiRequest/recruiter-auth';
 import { isApiError } from '@/lib/api-error';
+import { isRecruiterPortal } from '@/lib/auth-portal';
 import { useAuthStore } from '@/store/auth.store';
 import { ArrowLeft, CheckCircle2, Eye, EyeOff, Headphones, Lock, Mail, Phone, ShieldCheck, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -125,7 +127,9 @@ function PhoneVerificationModalDialog({
     const currentUser = useAuthStore.getState().user;
     if (currentUser?.email) {
       try {
-        const session = await authApi.login({ email: currentUser.email, password: trimmedPw });
+        const session = isRecruiterPortal()
+          ? await recruiterAuthApi.login({ email: currentUser.email, password: trimmedPw })
+          : await authApi.login({ email: currentUser.email, password: trimmedPw });
         if (session) {
           useAuthStore.getState().setSession(session);
         }
@@ -141,8 +145,9 @@ function PhoneVerificationModalDialog({
     }
 
     // 2. Dispatch live SMS verification code to backend
+    const api = accountSecurityApiFor(isRecruiterPortal() ? 'recruiter' : 'candidate');
     try {
-      await phoneVerificationApi.sendOtp(targetPhone);
+      await api.sendPhoneOtp(targetPhone);
       setStep('OTP');
       setCountdown(60);
       setOtpDigits(['', '', '', '', '', '']);
@@ -167,8 +172,9 @@ function PhoneVerificationModalDialog({
   const handleResendOtp = async () => {
     if (countdown > 0 || isResending) return;
     setIsResending(true);
+    const api = accountSecurityApiFor(isRecruiterPortal() ? 'recruiter' : 'candidate');
     try {
-      await phoneVerificationApi.sendOtp(targetPhone);
+      await api.sendPhoneOtp(targetPhone);
       setCountdown(60);
       setOtpDigits(['', '', '', '', '', '']);
       setOtpError(null);
@@ -234,11 +240,15 @@ function PhoneVerificationModalDialog({
 
     setIsVerifyingOtp(true);
     setOtpError(null);
+    const api = accountSecurityApiFor(isRecruiterPortal() ? 'recruiter' : 'candidate');
     try {
-      const updatedUser = await phoneVerificationApi.verifyOtp(code);
+      const patch = await api.verifyPhoneOtp(code);
       const store = useAuthStore.getState();
-      if (store.accessToken && updatedUser) {
-        store.setSession({ accessToken: store.accessToken, user: updatedUser });
+      if (store.accessToken && store.user) {
+        store.setSession({
+          accessToken: store.accessToken,
+          user: { ...store.user, ...patch, phone: targetPhone, phoneVerified: true },
+        });
       }
       toast.success(
         mode === 'CHANGE'
