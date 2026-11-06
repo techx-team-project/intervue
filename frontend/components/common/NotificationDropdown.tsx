@@ -1,49 +1,72 @@
 'use client';
 
-import { ROUTES } from '@/constants/routes';
+import {
+  isVietnameseRealm,
+  notificationCopy,
+  notificationTabLabel,
+  notificationTabsFor,
+} from '@/constants/notification';
 import { useNotifications } from '@/hooks/useNotifications';
-import type { NotificationCategory, NotificationTarget } from '@/types/notification';
-import { ArrowRight, CheckCheck, Filter, RotateCcw, Sparkles } from 'lucide-react';
+import type { NotificationRealm } from '@/types/notification';
+import { formatNotificationDate, groupByDate } from '@/utils/notification';
+import { AlertTriangle, ArrowRight, CheckCheck, Filter, RotateCcw, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface NotificationDropdownProps {
-  target: NotificationTarget;
+  realm: NotificationRealm;
+  baseRoute: string;
   isOpen: boolean;
   onClose: () => void;
   className?: string;
 }
 
-const CATEGORY_TABS: { key: NotificationCategory; label: string }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'jobs', label: 'Jobs' },
-  { key: 'applications', label: 'Applications' },
-  { key: 'connections', label: 'Connect' },
-  { key: 'system', label: 'System' },
-];
-
 type TimeRangeOption = '7days' | '30days' | '60days' | 'custom';
 
-export default function NotificationDropdown({ target, isOpen, onClose, className }: NotificationDropdownProps) {
+const PRESET_DAYS: Record<Exclude<TimeRangeOption, 'custom'>, number> = {
+  '7days': 7,
+  '30days': 30,
+  '60days': 60,
+};
+
+const DROPDOWN_PAGE_SIZE = 20;
+
+export default function NotificationDropdown({
+  realm,
+  baseRoute,
+  isOpen,
+  onClose,
+  className,
+}: NotificationDropdownProps) {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Time filter state (matching TopCV)
   const [isTimeFilterOpen, setIsTimeFilterOpen] = useState(false);
   const [selectedTimeOption, setSelectedTimeOption] = useState<TimeRangeOption | null>(null);
-  const [appliedTimeFilter, setAppliedTimeFilter] = useState<TimeRangeOption | null>(null);
-  const [filterReferenceTime, setFilterReferenceTime] = useState(0);
   const [customFrom, setCustomFrom] = useState('');
   const [customTo, setCustomTo] = useState('');
-  const [appliedCustomFrom, setAppliedCustomFrom] = useState('');
-  const [appliedCustomTo, setAppliedCustomTo] = useState('');
 
-  const { filteredNotifications, activeCategory, setActiveCategory, markAsRead, markAllAsRead } =
-    useNotifications(target);
+  const {
+    notifications,
+    activeCategory,
+    setActiveCategory,
+    timeRange,
+    setTimeRange,
+    markAsRead,
+    markAllAsRead,
+    markAllSeen,
+    isLoading,
+    isError,
+    refetch,
+  } = useNotifications(realm, DROPDOWN_PAGE_SIZE);
 
-  // Close when clicking outside
+  useEffect(() => {
+    if (!isOpen) return;
+    markAllSeen();
+  }, [isOpen, markAllSeen]);
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -57,67 +80,42 @@ export default function NotificationDropdown({ target, isOpen, onClose, classNam
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen, onClose]);
 
-  // Apply time filtering to notifications
-  const timeFilteredNotifications = useMemo(() => {
-    if (!appliedTimeFilter) return filteredNotifications;
-
-    const referenceNow = filterReferenceTime || 1793274600000;
-    return filteredNotifications.filter((n) => {
-      const itemTime = new Date(n.createdAt).getTime();
-      if (Number.isNaN(itemTime)) return true;
-
-      if (appliedTimeFilter === '7days') {
-        return referenceNow - itemTime <= 7 * 24 * 60 * 60 * 1000;
-      }
-      if (appliedTimeFilter === '30days') {
-        return referenceNow - itemTime <= 30 * 24 * 60 * 60 * 1000;
-      }
-      if (appliedTimeFilter === '60days') {
-        return referenceNow - itemTime <= 60 * 24 * 60 * 60 * 1000;
-      }
-      if (appliedTimeFilter === 'custom') {
-        const fromTime = appliedCustomFrom ? new Date(appliedCustomFrom).getTime() : 0;
-        const toTime = appliedCustomTo ? new Date(appliedCustomTo + 'T23:59:59Z').getTime() : Infinity;
-        return itemTime >= fromTime && itemTime <= toTime;
-      }
-      return true;
-    });
-  }, [filteredNotifications, appliedTimeFilter, filterReferenceTime, appliedCustomFrom, appliedCustomTo]);
-
   if (!isOpen) return null;
 
-  const viewAllRoute = target === 'admin' ? ROUTES.ADMIN_NOTIFICATIONS : ROUTES.RECRUITER_NOTIFICATIONS;
+  const tabs = notificationTabsFor(realm);
+  const copy = notificationCopy(realm);
+  const vi = isVietnameseRealm(realm);
+  const isFilterActive = Boolean(timeRange.from || timeRange.to);
 
-  const handleItemClick = (id: string) => {
+  const handleItemClick = (id: number) => {
     markAsRead(id);
     onClose();
-    const detailRoute = target === 'admin' ? `/admin/notifications/${id}` : `/recruiter/notifications/${id}`;
-    router.push(detailRoute);
+    router.push(`${baseRoute}/${id}`);
   };
 
   const handleApplyTimeFilter = () => {
-    setAppliedTimeFilter(selectedTimeOption);
-    setFilterReferenceTime(Date.now());
-    setAppliedCustomFrom(customFrom);
-    setAppliedCustomTo(customTo);
+    if (selectedTimeOption === 'custom') {
+      setTimeRange({
+        from: customFrom ? new Date(`${customFrom}T00:00:00`).toISOString() : undefined,
+        to: customTo ? new Date(`${customTo}T23:59:59`).toISOString() : undefined,
+      });
+    } else if (selectedTimeOption) {
+      const since = new Date();
+      since.setDate(since.getDate() - PRESET_DAYS[selectedTimeOption]);
+      setTimeRange({ from: since.toISOString() });
+    }
     setIsTimeFilterOpen(false);
   };
 
   const handleResetTimeFilter = () => {
     setSelectedTimeOption(null);
-    setAppliedTimeFilter(null);
-    setFilterReferenceTime(0);
     setCustomFrom('');
     setCustomTo('');
-    setAppliedCustomFrom('');
-    setAppliedCustomTo('');
+    setTimeRange({});
     setIsTimeFilterOpen(false);
   };
 
-  // Group notifications by displayDate
-  const groupedDates = Array.from(new Set(timeFilteredNotifications.map((n) => n.displayDate)));
-
-  const isFilterActive = Boolean(appliedTimeFilter);
+  const grouped = groupByDate(notifications);
 
   return (
     <div
@@ -126,12 +124,10 @@ export default function NotificationDropdown({ target, isOpen, onClose, classNam
         className || ''
       }`}
     >
-      {/* Header */}
       <div className="dark:border-forest-800 dark:bg-forest-900 flex items-center justify-between border-b border-slate-100 bg-white px-4 py-3.5">
         <h3 className="dark:text-forest-50 text-base font-bold text-slate-900">Notifications</h3>
 
         <div className="flex items-center gap-1.5">
-          {/* Time filter toggle icon matching TopCV */}
           <button
             type="button"
             onClick={() => setIsTimeFilterOpen((prev) => !prev)}
@@ -146,10 +142,9 @@ export default function NotificationDropdown({ target, isOpen, onClose, classNam
             <Filter className="h-4 w-4" />
           </button>
 
-          {/* Mark all as read icon */}
           <button
             type="button"
-            onClick={markAllAsRead}
+            onClick={() => markAllAsRead()}
             title="Mark all as read"
             aria-label="Mark all as read"
             className="dark:text-forest-400 dark:hover:bg-forest-850 flex items-center gap-1 rounded-full p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-[#00b14f] dark:hover:text-emerald-400"
@@ -159,12 +154,10 @@ export default function NotificationDropdown({ target, isOpen, onClose, classNam
         </div>
       </div>
 
-      {/* Expanded Time Filter Panel (matching TopCV Image) */}
       {isTimeFilterOpen && (
         <div className="dark:border-forest-800 dark:bg-forest-900 animate-in fade-in-0 slide-in-from-top-2 border-b border-slate-100 bg-white p-4 duration-150">
           <p className="dark:text-forest-100 text-xs font-bold text-slate-900 sm:text-sm">Filter by time</p>
 
-          {/* Preset Chips */}
           <div className="mt-3 flex flex-wrap gap-2">
             {[
               { key: '7days', label: 'Last 7 days' },
@@ -190,7 +183,6 @@ export default function NotificationDropdown({ target, isOpen, onClose, classNam
             })}
           </div>
 
-          {/* Custom Date Inputs */}
           {selectedTimeOption === 'custom' && (
             <div className="mt-3 flex items-center gap-2 pt-1 text-xs">
               <div className="flex-1">
@@ -200,7 +192,7 @@ export default function NotificationDropdown({ target, isOpen, onClose, classNam
                 <input
                   type="date"
                   value={customFrom}
-                  onChange={(e) => setCustomFrom(e.target.value)}
+                  onChange={(event) => setCustomFrom(event.target.value)}
                   className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-100 w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:border-[#00b14f] focus:outline-none"
                 />
               </div>
@@ -209,14 +201,13 @@ export default function NotificationDropdown({ target, isOpen, onClose, classNam
                 <input
                   type="date"
                   value={customTo}
-                  onChange={(e) => setCustomTo(e.target.value)}
+                  onChange={(event) => setCustomTo(event.target.value)}
                   className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-100 w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:border-[#00b14f] focus:outline-none"
                 />
               </div>
             </div>
           )}
 
-          {/* Action buttons (Reset & Apply) */}
           <div className="mt-4 flex items-center justify-end gap-2">
             <button
               type="button"
@@ -237,35 +228,56 @@ export default function NotificationDropdown({ target, isOpen, onClose, classNam
         </div>
       )}
 
-      {/* Category Filter Chips */}
       <div className="dark:border-forest-800 dark:bg-forest-950/60 flex scrollbar-none items-center gap-1.5 overflow-x-auto border-b border-slate-100 bg-slate-50/60 px-4 py-2.5">
-        {CATEGORY_TABS.map((tab) => {
-          const isActive = activeCategory === tab.key;
+        {tabs.map((tab) => {
+          const isActive = activeCategory === tab;
           return (
             <button
-              key={tab.key}
+              key={tab}
               type="button"
-              onClick={() => setActiveCategory(tab.key)}
+              onClick={() => setActiveCategory(tab)}
               className={`shrink-0 cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition ${
                 isActive
                   ? 'bg-[#00b14f] text-white shadow-2xs'
                   : 'dark:bg-forest-850 dark:text-forest-300 dark:hover:bg-forest-800 dark:border-forest-800 border border-slate-200 bg-white text-slate-600 hover:bg-slate-200/70'
               }`}
             >
-              {tab.label}
+              {notificationTabLabel(tab, vi)}
             </button>
           );
         })}
       </div>
 
-      {/* Notifications List */}
       <div className="dark:divide-forest-800 max-h-[380px] divide-y divide-slate-100 overflow-y-auto">
-        {timeFilteredNotifications.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-3 p-4">
+            {Array.from({ length: 3 }, (_, index) => (
+              <div key={index} className="flex items-start gap-3">
+                <div className="dark:bg-forest-800 h-9 w-9 shrink-0 animate-pulse rounded-full bg-slate-100" />
+                <div className="flex-1 space-y-2">
+                  <div className="dark:bg-forest-800 h-3.5 w-3/4 animate-pulse rounded bg-slate-100" />
+                  <div className="dark:bg-forest-800 h-3 w-full animate-pulse rounded bg-slate-100" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : isError ? (
+          <div className="py-12 text-center">
+            <AlertTriangle className="mx-auto h-8 w-8 stroke-[1.5] text-amber-500" />
+            <p className="dark:text-forest-300 mt-2 text-xs font-semibold text-slate-600">{copy.loadError}</p>
+            <button
+              type="button"
+              onClick={() => refetch()}
+              className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#00b14f] hover:underline"
+            >
+              <RotateCcw className="h-3 w-3" />
+              <span>{copy.retry}</span>
+            </button>
+          </div>
+        ) : notifications.length === 0 ? (
           <div className="py-12 text-center">
             <Sparkles className="dark:text-forest-600 mx-auto h-8 w-8 stroke-[1.5] text-slate-300" />
-            <p className="dark:text-forest-400 mt-2 text-xs font-semibold text-slate-500">
-              No notifications found matching this filter
-            </p>
+            <p className="dark:text-forest-400 mt-2 text-xs font-semibold text-slate-500">{copy.emptyFiltered}</p>
             {isFilterActive && (
               <button
                 type="button"
@@ -273,32 +285,30 @@ export default function NotificationDropdown({ target, isOpen, onClose, classNam
                 className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#00b14f] hover:underline"
               >
                 <RotateCcw className="h-3 w-3" />
-                <span>Clear time filter</span>
+                <span>{copy.clearTimeFilter}</span>
               </button>
             )}
           </div>
         ) : (
-          groupedDates.map((dateGroup) => {
-            const itemsInDate = timeFilteredNotifications.filter((n) => n.displayDate === dateGroup);
+          grouped.map(([dateGroup, itemsInDate]) => (
+            <div key={dateGroup}>
+              <div className="dark:bg-forest-950/90 dark:text-forest-400 sticky top-0 z-10 bg-slate-50/90 px-4 py-1 text-[11px] font-semibold text-slate-400 backdrop-blur-xs">
+                {dateGroup}
+              </div>
 
-            return (
-              <div key={dateGroup}>
-                <div className="dark:bg-forest-950/90 dark:text-forest-400 sticky top-0 z-10 bg-slate-50/90 px-4 py-1 text-[11px] font-semibold text-slate-400 backdrop-blur-xs">
-                  {dateGroup}
-                </div>
-
-                <div className="dark:divide-forest-800 divide-y divide-slate-100">
-                  {itemsInDate.map((item) => (
+              <div className="dark:divide-forest-800 divide-y divide-slate-100">
+                {itemsInDate.map((item) => {
+                  const isUnread = item.readAt === null;
+                  return (
                     <div
                       key={item.id}
                       onClick={() => handleItemClick(item.id)}
                       className={`flex cursor-pointer items-start gap-3 px-4 py-3 transition ${
-                        !item.isRead
+                        isUnread
                           ? 'dark:bg-forest-850/60 dark:hover:bg-forest-800/60 bg-emerald-50/25 hover:bg-slate-50/90'
                           : 'dark:bg-forest-900 dark:hover:bg-forest-850/50 bg-white hover:bg-slate-50/90'
                       }`}
                     >
-                      {/* InterVue Brand Emblem */}
                       <div className="dark:bg-forest-800 relative mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 ring-2 ring-[#00b14f]/20">
                         <Image
                           src="/intervue-logo-transparent.png"
@@ -309,11 +319,10 @@ export default function NotificationDropdown({ target, isOpen, onClose, classNam
                         />
                       </div>
 
-                      {/* Content */}
                       <div className="min-w-0 flex-1">
                         <h4
                           className={`line-clamp-1 text-[13px] leading-snug ${
-                            !item.isRead
+                            isUnread
                               ? 'dark:text-forest-50 font-bold text-slate-900'
                               : 'dark:text-forest-200 font-medium text-slate-700'
                           }`}
@@ -324,27 +333,25 @@ export default function NotificationDropdown({ target, isOpen, onClose, classNam
                           {item.summary}
                         </p>
                         <span className="dark:text-forest-400 mt-1 block text-[10.5px] text-slate-400">
-                          {item.displayDate}
+                          {formatNotificationDate(item.createdAt)}
                         </span>
                       </div>
 
-                      {/* Unread indicator */}
-                      {!item.isRead && (
+                      {isUnread && (
                         <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#00b14f] ring-2 ring-emerald-200 dark:ring-emerald-900" />
                       )}
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
-            );
-          })
+            </div>
+          ))
         )}
       </div>
 
-      {/* Footer link to full notification center */}
       <div className="dark:border-forest-800 dark:bg-forest-950/80 border-t border-slate-100 bg-slate-50/80 px-4 py-2.5 text-center">
         <Link
-          href={viewAllRoute}
+          href={baseRoute}
           onClick={onClose}
           className="inline-flex items-center gap-1.5 text-xs font-bold text-[#00b14f] transition hover:text-[#00873c] dark:text-emerald-400 dark:hover:text-emerald-300"
         >
