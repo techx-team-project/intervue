@@ -38,6 +38,13 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /auth/reset-password` | public | `{ token, password, confirmPassword }` | – (link valid 15 min, single use; logs out all devices) |
 | ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, roles, createdAt }` |
 | ✅ | `POST /ai/chat` | public / optional user | `{ message, sessionId? }` | `{ answer, sources, remainingQuota }` |
+| ✅ | `POST /ai/resume-match` | public / recruiter / user | `{ applicationId?, jobTitle, jobRequirements, jobDescription?, candidateData?, cvText? }` | `ResumeMatchResult` `{ applicationId, experienceSummary, requirements, questionsToAsk, model, promptVersion, aiProcessedCandidateData, analyzedAt, disclaimer }` (Runs async; sensitive PII/KYC and screening questions strictly stripped) |
+| ✅ | `POST /ai/cv-reviews` | candidate | `{ resumeId?, cvText?, targetPosition? }` | `CvReviewResult` `{ fileHash, overallScore, summary, comments: [{ section, quote, problem, fix }], modelVersion, promptVersion, fromCache }` (3 uses/day, resets 00:00 VN time; unchanged CV returns cached result without using quota) |
+| ✅ | `POST /ai/cover-letter` | candidate / user | `{ jobTitle, companyName, jobRequirements?, jobDescription?, resumeId?, cvText?, candidateName? }` | `CoverLetterGenerateResult` `{ coverLetter, modelVersion, promptVersion, notice }` (Fact-only draft from CV and job; user edits before sending; never sent automatically) |
+| ✅ | `POST /ai/cv-reviews/upload` | candidate | multipart `file`, `targetPosition?` | `CvReviewResult` (PDF upload; unreadable detected with clear reason; cached by hash) |
+| ✅ | `GET /ai/cv-reviews/quota` | candidate | – | `CvReviewQuotaResource` `{ usedToday, remaining, maxDaily, resetAt }` |
+| ✅ | `GET /ai/cv-reviews/{id}` | candidate | – | `CvReviewResult` (strictly accessible only by candidate owner) |
+| ✅ | `GET /ai/cv-reviews` | candidate | – | `List<CvReviewResult>` (review history for authenticated candidate) |
 | ✅ | `GET /admin/users` | admin | query `q`, `role`, `status`, `emailVerified` + pagination | `PageResource<AdminUserListResource>` |
 | ✅ | `GET /admin/users/summary` | admin | – | `AdminUserSummaryResource` |
 | ✅ | `GET /admin/users/{id}` | admin | – | `AdminUserDetailResource` |
