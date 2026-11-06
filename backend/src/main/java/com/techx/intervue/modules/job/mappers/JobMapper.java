@@ -6,8 +6,13 @@ import com.techx.intervue.modules.job.entities.Skill;
 import com.techx.intervue.modules.job.requests.SaveJobRequest;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobSummaryResource;
+import com.techx.intervue.modules.job.resources.PublicJobCompanyResource;
+import com.techx.intervue.modules.job.resources.PublicJobResource;
+import com.techx.intervue.modules.job.resources.PublicJobSummaryResource;
+import com.techx.intervue.modules.job.resources.SkillResource;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -49,11 +54,7 @@ public class JobMapper {
                 .workingArrangement(job.getWorkingArrangement())
                 .location(new JobResource.Location(job.getCity(), job.getAddress()))
                 .salary(toSalary(job))
-                .skills(
-                        job.getSkills().stream()
-                                .sorted(Comparator.comparing(Skill::getName))
-                                .map(skillMapper::toResource)
-                                .toList())
+                .skills(toSkills(job))
                 .description(job.getDescription())
                 .requirements(job.getRequirements())
                 .benefits(job.getBenefits())
@@ -81,6 +82,55 @@ public class JobMapper {
                 .publishedAt(job.getPublishedAt())
                 .updatedAt(job.getUpdatedAt())
                 .build();
+    }
+
+    public PublicJobSummaryResource toPublicSummary(Job job, String logoUrl) {
+        return PublicJobSummaryResource.builder()
+                .id(job.getId())
+                .title(job.getTitle())
+                .company(toPublicCompany(job, logoUrl, null))
+                .level(job.getLevel())
+                .contractType(job.getContractType())
+                .workingArrangement(job.getWorkingArrangement())
+                .city(job.getCity())
+                .salary(toSalary(job))
+                .skills(toSkills(job))
+                .deadline(job.getDeadline())
+                .publishedAt(job.getPublishedAt())
+                .build();
+    }
+
+    public PublicJobResource toPublicResource(Job job, String logoUrl, String companyAddress) {
+        return PublicJobResource.builder()
+                .id(job.getId())
+                .title(job.getTitle())
+                .company(toPublicCompany(job, logoUrl, companyAddress))
+                .level(job.getLevel())
+                .contractType(job.getContractType())
+                .workingArrangement(job.getWorkingArrangement())
+                .location(new JobResource.Location(job.getCity(), job.getAddress()))
+                .salary(toSalary(job))
+                .skills(toSkills(job))
+                .description(job.getDescription())
+                .requirements(job.getRequirements())
+                .benefits(job.getBenefits())
+                .openings(job.getOpenings())
+                .deadline(job.getDeadline())
+                .publishedAt(job.getPublishedAt())
+                .build();
+    }
+
+    private PublicJobCompanyResource toPublicCompany(
+            Job job, String logoUrl, String companyAddress) {
+        return new PublicJobCompanyResource(
+                job.getCompanyId(), job.getCompanyName(), logoUrl, companyAddress);
+    }
+
+    private List<SkillResource> toSkills(Job job) {
+        return job.getSkills().stream()
+                .sorted(Comparator.comparing(Skill::getName))
+                .map(skillMapper::toResource)
+                .toList();
     }
 
     private void applySalary(Job job, SaveJobRequest.Salary salary) {

@@ -21,6 +21,9 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
     @EntityGraph(attributePaths = "skills")
     Optional<Job> findByIdAndRecruiterId(Long id, Long recruiterId);
 
+    @EntityGraph(attributePaths = "skills")
+    Optional<Job> findByIdAndStatus(Long id, JobStatus status);
+
     @Query(
             "SELECT j.status AS status, COUNT(j) AS total FROM Job j"
                     + " WHERE j.recruiterId = :recruiterId GROUP BY j.status")
