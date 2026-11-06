@@ -20,7 +20,6 @@ import {
   FileText,
   HelpCircle,
   History,
-  Lock,
   RotateCw,
   ShieldCheck,
   UploadCloud,
@@ -1281,11 +1280,7 @@ function UnifiedVerificationStatusTracker({
 export function BusinessLicenseView() {
   const { profile, company, documents, handleSubmitLicense } = useCompanyVerification();
 
-  const isOwner = company?.myRole === 'OWNER';
-  const isMember = company?.myRole === 'MEMBER';
-
   const [documentType, setDocumentType] = useState<BusinessDocumentType>(() => {
-    if (isMember) return 'LETTER_OF_AUTHORIZATION';
     return profile.license.documentType || 'BUSINESS_LICENSE';
   });
 
@@ -1329,10 +1324,6 @@ export function BusinessLicenseView() {
     }
 
     if (documentType === 'BUSINESS_LICENSE') {
-      if (!isOwner) {
-        toast.error('Only the company OWNER can submit the Enterprise Registration Certificate (ERC).');
-        return;
-      }
       if (!ercFile) {
         toast.error('Please choose your Enterprise Registration Certificate file before saving.');
         return;
@@ -1471,16 +1462,11 @@ export function BusinessLicenseView() {
             <div className="mt-6 space-y-6">
               {/* OPTION 1: Enterprise Registration Certificate (ERC) */}
               <div className="space-y-3">
-                <label
-                  className={`flex cursor-pointer items-center gap-2.5 select-none ${
-                    isMember ? 'cursor-not-allowed opacity-60' : ''
-                  }`}
-                >
+                <label className="flex cursor-pointer items-center gap-2.5 select-none">
                   <input
                     type="radio"
                     name="verificationMethod"
                     value="BUSINESS_LICENSE"
-                    disabled={isMember}
                     checked={documentType === 'BUSINESS_LICENSE'}
                     onChange={() => setDocumentType('BUSINESS_LICENSE')}
                     className="h-4 w-4 text-[#00b14f] focus:ring-[#00b14f]"
@@ -1488,11 +1474,6 @@ export function BusinessLicenseView() {
                   <span className="text-sm font-bold text-slate-900">
                     Enterprise Registration Certificate or equivalent (ERC)
                   </span>
-                  {isMember && (
-                    <span className="inline-flex items-center gap-1 rounded-md bg-slate-200 px-2 py-0.5 text-[10px] font-bold text-slate-600">
-                      <Lock className="h-3 w-3" /> Owner only
-                    </span>
-                  )}
                 </label>
 
                 {documentType === 'BUSINESS_LICENSE' && (
@@ -1503,7 +1484,7 @@ export function BusinessLicenseView() {
                       file={ercFile}
                       onFileSelect={setErcFile}
                       onFileRemove={() => setErcFile(null)}
-                      disabled={isSubmitting || isMember}
+                      disabled={isSubmitting}
                       warningBullets={[
                         'Uploaded documents must show all pages and have no signs of modification, covering, or cropping.',
                         'Please upload an Enterprise Registration Certificate whose information matches company data on the General Department of Taxation portal.',
@@ -1531,11 +1512,6 @@ export function BusinessLicenseView() {
                   <span className="text-sm font-bold text-slate-900">
                     Letter of Authorization &amp; Identity Documents
                   </span>
-                  {isMember && (
-                    <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
-                      Recommended for Recruiters &amp; HR
-                    </span>
-                  )}
                 </label>
 
                 {documentType === 'LETTER_OF_AUTHORIZATION' && (
@@ -1663,7 +1639,7 @@ export function BusinessLicenseView() {
               <button
                 type="button"
                 onClick={handleSave}
-                disabled={isSubmitting || (documentType === 'BUSINESS_LICENSE' && isMember)}
+                disabled={isSubmitting}
                 className="inline-flex items-center gap-2 rounded-xl bg-[#00b14f] px-6 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-[#009b45] active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting ? (

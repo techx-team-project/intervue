@@ -87,8 +87,6 @@ export function useCompanyVerification() {
     };
 
     const myDoc = documents.find((d) => d.submittedByMe) || null;
-    const companyLicense = documents.find((d) => d.documentType === 'BUSINESS_LICENSE') || null;
-    const effectiveDoc = myDoc || (company?.myRole === 'OWNER' ? companyLicense : null);
     const phoneStep = profileResource?.steps.find((s) => s.stepId === 'PHONE');
     const licenseStep = profileResource?.steps.find((s) => s.stepId === 'LICENSE');
     const candidateAgreementStep = profileResource?.steps.find((s) => s.stepId === 'CANDIDATE_AGREEMENT');
@@ -132,23 +130,19 @@ export function useCompanyVerification() {
         verifiedAt: phoneStep?.completedAt,
       },
       license: {
-        status: effectiveDoc
-          ? effectiveDoc.reviewStatus
-          : licenseStep?.status === 'APPROVED'
-            ? 'APPROVED'
-            : 'NOT_SUBMITTED',
-        documentType: effectiveDoc?.documentType,
-        fileName: effectiveDoc?.originalFileName,
-        fileSize: effectiveDoc ? `${(effectiveDoc.fileSizeBytes / (1024 * 1024)).toFixed(1)} MB` : undefined,
-        submittedAt: effectiveDoc?.submittedAt,
-        reviewedAt: effectiveDoc?.reviewedAt,
-        reviewReason: effectiveDoc?.reviewReason || licenseStep?.reviewReason,
-        expiresAt: effectiveDoc?.expiresAt || licenseStep?.expiresAt,
-        documentId: effectiveDoc?.id,
-        identityFileName: effectiveDoc?.identityFileName,
-        identityBackFileName: effectiveDoc?.identityBackFileName,
-        hasIdentity: Boolean(effectiveDoc?.identityStoragePublicId),
-        hasIdentityBack: Boolean(effectiveDoc?.identityBackStoragePublicId),
+        status: myDoc ? myDoc.reviewStatus : licenseStep?.status === 'APPROVED' ? 'APPROVED' : 'NOT_SUBMITTED',
+        documentType: myDoc?.documentType,
+        fileName: myDoc?.originalFileName,
+        fileSize: myDoc ? `${(myDoc.fileSizeBytes / (1024 * 1024)).toFixed(1)} MB` : undefined,
+        submittedAt: myDoc?.submittedAt,
+        reviewedAt: myDoc?.reviewedAt,
+        reviewReason: myDoc?.reviewReason || licenseStep?.reviewReason,
+        expiresAt: myDoc?.expiresAt || licenseStep?.expiresAt,
+        documentId: myDoc?.id,
+        identityFileName: myDoc?.identityFileName,
+        identityBackFileName: myDoc?.identityBackFileName,
+        hasIdentity: Boolean(myDoc?.identityStoragePublicId),
+        hasIdentityBack: Boolean(myDoc?.identityBackStoragePublicId),
       },
       candidateAgreement: {
         status:
@@ -198,19 +192,24 @@ export function useCompanyVerification() {
 
   const handleSaveCompany = useCallback(
     async (data: SaveCompanyProfileRequest) => {
-      let saved: CompanyResource;
-      if (company) {
-        saved = await recruiterCompanyApi.updateCompany(data);
-        toast.success('Company profile updated successfully!');
-      } else {
-        saved = await recruiterCompanyApi.createCompany(data);
-        toast.success('Company created successfully!');
-      }
+      const saved = await recruiterCompanyApi.updateCompany(data);
       setCompany(saved);
       reload();
+      toast.success('Company profile updated successfully!');
       return saved;
     },
-    [company, reload],
+    [reload],
+  );
+
+  const handleLinkCompany = useCallback(
+    async (taxCode: string) => {
+      const linked = await recruiterCompanyApi.linkCompany(taxCode);
+      setCompany(linked);
+      reload();
+      toast.success(`Linked to ${linked.name}`);
+      return linked;
+    },
+    [reload],
   );
 
   const handleChooseCompany = useCallback(
@@ -303,6 +302,7 @@ export function useCompanyVerification() {
     handleSendPhoneOtp,
     handleVerifyPhone,
     handleSaveCompany,
+    handleLinkCompany,
     handleChooseCompany,
     handleLeaveCompany,
     handleSubmitLicense,

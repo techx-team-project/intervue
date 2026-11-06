@@ -16,6 +16,8 @@ export type CompanyMemberRole = 'OWNER' | 'MEMBER';
 
 export type CompanyMemberStatus = 'ACTIVE' | 'LEFT' | 'REVOKED';
 
+export type CompanyLinkState = 'NONE' | 'CHOSEN' | 'SUBMITTED' | 'REJECTED' | 'VERIFIED';
+
 export type AgreementType = 'CANDIDATE_DATA' | 'PLATFORM_DATA';
 
 export type AgreementScope = 'COMPANY' | 'USER';
@@ -57,6 +59,7 @@ export interface RecruiterVerificationProfileResource {
   canPublish: boolean;
   blockedReason: string | null;
   companyId: number | null;
+  linkState: CompanyLinkState;
   steps: VerificationStepResource[];
 }
 
@@ -72,9 +75,10 @@ export interface CompanyPhotoResource {
 export interface CompanyResource {
   id: number;
   name: string;
-  tradingName?: string;
   taxCode: string;
-  businessType: 'ENTERPRISE' | 'HOUSEHOLD';
+  registeredAddress?: string;
+  tradingName?: string;
+  businessType?: 'ENTERPRISE' | 'HOUSEHOLD';
   industry?: string;
   website?: string;
   market?: string;
@@ -82,16 +86,11 @@ export interface CompanyResource {
   size?: string;
   email?: string;
   phone?: string;
-  address: string;
+  address?: string;
   description?: string;
   benefits?: string;
   logoUrl?: string;
   photos: CompanyPhotoResource[];
-  verificationStatus: CompanyVerificationStatus;
-  verified: boolean;
-  verifiedAt?: string;
-  myRole: CompanyMemberRole;
-  legalFieldsLocked: boolean;
   profileComplete: boolean;
   missingFields: string[];
   createdAt: string;
@@ -101,14 +100,8 @@ export interface CompanyResource {
 export interface CompanySummaryResource {
   id: number;
   name: string;
-  tradingName?: string;
   taxCode: string;
-  industry?: string;
-  size?: string;
   address?: string;
-  logoUrl?: string;
-  verified: boolean;
-  memberCount?: number;
 }
 
 export interface TaxLookupResource {
@@ -116,7 +109,6 @@ export interface TaxLookupResource {
   name: string;
   tradingName?: string;
   address: string;
-  status?: string;
   existingOnPlatform: boolean;
   existingCompanyId?: number;
 }
@@ -141,9 +133,7 @@ export interface BusinessDocumentResource {
 }
 
 export interface SaveCompanyProfileRequest {
-  name: string;
   tradingName?: string;
-  taxCode: string;
   businessType: 'ENTERPRISE' | 'HOUSEHOLD';
   industry?: string;
   website?: string;
@@ -152,7 +142,7 @@ export interface SaveCompanyProfileRequest {
   size?: string;
   email?: string;
   phone?: string;
-  address: string;
+  address?: string;
   description?: string;
   benefits?: string;
 }
@@ -211,7 +201,7 @@ export interface CompanyMemberResource {
   name?: string;
   email: string;
   fullName: string;
-  role: CompanyMemberRole;
+  role?: CompanyMemberRole;
   status: CompanyMemberStatus;
   joinedAt: string;
   phoneVerified: boolean;
