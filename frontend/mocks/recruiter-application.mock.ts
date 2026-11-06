@@ -6,6 +6,7 @@ import type {
   ApplicationSource,
   ApplicationStatus,
   RecruiterApplication,
+  RequirementMatchItem,
   ScreeningAnswer,
 } from '@/types/recruiter-application';
 import { formatDate } from '@/utils/datetime';
@@ -96,6 +97,49 @@ function buildStatusHistory(seed: ApplicationSeed) {
   }));
 }
 
+function buildRequirementMatches(
+  jobRequirementsText: string | undefined,
+  matchedEvidence: string[],
+): RequirementMatchItem[] {
+  if (!jobRequirementsText) {
+    return matchedEvidence.map((ev) => ({
+      requirement: ev,
+      hasEvidence: true,
+      evidence: ev,
+    }));
+  }
+
+  const rawReqs = jobRequirementsText
+    .split(/\.\s+|\n+/)
+    .map((r) => r.trim().replace(/\.$/, ''))
+    .filter((r) => r.length > 5);
+
+  return rawReqs.map((req, idx) => {
+    const matchingEv = matchedEvidence.find((ev) => {
+      const words = req
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((w) => w.length > 3);
+      return words.some((w) => ev.toLowerCase().includes(w));
+    });
+
+    if (matchingEv || idx === 0) {
+      return {
+        requirement: req,
+        hasEvidence: true,
+        evidence: matchingEv ?? matchedEvidence[0] ?? req,
+      };
+    }
+
+    return {
+      requirement: req,
+      hasEvidence: false,
+      evidence: 'no evidence yet',
+      clarificationNote: 'Missing information does not mean a missing skill — ask before you conclude.',
+    };
+  });
+}
+
 function buildApplication(seed: ApplicationSeed): RecruiterApplication {
   const job = MOCK_RECRUITER_JOB_POSTS.find((item) => item.id === seed.jobId);
   const appliedAt = isoDaysAgo(seed.appliedDaysAgo);
@@ -138,8 +182,15 @@ function buildApplication(seed: ApplicationSeed): RecruiterApplication {
       matchedEvidence: seed.matchedEvidence,
       missingInformation: seed.missingInformation ?? [],
       askMoreAbout: seed.askMoreAbout ?? [],
-      model: 'intervue-match-v1',
+      model: 'gemini-2.5-flash',
+      promptVersion: 'resume-match.v1',
       evaluatedAt: isoDaysAgo(seed.appliedDaysAgo, 1),
+      aiProcessedCandidateData: true,
+      requirementMatches: buildRequirementMatches(job?.requirements, seed.matchedEvidence),
+      questionsToAsk: seed.askMoreAbout ?? [
+        'Bạn có thể chia sẻ sâu hơn về dự án thực tế gần nhất?',
+        'Cách bạn xử lý bài toán hiệu năng cao trong dự án là gì?',
+      ],
     },
     internalNotes: (seed.internalNotes ?? []).map((content, index) => ({
       id: `${seed.id}-note-${index + 1}`,

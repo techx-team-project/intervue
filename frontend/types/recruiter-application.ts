@@ -20,6 +20,13 @@ export interface ApplicationCandidateSummary {
   phone: string;
 }
 
+export interface RequirementMatchItem {
+  requirement: string;
+  hasEvidence: boolean;
+  evidence: string;
+  clarificationNote?: string;
+}
+
 export interface ApplicationAiMatch {
   score: number;
   summary: string;
@@ -28,6 +35,10 @@ export interface ApplicationAiMatch {
   askMoreAbout: string[];
   model: string;
   evaluatedAt: string;
+  promptVersion?: string;
+  aiProcessedCandidateData?: boolean;
+  requirementMatches?: RequirementMatchItem[];
+  questionsToAsk?: string[];
 }
 
 export interface ScreeningAnswer {

@@ -23,7 +23,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import Link from 'next/link';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import AiMatchRing, { getAiMatchTone } from './AiMatchRing';
 import ApplicationAiMatchPanel from './ApplicationAiMatchPanel';
 import ApplicationCvTab from './ApplicationCvTab';
@@ -66,7 +66,8 @@ export default function ApplicationDetailPageView({ initialApplication }: Applic
 
   const application = board.applications[0];
   const { candidate, aiMatch, interview, rejection } = application;
-  const tone = getAiMatchTone(aiMatch.score);
+  const [currentAiMatch, setCurrentAiMatch] = useState(aiMatch);
+  const tone = getAiMatchTone(currentAiMatch.score);
 
   return (
     <div className="space-y-4">
@@ -134,7 +135,7 @@ export default function ApplicationDetailPageView({ initialApplication }: Applic
           </div>
 
           <div className="flex items-center gap-3 self-start rounded-2xl border border-[#eef2f7] bg-[#fafbfc] px-4 py-3">
-            <AiMatchRing score={aiMatch.score} size="lg" />
+            <AiMatchRing score={currentAiMatch.score} size="lg" />
             <div>
               <p className="text-[11px] font-bold text-[#94a3b8] uppercase">AI match</p>
               <p className={cn('text-[13px] font-black', tone.text)}>{tone.label}</p>
@@ -194,7 +195,13 @@ export default function ApplicationDetailPageView({ initialApplication }: Applic
             title="InterVue AI match assessment"
             description="Evidence-based suggestions — the final decision is always yours."
           >
-            <ApplicationAiMatchPanel aiMatch={aiMatch} />
+            <ApplicationAiMatchPanel
+              aiMatch={currentAiMatch}
+              applicationId={application.id}
+              jobTitle={application.jobTitle}
+              candidateSkills={candidate.topSkills}
+              onMatchUpdated={(updated) => setCurrentAiMatch(updated)}
+            />
           </Section>
 
           <Section title="Screening answers" description="Answered by the candidate when applying to this job post.">
@@ -224,7 +231,7 @@ export default function ApplicationDetailPageView({ initialApplication }: Applic
             <dl className="space-y-2.5 text-[12.5px]">
               <div className="flex items-center justify-between gap-3">
                 <dt className="text-[#64748b]">AI match</dt>
-                <dd className={cn('font-black', tone.text)}>{aiMatch.score}/100</dd>
+                <dd className={cn('font-black', tone.text)}>{currentAiMatch.score}/100</dd>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <dt className="text-[#64748b]">CV ATS score</dt>
