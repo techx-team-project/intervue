@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { ChevronDown, MapPin, Search } from 'lucide-react';
 
@@ -15,10 +16,19 @@ import QrLoginPanel from './QrLoginPanel';
 import RecruitmentBanner from './RecruitmentBanner';
 
 export default function HeroSection() {
+  const router = useRouter();
   const [keyword, setKeyword] = useState('');
   const [selectedCity, setSelectedCity] = useState('Địa điểm');
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [categoryPage, setCategoryPage] = useState(1);
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (keyword.trim()) params.set('q', keyword.trim());
+    if (selectedCity !== HERO_CITIES[0]) params.set('city', selectedCity);
+    const query = params.toString();
+    router.push(query ? `/jobs?${query}` : '/jobs');
+  };
 
   const categories = categoryPage === 1 ? HERO_CATEGORIES_PAGE_1 : HERO_CATEGORIES_PAGE_2;
 
@@ -65,6 +75,9 @@ export default function HeroSection() {
               type="text"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSearch();
+              }}
               placeholder="Vị trí tuyển dụng, tên công ty"
               className="text-navy w-full bg-transparent text-[15px] placeholder-[#7f878f] focus:outline-none"
             />
@@ -106,6 +119,7 @@ export default function HeroSection() {
 
           <button
             type="button"
+            onClick={handleSearch}
             className="bg-primary hover:bg-primary-hover mr-1 flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-8 py-3 text-[15px] font-semibold text-white shadow-md transition"
           >
             <Search className="h-4 w-4" />
