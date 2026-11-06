@@ -80,7 +80,10 @@ public class AiChatService implements AiChatServiceInterface {
         AiChatResult result = aiGatewayService.chat(callContext, chatRequest);
 
         int steps = 0;
+        int totalToolCalls = 0;
+        final int maxToolCalls = 3;
         while (steps < MAX_AGENT_STEPS
+                && totalToolCalls < maxToolCalls
                 && result.stopReason() == AiStopReason.TOOL_USE
                 && !result.toolCalls().isEmpty()) {
             steps++;
@@ -88,8 +91,17 @@ public class AiChatService implements AiChatServiceInterface {
 
             List<AiContentBlock.ToolResult> toolResults = new ArrayList<>();
             for (AiContentBlock.ToolUse call : result.toolCalls()) {
+                if (totalToolCalls >= maxToolCalls) {
+                    toolResults.add(
+                            new AiContentBlock.ToolResult(
+                                    call.name(),
+                                    "Đã đạt giới hạn tối đa 3 lần gọi công cụ cho một câu trả lời.",
+                                    true));
+                    continue;
+                }
+                totalToolCalls++;
                 ToolExecutionResult execResult =
-                        agentToolService.execute(call.name(), call.input());
+                        agentToolService.execute(call.name(), userId, call.input());
                 if (!execResult.sources().isEmpty()) {
                     aggregatedSources.addAll(execResult.sources());
                 }

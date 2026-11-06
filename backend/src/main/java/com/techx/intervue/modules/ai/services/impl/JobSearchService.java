@@ -13,6 +13,41 @@ public class JobSearchService implements JobSearchServiceInterface {
     private static final List<JobSearchResult> CATALOG =
             List.of(
                     new JobSearchResult(
+                            "201",
+                            "Senior Java Backend Engineer (Remote - TP. HCM)",
+                            "Công ty Cổ phần Công nghệ TechX Global",
+                            "30 - 55 triệu VNĐ",
+                            "TP. Hồ Chí Minh · 100% Remote",
+                            "Senior",
+                            List.of(
+                                    "Java",
+                                    "Spring Boot",
+                                    "MySQL",
+                                    "Redis",
+                                    "Microservices",
+                                    "Docker",
+                                    "AWS",
+                                    "Kafka"),
+                            "Thiết kế và phát triển kiến trúc Microservices hiệu năng cao bằng Java và Spring Boot. Hỗ trợ chế độ làm việc 100% Remote tại TP. Hồ Chí Minh.",
+                            "/jobs/201"),
+                    new JobSearchResult(
+                            "202",
+                            "Java Software Engineer (Microservices / Cloud - Remote)",
+                            "Công ty Cổ phần VNG (VNG Corporation)",
+                            "25 - 45 triệu VNĐ",
+                            "TP. Hồ Chí Minh · Remote",
+                            "Mid",
+                            List.of(
+                                    "Java",
+                                    "Spring Boot",
+                                    "PostgreSQL",
+                                    "Kafka",
+                                    "Redis",
+                                    "Docker",
+                                    "Microservices"),
+                            "Phát triển hệ thống phân tán và dịch vụ thanh toán số quy mô lớn trên nền tảng Java 21/25. Làm việc từ xa Remote linh hoạt tại TP. Hồ Chí Minh.",
+                            "/jobs/202"),
+                    new JobSearchResult(
                             "103",
                             "Senior Backend Engineer (Node.js / TypeScript / Microservices)",
                             "Tập đoàn Công nghệ Viettel (Viettel Digital)",
@@ -128,47 +163,34 @@ public class JobSearchService implements JobSearchServiceInterface {
 
     @Override
     public List<JobSearchResult> search(String keyword, String level, String location, int limit) {
-        if (keyword == null || keyword.isBlank()) {
-            return CATALOG.stream().limit(Math.max(1, limit)).toList();
+        int maxResults = Math.min(Math.max(1, limit), 5);
+        if ((keyword == null || keyword.isBlank())
+                && (location == null || location.isBlank())
+                && (level == null || level.isBlank())) {
+            return CATALOG.stream().limit(maxResults).toList();
         }
 
         String normalizedKeyword = normalize(keyword);
         String normalizedLevel = level != null ? normalize(level) : null;
-        String normalizedLocation = location != null ? normalize(location) : null;
+        String normalizedLocation = location != null ? normalizeLocation(location) : null;
 
         List<JobSearchResult> matches = new ArrayList<>();
 
         for (JobSearchResult job : CATALOG) {
-            boolean skillMatch = matchesAny(job, normalizedKeyword);
-            if (!skillMatch) {
+            if (!matchesFilter(job, normalizedKeyword, normalizedLevel, normalizedLocation)) {
                 continue;
             }
-
-            if (normalizedLevel != null && !normalizedLevel.isBlank()) {
-                String jobLevel = normalize(job.level());
-                if (!jobLevel.contains(normalizedLevel) && !normalizedLevel.contains(jobLevel)) {
-                    continue;
-                }
-            }
-
-            if (normalizedLocation != null && !normalizedLocation.isBlank()) {
-                String jobLoc = normalize(job.location());
-                if (!jobLoc.contains(normalizedLocation) && !normalizedLocation.contains(jobLoc)) {
-                    continue;
-                }
-            }
-
             matches.add(job);
-            if (matches.size() >= limit) {
+            if (matches.size() >= maxResults) {
                 break;
             }
         }
 
-        if (matches.isEmpty() && (normalizedLevel != null || normalizedLocation != null)) {
+        if (matches.isEmpty() && normalizedKeyword != null && !normalizedKeyword.isBlank()) {
             for (JobSearchResult job : CATALOG) {
                 if (matchesAny(job, normalizedKeyword)) {
                     matches.add(job);
-                    if (matches.size() >= limit) {
+                    if (matches.size() >= maxResults) {
                         break;
                     }
                 }
@@ -178,8 +200,46 @@ public class JobSearchService implements JobSearchServiceInterface {
         return matches;
     }
 
+    private boolean matchesFilter(
+            JobSearchResult job,
+            String normalizedKeyword,
+            String normalizedLevel,
+            String normalizedLocation) {
+        if (normalizedKeyword != null && !normalizedKeyword.isBlank()) {
+            if (!matchesAny(job, normalizedKeyword)) {
+                return false;
+            }
+        }
+
+        if (normalizedLevel != null && !normalizedLevel.isBlank()) {
+            String jobLevel = normalize(job.level());
+            if (!jobLevel.contains(normalizedLevel) && !normalizedLevel.contains(jobLevel)) {
+                return false;
+            }
+        }
+
+        if (normalizedLocation != null && !normalizedLocation.isBlank()) {
+            String jobLoc = normalizeLocation(job.location());
+            if (!jobLoc.contains(normalizedLocation) && !normalizedLocation.contains(jobLoc)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private boolean matchesAny(JobSearchResult job, String normalizedKeyword) {
-        if (normalize(job.title()).contains(normalizedKeyword)) {
+        if (normalizedKeyword == null || normalizedKeyword.isBlank()) {
+            return true;
+        }
+        String titleNorm = normalize(job.title());
+        String descNorm = normalize(job.description());
+        String locNorm = normalize(job.location());
+        String fullJobText = titleNorm + " " + descNorm + " " + locNorm;
+
+        if (titleNorm.contains(normalizedKeyword)
+                || descNorm.contains(normalizedKeyword)
+                || locNorm.contains(normalizedKeyword)) {
             return true;
         }
         for (String skill : job.skills()) {
@@ -188,7 +248,49 @@ public class JobSearchService implements JobSearchServiceInterface {
                 return true;
             }
         }
-        return normalize(job.description()).contains(normalizedKeyword);
+
+        // Token-level check for multi-word queries like "remote java" or "find remote java jobs in
+        // ho chi minh city"
+        String[] tokens = normalizedKeyword.split("\\s+");
+        boolean allTokensMatch = true;
+        boolean hasMeaningfulToken = false;
+        for (String token : tokens) {
+            if (token.isBlank() || isStopWord(token)) {
+                continue;
+            }
+            hasMeaningfulToken = true;
+            boolean tokenMatches = fullJobText.contains(token);
+            if (!tokenMatches) {
+                for (String skill : job.skills()) {
+                    if (normalize(skill).contains(token) || token.contains(normalize(skill))) {
+                        tokenMatches = true;
+                        break;
+                    }
+                }
+            }
+            if (!tokenMatches) {
+                allTokensMatch = false;
+                break;
+            }
+        }
+
+        return hasMeaningfulToken && allTokensMatch;
+    }
+
+    private boolean isStopWord(String word) {
+        return word.equals("find")
+                || word.equals("job")
+                || word.equals("jobs")
+                || word.equals("in")
+                || word.equals("at")
+                || word.equals("for")
+                || word.equals("city")
+                || word.equals("tp")
+                || word.equals("tim")
+                || word.equals("viec")
+                || word.equals("lam")
+                || word.equals("o")
+                || word.equals("tai");
     }
 
     private String normalize(String value) {
@@ -199,5 +301,20 @@ public class JobSearchService implements JobSearchServiceInterface {
                 .replace("/", " ")
                 .replaceAll("\\s+", " ")
                 .trim();
+    }
+
+    private String normalizeLocation(String location) {
+        if (location == null) return "";
+        String norm = normalize(location);
+        if (norm.contains("ho chi minh") || norm.contains("hcm") || norm.contains("sai gon")) {
+            return "ho chi minh";
+        }
+        if (norm.contains("ha noi") || norm.contains("hn")) {
+            return "ha noi";
+        }
+        if (norm.contains("da nang")) {
+            return "da nang";
+        }
+        return norm;
     }
 }
