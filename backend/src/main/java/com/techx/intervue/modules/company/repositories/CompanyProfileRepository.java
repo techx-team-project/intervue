@@ -1,9 +1,11 @@
 package com.techx.intervue.modules.company.repositories;
 
 import com.techx.intervue.modules.company.entities.CompanyProfile;
+import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +16,15 @@ public interface CompanyProfileRepository extends JpaRepository<CompanyProfile, 
 
     @Query("SELECT p FROM CompanyProfile p WHERE p.member.id = :memberId")
     Optional<CompanyProfile> findByMemberId(@Param("memberId") Long memberId);
+
+    @Query(
+            "SELECT p FROM CompanyProfile p JOIN FETCH p.member m"
+                    + " WHERE m.company.id = :companyId AND m.status = :status"
+                    + " ORDER BY p.updatedAt DESC")
+    List<CompanyProfile> findByCompanyAndMemberStatus(
+            @Param("companyId") Long companyId,
+            @Param("status") CompanyMemberStatus status,
+            Pageable pageable);
 
     @Query(
             "SELECT p FROM CompanyProfile p JOIN FETCH p.member m"

@@ -31,6 +31,7 @@ import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.resources.CompanySummaryResource;
+import com.techx.intervue.modules.company.resources.PublicCompanyResource;
 import com.techx.intervue.modules.company.resources.TaxLookupResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import java.time.Instant;
@@ -42,6 +43,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +54,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CompanyService implements CompanyServiceInterface {
 
     private static final int MAX_PHOTOS = 10;
+    private static final int PUBLIC_PROFILE_CANDIDATES = 20;
     private static final String LOGO_FOLDER = "companies/logos";
     private static final String PHOTO_FOLDER = "companies/photos";
 
@@ -176,6 +179,32 @@ public class CompanyService implements CompanyServiceInterface {
                 .findById(companyId)
                 .map(companyMapper::toSummaryResource)
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PublicCompanyResource findPublic(Long companyId) {
+        Company company =
+                companyRepository
+                        .findById(companyId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        List<CompanyProfile> candidates =
+                companyProfileRepository.findByCompanyAndMemberStatus(
+                        companyId,
+                        CompanyMemberStatus.ACTIVE,
+                        PageRequest.of(0, PUBLIC_PROFILE_CANDIDATES));
+        CompanyProfile profile =
+                candidates.stream()
+                        .filter(candidate -> candidate.getDescription() != null)
+                        .findFirst()
+                        .or(() -> candidates.stream().findFirst())
+                        .orElse(null);
+        List<CompanyPhoto> photos =
+                profile == null
+                        ? List.of()
+                        : companyPhotoRepository.findByProfileIdOrderBySortOrderAsc(
+                                profile.getId());
+        return companyMapper.toPublicResource(company, profile, photos);
     }
 
     @Override
