@@ -49,6 +49,7 @@ export function emptyFormValues(): JobPostFormData {
     benefits: '',
     deadline: defaultDeadline(),
     openings: 1,
+    screeningQuestions: [],
   };
 }
 
@@ -72,6 +73,12 @@ export function toFormValues(job: RecruiterJobResource): JobPostFormData {
     benefits: job.benefits ?? '',
     deadline: job.deadline ?? defaults.deadline,
     openings: job.openings,
+    screeningQuestions: job.screeningQuestions.map((question) => ({
+      type: question.type,
+      prompt: question.prompt,
+      required: question.required,
+      options: question.options ?? [],
+    })),
   };
 }
 
@@ -95,6 +102,12 @@ export function toSaveRequest(values: JobPostFormData): SaveJobRequest {
     benefits: values.benefits.trim(),
     deadline: values.deadline || undefined,
     openings: values.openings,
+    screeningQuestions: values.screeningQuestions.map((question) => ({
+      type: question.type,
+      prompt: question.prompt.trim(),
+      required: question.required,
+      options: question.type === 'CHOICE' ? question.options : [],
+    })),
   };
 }
 
@@ -131,6 +144,7 @@ export function resourceToJobPost(job: RecruiterJobResource): RecruiterJobPost {
     description: job.description,
     requirements: job.requirements,
     benefits: job.benefits,
+    screeningQuestions: job.screeningQuestions,
     recruitsCount: job.openings,
     createdAt: job.createdAt,
     updatedAt: job.updatedAt,

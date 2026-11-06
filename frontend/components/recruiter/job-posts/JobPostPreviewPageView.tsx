@@ -108,7 +108,13 @@ export function recruiterJobToCandidateJobDetail(job: RecruiterJobPost): JobDeta
     },
     categories: [{ name: 'IT - Phần mềm', link: '/jobs' }],
     verifiedBadges: ['Giấy phép kinh doanh đã xác thực', 'Nhà tuyển dụng xác minh'],
-    screeningQuestions: [],
+    screeningQuestions: (job.screeningQuestions ?? []).map((question) => ({
+      id: String(question.id),
+      question: question.prompt,
+      type: question.type === 'CHOICE' ? 'MULTIPLE_CHOICE' : 'TEXT',
+      required: question.required,
+      options: question.options,
+    })),
   };
 }
 
