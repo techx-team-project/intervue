@@ -2,9 +2,6 @@ package com.techx.intervue.modules.recruiter.services.impl;
 
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
-import com.techx.intervue.modules.company.enums.CompanyMemberRole;
-import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
-import com.techx.intervue.modules.company.repositories.CompanyMemberRepository;
 import com.techx.intervue.modules.recruiter.entities.Recruiter;
 import com.techx.intervue.modules.recruiter.enums.RecruiterStatus;
 import com.techx.intervue.modules.recruiter.mappers.RecruiterMapper;
@@ -38,7 +35,6 @@ public class RecruiterService implements RecruiterServiceInterface {
     private final RecruiterRefreshTokenRepository refreshTokenRepository;
     private final RecruiterSessionCacheInterface sessionCache;
     private final RecruiterMapper recruiterMapper;
-    private final CompanyMemberRepository companyMemberRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -61,11 +57,6 @@ public class RecruiterService implements RecruiterServiceInterface {
         }
         if (recruiter.getStatus() == RecruiterStatus.PENDING_DELETION) {
             return;
-        }
-
-        if (companyMemberRepository.existsByUserIdAndRoleAndStatus(
-                recruiterId, CompanyMemberRole.OWNER, CompanyMemberStatus.ACTIVE)) {
-            throw new AppException(ErrorCode.LAST_COMPANY_OWNER);
         }
 
         Instant now = Instant.now();

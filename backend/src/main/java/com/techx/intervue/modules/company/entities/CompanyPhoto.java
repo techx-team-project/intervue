@@ -30,8 +30,8 @@ public class CompanyPhoto extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
+    @JoinColumn(name = "company_profile_id", nullable = false)
+    private CompanyProfile profile;
 
     @Column(name = "public_id", nullable = false)
     private String publicId;

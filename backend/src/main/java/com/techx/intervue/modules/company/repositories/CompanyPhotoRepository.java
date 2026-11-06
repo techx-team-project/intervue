@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CompanyPhotoRepository extends JpaRepository<CompanyPhoto, Long> {
 
-    List<CompanyPhoto> findByCompanyIdOrderBySortOrderAsc(Long companyId);
+    List<CompanyPhoto> findByProfileIdOrderBySortOrderAsc(Long profileId);
 
-    Optional<CompanyPhoto> findByIdAndCompanyId(Long id, Long companyId);
+    Optional<CompanyPhoto> findByIdAndProfileId(Long id, Long profileId);
 
-    long countByCompanyId(Long companyId);
+    long countByProfileId(Long profileId);
 }

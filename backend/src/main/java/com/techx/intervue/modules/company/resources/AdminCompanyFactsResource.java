@@ -1,9 +1,7 @@
 package com.techx.intervue.modules.company.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.techx.intervue.modules.company.enums.BusinessType;
-import com.techx.intervue.modules.company.enums.CompanyVerificationStatus;
 import java.time.Instant;
 import lombok.Builder;
 
@@ -14,6 +12,7 @@ public record AdminCompanyFactsResource(
         String name,
         String tradingName,
         String taxCode,
+        String registeredAddress,
         BusinessType businessType,
         String industry,
         String size,
@@ -21,14 +20,6 @@ public record AdminCompanyFactsResource(
         String email,
         String phone,
         String website,
-        CompanyVerificationStatus verificationStatus,
-        Instant verifiedAt,
         boolean profileComplete,
         int memberCount,
-        Instant createdAt) {
-
-    @JsonProperty("verified")
-    public boolean verified() {
-        return verificationStatus == CompanyVerificationStatus.VERIFIED;
-    }
-}
+        Instant createdAt) {}

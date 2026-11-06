@@ -1,7 +1,6 @@
 package com.techx.intervue.modules.company.repositories;
 
 import com.techx.intervue.modules.company.entities.CompanyMember;
-import com.techx.intervue.modules.company.enums.CompanyMemberRole;
 import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
 import java.util.List;
 import java.util.Optional;
@@ -24,17 +23,7 @@ public interface CompanyMemberRepository extends JpaRepository<CompanyMember, Lo
 
     boolean existsByUserIdAndStatus(Long userId, CompanyMemberStatus status);
 
-    boolean existsByUserIdAndRoleAndStatus(
-            Long userId, CompanyMemberRole role, CompanyMemberStatus status);
-
     Optional<CompanyMember> findByCompanyIdAndUserId(Long companyId, Long userId);
 
     List<CompanyMember> findByCompanyId(Long companyId);
-
-    List<CompanyMember> findByCompanyIdAndStatus(Long companyId, CompanyMemberStatus status);
-
-    long countByCompanyIdAndStatus(Long companyId, CompanyMemberStatus status);
-
-    long countByCompanyIdAndRoleAndStatus(
-            Long companyId, CompanyMemberRole role, CompanyMemberStatus status);
 }

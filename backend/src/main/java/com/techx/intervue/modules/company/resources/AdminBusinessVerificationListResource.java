@@ -2,7 +2,6 @@ package com.techx.intervue.modules.company.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.techx.intervue.modules.company.enums.BusinessDocumentType;
-import com.techx.intervue.modules.company.enums.CompanyVerificationStatus;
 import com.techx.intervue.modules.company.enums.DocumentReviewStatus;
 import java.time.Instant;
 import lombok.Builder;
@@ -20,7 +19,6 @@ public record AdminBusinessVerificationListResource(
         Long companyId,
         String companyName,
         String companyTaxCode,
-        CompanyVerificationStatus companyVerificationStatus,
         Long submittedByUserId,
         String submittedByName,
         String submittedByEmail) {}

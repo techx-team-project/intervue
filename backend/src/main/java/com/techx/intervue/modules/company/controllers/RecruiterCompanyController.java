@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.company.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.company.requests.CreateCompanyRequest;
 import com.techx.intervue.modules.company.requests.JoinCompanyRequest;
 import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
@@ -50,12 +51,12 @@ public class RecruiterCompanyController extends BaseController {
 
     @PostMapping
     public ResponseEntity<ApiResource<CompanyResource>> create(
-            @Valid @RequestBody SaveCompanyProfileRequest request,
+            @Valid @RequestBody CreateCompanyRequest request,
             @AuthenticationPrincipal CustomUserDetails principal,
             HttpServletRequest httpRequest) {
         return created(
                 companyService.create(request, actor(principal, httpRequest)),
-                "Company created successfully!");
+                "Company linked successfully!");
     }
 
     @PutMapping

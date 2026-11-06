@@ -17,7 +17,6 @@ public final class CompanySpecifications {
             String pattern = SpecificationSupport.containsPattern(request.q());
             return builder.or(
                     builder.like(builder.lower(root.get("name")), pattern),
-                    builder.like(builder.lower(root.get("tradingName")), pattern),
                     builder.like(builder.lower(root.get("taxCode")), pattern));
         };
     }

@@ -2,7 +2,6 @@ package com.techx.intervue.modules.notification.events;
 
 import com.techx.intervue.modules.company.enums.BusinessDocumentType;
 import com.techx.intervue.modules.company.enums.PublishRightLossCause;
-import com.techx.intervue.modules.company.enums.PublishRightLossScope;
 import com.techx.intervue.modules.company.events.BusinessDocumentReviewedEvent;
 import com.techx.intervue.modules.company.events.PublishRightLostEvent;
 import com.techx.intervue.modules.notification.enums.NotificationType;
@@ -76,7 +75,7 @@ public class NotificationEventListener {
     @Async("notificationTaskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     public void onPublishRightLost(PublishRightLostEvent event) {
-        if (event.scope() != PublishRightLossScope.INDIVIDUAL || event.userId() == null) {
+        if (event.userId() == null) {
             return;
         }
 
@@ -185,7 +184,6 @@ public class NotificationEventListener {
         return switch (cause) {
             case DOCUMENT_REVOKED -> "Tài liệu xác thực đã bị thu hồi";
             case DOCUMENT_EXPIRED -> "Tài liệu xác thực đã hết hạn";
-            case COMPANY_VERIFICATION_REVOKED -> "Doanh nghiệp đã bị thu hồi trạng thái xác thực";
             case MEMBERSHIP_REVOKED -> "Bạn đã bị gỡ khỏi danh sách thành viên của doanh nghiệp";
             case MEMBERSHIP_LEFT -> "Bạn đã rời khỏi doanh nghiệp";
         };
