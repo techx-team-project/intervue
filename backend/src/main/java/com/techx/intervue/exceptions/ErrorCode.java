@@ -112,6 +112,8 @@ public enum ErrorCode {
     AGREEMENT_ALREADY_ACCEPTED(HttpStatus.CONFLICT, "This agreement has already been accepted!"),
     PROFILE_SECTION_LIMIT_REACHED(
             HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!"),
+    JOB_NOT_EDITABLE(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This job can no longer be edited or deleted!"),
     SKILL_NAME_ALREADY_USED(HttpStatus.CONFLICT, "A skill with this name already exists!"),
     INVALID_STATUS_TRANSITION(
             HttpStatus.UNPROCESSABLE_CONTENT, "This status change is not allowed!"),

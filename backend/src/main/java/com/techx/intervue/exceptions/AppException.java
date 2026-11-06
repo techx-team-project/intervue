@@ -43,6 +43,10 @@ public class AppException extends RuntimeException {
         return new AppException(ErrorCode.VALIDATION_FAILED, List.of(detail), Map.of(), null);
     }
 
+    public static AppException validation(List<FieldErrorResource> details) {
+        return new AppException(ErrorCode.VALIDATION_FAILED, details, Map.of(), null);
+    }
+
     public static AppException invalidCredentials(boolean captchaRequired) {
         return new AppException(
                 ErrorCode.INVALID_CREDENTIALS,

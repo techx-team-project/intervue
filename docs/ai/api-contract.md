@@ -175,7 +175,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `CANNOT_RESTRICT_SELF` | 422 | An admin cannot ban their own account |
 | `LAST_ACTIVE_ADMIN` | 422 | The target is the only active admin left |
 
-## Skills
+## Skills & Recruiter Jobs
 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
@@ -184,7 +184,18 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `POST` | `/admin/skills` | admin | Body `{ name, group }`. `409 SKILL_NAME_ALREADY_USED` (case-insensitive). |
 | `PUT` | `/admin/skills/{id}` | admin | Same body. |
 | `POST` | `/admin/skills/{id}/activate` · `/deactivate` | admin | Skills are never deleted; an inactive skill disappears from suggestions and cannot be attached to a job. |
+| `GET` | `/recruiter/jobs?status=&q=&sort=&page=&size=` | recruiter | Own jobs only. `sort` is a Spring sort such as `updatedAt,desc`, `deadline,asc`, `salaryMax,desc`. Returns `PageResource<JobSummaryResource>`. |
+| `GET` | `/recruiter/jobs/summary` | recruiter | `{ total, byStatus: { DRAFT, PUBLISHED, PAUSED, CLOSED, EXPIRED, HIDDEN_BY_ADMIN } }`. |
+| `GET` | `/recruiter/jobs/{id}` | recruiter | `JobResource`. `404 NOT_FOUND` for someone else's job. |
+| `POST` | `/recruiter/jobs` | recruiter | Creates a `DRAFT`. Only `title` is required; everything else may be partial. `403 NOT_COMPANY_MEMBER` without a company. The company name is snapshotted on the job. |
+| `PUT` | `/recruiter/jobs/{id}` | recruiter | Allowed in `DRAFT`, `PUBLISHED`, `PAUSED` (otherwise `422 JOB_NOT_EDITABLE`). A non-draft job must stay complete. |
+| `POST` | `/recruiter/jobs/{id}/publish` | recruiter | `DRAFT` to `PUBLISHED`. Runs the publish gate (`assertCanPublish`) and a completeness check; incomplete jobs return `400 VALIDATION_FAILED` with the missing `fieldErrors`. |
+| `POST` | `/recruiter/jobs/{id}/pause` · `/resume` · `/close` | recruiter | `PUBLISHED` to `PAUSED`, `PAUSED` to `PUBLISHED` (gate re-checked), `PUBLISHED`/`PAUSED` to `CLOSED`. Anything else is `422 INVALID_STATUS_TRANSITION`. |
+| `DELETE` | `/recruiter/jobs/{id}` | recruiter | Drafts only (`422 JOB_NOT_EDITABLE` otherwise). |
 
+- `SaveJobRequest`: `{ title, level, contractType, workingArrangement, location: { city, address }, salary: { negotiable, min, max, currency }, skillIds, description, requirements, benefits, deadline, openings }`. Salary is monthly, in the minor unit of `currency` (`VND` or `USD`); `deadline` is a date in Vietnam time.
+- A publish-ready job needs level, contract type, arrangement, city, at least one skill, a description of 50+ characters, requirements of 20+, a salary range (or `negotiable`) and a deadline of today or later. Field names in errors are `level`, `contractType`, `workingArrangement`, `location.city`, `skillIds`, `description`, `requirements`, `salary.min`, `salary.max`, `deadline`.
+- A scheduler (daily 00:05, Asia/Ho_Chi_Minh) moves `PUBLISHED`/`PAUSED` jobs whose deadline has passed to `EXPIRED`. All transitions live in `JobStatusPolicy`.
 
 ## Error codes
 
@@ -212,6 +223,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `DELETION_BLOCKED` | 422 | Account deletion is blocked while unresolved operations remain |
 | `IDENTITY_NOT_VERIFIED` | 422 | Candidate must complete eKYC to apply |
 | `COMPANY_NOT_VERIFIED` | 422 | Company must be verified to post |
+| `JOB_NOT_EDITABLE` | 422 | The job is closed, expired, hidden, or not a draft (for delete) |
 | `SKILL_NAME_ALREADY_USED` | 409 | A skill with this name already exists |
 | `PROFILE_SECTION_LIMIT_REACHED` | 409 | A candidate profile section already holds its maximum number of items |
 | `RATE_LIMITED` | 429 | Honor `Retry-After` |

@@ -1,0 +1,44 @@
+package com.techx.intervue.modules.job.repositories;
+
+import com.techx.intervue.modules.job.entities.Job;
+import com.techx.intervue.modules.job.enums.JobStatus;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificationExecutor<Job> {
+
+    @EntityGraph(attributePaths = "skills")
+    Optional<Job> findByIdAndRecruiterId(Long id, Long recruiterId);
+
+    @Query(
+            "SELECT j.status AS status, COUNT(j) AS total FROM Job j"
+                    + " WHERE j.recruiterId = :recruiterId GROUP BY j.status")
+    List<StatusCount> countByStatusForRecruiter(@Param("recruiterId") Long recruiterId);
+
+    @Modifying
+    @Query(
+            "UPDATE Job j SET j.status = :target, j.updatedAt = :now"
+                    + " WHERE j.status IN :sources AND j.deadline < :today")
+    int transitionOverdue(
+            @Param("sources") Collection<JobStatus> sources,
+            @Param("target") JobStatus target,
+            @Param("today") LocalDate today,
+            @Param("now") Instant now);
+
+    interface StatusCount {
+        JobStatus getStatus();
+
+        long getTotal();
+    }
+}
