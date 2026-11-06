@@ -25,5 +25,6 @@ public record PublicJobResource(
         String requirements,
         String benefits,
         int openings,
+        ScreeningSummaryResource screening,
         LocalDate deadline,
         Instant publishedAt) {}

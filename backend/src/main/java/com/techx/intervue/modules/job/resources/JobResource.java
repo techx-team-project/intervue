@@ -29,6 +29,7 @@ public record JobResource(
         String requirements,
         String benefits,
         ApplicationMode applicationMode,
+        List<ScreeningQuestionResource> screeningQuestions,
         int openings,
         LocalDate deadline,
         Instant publishedAt,

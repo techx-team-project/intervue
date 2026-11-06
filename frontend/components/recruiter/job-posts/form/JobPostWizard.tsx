@@ -36,7 +36,7 @@ const STEP_FIELDS: Array<Array<Path<JobPostFormData>>> = [
     'deadline',
     'openings',
   ],
-  ['description', 'requirements', 'benefits'],
+  ['description', 'requirements', 'benefits', 'screeningQuestions'],
   [],
 ];
 
@@ -48,7 +48,13 @@ const SERVER_FIELD_MAP: Record<string, Path<JobPostFormData>> = {
   skillIds: 'skills',
 };
 
+function normaliseServerField(field: string): string {
+  const mapped = SERVER_FIELD_MAP[field] ?? field;
+  return mapped.replace(/\[(\d+)\]/g, '.$1');
+}
+
 function stepOfField(field: string): number {
+  if (field.startsWith('screeningQuestions')) return 1;
   const index = STEP_FIELDS.findIndex((fields) => fields.includes(field as Path<JobPostFormData>));
   return index === -1 ? 0 : index;
 }
@@ -95,17 +101,12 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
     if (isApiError(error)) {
       const fieldErrors = error.details.filter((detail) => detail.field);
       fieldErrors.forEach((detail) => {
-        const field = SERVER_FIELD_MAP[detail.field as string] ?? (detail.field as Path<JobPostFormData>);
-        form.setError(field, { message: detail.message });
+        form.setError(normaliseServerField(detail.field as string) as Path<JobPostFormData>, {
+          message: detail.message,
+        });
       });
       if (fieldErrors.length > 0) {
-        goTo(
-          Math.min(
-            ...fieldErrors.map((detail) =>
-              stepOfField(SERVER_FIELD_MAP[detail.field as string] ?? (detail.field as string)),
-            ),
-          ),
-        );
+        goTo(Math.min(...fieldErrors.map((detail) => stepOfField(normaliseServerField(detail.field as string)))));
       }
     }
     toast.error(getErrorMessage(error));
