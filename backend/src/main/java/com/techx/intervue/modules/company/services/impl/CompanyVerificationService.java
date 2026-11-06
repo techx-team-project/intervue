@@ -35,13 +35,20 @@ import com.techx.intervue.modules.company.resources.RecruiterVerificationProfile
 import com.techx.intervue.modules.company.resources.VerificationStepResource;
 import com.techx.intervue.modules.company.services.impl.CompanyVerificationLevelPolicy.Facts;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
+import com.techx.intervue.modules.notification.enums.NotificationType;
+import com.techx.intervue.modules.notification.enums.RecipientType;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface.NotificationCommand;
 import com.techx.intervue.modules.recruiter.resources.RecruiterResource;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterServiceInterface;
+import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +79,8 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     private final CompanyVerificationLevelPolicy levelPolicy;
     private final RecruiterServiceInterface recruiterService;
     private final AuditLogServiceInterface auditLogService;
+    private final UserServiceInterface userService;
+    private final NotificationPublisherInterface notificationPublisher;
 
     @Override
     @Transactional
@@ -207,6 +216,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                 AuditAction.BUSINESS_DOCUMENT_SUBMITTED,
                 document.getId(),
                 request.documentType().name());
+        notifyAdminQueue(company.getName(), "Thẩm định hồ sơ doanh nghiệp");
         return businessDocumentMapper.toResource(document, actor.userId());
     }
 
@@ -335,6 +345,26 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                 AgreementStatus.PENDING_REVIEW,
                 stored.publicId(),
                 actor);
+        notifyAdminQueue(membership.getCompany().getName(), "Thẩm định thoả thuận dữ liệu cá nhân");
+    }
+
+    private void notifyAdminQueue(String companyName, String queueLabel) {
+        List<NotificationCommand> commands =
+                userService.findActiveIdsByRole(RoleType.ADMIN).stream()
+                        .map(
+                                adminId ->
+                                        NotificationCommand.builder()
+                                                .recipientType(RecipientType.USER)
+                                                .recipientId(adminId)
+                                                .type(NotificationType.ADMIN_REVIEW_QUEUE_ITEM)
+                                                .params(
+                                                        Map.of(
+                                                                "companyName", companyName,
+                                                                "queueLabel", queueLabel))
+                                                .actionUrl("/admin/verification/business")
+                                                .build())
+                        .toList();
+        notificationPublisher.publishAll(commands);
     }
 
     @Override
