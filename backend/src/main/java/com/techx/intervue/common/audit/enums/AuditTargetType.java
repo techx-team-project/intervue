@@ -4,5 +4,6 @@ public enum AuditTargetType {
     USER,
     COMPANY,
     COMPANY_MEMBER,
-    BUSINESS_DOCUMENT
+    BUSINESS_DOCUMENT,
+    BLOG_POST
 }

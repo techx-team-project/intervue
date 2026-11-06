@@ -113,7 +113,10 @@ public enum ErrorCode {
     PROFILE_SECTION_LIMIT_REACHED(
             HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!"),
     INVALID_STATUS_TRANSITION(
-            HttpStatus.UNPROCESSABLE_CONTENT, "This status change is not allowed!");
+            HttpStatus.UNPROCESSABLE_CONTENT, "This status change is not allowed!"),
+    BLOG_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Blog post not found!"),
+    BLOG_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "Blog category not found!"),
+    BLOG_SLUG_ALREADY_EXISTS(HttpStatus.CONFLICT, "A blog post with this slug already exists!");
 
     private final HttpStatus status;
     private final String message;
