@@ -509,8 +509,6 @@ public class UserAdminService implements UserAdminServiceInterface {
                     "company";
             case BLOG_POST_CREATED, BLOG_POST_UPDATED, BLOG_POST_DELETED, BLOG_POST_PUBLISHED ->
                     "content";
-            case BLOG_POST_CREATED, BLOG_POST_UPDATED, BLOG_POST_DELETED, BLOG_POST_PUBLISHED ->
-                    "content";
         };
     }
 
@@ -561,8 +559,6 @@ public class UserAdminService implements UserAdminServiceInterface {
                     BUSINESS_DOCUMENT_REVOKED,
                     BUSINESS_DOCUMENT_EXPIRED ->
                     "Company verification activity";
-            case BLOG_POST_CREATED, BLOG_POST_UPDATED, BLOG_POST_DELETED, BLOG_POST_PUBLISHED ->
-                    detail != null && !detail.isBlank() ? detail : "Content management activity";
             case BLOG_POST_CREATED, BLOG_POST_UPDATED, BLOG_POST_DELETED, BLOG_POST_PUBLISHED ->
                     detail != null && !detail.isBlank() ? detail : "Content management activity";
         };
