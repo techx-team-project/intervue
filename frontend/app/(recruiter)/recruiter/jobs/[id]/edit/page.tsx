@@ -2,7 +2,6 @@ import JobPostFormView from '@/components/recruiter/job-posts/JobPostFormView';
 import PageHeader from '@/components/recruiter/PageHeader';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import { ROUTES } from '@/constants/routes';
-import { getRecruiterJobById } from '@/mocks/job.mock';
 import { notFound } from 'next/navigation';
 
 interface EditJobPostPageProps {
@@ -11,19 +10,19 @@ interface EditJobPostPageProps {
 
 export default async function EditJobPostPage({ params }: EditJobPostPageProps) {
   const { id } = await params;
-  const job = getRecruiterJobById(id);
+  const jobId = Number(id);
 
-  if (!job) notFound();
+  if (!Number.isInteger(jobId) || jobId <= 0) notFound();
 
   return (
     <>
       <Breadcrumb
         showHome={false}
-        items={[{ label: 'Job posts', href: ROUTES.RECRUITER_JOBS }, { label: 'Edit' }]}
+        items={[{ label: 'Tin tuyển dụng', href: ROUTES.RECRUITER_JOBS }, { label: 'Chỉnh sửa' }]}
         className="mb-3"
       />
-      <PageHeader title={`Edit: ${job.title}`} />
-      <JobPostFormView mode="edit" initialData={job} />
+      <PageHeader title="Chỉnh sửa tin tuyển dụng" />
+      <JobPostFormView jobId={jobId} />
     </>
   );
 }

@@ -2,22 +2,7 @@
 
 import { ROUTES } from '@/constants/routes';
 import type { RecruiterJobPost } from '@/types/recruiter-job';
-import {
-  AlertCircle,
-  Copy,
-  Eye,
-  Link2,
-  MoreVertical,
-  Pause,
-  Pencil,
-  PlayCircle,
-  RotateCcw,
-  SendHorizontal,
-  Square,
-  TimerReset,
-  Trash2,
-  Users,
-} from 'lucide-react';
+import { Copy, Eye, MoreVertical, Pause, Pencil, PlayCircle, Square, Trash2 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -29,13 +14,8 @@ interface JobPostRowActionsMenuProps {
   onPause: () => void;
   onReopen: () => void;
   onClose: () => void;
-  onExtend: () => void;
-  onSubmitForReview: () => void;
-  onRepost: () => void;
   onDuplicate: () => void;
-  onViewRejectionReason: () => void;
-  onCopyLink?: () => void;
-  onDelete?: () => void;
+  onDelete: () => void;
 }
 
 interface MenuAction {
@@ -47,114 +27,65 @@ interface MenuAction {
   tone?: 'default' | 'danger';
 }
 
-const EDITABLE_STATUSES = new Set(['DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED', 'REJECTED']);
+const EDITABLE_STATUSES = new Set(['DRAFT', 'PUBLISHED', 'PAUSED']);
 
 const MENU_WIDTH = 208;
 const MENU_OFFSET = 6;
 const VIEWPORT_PADDING = 12;
 const ITEM_HEIGHT = 36;
 
-export default function JobPostRowActionsMenu({
-  job,
-  isPending,
-  onPause,
-  onReopen,
-  onClose,
-  onExtend,
-  onSubmitForReview,
-  onRepost,
-  onDuplicate,
-  onViewRejectionReason,
-  onCopyLink,
-  onDelete,
-}: JobPostRowActionsMenuProps) {
+function buildActions(props: JobPostRowActionsMenuProps): MenuAction[] {
+  const { job } = props;
+  const base = `${ROUTES.RECRUITER_JOBS}/${job.id}`;
+  const actions: MenuAction[] = [];
+
+  if (EDITABLE_STATUSES.has(job.status)) {
+    actions.push({ key: 'edit', label: 'Chỉnh sửa', icon: Pencil, href: `${base}/edit` });
+  }
+  actions.push({ key: 'preview', label: 'Xem trước', icon: Eye, href: `${base}/preview` });
+
+  if (job.status === 'PUBLISHED') {
+    actions.push({ key: 'pause', label: 'Tạm dừng', icon: Pause, onClick: props.onPause });
+  }
+  if (job.status === 'PAUSED') {
+    actions.push({ key: 'reopen', label: 'Mở lại', icon: PlayCircle, onClick: props.onReopen });
+  }
+  if (job.status === 'PUBLISHED' || job.status === 'PAUSED') {
+    actions.push({ key: 'close', label: 'Đóng tin', icon: Square, onClick: props.onClose, tone: 'danger' });
+  }
+
+  actions.push({ key: 'duplicate', label: 'Nhân bản', icon: Copy, onClick: props.onDuplicate });
+
+  if (job.status === 'DRAFT') {
+    actions.push({ key: 'delete', label: 'Xóa bản nháp', icon: Trash2, onClick: props.onDelete, tone: 'danger' });
+  }
+  return actions;
+}
+
+export default function JobPostRowActionsMenu(props: JobPostRowActionsMenuProps) {
+  const { isPending } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const actions = buildActions(props);
 
   useEffect(() => {
     if (!isOpen) return;
-
-    const closeMenu = () => setIsOpen(false);
-    const handlePointerDown = (event: MouseEvent) => {
+    const close = () => setIsOpen(false);
+    const handlePointerDown = (event: PointerEvent) => {
       const target = event.target as Node;
-      if (triggerRef.current?.contains(target) || menuRef.current?.contains(target)) return;
-      setIsOpen(false);
+      if (!menuRef.current?.contains(target) && !triggerRef.current?.contains(target)) close();
     };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsOpen(false);
-    };
-
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('resize', closeMenu);
-    window.addEventListener('scroll', closeMenu, true);
-
+    document.addEventListener('pointerdown', handlePointerDown);
+    window.addEventListener('scroll', close, true);
+    window.addEventListener('resize', close);
     return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('resize', closeMenu);
-      window.removeEventListener('scroll', closeMenu, true);
+      document.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('scroll', close, true);
+      window.removeEventListener('resize', close);
     };
   }, [isOpen]);
-
-  const actions: MenuAction[] = [];
-
-  if (EDITABLE_STATUSES.has(job.status)) {
-    actions.push({ key: 'edit', label: 'Edit post', icon: Pencil, href: `${ROUTES.RECRUITER_JOBS}/${job.id}/edit` });
-  }
-
-  actions.push({
-    key: 'preview',
-    label: 'Preview candidate view',
-    icon: Eye,
-    href: `${ROUTES.RECRUITER_JOBS}/${job.id}/preview`,
-  });
-
-  if (onCopyLink && (job.status === 'PUBLISHED' || job.status === 'PAUSED')) {
-    actions.push({ key: 'copy-link', label: 'Copy public link', icon: Link2, onClick: onCopyLink });
-  }
-
-  if (job.status !== 'DRAFT') {
-    actions.push({
-      key: 'applications',
-      label: `Applications (${job.applicantsCount || 0})`,
-      icon: Users,
-      href: `${ROUTES.RECRUITER_APPLICATIONS}?job=${job.id}`,
-    });
-  }
-
-  if (job.status === 'DRAFT' || job.status === 'REJECTED') {
-    actions.push({ key: 'submit', label: 'Submit for review', icon: SendHorizontal, onClick: onSubmitForReview });
-  }
-
-  if (job.status === 'PUBLISHED') {
-    actions.push({ key: 'pause', label: 'Pause post', icon: Pause, onClick: onPause });
-    actions.push({ key: 'extend', label: 'Extend 30 days', icon: TimerReset, onClick: onExtend });
-  }
-
-  if (job.status === 'PAUSED') {
-    actions.push({ key: 'reopen', label: 'Reopen post', icon: PlayCircle, onClick: onReopen });
-  }
-
-  if (job.status === 'PUBLISHED' || job.status === 'PAUSED') {
-    actions.push({ key: 'close', label: 'Close post', icon: Square, onClick: onClose, tone: 'danger' });
-  }
-
-  if (job.status === 'EXPIRED') {
-    actions.push({ key: 'repost', label: 'Repost job', icon: RotateCcw, onClick: onRepost });
-  }
-
-  if (job.status === 'REJECTED') {
-    actions.push({ key: 'reason', label: 'View rejection reason', icon: AlertCircle, onClick: onViewRejectionReason });
-  }
-
-  actions.push({ key: 'duplicate', label: 'Duplicate as draft', icon: Copy, onClick: onDuplicate });
-
-  if (onDelete && (job.status === 'DRAFT' || job.status === 'CLOSED' || job.status === 'REJECTED')) {
-    actions.push({ key: 'delete', label: 'Delete post', icon: Trash2, onClick: onDelete, tone: 'danger' });
-  }
 
   const toggleMenu = () => {
     if (isOpen) {
@@ -185,9 +116,9 @@ export default function JobPostRowActionsMenu({
         type="button"
         disabled={isPending}
         onClick={toggleMenu}
-        aria-label="Actions"
+        aria-label="Thao tác"
         aria-expanded={isOpen}
-        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
       >
         <MoreVertical className="h-4 w-4" />
       </button>

@@ -4,35 +4,25 @@ import type {
   JobStatus,
   RecruiterJobSegment,
   RecruiterJobSort,
+  SkillGroup,
   WorkingArrangement,
 } from '@/types/recruiter-job';
 
 export const JOB_PAGE_SIZE = 8;
 
-export const JOB_SEGMENT_META: Record<RecruiterJobSegment, { label: string }> = {
-  all: { label: 'All posts' },
-  published: { label: 'Published' },
-  pending: { label: 'Pending review' },
-  paused: { label: 'Paused' },
-  expired: { label: 'Expired' },
-  draft: { label: 'Drafts' },
-  closed: { label: 'Closed' },
+export const JOB_SEGMENT_META: Record<RecruiterJobSegment, { label: string; status?: JobStatus }> = {
+  all: { label: 'Tất cả' },
+  published: { label: 'Đang tuyển', status: 'PUBLISHED' },
+  paused: { label: 'Tạm dừng', status: 'PAUSED' },
+  expired: { label: 'Hết hạn', status: 'EXPIRED' },
+  draft: { label: 'Bản nháp', status: 'DRAFT' },
+  closed: { label: 'Đã đóng', status: 'CLOSED' },
 };
 
-export const JOB_SORT_OPTIONS: Array<{ value: RecruiterJobSort; label: string }> = [
-  { value: 'newest', label: 'Newest updated' },
-  { value: 'expiringSoon', label: 'Expiring soon' },
-  { value: 'mostApplicants', label: 'Most applicants' },
-  { value: 'highestSalary', label: 'Highest salary' },
-];
-
-export const JOB_LEVEL_OPTIONS: Array<{ value: string; label: string }> = [
-  { value: 'ALL', label: 'All levels' },
-  { value: 'INTERN', label: 'Intern' },
-  { value: 'JUNIOR', label: 'Junior' },
-  { value: 'MID', label: 'Middle' },
-  { value: 'SENIOR', label: 'Senior' },
-  { value: 'LEAD', label: 'Lead / Principal' },
+export const JOB_SORT_OPTIONS: Array<{ value: RecruiterJobSort; label: string; param: string }> = [
+  { value: 'newest', label: 'Mới cập nhật', param: 'updatedAt,desc' },
+  { value: 'expiringSoon', label: 'Sắp hết hạn', param: 'deadline,asc' },
+  { value: 'highestSalary', label: 'Lương cao nhất', param: 'salaryMax,desc' },
 ];
 
 export const JOB_LEVEL_LABELS: Record<JobLevel, string> = {
@@ -42,14 +32,6 @@ export const JOB_LEVEL_LABELS: Record<JobLevel, string> = {
   SENIOR: 'Senior',
   LEAD: 'Lead',
 };
-
-export const JOB_ARRANGEMENT_OPTIONS: Array<{ value: string; label: string }> = [
-  { value: 'ALL', label: 'All arrangements' },
-  { value: 'ON_SITE', label: 'On-site' },
-  { value: 'HYBRID', label: 'Hybrid' },
-  { value: 'REMOTE', label: 'Remote' },
-  { value: 'FLEXIBLE', label: 'Flexible' },
-];
 
 export const JOB_ARRANGEMENT_LABELS: Record<WorkingArrangement, string> = {
   ON_SITE: 'On-site',
@@ -64,19 +46,12 @@ export const JOB_CONTRACT_LABELS: Record<ContractType, string> = {
   INTERNSHIP: 'Internship',
 };
 
-export const JOB_LOCATION_OPTIONS: Array<{ value: string; label: string }> = [
-  { value: 'ALL', label: 'All locations' },
-  { value: 'Hanoi', label: 'Hanoi' },
-  { value: 'Ho Chi Minh City', label: 'Ho Chi Minh City' },
-  { value: 'Da Nang', label: 'Da Nang' },
-];
-
 export function getJobExpiryDetails(expiresAt?: string, status?: JobStatus) {
   if (!expiresAt || status === 'DRAFT') {
     return {
       daysLeft: null,
       isExpired: false,
-      label: 'No expiry',
+      label: 'Chưa đặt hạn',
       tone: 'muted' as const,
       progressPercent: 0,
     };
@@ -91,7 +66,7 @@ export function getJobExpiryDetails(expiresAt?: string, status?: JobStatus) {
     return {
       daysLeft: 0,
       isExpired: true,
-      label: 'Expired',
+      label: 'Đã hết hạn',
       tone: 'danger' as const,
       progressPercent: 100,
     };
@@ -103,7 +78,7 @@ export function getJobExpiryDetails(expiresAt?: string, status?: JobStatus) {
     return {
       daysLeft,
       isExpired: false,
-      label: daysLeft === 1 ? '1 day left' : `${daysLeft} days left`,
+      label: `Còn ${daysLeft} ngày`,
       tone: 'warning' as const,
       progressPercent,
     };
@@ -112,8 +87,45 @@ export function getJobExpiryDetails(expiresAt?: string, status?: JobStatus) {
   return {
     daysLeft,
     isExpired: false,
-    label: `${daysLeft} days left`,
+    label: `Còn ${daysLeft} ngày`,
     tone: 'normal' as const,
     progressPercent,
   };
 }
+
+export const JOB_FORM_LEVEL_OPTIONS: Array<{ value: JobLevel; label: string }> = [
+  { value: 'INTERN', label: 'Thực tập sinh' },
+  { value: 'JUNIOR', label: 'Junior' },
+  { value: 'MID', label: 'Middle' },
+  { value: 'SENIOR', label: 'Senior' },
+  { value: 'LEAD', label: 'Lead / Principal' },
+];
+
+export const JOB_FORM_CONTRACT_OPTIONS: Array<{ value: ContractType; label: string }> = [
+  { value: 'FULL_TIME', label: 'Toàn thời gian' },
+  { value: 'PART_TIME', label: 'Bán thời gian' },
+  { value: 'INTERNSHIP', label: 'Thực tập' },
+];
+
+export const JOB_FORM_ARRANGEMENT_OPTIONS: Array<{ value: WorkingArrangement; label: string }> = [
+  { value: 'ON_SITE', label: 'Tại văn phòng' },
+  { value: 'HYBRID', label: 'Hybrid' },
+  { value: 'REMOTE', label: 'Từ xa' },
+  { value: 'FLEXIBLE', label: 'Linh hoạt' },
+];
+
+export const JOB_FORM_CURRENCY_OPTIONS = [
+  { value: 'VND', label: 'triệu VND' },
+  { value: 'USD', label: 'USD' },
+];
+
+export const JOB_CITY_SUGGESTIONS = ['Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ'];
+
+export const SKILL_GROUP_LABELS: Record<SkillGroup, string> = {
+  CORE: 'Cốt lõi',
+  AI_DATA: 'AI & Dữ liệu',
+  TOOLS_DEVOPS: 'Công cụ & DevOps',
+  SOFT_SKILLS: 'Kỹ năng mềm',
+};
+
+export const JOB_MAX_SKILLS = 20;

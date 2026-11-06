@@ -1,12 +1,48 @@
 // TEMP: replace with API
-import type { RecruiterJobPost } from '@/types/recruiter-job';
+import type { ContractType, JobLevel, WorkingArrangement } from '@/types/recruiter-job';
+
+export interface MockScreeningQuestion {
+  id: string;
+  question: string;
+  required: boolean;
+  type: 'TEXT' | 'YES_NO' | 'SINGLE_CHOICE';
+  options?: string[];
+}
+
+export interface MockRecruiterJobPost {
+  id: string;
+  title: string;
+  status: string;
+  level: JobLevel;
+  contractType: ContractType;
+  workingArrangement: WorkingArrangement;
+  location: { city: string; district?: string; specificAddress?: string };
+  salary: { negotiable: boolean; min?: number; max?: number; currency?: 'VND' | 'USD'; period?: 'MONTHLY' };
+  skills: string[];
+  description: string;
+  requirements: string;
+  benefits: string;
+  screeningQuestions: MockScreeningQuestion[];
+  recruitsCount: number;
+  applicantsCount?: number;
+  newApplicantsCount?: number;
+  viewsCount?: number;
+  isFeatured?: boolean;
+  isUrgent?: boolean;
+  rejectionReason?: string;
+  aiGenerated?: { description?: boolean; requirements?: boolean };
+  createdAt: string;
+  updatedAt: string;
+  expiresAt?: string;
+  publishedAt?: string;
+}
 
 const NOW = Date.now();
 const DAY = 24 * 60 * 60 * 1000;
 const daysFromNow = (days: number) => new Date(NOW + days * DAY).toISOString();
 const daysAgo = (days: number) => new Date(NOW - days * DAY).toISOString();
 
-export const MOCK_RECRUITER_JOB_POSTS: RecruiterJobPost[] = [
+export const MOCK_RECRUITER_JOB_POSTS: MockRecruiterJobPost[] = [
   {
     id: 'job-001',
     title: 'Backend Engineer (Java/Spring Boot)',
@@ -276,7 +312,3 @@ export const MOCK_RECRUITER_JOB_POSTS: RecruiterJobPost[] = [
     expiresAt: daysFromNow(23),
   },
 ];
-
-export function getRecruiterJobById(id: string): RecruiterJobPost | undefined {
-  return MOCK_RECRUITER_JOB_POSTS.find((job) => job.id === id);
-}

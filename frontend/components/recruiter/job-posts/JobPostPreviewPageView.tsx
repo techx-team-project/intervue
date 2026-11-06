@@ -14,7 +14,6 @@ import { toast } from 'sonner';
 
 interface JobPostPreviewPageViewProps {
   initialJob: RecruiterJobPost;
-  jobId: string;
 }
 
 export function recruiterJobToCandidateJobDetail(job: RecruiterJobPost): JobDetail {
@@ -66,11 +65,11 @@ export function recruiterJobToCandidateJobDetail(job: RecruiterJobPost): JobDeta
     slug: job.id,
     title: job.title || 'Untitled Job Post',
     company: {
-      name: 'InterVue Corporation',
+      name: job.companyName ?? 'Công ty của bạn',
       logo: 'https://cdn-new.topcv.vn/unsafe/80x/https://static.topcv.vn/company_logos/68d4fafca98ba1758788348.png',
       size: '50 - 150 nhân viên',
       industry: 'Công nghệ thông tin / Phần mềm',
-      address: `${job.location.district ? job.location.district + ', ' : ''}${job.location.city}`,
+      address: [job.location.address, job.location.city].filter(Boolean).join(', '),
       website: 'https://intervue.vn',
       isVerified: true,
       followers: '3.5k',
@@ -79,29 +78,25 @@ export function recruiterJobToCandidateJobDetail(job: RecruiterJobPost): JobDeta
     },
     salary: {
       display: salaryDisplay,
-      min: job.salary.min,
-      max: job.salary.max,
+      min: job.salary.min ?? undefined,
+      max: job.salary.max ?? undefined,
       currency: job.salary.currency || 'VND',
       negotiable: job.salary.negotiable,
     },
     location: {
-      city: job.location.city,
-      district: job.location.district,
-      specificAddress:
-        job.location.specificAddress ||
-        `${job.location.district ? job.location.district + ', ' : ''}${job.location.city}`,
+      city: job.location.city ?? '',
+      specificAddress: [job.location.address, job.location.city].filter(Boolean).join(', '),
     },
-    experience: levelLabels[job.level] || 'Tất cả cấp bậc',
+    experience: (job.level && levelLabels[job.level]) || 'Tất cả cấp bậc',
     deadline: job.expiresAt ? new Date(job.expiresAt).toLocaleDateString('vi-VN') : '30 ngày tới',
     daysRemaining: 30,
-    level: levelLabels[job.level] || job.level,
+    level: (job.level && levelLabels[job.level]) || job.level || '',
     recruitsCount: `${job.recruitsCount || 1} người`,
-    workingType: arrangementLabels[job.workingArrangement] || job.workingArrangement,
-    employmentType: contractLabels[job.contractType] || job.contractType,
+    workingType: (job.workingArrangement && arrangementLabels[job.workingArrangement]) || job.workingArrangement || '',
+    employmentType: (job.contractType && contractLabels[job.contractType]) || job.contractType || '',
     gender: 'Không yêu cầu',
-    isPro: Boolean(job.isFeatured),
-    isUrgent: Boolean(job.isUrgent),
-    highlightBadge: job.isUrgent ? '🔥 Tuyển gấp' : job.isFeatured ? '⭐ Tin nổi bật' : undefined,
+    isPro: false,
+    isUrgent: false,
     tags: job.skills || [],
     skills: job.skills || [],
     jobDescription: splitLines(job.description),
@@ -113,31 +108,14 @@ export function recruiterJobToCandidateJobDetail(job: RecruiterJobPost): JobDeta
     },
     categories: [{ name: 'IT - Phần mềm', link: '/jobs' }],
     verifiedBadges: ['Giấy phép kinh doanh đã xác thực', 'Nhà tuyển dụng xác minh'],
-    screeningQuestions: job.screeningQuestions || [],
+    screeningQuestions: [],
   };
 }
 
-export default function JobPostPreviewPageView({ initialJob, jobId }: JobPostPreviewPageViewProps) {
+export default function JobPostPreviewPageView({ initialJob }: JobPostPreviewPageViewProps) {
   const [hasCopied, setHasCopied] = useState(false);
 
-  // Lazy initialize state from sessionStorage if live unsaved preview exists
-  const [job] = useState<RecruiterJobPost>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const storageKey = jobId === 'draft' ? 'intervue_preview_draft' : `intervue_preview_${jobId}`;
-        const cached = sessionStorage.getItem(storageKey);
-        if (cached) {
-          const parsed = JSON.parse(cached) as RecruiterJobPost;
-          if (parsed && parsed.title) {
-            return parsed;
-          }
-        }
-      } catch {
-        // Fallback to initialJob
-      }
-    }
-    return initialJob;
-  });
+  const job = initialJob;
 
   const handleCopyLink = () => {
     const url = `${window.location.origin}/jobs/${job.id}`;
@@ -147,8 +125,7 @@ export default function JobPostPreviewPageView({ initialJob, jobId }: JobPostPre
     setTimeout(() => setHasCopied(false), 2000);
   };
 
-  const isDraft = jobId === 'draft' || job.id === 'preview' || job.id === 'draft';
-  const editUrl = isDraft ? ROUTES.RECRUITER_JOBS_CREATE : `${ROUTES.RECRUITER_JOBS}/${job.id}/edit`;
+  const editUrl = `${ROUTES.RECRUITER_JOBS}/${job.id}/edit`;
   const candidateJobDetail = recruiterJobToCandidateJobDetail(job);
 
   const handlePreviewClickCapture = (e: React.MouseEvent<HTMLDivElement>) => {

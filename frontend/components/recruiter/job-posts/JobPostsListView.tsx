@@ -1,325 +1,221 @@
 'use client';
 
 import Pagination from '@/components/common/Pagination';
+import Spinner from '@/components/common/Spinner';
 import { Button } from '@/components/ui/Button';
-import { JOB_PAGE_SIZE } from '@/constants/recruiter-job';
+import Modal from '@/components/ui/Modal';
+import { JOB_PAGE_SIZE, JOB_SEGMENT_META, JOB_SORT_OPTIONS } from '@/constants/recruiter-job';
 import { ROUTES } from '@/constants/routes';
 import { useJobPostActions } from '@/hooks/useJobPostActions';
-import type { RecruiterJobPost, RecruiterJobSegment, RecruiterJobSort } from '@/types/recruiter-job';
+import { useRecruiterJobCounts, useRecruiterJobList } from '@/hooks/useRecruiterJobs';
+import type { RecruiterJobSegment, RecruiterJobSort } from '@/types/recruiter-job';
+import { getErrorMessage } from '@/utils/error';
+import { summaryToJobPost } from '@/utils/recruiter-job';
 import { FilePlus, Plus, SearchX } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import JobPostsBulkBar from './JobPostsBulkBar';
 import JobPostsFilterBar from './JobPostsFilterBar';
+import JobPostsList from './JobPostsList';
 import JobPostsSegmentTabs from './JobPostsSegmentTabs';
 import JobPostsStatsRow from './JobPostsStatsRow';
-import JobPostsTable from './JobPostsTable';
 
-interface JobPostsListViewProps {
-  initialJobs: RecruiterJobPost[];
+interface ConfirmRequest {
+  title: string;
+  message: string;
+  run: () => void;
 }
 
-export default function JobPostsListView({ initialJobs }: JobPostsListViewProps) {
-  const [jobs, setJobs] = useState(initialJobs);
-  const actions = useJobPostActions(setJobs);
+const SEGMENTS = Object.keys(JOB_SEGMENT_META) as RecruiterJobSegment[];
 
-  // Filters & State
+export default function JobPostsListView() {
+  const actions = useJobPostActions();
   const [search, setSearch] = useState('');
   const [segment, setSegment] = useState<RecruiterJobSegment>('all');
-  const [level, setLevel] = useState('ALL');
-  const [arrangement, setArrangement] = useState('ALL');
-  const [location, setLocation] = useState('ALL');
   const [sort, setSort] = useState<RecruiterJobSort>('newest');
   const [page, setPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [confirm, setConfirm] = useState<ConfirmRequest | null>(null);
 
-  // Check if filters differ from default
-  const isFiltered = useMemo(() => {
-    return search.trim() !== '' || level !== 'ALL' || arrangement !== 'ALL' || location !== 'ALL' || sort !== 'newest';
-  }, [search, level, arrangement, location, sort]);
+  const listQuery = useRecruiterJobList({
+    status: JOB_SEGMENT_META[segment].status,
+    q: search,
+    sort: JOB_SORT_OPTIONS.find((option) => option.value === sort)?.param,
+    page: page - 1,
+    size: JOB_PAGE_SIZE,
+  });
+  const countsQuery = useRecruiterJobCounts();
 
-  const handleResetFilters = () => {
-    setSearch('');
-    setLevel('ALL');
-    setArrangement('ALL');
-    setLocation('ALL');
-    setSort('newest');
-    setPage(1);
-  };
+  const jobs = useMemo(() => (listQuery.data?.items ?? []).map(summaryToJobPost), [listQuery.data]);
+  const totalItems = listQuery.data?.totalItems ?? 0;
+  const pageCount = Math.max(1, listQuery.data?.totalPages ?? 1);
 
-  // Live counts for segment tabs
   const segmentCounts = useMemo(() => {
-    const counts: Record<RecruiterJobSegment, number> = {
-      all: jobs.length,
-      published: 0,
-      pending: 0,
-      paused: 0,
-      expired: 0,
-      draft: 0,
-      closed: 0,
+    const counts = {} as Record<RecruiterJobSegment, number>;
+    for (const key of SEGMENTS) {
+      const status = JOB_SEGMENT_META[key].status;
+      counts[key] = status ? (countsQuery.data?.byStatus[status] ?? 0) : (countsQuery.data?.total ?? 0);
+    }
+    return counts;
+  }, [countsQuery.data]);
+
+  const isFiltered = search.trim() !== '' || segment !== 'all';
+  const isAllSelected = jobs.length > 0 && jobs.every((job) => selectedIds.has(job.id));
+
+  const resetSelection = () => setSelectedIds(new Set());
+
+  const changeFilter =
+    <T,>(setter: (value: T) => void) =>
+    (value: T) => {
+      setter(value);
+      setPage(1);
+      resetSelection();
     };
 
-    for (const job of jobs) {
-      if (job.status === 'PUBLISHED') counts.published += 1;
-      else if (job.status === 'PENDING_REVIEW') counts.pending += 1;
-      else if (job.status === 'PAUSED') counts.paused += 1;
-      else if (job.status === 'EXPIRED') counts.expired += 1;
-      else if (job.status === 'DRAFT') counts.draft += 1;
-      else if (job.status === 'CLOSED') counts.closed += 1;
-    }
-
-    return counts;
-  }, [jobs]);
-
-  // Filtered & Sorted Jobs
-  const filteredJobs = useMemo(() => {
-    const query = search.trim().toLowerCase();
-
-    const result = jobs.filter((job) => {
-      // 1. Segment filter
-      if (segment === 'published' && job.status !== 'PUBLISHED') return false;
-      if (segment === 'pending' && job.status !== 'PENDING_REVIEW') return false;
-      if (segment === 'paused' && job.status !== 'PAUSED') return false;
-      if (segment === 'expired' && job.status !== 'EXPIRED') return false;
-      if (segment === 'draft' && job.status !== 'DRAFT') return false;
-      if (segment === 'closed' && job.status !== 'CLOSED') return false;
-
-      // 2. Search keyword filter (title, skills, id)
-      if (query) {
-        const matchesTitle = job.title.toLowerCase().includes(query);
-        const matchesId = job.id.toLowerCase().includes(query);
-        const matchesSkill = job.skills?.some((s) => s.toLowerCase().includes(query));
-        if (!matchesTitle && !matchesId && !matchesSkill) return false;
-      }
-
-      // 3. Level filter
-      if (level !== 'ALL' && job.level !== level) return false;
-
-      // 4. Arrangement filter
-      if (arrangement !== 'ALL' && job.workingArrangement !== arrangement) return false;
-
-      // 5. Location filter
-      if (location !== 'ALL' && !job.location.city.toLowerCase().includes(location.toLowerCase())) {
-        return false;
-      }
-
-      return true;
-    });
-
-    // Sort pipeline
-    return result.sort((a, b) => {
-      if (sort === 'expiringSoon') {
-        const timeA = a.expiresAt ? new Date(a.expiresAt).getTime() : Infinity;
-        const timeB = b.expiresAt ? new Date(b.expiresAt).getTime() : Infinity;
-        return timeA - timeB;
-      }
-
-      if (sort === 'mostApplicants') {
-        const appsA = a.applicantsCount ?? 0;
-        const appsB = b.applicantsCount ?? 0;
-        return appsB - appsA;
-      }
-
-      if (sort === 'highestSalary') {
-        const salA = a.salary.max ?? a.salary.min ?? 0;
-        const salB = b.salary.max ?? b.salary.min ?? 0;
-        return salB - salA;
-      }
-
-      // Default: 'newest' by updatedAt / createdAt
-      const dateA = new Date(a.updatedAt || a.createdAt).getTime();
-      const dateB = new Date(b.updatedAt || b.createdAt).getTime();
-      return dateB - dateA;
-    });
-  }, [jobs, segment, search, level, arrangement, location, sort]);
-
-  // Pagination
-  const pageCount = Math.max(1, Math.ceil(filteredJobs.length / JOB_PAGE_SIZE));
-  const currentPage = Math.min(page, pageCount);
-
-  const paginatedJobs = useMemo(() => {
-    const startIndex = (currentPage - 1) * JOB_PAGE_SIZE;
-    return filteredJobs.slice(startIndex, startIndex + JOB_PAGE_SIZE);
-  }, [filteredJobs, currentPage]);
-
-  // Selection handlers
-  const isAllSelected = useMemo(() => {
-    if (paginatedJobs.length === 0) return false;
-    return paginatedJobs.every((j) => selectedIds.has(j.id));
-  }, [paginatedJobs, selectedIds]);
-
-  const handleToggleSelect = (id: string) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
+  const toggleSelect = (id: string) =>
+    setSelectedIds((previous) => {
+      const next = new Set(previous);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       return next;
     });
-  };
 
-  const handleSelectAll = () => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (isAllSelected) {
-        paginatedJobs.forEach((j) => next.delete(j.id));
-      } else {
-        paginatedJobs.forEach((j) => next.add(j.id));
-      }
+  const toggleSelectAll = () =>
+    setSelectedIds((previous) => {
+      const next = new Set(previous);
+      jobs.forEach((job) => (isAllSelected ? next.delete(job.id) : next.add(job.id)));
       return next;
     });
+
+  const runBulk = async (task: (ids: string[]) => Promise<void>) => {
+    await task(Array.from(selectedIds));
+    resetSelection();
   };
 
-  const handleDeselectAll = () => {
-    setSelectedIds(new Set());
-  };
-
-  // Bulk actions
-  const handleBulkPause = async () => {
-    await actions.bulkPauseJobs(Array.from(selectedIds));
-    handleDeselectAll();
-  };
-
-  const handleBulkExtend = async () => {
-    await actions.bulkExtendJobs(Array.from(selectedIds));
-    handleDeselectAll();
-  };
-
-  const handleBulkClose = async () => {
-    await actions.bulkCloseJobs(Array.from(selectedIds));
-    handleDeselectAll();
-  };
-
-  // Stat card navigation
-  const handleSelectSegmentFromStats = (newSegment: RecruiterJobSegment) => {
-    setSegment(newSegment);
-    setPage(1);
-  };
-
-  const handleSelectSortFromStats = (newSort: RecruiterJobSort) => {
-    setSort(newSort);
-    setPage(1);
+  const handleConfirm = () => {
+    confirm?.run();
+    setConfirm(null);
   };
 
   return (
     <div className="space-y-5">
-      {/* 1. KPI Stats Metric Cards */}
-      <JobPostsStatsRow
-        jobs={jobs}
-        currentSegment={segment}
-        onSelectSegment={handleSelectSegmentFromStats}
-        onSelectSort={handleSelectSortFromStats}
-      />
+      <JobPostsStatsRow counts={countsQuery.data} currentSegment={segment} onSelectSegment={changeFilter(setSegment)} />
 
-      {/* 2. Status Segment Tabs */}
-      <JobPostsSegmentTabs
-        segment={segment}
-        onSegmentChange={(newSeg) => {
-          setSegment(newSeg);
-          setPage(1);
-        }}
-        counts={segmentCounts}
-      />
+      <JobPostsSegmentTabs segment={segment} onSegmentChange={changeFilter(setSegment)} counts={segmentCounts} />
 
-      {/* 3. Advanced Filter & Sort Bar */}
       <JobPostsFilterBar
         search={search}
-        onSearchChange={(val) => {
-          setSearch(val);
-          setPage(1);
-        }}
-        level={level}
-        onLevelChange={(val) => {
-          setLevel(val);
-          setPage(1);
-        }}
-        arrangement={arrangement}
-        onArrangementChange={(val) => {
-          setArrangement(val);
-          setPage(1);
-        }}
-        location={location}
-        onLocationChange={(val) => {
-          setLocation(val);
-          setPage(1);
-        }}
+        onSearchChange={changeFilter(setSearch)}
         sort={sort}
-        onSortChange={(val) => {
-          setSort(val);
-          setPage(1);
-        }}
-        onResetFilters={handleResetFilters}
-        isFiltered={isFiltered}
+        onSortChange={changeFilter(setSort)}
       />
 
-      {/* 4. Content Area: Table / Mobile Cards / Empty States */}
-      {filteredJobs.length === 0 ? (
+      {listQuery.isLoading ? (
+        <div className="flex justify-center py-16">
+          <Spinner />
+        </div>
+      ) : listQuery.isError ? (
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-6 py-12 text-center">
+          <p className="text-sm font-semibold text-rose-700">{getErrorMessage(listQuery.error)}</p>
+          <Button variant="outline" size="sm" onClick={() => listQuery.refetch()}>
+            Thử lại
+          </Button>
+        </div>
+      ) : jobs.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center shadow-xs">
-          {jobs.length === 0 ? (
-            <>
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-                <FilePlus className="h-7 w-7" />
-              </div>
-              <h3 className="text-navy text-base font-bold">No job posts yet</h3>
-              <p className="max-w-md text-xs text-slate-500">
-                Publish your first job post to start reaching qualified IT candidates on InterVue.
-              </p>
-              <Link href={ROUTES.RECRUITER_JOBS_CREATE} className="mt-2">
-                <Button leftIcon={<Plus className="h-4 w-4" />}>Post a job</Button>
-              </Link>
-            </>
-          ) : (
+          {isFiltered ? (
             <>
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
                 <SearchX className="h-7 w-7" />
               </div>
-              <h3 className="text-navy text-base font-bold">No matching job posts found</h3>
-              <p className="max-w-md text-xs text-slate-500">
-                Try adjusting your search query, clearing specific filters, or switching segment tabs.
-              </p>
-              <Button variant="outline" size="sm" onClick={handleResetFilters} className="mt-2">
-                Clear all filters
+              <h3 className="text-navy text-base font-bold">Không tìm thấy tin phù hợp</h3>
+              <p className="max-w-md text-xs text-slate-500">Thử đổi từ khóa tìm kiếm hoặc chuyển sang nhóm khác.</p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSearch('');
+                  setSegment('all');
+                  setPage(1);
+                }}
+              >
+                Xóa bộ lọc
               </Button>
+            </>
+          ) : (
+            <>
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                <FilePlus className="h-7 w-7" />
+              </div>
+              <h3 className="text-navy text-base font-bold">Bạn chưa có tin tuyển dụng nào</h3>
+              <p className="max-w-md text-xs text-slate-500">
+                Đăng tin đầu tiên để bắt đầu tiếp cận ứng viên IT chất lượng trên InterVue.
+              </p>
+              <Link href={ROUTES.RECRUITER_JOBS_CREATE} className="mt-2">
+                <Button leftIcon={<Plus className="h-4 w-4" />}>Đăng tin</Button>
+              </Link>
             </>
           )}
         </div>
       ) : (
         <div className="space-y-4">
-          <JobPostsTable
-            jobs={paginatedJobs}
+          <JobPostsList
+            jobs={jobs}
             actions={actions}
             selectedIds={selectedIds}
-            onToggleSelect={handleToggleSelect}
-            onSelectAll={handleSelectAll}
+            onToggleSelect={toggleSelect}
+            onSelectAll={toggleSelectAll}
             isAllSelected={isAllSelected}
+            onConfirm={setConfirm}
           />
-
-          {/* 5. Pagination */}
           <div className="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-xs sm:p-4">
             <Pagination
-              page={currentPage}
+              page={page}
               pageCount={pageCount}
-              totalItems={filteredJobs.length}
+              totalItems={totalItems}
               pageSize={JOB_PAGE_SIZE}
-              onPageChange={(newPage) => {
-                setPage(newPage);
-                if (typeof window !== 'undefined') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
+              onPageChange={(next) => {
+                setPage(next);
+                resetSelection();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
             />
           </div>
         </div>
       )}
 
-      {/* 6. Floating Bulk Actions Bar */}
       <JobPostsBulkBar
         selectedCount={selectedIds.size}
-        onPauseSelected={handleBulkPause}
-        onExtendSelected={handleBulkExtend}
-        onCloseSelected={handleBulkClose}
-        onDeselectAll={handleDeselectAll}
+        onPauseSelected={() => runBulk(actions.bulkPauseJobs)}
+        onCloseSelected={() =>
+          setConfirm({
+            title: 'Đóng các tin đã chọn?',
+            message: `${selectedIds.size} tin sẽ ngừng nhận hồ sơ và không thể mở lại.`,
+            run: () => runBulk(actions.bulkCloseJobs),
+          })
+        }
+        onDeselectAll={resetSelection}
         isPending={actions.pendingId === 'bulk'}
       />
+
+      <Modal
+        isOpen={confirm !== null}
+        onClose={() => setConfirm(null)}
+        title={confirm?.title}
+        maxWidth="sm"
+        footer={
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" onClick={() => setConfirm(null)}>
+              Hủy
+            </Button>
+            <Button variant="danger" onClick={handleConfirm}>
+              Xác nhận
+            </Button>
+          </div>
+        }
+      >
+        <p className="text-sm text-slate-600">{confirm?.message}</p>
+      </Modal>
     </div>
   );
 }
