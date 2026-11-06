@@ -515,6 +515,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     BROADCAST_SENT,
                     BROADCAST_CANCELLED ->
                     "notification";
+            case JOB_HIDDEN, JOB_RESTORED -> "moderation";
         };
     }
 
@@ -573,6 +574,8 @@ public class UserAdminService implements UserAdminServiceInterface {
                     BROADCAST_SENT,
                     BROADCAST_CANCELLED ->
                     detail != null && !detail.isBlank() ? detail : "Broadcast activity";
+            case JOB_HIDDEN -> "Job hidden by an admin";
+            case JOB_RESTORED -> "Job restored by an admin";
         };
     }
 

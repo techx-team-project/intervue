@@ -32,6 +32,9 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
                     + " WHERE j.recruiterId = :recruiterId GROUP BY j.status")
     List<StatusCount> countByStatusForRecruiter(@Param("recruiterId") Long recruiterId);
 
+    @Query("SELECT j.status AS status, COUNT(j) AS total FROM Job j GROUP BY j.status")
+    List<StatusCount> countByStatus();
+
     @Modifying
     @Query(
             "UPDATE Job j SET j.status = :target, j.updatedAt = :now"

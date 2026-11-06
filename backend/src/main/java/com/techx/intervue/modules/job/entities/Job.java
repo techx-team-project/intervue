@@ -126,6 +126,15 @@ public class Job extends BaseEntity {
     @Column(name = "published_at")
     private Instant publishedAt;
 
+    @Column(name = "hidden_reason", length = 500)
+    private String hiddenReason;
+
+    @Column(name = "hidden_at")
+    private Instant hiddenAt;
+
+    @Column(name = "hidden_by")
+    private Long hiddenBy;
+
     @BatchSize(size = 50)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

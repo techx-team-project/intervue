@@ -7,6 +7,7 @@ import com.techx.intervue.modules.job.entities.Skill;
 import com.techx.intervue.modules.job.enums.ApplicationMode;
 import com.techx.intervue.modules.job.enums.ScreeningQuestionType;
 import com.techx.intervue.modules.job.requests.SaveJobRequest;
+import com.techx.intervue.modules.job.resources.AdminJobSummaryResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobSummaryResource;
 import com.techx.intervue.modules.job.resources.PublicJobCompanyResource;
@@ -72,6 +73,8 @@ public class JobMapper {
                 .openings(job.getOpenings())
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
+                .hiddenReason(job.getHiddenReason())
+                .hiddenAt(job.getHiddenAt())
                 .createdAt(job.getCreatedAt())
                 .updatedAt(job.getUpdatedAt())
                 .build();
@@ -90,6 +93,23 @@ public class JobMapper {
                 .openings(job.getOpenings())
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
+                .updatedAt(job.getUpdatedAt())
+                .build();
+    }
+
+    public AdminJobSummaryResource toAdminSummary(Job job) {
+        return AdminJobSummaryResource.builder()
+                .id(job.getId())
+                .title(job.getTitle())
+                .status(job.getStatus())
+                .companyId(job.getCompanyId())
+                .companyName(job.getCompanyName())
+                .level(job.getLevel())
+                .city(job.getCity())
+                .salary(toSalary(job))
+                .deadline(job.getDeadline())
+                .publishedAt(job.getPublishedAt())
+                .hiddenReason(job.getHiddenReason())
                 .updatedAt(job.getUpdatedAt())
                 .build();
     }

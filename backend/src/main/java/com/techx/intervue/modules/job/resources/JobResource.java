@@ -33,6 +33,8 @@ public record JobResource(
         int openings,
         LocalDate deadline,
         Instant publishedAt,
+        String hiddenReason,
+        Instant hiddenAt,
         Instant createdAt,
         Instant updatedAt) {
 
