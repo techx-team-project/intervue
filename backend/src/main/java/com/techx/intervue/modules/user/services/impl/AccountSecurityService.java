@@ -6,6 +6,8 @@ import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.helpers.TokenHashUtil;
 import com.techx.intervue.modules.user.entities.RefreshToken;
 import com.techx.intervue.modules.user.entities.User;
+import com.techx.intervue.modules.user.enums.AccountType;
+import com.techx.intervue.modules.user.events.SecuritySettingChangedEvent;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
@@ -17,6 +19,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,7 @@ public class AccountSecurityService implements AccountSecurityServiceInterface {
     private final PasswordEncoder passwordEncoder;
     private final UserSessionCacheInterface userSessionCache;
     private final TokenHashUtil tokenHashUtil;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -65,6 +69,9 @@ public class AccountSecurityService implements AccountSecurityServiceInterface {
         userRepository.save(user);
         revokeOthers(userId, currentTokenId(userId, refreshToken), PASSWORD_CHANGED_REASON);
         userSessionCache.evict(userId);
+        eventPublisher.publishEvent(
+                new SecuritySettingChangedEvent(
+                        AccountType.USER, userId, "Mật khẩu đăng nhập đã được thay đổi."));
     }
 
     @Override

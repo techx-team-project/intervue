@@ -18,7 +18,9 @@ import com.techx.intervue.modules.recruiter.repositories.RecruiterTwoFactorRecov
 import com.techx.intervue.modules.recruiter.repositories.RecruiterTwoFactorRepository;
 import com.techx.intervue.modules.recruiter.resources.RecruiterTrustedDeviceResource;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterTwoFactorServiceInterface;
+import com.techx.intervue.modules.user.enums.AccountType;
 import com.techx.intervue.modules.user.enums.TwoFactorMethod;
+import com.techx.intervue.modules.user.events.SecuritySettingChangedEvent;
 import com.techx.intervue.modules.user.resources.TwoFactorSetupResource;
 import com.techx.intervue.modules.user.resources.TwoFactorStatusResource;
 import java.time.Instant;
@@ -26,6 +28,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +47,7 @@ public class RecruiterTwoFactorService implements RecruiterTwoFactorServiceInter
     private final RecruiterRepository recruiterRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthConfig authConfig;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -130,6 +134,9 @@ public class RecruiterTwoFactorService implements RecruiterTwoFactorServiceInter
         recruiterTwoFactorRepository.save(entity);
 
         int unspent = recoveryCodeRepository.findByRecruiterIdAndUsedAtIsNull(recruiterId).size();
+        eventPublisher.publishEvent(
+                new SecuritySettingChangedEvent(
+                        AccountType.RECRUITER, recruiterId, "Xác thực hai bước đã được bật."));
         return new TwoFactorStatusResource(true, entity.getConfirmedAt(), unspent);
     }
 
@@ -147,6 +154,9 @@ public class RecruiterTwoFactorService implements RecruiterTwoFactorServiceInter
         recoveryCodeRepository.deleteAllByRecruiterId(recruiterId);
         recruiterTwoFactorRepository.deleteById(recruiterId);
         trustedDeviceRepository.deleteAllByRecruiterId(recruiterId);
+        eventPublisher.publishEvent(
+                new SecuritySettingChangedEvent(
+                        AccountType.RECRUITER, recruiterId, "Xác thực hai bước đã được tắt."));
     }
 
     @Override

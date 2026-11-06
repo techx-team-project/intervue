@@ -9,7 +9,9 @@ import com.techx.intervue.modules.helpers.TotpUtil;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.entities.UserTwoFactor;
 import com.techx.intervue.modules.user.entities.UserTwoFactorRecoveryCode;
+import com.techx.intervue.modules.user.enums.AccountType;
 import com.techx.intervue.modules.user.enums.TwoFactorMethod;
+import com.techx.intervue.modules.user.events.SecuritySettingChangedEvent;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.repositories.UserTwoFactorRecoveryCodeRepository;
 import com.techx.intervue.modules.user.repositories.UserTwoFactorRepository;
@@ -20,6 +22,7 @@ import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,7 @@ public class TwoFactorService implements TwoFactorServiceInterface {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthConfig authConfig;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -125,6 +129,9 @@ public class TwoFactorService implements TwoFactorServiceInterface {
                                 .filter(c -> !c.isUsed())
                                 .count();
 
+        eventPublisher.publishEvent(
+                new SecuritySettingChangedEvent(
+                        AccountType.USER, userId, "Xác thực hai bước đã được bật."));
         return new TwoFactorStatusResource(true, entity.getConfirmedAt(), unspent);
     }
 
@@ -141,6 +148,9 @@ public class TwoFactorService implements TwoFactorServiceInterface {
 
         recoveryCodeRepository.deleteByUserId(userId);
         userTwoFactorRepository.deleteById(userId);
+        eventPublisher.publishEvent(
+                new SecuritySettingChangedEvent(
+                        AccountType.USER, userId, "Xác thực hai bước đã được tắt."));
     }
 
     @Override
