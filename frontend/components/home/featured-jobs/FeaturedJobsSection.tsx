@@ -1,149 +1,85 @@
 'use client';
 
+import Spinner from '@/components/common/Spinner';
+import PublicJobCard from '@/components/jobs/PublicJobCard';
+import { usePublicJobs } from '@/hooks/usePublicJobs';
+import { cn } from '@/lib/utils';
+import { ArrowRight, Briefcase, Filter } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowRight, Filter, Lightbulb, X } from 'lucide-react';
-import { FEATURED_JOBS } from '@/mocks/home/jobs.mock';
-import JobCard from './JobCard';
 
-const LOCATION_FILTERS = [
-  { id: 'all', label: 'Ngẫu nhiên' },
-  { id: 'hanoi', label: 'Hà Nội' },
-  { id: 'hcm', label: 'TP. Hồ Chí Minh' },
-  { id: 'danang', label: 'Đà Nẵng' },
-  { id: 'high_salary', label: 'Lương cao' },
+const FEATURED_COUNT = 9;
+
+const CITY_FILTERS = [
+  { id: '', label: 'Mới nhất' },
+  { id: 'Hà Nội', label: 'Hà Nội' },
+  { id: 'Hồ Chí Minh', label: 'TP. Hồ Chí Minh' },
+  { id: 'Đà Nẵng', label: 'Đà Nẵng' },
 ];
 
-function isHighSalaryJob(salary: string): boolean {
-  if (!salary || salary === 'Thoả thuận') return false;
-
-  const match = salary.match(/(\d+)(?:\s*[-–]\s*(\d+))?\s*(?:triệu|tr)/i);
-  if (match) {
-    const maxVal = match[2] ? parseInt(match[2], 10) : parseInt(match[1], 10);
-    return maxVal >= 20;
-  }
-
-  const usdMatch = salary.match(/\$?\s*([\d,.]+)/);
-  if (salary.includes('$') && usdMatch) {
-    return parseFloat(usdMatch[1].replace(',', '')) >= 1000;
-  }
-
-  return false;
-}
-
 export default function FeaturedJobsSection() {
-  const [jobType, setJobType] = useState<'office' | 'general_labor'>('office');
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [savedJobs, setSavedJobs] = useState<number[]>([]);
-  const [showTip, setShowTip] = useState(true);
-
-  const toggleSaveJob = (id: number) => {
-    setSavedJobs((prev) => (prev.includes(id) ? prev.filter((j) => j !== id) : [...prev, id]));
-  };
-
-  const filteredJobs = FEATURED_JOBS.filter((job) => {
-    if (job.type !== jobType) return false;
-    if (activeFilter === 'hanoi') return job.location.includes('Hà Nội');
-    if (activeFilter === 'hcm') return job.location.includes('Hồ Chí Minh') || job.location.includes('TP. HCM');
-    if (activeFilter === 'danang') return job.location.includes('Đà Nẵng');
-    if (activeFilter === 'high_salary') return isHighSalaryJob(job.salary);
-    return true;
-  });
+  const [city, setCity] = useState('');
+  const { data, isLoading, isError } = usePublicJobs({ city, size: FEATURED_COUNT });
+  const jobs = data?.items ?? [];
 
   return (
     <section id="feature-jobs" className="container-topcv my-10">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-4">
-          <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl">
-            Việc làm <span className="text-primary">nổi bật</span>
-          </h2>
+        <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl">
+          Việc làm <span className="text-primary">nổi bật</span>
+        </h2>
 
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            <button
-              type="button"
-              onClick={() => setJobType('office')}
-              className={`cursor-pointer rounded-full px-5 py-2 text-sm font-extrabold transition duration-200 active:scale-95 ${
-                jobType === 'office'
-                  ? 'bg-primary text-white shadow-xs hover:bg-emerald-600'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
-              }`}
-            >
-              Việc văn phòng
-            </button>
-            <button
-              type="button"
-              onClick={() => setJobType('general_labor')}
-              className={`cursor-pointer rounded-full px-5 py-2 text-sm font-extrabold transition duration-200 active:scale-95 ${
-                jobType === 'general_labor'
-                  ? 'bg-primary text-white shadow-xs hover:bg-emerald-600'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
-              }`}
-            >
-              Việc phổ thông
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-center">
-          <a
-            href="https://www.topcv.vn/viec-lam-tot-nhat"
-            target="_blank"
-            rel="noreferrer"
-            className="group bg-primary inline-flex cursor-pointer items-center gap-2 rounded-xl px-4.5 py-2 text-sm font-extrabold text-white shadow-xs transition duration-200 hover:bg-emerald-600 sm:px-5 sm:py-2.5"
-          >
-            <span>Xem tất cả</span>
-            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-          </a>
-        </div>
+        <Link
+          href="/jobs"
+          className="group bg-primary inline-flex items-center gap-2 rounded-xl px-4.5 py-2 text-sm font-extrabold text-white shadow-xs transition duration-200 hover:bg-emerald-600 sm:px-5 sm:py-2.5"
+        >
+          <span>Xem tất cả</span>
+          <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+        </Link>
       </div>
 
-      <div className="mb-4 flex scrollbar-none items-center gap-2 overflow-x-auto pb-2">
+      <div className="mb-5 flex scrollbar-none items-center gap-2 overflow-x-auto pb-2">
         <span className="mr-1 flex shrink-0 items-center gap-1.5 text-xs font-medium text-slate-500">
           <Filter className="text-primary h-3.5 w-3.5" />
           Lọc theo:
         </span>
-        {LOCATION_FILTERS.map((item) => (
+        {CITY_FILTERS.map((item) => (
           <button
-            key={item.id}
+            key={item.label}
             type="button"
-            onClick={() => setActiveFilter(item.id)}
-            className={`shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-xs transition ${
-              activeFilter === item.id
+            onClick={() => setCity(item.id)}
+            className={cn(
+              'shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-xs transition',
+              city === item.id
                 ? 'bg-primary font-bold text-white shadow-xs'
-                : 'hover:text-primary border border-slate-200 bg-white font-medium text-slate-600 shadow-2xs hover:border-emerald-300 hover:bg-emerald-50/50'
-            }`}
+                : 'hover:text-primary border border-slate-200 bg-white font-medium text-slate-600 hover:border-emerald-300 hover:bg-emerald-50/50',
+            )}
           >
             {item.label}
           </button>
         ))}
       </div>
 
-      {showTip && (
-        <div className="mb-5 flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/60 px-4 py-2.5 text-xs text-emerald-800 shadow-2xs">
-          <div className="flex items-center gap-2.5">
-            <div className="text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100">
-              <Lightbulb className="h-3.5 w-3.5" />
-            </div>
-            <span>
-              <strong>Gợi ý:</strong> Di chuột vào tiêu đề việc làm để xem thêm thông tin chi tiết và cơ hội ứng tuyển
-              nhanh
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setShowTip(false)}
-            className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-600"
-            title="Đóng gợi ý"
-          >
-            <X className="h-4 w-4" />
-          </button>
+      {isLoading ? (
+        <div className="flex justify-center py-14">
+          <Spinner />
+        </div>
+      ) : isError ? (
+        <p className="rounded-2xl border border-rose-200 bg-rose-50 px-6 py-10 text-center text-sm font-semibold text-rose-700">
+          Không tải được danh sách việc làm. Vui lòng thử lại sau.
+        </p>
+      ) : jobs.length === 0 ? (
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-14 text-center">
+          <Briefcase className="h-9 w-9 text-slate-300" aria-hidden />
+          <p className="text-sm font-semibold text-slate-700">Chưa có tin tuyển dụng nào</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {jobs.map((job) => (
+            <PublicJobCard key={job.id} job={job} />
+          ))}
         </div>
       )}
-
-      <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {filteredJobs.map((job) => (
-          <JobCard key={job.id} job={job} isSaved={savedJobs.includes(job.id)} onToggleSave={toggleSaveJob} />
-        ))}
-      </div>
     </section>
   );
 }
