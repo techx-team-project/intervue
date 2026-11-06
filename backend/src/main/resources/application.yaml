@@ -71,12 +71,9 @@ ai:
     max-tokens: 4096
     timeout: 60s
     max-retries: 2
-  voyage:
-    api-key: ${VOYAGE_API_KEY:}
-    base-url: https://api.voyageai.com/v1
-    model: voyage-4
-    timeout: 30s
-    max-retries: 2
+  embedding:
+    model: gemini-embedding-001
+    dimensions: 768
   quota:
     user-per-day: 30
     ip-per-hour: 10
