@@ -69,6 +69,7 @@ export const ROUTES = {
   ADMIN_SUPPORT_TICKETS: '/admin/support/tickets',
   ADMIN_SUPPORT_CONSULTATIONS: '/admin/support/consultations',
   ADMIN_CONTENT_BLOG: '/admin/content/blog',
+  ADMIN_CONTENT_BLOG_CREATE: '/admin/content/blog/create',
   ADMIN_CONTENT_FAQ: '/admin/content/faq',
   ADMIN_CONTENT_FEATURED_COMPANIES: '/admin/content/featured-companies',
   ADMIN_CONTENT_CHATBOT: '/admin/content/chatbot',
