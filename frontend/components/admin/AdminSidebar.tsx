@@ -10,7 +10,7 @@ import {
 import { cn } from '@/lib/utils';
 import type { AdminNavItem, AdminNavSection, AdminPermission, AdminQueueCounts } from '@/types/admin';
 import { ROUTES } from '@/constants/routes';
-import { useNotificationCount } from '@/hooks/useNotifications';
+import { useUnreadCount } from '@/hooks/useNotifications';
 import { ChevronDown, HelpCircle, Search } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -58,7 +58,7 @@ export default function AdminSidebar({
   const pathname = usePathname();
   const [query, setQuery] = useState('');
   const [toggled, setToggled] = useState<Record<string, boolean>>({});
-  const unreadNotificationsCount = useNotificationCount('admin');
+  const { total: unreadNotificationsCount } = useUnreadCount('admin');
 
   const needle = query.trim().toLowerCase();
   const sections = useMemo(() => filterByQuery(visibleSections(permissions), needle), [permissions, needle]);

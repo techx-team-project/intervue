@@ -4,7 +4,7 @@ import { RECRUITER_NAV_SECTIONS } from '@/constants/recruiter-nav';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
 import { useCompanyVerification } from '@/hooks/useCompanyVerification';
-import { useNotificationCount } from '@/hooks/useNotifications';
+import { useUnreadCount } from '@/hooks/useNotifications';
 import { cn } from '@/lib/utils';
 import { HelpCircle, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
@@ -20,7 +20,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
   const pathname = usePathname();
   const { user } = useAuth();
   const { profile, company } = useCompanyVerification();
-  const unreadNotificationsCount = useNotificationCount('recruiter');
+  const { total: unreadNotificationsCount } = useUnreadCount('recruiter');
 
   const isVerified = profile.canPublish || profile.level === 3;
 

@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function AdminNotificationDetailPage() {
-  return <NotificationDetailView target="admin" baseRoute="/admin/notifications" />;
+  return <NotificationDetailView realm="admin" baseRoute="/admin/notifications" />;
 }

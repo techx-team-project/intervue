@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function RecruiterNotificationDetailPage() {
-  return <NotificationDetailView target="recruiter" baseRoute="/recruiter/notifications" />;
+  return <NotificationDetailView realm="recruiter" baseRoute="/recruiter/notifications" />;
 }
