@@ -509,6 +509,12 @@ public class UserAdminService implements UserAdminServiceInterface {
                     "company";
             case BLOG_POST_CREATED, BLOG_POST_UPDATED, BLOG_POST_DELETED, BLOG_POST_PUBLISHED ->
                     "content";
+            case BROADCAST_CREATED,
+                    BROADCAST_UPDATED,
+                    BROADCAST_DELETED,
+                    BROADCAST_SENT,
+                    BROADCAST_CANCELLED ->
+                    "notification";
         };
     }
 
@@ -561,6 +567,12 @@ public class UserAdminService implements UserAdminServiceInterface {
                     "Company verification activity";
             case BLOG_POST_CREATED, BLOG_POST_UPDATED, BLOG_POST_DELETED, BLOG_POST_PUBLISHED ->
                     detail != null && !detail.isBlank() ? detail : "Content management activity";
+            case BROADCAST_CREATED,
+                    BROADCAST_UPDATED,
+                    BROADCAST_DELETED,
+                    BROADCAST_SENT,
+                    BROADCAST_CANCELLED ->
+                    detail != null && !detail.isBlank() ? detail : "Broadcast activity";
         };
     }
 
