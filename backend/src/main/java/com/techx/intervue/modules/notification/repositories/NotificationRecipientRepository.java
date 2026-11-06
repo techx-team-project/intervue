@@ -42,6 +42,8 @@ public interface NotificationRecipientRepository
 
     long countByNotificationId(Long notificationId);
 
+    long countByNotificationIdAndReadAtIsNotNull(Long notificationId);
+
     @Query(
             """
             SELECT n.category AS category, COUNT(r) AS total

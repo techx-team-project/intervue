@@ -1,7 +1,7 @@
 'use client';
 
 import { adminBroadcastApi, type BroadcastSearchParams } from '@/apiRequest/notification';
-import type { BroadcastInput } from '@/types/notification';
+import type { AdminBroadcastResource, BroadcastInput } from '@/types/notification';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 
@@ -13,6 +13,19 @@ export const broadcastKeys = {
   detail: (id: number) => ['admin', 'broadcasts', 'detail', id] as const,
   audience: (id: number) => ['admin', 'broadcasts', 'audience', id] as const,
 };
+
+export function toDraftCopy(broadcast: AdminBroadcastResource): BroadcastInput {
+  return {
+    audience: broadcast.audience,
+    severity: broadcast.severity,
+    title: `${broadcast.title} (copy)`,
+    summary: broadcast.summary,
+    bodyMarkdown: broadcast.bodyMarkdown,
+    actionUrl: broadcast.actionUrl,
+    actionLabel: broadcast.actionLabel,
+    scheduledAt: null,
+  };
+}
 
 export function useAdminBroadcasts() {
   const queryClient = useQueryClient();
@@ -30,6 +43,10 @@ export function useAdminBroadcasts() {
   const sendMutation = useMutation({ mutationFn: adminBroadcastApi.send, onSuccess: invalidate });
   const cancelMutation = useMutation({ mutationFn: adminBroadcastApi.cancel, onSuccess: invalidate });
   const removeMutation = useMutation({ mutationFn: adminBroadcastApi.remove, onSuccess: invalidate });
+  const duplicateMutation = useMutation({
+    mutationFn: (broadcast: AdminBroadcastResource) => adminBroadcastApi.create(toDraftCopy(broadcast)),
+    onSuccess: invalidate,
+  });
 
   const patchFilters = useCallback((next: Partial<BroadcastSearchParams>) => {
     setFilters((prev) => ({ ...prev, ...next, page: next.page ?? 0 }));
@@ -48,7 +65,9 @@ export function useAdminBroadcasts() {
     send: sendMutation.mutateAsync,
     cancel: cancelMutation.mutateAsync,
     remove: removeMutation.mutateAsync,
-    isMutating: sendMutation.isPending || cancelMutation.isPending || removeMutation.isPending,
+    duplicate: duplicateMutation.mutateAsync,
+    isMutating:
+      sendMutation.isPending || cancelMutation.isPending || removeMutation.isPending || duplicateMutation.isPending,
   };
 }
 
@@ -81,6 +100,21 @@ export function useAdminBroadcast(id: number | null) {
     onSuccess: invalidate,
   });
 
+  const cancelMutation = useMutation({
+    mutationFn: () => adminBroadcastApi.cancel(id as number),
+    onSuccess: invalidate,
+  });
+
+  const removeMutation = useMutation({
+    mutationFn: () => adminBroadcastApi.remove(id as number),
+    onSuccess: invalidate,
+  });
+
+  const duplicateMutation = useMutation({
+    mutationFn: (broadcast: AdminBroadcastResource) => adminBroadcastApi.create(toDraftCopy(broadcast)),
+    onSuccess: invalidate,
+  });
+
   return {
     broadcast: detailQuery.data ?? null,
     audience: audienceQuery.data ?? null,
@@ -89,7 +123,11 @@ export function useAdminBroadcast(id: number | null) {
     create: createMutation.mutateAsync,
     update: updateMutation.mutateAsync,
     send: sendMutation.mutateAsync,
+    cancel: cancelMutation.mutateAsync,
+    remove: removeMutation.mutateAsync,
+    duplicate: duplicateMutation.mutateAsync,
     isSaving: createMutation.isPending || updateMutation.isPending,
     isSending: sendMutation.isPending,
+    isMutating: cancelMutation.isPending || removeMutation.isPending || duplicateMutation.isPending,
   };
 }

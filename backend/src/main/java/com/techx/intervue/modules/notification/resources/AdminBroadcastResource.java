@@ -20,5 +20,6 @@ public record AdminBroadcastResource(
         Instant scheduledAt,
         Instant sentAt,
         long deliveredCount,
+        long readCount,
         Instant createdAt,
         Instant updatedAt) {}

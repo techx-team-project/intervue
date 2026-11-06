@@ -27,7 +27,8 @@ public class NotificationMapper {
                 .build();
     }
 
-    public AdminBroadcastResource toBroadcastResource(Notification broadcast, long deliveredCount) {
+    public AdminBroadcastResource toBroadcastResource(
+            Notification broadcast, long deliveredCount, long readCount) {
         return AdminBroadcastResource.builder()
                 .id(broadcast.getId())
                 .audience(broadcast.getAudience())
@@ -41,6 +42,7 @@ public class NotificationMapper {
                 .scheduledAt(broadcast.getScheduledAt())
                 .sentAt(broadcast.getSentAt())
                 .deliveredCount(deliveredCount)
+                .readCount(readCount)
                 .createdAt(broadcast.getCreatedAt())
                 .updatedAt(broadcast.getUpdatedAt())
                 .build();

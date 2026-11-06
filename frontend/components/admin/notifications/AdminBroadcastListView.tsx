@@ -10,6 +10,7 @@ import { useAdminBroadcasts } from '@/hooks/useAdminBroadcasts';
 import type { AdminBroadcastResource, BroadcastAudience, BroadcastStatus } from '@/types/notification';
 import { AlertTriangle, Plus } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -34,10 +35,11 @@ const AUDIENCE_OPTIONS = [
 const ACTION_COPY: Record<PendingAction['kind'], { title: string; confirmLabel: string }> = {
   send: { title: 'Send this announcement now?', confirmLabel: 'Send now' },
   cancel: { title: 'Cancel this announcement?', confirmLabel: 'Cancel announcement' },
-  delete: { title: 'Delete this draft?', confirmLabel: 'Delete draft' },
+  delete: { title: 'Delete this announcement?', confirmLabel: 'Delete' },
 };
 
 export default function AdminBroadcastListView() {
+  const router = useRouter();
   const {
     broadcasts,
     totalItems,
@@ -51,6 +53,7 @@ export default function AdminBroadcastListView() {
     send,
     cancel,
     remove,
+    duplicate,
     isMutating,
   } = useAdminBroadcasts();
 
@@ -76,6 +79,16 @@ export default function AdminBroadcastListView() {
     }
   };
 
+  const handleDuplicate = async (broadcast: AdminBroadcastResource) => {
+    try {
+      const copy = await duplicate(broadcast);
+      toast.success('Draft copy created');
+      router.push(`${ROUTES.ADMIN_CONTENT_ANNOUNCEMENTS}/${copy.id}/edit`);
+    } catch {
+      toast.error('Could not duplicate the announcement');
+    }
+  };
+
   const consequencesFor = (action: PendingAction): string[] => {
     if (action.kind === 'send') {
       return [
@@ -87,7 +100,7 @@ export default function AdminBroadcastListView() {
     if (action.kind === 'cancel') {
       return ['The announcement will never be delivered.', 'It stays visible here as a cancelled record.'];
     }
-    return ['The draft is removed permanently.', 'Only drafts that were never sent can be deleted.'];
+    return ['The record is removed permanently.', 'Only announcements that were never delivered can be deleted.'];
   };
 
   return (
@@ -154,6 +167,7 @@ export default function AdminBroadcastListView() {
             onSend={(broadcast) => setPending({ kind: 'send', broadcast })}
             onCancel={(broadcast) => setPending({ kind: 'cancel', broadcast })}
             onDelete={(broadcast) => setPending({ kind: 'delete', broadcast })}
+            onDuplicate={handleDuplicate}
           />
 
           {totalPages > 1 && (

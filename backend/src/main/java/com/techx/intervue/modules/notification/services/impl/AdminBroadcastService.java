@@ -30,6 +30,7 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -49,6 +50,8 @@ public class AdminBroadcastService implements AdminBroadcastServiceInterface {
     private static final Sort DEFAULT_SORT = Sort.by(Sort.Direction.DESC, "createdAt");
     private static final Sort TIE_BREAKER = Sort.by(Sort.Direction.DESC, "id");
     private static final int DISPATCH_BATCH_SIZE = 20;
+    private static final Set<BroadcastStatus> DELETABLE =
+            Set.of(BroadcastStatus.DRAFT, BroadcastStatus.CANCELLED);
 
     private final NotificationRepository notificationRepository;
     private final NotificationRecipientRepository recipientRepository;
@@ -127,7 +130,7 @@ public class AdminBroadcastService implements AdminBroadcastServiceInterface {
     @Transactional
     public void delete(Long id, RequestActor actor) {
         Notification broadcast = require(id);
-        if (broadcast.getStatus() != BroadcastStatus.DRAFT) {
+        if (!DELETABLE.contains(broadcast.getStatus())) {
             throw new AppException(ErrorCode.INVALID_STATUS_TRANSITION);
         }
         audit(actor, AuditAction.BROADCAST_DELETED, broadcast);
@@ -244,11 +247,12 @@ public class AdminBroadcastService implements AdminBroadcastServiceInterface {
     }
 
     private AdminBroadcastResource toResource(Notification broadcast) {
-        long delivered =
-                broadcast.getId() == null
-                        ? 0
-                        : recipientRepository.countByNotificationId(broadcast.getId());
-        return notificationMapper.toBroadcastResource(broadcast, delivered);
+        if (broadcast.getId() == null) {
+            return notificationMapper.toBroadcastResource(broadcast, 0, 0);
+        }
+        long delivered = recipientRepository.countByNotificationId(broadcast.getId());
+        long read = recipientRepository.countByNotificationIdAndReadAtIsNotNull(broadcast.getId());
+        return notificationMapper.toBroadcastResource(broadcast, delivered, read);
     }
 
     private Pageable withStableOrder(Pageable pageable) {
