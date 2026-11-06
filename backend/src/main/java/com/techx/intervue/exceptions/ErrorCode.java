@@ -109,6 +109,7 @@ public enum ErrorCode {
             HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!"),
     JOB_NOT_EDITABLE(
             HttpStatus.UNPROCESSABLE_CONTENT, "This job can no longer be edited or deleted!"),
+    RESUME_LIMIT_REACHED(HttpStatus.CONFLICT, "You have reached the maximum number of CVs!"),
     SCREENING_QUESTIONS_LOCKED(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "Screening questions cannot change once the job has applications!"),
