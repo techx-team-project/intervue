@@ -9,11 +9,14 @@ import com.techx.intervue.modules.recruiter.entities.RecruiterRefreshToken;
 import com.techx.intervue.modules.recruiter.repositories.RecruiterRefreshTokenRepository;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterRefreshTokenServiceInterface;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterSessionCacheInterface;
+import com.techx.intervue.modules.user.enums.AccountType;
+import com.techx.intervue.modules.user.events.NewDeviceSignInEvent;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,7 @@ public class RecruiterRefreshTokenService implements RecruiterRefreshTokenServic
     private final RecruiterSessionCacheInterface sessionCache;
     private final AuthConfig authConfig;
     private final TokenHashUtil tokenHashUtil;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -46,7 +50,25 @@ public class RecruiterRefreshTokenService implements RecruiterRefreshTokenServic
                                                         authConfig.getRefreshTokenTTLDays(),
                                                         ChronoUnit.DAYS))
                                 .build());
+        announceIfNewDevice(saved);
         return new IssuedToken(rawToken, saved.getId());
+    }
+
+    // A rotated token keeps the same device label, so only a genuinely unseen device notifies.
+    private void announceIfNewDevice(RecruiterRefreshToken issued) {
+        if (repository.countByRecruiterIdAndIdNot(issued.getRecruiterId(), issued.getId()) == 0
+                || repository.existsByRecruiterIdAndDeviceLabelAndIdNot(
+                        issued.getRecruiterId(), issued.getDeviceLabel(), issued.getId())) {
+            return;
+        }
+        eventPublisher.publishEvent(
+                NewDeviceSignInEvent.builder()
+                        .accountType(AccountType.RECRUITER)
+                        .accountId(issued.getRecruiterId())
+                        .deviceLabel(issued.getDeviceLabel())
+                        .ip(issued.getIp())
+                        .at(Instant.now())
+                        .build());
     }
 
     @Override
