@@ -53,12 +53,15 @@ public class RecruiterCompanyVerificationController extends BaseController {
             @RequestParam("documentType") BusinessDocumentType documentType,
             @RequestPart("file") MultipartFile file,
             @RequestPart(value = "identityFile", required = false) MultipartFile identityFile,
+            @RequestPart(value = "identityBackFile", required = false)
+                    MultipartFile identityBackFile,
             @AuthenticationPrincipal CustomUserDetails principal,
             HttpServletRequest httpRequest) {
         return created(
                 verificationService.submitDocument(
                         file,
                         identityFile,
+                        identityBackFile,
                         new SubmitBusinessDocumentRequest(documentType),
                         actor(principal, httpRequest)),
                 "Document submitted successfully! It is now awaiting review.");
@@ -79,6 +82,32 @@ public class RecruiterCompanyVerificationController extends BaseController {
             @PathVariable Long documentId, @AuthenticationPrincipal CustomUserDetails principal) {
         StoredDocumentContent content =
                 verificationService.readDocument(documentId, principal.getId());
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(content.contentType()))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.inline().filename(content.fileName()).build().toString())
+                .body(content.bytes());
+    }
+
+    @GetMapping("/documents/{documentId}/identity/view")
+    public ResponseEntity<byte[]> viewIdentityDocument(
+            @PathVariable Long documentId, @AuthenticationPrincipal CustomUserDetails principal) {
+        StoredDocumentContent content =
+                verificationService.readIdentityDocument(documentId, principal.getId());
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(content.contentType()))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.inline().filename(content.fileName()).build().toString())
+                .body(content.bytes());
+    }
+
+    @GetMapping("/documents/{documentId}/identity-back/view")
+    public ResponseEntity<byte[]> viewIdentityBackDocument(
+            @PathVariable Long documentId, @AuthenticationPrincipal CustomUserDetails principal) {
+        StoredDocumentContent content =
+                verificationService.readIdentityBackDocument(documentId, principal.getId());
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(content.contentType()))
                 .header(

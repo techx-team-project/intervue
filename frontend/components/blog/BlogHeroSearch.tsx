@@ -25,14 +25,14 @@ interface BlogHeroSearchProps {
 }
 
 const DEFAULT_POPULAR_TAGS = [
-  'Lương Gross Net',
-  'CV chuẩn ATS',
-  'Phỏng vấn',
+  'Gross Net Salary',
+  'ATS Resume',
+  'Job Interview',
   'Marketing',
   'IT / AI',
-  'Mô hình Ikigai',
-  'Bảo hiểm xã hội',
-  'Thử việc',
+  'STAR Method',
+  'Labor Law',
+  'Probation',
 ];
 
 export default function BlogHeroSearch({
@@ -67,11 +67,11 @@ export default function BlogHeroSearch({
         {categoryMeta && (
           <nav className="mb-4 flex items-center gap-1.5 text-xs text-gray-400">
             <Link href="/" className="transition hover:text-white">
-              Trang chủ
+              Home
             </Link>
             <ChevronRight className="h-3 w-3" />
             <Link href="/blog" className="transition hover:text-white">
-              Cẩm nang nghề nghiệp
+              Career Guides
             </Link>
             <ChevronRight className="h-3 w-3" />
             <span className="font-semibold text-emerald-400">{categoryMeta.name}</span>
@@ -82,7 +82,7 @@ export default function BlogHeroSearch({
           <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold ring-1 ring-white/15 backdrop-blur-md">
             <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
             <span className="text-emerald-300">
-              {categoryMeta ? categoryMeta.badge : 'Cẩm nang nghề nghiệp & Tuyển dụng 2026'}
+              {categoryMeta ? categoryMeta.badge : 'Career Guides & Recruitment 2026'}
             </span>
           </div>
 
@@ -94,7 +94,7 @@ export default function BlogHeroSearch({
               </span>
             ) : (
               <>
-                Phát triển sự nghiệp cùng <span className="text-primary">InterVue</span>
+                Accelerate Your Tech Career with <span className="text-primary">InterVue</span>
               </>
             )}
           </h1>
@@ -102,7 +102,7 @@ export default function BlogHeroSearch({
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-300 sm:text-base">
             {categoryMeta
               ? categoryMeta.description
-              : 'Trang bị kiến thức chuyên ngành, bí quyết phỏng vấn chinh phục nhà tuyển dụng, tính lương Gross - Net và định hướng phát triển bản thân vững chắc.'}
+              : 'Equip yourself with industry domain knowledge, interview playbooks, take-home salary calculations, and strategic career advancement playbooks.'}
           </p>
 
           <div className="mx-auto mt-8 max-w-2xl">
@@ -114,8 +114,8 @@ export default function BlogHeroSearch({
                 onChange={(e) => onSearchChange(e.target.value)}
                 placeholder={
                   categoryMeta
-                    ? `Tìm kiếm bài viết trong "${categoryMeta.name}"...`
-                    : 'Tìm kiếm bí quyết viết CV, tính lương, câu hỏi phỏng vấn, ngành nghề...'
+                    ? `Search articles in "${categoryMeta.name}"...`
+                    : 'Search career guides, ATS resumes, interview questions, salary tools...'
                 }
                 className="focus:border-primary w-full rounded-2xl border-2 border-white/15 bg-white/10 py-4 pr-12 pl-12 text-sm text-white placeholder-gray-400 backdrop-blur-md transition focus:bg-white/20 focus:outline-none sm:text-base"
               />
@@ -123,29 +123,29 @@ export default function BlogHeroSearch({
                 <button
                   type="button"
                   onClick={() => onSearchChange('')}
-                  className="absolute right-4 rounded-full p-1 text-gray-400 hover:text-white"
+                  className="absolute right-4 rounded-full p-1 text-gray-400 transition hover:bg-white/10 hover:text-white"
                 >
                   <X className="h-4 w-4" />
                 </button>
               )}
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
-              <span className="flex items-center gap-1 text-gray-400">
-                <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
-                Từ khóa nổi bật:
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5 text-xs text-gray-300">
+              <span className="inline-flex items-center gap-1 text-gray-400">
+                <TrendingUp className="h-3 w-3 text-emerald-400" />
+                Trending topics:
               </span>
               {DEFAULT_POPULAR_TAGS.map((tag) => {
-                const isSelected = selectedTag?.toLowerCase() === tag.toLowerCase();
+                const isSelected = selectedTag === tag;
                 return (
                   <button
                     key={tag}
                     type="button"
                     onClick={() => onSelectTag(isSelected ? null : tag)}
-                    className={`rounded-full px-3 py-1 font-medium transition ${
+                    className={`rounded-full px-2.5 py-1 text-xs font-medium transition ${
                       isSelected
-                        ? 'bg-primary text-white shadow-sm'
-                        : 'bg-white/10 text-gray-300 ring-1 ring-white/10 hover:bg-white/20 hover:text-white'
+                        ? 'bg-primary text-white shadow-xs'
+                        : 'bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white'
                     }`}
                   >
                     #{tag}

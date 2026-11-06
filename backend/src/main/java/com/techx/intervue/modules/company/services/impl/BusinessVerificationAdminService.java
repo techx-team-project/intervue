@@ -46,6 +46,12 @@ import com.techx.intervue.modules.company.resources.CompanyMemberResource;
 import com.techx.intervue.modules.company.services.interfaces.BusinessVerificationAdminServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface.StoredDocumentContent;
+import com.techx.intervue.modules.notification.enums.NotificationType;
+import com.techx.intervue.modules.notification.enums.RecipientType;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface.NotificationCommand;
+import com.techx.intervue.modules.recruiter.resources.RecruiterResource;
+import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterServiceInterface;
 import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import java.time.Instant;
@@ -85,6 +91,8 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     private final CompanyProfileCompleteness completeness;
     private final CompanyVerificationServiceInterface companyVerificationService;
     private final UserServiceInterface userService;
+    private final RecruiterServiceInterface recruiterService;
+    private final NotificationPublisherInterface notificationPublisher;
     private final AuditLogServiceInterface auditLogService;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -161,15 +169,36 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
     }
 
     @Override
+    public StoredDocumentContent readIdentityBackDocument(Long documentId) {
+        BusinessDocument document = requireDocument(documentId);
+        if (document.getIdentityBackStoragePublicId() == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return new StoredDocumentContent(
+                document.getIdentityBackFileName() == null
+                        ? "identity_card_back.png"
+                        : document.getIdentityBackFileName(),
+                "image/png",
+                storageService.fetchDocument(
+                        document.getIdentityBackStoragePublicId(),
+                        StorageTarget.IDENTITY_DOCUMENT));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Page<AdminCompanyAgreementResource> searchAgreements(
             AgreementStatus status, Pageable pageable) {
         Page<CompanyAgreement> page =
                 status == null
-                        ? companyAgreementRepository.findByAcceptanceMode(
-                                AgreementAcceptanceMode.CUSTOM_UPLOAD, pageable)
-                        : companyAgreementRepository.findByAcceptanceModeAndStatus(
-                                AgreementAcceptanceMode.CUSTOM_UPLOAD, status, pageable);
+                        ? companyAgreementRepository.findByScopeAndAcceptanceMode(
+                                AgreementScope.COMPANY,
+                                AgreementAcceptanceMode.CUSTOM_UPLOAD,
+                                pageable)
+                        : companyAgreementRepository.findByScopeAndAcceptanceModeAndStatus(
+                                AgreementScope.COMPANY,
+                                AgreementAcceptanceMode.CUSTOM_UPLOAD,
+                                status,
+                                pageable);
 
         Map<Long, UserResource> signers =
                 usersById(page.getContent().stream().map(CompanyAgreement::getSignedBy).toList());
@@ -228,6 +257,19 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
         agreement.setStatus(AgreementStatus.ACCEPTED);
         companyAgreementRepository.save(agreement);
 
+        if (agreement.getScope() == AgreementScope.COMPANY && agreement.getSignedBy() != null) {
+            companyAgreementRepository
+                    .findFirstByUserIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
+                            agreement.getSignedBy(),
+                            AgreementScope.USER,
+                            agreement.getAgreementType())
+                    .ifPresent(
+                            userAgreement -> {
+                                userAgreement.setStatus(AgreementStatus.ACCEPTED);
+                                companyAgreementRepository.save(userAgreement);
+                            });
+        }
+
         audit(
                 actor,
                 AuditAction.AGREEMENT_ACCEPTED,
@@ -235,6 +277,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
                 agreement.getCompany().getId(),
                 "Approved custom agreement: " + agreement.getAgreementType(),
                 null);
+        notifyAgreementReviewed(agreement, "được chấp thuận", null);
     }
 
     @Override
@@ -248,6 +291,19 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
         agreement.setStatus(AgreementStatus.REJECTED);
         companyAgreementRepository.save(agreement);
 
+        if (agreement.getScope() == AgreementScope.COMPANY && agreement.getSignedBy() != null) {
+            companyAgreementRepository
+                    .findFirstByUserIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
+                            agreement.getSignedBy(),
+                            AgreementScope.USER,
+                            agreement.getAgreementType())
+                    .ifPresent(
+                            userAgreement -> {
+                                userAgreement.setStatus(AgreementStatus.REJECTED);
+                                companyAgreementRepository.save(userAgreement);
+                            });
+        }
+
         audit(
                 actor,
                 AuditAction.BUSINESS_DOCUMENT_REJECTED,
@@ -255,6 +311,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
                 agreement.getCompany().getId(),
                 "Rejected custom agreement: " + agreement.getAgreementType(),
                 request == null ? null : request.reason());
+        notifyAgreementReviewed(agreement, "bị từ chối", request == null ? null : request.reason());
     }
 
     @Override
@@ -288,6 +345,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
                     company.getId(),
                     company.getName(),
                     null);
+            notifyCompanyVerified(company);
         }
 
         audit(
@@ -419,6 +477,7 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
                                         ? null
                                         : document.getSubmittedBy())
                         .companyId(document.getCompany().getId())
+                        .companyName(document.getCompany().getName())
                         .scope(scope)
                         .cause(cause)
                         .reassignToUserId(
@@ -466,10 +525,51 @@ public class BusinessVerificationAdminService implements BusinessVerificationAdm
         document.setReviewedBy(actor.userId());
     }
 
+    private void notifyAgreementReviewed(
+            CompanyAgreement agreement, String outcome, String reason) {
+        if (agreement.getSignedBy() == null) {
+            return;
+        }
+        notificationPublisher.publish(
+                NotificationCommand.builder()
+                        .recipientType(RecipientType.RECRUITER)
+                        .recipientId(agreement.getSignedBy())
+                        .type(NotificationType.AGREEMENT_REVIEWED)
+                        .params(
+                                Map.of(
+                                        "companyName",
+                                        agreement.getCompany().getName(),
+                                        "outcome",
+                                        outcome,
+                                        "reason",
+                                        reason == null || reason.isBlank() ? "—" : reason))
+                        .actionUrl("/recruiter/company/agreements")
+                        .build());
+    }
+
+    private void notifyCompanyVerified(Company company) {
+        List<NotificationCommand> commands =
+                companyMemberRepository
+                        .findByCompanyIdAndStatus(company.getId(), CompanyMemberStatus.ACTIVE)
+                        .stream()
+                        .map(
+                                member ->
+                                        NotificationCommand.builder()
+                                                .recipientType(RecipientType.RECRUITER)
+                                                .recipientId(member.getUserId())
+                                                .type(NotificationType.COMPANY_VERIFIED)
+                                                .params(Map.of("companyName", company.getName()))
+                                                .actionUrl("/recruiter/company")
+                                                .build())
+                        .toList();
+        notificationPublisher.publishAll(commands);
+    }
+
     private void notifyRecruiter(BusinessDocument document, String reason) {
-        UserResource recruiter = userService.getMe(document.getSubmittedBy());
+        RecruiterResource recruiter = recruiterService.getMe(document.getSubmittedBy());
         eventPublisher.publishEvent(
                 new BusinessDocumentReviewedEvent(
+                        recruiter.id(),
                         recruiter.email(),
                         recruiter.name(),
                         document.getReviewStatus(),

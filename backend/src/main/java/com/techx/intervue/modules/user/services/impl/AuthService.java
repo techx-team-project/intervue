@@ -20,6 +20,7 @@ import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.LoginAttemptServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.RefreshResult;
+import com.techx.intervue.modules.user.services.interfaces.TwoFactorServiceInterface;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -46,6 +47,7 @@ public class AuthService implements AuthServiceInterface {
     private final AuthSessionServiceInterface authSessionService;
     private final RefreshTokenServiceInterface refreshTokenService;
     private final JwtServiceInterface jwtService;
+    private final TwoFactorServiceInterface twoFactorService;
     private final BlacklistServiceInterface blacklistService;
     private final AuditLogServiceInterface auditLogService;
 
@@ -71,6 +73,46 @@ public class AuthService implements AuthServiceInterface {
 
         loginAttemptService.reset(email, ip);
         User user = found.get();
+        ensureSignInAllowed(user);
+
+        if (twoFactorService.isTwoFactorEnabled(user.getId())) {
+            String tempToken =
+                    jwtService.generateTwoFactorTempToken(
+                            user.getId(), com.techx.intervue.modules.user.enums.AccountType.USER);
+            return AuthResult.challenge(tempToken);
+        }
+
+        AuthResult result = authSessionService.open(user, userAgent, ip);
+        userRepository.touchLastLogin(user.getId(), Instant.now());
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public AuthResult verifyTwoFactor(
+            com.techx.intervue.modules.user.requests.TwoFactorChallengeRequest request,
+            String userAgent,
+            String ip) {
+        Long userId;
+        try {
+            String purpose =
+                    jwtService.extractAllClaims(request.tempToken()).get("purp", String.class);
+            if (!"2FA_PREAUTH".equals(purpose)) {
+                throw new AppException(ErrorCode.UNAUTHENTICATED);
+            }
+            userId = jwtService.extractSubject(request.tempToken());
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        if (!twoFactorService.verifyCodeOrRecoveryCode(userId, request.code())) {
+            throw AppException.validation("code", "Invalid verification code or recovery code!");
+        }
+
+        User user =
+                userRepository
+                        .findByIdWithRoles(userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
         ensureSignInAllowed(user);
 
         AuthResult result = authSessionService.open(user, userAgent, ip);

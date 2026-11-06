@@ -22,6 +22,7 @@ import com.techx.intervue.modules.company.events.CompanyAssetsDiscardedEvent;
 import com.techx.intervue.modules.company.events.PublishRightLostEvent;
 import com.techx.intervue.modules.company.mappers.CompanyMapper;
 import com.techx.intervue.modules.company.repositories.BusinessDocumentRepository;
+import com.techx.intervue.modules.company.repositories.CompanyAgreementRepository;
 import com.techx.intervue.modules.company.repositories.CompanyMemberRepository;
 import com.techx.intervue.modules.company.repositories.CompanyPhotoRepository;
 import com.techx.intervue.modules.company.repositories.CompanyRepository;
@@ -31,20 +32,26 @@ import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.resources.CompanySummaryResource;
+import com.techx.intervue.modules.company.resources.TaxLookupResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CompanyService implements CompanyServiceInterface {
@@ -57,6 +64,7 @@ public class CompanyService implements CompanyServiceInterface {
     private final CompanyMemberRepository companyMemberRepository;
     private final CompanyPhotoRepository companyPhotoRepository;
     private final BusinessDocumentRepository businessDocumentRepository;
+    private final CompanyAgreementRepository companyAgreementRepository;
     private final StorageServiceInterface storageService;
     private final CompanyMapper companyMapper;
     private final CompanyProfileCompleteness completeness;
@@ -171,9 +179,7 @@ public class CompanyService implements CompanyServiceInterface {
         Company company = membership.getCompany();
 
         if (membership.isOwner() && isLastOwner(company.getId())) {
-            if (hasOtherActiveMembers(company.getId())
-                    || company.isVerified()
-                    || businessDocumentRepository.existsByCompanyId(company.getId())) {
+            if (hasOtherActiveMembers(company.getId()) || company.isVerified()) {
                 throw new AppException(ErrorCode.LAST_COMPANY_OWNER);
             }
             discardCompany(company, actor);
@@ -188,6 +194,7 @@ public class CompanyService implements CompanyServiceInterface {
                 PublishRightLostEvent.builder()
                         .userId(actor.userId())
                         .companyId(company.getId())
+                        .companyName(company.getName())
                         .scope(PublishRightLossScope.INDIVIDUAL)
                         .cause(PublishRightLossCause.MEMBERSHIP_LEFT)
                         .reassignToUserId(ownerIdOf(company.getId()))
@@ -211,6 +218,75 @@ public class CompanyService implements CompanyServiceInterface {
             storageService.delete(previousLogo, StorageTarget.IMAGE);
         }
         return buildResource(company, membership.getRole());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TaxLookupResource lookupTax(String taxCode) {
+        if (taxCode == null || taxCode.isBlank()) {
+            throw new AppException(ErrorCode.VALIDATION_FAILED);
+        }
+        String cleanTax = taxCode.trim().replaceAll("[^0-9]", "");
+        if (cleanTax.length() < 10 || cleanTax.length() > 14) {
+            throw new AppException(ErrorCode.VALIDATION_FAILED);
+        }
+
+        // 1. Check if already exists in InterVue database
+        Optional<Company> existing = companyRepository.findByTaxCode(cleanTax);
+        if (existing.isPresent()) {
+            Company c = existing.get();
+            return TaxLookupResource.builder()
+                    .taxCode(c.getTaxCode())
+                    .name(c.getName())
+                    .tradingName(c.getTradingName())
+                    .address(c.getAddress())
+                    .status("Active on InterVue")
+                    .existingOnPlatform(true)
+                    .existingCompanyId(c.getId())
+                    .build();
+        }
+
+        // 2. Query open tax registry API
+        try {
+            RestClient restClient =
+                    RestClient.builder()
+                            .defaultHeader(
+                                    HttpHeaders.USER_AGENT,
+                                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36")
+                            .build();
+
+            Map<?, ?> response =
+                    restClient
+                            .get()
+                            .uri("https://api.vietqr.io/v2/business/" + cleanTax)
+                            .retrieve()
+                            .body(Map.class);
+
+            if (response != null
+                    && "00".equals(String.valueOf(response.get("code")))
+                    && response.get("data") instanceof Map<?, ?> data) {
+                String name = (String) data.get("name");
+                String internationalName = (String) data.get("internationalName");
+                String shortName = (String) data.get("shortName");
+                String address = (String) data.get("address");
+                String status = (String) data.get("status");
+                String trading =
+                        (shortName != null && !shortName.isBlank()) ? shortName : internationalName;
+
+                return TaxLookupResource.builder()
+                        .taxCode(cleanTax)
+                        .name(name)
+                        .tradingName(trading)
+                        .address(address)
+                        .status(status)
+                        .existingOnPlatform(false)
+                        .build();
+            }
+        } catch (Exception e) {
+            log.warn("Tax lookup service unavailable for taxCode {}: {}", cleanTax, e.getMessage());
+        }
+
+        return TaxLookupResource.builder().taxCode(cleanTax).existingOnPlatform(false).build();
     }
 
     @Override
@@ -301,6 +377,9 @@ public class CompanyService implements CompanyServiceInterface {
 
         // Children must be deleted and flushed first: rows already loaded in this session still
         // point at the company, and Hibernate rejects the flush before the database cascade runs.
+        businessDocumentRepository.deleteAll(
+                businessDocumentRepository.findByCompanyIdOrderBySubmittedAtDesc(company.getId()));
+        companyAgreementRepository.deleteByCompanyId(company.getId());
         companyPhotoRepository.deleteAll(photos);
         companyMemberRepository.deleteAll(companyMemberRepository.findByCompanyId(company.getId()));
         companyMemberRepository.flush();

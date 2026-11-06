@@ -11,6 +11,8 @@ public enum ErrorCode {
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Incorrect login credentials"),
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Your session is invalid or has expired!"),
     FORBIDDEN(HttpStatus.FORBIDDEN, "You do not have permission to perform this action!"),
+    ADMIN_ACCESS_REQUIRED(
+            HttpStatus.FORBIDDEN, "Access restricted to authorized administrators only."),
     NOT_FOUND(HttpStatus.NOT_FOUND, "Resource not found!"),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "This method is not allowed here!"),
     UNSUPPORTED_MEDIA_TYPE(
@@ -104,11 +106,20 @@ public enum ErrorCode {
     PHONE_OTP_INVALID(HttpStatus.BAD_REQUEST, "The verification code is invalid or has expired!"),
     PHONE_OTP_NOT_REQUESTED(
             HttpStatus.UNPROCESSABLE_CONTENT, "Please request a verification code first!"),
+    PHONE_OTP_ATTEMPTS_EXCEEDED(
+            HttpStatus.BAD_REQUEST,
+            "You have exceeded the maximum verification attempts. This code is now invalid. Please request a new one."),
     AGREEMENT_ALREADY_ACCEPTED(HttpStatus.CONFLICT, "This agreement has already been accepted!"),
     PROFILE_SECTION_LIMIT_REACHED(
             HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!"),
+    SKILL_NAME_ALREADY_USED(HttpStatus.CONFLICT, "A skill with this name already exists!"),
     INVALID_STATUS_TRANSITION(
-            HttpStatus.UNPROCESSABLE_CONTENT, "This status change is not allowed!");
+            HttpStatus.UNPROCESSABLE_CONTENT, "This status change is not allowed!"),
+    BLOG_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Blog post not found!"),
+    BLOG_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "Blog category not found!"),
+    BLOG_SLUG_ALREADY_EXISTS(HttpStatus.CONFLICT, "A blog post with this slug already exists!"),
+    BROADCAST_AUDIENCE_EMPTY(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This broadcast has no recipients to send to!");
 
     private final HttpStatus status;
     private final String message;

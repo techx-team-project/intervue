@@ -344,6 +344,15 @@ public class UserAdminService implements UserAdminServiceInterface {
     // Dropping the Redis session entry rejects the live access token on the next
     // request, so the account is out immediately instead of after the token expires.
     private void endEverySession(Long userId) {
+        userRepository
+                .findById(userId)
+                .ifPresent(
+                        user -> {
+                            user.setTokenVersion(
+                                    (user.getTokenVersion() != null ? user.getTokenVersion() : 1)
+                                            + 1);
+                            userRepository.save(user);
+                        });
         userSessionCache.evict(userId);
         refreshTokenRepository.revokeAllRefreshTokenByUser(userId);
     }
@@ -498,6 +507,14 @@ public class UserAdminService implements UserAdminServiceInterface {
                     BUSINESS_DOCUMENT_REVOKED,
                     BUSINESS_DOCUMENT_EXPIRED ->
                     "company";
+            case BLOG_POST_CREATED, BLOG_POST_UPDATED, BLOG_POST_DELETED, BLOG_POST_PUBLISHED ->
+                    "content";
+            case BROADCAST_CREATED,
+                    BROADCAST_UPDATED,
+                    BROADCAST_DELETED,
+                    BROADCAST_SENT,
+                    BROADCAST_CANCELLED ->
+                    "notification";
         };
     }
 
@@ -548,6 +565,14 @@ public class UserAdminService implements UserAdminServiceInterface {
                     BUSINESS_DOCUMENT_REVOKED,
                     BUSINESS_DOCUMENT_EXPIRED ->
                     "Company verification activity";
+            case BLOG_POST_CREATED, BLOG_POST_UPDATED, BLOG_POST_DELETED, BLOG_POST_PUBLISHED ->
+                    detail != null && !detail.isBlank() ? detail : "Content management activity";
+            case BROADCAST_CREATED,
+                    BROADCAST_UPDATED,
+                    BROADCAST_DELETED,
+                    BROADCAST_SENT,
+                    BROADCAST_CANCELLED ->
+                    detail != null && !detail.isBlank() ? detail : "Broadcast activity";
         };
     }
 

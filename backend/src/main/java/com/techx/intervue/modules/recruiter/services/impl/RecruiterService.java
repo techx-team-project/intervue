@@ -2,6 +2,9 @@ package com.techx.intervue.modules.recruiter.services.impl;
 
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
+import com.techx.intervue.modules.company.enums.CompanyMemberRole;
+import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
+import com.techx.intervue.modules.company.repositories.CompanyMemberRepository;
 import com.techx.intervue.modules.recruiter.entities.Recruiter;
 import com.techx.intervue.modules.recruiter.enums.RecruiterStatus;
 import com.techx.intervue.modules.recruiter.mappers.RecruiterMapper;
@@ -12,6 +15,7 @@ import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterService
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterSessionCacheInterface;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +38,7 @@ public class RecruiterService implements RecruiterServiceInterface {
     private final RecruiterRefreshTokenRepository refreshTokenRepository;
     private final RecruiterSessionCacheInterface sessionCache;
     private final RecruiterMapper recruiterMapper;
+    private final CompanyMemberRepository companyMemberRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -58,6 +63,11 @@ public class RecruiterService implements RecruiterServiceInterface {
             return;
         }
 
+        if (companyMemberRepository.existsByUserIdAndRoleAndStatus(
+                recruiterId, CompanyMemberRole.OWNER, CompanyMemberStatus.ACTIVE)) {
+            throw new AppException(ErrorCode.LAST_COMPANY_OWNER);
+        }
+
         Instant now = Instant.now();
         recruiter.setStatus(RecruiterStatus.PENDING_DELETION);
         recruiter.setDeleteRequestedAt(now);
@@ -65,6 +75,23 @@ public class RecruiterService implements RecruiterServiceInterface {
 
         refreshTokenRepository.revokeAllByRecruiterId(recruiterId, now, DELETION_REQUESTED_REASON);
         sessionCache.evict(recruiterId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RecruiterResource> findByIds(Collection<Long> recruiterIds) {
+        if (recruiterIds == null || recruiterIds.isEmpty()) {
+            return List.of();
+        }
+        return recruiterRepository.findAllById(recruiterIds).stream()
+                .map(recruiterMapper::toResource)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> findActiveIds() {
+        return recruiterRepository.findIdsByStatus(RecruiterStatus.ACTIVE);
     }
 
     @Override

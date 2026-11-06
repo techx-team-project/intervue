@@ -1,0 +1,156 @@
+templates:
+  BUSINESS_DOCUMENT_APPROVED:
+    title: "Tài liệu {documentLabel} đã được phê duyệt"
+    summary: "Tài liệu {documentLabel} của {companyName} đã được quản trị viên phê duyệt."
+    body: |
+      Quản trị viên InterVue đã phê duyệt tài liệu **{documentLabel}** của **{companyName}**.
+
+      Hiệu lực đến: **{expiresAt}**
+
+      Khi tài liệu hết hạn, quyền đăng tin tuyển dụng của bạn sẽ tạm dừng cho đến khi bạn nộp bản mới.
+    actionLabel: "Xem hồ sơ xác thực"
+
+  BUSINESS_DOCUMENT_REJECTED:
+    title: "Tài liệu {documentLabel} bị từ chối"
+    summary: "Tài liệu {documentLabel} của {companyName} chưa đạt yêu cầu và đã bị từ chối."
+    body: |
+      Tài liệu **{documentLabel}** của **{companyName}** chưa đạt yêu cầu xác thực.
+
+      **Lý do:** {reason}
+
+      Bạn có thể nộp lại tài liệu sau khi đã khắc phục.
+    actionLabel: "Nộp lại tài liệu"
+
+  BUSINESS_DOCUMENT_MORE_INFO:
+    title: "Cần bổ sung thông tin cho tài liệu {documentLabel}"
+    summary: "Quản trị viên yêu cầu bổ sung thông tin cho tài liệu {documentLabel} của {companyName}."
+    body: |
+      Quản trị viên cần thêm thông tin để hoàn tất thẩm định tài liệu **{documentLabel}** của **{companyName}**.
+
+      **Nội dung cần bổ sung:** {reason}
+
+      Hồ sơ của bạn vẫn đang được giữ trong hàng chờ xử lý.
+    actionLabel: "Bổ sung ngay"
+
+  BUSINESS_DOCUMENT_REVOKED:
+    title: "Tài liệu {documentLabel} đã bị thu hồi"
+    summary: "Tài liệu {documentLabel} của {companyName} đã bị thu hồi hiệu lực."
+    body: |
+      Quản trị viên đã thu hồi hiệu lực tài liệu **{documentLabel}** của **{companyName}**.
+
+      **Lý do:** {reason}
+
+      Quyền đăng tin tuyển dụng gắn với tài liệu này đã tạm dừng.
+    actionLabel: "Xem hồ sơ xác thực"
+
+  BUSINESS_DOCUMENT_EXPIRED:
+    title: "Tài liệu {documentLabel} đã hết hạn"
+    summary: "Tài liệu {documentLabel} của {companyName} đã hết hiệu lực từ {expiresAt}."
+    body: |
+      Tài liệu **{documentLabel}** của **{companyName}** đã hết hiệu lực từ **{expiresAt}**.
+
+      Quyền đăng tin tuyển dụng gắn với tài liệu này đã tạm dừng. Vui lòng nộp bản cập nhật để khôi phục.
+    actionLabel: "Cập nhật tài liệu"
+
+  PUBLISH_RIGHT_LOST:
+    title: "Quyền đăng tin tuyển dụng đã tạm dừng"
+    summary: "Tài khoản của bạn tại {companyName} hiện không còn quyền đăng tin tuyển dụng."
+    body: |
+      Tài khoản của bạn tại **{companyName}** hiện không còn quyền đăng tin tuyển dụng.
+
+      **Nguyên nhân:** {cause}
+
+      Các tin đang hiển thị không bị gỡ, nhưng bạn không thể đăng tin mới hoặc nhận hồ sơ ứng tuyển cho đến khi hoàn tất xác thực lại.
+    actionLabel: "Xác thực lại"
+
+  COMPANY_VERIFIED:
+    title: "Doanh nghiệp {companyName} đã được xác thực"
+    summary: "Hồ sơ doanh nghiệp {companyName} đã hoàn tất xác thực."
+    body: |
+      Hồ sơ doanh nghiệp **{companyName}** đã được xác thực thành công.
+
+      Trang doanh nghiệp của bạn sẽ hiển thị huy hiệu đã xác thực với ứng viên.
+    actionLabel: "Xem trang doanh nghiệp"
+
+  COMPANY_MEMBERSHIP_CHANGED:
+    title: "Tư cách thành viên tại {companyName} đã thay đổi"
+    summary: "{change}"
+    body: |
+      Tư cách thành viên của bạn tại **{companyName}** vừa được cập nhật.
+
+      **Chi tiết:** {change}
+
+      Nếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ người sở hữu doanh nghiệp hoặc bộ phận hỗ trợ.
+    actionLabel: "Xem doanh nghiệp"
+
+  AGREEMENT_REVIEWED:
+    title: "Thoả thuận xử lý dữ liệu cá nhân {outcome}"
+    summary: "Thoả thuận xử lý dữ liệu cá nhân của {companyName} đã được thẩm định."
+    body: |
+      Thoả thuận xử lý dữ liệu cá nhân của **{companyName}** đã được thẩm định với kết quả: **{outcome}**.
+
+      **Ghi chú của quản trị viên:** {reason}
+    actionLabel: "Xem thoả thuận"
+
+  ACCOUNT_RESTRICTED:
+    title: "Tài khoản của bạn đã bị hạn chế"
+    summary: "Tài khoản của bạn đang bị hạn chế truy cập một số tính năng."
+    body: |
+      Tài khoản của bạn đã bị hạn chế truy cập một số tính năng trên InterVue.
+
+      **Lý do:** {reason}
+
+      **Thời hạn:** {expiresAt}
+
+      Nếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ bộ phận hỗ trợ để được xem xét lại.
+    actionLabel: "Liên hệ hỗ trợ"
+
+  ACCOUNT_RESTRICTION_LIFTED:
+    title: "Tài khoản của bạn đã được khôi phục"
+    summary: "Hạn chế trên tài khoản của bạn đã được gỡ bỏ."
+    body: |
+      Hạn chế trên tài khoản của bạn đã được gỡ bỏ. Bạn có thể sử dụng lại đầy đủ các tính năng của InterVue.
+    actionLabel: "Về trang chủ"
+
+  ACCOUNT_ROLES_CHANGED:
+    title: "Quyền tài khoản của bạn đã thay đổi"
+    summary: "Danh sách quyền truy cập trên tài khoản của bạn vừa được cập nhật."
+    body: |
+      Danh sách quyền truy cập trên tài khoản của bạn vừa được quản trị viên cập nhật.
+
+      Bạn có thể cần đăng xuất và đăng nhập lại để thay đổi có hiệu lực đầy đủ.
+    actionLabel: "Xem tài khoản"
+
+  SECURITY_NEW_DEVICE_LOGIN:
+    title: "Đăng nhập từ thiết bị mới"
+    summary: "Có một lần đăng nhập mới từ {device} tại {location}."
+    body: |
+      Tài khoản của bạn vừa được đăng nhập từ một thiết bị chưa từng sử dụng trước đây.
+
+      - **Thiết bị:** {device}
+      - **Vị trí:** {location}
+      - **Địa chỉ IP:** {ip}
+      - **Thời điểm:** {at}
+
+      Nếu đây là bạn, có thể bỏ qua thông báo này. Nếu không, hãy đổi mật khẩu và đăng xuất khỏi mọi thiết bị ngay lập tức.
+    actionLabel: "Kiểm tra bảo mật"
+
+  SECURITY_SETTING_CHANGED:
+    title: "Thiết lập bảo mật đã thay đổi"
+    summary: "{change}"
+    body: |
+      Một thiết lập bảo mật trên tài khoản của bạn vừa được thay đổi.
+
+      **Chi tiết:** {change}
+
+      Nếu không phải bạn thực hiện, hãy đổi mật khẩu ngay và liên hệ bộ phận hỗ trợ.
+    actionLabel: "Kiểm tra bảo mật"
+
+  ADMIN_REVIEW_QUEUE_ITEM:
+    title: "Hồ sơ mới chờ thẩm định: {queueLabel}"
+    summary: "{companyName} vừa gửi hồ sơ vào hàng chờ {queueLabel}."
+    body: |
+      **{companyName}** vừa gửi một hồ sơ vào hàng chờ **{queueLabel}**.
+
+      Hồ sơ đang chờ quản trị viên thẩm định.
+    actionLabel: "Mở hàng chờ"

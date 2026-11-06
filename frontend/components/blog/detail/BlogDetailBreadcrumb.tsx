@@ -23,7 +23,7 @@ export default function BlogDetailBreadcrumb({ article }: BlogDetailBreadcrumbPr
   };
 
   const breadcrumbItems: BreadcrumbItem[] = [
-    { label: 'Cẩm nang nghề nghiệp', href: '/blog' },
+    { label: 'Career Guides', href: '/blog' },
     { label: article.category, href: `/blog/${article.categorySlug}` },
     { label: article.title },
   ];
@@ -43,7 +43,7 @@ export default function BlogDetailBreadcrumb({ article }: BlogDetailBreadcrumbPr
               leftIcon={copied ? <Check className="text-primary h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
               className="text-xs"
             >
-              {copied ? 'Đã sao chép link' : 'Sao chép link'}
+              {copied ? 'Link copied!' : 'Copy link'}
             </Button>
 
             <Button
@@ -54,7 +54,7 @@ export default function BlogDetailBreadcrumb({ article }: BlogDetailBreadcrumbPr
               leftIcon={<Bookmark className="h-3.5 w-3.5" />}
               className="text-xs"
             >
-              {bookmarked ? 'Đã lưu' : 'Lưu bài viết'}
+              {bookmarked ? 'Saved' : 'Save article'}
             </Button>
           </div>
         </div>

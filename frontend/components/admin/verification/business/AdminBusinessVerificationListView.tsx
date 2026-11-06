@@ -7,9 +7,20 @@ import type {
   AdminBusinessVerificationListResource,
   BusinessVerificationSummaryResource,
 } from '@/types/recruiter-company';
-import { AlertTriangle, Building2, Calendar, Clock, FileText, RotateCcw, ShieldCheck, Sparkles } from 'lucide-react';
+import {
+  AlertTriangle,
+  Building2,
+  Calendar,
+  Clock,
+  FileCheck2,
+  FileText,
+  RotateCcw,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { AdminCompanyDirectoryTable } from './AdminCompanyDirectoryTable';
+import { AdminCustomAgreementsTable } from './AdminCustomAgreementsTable';
 import {
   AdminBusinessVerificationFilterBar,
   type AdminVerificationFilterState,
@@ -112,6 +123,7 @@ export function AdminBusinessVerificationListView({
     return summary;
   }, [initialSummary, summary, effectiveDossiers]);
 
+  const [entityMode, setEntityMode] = useState<'DOSSIERS' | 'AGREEMENTS'>('DOSSIERS');
   const [activeTab, setActiveTab] = useState<VerificationTabKey>('QUEUE');
   const [filters, setFilters] = useState<AdminVerificationFilterState>({
     keyword: '',
@@ -276,220 +288,266 @@ export function AdminBusinessVerificationListView({
         }
       />
 
-      {/* SLA Alert Banner if any overdue */}
-      {slaOverdue > 0 && (
-        <div className="flex flex-col gap-2 rounded-2xl border border-amber-300/80 bg-amber-50/90 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-amber-800/80 dark:bg-amber-950/40">
-          <div className="flex items-center gap-3">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-500" />
-            </span>
-            <p className="text-xs font-semibold text-amber-950 dark:text-amber-200">
-              <strong className="font-bold">SLA Alert:</strong> {slaOverdue} verification dossier has been waiting for
-              over 24 hours. Prioritize this review to maintain corporate partner satisfaction.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => handleSelectStatusFromSummary('PENDING_REVIEW')}
-            className="self-start rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white shadow-2xs transition hover:bg-amber-700 sm:self-auto"
-          >
-            Filter Pending Queue &rarr;
-          </button>
-        </div>
-      )}
-
-      {/* Summary KPI Command Row */}
-      <AdminBusinessVerificationSummaryRow
-        summary={effectiveSummary}
-        selectedStatus={
-          activeTab === 'QUEUE'
-            ? 'PENDING_REVIEW'
-            : activeTab === 'NEED_INFO'
-              ? 'MORE_INFO_REQUIRED'
-              : activeTab === 'APPROVED'
-                ? 'APPROVED'
-                : activeTab === 'EXPIRING'
-                  ? 'EXPIRING_SOON'
-                  : filters.reviewStatus
-        }
-        onSelectStatus={handleSelectStatusFromSummary}
-      />
-
-      {/* Main Workspace Section: Tabs + Filter + Table */}
-      <div className="space-y-5">
-        {/* Workflow Tabs Navigation */}
-        <div className="dark:border-forest-800 border-b border-slate-200">
-          <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+      {/* Entity Mode Switcher (Business Dossiers vs Custom Agreements) */}
+      <div className="dark:border-forest-800 dark:bg-forest-900 flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-2.5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <span className="pl-2 text-xs font-semibold text-slate-500">View Domain:</span>
+          <div className="dark:bg-forest-800 inline-flex rounded-xl bg-slate-100 p-1">
             <button
               type="button"
-              onClick={() => {
-                setActiveTab('QUEUE');
-                setCurrentPage(0);
-              }}
-              className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
-                activeTab === 'QUEUE'
-                  ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                  : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+              onClick={() => setEntityMode('DOSSIERS')}
+              className={`inline-flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-bold transition ${
+                entityMode === 'DOSSIERS'
+                  ? 'dark:bg-forest-700 dark:text-forest-100 bg-white text-slate-900 shadow-xs'
+                  : 'dark:text-forest-400 dark:hover:text-forest-200 text-slate-500 hover:text-slate-900'
               }`}
             >
-              <Clock className="h-4 w-4" />
-              <span>Pending Queue</span>
-              <span
-                className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                  activeTab === 'QUEUE'
-                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
-                }`}
-              >
-                {effectiveSummary.pendingReview}
-              </span>
-              {effectiveSummary.slaOverdueCount > 0 && (
-                <span className="flex h-1.5 w-1.5 rounded-full bg-rose-500" title="Overdue >24h" />
-              )}
+              <Building2 className="h-4 w-4 text-[#00b14f]" />
+              <span>Business Dossiers (ERC &amp; LOA)</span>
             </button>
 
             <button
               type="button"
-              onClick={() => {
-                setActiveTab('NEED_INFO');
-                setCurrentPage(0);
-              }}
-              className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
-                activeTab === 'NEED_INFO'
-                  ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                  : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+              onClick={() => setEntityMode('AGREEMENTS')}
+              className={`inline-flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-bold transition ${
+                entityMode === 'AGREEMENTS'
+                  ? 'dark:bg-forest-700 dark:text-forest-100 bg-white text-slate-900 shadow-xs'
+                  : 'dark:text-forest-400 dark:hover:text-forest-200 text-slate-500 hover:text-slate-900'
               }`}
             >
-              <AlertTriangle className="h-4 w-4" />
-              <span>Needs Action</span>
-              <span
-                className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                  activeTab === 'NEED_INFO'
-                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
-                }`}
-              >
-                {effectiveSummary.moreInfoRequired}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab('APPROVED');
-                setCurrentPage(0);
-              }}
-              className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
-                activeTab === 'APPROVED'
-                  ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                  : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
-              }`}
-            >
-              <ShieldCheck className="h-4 w-4" />
-              <span>Approved</span>
-              <span
-                className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                  activeTab === 'APPROVED'
-                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
-                }`}
-              >
-                {effectiveSummary.approved}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab('EXPIRING');
-                setCurrentPage(0);
-              }}
-              className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
-                activeTab === 'EXPIRING'
-                  ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                  : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
-              }`}
-            >
-              <Calendar className="h-4 w-4" />
-              <span>Expiring LOA</span>
-              <span
-                className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                  activeTab === 'EXPIRING'
-                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
-                }`}
-              >
-                {effectiveSummary.expiringSoonCount ?? 0}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab('COMPANIES');
-                setCurrentPage(0);
-              }}
-              className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
-                activeTab === 'COMPANIES'
-                  ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                  : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
-              }`}
-            >
-              <Building2 className="h-4 w-4" />
-              <span>Company Directory</span>
-              <span
-                className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                  activeTab === 'COMPANIES'
-                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
-                }`}
-              >
-                {companies.length}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setActiveTab('ALL');
-                setCurrentPage(0);
-              }}
-              className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
-                activeTab === 'ALL'
-                  ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                  : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
-              }`}
-            >
-              <FileText className="h-4 w-4" />
-              <span>All Requests ({effectiveDossiers.length})</span>
+              <FileCheck2 className="h-4 w-4 text-emerald-600" />
+              <span>Custom Data Agreements</span>
             </button>
           </div>
         </div>
 
-        {/* Tab Content */}
-        {activeTab === 'COMPANIES' ? (
-          <AdminCompanyDirectoryTable companies={companies} onSelectCompanyDossier={handleSelectCompanyTaxCode} />
-        ) : (
-          <div className="space-y-4">
-            {/* Filter Bar */}
-            <AdminBusinessVerificationFilterBar
-              filters={filters}
-              onChange={handleFilterChange}
-              onReset={handleResetFilters}
-            />
-
-            {/* Dossiers Table with built-in pagination */}
-            <AdminBusinessVerificationTable
-              items={paginatedDossiers}
-              totalItems={filteredDossiers.length}
-              currentPage={currentPage}
-              pageSize={pageSize}
-              onPageChange={setCurrentPage}
-            />
-          </div>
-        )}
+        <p className="pr-2 text-xs text-slate-500">
+          {entityMode === 'DOSSIERS'
+            ? 'Reviewing corporate licenses and recruiter authorization mandates.'
+            : 'Reviewing customized enterprise personal data processing agreements.'}
+        </p>
       </div>
+
+      {entityMode === 'AGREEMENTS' ? (
+        <AdminCustomAgreementsTable />
+      ) : (
+        <>
+          {/* SLA Alert Banner if any overdue */}
+          {slaOverdue > 0 && (
+            <div className="flex flex-col gap-2 rounded-2xl border border-amber-300/80 bg-amber-50/90 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-amber-800/80 dark:bg-amber-950/40">
+              <div className="flex items-center gap-3">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-500" />
+                </span>
+                <p className="text-xs font-semibold text-amber-950 dark:text-amber-200">
+                  <strong className="font-bold">SLA Alert:</strong> {slaOverdue} verification dossier has been waiting
+                  for over 24 hours. Prioritize this review to maintain corporate partner satisfaction.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleSelectStatusFromSummary('PENDING_REVIEW')}
+                className="self-start rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white shadow-2xs transition hover:bg-amber-700 sm:self-auto"
+              >
+                Filter Pending Queue &rarr;
+              </button>
+            </div>
+          )}
+
+          {/* Summary KPI Command Row */}
+          <AdminBusinessVerificationSummaryRow
+            summary={effectiveSummary}
+            selectedStatus={
+              activeTab === 'QUEUE'
+                ? 'PENDING_REVIEW'
+                : activeTab === 'NEED_INFO'
+                  ? 'MORE_INFO_REQUIRED'
+                  : activeTab === 'APPROVED'
+                    ? 'APPROVED'
+                    : activeTab === 'EXPIRING'
+                      ? 'EXPIRING_SOON'
+                      : filters.reviewStatus
+            }
+            onSelectStatus={handleSelectStatusFromSummary}
+          />
+
+          {/* Main Workspace Section: Tabs + Filter + Table */}
+          <div className="space-y-5">
+            {/* Workflow Tabs Navigation */}
+            <div className="dark:border-forest-800 border-b border-slate-200">
+              <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('QUEUE');
+                    setCurrentPage(0);
+                  }}
+                  className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
+                    activeTab === 'QUEUE'
+                      ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                  }`}
+                >
+                  <Clock className="h-4 w-4" />
+                  <span>Pending Queue</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                      activeTab === 'QUEUE'
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                        : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
+                    }`}
+                  >
+                    {effectiveSummary.pendingReview}
+                  </span>
+                  {effectiveSummary.slaOverdueCount > 0 && (
+                    <span className="flex h-1.5 w-1.5 rounded-full bg-rose-500" title="Overdue >24h" />
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('NEED_INFO');
+                    setCurrentPage(0);
+                  }}
+                  className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
+                    activeTab === 'NEED_INFO'
+                      ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                  }`}
+                >
+                  <AlertTriangle className="h-4 w-4" />
+                  <span>Needs Action</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                      activeTab === 'NEED_INFO'
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                        : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
+                    }`}
+                  >
+                    {effectiveSummary.moreInfoRequired}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('APPROVED');
+                    setCurrentPage(0);
+                  }}
+                  className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
+                    activeTab === 'APPROVED'
+                      ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                  }`}
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                  <span>Approved</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                      activeTab === 'APPROVED'
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                        : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
+                    }`}
+                  >
+                    {effectiveSummary.approved}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('EXPIRING');
+                    setCurrentPage(0);
+                  }}
+                  className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
+                    activeTab === 'EXPIRING'
+                      ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                  }`}
+                >
+                  <Calendar className="h-4 w-4" />
+                  <span>Expiring LOA</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                      activeTab === 'EXPIRING'
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                        : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
+                    }`}
+                  >
+                    {effectiveSummary.expiringSoonCount ?? 0}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('COMPANIES');
+                    setCurrentPage(0);
+                  }}
+                  className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
+                    activeTab === 'COMPANIES'
+                      ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                  }`}
+                >
+                  <Building2 className="h-4 w-4" />
+                  <span>Company Directory</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                      activeTab === 'COMPANIES'
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                        : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
+                    }`}
+                  >
+                    {companies.length}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('ALL');
+                    setCurrentPage(0);
+                  }}
+                  className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
+                    activeTab === 'ALL'
+                      ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                  }`}
+                >
+                  <FileText className="h-4 w-4" />
+                  <span>All Requests ({effectiveDossiers.length})</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Tab Content */}
+            {activeTab === 'COMPANIES' ? (
+              <AdminCompanyDirectoryTable companies={companies} onSelectCompanyDossier={handleSelectCompanyTaxCode} />
+            ) : (
+              <div className="space-y-4">
+                {/* Filter Bar */}
+                <AdminBusinessVerificationFilterBar
+                  filters={filters}
+                  onChange={handleFilterChange}
+                  onReset={handleResetFilters}
+                />
+
+                {/* Dossiers Table with built-in pagination */}
+                <AdminBusinessVerificationTable
+                  items={paginatedDossiers}
+                  totalItems={filteredDossiers.length}
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

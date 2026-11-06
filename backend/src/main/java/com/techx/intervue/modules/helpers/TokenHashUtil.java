@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TokenHashUtil {
-    public String hash(String token) {
+
+    public static String sha256(String token) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedHashBytes = digest.digest(token.getBytes(StandardCharsets.UTF_8));
@@ -16,5 +17,9 @@ public class TokenHashUtil {
         } catch (NoSuchAlgorithmException ex) {
             throw new IllegalStateException("SHA-256 algorithm not available", ex);
         }
+    }
+
+    public String hash(String token) {
+        return sha256(token);
     }
 }

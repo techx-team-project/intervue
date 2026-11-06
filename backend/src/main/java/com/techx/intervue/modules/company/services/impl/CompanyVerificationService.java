@@ -35,13 +35,20 @@ import com.techx.intervue.modules.company.resources.RecruiterVerificationProfile
 import com.techx.intervue.modules.company.resources.VerificationStepResource;
 import com.techx.intervue.modules.company.services.impl.CompanyVerificationLevelPolicy.Facts;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
-import com.techx.intervue.modules.user.resources.UserResource;
+import com.techx.intervue.modules.notification.enums.NotificationType;
+import com.techx.intervue.modules.notification.enums.RecipientType;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface.NotificationCommand;
+import com.techx.intervue.modules.recruiter.resources.RecruiterResource;
+import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterServiceInterface;
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,13 +77,16 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     private final BusinessDocumentMapper businessDocumentMapper;
     private final CompanyProfileCompleteness completeness;
     private final CompanyVerificationLevelPolicy levelPolicy;
-    private final UserServiceInterface userService;
+    private final RecruiterServiceInterface recruiterService;
     private final AuditLogServiceInterface auditLogService;
+    private final UserServiceInterface userService;
+    private final NotificationPublisherInterface notificationPublisher;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public RecruiterVerificationProfileResource findProfile(Long userId) {
         Optional<CompanyMember> membership = activeMembership(userId);
+        membership.ifPresent(this::ensureOwnerAgreementsInherited);
         Company company = membership.map(CompanyMember::getCompany).orElse(null);
         Facts facts = factsFor(userId, company);
         List<VerificationStepResource> steps = buildSteps(userId, company, facts);
@@ -97,16 +107,20 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public boolean canPublish(Long userId) {
-        Company company = activeMembership(userId).map(CompanyMember::getCompany).orElse(null);
+        Optional<CompanyMember> membership = activeMembership(userId);
+        membership.ifPresent(this::ensureOwnerAgreementsInherited);
+        Company company = membership.map(CompanyMember::getCompany).orElse(null);
         return levelPolicy.canPublish(factsFor(userId, company));
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public void assertCanPublish(Long userId) {
-        Company company = activeMembership(userId).map(CompanyMember::getCompany).orElse(null);
+        Optional<CompanyMember> membership = activeMembership(userId);
+        membership.ifPresent(this::ensureOwnerAgreementsInherited);
+        Company company = membership.map(CompanyMember::getCompany).orElse(null);
         ErrorCode blocked = levelPolicy.blockedReason(factsFor(userId, company));
         if (blocked != null) {
             throw new AppException(blocked);
@@ -125,6 +139,16 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     public BusinessDocumentResource submitDocument(
             MultipartFile file,
             MultipartFile identityFile,
+            SubmitBusinessDocumentRequest request,
+            RequestActor actor) {
+        return submitDocument(file, identityFile, null, request, actor);
+    }
+
+    @Override
+    public BusinessDocumentResource submitDocument(
+            MultipartFile file,
+            MultipartFile identityFile,
+            MultipartFile identityBackFile,
             SubmitBusinessDocumentRequest request,
             RequestActor actor) {
         CompanyMember membership = requireMembership(actor.userId());
@@ -151,6 +175,12 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                     storageService.upload(
                             identityFile, StorageTarget.IDENTITY_DOCUMENT, "identity");
         }
+        StoredFile identityBackStored = null;
+        if (identityBackFile != null && !identityBackFile.isEmpty()) {
+            identityBackStored =
+                    storageService.upload(
+                            identityBackFile, StorageTarget.IDENTITY_DOCUMENT, "identity");
+        }
 
         BusinessDocument document =
                 businessDocumentRepository.save(
@@ -170,6 +200,14 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                                         identityStored == null
                                                 ? null
                                                 : identityStored.originalFileName())
+                                .identityBackStoragePublicId(
+                                        identityBackStored == null
+                                                ? null
+                                                : identityBackStored.publicId())
+                                .identityBackFileName(
+                                        identityBackStored == null
+                                                ? null
+                                                : identityBackStored.originalFileName())
                                 .submittedAt(Instant.now())
                                 .build());
 
@@ -178,6 +216,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                 AuditAction.BUSINESS_DOCUMENT_SUBMITTED,
                 document.getId(),
                 request.documentType().name());
+        notifyAdminQueue(company.getName(), "Thẩm định hồ sơ doanh nghiệp");
         return businessDocumentMapper.toResource(document, actor.userId());
     }
 
@@ -185,9 +224,21 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     @Transactional(readOnly = true)
     public List<BusinessDocumentResource> findDocuments(Long userId) {
         CompanyMember membership = requireMembership(userId);
-        return businessDocumentRepository
-                .findByCompanyIdOrderBySubmittedAtDesc(membership.getCompany().getId())
-                .stream()
+        List<BusinessDocument> documents =
+                businessDocumentRepository.findByCompanyIdOrderBySubmittedAtDesc(
+                        membership.getCompany().getId());
+        if (!membership.isOwner()) {
+            documents =
+                    documents.stream()
+                            .filter(
+                                    doc ->
+                                            doc.getSubmittedBy().equals(userId)
+                                                    || doc.getDocumentType()
+                                                            == BusinessDocumentType
+                                                                    .BUSINESS_LICENSE)
+                            .toList();
+        }
+        return documents.stream()
                 .map(document -> businessDocumentMapper.toResource(document, userId))
                 .toList();
     }
@@ -210,6 +261,60 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                         document.getStoragePublicId(), StorageTarget.LEGAL_DOCUMENT);
         return new StoredDocumentContent(
                 document.getOriginalFileName(), document.getContentType(), bytes);
+    }
+
+    @Override
+    public StoredDocumentContent readIdentityDocument(Long documentId, Long userId) {
+        CompanyMember membership = requireMembership(userId);
+        BusinessDocument document =
+                businessDocumentRepository
+                        .findById(documentId)
+                        .filter(found -> found.getCompany().getId().equals(companyIdOf(membership)))
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        if (!membership.isOwner() && !document.getSubmittedBy().equals(userId)) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        if (document.getIdentityStoragePublicId() == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+        byte[] bytes =
+                storageService.fetchDocument(
+                        document.getIdentityStoragePublicId(), StorageTarget.IDENTITY_DOCUMENT);
+        return new StoredDocumentContent(
+                document.getIdentityFileName() == null
+                        ? "identity_card_front.png"
+                        : document.getIdentityFileName(),
+                "image/png",
+                bytes);
+    }
+
+    @Override
+    public StoredDocumentContent readIdentityBackDocument(Long documentId, Long userId) {
+        CompanyMember membership = requireMembership(userId);
+        BusinessDocument document =
+                businessDocumentRepository
+                        .findById(documentId)
+                        .filter(found -> found.getCompany().getId().equals(companyIdOf(membership)))
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        if (!membership.isOwner() && !document.getSubmittedBy().equals(userId)) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        if (document.getIdentityBackStoragePublicId() == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+        byte[] bytes =
+                storageService.fetchDocument(
+                        document.getIdentityBackStoragePublicId(), StorageTarget.IDENTITY_DOCUMENT);
+        return new StoredDocumentContent(
+                document.getIdentityBackFileName() == null
+                        ? "identity_card_back.png"
+                        : document.getIdentityBackFileName(),
+                "image/png",
+                bytes);
     }
 
     @Override
@@ -240,6 +345,26 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                 AgreementStatus.PENDING_REVIEW,
                 stored.publicId(),
                 actor);
+        notifyAdminQueue(membership.getCompany().getName(), "Thẩm định thoả thuận dữ liệu cá nhân");
+    }
+
+    private void notifyAdminQueue(String companyName, String queueLabel) {
+        List<NotificationCommand> commands =
+                userService.findActiveIdsByRole(RoleType.ADMIN).stream()
+                        .map(
+                                adminId ->
+                                        NotificationCommand.builder()
+                                                .recipientType(RecipientType.USER)
+                                                .recipientId(adminId)
+                                                .type(NotificationType.ADMIN_REVIEW_QUEUE_ITEM)
+                                                .params(
+                                                        Map.of(
+                                                                "companyName", companyName,
+                                                                "queueLabel", queueLabel))
+                                                .actionUrl("/admin/verification/business")
+                                                .build())
+                        .toList();
+        notificationPublisher.publishAll(commands);
     }
 
     @Override
@@ -276,7 +401,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
             throw new AppException(ErrorCode.AGREEMENT_ALREADY_ACCEPTED);
         }
 
-        if (membership.isOwner() && !isAcceptedForCompany(companyId, agreementType)) {
+        if (!isAcceptedForCompany(companyId, agreementType)) {
             companyAgreementRepository.save(
                     agreementOf(
                             membership,
@@ -325,17 +450,17 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
                 .build();
     }
 
-    private Facts factsFor(Long userId, Company company) {
-        UserResource user = userService.getMe(userId);
+    private Facts factsFor(Long recruiterId, Company company) {
+        RecruiterResource recruiter = recruiterService.getMe(recruiterId);
         return Facts.builder()
-                .emailVerified(user.emailVerified())
-                .phoneVerified(user.phoneVerified())
+                .emailVerified(recruiter.emailVerified())
+                .phoneVerified(recruiter.phoneVerified())
                 .companyLinked(company != null)
                 .companyAgreementSigned(
                         company != null && allAgreementsAcceptedForCompany(company.getId()))
-                .personalAgreementsAccepted(allAgreementsAcceptedForUser(userId))
+                .personalAgreementsAccepted(allAgreementsAcceptedForUser(recruiterId))
                 .companyVerified(company != null && company.isVerified())
-                .ownDocumentEffective(effectiveDocument(userId).isPresent())
+                .ownDocumentEffective(effectiveDocument(recruiterId).isPresent())
                 .build();
     }
 
@@ -396,10 +521,7 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
         CompanyAgreement agreement = personal.get();
         VerificationStepStatus status =
                 switch (agreement.getStatus()) {
-                    case ACCEPTED ->
-                            company != null && isAcceptedForCompany(company.getId(), type)
-                                    ? VerificationStepStatus.APPROVED
-                                    : VerificationStepStatus.ACTION_REQUIRED;
+                    case ACCEPTED -> VerificationStepStatus.APPROVED;
                     case PENDING_REVIEW -> VerificationStepStatus.IN_REVIEW;
                     case REJECTED -> VerificationStepStatus.REJECTED;
                 };
@@ -436,12 +558,70 @@ public class CompanyVerificationService implements CompanyVerificationServiceInt
     }
 
     private boolean isAcceptedForCompany(Long companyId, AgreementType agreementType) {
+        boolean hasCompanyScope =
+                companyAgreementRepository
+                        .findFirstByCompanyIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
+                                companyId, AgreementScope.COMPANY, agreementType)
+                        .filter(
+                                agreement ->
+                                        CURRENT_AGREEMENT_VERSION.equals(agreement.getVersion()))
+                        .filter(CompanyAgreement::isAccepted)
+                        .isPresent();
+        if (hasCompanyScope) {
+            return true;
+        }
         return companyAgreementRepository
                 .findFirstByCompanyIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
-                        companyId, AgreementScope.COMPANY, agreementType)
+                        companyId, AgreementScope.USER, agreementType)
                 .filter(agreement -> CURRENT_AGREEMENT_VERSION.equals(agreement.getVersion()))
                 .filter(CompanyAgreement::isAccepted)
                 .isPresent();
+    }
+
+    private void ensureOwnerAgreementsInherited(CompanyMember membership) {
+        if (!membership.isOwner() || membership.getCompany() == null) {
+            return;
+        }
+        Long companyId = membership.getCompany().getId();
+        Long ownerId = membership.getUserId();
+        for (AgreementType type : AgreementType.values()) {
+            if (!isAcceptedForCompany(companyId, type)) {
+                companyAgreementRepository
+                        .findFirstByUserIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
+                                ownerId, AgreementScope.USER, type)
+                        .filter(ag -> CURRENT_AGREEMENT_VERSION.equals(ag.getVersion()))
+                        .filter(CompanyAgreement::isAccepted)
+                        .ifPresent(
+                                accepted -> {
+                                    companyAgreementRepository.save(
+                                            CompanyAgreement.builder()
+                                                    .scope(AgreementScope.COMPANY)
+                                                    .company(membership.getCompany())
+                                                    .userId(null)
+                                                    .signedBy(ownerId)
+                                                    .agreementType(type)
+                                                    .acceptanceMode(accepted.getAcceptanceMode())
+                                                    .version(CURRENT_AGREEMENT_VERSION)
+                                                    .status(AgreementStatus.ACCEPTED)
+                                                    .acceptedAt(accepted.getAcceptedAt())
+                                                    .storagePublicId(accepted.getStoragePublicId())
+                                                    .build());
+                                    companyAgreementRepository.save(
+                                            CompanyAgreement.builder()
+                                                    .scope(AgreementScope.USER)
+                                                    .company(membership.getCompany())
+                                                    .userId(ownerId)
+                                                    .signedBy(ownerId)
+                                                    .agreementType(type)
+                                                    .acceptanceMode(accepted.getAcceptanceMode())
+                                                    .version(CURRENT_AGREEMENT_VERSION)
+                                                    .status(AgreementStatus.ACCEPTED)
+                                                    .acceptedAt(accepted.getAcceptedAt())
+                                                    .storagePublicId(accepted.getStoragePublicId())
+                                                    .build());
+                                });
+            }
+        }
     }
 
     private Optional<CompanyAgreement> currentUserAgreement(

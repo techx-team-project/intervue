@@ -49,6 +49,11 @@ public interface RecruiterRefreshTokenRepository
 
     Optional<RecruiterRefreshToken> findByIdAndRecruiterId(Long id, Long recruiterId);
 
+    long countByRecruiterIdAndIdNot(Long recruiterId, Long id);
+
+    boolean existsByRecruiterIdAndDeviceLabelAndIdNot(
+            Long recruiterId, String deviceLabel, Long id);
+
     List<RecruiterRefreshToken>
             findByRecruiterIdAndRevokedFalseAndExpiryDateAfterOrderByLastUsedAtDesc(
                     Long recruiterId, Instant now);

@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { REDIRECT_PARAM, ROUTES } from '@/constants/routes';
+import { toRecruiterSession } from '@/lib/auth-portal';
 import { LoginFormData, loginSchema } from '@/schemas/auth.schema';
 import { useAuthStore } from '@/store/auth.store';
 import { applyFormError } from '@/utils/error';
@@ -17,12 +18,14 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import FormErrorAlert from './FormErrorAlert';
+import TwoFactorChallengeModal from './TwoFactorChallengeModal';
 
 export default function RecruiterLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [challengeToken, setChallengeToken] = useState<string | null>(null);
 
   const {
     register,
@@ -38,9 +41,14 @@ export default function RecruiterLoginForm() {
   const onSubmit = handleSubmit(async (values) => {
     setIsLoading(true);
     try {
-      const session = await recruiterAuthApi.login(values);
-      useAuthStore.getState().setSession(session);
-      toast.success('Signed in to the employer portal.');
+      const res = await recruiterAuthApi.login(values);
+      if (res.requiresTwoFactor && res.tempToken) {
+        setChallengeToken(res.tempToken);
+        return;
+      }
+      const session = toRecruiterSession(res);
+      useAuthStore.getState().setSession(session, 'recruiter');
+      toast.success('Đã đăng nhập vào cổng nhà tuyển dụng.');
       router.replace(sanitizeRedirect(searchParams?.get(REDIRECT_PARAM), ROUTES.RECRUITER_DASHBOARD));
     } catch (error: unknown) {
       applyFormError(error, setError, ['email', 'password']);
@@ -118,6 +126,20 @@ export default function RecruiterLoginForm() {
           Candidate sign in
         </Link>
       </div>
+
+      {challengeToken && (
+        <TwoFactorChallengeModal
+          isOpen={true}
+          tempToken={challengeToken}
+          portal="recruiter"
+          onSuccess={(session) => {
+            useAuthStore.getState().setSession(session, 'recruiter');
+            toast.success('Đã đăng nhập vào cổng nhà tuyển dụng.');
+            router.replace(sanitizeRedirect(searchParams?.get(REDIRECT_PARAM), ROUTES.RECRUITER_DASHBOARD));
+          }}
+          onCancel={() => setChallengeToken(null)}
+        />
+      )}
     </div>
   );
 }

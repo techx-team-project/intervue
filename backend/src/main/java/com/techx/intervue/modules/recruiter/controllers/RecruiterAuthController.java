@@ -62,13 +62,30 @@ public class RecruiterAuthController extends BaseController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResource<RecruiterAuthResource>> login(
-            @Valid @RequestBody LoginRequest request, HttpServletRequest httpRequest) {
+            @Valid @RequestBody LoginRequest request,
+            @CookieValue(name = CookieHelper.RECRUITER_DEVICE_TRUST_COOKIE, required = false)
+                    String deviceTrustToken,
+            HttpServletRequest httpRequest) {
         return withSession(
                 recruiterAuthService.login(
                         request,
                         httpRequest.getHeader(HttpHeaders.USER_AGENT),
-                        IpHelper.getClientIp(httpRequest)),
+                        IpHelper.getClientIp(httpRequest),
+                        deviceTrustToken),
                 "Logged in successfully!");
+    }
+
+    @PostMapping("/verify-2fa")
+    public ResponseEntity<ApiResource<RecruiterAuthResource>> verifyTwoFactor(
+            @Valid @RequestBody
+                    com.techx.intervue.modules.user.requests.TwoFactorChallengeRequest request,
+            HttpServletRequest httpRequest) {
+        return withSession(
+                recruiterAuthService.verifyTwoFactor(
+                        request,
+                        httpRequest.getHeader(HttpHeaders.USER_AGENT),
+                        IpHelper.getClientIp(httpRequest)),
+                "Two-factor authentication verified successfully!");
     }
 
     @PostMapping("/refresh")
@@ -139,15 +156,30 @@ public class RecruiterAuthController extends BaseController {
 
     private ResponseEntity<ApiResource<RecruiterAuthResource>> withSession(
             RecruiterAuthResult result, String message) {
+        if (Boolean.TRUE.equals(result.requiresTwoFactor())) {
+            return ResponseEntity.ok(
+                    ApiResource.success(
+                            RecruiterAuthResource.challenge(result.tempToken()),
+                            "Two-factor authentication required."));
+        }
+        var responseBuilder = ResponseEntity.ok();
         String cookie =
                 CookieHelper.buildRecruiterRefreshTokenCookie(
                                 result.refreshToken(),
                                 Duration.ofDays(authConfig.getRefreshTokenTTLDays()))
                         .toString();
+        responseBuilder.header(HttpHeaders.SET_COOKIE, cookie);
+
+        if (result.deviceTrustToken() != null) {
+            String deviceCookie =
+                    CookieHelper.buildRecruiterDeviceTrustCookie(
+                                    result.deviceTrustToken(), CookieHelper.DEVICE_TRUST_MAX_AGE)
+                            .toString();
+            responseBuilder.header(HttpHeaders.SET_COOKIE, deviceCookie);
+        }
+
         RecruiterAuthResource body =
                 new RecruiterAuthResource(result.accessToken(), result.recruiter());
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie)
-                .body(ApiResource.success(body, message));
+        return responseBuilder.body(ApiResource.success(body, message));
     }
 }

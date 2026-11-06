@@ -23,7 +23,11 @@ public class LocalRecruiterSeedService implements LocalRecruiterSeedServiceInter
     @Transactional
     public boolean createIfAbsent(String name, String email, String rawPassword) {
         String normalizedEmail = EmailHelper.normalize(email);
-        if (recruiterRepository.existsByEmail(normalizedEmail)) {
+        var existing = recruiterRepository.findByEmail(normalizedEmail);
+        if (existing.isPresent()) {
+            Recruiter recruiter = existing.get();
+            recruiter.setPassword(passwordEncoder.encode(rawPassword));
+            recruiterRepository.save(recruiter);
             return false;
         }
 

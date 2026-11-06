@@ -44,6 +44,7 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
                 height={40}
                 priority
                 className="h-10 w-auto object-contain transition-transform duration-200"
+                style={{ width: 'auto', height: 'auto' }}
               />
               <span className="border-primary/20 bg-primary-light text-primary rounded-md border px-2 py-0.5 text-xs font-bold">
                 Nhà tuyển dụng
@@ -127,6 +128,7 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
               height={40}
               priority
               className="h-10 w-auto object-contain transition-transform duration-200"
+              style={{ width: 'auto', height: 'auto' }}
             />
           </Link>
 

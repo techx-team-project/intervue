@@ -1,6 +1,7 @@
 'use client';
 
 import { ROUTES } from '@/constants/routes';
+import { useResendVerification } from '@/hooks/useResendVerification';
 import type { RecruiterVerificationProfile, VerificationChecklistItem } from '@/types/recruiter-company';
 import { AlertCircle, AlertTriangle, ArrowRight, CheckCircle2, Clock, Lock, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
@@ -51,6 +52,7 @@ const BLOCKED_REASON_MESSAGES: Record<string, { title: string; desc: string; act
 
 export function VerificationChecklist({ profile }: VerificationChecklistProps) {
   const blockedNotice = profile.blockedReason ? BLOCKED_REASON_MESSAGES[profile.blockedReason] : null;
+  const resend = useResendVerification();
 
   return (
     <div className="flex h-full flex-col justify-between bg-white p-6 select-none sm:p-8 lg:p-10">
@@ -88,6 +90,24 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
           </div>
         </div>
 
+        {/* Verification Success Callout */}
+        {profile.canPublish && (
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 text-emerald-950 shadow-2xs">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#00b14f]" />
+              <div className="space-y-0.5">
+                <p className="text-sm font-bold text-emerald-950">
+                  Verification Complete — Level 3 Verified Enterprise
+                </p>
+                <p className="text-xs text-emerald-800">
+                  Your business credentials and data protection agreements have been fully verified. You have full job
+                  posting privileges across the platform.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Blocked Reason Callout */}
         {blockedNotice && !profile.canPublish && (
           <div className="rounded-xl border border-amber-200 bg-amber-50/80 p-4 text-amber-900">
@@ -97,13 +117,25 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
                 <p className="text-sm font-bold">{blockedNotice.title}</p>
                 <p className="text-xs text-amber-800/90">{blockedNotice.desc}</p>
                 <div className="pt-1.5">
-                  <Link
-                    href={blockedNotice.actionUrl}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-amber-900 underline hover:text-amber-950"
-                  >
-                    <span>{blockedNotice.actionLabel}</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
+                  {profile.blockedReason === 'EMAIL_NOT_VERIFIED' ? (
+                    <button
+                      type="button"
+                      disabled={resend.isPending}
+                      onClick={() => resend.mutate()}
+                      className="inline-flex cursor-pointer items-center gap-1 text-xs font-bold text-amber-900 underline hover:text-amber-950 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      <span>{resend.isPending ? 'Sending verification email...' : 'Resend verification email'}</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                  ) : (
+                    <Link
+                      href={blockedNotice.actionUrl}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-amber-900 underline hover:text-amber-950"
+                    >
+                      <span>{blockedNotice.actionLabel}</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>

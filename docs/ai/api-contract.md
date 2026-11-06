@@ -175,6 +175,17 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `CANNOT_RESTRICT_SELF` | 422 | An admin cannot ban their own account |
 | `LAST_ACTIVE_ADMIN` | 422 | The target is the only active admin left |
 
+## Skills
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/skills?query=` | public | Suggest-as-you-type over active skills, max 20, prefix matches first. Result cached in Redis (`cache:skills:active`, 10 min) and evicted on admin writes. `SkillResource`: `{ id, name, group }`, `group` is `CORE`, `AI_DATA`, `TOOLS_DEVOPS` or `SOFT_SKILLS`. |
+| `GET` | `/admin/skills?q=&group=&active=` | admin | Paged `AdminSkillResource` (`+ active, updatedAt`). |
+| `POST` | `/admin/skills` | admin | Body `{ name, group }`. `409 SKILL_NAME_ALREADY_USED` (case-insensitive). |
+| `PUT` | `/admin/skills/{id}` | admin | Same body. |
+| `POST` | `/admin/skills/{id}/activate` · `/deactivate` | admin | Skills are never deleted; an inactive skill disappears from suggestions and cannot be attached to a job. |
+
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -201,6 +212,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `DELETION_BLOCKED` | 422 | Account deletion is blocked while unresolved operations remain |
 | `IDENTITY_NOT_VERIFIED` | 422 | Candidate must complete eKYC to apply |
 | `COMPANY_NOT_VERIFIED` | 422 | Company must be verified to post |
+| `SKILL_NAME_ALREADY_USED` | 409 | A skill with this name already exists |
 | `PROFILE_SECTION_LIMIT_REACHED` | 409 | A candidate profile section already holds its maximum number of items |
 | `RATE_LIMITED` | 429 | Honor `Retry-After` |
 | `AI_USER_QUOTA_EXCEEDED` | 429 | Daily AI limit per user reached; honor `Retry-After` |

@@ -190,7 +190,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         label: 'Content',
         icon: FileText,
         children: [
-          { label: 'Blog', href: ROUTES.ADMIN_CONTENT_BLOG, permission: 'content.manage', comingSoon: true },
+          { label: 'Blog', href: ROUTES.ADMIN_CONTENT_BLOG, permission: 'content.manage', comingSoon: false },
           { label: 'FAQ', href: ROUTES.ADMIN_CONTENT_FAQ, permission: 'content.manage', comingSoon: true },
           {
             label: 'Featured companies',
@@ -208,7 +208,6 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             label: 'Announcements',
             href: ROUTES.ADMIN_CONTENT_ANNOUNCEMENTS,
             permission: 'content.manage',
-            comingSoon: true,
           },
         ],
       },

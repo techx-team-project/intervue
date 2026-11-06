@@ -5,7 +5,7 @@ import { ADMIN_QUICK_LINKS } from '@/constants/admin-work';
 import { ROUTES } from '@/constants/routes';
 import { useAdminTheme } from '@/hooks/useAdminTheme';
 import { useAuth } from '@/hooks/useAuth';
-import { useNotificationCount } from '@/hooks/useNotifications';
+import { useUnreadCount } from '@/hooks/useNotifications';
 import type { AdminQueueCounts } from '@/types/admin';
 import { Bell, ChevronDown, Menu, Moon, Sun } from 'lucide-react';
 import Image from 'next/image';
@@ -25,7 +25,7 @@ const ICON_BUTTON_CLASS =
 export default function AdminTopBar({ queueCounts, onToggleSidebar, onOpenMobileNav }: AdminTopBarProps) {
   const { user } = useAuth();
   const { theme, toggleTheme } = useAdminTheme();
-  const unreadNotifications = useNotificationCount('admin');
+  const { total: unreadNotifications } = useUnreadCount('admin');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -134,7 +134,8 @@ export default function AdminTopBar({ queueCounts, onToggleSidebar, onOpenMobile
             </button>
 
             <NotificationDropdown
-              target="admin"
+              realm="admin"
+              baseRoute={ROUTES.ADMIN_NOTIFICATIONS}
               isOpen={isNotificationOpen}
               onClose={() => setIsNotificationOpen(false)}
             />

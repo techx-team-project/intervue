@@ -8,6 +8,6 @@ export const metadata: Metadata = {
 
 export default function AdminNotificationsPage() {
   return (
-    <NotificationsListView target="admin" baseRoute="/admin/notifications" pageTitle="System Alerts & Notifications" />
+    <NotificationsListView realm="admin" baseRoute="/admin/notifications" pageTitle="System Alerts & Notifications" />
   );
 }

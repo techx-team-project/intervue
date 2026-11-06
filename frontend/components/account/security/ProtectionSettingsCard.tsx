@@ -1,4 +1,9 @@
+'use client';
+
+import { recruiterTwoFactorApi, userTwoFactorApi } from '@/apiRequest/two-factor';
+import { ROUTES } from '@/constants/routes';
 import type { AuthPortal } from '@/lib/auth-portal';
+import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, KeyRound, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 import AccountEmailRow from './AccountEmailRow';
@@ -21,6 +26,14 @@ export default function ProtectionSettingsCard({
   phoneVerified,
   passwordHref,
 }: ProtectionSettingsCardProps) {
+  const isRecruiter = portal === 'recruiter';
+  const api = isRecruiter ? recruiterTwoFactorApi : userTwoFactorApi;
+  const { data: twoFactorStatus } = useQuery({
+    queryKey: [portal, 'two-factor-status'],
+    queryFn: () => api.getStatus(),
+  });
+  const is2FaEnabled = twoFactorStatus?.enabled ?? false;
+
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
       <h2 className="text-base font-bold text-slate-800">Core protection settings</h2>
@@ -51,14 +64,22 @@ export default function ProtectionSettingsCard({
 
         <div className="flex items-center justify-between py-4">
           <div className="flex items-start gap-3.5">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+            <div
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                is2FaEnabled ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
+              }`}
+            >
               <Smartphone className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-slate-800">Two-factor authentication</span>
-                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">
-                  Not active
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                    is2FaEnabled ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                  }`}
+                >
+                  {is2FaEnabled ? 'Active' : 'Not active'}
                 </span>
               </div>
               <div className="text-xs text-slate-500">
@@ -67,10 +88,10 @@ export default function ProtectionSettingsCard({
             </div>
           </div>
           <Link
-            href="/account/two-factor"
+            href={portal === 'recruiter' ? ROUTES.RECRUITER_ACCOUNT_TWO_FACTOR : '/account/two-factor'}
             className="bg-primary rounded-full px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition hover:bg-emerald-700"
           >
-            Enable now
+            {is2FaEnabled ? (isRecruiter ? 'Manage' : 'Quản lý') : isRecruiter ? 'Enable now' : 'Kích hoạt ngay'}
           </Link>
         </div>
       </div>

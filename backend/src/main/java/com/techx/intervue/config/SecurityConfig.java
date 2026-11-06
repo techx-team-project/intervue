@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
 import org.springframework.security.authorization.AuthorityAuthorizationManager;
@@ -53,6 +54,8 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/recruiter/auth/login")
                                         .permitAll()
+                                        .requestMatchers("/api/v1/recruiter/auth/verify-2fa")
+                                        .permitAll()
                                         .requestMatchers("/api/v1/recruiter/auth/register")
                                         .permitAll()
                                         .requestMatchers("/api/v1/recruiter/auth/refresh")
@@ -74,7 +77,23 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()
+                                        .requestMatchers("/api/v1/blogs/**")
+                                        .permitAll()
+                                        .requestMatchers("/api/v1/job-alerts/**")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/skills")
+                                        .permitAll()
                                         // 2. Admin area
+                                        .requestMatchers("/api/v1/admin/auth/login")
+                                        .permitAll()
+                                        .requestMatchers("/api/v1/admin/auth/verify-2fa")
+                                        .permitAll()
+                                        .requestMatchers("/api/v1/admin/auth/2fa/**")
+                                        .permitAll()
+                                        .requestMatchers("/api/v1/admin/auth/refresh")
+                                        .permitAll()
+                                        .requestMatchers("/api/v1/admin/auth/logout")
+                                        .permitAll()
                                         .requestMatchers("/api/v1/admin/**")
                                         .hasRole("ADMIN")
                                         .requestMatchers("/api/v1/recruiter/**")

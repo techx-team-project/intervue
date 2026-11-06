@@ -3,15 +3,28 @@ import { notFound, redirect } from 'next/navigation';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import BlogDetailView from '@/components/blog/detail/BlogDetailView';
+import { blogApi } from '@/apiRequest/blog';
+import { toBlogArticle, type BlogArticle } from '@/types/blog';
 import { getBlogArticleBySlug, getAllBlogArticles } from '@/mocks/blog.mock';
+
+export const revalidate = 60;
 
 interface BlogArticleDetailPageProps {
   params: Promise<{ category: string; slug: string }>;
 }
 
 export async function generateMetadata({ params }: BlogArticleDetailPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const article = getBlogArticleBySlug(slug);
+  const { category, slug } = await params;
+  let article: BlogArticle | undefined = getBlogArticleBySlug(slug);
+
+  try {
+    const res = await blogApi.getDetail(category, slug);
+    if (res) {
+      article = toBlogArticle(res);
+    }
+  } catch {
+    // Fallback to mock
+  }
 
   if (!article) {
     return {
@@ -31,6 +44,18 @@ export async function generateMetadata({ params }: BlogArticleDetailPageProps): 
 }
 
 export async function generateStaticParams() {
+  try {
+    const res = await blogApi.search({ size: 100 });
+    if (res && res.items && res.items.length > 0) {
+      return res.items.map((art) => ({
+        category: art.categorySlug,
+        slug: art.slug,
+      }));
+    }
+  } catch {
+    // Fallback
+  }
+
   const articles = getAllBlogArticles();
   return articles.map((art) => ({
     category: art.categorySlug,
@@ -40,7 +65,16 @@ export async function generateStaticParams() {
 
 export default async function BlogArticleDetailPage({ params }: BlogArticleDetailPageProps) {
   const { category, slug } = await params;
-  const article = getBlogArticleBySlug(slug);
+  let article: BlogArticle | undefined = getBlogArticleBySlug(slug);
+
+  try {
+    const res = await blogApi.getDetail(category, slug);
+    if (res) {
+      article = toBlogArticle(res);
+    }
+  } catch {
+    // Fallback to mock
+  }
 
   if (!article) {
     notFound();

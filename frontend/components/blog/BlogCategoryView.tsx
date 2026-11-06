@@ -152,7 +152,9 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 text-purple-700">
                   <Sparkles className="h-5 w-5" />
                 </span>
-                <h3 className="text-xl font-bold text-[#171717]">Toàn cảnh kỹ năng & dải lương các ngành hot</h3>
+                <h3 className="text-xl font-bold text-[#171717]">
+                  Key Skills & Salary Ranges Across High-Demand Sectors
+                </h3>
               </div>
             </div>
 
@@ -171,7 +173,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                     </div>
                   </div>
                   <div className="mt-3 flex items-center justify-between text-xs">
-                    <span className="text-gray-500">Mức lương phổ biến:</span>
+                    <span className="text-gray-500">Typical salary range:</span>
                     <span className="text-primary font-bold">{domain.salary}</span>
                   </div>
                   <div className="mt-2.5 flex flex-wrap gap-1">
@@ -220,7 +222,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                 <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
                   <BookOpen className="h-5 w-5" />
                 </div>
-                <h2 className="text-xl font-bold text-[#171717]">Danh sách bài viết ({filteredArticles.length})</h2>
+                <h2 className="text-xl font-bold text-[#171717]">Articles ({filteredArticles.length})</h2>
               </div>
             </div>
 
@@ -240,7 +242,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                       onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                       className="rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-40"
                     >
-                      Trang trước
+                      Previous
                     </button>
                     {Array.from({ length: totalPages }).map((_, i) => (
                       <button
@@ -262,7 +264,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                       onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                       className="rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-40"
                     >
-                      Trang sau
+                      Next
                     </button>
                   </div>
                 )}
@@ -270,8 +272,8 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
             ) : (
               <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-white py-16 text-center">
                 <SearchX className="h-12 w-12 text-gray-300" />
-                <h3 className="mt-4 text-base font-bold text-gray-700">Không tìm thấy bài viết phù hợp</h3>
-                <p className="mt-1 text-xs text-gray-400">Thử tìm kiếm với từ khóa khác hoặc bỏ chọn bộ lọc</p>
+                <h3 className="mt-4 text-base font-bold text-gray-700">No matching articles found</h3>
+                <p className="mt-1 text-xs text-gray-400">Try a different search keyword or reset filters</p>
                 <button
                   type="button"
                   onClick={() => {

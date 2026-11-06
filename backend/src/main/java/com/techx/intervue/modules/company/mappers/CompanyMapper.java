@@ -29,7 +29,11 @@ public class CompanyMapper {
         company.setTradingName(request.tradingName());
         company.setTaxCode(request.taxCode());
         company.setBusinessType(request.businessType());
-        company.setIndustry(request.industry());
+        String resolvedIndustry =
+                (request.industry() == null || request.industry().isBlank())
+                        ? "Software & Information Technology"
+                        : request.industry().trim();
+        company.setIndustry(resolvedIndustry);
         company.setWebsite(request.website());
         company.setMarket(request.market());
         company.setTargetCustomers(request.targetCustomers());

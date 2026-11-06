@@ -6,6 +6,7 @@ import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.resources.CompanySummaryResource;
+import com.techx.intervue.modules.company.resources.TaxLookupResource;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,8 @@ public interface CompanyServiceInterface {
     void leave(RequestActor actor);
 
     CompanyResource replaceLogo(MultipartFile file, Long userId);
+
+    TaxLookupResource lookupTax(String taxCode);
 
     CompanyResource addPhotos(List<MultipartFile> files, Long userId);
 

@@ -8,6 +8,7 @@ import type {
   CompanySummaryResource,
   RecruiterVerificationProfileResource,
   SaveCompanyProfileRequest,
+  TaxLookupResource,
 } from '@/types/recruiter-company';
 
 export const recruiterCompanyApi = {
@@ -31,10 +32,16 @@ export const recruiterCompanyApi = {
 
   searchCompanies: (keyword?: string, page = 0, size = 10) => {
     const params = new URLSearchParams();
-    if (keyword?.trim()) params.set('keyword', keyword.trim());
+    if (keyword?.trim()) params.set('q', keyword.trim());
     params.set('page', String(page));
     params.set('size', String(size));
     return request<Page<CompanySummaryResource>>(`/recruiter/company/search?${params.toString()}`);
+  },
+
+  lookupTax: (taxCode: string) => {
+    const params = new URLSearchParams();
+    params.set('taxCode', taxCode.trim());
+    return request<TaxLookupResource>(`/recruiter/company/lookup-tax?${params.toString()}`);
   },
 
   joinCompany: (companyId: number) =>
@@ -72,11 +79,19 @@ export const recruiterCompanyApi = {
     }),
 
   // Legal documents
-  submitDocument: (documentType: BusinessDocumentType, file: File, identityFile?: File | null) => {
+  submitDocument: (
+    documentType: BusinessDocumentType,
+    file: File,
+    identityFile?: File | null,
+    identityBackFile?: File | null,
+  ) => {
     const formData = new FormData();
     formData.append('file', file);
     if (identityFile) {
       formData.append('identityFile', identityFile);
+    }
+    if (identityBackFile) {
+      formData.append('identityBackFile', identityBackFile);
     }
     return request<BusinessDocumentResource>(
       `/recruiter/company/documents?documentType=${encodeURIComponent(documentType)}`,
@@ -88,6 +103,21 @@ export const recruiterCompanyApi = {
   },
 
   getDocuments: () => request<BusinessDocumentResource[]>('/recruiter/company/documents'),
+
+  viewDocumentBlob: (documentId: number) =>
+    request<Blob>(`/recruiter/company/documents/${documentId}/view`, {
+      responseType: 'blob',
+    }),
+
+  viewIdentityBlob: (documentId: number) =>
+    request<Blob>(`/recruiter/company/documents/${documentId}/identity/view`, {
+      responseType: 'blob',
+    }),
+
+  viewIdentityBackBlob: (documentId: number) =>
+    request<Blob>(`/recruiter/company/documents/${documentId}/identity-back/view`, {
+      responseType: 'blob',
+    }),
 
   // Agreements
   acceptAgreement: (agreementType: AgreementType) =>

@@ -27,6 +27,8 @@ public interface BusinessVerificationAdminServiceInterface {
 
     StoredDocumentContent readIdentityDocument(Long documentId);
 
+    StoredDocumentContent readIdentityBackDocument(Long documentId);
+
     AdminBusinessVerificationDetailResource approve(
             Long documentId, ApproveDocumentRequest request, RequestActor actor);
 

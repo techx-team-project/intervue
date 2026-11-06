@@ -72,7 +72,7 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
               href={articleUrl}
               className="text-primary inline-flex items-center gap-1 text-xs font-semibold transition-transform group-hover:translate-x-0.5"
             >
-              <span>Đọc tiếp</span>
+              <span>Read article</span>
               <ArrowUpRight className="h-3.5 w-3.5" />
             </Link>
           </div>

@@ -48,11 +48,13 @@ public class AuthSessionService implements AuthSessionServiceInterface {
     }
 
     private String grantAccess(User user) {
+        int tokenVersion = user.getTokenVersion() != null ? user.getTokenVersion() : 1;
         userSessionCache.set(
                 user.getId(),
                 user.getEmail(),
                 user.activeRoleTypes(),
+                tokenVersion,
                 Duration.ofMillis(authConfig.getExpirationTime()));
-        return jwtService.generateToken(user.getId(), AccountType.USER);
+        return jwtService.generateToken(user.getId(), AccountType.USER, tokenVersion);
     }
 }

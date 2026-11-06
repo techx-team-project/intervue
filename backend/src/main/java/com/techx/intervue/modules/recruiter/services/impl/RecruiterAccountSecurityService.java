@@ -10,6 +10,8 @@ import com.techx.intervue.modules.recruiter.repositories.RecruiterRefreshTokenRe
 import com.techx.intervue.modules.recruiter.repositories.RecruiterRepository;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterAccountSecurityServiceInterface;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterSessionCacheInterface;
+import com.techx.intervue.modules.user.enums.AccountType;
+import com.techx.intervue.modules.user.events.SecuritySettingChangedEvent;
 import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
 import com.techx.intervue.modules.user.resources.AccountSessionResource;
 import com.techx.intervue.services.interfaces.RateLimitServiceInterface;
@@ -17,6 +19,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,7 @@ public class RecruiterAccountSecurityService implements RecruiterAccountSecurity
     private final PasswordEncoder passwordEncoder;
     private final RecruiterSessionCacheInterface sessionCache;
     private final TokenHashUtil tokenHashUtil;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -68,9 +72,17 @@ public class RecruiterAccountSecurityService implements RecruiterAccountSecurity
         }
 
         recruiter.setPassword(passwordEncoder.encode(request.password()));
+        recruiter.setTokenVersion(
+                (recruiter.getTokenVersion() != null ? recruiter.getTokenVersion() : 1) + 1);
+        recruiterRepository.save(recruiter);
         revokeOthers(
                 recruiterId, currentTokenId(recruiterId, refreshToken), PASSWORD_CHANGED_REASON);
         sessionCache.evict(recruiterId);
+        eventPublisher.publishEvent(
+                new SecuritySettingChangedEvent(
+                        AccountType.RECRUITER,
+                        recruiterId,
+                        "Mật khẩu đăng nhập đã được thay đổi."));
     }
 
     @Override
@@ -121,6 +133,13 @@ public class RecruiterAccountSecurityService implements RecruiterAccountSecurity
     @Override
     @Transactional
     public void revokeOtherSessions(Long recruiterId, String refreshToken) {
+        Recruiter recruiter =
+                recruiterRepository
+                        .findById(recruiterId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        recruiter.setTokenVersion(
+                (recruiter.getTokenVersion() != null ? recruiter.getTokenVersion() : 1) + 1);
+        recruiterRepository.save(recruiter);
         revokeOthers(recruiterId, currentTokenId(recruiterId, refreshToken), USER_REVOKED_REASON);
         sessionCache.evict(recruiterId);
     }

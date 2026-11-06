@@ -70,6 +70,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
         try {
+            String purpose = jwtService.extractAllClaims(token).get("purp", String.class);
+            if ("2FA_PREAUTH".equals(purpose) || "2FA_SETUP".equals(purpose)) {
+                writeErrorResponse(
+                        response,
+                        "Pre-authentication token cannot be used to access protected resources.");
+                return;
+            }
+
             String jti = jwtService.extractJti(token);
             if (Boolean.TRUE.equals(blacklistService.isRevoked(jti))) {
                 if ("/api/v1/ai/chat".equals(request.getRequestURI())) {
@@ -93,6 +101,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         return;
                     }
                     writeErrorResponse(response, "Your session has expired.");
+                    return;
+                }
+
+                Integer tokenVersion = jwtService.extractTokenVersion(token);
+                int expectedVersion = session.tokenVersion() != null ? session.tokenVersion() : 1;
+                int actualVersion = tokenVersion != null ? tokenVersion : 1;
+                if (actualVersion != expectedVersion) {
+                    if ("/api/v1/ai/chat".equals(request.getRequestURI())) {
+                        filterChain.doFilter(request, response);
+                        return;
+                    }
+                    writeErrorResponse(response, "Your session has been invalidated.");
                     return;
                 }
 
@@ -140,17 +160,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     recruiterSessionCache.get(accountId);
             return session == null
                     ? null
-                    : new SessionIdentity(session.email(), Set.of(RECRUITER_ROLE));
+                    : new SessionIdentity(
+                            session.email(), Set.of(RECRUITER_ROLE), session.tokenVersion());
         }
         UserSessionCacheInterface.SessionData session = userSessionCache.get(accountId);
         return session == null
                 ? null
                 : new SessionIdentity(
                         session.email(),
-                        session.roles().stream().map(RoleType::name).collect(Collectors.toSet()));
+                        session.roles().stream().map(RoleType::name).collect(Collectors.toSet()),
+                        session.tokenVersion());
     }
 
-    private record SessionIdentity(String email, Set<String> roles) {}
+    private record SessionIdentity(String email, Set<String> roles, Integer tokenVersion) {}
 
     private void writeErrorResponse(HttpServletResponse response, String message)
             throws IOException {

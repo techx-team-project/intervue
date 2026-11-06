@@ -65,6 +65,7 @@ export default function CareerTableOfContents({ items }: CareerTableOfContentsPr
           <h3 className="text-sm font-bold text-[#171717] sm:text-base">
             {CAREER_ORIENTATION_MESSAGES.tableOfContents.title}
           </h3>
+          <h3 className="text-sm font-bold text-[#171717] sm:text-base">Table of Contents</h3>
         </div>
 
         <button

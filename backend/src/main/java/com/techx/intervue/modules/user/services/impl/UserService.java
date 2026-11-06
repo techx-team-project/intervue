@@ -8,6 +8,7 @@ import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterf
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.user.entities.User;
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.mappers.UserMapper;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
@@ -56,6 +57,12 @@ public class UserService extends BaseService implements UserServiceInterface {
     @Transactional(readOnly = true)
     public List<UserResource> findByIds(Collection<Long> userIds) {
         return userRepository.findAllById(userIds).stream().map(userMapper::toResource).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> findActiveIdsByRole(RoleType role) {
+        return userRepository.findIdsByStatusAndActiveRole(UserStatus.ACTIVE, role, Instant.now());
     }
 
     @Override

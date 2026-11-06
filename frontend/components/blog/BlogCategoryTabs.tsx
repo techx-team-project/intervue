@@ -16,7 +16,7 @@ interface CategoryTabItem {
 const TABS: CategoryTabItem[] = [
   {
     id: 'all',
-    name: 'Tất cả bài viết',
+    name: 'All Articles',
     href: '/blog',
     icon: <Sparkles className="h-4 w-4" />,
   },
