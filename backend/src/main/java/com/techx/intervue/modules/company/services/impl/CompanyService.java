@@ -34,6 +34,7 @@ import com.techx.intervue.modules.company.resources.CompanySummaryResource;
 import com.techx.intervue.modules.company.resources.PublicCompanyResource;
 import com.techx.intervue.modules.company.resources.TaxLookupResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
+import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterServiceInterface;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -64,6 +65,7 @@ public class CompanyService implements CompanyServiceInterface {
     private final CompanyPhotoRepository companyPhotoRepository;
     private final BusinessDocumentRepository businessDocumentRepository;
     private final StorageServiceInterface storageService;
+    private final RecruiterServiceInterface recruiterService;
     private final TaxCodeLookupInterface taxCodeLookup;
     private final CompanyMapper companyMapper;
     private final CompanyProfileCompleteness completeness;
@@ -179,6 +181,19 @@ public class CompanyService implements CompanyServiceInterface {
                 .findById(companyId)
                 .map(companyMapper::toSummaryResource)
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean hasActiveMemberWithEmail(Long companyId, String email) {
+        List<Long> memberIds =
+                companyMemberRepository
+                        .findByCompanyIdAndStatus(companyId, CompanyMemberStatus.ACTIVE)
+                        .stream()
+                        .map(CompanyMember::getUserId)
+                        .toList();
+        return recruiterService.findByIds(memberIds).stream()
+                .anyMatch(recruiter -> recruiter.email().equalsIgnoreCase(email));
     }
 
     @Override

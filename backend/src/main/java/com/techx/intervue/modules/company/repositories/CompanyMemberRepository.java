@@ -26,4 +26,6 @@ public interface CompanyMemberRepository extends JpaRepository<CompanyMember, Lo
     Optional<CompanyMember> findByCompanyIdAndUserId(Long companyId, Long userId);
 
     List<CompanyMember> findByCompanyId(Long companyId);
+
+    List<CompanyMember> findByCompanyIdAndStatus(Long companyId, CompanyMemberStatus status);
 }

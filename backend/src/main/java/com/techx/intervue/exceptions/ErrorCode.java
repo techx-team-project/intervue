@@ -109,6 +109,12 @@ public enum ErrorCode {
             HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!"),
     JOB_NOT_EDITABLE(
             HttpStatus.UNPROCESSABLE_CONTENT, "This job can no longer be edited or deleted!"),
+    ALREADY_APPLIED(HttpStatus.CONFLICT, "You have already applied to this job!"),
+    JOB_NOT_OPEN(HttpStatus.UNPROCESSABLE_CONTENT, "This job is not accepting applications!"),
+    CANNOT_APPLY_TO_OWN_COMPANY(
+            HttpStatus.UNPROCESSABLE_CONTENT, "You cannot apply to a job of your own company!"),
+    IDENTITY_NOT_VERIFIED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "Verify your identity before applying!"),
     RESUME_LIMIT_REACHED(HttpStatus.CONFLICT, "You have reached the maximum number of CVs!"),
     SCREENING_QUESTIONS_LOCKED(
             HttpStatus.UNPROCESSABLE_CONTENT,
