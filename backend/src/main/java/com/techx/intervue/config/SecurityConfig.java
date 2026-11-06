@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
 import org.springframework.security.authorization.AuthorityAuthorizationManager;
@@ -79,6 +80,8 @@ public class SecurityConfig {
                                         .requestMatchers("/api/v1/blogs/**")
                                         .permitAll()
                                         .requestMatchers("/api/v1/job-alerts/**")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/skills")
                                         .permitAll()
                                         // 2. Admin area
                                         .requestMatchers("/api/v1/admin/auth/login")
