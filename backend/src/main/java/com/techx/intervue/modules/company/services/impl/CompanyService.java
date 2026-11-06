@@ -34,8 +34,11 @@ import com.techx.intervue.modules.company.resources.CompanySummaryResource;
 import com.techx.intervue.modules.company.resources.TaxLookupResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -164,6 +167,29 @@ public class CompanyService implements CompanyServiceInterface {
                 .existingOnPlatform(existing.isPresent())
                 .existingCompanyId(existing.map(Company::getId).orElse(null))
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CompanySummaryResource findSummary(Long companyId) {
+        return companyRepository
+                .findById(companyId)
+                .map(companyMapper::toSummaryResource)
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<Long, String> findLogoUrlsByRecruiterIds(Collection<Long> recruiterIds) {
+        if (recruiterIds.isEmpty()) {
+            return Map.of();
+        }
+        return companyProfileRepository.findWithLogoByRecruiterIds(recruiterIds).stream()
+                .collect(
+                        Collectors.toMap(
+                                profile -> profile.getMember().getUserId(),
+                                profile -> storageService.publicImageUrl(profile.getLogoPublicId()),
+                                (first, second) -> first));
     }
 
     @Override
