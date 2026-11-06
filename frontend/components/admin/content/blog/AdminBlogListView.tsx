@@ -101,10 +101,10 @@ export function AdminBlogListView({ initialSummary, initialPage, categories, onR
       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
-            Quản lý Cẩm nang Nghề nghiệp & Blog
+            Career Guides & Blog Management
           </h1>
           <p className="mt-1 text-xs text-slate-500">
-            Quản trị các bài viết định hướng, bí quyết tìm việc, lương thưởng và kiến thức chuyên ngành.
+            Publish career advice, salary insights, and industry recruitment playbooks.
           </p>
         </div>
       </div>
@@ -145,9 +145,9 @@ export function AdminBlogListView({ initialSummary, initialPage, categories, onR
       {postsPage && postsPage.totalPages > 1 && (
         <div className="flex items-center justify-between rounded-2xl border border-slate-200/80 bg-white px-5 py-3 text-xs text-slate-500 shadow-2xs">
           <div>
-            Trang <span className="font-bold text-slate-900">{postsPage.page + 1}</span> /{' '}
-            <span className="font-bold text-slate-900">{postsPage.totalPages}</span> (Tổng{' '}
-            <span className="font-bold text-slate-900">{postsPage.totalItems}</span> bài viết)
+            Page <span className="font-bold text-slate-900">{postsPage.page + 1}</span> of{' '}
+            <span className="font-bold text-slate-900">{postsPage.totalPages}</span> (
+            <span className="font-bold text-slate-900">{postsPage.totalItems}</span> total articles)
           </div>
 
           <div className="flex items-center gap-2">
@@ -158,7 +158,7 @@ export function AdminBlogListView({ initialSummary, initialPage, categories, onR
               className="inline-flex cursor-pointer items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <ChevronLeft className="h-4 w-4" />
-              <span>Trước</span>
+              <span>Previous</span>
             </button>
 
             <button
@@ -167,7 +167,7 @@ export function AdminBlogListView({ initialSummary, initialPage, categories, onR
               onClick={() => loadData(postsPage.page + 1)}
               className="inline-flex cursor-pointer items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              <span>Sau</span>
+              <span>Next</span>
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
@@ -175,23 +175,23 @@ export function AdminBlogListView({ initialSummary, initialPage, categories, onR
       )}
 
       {postToDelete && (
-        <Modal isOpen={true} onClose={() => setPostToDelete(null)} title="Xác nhận xóa bài viết" maxWidth="sm">
+        <Modal isOpen={true} onClose={() => setPostToDelete(null)} title="Delete Article" maxWidth="sm">
           <div className="space-y-4 p-5">
-            <div className="flex items-start gap-3 rounded-2xl bg-red-50 p-4 text-xs text-red-800">
-              <AlertTriangle className="h-5 w-5 shrink-0 text-red-600" />
+            <div className="flex items-start gap-3 rounded-2xl bg-rose-50 p-4 text-xs text-rose-800">
+              <AlertTriangle className="h-5 w-5 shrink-0 text-rose-600" />
               <p className="leading-relaxed">
-                Bạn có chắc chắn muốn xóa bài viết{' '}
-                <strong className="font-bold text-red-900">&ldquo;{postToDelete.title}&rdquo;</strong>? Bài viết sẽ bị
-                ẩn khỏi toàn bộ trang Cẩm nang ứng viên.
+                Are you sure you want to delete{' '}
+                <strong className="font-bold text-rose-900">&ldquo;{postToDelete.title}&rdquo;</strong>? This will
+                remove the article from the candidate portal.
               </p>
             </div>
 
             <div className="flex items-center justify-end gap-2.5 pt-2">
               <Button variant="outline" size="sm" onClick={() => setPostToDelete(null)} disabled={isDeleting}>
-                Hủy bỏ
+                Cancel
               </Button>
               <Button variant="danger" size="sm" onClick={handleConfirmDelete} isLoading={isDeleting}>
-                Xác nhận xóa
+                Delete Article
               </Button>
             </div>
           </div>
@@ -200,3 +200,5 @@ export function AdminBlogListView({ initialSummary, initialPage, categories, onR
     </div>
   );
 }
+
+export default AdminBlogListView;

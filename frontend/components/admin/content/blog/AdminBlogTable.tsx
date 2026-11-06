@@ -20,8 +20,8 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
           <Sparkles className="h-6 w-6" />
         </div>
-        <h4 className="mt-3 text-sm font-bold text-slate-900">Không tìm thấy bài viết nào</h4>
-        <p className="mt-1 text-xs text-slate-500">Hãy thử thay đổi điều kiện lọc hoặc tạo bài viết mới.</p>
+        <h4 className="mt-3 text-sm font-bold text-slate-900">No articles found</h4>
+        <p className="mt-1 text-xs text-slate-500">Try adjusting your search criteria or create a new article.</p>
       </div>
     );
   }
@@ -32,13 +32,13 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
         <table className="w-full border-collapse text-left text-xs">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50/70 font-semibold tracking-wider text-slate-500 uppercase">
-              <th className="py-3.5 pr-4 pl-6">Bài viết</th>
-              <th className="px-4 py-3.5">Chuyên mục</th>
-              <th className="px-4 py-3.5 text-center">Trạng thái</th>
-              <th className="px-4 py-3.5 text-center">Nổi bật</th>
-              <th className="px-4 py-3.5 text-right">Lượt xem</th>
-              <th className="px-4 py-3.5">Ngày đăng</th>
-              <th className="py-3.5 pr-6 pl-4 text-right">Thao tác</th>
+              <th className="py-3.5 pr-4 pl-6">Article</th>
+              <th className="px-4 py-3.5">Category</th>
+              <th className="px-4 py-3.5 text-center">Status</th>
+              <th className="px-4 py-3.5 text-center">Featured</th>
+              <th className="px-4 py-3.5 text-right">Views</th>
+              <th className="px-4 py-3.5">Published Date</th>
+              <th className="py-3.5 pr-6 pl-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -86,13 +86,13 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
                     <button
                       type="button"
                       onClick={() => onToggleStatus(post)}
-                      title="Bấm để đổi trạng thái"
+                      title="Click to toggle status"
                       className={`inline-flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold transition hover:opacity-80 ${
                         isPublished ? 'bg-emerald-50 text-[#00b14f]' : 'bg-amber-50 text-amber-700'
                       }`}
                     >
                       {isPublished ? <CheckCircle2 className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
-                      <span>{isPublished ? 'Xuất bản' : 'Bản nháp'}</span>
+                      <span>{isPublished ? 'Published' : 'Draft'}</span>
                     </button>
                   </td>
 
@@ -102,7 +102,7 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
                         size="sm"
                         checked={post.isFeatured}
                         onChange={() => onToggleFeatured(post)}
-                        ariaLabel="Ghim nổi bật"
+                        ariaLabel="Toggle featured"
                       />
                     </div>
                   </td>
@@ -113,12 +113,12 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
 
                   <td className="px-4 py-4 whitespace-nowrap text-slate-500">
                     {post.publishedAt
-                      ? new Date(post.publishedAt).toLocaleDateString('vi-VN', {
-                          day: '2-digit',
-                          month: '2-digit',
+                      ? new Date(post.publishedAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
                           year: 'numeric',
                         })
-                      : 'Chưa xuất bản'}
+                      : 'Unpublished'}
                   </td>
 
                   <td className="py-4 pr-6 pl-4 text-right whitespace-nowrap">
@@ -127,7 +127,7 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
                         href={candidateUrl}
                         target="_blank"
                         rel="noreferrer"
-                        title="Xem trang Candidate"
+                        title="View live candidate article"
                         className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
                       >
                         <ExternalLink className="h-4 w-4" />
@@ -135,7 +135,7 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
 
                       <Link
                         href={`/admin/content/blog/${post.id}/edit`}
-                        title="Chỉnh sửa bài viết"
+                        title="Edit article"
                         className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-[#00b14f]"
                       >
                         <Edit className="h-4 w-4" />
@@ -144,8 +144,8 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
                       <button
                         type="button"
                         onClick={() => onDelete(post)}
-                        title="Xóa bài viết"
-                        className="cursor-pointer rounded-lg p-1.5 text-slate-400 transition hover:bg-red-50 hover:text-red-600"
+                        title="Delete article"
+                        className="rounded-lg p-1.5 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -160,3 +160,5 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
     </div>
   );
 }
+
+export default AdminBlogTable;

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Square, RotateCcw, CheckCircle, FileText, ArrowRight } from 'lucide-react';
+import { useAuthStore } from '@/store/auth.store';
 
 interface ChecklistItem {
   id: string;
@@ -15,68 +16,105 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
   {
     id: 'res-company',
     stage: 'before',
-    label: 'Nghiên cứu kỹ sản phẩm & văn hóa công ty',
-    desc: 'Đọc website, fanpage, báo cáo tài chính/tin tức mới nhất trong 6 tháng qua.',
+    label: 'Research Company Culture & Tech Stack',
+    desc: 'Review website, recent press releases, GitHub repositories, and team engineering blogs.',
   },
   {
     id: 'res-star',
     stage: 'before',
-    label: 'Chuẩn bị 3 câu chuyện thành tựu theo mô hình STAR',
-    desc: 'Chọn 3 case study dự án nổi bật: Situation, Task, Action, Result có số liệu.',
+    label: 'Prepare 3 STAR Technique Stories',
+    desc: 'Craft quantifiable case studies: Situation, Task, Action, Result highlighting business impact.',
   },
   {
     id: 'res-cv-print',
     stage: 'before',
-    label: 'In sẵn 2 - 3 bản CV cứng + Portfolio',
-    desc: 'Để trong bìa sơ mi phẳng phiu mang đến buổi phỏng vấn trực tiếp.',
+    label: 'Prepare Updated Resumes & Portfolio Links',
+    desc: 'Keep hard copies or quick links ready for panel interviewers and hiring managers.',
   },
   {
     id: 'res-questions',
     stage: 'before',
-    label: 'Chuẩn bị 3 - 5 câu hỏi thông minh hỏi lại nhà tuyển dụng',
-    desc: 'Hỏi về mục tiêu 3 tháng đầu, thách thức của team hoặc văn hóa làm việc.',
+    label: 'Prepare 3-5 Insightful Questions',
+    desc: 'Ask about 90-day deliverables, technical architecture hurdles, and engineering team autonomy.',
   },
   {
     id: 'day-clothes',
     stage: 'day_of',
-    label: 'Trang phục chỉn chu, lịch sự phù hợp văn hóa',
-    desc: 'Áo sơ mi/blazer gọn gàng, kiểm tra tác phong đầu tóc chỉnh tề.',
+    label: 'Professional Attire & Audio-Video Setup',
+    desc: 'Dress for the occasion, verify microphone, camera lighting, and silent workspace background.',
   },
   {
     id: 'day-early',
     stage: 'day_of',
-    label: 'Có mặt sớm trước giờ hẹn 10 - 15 phút',
-    desc: 'Tránh kẹt xe, có thời gian thư giãn hít thở sâu và chỉnh trang lại.',
+    label: 'Join or Arrive 10-15 Minutes Early',
+    desc: 'Test your connection or settle into the waiting lobby with calm breathing and quick notes review.',
   },
   {
     id: 'dur-eye',
     stage: 'during',
-    label: 'Duy trì giao tiếp ánh mắt & nụ cười tự tin',
-    desc: 'Thân thiện, lắng nghe trọn vẹn câu hỏi của hội đồng trước khi trả lời.',
+    label: 'Maintain Eye Contact & Confident Tone',
+    desc: 'Actively listen to interviewer prompts, pause thoughtfully before delivering structured answers.',
   },
   {
     id: 'dur-truth',
     stage: 'during',
-    label: 'Thành thật và tích cực trong mọi câu trả lời',
-    desc: 'Không nói dối kinh nghiệm, không nói xấu sếp hoặc công ty cũ.',
+    label: 'Honest & Positive Responses',
+    desc: 'Own your experience boundaries authentically; never disparage past employers or team members.',
   },
   {
     id: 'aft-thanks',
     stage: 'after',
-    label: 'Gửi Email cảm ơn (Thank-you note) trong vòng 24h',
-    desc: 'Cảm ơn thời gian phỏng vấn và nhấn mạnh lại sự hào hứng với vị trí.',
+    label: 'Send Thoughtful Thank-You Note Within 24h',
+    desc: 'Express gratitude for the interview time and reaffirm enthusiasm with reference to a discussed topic.',
   },
 ];
 
+const DEFAULT_CHECKED = ['res-company', 'res-star'];
+
 export default function InterviewPrepChecklist() {
-  const [checkedIds, setCheckedIds] = useState<string[]>(['res-company', 'res-star']);
+  const user = useAuthStore((state) => state.candidate.user || state.user);
+  const storageKey = user?.id ? `intervue_interview_checklist_user_${user.id}` : 'intervue_interview_checklist_guest';
+
+  const [checkedIds, setCheckedIds] = useState<string[]>(DEFAULT_CHECKED);
+
+  // Load persisted checklist state asynchronously on client mount to preserve SSR hydration
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const stored = localStorage.getItem(storageKey);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) {
+            setCheckedIds(parsed);
+          }
+        }
+      } catch {
+        // Fallback to default state if localStorage is unavailable
+      }
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [storageKey]);
 
   const toggleItem = (id: string) => {
-    setCheckedIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+    setCheckedIds((prev) => {
+      const next = prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id];
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(next));
+      } catch {
+        // Ignore localStorage quota errors
+      }
+      return next;
+    });
   };
 
   const handleReset = () => {
     setCheckedIds([]);
+    try {
+      localStorage.removeItem(storageKey);
+    } catch {
+      // Ignore
+    }
   };
 
   const completedCount = checkedIds.length;
@@ -93,14 +131,14 @@ export default function InterviewPrepChecklist() {
                 Interactive Checklist
               </span>
               <span className="text-xs text-blue-200">
-                Đã chuẩn bị {completedCount}/{totalCount} mục
+                {completedCount}/{totalCount} completed
               </span>
             </div>
             <h3 className="mt-1 text-xl font-bold tracking-tight text-white sm:text-2xl">
-              Checklist chuẩn bị phỏng vấn thành công
+              Interview Success Preparation Checklist
             </h3>
             <p className="mt-1 text-xs text-blue-100/80">
-              Đánh dấu các mục đã sẵn sàng để đảm bảo bạn tự tin 100% trước nhà tuyển dụng.
+              Check off milestones to ensure you are 100% prepared and confident before meeting employers.
             </p>
           </div>
 
@@ -110,13 +148,13 @@ export default function InterviewPrepChecklist() {
             className="inline-flex items-center gap-1.5 self-start rounded-xl bg-white/10 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/20 sm:self-center"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            Làm lại checklist
+            Reset checklist
           </button>
         </div>
 
         <div className="mt-6">
           <div className="flex justify-between text-xs font-medium text-blue-100">
-            <span>Mức độ sẵn sàng</span>
+            <span>Readiness Score</span>
             <span className="font-bold text-white">{progressPercent}%</span>
           </div>
           <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-blue-950/40">
@@ -170,8 +208,10 @@ export default function InterviewPrepChecklist() {
               <FileText className="h-5 w-5" />
             </div>
             <div>
-              <h5 className="text-sm font-bold text-blue-950">Chưa có bản CV chuẩn ATS?</h5>
-              <p className="text-xs text-blue-800">Khám phá kho mẫu CV chuyên nghiệp được nhà tuyển dụng ưa chuộng</p>
+              <h5 className="text-sm font-bold text-blue-950">Need an ATS-standard resume?</h5>
+              <p className="text-xs text-blue-800">
+                Explore our curated collection of professional tech templates favored by top recruiters.
+              </p>
             </div>
           </div>
 
@@ -179,7 +219,7 @@ export default function InterviewPrepChecklist() {
             href="/cv-templates"
             className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-blue-700"
           >
-            Tạo CV xin việc ngay
+            Create Resume Now
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
