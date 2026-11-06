@@ -89,6 +89,12 @@ public class RecruiterService implements RecruiterServiceInterface {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Long> findActiveIds() {
+        return recruiterRepository.findIdsByStatus(RecruiterStatus.ACTIVE);
+    }
+
+    @Override
     @Transactional
     public RecruiterResource cancelAccountDeletion(Long recruiterId) {
         Recruiter recruiter = requireRecruiter(recruiterId);
