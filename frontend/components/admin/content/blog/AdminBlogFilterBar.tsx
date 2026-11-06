@@ -38,7 +38,7 @@ export function AdminBlogFilterBar({
             type="text"
             value={keyword}
             onChange={(e) => onKeywordChange(e.target.value)}
-            placeholder="Tìm theo tiêu đề bài viết..."
+            placeholder="Search by article title, slug..."
             className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2 pr-4 pl-9 text-xs font-medium text-slate-900 transition placeholder:text-slate-400 focus:border-[#00b14f] focus:bg-white focus:ring-2 focus:ring-[#00b14f]/20 focus:outline-none"
           />
         </div>
@@ -49,7 +49,7 @@ export function AdminBlogFilterBar({
             onChange={(e) => onCategoryChange(e.target.value ? Number(e.target.value) : undefined)}
             className="rounded-xl border border-slate-200 bg-slate-50/50 px-3 py-2 text-xs font-medium text-slate-700 transition focus:border-[#00b14f] focus:bg-white focus:outline-none"
           >
-            <option value="">Tất cả chuyên mục</option>
+            <option value="">All Categories</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
@@ -62,9 +62,9 @@ export function AdminBlogFilterBar({
             onChange={(e) => onStatusChange((e.target.value as BlogPostStatus) || undefined)}
             className="rounded-xl border border-slate-200 bg-slate-50/50 px-3 py-2 text-xs font-medium text-slate-700 transition focus:border-[#00b14f] focus:bg-white focus:outline-none"
           >
-            <option value="">Tất cả trạng thái</option>
-            <option value="PUBLISHED">Đã xuất bản</option>
-            <option value="DRAFT">Bản nháp</option>
+            <option value="">All Statuses</option>
+            <option value="PUBLISHED">Published</option>
+            <option value="DRAFT">Draft</option>
           </select>
 
           <button
@@ -77,7 +77,7 @@ export function AdminBlogFilterBar({
             }`}
           >
             <Filter className="h-3.5 w-3.5" />
-            <span>Nổi bật</span>
+            <span>Featured</span>
           </button>
         </div>
       </div>
@@ -88,9 +88,11 @@ export function AdminBlogFilterBar({
           className="inline-flex items-center gap-1.5 rounded-xl bg-[#00b14f] px-4 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#009643]"
         >
           <Plus className="h-4 w-4" />
-          <span>Viết bài mới</span>
+          <span>New Article</span>
         </Link>
       </div>
     </div>
   );
 }
+
+export default AdminBlogFilterBar;

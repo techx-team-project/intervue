@@ -76,8 +76,8 @@ const DYNAMIC_LEAVES: { pattern: RegExp; label: (match: RegExpMatchArray) => str
   { pattern: /^\/admin\/users\/admins\/create$/, label: () => 'Create admin' },
   { pattern: /^\/admin\/users\/(\d+)$/, label: (match) => `Account #${match[1]}` },
   { pattern: /^\/admin\/notifications\/([^/]+)$/, label: () => 'Notification details' },
-  { pattern: /^\/admin\/content\/blog\/create$/, label: () => 'Viết bài mới' },
-  { pattern: /^\/admin\/content\/blog\/(\d+)\/edit$/, label: (match) => `Chỉnh sửa bài viết #${match[1]}` },
+  { pattern: /^\/admin\/content\/blog\/create$/, label: () => 'Create Article' },
+  { pattern: /^\/admin\/content\/blog\/(\d+)\/edit$/, label: (match) => `Edit Article #${match[1]}` },
 ];
 
 function dynamicLeaf(pathname: string): AdminBreadcrumbEntry[] {

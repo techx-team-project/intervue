@@ -2,8 +2,8 @@ import AdminBlogEditPageClient from '@/components/admin/content/blog/editor/Admi
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Chỉnh sửa bài viết | InterVue Admin',
-  description: 'Chỉnh sửa bài viết cẩm nang nghề nghiệp.',
+  title: 'Edit Article | InterVue Admin',
+  description: 'Edit career guide article content and metadata.',
 };
 
 interface AdminBlogEditPageProps {

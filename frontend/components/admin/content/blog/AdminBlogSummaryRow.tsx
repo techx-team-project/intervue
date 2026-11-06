@@ -28,7 +28,7 @@ export function AdminBlogSummaryRow({ summary }: AdminBlogSummaryRowProps) {
           <FileText className="h-6 w-6" />
         </div>
         <div>
-          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Tổng bài viết</p>
+          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Total Articles</p>
           <p className="mt-0.5 text-2xl font-bold tracking-tight text-slate-900">{total}</p>
         </div>
       </div>
@@ -38,7 +38,7 @@ export function AdminBlogSummaryRow({ summary }: AdminBlogSummaryRowProps) {
           <CheckCircle2 className="h-6 w-6" />
         </div>
         <div>
-          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Đang xuất bản</p>
+          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Published</p>
           <p className="mt-0.5 text-2xl font-bold tracking-tight text-[#00b14f]">{published}</p>
         </div>
       </div>
@@ -48,7 +48,7 @@ export function AdminBlogSummaryRow({ summary }: AdminBlogSummaryRowProps) {
           <Clock className="h-6 w-6" />
         </div>
         <div>
-          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Bản nháp</p>
+          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Drafts</p>
           <p className="mt-0.5 text-2xl font-bold tracking-tight text-amber-600">{drafts}</p>
         </div>
       </div>
@@ -58,10 +58,12 @@ export function AdminBlogSummaryRow({ summary }: AdminBlogSummaryRowProps) {
           <Eye className="h-6 w-6" />
         </div>
         <div>
-          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Tổng lượt xem</p>
+          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Total Views</p>
           <p className="mt-0.5 text-2xl font-bold tracking-tight text-indigo-600">{formattedViews}</p>
         </div>
       </div>
     </div>
   );
 }
+
+export default AdminBlogSummaryRow;
