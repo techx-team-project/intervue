@@ -1,0 +1,108 @@
+{
+  "search": {
+    "placeholder": "Tìm kiếm việc làm theo chức danh, kỹ năng hoặc công ty...",
+    "keywordLabel": "Tên công việc hoặc từ khóa",
+    "locationLabel": "Địa điểm",
+    "categoryLabel": "Ngành nghề",
+    "allLocations": "Tất cả địa điểm",
+    "allCategories": "Tất cả ngành nghề",
+    "searchBtn": "Tìm việc làm",
+    "popularSearches": "Phổ biến: Java, React, Node.js, Python, DevOps, Remote"
+  },
+  "filters": {
+    "title": "Bộ lọc việc làm",
+    "jobType": "Hình thức làm việc",
+    "level": "Cấp bậc chuyên môn",
+    "experience": "Số năm kinh nghiệm",
+    "salary": "Mức lương",
+    "skills": "Kỹ năng trọng tâm",
+    "workplace": "Mô hình làm việc",
+    "remoteOnly": "Việc làm Remote",
+    "resetFilters": "Đặt lại bộ lọc",
+    "applyFilters": "Áp dụng bộ lọc",
+    "jobTypes": {
+      "fullTime": "Toàn thời gian",
+      "partTime": "Bán thời gian",
+      "contract": "Hợp đồng",
+      "internship": "Thực tập",
+      "freelance": "Làm việc tự do"
+    },
+    "workplaces": {
+      "onSite": "Tại văn phòng",
+      "hybrid": "Hybrid",
+      "remote": "Remote"
+    },
+    "levels": {
+      "intern": "Thực tập sinh",
+      "fresher": "Fresher",
+      "junior": "Junior",
+      "middle": "Middle",
+      "senior": "Senior",
+      "lead": "Tech Lead / Chuyên gia chính",
+      "manager": "Quản lý kỹ thuật",
+      "director": "Giám đốc kỹ thuật / Trưởng bộ phận"
+    },
+    "experiences": {
+      "none": "Không yêu cầu kinh nghiệm",
+      "underOne": "Dưới 1 năm",
+      "oneToThree": "1 - 3 năm",
+      "threeToFive": "3 - 5 năm",
+      "overFive": "Trên 5 năm"
+    }
+  },
+  "list": {
+    "title": "Khám phá cơ hội nghề nghiệp IT",
+    "countFound": "Tìm thấy {count} việc làm",
+    "emptyTitle": "Không tìm thấy việc làm phù hợp",
+    "emptyDesc": "Hãy thử điều chỉnh bộ lọc, vị trí làm việc hoặc từ khóa tìm kiếm để khám phá nhiều cơ hội hơn.",
+    "sortLabel": "Sắp xếp theo",
+    "sortNewest": "Mới nhất",
+    "sortSalaryHigh": "Lương cao nhất",
+    "sortRelevant": "Phù hợp nhất",
+    "viewJobCta": "Xem chi tiết",
+    "applyJobCta": "Ứng tuyển nhanh"
+  },
+  "detail": {
+    "postedAt": "Đăng ngày: {date}",
+    "deadline": "Hạn nộp hồ sơ: {date}",
+    "expiresOn": "Hết hạn vào: {date}",
+    "salaryNegotiable": "Thương lượng",
+    "salaryFromTo": "{min} - {max} VND",
+    "salaryUpTo": "Lên tới {max} VND",
+    "location": "Địa điểm",
+    "workingModel": "Mô hình làm việc",
+    "level": "Cấp bậc",
+    "experience": "Kinh nghiệm",
+    "quantity": "Số lượng tuyển: {count}",
+    "jobDescription": "Mô tả công việc",
+    "requirements": "Yêu cầu công việc",
+    "benefits": "Quyền lợi & Đãi ngộ",
+    "skillsRequired": "Công nghệ yêu cầu",
+    "companyOverview": "Giới thiệu công ty",
+    "applyModalTitle": "Ứng tuyển vị trí này",
+    "alreadyApplied": "Bạn đã ứng tuyển vị trí này",
+    "saveJob": "Lưu việc làm",
+    "savedJob": "Đã lưu",
+    "shareJob": "Chia sẻ"
+  },
+  "apply": {
+    "modalTitle": "Ứng tuyển {jobTitle}",
+    "selectCvPrompt": "Chọn CV của bạn để ứng tuyển",
+    "uploadNewCv": "Tải lên file CV mới (PDF, tối đa 10MB)",
+    "useExistingCv": "Chọn CV đã lưu sẵn trong hệ thống",
+    "coverLetterLabel": "Thư giới thiệu (Không bắt buộc)",
+    "coverLetterPlaceholder": "Nêu bật điểm mạnh và lý do bạn là ứng viên phù hợp...",
+    "submitApplication": "Nộp đơn ứng tuyển",
+    "applying": "Đang gửi đơn ứng tuyển...",
+    "successMessage": "Đơn ứng tuyển vị trí {jobTitle} của bạn đã được gửi thành công!",
+    "kycRequiredNotice": "Bạn cần hoàn thành xác thực eKYC trước khi ứng tuyển vị trí này."
+  },
+  "tags": {
+    "urgent": "Tuyển gấp",
+    "featured": "Nổi bật",
+    "hot": "Việc làm Hot",
+    "newTag": "Mới",
+    "remoteTag": "Remote"
+  }
+}
+

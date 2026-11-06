@@ -1,0 +1,36 @@
+{
+  "hero": {
+    "title": "InterVue Rewards & Gift Vouchers",
+    "subtitle": "Accumulate points by completing profile sections, taking assessments, and redeem exclusive tech gifts and recruiter vouchers",
+    "balanceLabel": "Your Reward Points",
+    "pointsBalance": "{points} points available",
+    "redeemPointsBtn": "Redeem Vouchers"
+  },
+  "activation": {
+    "formTitle": "Activate Gift Code",
+    "subtitle": "Enter your promotional code to claim reward points or hiring discounts",
+    "codeLabel": "Gift Code / Promo Voucher",
+    "codePlaceholder": "e.g. INTERVUE2026",
+    "activateBtn": "Activate Voucher",
+    "activating": "Activating...",
+    "successMessage": "Successfully activated gift code. Added {points} points to your account!",
+    "invalidCode": "Invalid or expired gift code. Please check and try again."
+  },
+  "vouchers": {
+    "sectionTitle": "Available Rewards & Vouchers",
+    "sectionSubtitle": "Exchange your points for hiring packages, CV review sessions, and tech vouchers",
+    "pointsRequired": "{points} points",
+    "minOrder": "Min. order value: {min} VND",
+    "expiryDate": "Valid through: {date}",
+    "redeemBtn": "Redeem Now",
+    "outOfStock": "Out of Stock"
+  },
+  "faq": {
+    "title": "Rewards FAQ",
+    "q1": "How do I earn reward points?",
+    "a1": "You earn points by completing your candidate profile, completing eKYC verification, sharing job posts, and taking career quizzes.",
+    "q2": "Can I transfer points to another user?",
+    "a2": "Reward points are tied to your registered account and cannot be transferred or converted to direct cash."
+  }
+}
+

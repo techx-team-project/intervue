@@ -1,0 +1,27 @@
+{
+  "hub": {
+    "title": "InterVue Tech & Career Blog",
+    "subtitle": "Expert insights on software engineering, AI hiring, technical interview prep, and tech career growth",
+    "searchPlaceholder": "Search articles by topic, tech stack, or keyword...",
+    "featuredBadge": "Editor's Choice",
+    "latestArticlesTitle": "Latest Engineering & Career Posts",
+    "categoriesTitle": "Explore Topics"
+  },
+  "article": {
+    "publishedAt": "Published on {date}",
+    "readingTime": "{minutes} min read",
+    "viewsCount": "{views} views",
+    "author": "Written by {author}",
+    "shareArticle": "Share this Article",
+    "relatedArticles": "Related Articles",
+    "tableOfContents": "Article Outline"
+  },
+  "tools": {
+    "salaryCalculatorTitle": "GROSS - NET Salary Calculator",
+    "salaryCalculatorDesc": "Accurately convert your gross and net salary with updated social insurance and personal income tax brackets for 2026.",
+    "grossNetBtn": "Calculate Salary Now",
+    "interviewChecklistTitle": "Tech Interview Readiness Checklist",
+    "interviewChecklistDesc": "Comprehensive checklist covering system design, live coding, behavioral questions, and follow-up etiquette.",
+    "checklistBtn": "View Full Checklist"
+  }
+}

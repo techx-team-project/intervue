@@ -1,0 +1,49 @@
+{
+  "consentDialog": {
+    "title": "Đồng thuận xử lý dữ liệu cá nhân bằng AI",
+    "intro": "Để cung cấp tính năng gợi ý việc làm thông minh, phân tích độ phù hợp của CV và định hướng sự nghiệp, InterVue sử dụng các mô hình AI để xử lý thông tin hồ sơ và đơn ứng tuyển của bạn.",
+    "dataPurposesTitle": "Mục đích xử lý dữ liệu của bạn:",
+    "purposeMatching": "Đối chiếu kỹ năng trong CV với yêu cầu công việc và tiêu chuẩn kỹ thuật",
+    "purposeSummaries": "Tạo tóm tắt năng lực khách quan và gợi ý bộ câu hỏi phỏng vấn cho nhà tuyển dụng",
+    "purposeSupport": "Hỗ trợ giải đáp thắc mắc người dùng qua Trợ lý AI InterVue",
+    "privacyGuarantees": "Các dữ liệu nhạy cảm (tuổi tác, giới tính, hình ảnh chân dung, căn cước công dân) tuyệt đối không được gửi tới mô hình AI. AI chỉ đóng vai trò hỗ trợ; nhà tuyển dụng là người đưa ra quyết định tuyển dụng cuối cùng.",
+    "versionLabel": "Phiên bản chính sách: {version}",
+    "confirmBtn": "Tôi đồng ý & Tiếp tục",
+    "declineBtn": "Từ chối"
+  },
+  "resumeMatch": {
+    "analyzeBtn": "Phân tích bằng AI",
+    "analyzing": "Đang phân tích CV ứng viên bằng AI...",
+    "resultsTitle": "Kết quả phân tích độ phù hợp & Bằng chứng CV",
+    "analyzedWith": "Phân tích bằng {model} (Phiên bản prompt {version})",
+    "aiProcessedLabel": "Dữ liệu ứng viên đã được xử lý bằng AI",
+    "humanDecisionDisclaimer": "Đánh giá của AI chỉ mang tính tham khảo. Thiếu thông tin không đồng nghĩa với thiếu kỹ năng. Quyết định tuyển dụng cuối cùng thuộc về nhà tuyển dụng.",
+    "summaryTitle": "Tóm tắt năng lực ứng viên",
+    "evidenceTitle": "Yêu cầu công việc & Bằng chứng trong CV",
+    "requirementLabel": "Yêu cầu công việc",
+    "evidenceFoundLabel": "Bằng chứng tìm thấy trong CV",
+    "noEvidenceYet": "Chưa có bằng chứng",
+    "questionsTitle": "Gợi ý câu hỏi phỏng vấn",
+    "questionsDesc": "Các câu hỏi phỏng vấn gợi ý để xác thực năng lực chuyên môn và làm rõ các điểm chưa có bằng chứng trong CV:"
+  },
+  "supportChat": {
+    "title": "Trợ lý ảo InterVue",
+    "welcomeMessage": "Xin chào! Tôi là Trợ lý AI của InterVue. Bạn có thể hỏi tôi về việc làm, cẩm nang sử dụng hoặc chính sách tuyển dụng.",
+    "inputPlaceholder": "Đặt câu hỏi về việc làm, công ty hoặc nền tảng InterVue...",
+    "sendBtn": "Gửi tin nhắn",
+    "clearHistory": "Xóa lịch sử trò chuyện",
+    "errorFallback": "Không thể xử lý yêu cầu lúc này, vui lòng thử lại sau.",
+    "suggestedQuestions": {
+      "remoteJobs": "Tìm việc làm Java Remote tại Hồ Chí Minh",
+      "platformGuide": "Quy trình xác thực eKYC trên InterVue như thế nào?",
+      "myApplications": "Kiểm tra trạng thái các đơn ứng tuyển của tôi"
+    }
+  },
+  "quota": {
+    "guestLimitTitle": "Đạt giới hạn câu hỏi theo giờ",
+    "guestLimitMessage": "Bạn đã dùng hết {count} câu hỏi/giờ dành cho khách. Vui lòng đăng nhập để tiếp tục.",
+    "userLimitTitle": "Đạt giới hạn câu hỏi theo ngày",
+    "userLimitMessage": "Bạn đã đạt giới hạn {count} câu hỏi trong ngày hôm nay.",
+    "serviceUnavailable": "Dịch vụ AI tạm thời gián đoạn, vui lòng thử lại sau."
+  }
+}

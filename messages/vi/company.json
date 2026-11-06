@@ -1,0 +1,37 @@
+{
+  "directory": {
+    "title": "Danh bạ công ty công nghệ hàng đầu",
+    "subtitle": "Khám phá các tập đoàn công nghệ, công ty sản phẩm và startup đổi mới sáng tạo tại Việt Nam",
+    "searchPlaceholder": "Tìm kiếm công ty theo tên, công nghệ hoặc ngành nghề...",
+    "industryFilter": "Lĩnh vực hoạt động",
+    "locationFilter": "Trụ sở chính",
+    "countFound": "Tìm thấy {count} công ty",
+    "featuredCompaniesTitle": "Nhà tuyển dụng nổi bật"
+  },
+  "detail": {
+    "verifiedBadge": "Doanh nghiệp đã xác thực (eKYC & Giấy phép hợp lệ)",
+    "companySize": "Quy mô: {size} nhân viên",
+    "industry": "Lĩnh vực: {industry}",
+    "website": "Website chính thức",
+    "headquarters": "Trụ sở: {location}",
+    "foundedIn": "Thành lập năm {year}",
+    "aboutCompany": "Tổng quan về công ty",
+    "workingCulture": "Văn hóa làm việc & Môi trường kỹ thuật",
+    "benefitsAndPerks": "Chế độ đãi ngộ & Phúc lợi",
+    "officeLocations": "Địa chỉ văn phòng",
+    "openJobsTab": "Việc làm đang tuyển ({count})",
+    "activeHiringCount": "{count} Vị trí đang tuyển",
+    "reviewsTab": "Đánh giá ({count})",
+    "followCompanyBtn": "+ Theo dõi công ty",
+    "followingCompanyBtn": "Đang theo dõi"
+  },
+  "reviews": {
+    "overallRating": "Đánh giá chung về văn hóa & lãnh đạo",
+    "ratingCount": "{count} đánh giá từ nhân viên",
+    "writeReviewBtn": "Viết đánh giá",
+    "prosLabel": "Điểm nhân viên yêu thích:",
+    "consLabel": "Điểm cần cải thiện:",
+    "recommendationRate": "{percent}% khuyến khích bạn bè làm việc tại đây"
+  }
+}
+

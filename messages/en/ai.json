@@ -1,0 +1,50 @@
+{
+  "consentDialog": {
+    "title": "Consent for AI Personal Data Processing",
+    "intro": "To provide intelligent job matching, CV analysis, and career insights, InterVue uses AI models to evaluate your profile and application data.",
+    "dataPurposesTitle": "How your data is processed:",
+    "purposeMatching": "Matching CV qualifications against job requirements and technical criteria",
+    "purposeSummaries": "Generating objective skill summaries and suggested interview questions for recruiters",
+    "purposeSupport": "Answering your inquiries via the AI Support Assistant",
+    "privacyGuarantees": "Sensitive personal attributes (age, gender, photo, national ID) are strictly excluded from AI processing. AI assists recruiters; humans make all final hiring decisions.",
+    "versionLabel": "Policy Version: {version}",
+    "confirmBtn": "I Consent & Agree",
+    "declineBtn": "Decline"
+  },
+  "resumeMatch": {
+    "analyzeBtn": "Analyze with AI",
+    "analyzing": "Analyzing candidate CV with AI...",
+    "resultsTitle": "AI Qualification & Evidence Match",
+    "analyzedWith": "Analyzed with {model} (Prompt {version})",
+    "aiProcessedLabel": "AI Processed Candidate Data",
+    "humanDecisionDisclaimer": "AI evaluation is advisory only. Missing information is not missing skill. Final hiring decisions rest entirely with recruiters.",
+    "summaryTitle": "Candidate Profile Summary",
+    "evidenceTitle": "Job Requirements & CV Evidence",
+    "requirementLabel": "Requirement",
+    "evidenceFoundLabel": "Evidence Found in CV",
+    "noEvidenceYet": "no evidence yet",
+    "questionsTitle": "Suggested Interview Questions",
+    "questionsDesc": "Recommended questions to verify skills and clarify unevidenced areas during the interview:"
+  },
+  "supportChat": {
+    "title": "InterVue Assistant",
+    "welcomeMessage": "Hello! I am your InterVue AI Assistant. Ask me about job openings, platform guidelines, or IT recruitment best practices.",
+    "inputPlaceholder": "Ask a question about jobs, companies, or InterVue...",
+    "sendBtn": "Send Message",
+    "clearHistory": "Clear Chat History",
+    "errorFallback": "Unable to process your request at this moment. Please try again shortly.",
+    "suggestedQuestions": {
+      "remoteJobs": "Find remote Java jobs in Ho Chi Minh City",
+      "platformGuide": "How does eKYC verification work on InterVue?",
+      "myApplications": "What is the status of my job applications?"
+    }
+  },
+  "quota": {
+    "guestLimitTitle": "Hourly Guest Limit Reached",
+    "guestLimitMessage": "You have reached your limit of {count} questions per hour for guests. Please sign in to continue.",
+    "userLimitTitle": "Daily Limit Reached",
+    "userLimitMessage": "You have reached your daily limit of {count} questions today.",
+    "serviceUnavailable": "AI service is temporarily unavailable. Please try again later."
+  }
+}
+

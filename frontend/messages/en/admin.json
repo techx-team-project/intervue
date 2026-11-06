@@ -1,0 +1,83 @@
+{
+  "dashboard": {
+    "title": "Admin Console",
+    "subtitle": "System operations, platform security, verification queues, and audit telemetry",
+    "statsUsersCount": "{count} registered users",
+    "statsActiveJobs": "Active Listings",
+    "statsVerificationsPending": "Pending Business Verifications",
+    "statsSystemHealth": "System Operational Status"
+  },
+  "users": {
+    "title": "User Account Management",
+    "subtitle": "Manage candidates, recruiters, and platform administrators",
+    "searchPlaceholder": "Search users by name, email, or user ID...",
+    "roleFilter": "Role Filter",
+    "statusFilter": "Account Status Filter",
+    "tableHeaderName": "User Name",
+    "tableHeaderEmail": "Email Address",
+    "tableHeaderRole": "Platform Roles",
+    "tableHeaderStatus": "Status",
+    "tableHeaderJoined": "Joined Date",
+    "tableHeaderActions": "Actions",
+    "actions": {
+      "viewDetail": "View Details",
+      "restrictAccount": "Restrict / Suspend Account",
+      "liftRestriction": "Lift Restriction",
+      "grantRole": "Grant Recruiter Role",
+      "revokeRole": "Revoke Role",
+      "viewAuditLogs": "Audit History"
+    },
+    "detail": {
+      "accountSummary": "Account Summary",
+      "securityInfo": "Security & Multi-Factor Authentication",
+      "sessionsTab": "Active Sessions",
+      "restrictionsTab": "Restriction History",
+      "activityTab": "Recent Activity Logs"
+    },
+    "restrictModal": {
+      "title": "Restrict User Account: {email}",
+      "reasonLabel": "Reason for restriction",
+      "reasonPlaceholder": "Specify violation of terms, suspicious activity, or fraud...",
+      "durationLabel": "Restriction Duration",
+      "suspendPermanent": "Permanent Suspension (Ban)",
+      "suspendTemporary": "Temporary Suspension (30 Days)",
+      "confirmBtn": "Apply Restriction",
+      "successMessage": "User {email} has been restricted."
+    },
+    "liftModal": {
+      "title": "Lift Account Restriction",
+      "confirmDesc": "Are you sure you want to lift restrictions on account {email}?",
+      "confirmBtn": "Lift Restriction",
+      "successMessage": "Restriction on {email} has been lifted."
+    }
+  },
+  "verificationQueue": {
+    "title": "Employer Business Verification Queue",
+    "subtitle": "Review corporate registration certificates and approve trusted employer badges",
+    "emptyNotice": "No employer verification requests are currently awaiting review.",
+    "companyName": "Company Name",
+    "taxCode": "Tax ID",
+    "submittedAt": "Submitted: {date}",
+    "documentViewer": "Inspect Business Document",
+    "approveBtn": "Approve Employer",
+    "rejectBtn": "Decline Request",
+    "approveCompanySuccess": "Company {name} has been verified.",
+    "rejectReasonModal": {
+      "title": "Decline Verification for {name}",
+      "reasonLabel": "Reason for rejection",
+      "reasonPlaceholder": "e.g. Blurry scan, tax code mismatch, expired license...",
+      "confirmBtn": "Confirm Decline"
+    }
+  },
+  "auditLogs": {
+    "title": "Platform Security Audit Logs",
+    "subtitle": "Immutable audit trails tracking all administrative actions and security events",
+    "filterAction": "Filter by Action Type",
+    "filterActor": "Filter by Actor",
+    "tableHeaderActor": "Actor",
+    "tableHeaderAction": "Action Performed",
+    "tableHeaderTarget": "Target Resource",
+    "tableHeaderTimestamp": "Timestamp (UTC)",
+    "tableHeaderIpAddress": "IP Address"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "dashboard": {
+    "title": "Cổng Quản trị hệ thống",
+    "subtitle": "Vận hành hệ thống, an ninh nền tảng, xét duyệt doanh nghiệp và nhật ký kiểm toán",
+    "statsUsersCount": "{count} người dùng đăng ký",
+    "statsActiveJobs": "Tin tuyển dụng đang mở",
+    "statsVerificationsPending": "Hồ sơ doanh nghiệp chờ duyệt",
+    "statsSystemHealth": "Tình trạng hoạt động hệ thống"
+  },
+  "users": {
+    "title": "Quản lý tài khoản người dùng",
+    "subtitle": "Quản lý danh sách ứng viên, nhà tuyển dụng và quản trị viên hệ thống",
+    "searchPlaceholder": "Tìm kiếm người dùng theo tên, email hoặc mã ID...",
+    "roleFilter": "Lọc theo vai trò",
+    "statusFilter": "Lọc theo trạng thái tài khoản",
+    "tableHeaderName": "Họ và tên",
+    "tableHeaderEmail": "Địa chỉ email",
+    "tableHeaderRole": "Vai trò hệ thống",
+    "tableHeaderStatus": "Trạng thái",
+    "tableHeaderJoined": "Ngày tham gia",
+    "tableHeaderActions": "Thao tác",
+    "actions": {
+      "viewDetail": "Xem chi tiết",
+      "restrictAccount": "Hạn chế / Tạm khóa tài khoản",
+      "liftRestriction": "Gỡ bỏ hạn chế",
+      "grantRole": "Cấp quyền Nhà tuyển dụng",
+      "revokeRole": "Thu hồi quyền",
+      "viewAuditLogs": "Lịch sử kiểm toán"
+    },
+    "detail": {
+      "accountSummary": "Tổng quan tài khoản",
+      "securityInfo": "Bảo mật & Xác thực đa yếu tố",
+      "sessionsTab": "Phiên đăng nhập đang hoạt động",
+      "restrictionsTab": "Lịch sử xử lý vi phạm",
+      "activityTab": "Nhật ký hoạt động gần đây"
+    },
+    "restrictModal": {
+      "title": "Hạn chế tài khoản người dùng: {email}",
+      "reasonLabel": "Lý do áp dụng hạn chế",
+      "reasonPlaceholder": "Chỉ rõ hành vi vi phạm điều khoản, nghi vấn gian lận hoặc spam...",
+      "durationLabel": "Thời hạn hạn chế",
+      "suspendPermanent": "Khóa vĩnh viễn (Cấm tài khoản)",
+      "suspendTemporary": "Tạm đình chỉ (30 ngày)",
+      "confirmBtn": "Áp dụng hạn chế",
+      "successMessage": "Người dùng {email} đã bị hạn chế."
+    },
+    "liftModal": {
+      "title": "Gỡ bỏ hạn chế tài khoản",
+      "confirmDesc": "Bạn có chắc chắn muốn gỡ bỏ hạn chế cho tài khoản {email}?",
+      "confirmBtn": "Gỡ bỏ hạn chế",
+      "successMessage": "Đã gỡ bỏ hạn chế cho người dùng {email}."
+    }
+  },
+  "verificationQueue": {
+    "title": "Hàng đợi xác thực doanh nghiệp",
+    "subtitle": "Kiểm tra giấy chứng nhận đăng ký kinh doanh và cấp tích xanh doanh nghiệp uy tín",
+    "emptyNotice": "Hiện tại không có yêu cầu xác thực doanh nghiệp nào đang chờ xử lý.",
+    "companyName": "Tên công ty",
+    "taxCode": "Mã số thuế",
+    "submittedAt": "Gửi ngày: {date}",
+    "documentViewer": "Xem tài liệu doanh nghiệp",
+    "approveBtn": "Phê duyệt doanh nghiệp",
+    "rejectBtn": "Từ chối yêu cầu",
+    "approveCompanySuccess": "Công ty {name} đã được xác thực thành công.",
+    "rejectReasonModal": {
+      "title": "Từ chối xác thực cho {name}",
+      "reasonLabel": "Lý do từ chối",
+      "reasonPlaceholder": "Ví dụ: Bản scan bị mờ, mã số thuế không khớp, giấy phép hết hạn...",
+      "confirmBtn": "Xác nhận từ chối"
+    }
+  },
+  "auditLogs": {
+    "title": "Nhật ký kiểm toán an ninh hệ thống",
+    "subtitle": "Dữ liệu nhật ký bất biến ghi nhận mọi thao tác quản trị và sự kiện an ninh",
+    "filterAction": "Lọc theo loại hành động",
+    "filterActor": "Lọc theo người thực hiện",
+    "tableHeaderActor": "Người thực hiện",
+    "tableHeaderAction": "Hành động thực hiện",
+    "tableHeaderTarget": "Đối tượng tác động",
+    "tableHeaderTimestamp": "Thời gian (UTC)",
+    "tableHeaderIpAddress": "Địa chỉ IP"
+  }
+}

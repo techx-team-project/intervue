@@ -1,0 +1,78 @@
+{
+  "hero": {
+    "breadcrumbHome": "Home",
+    "breadcrumbHandbook": "Career Handbook",
+    "breadcrumbCurrent": "Career Orientation",
+    "badge": "Comprehensive Career Guide & Pathways",
+    "title": "IT Career Orientation & Pathways",
+    "description": "Market insights, career progression roadmaps, and salary benchmarks to help shape your career trajectory and maximize your earning potential.",
+    "searchPlaceholder": "Search articles, specializations, salary data, skills...",
+    "trendingLabel": "Trending:",
+    "trendingTags": {
+      "softwareEng": "Software Engineering",
+      "aiMl": "AI & Machine Learning",
+      "devops": "DevOps & Cloud",
+      "data": "Data Engineering",
+      "product": "Product Management",
+      "cybersecurity": "Cybersecurity"
+    }
+  },
+  "featured": {
+    "title": "Featured Career Articles",
+    "subtitle": "Stay up to date with the latest tech hiring and compensation trends",
+    "badgeHighlight": "Spotlight",
+    "viewsSuffix": "{views} views",
+    "readingTime": "{minutes} min read",
+    "exploreCta": "Explore Now",
+    "readMoreCta": "Read Full Article"
+  },
+  "card": {
+    "detailCta": "View Details"
+  },
+  "assessment": {
+    "badge": "60-Second Career Quiz",
+    "title": "Discover Your Best-Fit IT Career Path",
+    "description": "Answer 2 short questions to receive personalized role suggestions and progression roadmaps matched to your aspirations.",
+    "progressLabel": "Progress:",
+    "backBtn": "← Back to previous question",
+    "completedBadge": "Your Personalized Career Match",
+    "completedTitle": "Most suitable career field: {field}",
+    "completedDesc": "Based on your income goals and preferred working style, you have high potential in this career domain. Explore the roadmap below to jumpstart your career!",
+    "seeGuideCta": "View Career Guide & Roadmap",
+    "retakeCta": "Retake Quiz",
+    "questions": {
+      "step1": {
+        "title": "1. What is your primary career goal and work style?",
+        "options": {
+          "sales": "High-impact business growth and client relationships",
+          "creative": "Product design, user experience, and branding",
+          "engineering": "Deep technical problem solving, coding, and architecture",
+          "data": "Data analytics, machine learning, and pattern discovery"
+        }
+      },
+      "step2": {
+        "title": "2. What working environment do you thrive in?",
+        "options": {
+          "startup": "Fast-paced high-growth startup with rapid ownership",
+          "enterprise": "Structured multinational corporation with clear ladders",
+          "remote": "Remote-first global distributed team",
+          "consulting": "Consulting agency delivering client-facing digital projects"
+        }
+      }
+    }
+  },
+  "detail": {
+    "tableOfContents": "Table of Contents",
+    "salaryAnalysis": "Salary Benchmarks & Compensation Trends",
+    "roadmapTitle": "Career Progression Roadmap",
+    "specializationsTitle": "Key Specializations",
+    "interviewPrepTitle": "Interview Preparation & Common Questions",
+    "relatedJobsTitle": "Open Jobs in this Field",
+    "aiInterviewCta": {
+      "badge": "AI Practice Interview",
+      "title": "Practice Interviews for this Role with AI",
+      "desc": "Simulate technical and behavioral interviews tailored to this specialization with instant feedback.",
+      "button": "Start Practice Session"
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "pageMetadata": {
+    "title": "Mẫu CV Xin Việc Tiếng Việt Đơn Giản Chuẩn 2026 | InterVue",
+    "description": "Tuyển chọn 21+ mẫu CV tiếng Việt thiết kế đơn giản, chuẩn ATS 2026. Tạo CV online miễn phí, dễ tùy biến màu sắc và tải file PDF chất lượng cao.",
+    "ogTitle": "Tuyển Chọn Mẫu CV Xin Việc Chuẩn ATS - InterVue",
+    "ogDescription": "Tạo CV online miễn phí với các mẫu CV được thiết kế sẵn tối ưu điểm số ATS cho mọi ngành nghề công nghệ."
+  },
+  "slugMetadata": {
+    "title": "Tuyển chọn mẫu CV {styleName} chuẩn ATS | InterVue",
+    "description": "Khám phá các mẫu CV {styleName} chuẩn ATS 2026. Thiết kế tối ưu hóa khả năng đọc lướt cho nhà tuyển dụng và tương thích hệ thống quét hồ sơ tự động."
+  },
+  "hero": {
+    "homeBreadcrumb": "Trang chủ",
+    "styleBreadcrumb": "Mẫu CV theo phong cách",
+    "currentBreadcrumb": "Mẫu CV {styleName}",
+    "badge": "Thư viện CV chuẩn hóa ATS tuyển chọn",
+    "title": "Mẫu CV xin việc IT",
+    "titleHighlight": "Đơn giản & Chuyên nghiệp",
+    "titleSuffix": "chuẩn 2026",
+    "description": "Tuyển chọn các mẫu CV có thiết kế tinh gọn, ưu tiên tính dễ đọc và tối ưu hóa bộ lọc ATS. Dành cho ứng viên muốn tập trung vào khả năng truyền tải thông tin đầy đủ, rõ ràng và làm nổi bật thành tựu tới nhà tuyển dụng.",
+    "badges": {
+      "atsPass": "100% Vượt bộ lọc ATS",
+      "a4Standard": "Định dạng A4 chuẩn quốc tế",
+      "freeExport": "Xuất file PDF miễn phí"
+    },
+    "ctaCard": {
+      "title": "Tạo CV Chuyên Nghiệp",
+      "subtitle": "Chỉ mất 3 phút với InterVue",
+      "availableLabel": "Mẫu CV sẵn có:",
+      "availableValue": "21+ Mẫu",
+      "usersLabel": "Lượt ứng viên sử dụng:",
+      "usersValue": "{count}+ Ứng viên",
+      "interviewRateLabel": "Tỉ lệ gọi phỏng vấn:",
+      "interviewRateValue": "+42% so với CV thường"
+    }
+  },
+  "filterBar": {
+    "searchPlaceholder": "Tìm theo tên mẫu, công nghệ hoặc ngành nghề...",
+    "industryLabel": "Ngành nghề:",
+    "languageLabel": "Ngôn ngữ:",
+    "allLanguageLabel": "Tất cả ngôn ngữ",
+    "languages": {
+      "all": "Tất cả",
+      "vi": "Tiếng Việt",
+      "en": "Tiếng Anh"
+    }
+  },
+  "view": {
+    "listTitle": "Danh sách mẫu CV {styleName} ({count})",
+    "defaultStyleName": "Đơn giản",
+    "freeAndAtsBadge": "Tất cả mẫu đều miễn phí & chuẩn hóa ATS",
+    "notFoundTitle": "Không tìm thấy mẫu CV phù hợp",
+    "notFoundDesc": "Hãy thử chọn lại phong cách, ngành nghề khác hoặc xóa từ khóa tìm kiếm.",
+    "viewAllBtn": "Xem tất cả mẫu CV"
+  },
+  "templateCard": {
+    "useTemplateBtn": "Dùng mẫu CV này",
+    "previewBtn": "Xem nhanh",
+    "atsScore": "Điểm ATS: {score}/100"
+  },
+  "previewModal": {
+    "title": "Xem trước mẫu CV: {name}",
+    "closeBtn": "Đóng xem trước",
+    "customizeColor": "Tùy biến bảng màu:",
+    "downloadPdfBtn": "Tải file PDF",
+    "useOnlineBtn": "Chỉnh sửa CV online"
+  },
+  "benefits": {
+    "title": "Vì sao nên chọn mẫu CV của InterVue?",
+    "subtitle": "Được thiết kế bởi các chuyên gia tuyển dụng công nghệ hàng đầu",
+    "itemAts": "Được các hệ thống ATS hiện đại bóc tách dữ liệu chính xác, không lỗi cột hay mất chữ",
+    "itemDesign": "Bố cục tinh gọn, làm nổi bật công nghệ và số liệu thành tích thực tế",
+    "itemExport": "Xuất file PDF chất lượng cao, sắc nét khi gửi email cũng như khi in ấn",
+    "itemFree": "Hoàn toàn miễn phí, không giới hạn số lần chỉnh sửa, tải file và đổi bảng màu"
+  },
+  "stepGuide": {
+    "title": "3 bước tạo CV chuẩn ATS nhanh chóng",
+    "subtitle": "Từ khâu chọn mẫu đến khi nhận lời mời phỏng vấn",
+    "step1": "1. Chọn một mẫu CV chuẩn ATS phù hợp với phong cách và cấp bậc của bạn",
+    "step2": "2. Điền thông tin kinh nghiệm, kỹ năng và dự án với gợi ý thời gian thực từ AI",
+    "step3": "3. Tải xuống CV định dạng PDF và nộp hồ sơ trực tiếp tới các công ty công nghệ"
+  },
+  "faq": {
+    "title": "Câu hỏi thường gặp về CV và hệ thống ATS",
+    "q1": "Thế nào là một CV chuẩn ATS?",
+    "a1": "CV chuẩn ATS sử dụng bố cục phân tách rõ ràng, font chữ chuẩn và văn bản có thể quét tự động, giúp phần mềm tuyển dụng bóc tách kinh nghiệm mà không bị lỗi font hoặc mất thông tin.",
+    "q2": "Mẫu CV trên InterVue có thực sự miễn phí?",
+    "a2": "Đúng vậy, toàn bộ mẫu CV trên InterVue đều hoàn toàn miễn phí tạo, tùy chỉnh màu sắc và tải file PDF về máy.",
+    "q3": "Tôi có thể tối ưu CV cho công việc Remote không?",
+    "a3": "Hoàn toàn có thể. Bạn có thể nêu bật kỹ năng làm việc Remote, khả năng giao tiếp bất đồng bộ và kinh nghiệm làm việc với các nhóm phân tán."
+  }
+}
+

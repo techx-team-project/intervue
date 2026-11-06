@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "test:i18n": "node scripts/check-i18n-parity.mjs",
+    "check:i18n": "node scripts/check-i18n-parity.mjs"
   },
   "devDependencies": {
     "lefthook": "^2.1.14"

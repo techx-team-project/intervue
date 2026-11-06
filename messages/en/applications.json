@@ -1,0 +1,68 @@
+{
+  "page": {
+    "title": "My Applications",
+    "subtitle": "Track and manage your submitted job applications and interview invites",
+    "totalCount": "{count} applications",
+    "tabs": {
+      "all": "All Applications",
+      "applied": "Submitted",
+      "reviewing": "In Review",
+      "shortlisted": "Shortlisted",
+      "interview": "Interviewing",
+      "offered": "Offered",
+      "rejected": "Not Selected",
+      "withdrawn": "Withdrawn"
+    }
+  },
+  "item": {
+    "appliedDate": "Applied on {date}",
+    "viewCv": "View Submitted CV",
+    "viewJob": "View Job Details",
+    "withdrawBtn": "Withdraw Application",
+    "interviewScheduled": "Interview Scheduled",
+    "feedbackTitle": "Recruiter Feedback",
+    "rejectionReason": "Reason: {reason}"
+  },
+  "status": {
+    "pending": "Submitted",
+    "reviewing": "Under Review",
+    "shortlisted": "Shortlisted",
+    "interviewScheduled": "Interview Scheduled",
+    "offered": "Offer Extended",
+    "rejected": "Not Selected",
+    "withdrawn": "Withdrawn"
+  },
+  "interview": {
+    "title": "Interview Invitation",
+    "dateTime": "Scheduled for {time} on {date}",
+    "location": "Location: {location}",
+    "link": "Meeting link: {link}",
+    "notes": "Recruiter notes: {notes}",
+    "acceptBtn": "Accept Invitation",
+    "rescheduleBtn": "Request Reschedule"
+  },
+  "withdraw": {
+    "title": "Withdraw Application",
+    "desc": "Are you sure you want to withdraw your application for {jobTitle}? This action cannot be undone.",
+    "reasonLabel": "Reason for withdrawal (Optional)",
+    "reasonPlaceholder": "e.g. Accepted another offer, relocation, etc.",
+    "confirmBtn": "Yes, Withdraw",
+    "cancelBtn": "Keep Application",
+    "withdrawing": "Withdrawing...",
+    "withdrawSuccess": "Application for {jobTitle} has been withdrawn."
+  },
+  "empty": {
+    "title": "No applications found",
+    "desc": "You haven't submitted any job applications in this category yet.",
+    "exploreJobsCta": "Explore Open Jobs"
+  },
+  "recruiterReview": {
+    "candidateCvTitle": "Candidate CV & Credentials",
+    "pipelineStage": "Stage: {stage}",
+    "statusChangeSuccess": "Application status updated to {status}",
+    "scheduleInterviewBtn": "Schedule Interview",
+    "rejectBtn": "Decline Candidate",
+    "offerBtn": "Extend Offer"
+  }
+}
+

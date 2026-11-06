@@ -1,0 +1,108 @@
+{
+  "search": {
+    "placeholder": "Search jobs by title, skill, or company...",
+    "keywordLabel": "Job title or keyword",
+    "locationLabel": "Location",
+    "categoryLabel": "Job Category",
+    "allLocations": "All Locations",
+    "allCategories": "All Categories",
+    "searchBtn": "Find Jobs",
+    "popularSearches": "Popular: Java, React, Node.js, Python, DevOps, Remote"
+  },
+  "filters": {
+    "title": "Filter Jobs",
+    "jobType": "Employment Type",
+    "level": "Experience Level",
+    "experience": "Years of Experience",
+    "salary": "Salary Range",
+    "skills": "Key Skills",
+    "workplace": "Workplace Model",
+    "remoteOnly": "Remote Only",
+    "resetFilters": "Reset Filters",
+    "applyFilters": "Apply Filters",
+    "jobTypes": {
+      "fullTime": "Full-time",
+      "partTime": "Part-time",
+      "contract": "Contract",
+      "internship": "Internship",
+      "freelance": "Freelance"
+    },
+    "workplaces": {
+      "onSite": "On-site",
+      "hybrid": "Hybrid",
+      "remote": "Remote"
+    },
+    "levels": {
+      "intern": "Intern",
+      "fresher": "Fresher",
+      "junior": "Junior",
+      "middle": "Middle",
+      "senior": "Senior",
+      "lead": "Tech Lead / Principal",
+      "manager": "Engineering Manager",
+      "director": "Director / Head of Tech"
+    },
+    "experiences": {
+      "none": "No experience required",
+      "underOne": "Under 1 year",
+      "oneToThree": "1 - 3 years",
+      "threeToFive": "3 - 5 years",
+      "overFive": "Over 5 years"
+    }
+  },
+  "list": {
+    "title": "Explore IT Opportunities",
+    "countFound": "{count} jobs found",
+    "emptyTitle": "No matching jobs found",
+    "emptyDesc": "Try adjusting your filters, location, or search keywords to explore more roles.",
+    "sortLabel": "Sort by",
+    "sortNewest": "Newest",
+    "sortSalaryHigh": "Highest Salary",
+    "sortRelevant": "Most Relevant",
+    "viewJobCta": "View Job",
+    "applyJobCta": "Quick Apply"
+  },
+  "detail": {
+    "postedAt": "Posted: {date}",
+    "deadline": "Application deadline: {date}",
+    "expiresOn": "Expires on: {date}",
+    "salaryNegotiable": "Negotiable",
+    "salaryFromTo": "{min} - {max} VND",
+    "salaryUpTo": "Up to {max} VND",
+    "location": "Location",
+    "workingModel": "Workplace Model",
+    "level": "Level",
+    "experience": "Experience",
+    "quantity": "Open Positions: {count}",
+    "jobDescription": "Job Description",
+    "requirements": "Job Requirements",
+    "benefits": "Benefits & Perks",
+    "skillsRequired": "Required Tech Stack",
+    "companyOverview": "Company Overview",
+    "applyModalTitle": "Apply for this Position",
+    "alreadyApplied": "You have already applied",
+    "saveJob": "Save Job",
+    "savedJob": "Saved",
+    "shareJob": "Share"
+  },
+  "apply": {
+    "modalTitle": "Apply for {jobTitle}",
+    "selectCvPrompt": "Select your CV for this application",
+    "uploadNewCv": "Upload a new CV file (PDF, max 10MB)",
+    "useExistingCv": "Select an existing saved CV",
+    "coverLetterLabel": "Cover letter (Optional)",
+    "coverLetterPlaceholder": "Highlight your key strengths and why you are a great fit...",
+    "submitApplication": "Submit Application",
+    "applying": "Submitting application...",
+    "successMessage": "Your application for {jobTitle} has been submitted successfully!",
+    "kycRequiredNotice": "You must complete eKYC verification before applying to this role."
+  },
+  "tags": {
+    "urgent": "Urgent Hiring",
+    "featured": "Featured",
+    "hot": "Hot Job",
+    "newTag": "New",
+    "remoteTag": "Remote"
+  }
+}
+

@@ -1,0 +1,45 @@
+{
+  "hero": {
+    "title": "Bứt phá sự nghiệp công nghệ thông tin cùng AI",
+    "subtitle": "Khám phá việc làm IT đã xác thực, tối ưu hóa CV chuẩn ATS và kết nối trực tiếp với các doanh nghiệp công nghệ hàng đầu.",
+    "searchPlaceholder": "Tên công việc, kỹ năng công nghệ hoặc tên công ty...",
+    "citySelect": "Địa điểm",
+    "categorySelect": "Chuyên ngành",
+    "findJobsBtn": "Tìm việc ngay",
+    "popularKeywords": "Xu hướng: Java, Golang, React, DevOps, AI Engineer, Remote",
+    "statsCompanies": "{count}+ Doanh nghiệp uy tín",
+    "statsJobs": "{count}+ Việc làm IT đang tuyển",
+    "statsCandidates": "{count}+ Ứng viên công nghệ"
+  },
+  "ecosystem": {
+    "badge": "Nền tảng tuyển dụng công nghệ ứng dụng AI",
+    "title": "Vì sao nhân tài IT và Nhà tuyển dụng lựa chọn InterVue?",
+    "subtitle": "Hệ sinh thái tuyển dụng minh bạch, thông minh dành riêng cho ngành công nghệ thông tin",
+    "featureAiMatch": "Phân tích độ phù hợp CV đối chiếu bằng chứng bằng AI",
+    "featureAtsCv": "Công cụ tạo CV chuẩn ATS hoàn toàn miễn phí",
+    "featureVerifiedEmployers": "Nhà tuyển dụng xác thực nghiêm ngặt qua eKYC",
+    "featureCareerGuidance": "Dữ liệu thị trường lương & Lộ trình sự nghiệp thời gian thực"
+  },
+  "topCategories": {
+    "title": "Khám phá các chuyên ngành IT xu hướng",
+    "subtitle": "Tìm kiếm cơ hội việc làm theo đúng công nghệ và cấp bậc của bạn",
+    "viewAllCategories": "Xem tất cả chuyên ngành"
+  },
+  "featuredJobs": {
+    "title": "Cơ hội việc làm IT nổi bật",
+    "subtitle": "Tuyển chọn các vị trí kỹ thuật chất lượng cao với mức đãi ngộ hấp dẫn",
+    "viewAllJobs": "Xem toàn bộ việc làm"
+  },
+  "topCompanies": {
+    "title": "Nhà tuyển dụng công nghệ hàng đầu",
+    "subtitle": "Gia nhập các đội ngũ kỹ thuật tiên phong kiến tạo tương lai số tại Việt Nam",
+    "exploreCompanies": "Khám phá danh bạ công ty"
+  },
+  "marketDashboard": {
+    "title": "Bản đồ thị trường tuyển dụng IT",
+    "subtitle": "Số liệu thời gian thực về nhu cầu tuyển dụng, mức lương trung bình và kỹ năng xu hướng",
+    "trendingSkills": "Kỹ năng được săn đón nhất",
+    "averageSalaryByRole": "Mức lương trung bình theo cấp bậc",
+    "demandGrowth": "Tăng trưởng nhu cầu tuyển dụng: +{rate}% so với cùng kỳ"
+  }
+}

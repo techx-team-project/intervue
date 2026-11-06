@@ -1,0 +1,33 @@
+{
+  "fallback": "Something went wrong, please try again later.",
+  "codes": {
+    "NETWORK_ERROR": "Unable to reach the server, please check your network connection.",
+    "VALIDATION_FAILED": "Some information is invalid, please review and try again.",
+    "INVALID_CREDENTIALS": "Incorrect email or password.",
+    "UNAUTHENTICATED": "Your session has expired, please sign in again.",
+    "FORBIDDEN": "You do not have permission to perform this action.",
+    "NOT_FOUND": "The requested resource was not found.",
+    "EMAIL_ALREADY_USED": "This email address is already registered.",
+    "EMAIL_ALREADY_VERIFIED": "This email address has already been verified.",
+    "EMAIL_NOT_VERIFIED": "Please verify your email address before continuing.",
+    "INVALID_OR_EXPIRED_TOKEN": "The link or verification token is invalid or has expired.",
+    "IDENTITY_NOT_VERIFIED": "You need to complete eKYC identity verification before doing this.",
+    "PROFILE_SECTION_LIMIT_REACHED": "You have reached the maximum number of items allowed for this section.",
+    "PHONE_ALREADY_USED": "This phone number is already associated with another account.",
+    "PHONE_ALREADY_VERIFIED": "This phone number has already been verified.",
+    "PHONE_OTP_INVALID": "The verification code is invalid or has expired.",
+    "PHONE_OTP_NOT_REQUESTED": "Please request a verification code first.",
+    "ACCOUNT_DELETED": "This account has been deleted.",
+    "ACCOUNT_BANNED": "This account has been suspended.",
+    "RATE_LIMITED": "Too many requests. Please try again in {seconds} seconds.",
+    "AI_IP_QUOTA_EXCEEDED": "You have reached your limit of {count} questions per hour for guests. Please sign in or try again later.",
+    "AI_USER_QUOTA_EXCEEDED": "You have reached your daily limit of {count} questions today.",
+    "AI_CHAT_FAILED": "Unable to process message right now. Please try again shortly.",
+    "AI_PROVIDER_UNAVAILABLE": "AI service is temporarily disrupted, please try again later.",
+    "FILE_TOO_LARGE": "File size exceeds the allowable limit of {max}MB.",
+    "INVALID_FILE_TYPE": "Invalid file format. Only PDF files are supported.",
+    "CV_UNREADABLE": "Unable to extract text from CV. Reason: {reason}",
+    "INTERNAL_SERVER_ERROR": "Internal server error. Please try again later."
+  }
+}
+
