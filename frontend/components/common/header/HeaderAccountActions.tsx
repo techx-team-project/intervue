@@ -1,7 +1,9 @@
 'use client';
 
+import NotificationDropdown from '@/components/common/NotificationDropdown';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
+import { useUnreadCount } from '@/hooks/useNotifications';
 import { Bell, ChevronDown, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -16,6 +18,9 @@ interface HeaderAccountActionsProps {
 export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAccountActionsProps = {}) {
   const { user, status } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const realm = portal === 'recruiter' ? 'recruiter' : 'candidate';
+  const { total: unreadCount } = useUnreadCount(realm, Boolean(user));
   const userMenuRef = useRef<HTMLDivElement>(null);
   const userCloseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -75,16 +80,29 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
 
   return (
     <>
-      <button
-        type="button"
-        title="Notifications"
-        className="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200"
-      >
-        <Bell className="h-4.5 w-4.5" />
-        <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[10px] font-bold text-white shadow-xs">
-          1
-        </span>
-      </button>
+      <div className="relative">
+        <button
+          type="button"
+          title="Thông báo"
+          aria-label="Thông báo"
+          onClick={() => setIsNotificationOpen((prev) => !prev)}
+          className="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200"
+        >
+          <Bell className="h-4.5 w-4.5" />
+          {unreadCount > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-600 px-1 text-[10px] font-bold text-white shadow-xs">
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </span>
+          )}
+        </button>
+
+        <NotificationDropdown
+          realm={realm}
+          baseRoute={realm === 'recruiter' ? ROUTES.RECRUITER_NOTIFICATIONS : ROUTES.NOTIFICATIONS}
+          isOpen={isNotificationOpen}
+          onClose={() => setIsNotificationOpen(false)}
+        />
+      </div>
 
       <button
         type="button"
