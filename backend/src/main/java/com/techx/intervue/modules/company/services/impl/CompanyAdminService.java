@@ -8,6 +8,7 @@ import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterf
 import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
+import com.techx.intervue.modules.company.entities.Company;
 import com.techx.intervue.modules.company.entities.CompanyMember;
 import com.techx.intervue.modules.company.enums.CompanyMemberRole;
 import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
@@ -22,9 +23,14 @@ import com.techx.intervue.modules.company.requests.TransferCompanyOwnerRequest;
 import com.techx.intervue.modules.company.resources.CompanyMemberResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyAdminServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
+import com.techx.intervue.modules.notification.enums.NotificationType;
+import com.techx.intervue.modules.notification.enums.RecipientType;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface.NotificationCommand;
 import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -45,6 +51,7 @@ public class CompanyAdminService implements CompanyAdminServiceInterface {
     private final UserServiceInterface userService;
     private final AuditLogServiceInterface auditLogService;
     private final ApplicationEventPublisher eventPublisher;
+    private final NotificationPublisherInterface notificationPublisher;
 
     @Override
     @Transactional(readOnly = true)
@@ -57,7 +64,7 @@ public class CompanyAdminService implements CompanyAdminServiceInterface {
     @Transactional
     public List<CompanyMemberResource> revokeMembership(
             Long companyId, Long userId, RevokeMembershipRequest request, RequestActor actor) {
-        requireCompany(companyId);
+        Company company = requireCompany(companyId);
         CompanyMember member =
                 companyMemberRepository
                         .findByCompanyIdAndUserId(companyId, userId)
@@ -85,6 +92,7 @@ public class CompanyAdminService implements CompanyAdminServiceInterface {
                 PublishRightLostEvent.builder()
                         .userId(userId)
                         .companyId(companyId)
+                        .companyName(company.getName())
                         .scope(PublishRightLossScope.INDIVIDUAL)
                         .cause(PublishRightLossCause.MEMBERSHIP_REVOKED)
                         .reassignToUserId(ownerIdOf(companyId))
@@ -97,7 +105,7 @@ public class CompanyAdminService implements CompanyAdminServiceInterface {
     @Transactional
     public List<CompanyMemberResource> transferOwner(
             Long companyId, TransferCompanyOwnerRequest request, RequestActor actor) {
-        requireCompany(companyId);
+        Company company = requireCompany(companyId);
         List<CompanyMember> active =
                 companyMemberRepository.findByCompanyIdAndStatus(
                         companyId, CompanyMemberStatus.ACTIVE);
@@ -111,6 +119,11 @@ public class CompanyAdminService implements CompanyAdminServiceInterface {
             throw AppException.validation("userId", "This member already owns the company");
         }
 
+        List<Long> demoted =
+                active.stream()
+                        .filter(CompanyMember::isOwner)
+                        .map(CompanyMember::getUserId)
+                        .toList();
         active.stream()
                 .filter(CompanyMember::isOwner)
                 .forEach(member -> member.setRole(CompanyMemberRole.MEMBER));
@@ -124,6 +137,7 @@ public class CompanyAdminService implements CompanyAdminServiceInterface {
                 companyId,
                 "newOwner=" + request.userId(),
                 null);
+        notifyOwnerTransferred(company, next.getUserId(), demoted);
         return membersOf(companyId);
     }
 
@@ -163,10 +177,39 @@ public class CompanyAdminService implements CompanyAdminServiceInterface {
                 .orElse(null);
     }
 
-    private void requireCompany(Long companyId) {
-        if (!companyRepository.existsById(companyId)) {
-            throw new AppException(ErrorCode.NOT_FOUND);
-        }
+    private void notifyOwnerTransferred(
+            Company company, Long newOwnerId, List<Long> previousOwnerIds) {
+        List<NotificationCommand> commands = new ArrayList<>();
+        commands.add(
+                membershipChange(
+                        company, newOwnerId, "Bạn đã trở thành người sở hữu doanh nghiệp này."));
+        previousOwnerIds.stream()
+                .filter(id -> !id.equals(newOwnerId))
+                .map(
+                        id ->
+                                membershipChange(
+                                        company,
+                                        id,
+                                        "Quyền sở hữu doanh nghiệp đã được chuyển cho một thành"
+                                                + " viên khác."))
+                .forEach(commands::add);
+        notificationPublisher.publishAll(commands);
+    }
+
+    private NotificationCommand membershipChange(Company company, Long recipientId, String change) {
+        return NotificationCommand.builder()
+                .recipientType(RecipientType.RECRUITER)
+                .recipientId(recipientId)
+                .type(NotificationType.COMPANY_MEMBERSHIP_CHANGED)
+                .params(Map.of("companyName", company.getName(), "change", change))
+                .actionUrl("/recruiter/company")
+                .build();
+    }
+
+    private Company requireCompany(Long companyId) {
+        return companyRepository
+                .findById(companyId)
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
     }
 
     private void audit(
