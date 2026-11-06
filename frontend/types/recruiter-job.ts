@@ -78,6 +78,8 @@ export interface RecruiterJobResource {
   openings: number;
   deadline?: string;
   publishedAt?: string;
+  hiddenReason?: string;
+  hiddenAt?: string;
   createdAt: string;
   updatedAt: string;
 }

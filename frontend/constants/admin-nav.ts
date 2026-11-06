@@ -58,7 +58,6 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FileText,
         queue: 'jobPosts',
         permission: 'moderation.jobs',
-        comingSoon: true,
       },
       {
         label: 'Reports',
