@@ -44,7 +44,17 @@ public class CloudinaryStorageService implements StorageServiceInterface {
 
     @Override
     public StoredFile upload(MultipartFile file, StorageTarget target, String folder) {
-        byte[] content = readContent(file);
+        return store(readContent(file), file.getOriginalFilename(), target, folder);
+    }
+
+    @Override
+    public StoredFile copy(
+            String publicId, String originalFileName, StorageTarget target, String folder) {
+        return store(fetchDocument(publicId, target), originalFileName, target, folder);
+    }
+
+    private StoredFile store(
+            byte[] content, String originalFileName, StorageTarget target, String folder) {
         if (content.length > maxBytesFor(target)) {
             throw new AppException(ErrorCode.FILE_TOO_LARGE);
         }
@@ -84,7 +94,7 @@ public class CloudinaryStorageService implements StorageServiceInterface {
 
         return StoredFile.builder()
                 .publicId(publicId)
-                .originalFileName(safeFileName(file.getOriginalFilename(), type))
+                .originalFileName(safeFileName(originalFileName, type))
                 .contentType(type.contentType())
                 .sizeInBytes(content.length)
                 .checksumSha256(checksum(content))

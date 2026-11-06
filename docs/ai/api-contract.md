@@ -200,6 +200,17 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 - A publish-ready job needs level, contract type, arrangement, city, at least one skill, a description of 50+ characters, requirements of 20+, a salary range (or `negotiable`) and a deadline of today or later. Field names in errors are `level`, `contractType`, `workingArrangement`, `location.city`, `skillIds`, `description`, `requirements`, `salary.min`, `salary.max`, `deadline`.
 - A scheduler (daily 00:05, Asia/Ho_Chi_Minh) moves `PUBLISHED`/`PAUSED` jobs whose deadline has passed to `EXPIRED`. All transitions live in `JobStatusPolicy`.
 
+## Candidate CVs
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/candidate/cvs` | candidate | `CandidateResumeResource[] { id, fileName, url, fileSizeBytes, contentType, isDefault, parsedSummary?, createdAt }`, newest first. `url` is the download path. |
+| `POST` | `/candidate/cvs` | candidate | multipart `file`. PDF only (checked by content, not extension), max 5 MB, max 5 pages, no password. A rejected file returns `400 VALIDATION_FAILED` on field `file` with the reason. Max 3 CVs per candidate (`409 RESUME_LIMIT_REACHED`). The first CV becomes the default. |
+| `PATCH` | `/candidate/cvs/{id}` | candidate | Body `{ fileName }` (max 150). |
+| `POST` | `/candidate/cvs/{id}/default` | candidate | Makes this CV the default. |
+| `DELETE` | `/candidate/cvs/{id}` | candidate | Deleting the default promotes the newest remaining CV. The stored file is removed after commit. |
+| `GET` | `/candidate/cvs/{id}/download` | candidate | Streams the PDF through the backend after the ownership check; no storage URL reaches the browser. Another candidate's CV is `404`. |
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -224,8 +235,8 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `ACCOUNT_DELETED` | 403 | The account has been permanently deleted |
 | `ACCOUNT_NOT_PENDING_DELETION` | 422 | The account is not pending deletion |
 | `DELETION_BLOCKED` | 422 | Account deletion is blocked while unresolved operations remain |
-| `IDENTITY_NOT_VERIFIED` | 422 | Candidate must complete eKYC to apply |
 | `JOB_NOT_EDITABLE` | 422 | The job is closed, expired, hidden, or not a draft (for delete) |
+| `RESUME_LIMIT_REACHED` | 409 | The candidate already has the maximum number of CVs |
 | `SCREENING_QUESTIONS_LOCKED` | 422 | The job already has applications, so its screening questions cannot change |
 | `SKILL_NAME_ALREADY_USED` | 409 | A skill with this name already exists |
 | `PROFILE_SECTION_LIMIT_REACHED` | 409 | A candidate profile section already holds its maximum number of items |
