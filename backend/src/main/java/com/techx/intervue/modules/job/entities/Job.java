@@ -7,6 +7,7 @@ import com.techx.intervue.modules.job.enums.JobLevel;
 import com.techx.intervue.modules.job.enums.JobStatus;
 import com.techx.intervue.modules.job.enums.SalaryCurrency;
 import com.techx.intervue.modules.job.enums.WorkingArrangement;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,11 +19,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -129,4 +134,10 @@ public class Job extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "skill_id"))
     @Builder.Default
     private Set<Skill> skills = new HashSet<>();
+
+    @BatchSize(size = 50)
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC")
+    @Builder.Default
+    private List<JobScreeningQuestion> screeningQuestions = new ArrayList<>();
 }

@@ -109,6 +109,9 @@ public enum ErrorCode {
             HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!"),
     JOB_NOT_EDITABLE(
             HttpStatus.UNPROCESSABLE_CONTENT, "This job can no longer be edited or deleted!"),
+    SCREENING_QUESTIONS_LOCKED(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "Screening questions cannot change once the job has applications!"),
     SKILL_NAME_ALREADY_USED(HttpStatus.CONFLICT, "A skill with this name already exists!"),
     INVALID_STATUS_TRANSITION(
             HttpStatus.UNPROCESSABLE_CONTENT, "This status change is not allowed!"),
