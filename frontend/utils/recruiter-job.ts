@@ -1,0 +1,140 @@
+import type { JobPostFormData } from '@/schemas/job.schema';
+import type {
+  RecruiterJobPost,
+  RecruiterJobResource,
+  RecruiterJobSummaryResource,
+  SaveJobRequest,
+  SalaryCurrency,
+} from '@/types/recruiter-job';
+
+const VND_UNIT = 1_000_000;
+
+export function optionLabel(options: ReadonlyArray<{ value: string; label: string }>, value?: string | null) {
+  return options.find((option) => option.value === value)?.label ?? '—';
+}
+
+const DEFAULT_DEADLINE_DAYS = 30;
+
+export function toDisplayAmount(amount: number | null | undefined, currency: SalaryCurrency): number | undefined {
+  if (amount === null || amount === undefined) return undefined;
+  return currency === 'VND' ? amount / VND_UNIT : amount;
+}
+
+export function toStoredAmount(amount: number | undefined, currency: SalaryCurrency): number | undefined {
+  if (amount === undefined || Number.isNaN(amount)) return undefined;
+  return currency === 'VND' ? Math.round(amount * VND_UNIT) : Math.round(amount);
+}
+
+export function defaultDeadline(): string {
+  const date = new Date();
+  date.setDate(date.getDate() + DEFAULT_DEADLINE_DAYS);
+  return date.toISOString().slice(0, 10);
+}
+
+export function emptyFormValues(): JobPostFormData {
+  return {
+    title: '',
+    level: 'JUNIOR',
+    contractType: 'FULL_TIME',
+    workingArrangement: 'HYBRID',
+    city: '',
+    address: '',
+    salaryNegotiable: false,
+    salaryMin: undefined,
+    salaryMax: undefined,
+    currency: 'VND',
+    skills: [],
+    description: '',
+    requirements: '',
+    benefits: '',
+    deadline: defaultDeadline(),
+    openings: 1,
+  };
+}
+
+export function toFormValues(job: RecruiterJobResource): JobPostFormData {
+  const defaults = emptyFormValues();
+  const currency = job.salary.currency ?? defaults.currency;
+  return {
+    title: job.title,
+    level: job.level ?? defaults.level,
+    contractType: job.contractType ?? defaults.contractType,
+    workingArrangement: job.workingArrangement ?? defaults.workingArrangement,
+    city: job.location.city ?? '',
+    address: job.location.address ?? '',
+    salaryNegotiable: job.salary.negotiable,
+    salaryMin: toDisplayAmount(job.salary.min, currency),
+    salaryMax: toDisplayAmount(job.salary.max, currency),
+    currency,
+    skills: job.skills.map((skill) => ({ id: skill.id, name: skill.name })),
+    description: job.description ?? '',
+    requirements: job.requirements ?? '',
+    benefits: job.benefits ?? '',
+    deadline: job.deadline ?? defaults.deadline,
+    openings: job.openings,
+  };
+}
+
+export function toSaveRequest(values: JobPostFormData): SaveJobRequest {
+  const negotiable = values.salaryNegotiable;
+  return {
+    title: values.title.trim(),
+    level: values.level,
+    contractType: values.contractType,
+    workingArrangement: values.workingArrangement,
+    location: { city: values.city.trim(), address: values.address.trim() },
+    salary: {
+      negotiable,
+      min: negotiable ? undefined : toStoredAmount(values.salaryMin, values.currency),
+      max: negotiable ? undefined : toStoredAmount(values.salaryMax, values.currency),
+      currency: negotiable ? undefined : values.currency,
+    },
+    skillIds: values.skills.map((skill) => skill.id),
+    description: values.description.trim(),
+    requirements: values.requirements.trim(),
+    benefits: values.benefits.trim(),
+    deadline: values.deadline || undefined,
+    openings: values.openings,
+  };
+}
+
+export function summaryToJobPost(summary: RecruiterJobSummaryResource): RecruiterJobPost {
+  return {
+    id: String(summary.id),
+    title: summary.title,
+    status: summary.status,
+    level: summary.level,
+    contractType: summary.contractType,
+    workingArrangement: summary.workingArrangement,
+    location: { city: summary.city },
+    salary: summary.salary,
+    skills: [],
+    recruitsCount: summary.openings,
+    updatedAt: summary.updatedAt,
+    expiresAt: summary.deadline,
+    publishedAt: summary.publishedAt,
+  };
+}
+
+export function resourceToJobPost(job: RecruiterJobResource): RecruiterJobPost {
+  return {
+    id: String(job.id),
+    title: job.title,
+    companyName: job.companyName,
+    status: job.status,
+    level: job.level,
+    contractType: job.contractType,
+    workingArrangement: job.workingArrangement,
+    location: job.location,
+    salary: job.salary,
+    skills: job.skills.map((skill) => skill.name),
+    description: job.description,
+    requirements: job.requirements,
+    benefits: job.benefits,
+    recruitsCount: job.openings,
+    createdAt: job.createdAt,
+    updatedAt: job.updatedAt,
+    expiresAt: job.deadline,
+    publishedAt: job.publishedAt,
+  };
+}

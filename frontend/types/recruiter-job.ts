@@ -1,4 +1,4 @@
-export type JobStatus = 'DRAFT' | 'PENDING_REVIEW' | 'PUBLISHED' | 'PAUSED' | 'CLOSED' | 'EXPIRED' | 'REJECTED';
+export type JobStatus = 'DRAFT' | 'PUBLISHED' | 'PAUSED' | 'CLOSED' | 'EXPIRED' | 'HIDDEN_BY_ADMIN';
 
 export type ContractType = 'FULL_TIME' | 'PART_TIME' | 'INTERNSHIP';
 
@@ -6,60 +6,104 @@ export type WorkingArrangement = 'ON_SITE' | 'HYBRID' | 'REMOTE' | 'FLEXIBLE';
 
 export type JobLevel = 'INTERN' | 'JUNIOR' | 'MID' | 'SENIOR' | 'LEAD';
 
+export type SalaryCurrency = 'VND' | 'USD';
+
+export type SkillGroup = 'CORE' | 'AI_DATA' | 'TOOLS_DEVOPS' | 'SOFT_SKILLS';
+
 export interface JobSalary {
   negotiable: boolean;
-  min?: number;
-  max?: number;
-  currency?: 'VND' | 'USD';
-  period?: 'MONTHLY';
-}
-
-export type ScreeningQuestionType = 'TEXT' | 'YES_NO' | 'SINGLE_CHOICE';
-
-export interface ScreeningQuestion {
-  id: string;
-  question: string;
-  required: boolean;
-  type: ScreeningQuestionType;
-  options?: string[];
+  min?: number | null;
+  max?: number | null;
+  currency?: SalaryCurrency | null;
 }
 
 export interface JobLocation {
-  city: string;
-  district?: string;
-  specificAddress?: string;
+  city?: string | null;
+  address?: string | null;
 }
 
-export type RecruiterJobSegment = 'all' | 'published' | 'pending' | 'paused' | 'expired' | 'draft' | 'closed';
+export interface SkillResource {
+  id: number;
+  name: string;
+  group: SkillGroup;
+}
 
-export type RecruiterJobSort = 'newest' | 'expiringSoon' | 'mostApplicants' | 'highestSalary';
+export interface RecruiterJobSummaryResource {
+  id: number;
+  title: string;
+  status: JobStatus;
+  level?: JobLevel;
+  contractType?: ContractType;
+  workingArrangement?: WorkingArrangement;
+  city?: string;
+  salary: JobSalary;
+  openings: number;
+  deadline?: string;
+  publishedAt?: string;
+  updatedAt: string;
+}
+
+export interface RecruiterJobResource {
+  id: number;
+  title: string;
+  status: JobStatus;
+  companyName: string;
+  level?: JobLevel;
+  contractType?: ContractType;
+  workingArrangement?: WorkingArrangement;
+  location: JobLocation;
+  salary: JobSalary;
+  skills: SkillResource[];
+  description?: string;
+  requirements?: string;
+  benefits?: string;
+  openings: number;
+  deadline?: string;
+  publishedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RecruiterJobCounts {
+  total: number;
+  byStatus: Record<JobStatus, number>;
+}
+
+export interface SaveJobRequest {
+  title: string;
+  level?: JobLevel;
+  contractType?: ContractType;
+  workingArrangement?: WorkingArrangement;
+  location: { city?: string; address?: string };
+  salary: { negotiable: boolean; min?: number; max?: number; currency?: SalaryCurrency };
+  skillIds: number[];
+  description?: string;
+  requirements?: string;
+  benefits?: string;
+  deadline?: string;
+  openings: number;
+}
+
+export type RecruiterJobSegment = 'all' | 'published' | 'paused' | 'expired' | 'draft' | 'closed';
+
+export type RecruiterJobSort = 'newest' | 'expiringSoon' | 'highestSalary';
 
 export interface RecruiterJobPost {
   id: string;
   title: string;
+  companyName?: string;
   status: JobStatus;
-  level: JobLevel;
-  contractType: ContractType;
-  workingArrangement: WorkingArrangement;
+  level?: JobLevel;
+  contractType?: ContractType;
+  workingArrangement?: WorkingArrangement;
   location: JobLocation;
   salary: JobSalary;
   skills: string[];
-  description: string;
-  requirements: string;
-  benefits: string;
-  screeningQuestions: ScreeningQuestion[];
+  description?: string;
+  requirements?: string;
+  benefits?: string;
   recruitsCount: number;
-  applicantsCount?: number;
-  newApplicantsCount?: number;
-  viewsCount?: number;
-  isFeatured?: boolean;
-  isUrgent?: boolean;
-  rejectionReason?: string;
-  aiGenerated?: {
-    description?: boolean;
-    requirements?: boolean;
-  };
-  createdAt: string;
+  createdAt?: string;
   updatedAt: string;
   expiresAt?: string;
   publishedAt?: string;

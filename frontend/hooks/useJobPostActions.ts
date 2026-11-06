@@ -1,131 +1,75 @@
 'use client';
 
-import type { JobStatus, RecruiterJobPost } from '@/types/recruiter-job';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { recruiterJobApi } from '@/apiRequest/recruiter-job';
+import { useRecruiterJobMutations } from '@/hooks/useRecruiterJobs';
+import type { JobStatus } from '@/types/recruiter-job';
+import { getErrorMessage } from '@/utils/error';
+import { toFormValues, toSaveRequest } from '@/utils/recruiter-job';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
-const MOCK_DELAY_MS = 600;
-const EXTEND_DAYS = 30;
+const BULK_ID = 'bulk';
+const MAX_TITLE_LENGTH = 150;
+const COPY_SUFFIX = ' (bản sao)';
 
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export function useJobPostActions(setJobs: Dispatch<SetStateAction<RecruiterJobPost[]>>) {
+export function useJobPostActions() {
+  const mutations = useRecruiterJobMutations();
   const [pendingId, setPendingId] = useState<string | null>(null);
 
-  const runUpdate = async (
-    id: string,
-    updater: (job: RecruiterJobPost) => RecruiterJobPost,
-    successMessage: string,
-  ) => {
+  const run = async (id: string, task: () => Promise<unknown>, successMessage: string) => {
     setPendingId(id);
-    await delay(MOCK_DELAY_MS);
-    setJobs((prev) => prev.map((job) => (job.id === id ? updater(job) : job)));
-    toast.success(successMessage);
-    setPendingId(null);
-  };
-
-  const pauseJob = (id: string) => runUpdate(id, (job) => ({ ...job, status: 'PAUSED' }), 'Job post paused.');
-
-  const reopenJob = (id: string) => runUpdate(id, (job) => ({ ...job, status: 'PUBLISHED' }), 'Job post reopened.');
-
-  const toggleJobStatus = async (id: string, currentStatus: JobStatus) => {
-    if (currentStatus === 'PUBLISHED') {
-      await pauseJob(id);
-    } else if (currentStatus === 'PAUSED') {
-      await reopenJob(id);
+    try {
+      await task();
+      toast.success(successMessage);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setPendingId(null);
     }
   };
 
-  const closeJob = (id: string) => runUpdate(id, (job) => ({ ...job, status: 'CLOSED' }), 'Job post closed.');
+  const pauseJob = (id: string) => run(id, () => mutations.pause.mutateAsync(Number(id)), 'Đã tạm dừng tin.');
 
-  const extendJob = (id: string) =>
-    runUpdate(
+  const reopenJob = (id: string) => run(id, () => mutations.resume.mutateAsync(Number(id)), 'Đã mở lại tin.');
+
+  const closeJob = (id: string) => run(id, () => mutations.close.mutateAsync(Number(id)), 'Đã đóng tin.');
+
+  const deleteJob = (id: string) => run(id, () => mutations.remove.mutateAsync(Number(id)), 'Đã xóa bản nháp.');
+
+  const toggleJobStatus = (id: string, currentStatus: JobStatus) => {
+    if (currentStatus === 'PUBLISHED') return pauseJob(id);
+    if (currentStatus === 'PAUSED') return reopenJob(id);
+    return Promise.resolve();
+  };
+
+  const duplicateJob = (id: string) =>
+    run(
       id,
-      (job) => ({ ...job, expiresAt: new Date(Date.now() + EXTEND_DAYS * 24 * 60 * 60 * 1000).toISOString() }),
-      `Job post extended by ${EXTEND_DAYS} days.`,
+      async () => {
+        const source = await recruiterJobApi.get(Number(id));
+        const copy = toSaveRequest(toFormValues(source));
+        const title = `${source.title.slice(0, MAX_TITLE_LENGTH - COPY_SUFFIX.length)}${COPY_SUFFIX}`;
+        await mutations.create.mutateAsync({ ...copy, title });
+      },
+      'Đã tạo bản sao dưới dạng nháp.',
     );
 
-  const submitForReview = (id: string) =>
-    runUpdate(id, (job) => ({ ...job, status: 'PENDING_REVIEW' }), 'Job post submitted for review.');
-
-  const repostJob = (id: string) =>
-    runUpdate(
-      id,
-      (job) => ({
-        ...job,
-        status: 'PENDING_REVIEW',
-        expiresAt: new Date(Date.now() + EXTEND_DAYS * 24 * 60 * 60 * 1000).toISOString(),
-      }),
-      'Job post reposted and waiting for review.',
-    );
-
-  const duplicateJob = async (id: string) => {
-    setPendingId(id);
-    await delay(MOCK_DELAY_MS);
-    setJobs((prev) => {
-      const source = prev.find((job) => job.id === id);
-      if (!source) return prev;
-
-      const now = new Date().toISOString();
-      const copy: RecruiterJobPost = {
-        ...source,
-        id: `${source.id}-copy-${Date.now()}`,
-        title: `${source.title} (copy)`,
-        status: 'DRAFT',
-        rejectionReason: undefined,
-        publishedAt: undefined,
-        expiresAt: undefined,
-        applicantsCount: 0,
-        newApplicantsCount: 0,
-        viewsCount: 0,
-        createdAt: now,
-        updatedAt: now,
-      };
-      return [copy, ...prev];
-    });
-    toast.success('Job post duplicated as a draft.');
-    setPendingId(null);
-  };
-
-  const deleteJob = async (id: string) => {
-    setPendingId(id);
-    await delay(MOCK_DELAY_MS);
-    setJobs((prev) => prev.filter((job) => job.id !== id));
-    toast.success('Job post deleted.');
-    setPendingId(null);
-  };
-
-  const bulkPauseJobs = async (ids: string[]) => {
+  const runBulk = async (ids: string[], task: (id: number) => Promise<unknown>, noun: string) => {
     if (ids.length === 0) return;
-    setPendingId('bulk');
-    await delay(MOCK_DELAY_MS);
-    setJobs((prev) =>
-      prev.map((job) => (ids.includes(job.id) && job.status === 'PUBLISHED' ? { ...job, status: 'PAUSED' } : job)),
-    );
-    toast.success(`Paused ${ids.length} selected job post${ids.length > 1 ? 's' : ''}.`);
+    setPendingId(BULK_ID);
+    const results = await Promise.allSettled(ids.map((id) => task(Number(id))));
+    const failed = results.filter((result) => result.status === 'rejected').length;
+    if (failed === 0) {
+      toast.success(`Đã ${noun} ${ids.length} tin.`);
+    } else {
+      toast.error(`${noun} thất bại ${failed}/${ids.length} tin. Chỉ tin đang tuyển mới tạm dừng được.`);
+    }
     setPendingId(null);
   };
 
-  const bulkExtendJobs = async (ids: string[]) => {
-    if (ids.length === 0) return;
-    setPendingId('bulk');
-    await delay(MOCK_DELAY_MS);
-    const newExpiresAt = new Date(Date.now() + EXTEND_DAYS * 24 * 60 * 60 * 1000).toISOString();
-    setJobs((prev) => prev.map((job) => (ids.includes(job.id) ? { ...job, expiresAt: newExpiresAt } : job)));
-    toast.success(`Extended ${ids.length} job post${ids.length > 1 ? 's' : ''} by ${EXTEND_DAYS} days.`);
-    setPendingId(null);
-  };
+  const bulkPauseJobs = (ids: string[]) => runBulk(ids, (id) => mutations.pause.mutateAsync(id), 'tạm dừng');
 
-  const bulkCloseJobs = async (ids: string[]) => {
-    if (ids.length === 0) return;
-    setPendingId('bulk');
-    await delay(MOCK_DELAY_MS);
-    setJobs((prev) => prev.map((job) => (ids.includes(job.id) ? { ...job, status: 'CLOSED' } : job)));
-    toast.success(`Closed ${ids.length} selected job post${ids.length > 1 ? 's' : ''}.`);
-    setPendingId(null);
-  };
+  const bulkCloseJobs = (ids: string[]) => runBulk(ids, (id) => mutations.close.mutateAsync(id), 'đóng');
 
   return {
     pendingId,
@@ -133,13 +77,11 @@ export function useJobPostActions(setJobs: Dispatch<SetStateAction<RecruiterJobP
     reopenJob,
     toggleJobStatus,
     closeJob,
-    extendJob,
-    submitForReview,
-    repostJob,
-    duplicateJob,
     deleteJob,
+    duplicateJob,
     bulkPauseJobs,
-    bulkExtendJobs,
     bulkCloseJobs,
   };
 }
+
+export const BULK_PENDING_ID = BULK_ID;

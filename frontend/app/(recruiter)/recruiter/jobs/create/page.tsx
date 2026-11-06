@@ -8,11 +8,11 @@ export default function CreateJobPostPage() {
     <>
       <Breadcrumb
         showHome={false}
-        items={[{ label: 'Job posts', href: ROUTES.RECRUITER_JOBS }, { label: 'Create' }]}
+        items={[{ label: 'Tin tuyển dụng', href: ROUTES.RECRUITER_JOBS }, { label: 'Đăng tin mới' }]}
         className="mb-3"
       />
-      <PageHeader title="New job post" />
-      <JobPostFormView mode="create" />
+      <PageHeader title="Đăng tin tuyển dụng" description="Điền 3 bước ngắn gọn, bạn có thể lưu nháp bất cứ lúc nào." />
+      <JobPostFormView />
     </>
   );
 }
