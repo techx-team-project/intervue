@@ -72,6 +72,7 @@ export interface AdminBroadcastResource {
   scheduledAt: string | null;
   sentAt: string | null;
   deliveredCount: number;
+  readCount: number;
   createdAt: string;
   updatedAt: string;
 }
