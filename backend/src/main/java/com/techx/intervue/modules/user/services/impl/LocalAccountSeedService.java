@@ -29,7 +29,11 @@ public class LocalAccountSeedService implements LocalAccountSeedServiceInterface
     public boolean createIfAbsent(
             String name, String email, String rawPassword, Set<RoleType> roles) {
         String normalizedEmail = EmailHelper.normalize(email);
-        if (userRepository.existsByEmail(normalizedEmail)) {
+        var existing = userRepository.findByEmail(normalizedEmail);
+        if (existing.isPresent()) {
+            User user = existing.get();
+            user.setPassword(passwordEncoder.encode(rawPassword));
+            userRepository.save(user);
             return false;
         }
 
