@@ -116,7 +116,9 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "This status change is not allowed!"),
     BLOG_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Blog post not found!"),
     BLOG_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "Blog category not found!"),
-    BLOG_SLUG_ALREADY_EXISTS(HttpStatus.CONFLICT, "A blog post with this slug already exists!");
+    BLOG_SLUG_ALREADY_EXISTS(HttpStatus.CONFLICT, "A blog post with this slug already exists!"),
+    BROADCAST_AUDIENCE_EMPTY(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This broadcast has no recipients to send to!");
 
     private final HttpStatus status;
     private final String message;
