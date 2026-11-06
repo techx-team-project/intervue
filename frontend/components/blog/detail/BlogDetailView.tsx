@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { BlogArticle } from '@/types/blog';
 import BlogDetailBreadcrumb from './BlogDetailBreadcrumb';
+import MarkdownArticleContent, { extractTableOfContents } from './MarkdownArticleContent';
 import CareerTableOfContents from '@/components/career-orientation/detail/CareerTableOfContents';
 import CareerSalaryInteractive from '@/components/career-orientation/detail/CareerSalaryInteractive';
 import CareerRoadmapTimeline from '@/components/career-orientation/detail/CareerRoadmapTimeline';
@@ -81,70 +82,76 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="lg:col-span-3">
-            <CareerTableOfContents items={article.tableOfContents} />
+            <CareerTableOfContents
+              items={article.content ? extractTableOfContents(article.content) : article.tableOfContents}
+            />
           </div>
 
           <article className="space-y-10 lg:col-span-6">
-            {article.sections.map((section) => (
-              <section key={section.id} id={section.id} className="scroll-mt-28 space-y-4">
-                <h2 className="border-b border-gray-100 pb-2 text-xl font-bold text-[#171717] sm:text-2xl">
-                  {section.title}
-                </h2>
+            {article.content ? (
+              <MarkdownArticleContent content={article.content} />
+            ) : (
+              article.sections.map((section) => (
+                <section key={section.id} id={section.id} className="scroll-mt-28 space-y-4">
+                  <h2 className="border-b border-gray-100 pb-2 text-xl font-bold text-[#171717] sm:text-2xl">
+                    {section.title}
+                  </h2>
 
-                {section.leadText && <p className="text-navy leading-relaxed font-medium">{section.leadText}</p>}
+                  {section.leadText && <p className="text-navy leading-relaxed font-medium">{section.leadText}</p>}
 
-                <div className="space-y-3.5 text-sm leading-relaxed text-[#374151]">
-                  {section.paragraphs.map((p, pIdx) => (
-                    <p key={pIdx}>{p}</p>
-                  ))}
-                </div>
-
-                {section.highlights && section.highlights.length > 0 && (
-                  <div className="bg-primary-light text-navy rounded-2xl border border-emerald-100 p-4 text-xs sm:text-sm">
-                    <div className="text-primary mb-2 font-bold">Điểm cốt lõi cần nhớ:</div>
-                    <ul className="space-y-1.5">
-                      {section.highlights.map((h, hIdx) => (
-                        <li key={hIdx} className="flex items-start gap-2">
-                          <CheckCircle2 className="text-primary mt-0.5 h-4 w-4 shrink-0" />
-                          <span>{h}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {section.subsections && section.subsections.length > 0 && (
-                  <div className="mt-4 space-y-4 pl-2">
-                    {section.subsections.map((sub, sIdx) => (
-                      <div key={sIdx} className="rounded-xl border border-gray-100 bg-white p-4 shadow-2xs">
-                        <h3 className="font-bold text-[#171717] sm:text-base">{sub.title}</h3>
-                        <div className="mt-2 space-y-2 text-xs leading-relaxed text-[#526475] sm:text-sm">
-                          {sub.content.map((c, cIdx) => (
-                            <p key={cIdx}>{c}</p>
-                          ))}
-                        </div>
-                      </div>
+                  <div className="space-y-3.5 text-sm leading-relaxed text-[#374151]">
+                    {section.paragraphs.map((p, pIdx) => (
+                      <p key={pIdx}>{p}</p>
                     ))}
                   </div>
-                )}
 
-                {section.id === 'nganh-marketing-gom-nhung-chuyen-nganh-nao' && article.specializations && (
-                  <CareerSpecializationsGrid specializations={article.specializations} />
-                )}
+                  {section.highlights && section.highlights.length > 0 && (
+                    <div className="bg-primary-light text-navy rounded-2xl border border-emerald-100 p-4 text-xs sm:text-sm">
+                      <div className="text-primary mb-2 font-bold">Điểm cốt lõi cần nhớ:</div>
+                      <ul className="space-y-1.5">
+                        {section.highlights.map((h, hIdx) => (
+                          <li key={hIdx} className="flex items-start gap-2">
+                            <CheckCircle2 className="text-primary mt-0.5 h-4 w-4 shrink-0" />
+                            <span>{h}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
-                {section.id === 'muc-luong-nganh-marketing' && article.salaryTiers && (
-                  <CareerSalaryInteractive salaryTiers={article.salaryTiers} />
-                )}
+                  {section.subsections && section.subsections.length > 0 && (
+                    <div className="mt-4 space-y-4 pl-2">
+                      {section.subsections.map((sub, sIdx) => (
+                        <div key={sIdx} className="rounded-xl border border-gray-100 bg-white p-4 shadow-2xs">
+                          <h3 className="font-bold text-[#171717] sm:text-base">{sub.title}</h3>
+                          <div className="mt-2 space-y-2 text-xs leading-relaxed text-[#526475] sm:text-sm">
+                            {sub.content.map((c, cIdx) => (
+                              <p key={cIdx}>{c}</p>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-                {section.id === 'lo-trinh-thang-tien-nganh-marketing' && article.careerRoadmap && (
-                  <CareerRoadmapTimeline stages={article.careerRoadmap} />
-                )}
+                  {section.id === 'nganh-marketing-gom-nhung-chuyen-nganh-nao' && article.specializations && (
+                    <CareerSpecializationsGrid specializations={article.specializations} />
+                  )}
 
-                {section.id === 'nhung-to-chat-ky-nang-can-co' && <CareerAiInterviewCta />}
+                  {section.id === 'muc-luong-nganh-marketing' && article.salaryTiers && (
+                    <CareerSalaryInteractive salaryTiers={article.salaryTiers} />
+                  )}
 
-                {section.id === 'tim-viec-lam-nganh-marketing-o-dau' && <CareerRelatedJobsWidget />}
-              </section>
-            ))}
+                  {section.id === 'lo-trinh-thang-tien-nganh-marketing' && article.careerRoadmap && (
+                    <CareerRoadmapTimeline stages={article.careerRoadmap} />
+                  )}
+
+                  {section.id === 'nhung-to-chat-ky-nang-can-co' && <CareerAiInterviewCta />}
+
+                  {section.id === 'tim-viec-lam-nganh-marketing-o-dau' && <CareerRelatedJobsWidget />}
+                </section>
+              ))
+            )}
 
             <div className="border-t border-gray-100 pt-6">
               <span className="text-navy mb-3 block text-xs font-bold tracking-wider uppercase">Chủ đề liên quan:</span>
