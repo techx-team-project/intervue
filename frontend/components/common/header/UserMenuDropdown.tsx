@@ -160,6 +160,13 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
                 Việc làm đã ứng tuyển
               </Link>
               <Link
+                href="/candidate/job-alerts"
+                onClick={onClose}
+                className="block rounded-lg px-2 py-1 text-xs text-slate-600 transition-colors hover:bg-emerald-50/60 hover:text-emerald-600"
+              >
+                Cài đặt thông báo việc làm (Job Alerts)
+              </Link>
+              <Link
                 href="/account"
                 onClick={onClose}
                 className="block rounded-lg px-2 py-1 text-xs text-slate-600 transition-colors hover:bg-emerald-50/60 hover:text-emerald-600"
