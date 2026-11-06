@@ -1,6 +1,6 @@
 CREATE TABLE ai_cv_reviews (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    candidate_profile_id BIGINT NOT NULL,
+    candidate_profile_id BIGINT UNSIGNED NOT NULL,
     file_hash VARCHAR(64) NOT NULL,
     overall_score INT NULL,
     summary TEXT NULL,
