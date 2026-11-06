@@ -44,8 +44,9 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
                 height={40}
                 priority
                 className="h-10 w-auto object-contain transition-transform duration-200"
+                style={{ width: 'auto', height: 'auto' }}
               />
-              <span className="rounded-md border border-primary/20 bg-primary-light px-2 py-0.5 text-xs font-bold text-primary">
+              <span className="border-primary/20 bg-primary-light text-primary rounded-md border px-2 py-0.5 text-xs font-bold">
                 Nhà tuyển dụng
               </span>
             </Link>
@@ -72,15 +73,15 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
           <div className="flex items-center gap-2.5 sm:gap-3">
             <a
               href="tel:0812665001"
-              className="hidden items-center gap-1.5 text-xs font-bold text-slate-600 transition hover:text-primary xl:flex"
+              className="hover:text-primary hidden items-center gap-1.5 text-xs font-bold text-slate-600 transition xl:flex"
             >
-              <PhoneCall className="h-3.5 w-3.5 text-primary" />
+              <PhoneCall className="text-primary h-3.5 w-3.5" />
               <span>0812.665.001</span>
             </a>
 
             <Link
               href={ROUTES.HOME}
-              className="hidden items-center gap-1.5 text-xs font-semibold text-slate-600 transition hover:text-primary sm:flex"
+              className="hover:text-primary hidden items-center gap-1.5 text-xs font-semibold text-slate-600 transition sm:flex"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Dành cho Người tìm việc</span>
@@ -92,7 +93,7 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
 
             <Link
               href={recruiterPostJobHref}
-              className="hidden items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-hover sm:flex"
+              className="bg-primary hover:bg-primary-hover hidden items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors sm:flex"
             >
               <PlusCircle className="h-4 w-4" />
               <span>Đăng tin ngay</span>
@@ -127,6 +128,7 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
               height={40}
               priority
               className="h-10 w-auto object-contain transition-transform duration-200"
+              style={{ width: 'auto', height: 'auto' }}
             />
           </Link>
 
