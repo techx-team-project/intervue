@@ -34,6 +34,16 @@ public class SmtpMailService implements MailServiceInterface {
     @Override
     public void sendHtml(
             String to, String subject, String template, Map<String, String> variables) {
+        sendHtmlWithRaw(to, subject, template, variables, Map.of());
+    }
+
+    @Override
+    public void sendHtmlWithRaw(
+            String to,
+            String subject,
+            String template,
+            Map<String, String> variables,
+            Map<String, String> rawVariables) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper =
@@ -41,22 +51,32 @@ public class SmtpMailService implements MailServiceInterface {
             helper.setFrom(fromAddress, appProperties.mailFromName());
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(render(template, variables), true);
+            helper.setText(render(template, variables, rawVariables), true);
             mailSender.send(message);
         } catch (MessagingException | MailException | IOException e) {
             log.error("Failed to send '{}' email: {}", template, e.getMessage());
         }
     }
 
-    private String render(String template, Map<String, String> variables) throws IOException {
+    private String render(
+            String template, Map<String, String> variables, Map<String, String> rawVariables)
+            throws IOException {
         String html =
                 StreamUtils.copyToString(
                         new ClassPathResource(TEMPLATE_PATH.formatted(template)).getInputStream(),
                         StandardCharsets.UTF_8);
-        for (Map.Entry<String, String> entry : variables.entrySet()) {
-            html =
-                    html.replace(
-                            "{{" + entry.getKey() + "}}", HtmlUtils.htmlEscape(entry.getValue()));
+        if (variables != null) {
+            for (Map.Entry<String, String> entry : variables.entrySet()) {
+                html =
+                        html.replace(
+                                "{{" + entry.getKey() + "}}",
+                                HtmlUtils.htmlEscape(entry.getValue()));
+            }
+        }
+        if (rawVariables != null) {
+            for (Map.Entry<String, String> entry : rawVariables.entrySet()) {
+                html = html.replace("{{" + entry.getKey() + "}}", entry.getValue());
+            }
         }
         return html;
     }

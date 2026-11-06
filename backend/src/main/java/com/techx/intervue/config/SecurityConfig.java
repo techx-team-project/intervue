@@ -78,6 +78,8 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/blogs/**")
                                         .permitAll()
+                                        .requestMatchers("/api/v1/job-alerts/**")
+                                        .permitAll()
                                         // 2. Admin area
                                         .requestMatchers("/api/v1/admin/auth/login")
                                         .permitAll()

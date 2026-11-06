@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Award, Bookmark, Building2, Search, Send, Sparkles } from 'lucide-react';
+import { Award, BellRing, Bookmark, Building2, Search, Send, Sparkles } from 'lucide-react';
 
 export function JobsDropdown() {
   return (
@@ -28,6 +28,13 @@ export function JobsDropdown() {
           >
             <Send className="h-4 w-4 text-emerald-600" />
             <span className="text-sm">Việc làm đã ứng tuyển</span>
+          </Link>
+          <Link
+            href="/candidate/job-alerts"
+            className="flex items-center gap-2.5 rounded-lg p-2 text-slate-800 transition-colors hover:bg-emerald-50/50 hover:text-emerald-600"
+          >
+            <BellRing className="h-4 w-4 text-emerald-600" />
+            <span className="text-sm">Thông báo việc làm (Job Alerts)</span>
           </Link>
           <Link
             href="#feature-jobs"

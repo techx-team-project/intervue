@@ -7,6 +7,7 @@ export const ROUTES = {
   VERIFY_EMAIL: '/verify-email',
   CONFIRM_EMAIL_CHANGE: '/confirm-email-change',
   CANDIDATE_PROFILE: '/candidate/profile',
+  CANDIDATE_JOB_ALERTS: '/candidate/job-alerts',
   ACCOUNT_TWO_FACTOR: '/account/two-factor',
   NOTIFICATIONS: '/notifications',
   NOTIFICATION_PREFERENCES: '/account/notification-preferences',
