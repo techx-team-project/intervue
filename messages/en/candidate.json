@@ -1,0 +1,108 @@
+{
+  "profile": {
+    "title": "Candidate Profile",
+    "subtitle": "Keep your personal information, skills, and work history up to date for recruiters",
+    "completionRate": "Profile is {percent}% complete",
+    "viewPublicProfile": "View Public Profile",
+    "editProfile": "Edit Profile",
+    "basicInfo": {
+      "title": "Basic Information",
+      "fullName": "Full Name",
+      "headline": "Professional Title / Headline",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "birthday": "Date of Birth",
+      "gender": "Gender",
+      "city": "Current City / Province",
+      "address": "Full Address",
+      "github": "GitHub URL",
+      "linkedin": "LinkedIn URL",
+      "portfolio": "Personal Website / Portfolio",
+      "genders": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+      }
+    },
+    "summary": {
+      "title": "About Me",
+      "placeholder": "Briefly describe your career background, key achievements, and future ambitions..."
+    },
+    "experience": {
+      "title": "Work Experience",
+      "addBtn": "Add Experience",
+      "company": "Company Name",
+      "position": "Job Title / Role",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "currentJob": "I currently work here",
+      "description": "Responsibilities and Achievements"
+    },
+    "education": {
+      "title": "Education",
+      "addBtn": "Add Education",
+      "school": "University / College",
+      "major": "Major / Field of Study",
+      "degree": "Degree Level",
+      "startYear": "Start Year",
+      "endYear": "Graduation Year",
+      "gpa": "GPA (Optional)"
+    },
+    "skills": {
+      "title": "Skills & Technologies",
+      "addSkill": "Add Skill",
+      "techSkills": "Technical Skills",
+      "softSkills": "Soft Skills",
+      "languages": "Foreign Languages",
+      "proficiency": "Proficiency Level"
+    },
+    "certificates": {
+      "title": "Certifications & Licenses",
+      "addBtn": "Add Certificate",
+      "name": "Certificate Name",
+      "organization": "Issuing Organization",
+      "issueDate": "Issue Date",
+      "credentialUrl": "Credential URL"
+    },
+    "projects": {
+      "title": "Featured Projects",
+      "addBtn": "Add Project",
+      "projectName": "Project Name",
+      "role": "Your Role",
+      "techStack": "Tech Stack Used",
+      "projectUrl": "Live Demo / Repository URL",
+      "description": "Project Overview and Outcomes"
+    }
+  },
+  "cv": {
+    "title": "CV Management",
+    "subtitle": "Upload and manage your CV files to easily apply for jobs",
+    "uploadBtn": "Upload New CV",
+    "uploadHint": "Supported formats: PDF (up to 10MB). Clean, readable text yields optimal ATS parsing.",
+    "defaultBadge": "Default CV",
+    "setDefaultBtn": "Set as Default",
+    "downloadBtn": "Download CV",
+    "deleteBtn": "Delete CV",
+    "previewBtn": "Preview",
+    "uploadSuccess": "CV \"{name}\" uploaded successfully.",
+    "deleteSuccess": "CV deleted successfully.",
+    "setDefaultSuccess": "CV \"{name}\" has been set as your default CV.",
+    "maxFilesReached": "You can upload a maximum of {max} CV files.",
+    "deleteCvConfirm": "Are you sure you want to delete CV \"{name}\"?"
+  },
+  "ekyc": {
+    "title": "eKYC Identity Verification",
+    "subtitle": "Verify your identity with Citizen ID to unlock trusted candidate status and one-click apply",
+    "statusVerified": "Identity Verified (eKYC Passed)",
+    "statusPending": "Verification Under Review",
+    "statusUnverified": "Not Verified",
+    "startKycBtn": "Start eKYC Verification",
+    "idCardFront": "Front of Citizen ID / Passport",
+    "idCardBack": "Back of Citizen ID",
+    "selfie": "Facial Selfie Verification",
+    "instructions": "Ensure photos are clear, well-lit, and uncropped with no glare.",
+    "verifySuccess": "Your identity has been verified successfully via eKYC.",
+    "verifyFailed": "eKYC verification could not be completed. Reason: {reason}"
+  }
+}
+

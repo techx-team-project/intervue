@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { CareerSalaryTier } from '@/types/career';
+import { CAREER_ORIENTATION_MESSAGES } from '@/constants/career-orientation';
 import { Banknote, Award, Briefcase } from 'lucide-react';
 
 interface CareerSalaryInteractiveProps {
@@ -13,6 +14,18 @@ export default function CareerSalaryInteractive({ salaryTiers }: CareerSalaryInt
 
   if (!salaryTiers || salaryTiers.length === 0) return null;
 
+  const {
+    badge,
+    title,
+    description,
+    expLevelTitle,
+    expRequiredTitle,
+    avgIncomeTitle,
+    bonusTitle,
+    coreDescTitle,
+    popularRolesTitle,
+  } = CAREER_ORIENTATION_MESSAGES.salaryInteractive;
+
   const currentTier = salaryTiers[activeTierIndex];
 
   return (
@@ -21,12 +34,10 @@ export default function CareerSalaryInteractive({ salaryTiers }: CareerSalaryInt
         <div>
           <div className="text-primary mb-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold">
             <Banknote className="h-3.5 w-3.5" />
-            <span>Thống Kê Khảo Sát Thu Nhập 2026</span>
+            <span>{badge}</span>
           </div>
-          <h3 className="text-xl font-bold text-[#171717] sm:text-2xl">Bảng mức lương ngành Marketing theo cấp bậc</h3>
-          <p className="mt-1 text-xs text-[#526475] sm:text-sm">
-            Dữ liệu khảo sát từ hơn 5.000 tin tuyển dụng thực tế và báo cáo tiền lương của InterVue.
-          </p>
+          <h3 className="text-xl font-bold text-[#171717] sm:text-2xl">{title}</h3>
+          <p className="mt-1 text-xs text-[#526475] sm:text-sm">{description}</p>
         </div>
       </div>
 
@@ -53,33 +64,31 @@ export default function CareerSalaryInteractive({ salaryTiers }: CareerSalaryInt
       <div className="mt-5 rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
         <div className="flex flex-col justify-between gap-4 border-b border-gray-100 pb-5 md:flex-row md:items-center">
           <div>
-            <span className="text-xs font-semibold tracking-wider text-[#7f878f] uppercase">Cấp bậc kinh nghiệm</span>
+            <span className="text-xs font-semibold tracking-wider text-[#7f878f] uppercase">{expLevelTitle}</span>
             <h4 className="mt-0.5 text-lg font-bold text-[#171717] sm:text-xl">{currentTier.level}</h4>
             <div className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-[#526475]">
               <Briefcase className="text-primary h-3.5 w-3.5" />
               <span>
-                Yêu cầu kinh nghiệm: <strong>{currentTier.experience}</strong>
+                {expRequiredTitle} <strong>{currentTier.experience}</strong>
               </span>
             </div>
           </div>
 
           <div className="bg-primary-light rounded-2xl border border-emerald-200/80 p-4 text-center md:min-w-64">
-            <span className="text-xs font-medium text-[#526475]">Khoảng thu nhập bình quân</span>
+            <span className="text-xs font-medium text-[#526475]">{avgIncomeTitle}</span>
             <div className="text-primary mt-1 text-xl font-black sm:text-2xl">{currentTier.range}</div>
-            <span className="mt-0.5 block text-[11px] text-[#7f878f]">+ Thưởng KPI & Hoa hồng theo doanh thu</span>
+            <span className="mt-0.5 block text-[11px] text-[#7f878f]">{bonusTitle}</span>
           </div>
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
           <div>
-            <h5 className="text-navy mb-2 text-xs font-bold tracking-wider uppercase">Mô tả trách nhiệm cốt lõi</h5>
+            <h5 className="text-navy mb-2 text-xs font-bold tracking-wider uppercase">{coreDescTitle}</h5>
             <p className="text-sm leading-relaxed text-[#526475]">{currentTier.description}</p>
           </div>
 
           <div>
-            <h5 className="text-navy mb-2 text-xs font-bold tracking-wider uppercase">
-              Các chức danh việc làm tiêu biểu
-            </h5>
+            <h5 className="text-navy mb-2 text-xs font-bold tracking-wider uppercase">{popularRolesTitle}</h5>
             <div className="flex flex-wrap gap-2">
               {currentTier.popularRoles.map((role, rIdx) => (
                 <span

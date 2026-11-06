@@ -2,25 +2,24 @@
 
 import React from 'react';
 import { CV_STEPS } from '@/mocks/cv-template.mock';
+import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
 import { MousePointerClick, Edit3, Download, Sparkles } from 'lucide-react';
 
 const STEP_ICONS = [MousePointerClick, Edit3, Download];
 
 export default function CvStepGuideSection() {
+  const { badge, title, description } = CV_TEMPLATE_MESSAGES.stepGuide;
+
   return (
     <section className="border-t border-gray-200 bg-white py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <div className="text-primary mb-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-semibold">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Quy Trình Tạo CV Đơn Giản & Nhanh Chóng</span>
+            <span>{badge}</span>
           </div>
-          <h2 className="text-2xl font-black tracking-tight text-[#171717] sm:text-3xl">
-            Tạo CV online miễn phí chỉ với 3 bước
-          </h2>
-          <p className="mt-2 text-xs text-[#526475] sm:text-sm">
-            Hơn 850.000 ứng viên đã tạo thành công CV chuẩn ATS và tìm được công việc ưng ý cùng InterVue.
-          </p>
+          <h2 className="text-2xl font-black tracking-tight text-[#171717] sm:text-3xl">{title}</h2>
+          <p className="mt-2 text-xs text-[#526475] sm:text-sm">{description}</p>
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">

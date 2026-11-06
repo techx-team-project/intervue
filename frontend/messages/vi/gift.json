@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "title": "Quà tặng & Đổi thưởng InterVue",
+    "subtitle": "Tích lũy điểm thưởng khi hoàn thiện hồ sơ, tham gia trắc nghiệm và đổi lấy các gói quà tặng công nghệ độc quyền cùng voucher tuyển dụng",
+    "balanceLabel": "Điểm thưởng của bạn",
+    "pointsBalance": "{points} điểm khả dụng",
+    "redeemPointsBtn": "Đổi ưu đãi ngay"
+  },
+  "activation": {
+    "formTitle": "Kích hoạt mã quà tặng",
+    "subtitle": "Nhập mã khuyến mại để nhận điểm thưởng hoặc chiết khấu gói dịch vụ",
+    "codeLabel": "Mã quà tặng / Voucher",
+    "codePlaceholder": "Ví dụ: INTERVUE2026",
+    "activateBtn": "Kích hoạt mã",
+    "activating": "Đang kích hoạt...",
+    "successMessage": "Kích hoạt mã quà tặng thành công. Đã cộng {points} điểm vào tài khoản của bạn!",
+    "invalidCode": "Mã quà tặng không hợp lệ hoặc đã hết hạn sử dụng. Vui lòng thử lại."
+  },
+  "vouchers": {
+    "sectionTitle": "Quà tặng & Voucher đang mở",
+    "sectionSubtitle": "Đổi điểm tích lũy lấy các gói dịch vụ tuyển dụng, đánh giá CV và quà tặng công nghệ",
+    "pointsRequired": "{points} điểm",
+    "minOrder": "Đơn hàng tối thiểu: {min} VND",
+    "expiryDate": "Hạn sử dụng: {date}",
+    "redeemBtn": "Đổi quà ngay",
+    "outOfStock": "Tạm hết quà"
+  },
+  "faq": {
+    "title": "Câu hỏi thường gặp về điểm thưởng",
+    "q1": "Làm thế nào để tích lũy điểm thưởng?",
+    "a1": "Bạn có thể tích điểm bằng cách hoàn thiện hồ sơ ứng viên, hoàn thành xác thực eKYC, chia sẻ tin tuyển dụng và tham gia các bài trắc nghiệm nghề nghiệp.",
+    "q2": "Tôi có thể chuyển điểm cho tài khoản khác không?",
+    "a2": "Điểm thưởng được gắn liền với tài khoản đăng ký của bạn và không thể chuyển nhượng hoặc quy đổi trực tiếp thành tiền mặt."
+  }
+}

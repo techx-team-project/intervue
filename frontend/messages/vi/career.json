@@ -1,0 +1,78 @@
+{
+  "hero": {
+    "breadcrumbHome": "Trang chủ",
+    "breadcrumbHandbook": "Cẩm nang nghề nghiệp",
+    "breadcrumbCurrent": "Định hướng nghề nghiệp",
+    "badge": "Cẩm nang & Lộ trình sự nghiệp toàn diện",
+    "title": "Định hướng nghề nghiệp & Lộ trình phát triển IT",
+    "description": "Chia sẻ thông tin, phân tích thị trường và lộ trình thăng tiến cần thiết giúp bạn sớm định hình sự nghiệp, lựa chọn ngành nghề phù hợp và bứt phá thu nhập.",
+    "searchPlaceholder": "Tìm kiếm bài viết, chuyên ngành, mức lương, kỹ năng...",
+    "trendingLabel": "Xu hướng:",
+    "trendingTags": {
+      "softwareEng": "Kỹ thuật phần mềm",
+      "aiMl": "AI & Học máy",
+      "devops": "DevOps & Điện toán đám mây",
+      "data": "Kỹ thuật dữ liệu",
+      "product": "Quản lý sản phẩm",
+      "cybersecurity": "An toàn thông tin"
+    }
+  },
+  "featured": {
+    "title": "Bài viết định hướng nổi bật",
+    "subtitle": "Cập nhật xu hướng tuyển dụng và đãi ngộ mới nhất của ngành công nghệ",
+    "badgeHighlight": "Tiêu điểm",
+    "viewsSuffix": "{views} lượt xem",
+    "readingTime": "{minutes} phút đọc",
+    "exploreCta": "Khám phá ngay",
+    "readMoreCta": "Đọc tiếp"
+  },
+  "card": {
+    "detailCta": "Chi tiết"
+  },
+  "assessment": {
+    "badge": "Trắc nghiệm nhanh 60 giây",
+    "title": "Khám phá cơ hội nghề nghiệp phù hợp nhất với bạn",
+    "description": "Trả lời 2 câu hỏi ngắn để InterVue gợi ý ngành nghề và lộ trình thăng tiến tối ưu với năng lực của bạn.",
+    "progressLabel": "Tiến độ:",
+    "backBtn": "← Quay lại câu hỏi trước",
+    "completedBadge": "Kết quả định hướng dành cho bạn",
+    "completedTitle": "Lĩnh vực phù hợp nhất: {field}",
+    "completedDesc": "Dựa trên định hướng mục tiêu thu nhập và môi trường mong muốn, bạn có tiềm năng bứt phá cao nhất trong ngành này. Hãy đọc ngay bài phân tích lộ trình chi tiết bên dưới!",
+    "seeGuideCta": "Xem cẩm nang & lộ trình ngành",
+    "retakeCta": "Làm lại trắc nghiệm",
+    "questions": {
+      "step1": {
+        "title": "1. Mục tiêu thu nhập và phong cách công việc ưu tiên của bạn?",
+        "options": {
+          "sales": "Đột phá doanh thu, xây dựng quan hệ khách hàng và đối tác",
+          "creative": "Thiết kế sản phẩm, trải nghiệm người dùng và xây dựng thương hiệu",
+          "engineering": "Giải quyết bài toán kỹ thuật chuyên sâu, lập trình và kiến trúc hệ thống",
+          "data": "Phân tích số liệu, mô hình học máy và khai phá dữ liệu"
+        }
+      },
+      "step2": {
+        "title": "2. Bạn phát huy tốt nhất trong môi trường làm việc nào?",
+        "options": {
+          "startup": "Khởi nghiệp tốc độ cao, trao quyền nhanh và linh hoạt",
+          "enterprise": "Tập đoàn đa quốc gia quy mô lớn, quy trình rõ ràng",
+          "remote": "Làm việc Remote phân tán toàn cầu",
+          "consulting": "Công ty tư vấn triển khai dự án giải pháp số cho khách hàng"
+        }
+      }
+    }
+  },
+  "detail": {
+    "tableOfContents": "Mục lục bài viết",
+    "salaryAnalysis": "Phân tích mức lương & Thu nhập thị trường",
+    "roadmapTitle": "Lộ trình thăng tiến sự nghiệp",
+    "specializationsTitle": "Các hướng chuyên môn chính",
+    "interviewPrepTitle": "Chuẩn bị phỏng vấn & Câu hỏi thường gặp",
+    "relatedJobsTitle": "Việc làm đang tuyển trong lĩnh vực này",
+    "aiInterviewCta": {
+      "badge": "Luyện phỏng vấn AI",
+      "title": "Luyện phỏng vấn thử vị trí này với AI",
+      "desc": "Mô phỏng phỏng vấn kỹ thuật và tình huống thực tế bám sát chuyên môn với nhận xét tức thì từ AI.",
+      "button": "Bắt đầu luyện tập"
+    }
+  }
+}

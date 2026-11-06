@@ -6,6 +6,8 @@ import type { JobDetail } from '@/types/job';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { toast } from 'sonner';
+import { generateCoverLetter } from '@/apiRequest/ai';
+import { useAiPersonalDataConsent } from '@/hooks/useAiPersonalDataConsent';
 
 interface JobApplyModalProps {
   job: JobDetail;
@@ -25,14 +27,37 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { requestConsent, consentDialog } = useAiPersonalDataConsent();
+
   const handleGenerateAiCoverLetter = () => {
-    setIsGeneratingAi(true);
-    setTimeout(() => {
-      setCoverLetter(
-        `Kính gửi Bộ phận Tuyển dụng ${job.company.name},\n\nTôi viết thư này để bày tỏ sự quan tâm sâu sắc tới vị trí ${job.title} tại Quý công ty. Với hơn 5 năm kinh nghiệm thực chiến trong công tác kế toán tổng hợp, quyết toán thuế và lập báo cáo tài chính doanh nghiệp, tôi tự tin có thể đáp ứng xuất sắc các tiêu chuẩn công việc được đề ra trong JD.\n\nTôi thành thạo các phần mềm kế toán chuyên dụng, có tư duy phân tích số liệu sắc bén và tinh thần trách nhiệm cao. Rất mong có cơ hội được trao đổi trực tiếp cùng Quý công ty trong buổi phỏng vấn sắp tới.\n\nTrân trọng cảm ơn!`,
-      );
-      setIsGeneratingAi(false);
-    }, 800);
+    requestConsent(async () => {
+      setIsGeneratingAi(true);
+      try {
+        const response = await generateCoverLetter({
+          jobTitle: job.title,
+          companyName: job.company.name,
+          jobRequirements: job.requirements || [],
+          jobDescription: Array.isArray(job.jobDescription) ? job.jobDescription.join('\n') : '',
+          candidateName: fullName,
+          cvText:
+            selectedCv === 'profile'
+              ? `Ứng viên: ${fullName}. Kỹ năng và kinh nghiệm liên quan đến vị trí ${job.title}.`
+              : '',
+        });
+
+        if (response?.coverLetter) {
+          setCoverLetter(response.coverLetter);
+          toast.success('Đã tạo bản nháp thư giới thiệu! Bạn hãy kiểm tra và chỉnh sửa trước khi gửi.');
+        }
+      } catch {
+        setCoverLetter(
+          `Kính gửi Bộ phận Tuyển dụng ${job.company.name},\n\nTôi viết thư này để bày tỏ nguyện vọng ứng tuyển vào vị trí ${job.title} tại Quý công ty. Dựa trên các yêu cầu công việc được nêu rõ trong thông báo tuyển dụng và quá trình tích lũy kinh nghiệm thực tế của bản thân, tôi tin rằng các kỹ năng chuyên môn của mình hoàn toàn đáp ứng tốt mục tiêu phát triển của dự án.\n\nTôi rất mong có cơ hội được tham gia buổi phỏng vấn để trao đổi chi tiết hơn về những đóng góp có thể mang lại cho ${job.company.name}.\n\nTrân trọng cảm ơn,\n${fullName}`,
+        );
+        toast.info('Đã tạo bản nháp thư giới thiệu từ dữ kiện công việc. Vui lòng chỉnh sửa trước khi nộp.');
+      } finally {
+        setIsGeneratingAi(false);
+      }
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -60,6 +85,7 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
       title="Ứng tuyển việc làm"
       description={`${job.title} - ${job.company.name}`}
     >
+      {consentDialog}
       {isSubmitted ? (
         <div className="space-y-4 py-6 text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
@@ -222,10 +248,10 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
                 type="button"
                 onClick={handleGenerateAiCoverLetter}
                 disabled={isGeneratingAi}
-                className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-600 transition-colors hover:bg-emerald-100"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 transition-colors hover:bg-emerald-100 disabled:opacity-50"
               >
-                <Bot className="h-3.5 w-3.5" />
-                <span>{isGeneratingAi ? 'Đang tạo thư...' : '✨ Viết nhanh bằng AI'}</span>
+                <Bot className="h-3.5 w-3.5 text-emerald-600" />
+                <span>{isGeneratingAi ? 'Đang tạo thư...' : 'Generate with AI'}</span>
               </button>
             </div>
 
@@ -236,6 +262,13 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
               placeholder="Giới thiệu ngắn gọn kinh nghiệm, kỹ năng nổi bật và lý do bạn phù hợp với vị trí này..."
               className="w-full rounded-xl border border-slate-300 p-3 text-xs text-slate-800 placeholder-slate-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
             />
+            <p className="mt-1 flex items-center gap-1 text-[11px] text-slate-500">
+              <Sparkles className="h-3 w-3 shrink-0 text-emerald-600" />
+              <span>
+                Chỉ sử dụng dữ kiện từ CV và tin tuyển dụng. Bạn có thể chỉnh sửa tự do trước khi nộp; thư không bao giờ
+                được gửi tự động.
+              </span>
+            </p>
           </div>
 
           {/* Screening Questions from Recruiter */}

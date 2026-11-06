@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { CvTemplateItem, CvTemplateStyle, CvTemplateIndustry } from '@/types/cv-template';
+import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
 import CvHeroBanner from './CvHeroBanner';
 import CvFilterBar from './CvFilterBar';
 import CvTemplateCard from './CvTemplateCard';
@@ -31,6 +32,9 @@ export default function CvTemplatesView({
   const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  const { listTitle, defaultStyleName, freeAndAtsBadge, notFoundTitle, notFoundDesc, viewAllBtn } =
+    CV_TEMPLATE_MESSAGES.view;
+
   const [previewState, setPreviewState] = useState<{
     isOpen: boolean;
     template: CvTemplateItem | null;
@@ -52,7 +56,7 @@ export default function CvTemplatesView({
         }
       }
 
-      if (selectedLanguage !== 'all' && !item.languages.includes(selectedLanguage as 'Tiếng Việt' | 'Tiếng Anh')) {
+      if (selectedLanguage !== 'all' && !item.languages.includes(selectedLanguage)) {
         return false;
       }
 
@@ -86,6 +90,8 @@ export default function CvTemplatesView({
     router.push('/candidate/profile');
   };
 
+  const styleSuffix = selectedStyleSlug === 'mau-don-gian' ? defaultStyleName : '';
+
   return (
     <div className="min-h-screen bg-[#f8faf9]">
       <CvHeroBanner />
@@ -110,10 +116,10 @@ export default function CvTemplatesView({
               <LayoutGrid className="h-5 w-5" />
             </div>
             <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">
-              Danh sách mẫu CV {selectedStyleSlug === 'mau-don-gian' ? 'Đơn giản' : ''} ({filteredTemplates.length})
+              {listTitle(styleSuffix, filteredTemplates.length)}
             </h2>
           </div>
-          <span className="hidden text-xs text-[#7f878f] sm:inline-block">Tất cả mẫu đều miễn phí & chuẩn hóa ATS</span>
+          <span className="hidden text-xs text-[#7f878f] sm:inline-block">{freeAndAtsBadge}</span>
         </div>
 
         {filteredTemplates.length > 0 ? (
@@ -130,10 +136,8 @@ export default function CvTemplatesView({
         ) : (
           <div className="rounded-3xl border border-dashed border-gray-200 bg-white p-12 text-center">
             <SearchX className="mx-auto mb-3 h-12 w-12 text-[#9ca3af]" />
-            <h3 className="text-base font-bold text-[#171717]">Không tìm thấy mẫu CV phù hợp</h3>
-            <p className="mt-1 text-xs text-[#7f878f]">
-              Hãy thử chọn lại phong cách, ngành nghề khác hoặc xóa từ khóa tìm kiếm.
-            </p>
+            <h3 className="text-base font-bold text-[#171717]">{notFoundTitle}</h3>
+            <p className="mt-1 text-xs text-[#7f878f]">{notFoundDesc}</p>
             <button
               type="button"
               onClick={() => {
@@ -144,7 +148,7 @@ export default function CvTemplatesView({
               }}
               className="bg-primary mt-4 rounded-xl px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#009b44]"
             >
-              Xem tất cả mẫu CV
+              {viewAllBtn}
             </button>
           </div>
         )}

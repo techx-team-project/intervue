@@ -1,0 +1,45 @@
+{
+  "hero": {
+    "title": "Empowering Your Next-Gen IT Career with AI",
+    "subtitle": "Discover verified tech jobs, optimize your ATS CV, and connect directly with top engineering companies across Vietnam.",
+    "searchPlaceholder": "Job title, tech stack, or company name...",
+    "citySelect": "Location",
+    "categorySelect": "Specialization",
+    "findJobsBtn": "Search Jobs",
+    "popularKeywords": "Trending: Java, Golang, React, DevOps, AI Engineer, Remote",
+    "statsCompanies": "{count}+ Verified Companies",
+    "statsJobs": "{count}+ Active IT Jobs",
+    "statsCandidates": "{count}+ Tech Candidates"
+  },
+  "ecosystem": {
+    "badge": "AI-Powered Recruitment Platform",
+    "title": "Why Tech Professionals & Recruiters Choose InterVue",
+    "subtitle": "A transparent, intelligent recruitment ecosystem built specifically for the software industry",
+    "featureAiMatch": "Evidence-Based AI Resume Matching",
+    "featureAtsCv": "100% Free ATS-Compliant CV Builder",
+    "featureVerifiedEmployers": "Strictly Verified Employers via eKYC",
+    "featureCareerGuidance": "Real-Time IT Salary & Roadmap Intelligence"
+  },
+  "topCategories": {
+    "title": "Explore In-Demand Tech Specializations",
+    "subtitle": "Find open roles tailored to your exact tech stack and seniority level",
+    "viewAllCategories": "View All Specializations"
+  },
+  "featuredJobs": {
+    "title": "Featured IT Opportunities",
+    "subtitle": "Hand-picked high-growth engineering positions with attractive compensation",
+    "viewAllJobs": "Explore All Jobs"
+  },
+  "topCompanies": {
+    "title": "Top Tech Employers Hiring Now",
+    "subtitle": "Work alongside visionary teams shaping the future of technology in Vietnam",
+    "exploreCompanies": "Explore Company Directory"
+  },
+  "marketDashboard": {
+    "title": "IT Recruitment Market Intelligence",
+    "subtitle": "Live telemetry on hiring volume, salary benchmarks, and trending tech stacks",
+    "trendingSkills": "Most In-Demand Skills",
+    "averageSalaryByRole": "Average Salary by Seniority",
+    "demandGrowth": "Hiring Growth Rate: +{rate}% YoY"
+  }
+}

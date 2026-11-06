@@ -142,6 +142,11 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- PDFBox (CV parsing) -->
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>3.0.4</version>
 		<!-- QR Code (ZXing) -->
 		<dependency>
 			<groupId>com.google.zxing</groupId>

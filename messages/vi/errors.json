@@ -1,0 +1,33 @@
+{
+  "fallback": "Đã có lỗi xảy ra, vui lòng thử lại sau.",
+  "codes": {
+    "NETWORK_ERROR": "Không thể kết nối đến máy chủ, vui lòng kiểm tra kết nối mạng của bạn.",
+    "VALIDATION_FAILED": "Một số thông tin chưa hợp lệ, vui lòng kiểm tra và thử lại.",
+    "INVALID_CREDENTIALS": "Email hoặc mật khẩu không chính xác.",
+    "UNAUTHENTICATED": "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.",
+    "FORBIDDEN": "Bạn không có quyền thực hiện thao tác này.",
+    "NOT_FOUND": "Không tìm thấy tài nguyên yêu cầu.",
+    "EMAIL_ALREADY_USED": "Địa chỉ email này đã được đăng ký tài khoản.",
+    "EMAIL_ALREADY_VERIFIED": "Địa chỉ email này đã được xác thực trước đó.",
+    "EMAIL_NOT_VERIFIED": "Vui lòng xác thực email của bạn trước khi tiếp tục.",
+    "INVALID_OR_EXPIRED_TOKEN": "Đường dẫn hoặc mã xác thực không hợp lệ hoặc đã hết hạn.",
+    "IDENTITY_NOT_VERIFIED": "Bạn cần hoàn thành xác thực danh tính eKYC trước khi thực hiện thao tác này.",
+    "PROFILE_SECTION_LIMIT_REACHED": "Bạn đã đạt số lượng mục tối đa cho phần hồ sơ này.",
+    "PHONE_ALREADY_USED": "Số điện thoại này đã được sử dụng bởi một tài khoản khác.",
+    "PHONE_ALREADY_VERIFIED": "Số điện thoại này đã được xác thực.",
+    "PHONE_OTP_INVALID": "Mã xác thực không chính xác hoặc đã hết hạn.",
+    "PHONE_OTP_NOT_REQUESTED": "Vui lòng yêu cầu gửi mã xác thực trước.",
+    "ACCOUNT_DELETED": "Tài khoản này đã bị xóa.",
+    "ACCOUNT_BANNED": "Tài khoản này đã bị khóa hoặc tạm ngưng hoạt động.",
+    "RATE_LIMITED": "Quá nhiều yêu cầu. Vui lòng thử lại sau {seconds} giây.",
+    "AI_IP_QUOTA_EXCEEDED": "Bạn đã dùng hết {count} câu hỏi/giờ dành cho khách. Vui lòng đăng nhập hoặc thử lại sau.",
+    "AI_USER_QUOTA_EXCEEDED": "Bạn đã đạt giới hạn {count} câu hỏi trong ngày hôm nay.",
+    "AI_CHAT_FAILED": "Không thể xử lý tin nhắn lúc này, vui lòng thử lại sau.",
+    "AI_PROVIDER_UNAVAILABLE": "Dịch vụ AI tạm thời gián đoạn, vui lòng thử lại sau.",
+    "FILE_TOO_LARGE": "Kích thước file vượt quá giới hạn cho phép {max}MB.",
+    "INVALID_FILE_TYPE": "Định dạng file không hợp lệ. Hệ thống chỉ chấp nhận file định dạng PDF.",
+    "CV_UNREADABLE": "Không thể trích xuất nội dung từ CV. Lý do: {reason}",
+    "INTERNAL_SERVER_ERROR": "Lỗi máy chủ nội bộ. Vui lòng thử lại sau ít phút."
+  }
+}
+

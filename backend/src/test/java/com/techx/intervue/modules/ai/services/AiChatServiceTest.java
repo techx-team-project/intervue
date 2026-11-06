@@ -7,19 +7,25 @@ import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.ai.requests.AiCallContext;
+import com.techx.intervue.modules.ai.requests.AiChatMessage;
 import com.techx.intervue.modules.ai.requests.AiChatRequest;
+import com.techx.intervue.modules.ai.requests.AiContentBlock;
+import com.techx.intervue.modules.ai.requests.AiRole;
 import com.techx.intervue.modules.ai.requests.UserChatRequest;
 import com.techx.intervue.modules.ai.resources.AiChatResult;
 import com.techx.intervue.modules.ai.resources.AiStopReason;
 import com.techx.intervue.modules.ai.resources.AiUsage;
 import com.techx.intervue.modules.ai.resources.KnowledgeMatch;
 import com.techx.intervue.modules.ai.resources.PromptTemplate;
+import com.techx.intervue.modules.ai.resources.ToolExecutionResult;
 import com.techx.intervue.modules.ai.resources.UserChatResponse;
 import com.techx.intervue.modules.ai.services.impl.AiChatService;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
@@ -29,6 +35,7 @@ import com.techx.intervue.modules.ai.services.interfaces.PlatformAgentToolServic
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -113,6 +120,112 @@ class AiChatServiceTest {
                 .containsExactly(
                         "recruiter_flows.md - How to Verify Your Company (Company Verification Process)");
         assertThat(response.remainingQuota()).isEqualTo(29);
+    }
+
+    @Test
+    @DisplayName("Should pass caller userId to agent tool and execute tool correctly")
+    void shouldPassCallerUserIdToAgentTool() {
+        when(redis.opsForList()).thenReturn(listOperations);
+        when(listOperations.range(anyString(), eq(0L), eq(-1L))).thenReturn(List.of());
+        when(knowledgeBaseService.retrieve(anyString(), anyInt(), anyDouble()))
+                .thenReturn(List.of());
+
+        PromptTemplate prompt =
+                new PromptTemplate("support-chatbot.v1", 1, "You are the support assistant.");
+        when(promptService.load("support-chatbot", 1)).thenReturn(prompt);
+
+        AiContentBlock.ToolUse toolUse =
+                new AiContentBlock.ToolUse("call-1", "get_my_applications", Map.of());
+        AiChatMessage assistantMsg = new AiChatMessage(AiRole.ASSISTANT, List.of(toolUse), null);
+
+        AiChatResult firstTurnResult =
+                new AiChatResult(
+                        "",
+                        List.of(toolUse),
+                        AiStopReason.TOOL_USE,
+                        new AiUsage(100, 50),
+                        "gemini-3.8-flash",
+                        assistantMsg);
+
+        AiChatResult secondTurnResult =
+                new AiChatResult(
+                        "Bạn đã nộp 2 hồ sơ ứng tuyển.",
+                        List.of(),
+                        AiStopReason.END_TURN,
+                        new AiUsage(120, 60),
+                        "gemini-3.8-flash",
+                        null);
+
+        when(aiGatewayService.chat(any(AiCallContext.class), any(AiChatRequest.class)))
+                .thenReturn(firstTurnResult)
+                .thenReturn(secondTurnResult);
+
+        when(agentToolService.execute("get_my_applications", 42L, Map.of()))
+                .thenReturn(ToolExecutionResult.success("Hồ sơ 1: Java Backend"));
+        when(quotaService.getRemaining(eq(42L), anyString())).thenReturn(28);
+
+        UserChatRequest request = new UserChatRequest("Xem các hồ sơ tôi đã nộp", "session-xyz");
+        UserChatResponse response = service.chat(42L, "127.0.0.1", request);
+
+        assertThat(response.answer()).isEqualTo("Bạn đã nộp 2 hồ sơ ứng tuyển.");
+        verify(agentToolService).execute("get_my_applications", 42L, Map.of());
+    }
+
+    @Test
+    @DisplayName("Should cap tool execution at maximum 3 tool calls per answer")
+    void shouldCapToolExecutionAtMax3Calls() {
+        when(redis.opsForList()).thenReturn(listOperations);
+        when(listOperations.range(anyString(), eq(0L), eq(-1L))).thenReturn(List.of());
+        when(knowledgeBaseService.retrieve(anyString(), anyInt(), anyDouble()))
+                .thenReturn(List.of());
+
+        PromptTemplate prompt = new PromptTemplate("support-chatbot.v1", 1, "System prompt");
+        when(promptService.load("support-chatbot", 1)).thenReturn(prompt);
+
+        List<AiContentBlock.ToolUse> fourCalls =
+                List.of(
+                        new AiContentBlock.ToolUse("c1", "search_jobs", Map.of("keyword", "Java")),
+                        new AiContentBlock.ToolUse(
+                                "c2", "get_company_info", Map.of("companyName", "VNG")),
+                        new AiContentBlock.ToolUse(
+                                "c3", "get_platform_guide", Map.of("query", "cv")),
+                        new AiContentBlock.ToolUse("c4", "get_my_applications", Map.of()));
+
+        AiChatMessage assistantMsg =
+                new AiChatMessage(AiRole.ASSISTANT, List.copyOf(fourCalls), null);
+
+        AiChatResult firstTurnResult =
+                new AiChatResult(
+                        "",
+                        fourCalls,
+                        AiStopReason.TOOL_USE,
+                        new AiUsage(100, 50),
+                        "gemini-3.8-flash",
+                        assistantMsg);
+
+        AiChatResult secondTurnResult =
+                new AiChatResult(
+                        "Tổng hợp kết quả...",
+                        List.of(),
+                        AiStopReason.END_TURN,
+                        new AiUsage(120, 60),
+                        "gemini-3.8-flash",
+                        null);
+
+        when(aiGatewayService.chat(any(AiCallContext.class), any(AiChatRequest.class)))
+                .thenReturn(firstTurnResult)
+                .thenReturn(secondTurnResult);
+
+        when(agentToolService.execute(anyString(), any(), any()))
+                .thenReturn(ToolExecutionResult.success("tool output"));
+        when(quotaService.getRemaining(eq(1L), anyString())).thenReturn(27);
+
+        UserChatRequest request = new UserChatRequest("Tìm tất cả", "session-xyz");
+        UserChatResponse response = service.chat(1L, "127.0.0.1", request);
+
+        assertThat(response.answer()).isEqualTo("Tổng hợp kết quả...");
+        // Exactly 3 calls executed, 4th was rejected by cap
+        verify(agentToolService, times(3)).execute(anyString(), any(), any());
     }
 
     @Test

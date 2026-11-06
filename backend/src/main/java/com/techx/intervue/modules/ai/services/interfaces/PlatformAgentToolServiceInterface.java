@@ -9,5 +9,9 @@ public interface PlatformAgentToolServiceInterface {
 
     List<AiToolDefinition> getAvailableTools();
 
-    ToolExecutionResult execute(String toolName, Map<String, Object> arguments);
+    default ToolExecutionResult execute(String toolName, Map<String, Object> arguments) {
+        return execute(toolName, null, arguments);
+    }
+
+    ToolExecutionResult execute(String toolName, Long callerUserId, Map<String, Object> arguments);
 }

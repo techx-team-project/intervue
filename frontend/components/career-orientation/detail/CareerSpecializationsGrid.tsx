@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CareerSpecialization } from '@/types/career';
+import { CAREER_ORIENTATION_MESSAGES } from '@/constants/career-orientation';
 import { Layers, TrendingUp, Check } from 'lucide-react';
 
 interface CareerSpecializationsGridProps {
@@ -11,6 +12,8 @@ interface CareerSpecializationsGridProps {
 export default function CareerSpecializationsGrid({ specializations }: CareerSpecializationsGridProps) {
   if (!specializations || specializations.length === 0) return null;
 
+  const { title, description, coreSkillsTitle, commonToolsTitle } = CAREER_ORIENTATION_MESSAGES.specializationsGrid;
+
   return (
     <div className="my-8">
       <div className="mb-6 flex items-center gap-2">
@@ -18,12 +21,8 @@ export default function CareerSpecializationsGrid({ specializations }: CareerSpe
           <Layers className="h-5 w-5" />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-[#171717] sm:text-2xl">
-            Các chuyên ngành Marketing tiềm năng nhất 2026
-          </h3>
-          <p className="mt-0.5 text-xs text-[#7f878f] sm:text-sm">
-            Lựa chọn chuyên ngành phù hợp với sở trường phân tích hay sáng tạo nghệ thuật
-          </p>
+          <h3 className="text-xl font-bold text-[#171717] sm:text-2xl">{title}</h3>
+          <p className="mt-0.5 text-xs text-[#7f878f] sm:text-sm">{description}</p>
         </div>
       </div>
 
@@ -45,7 +44,7 @@ export default function CareerSpecializationsGrid({ specializations }: CareerSpe
 
               <div className="mb-3">
                 <span className="text-navy mb-1.5 block text-[11px] font-bold tracking-wider uppercase">
-                  Kỹ năng cốt lõi:
+                  {coreSkillsTitle}
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {spec.keySkills.map((skill, sIdx) => (
@@ -62,7 +61,7 @@ export default function CareerSpecializationsGrid({ specializations }: CareerSpe
 
               <div>
                 <span className="text-navy mb-1.5 block text-[11px] font-bold tracking-wider uppercase">
-                  Công cụ thường dùng:
+                  {commonToolsTitle}
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {spec.tools.map((tool, tIdx) => (

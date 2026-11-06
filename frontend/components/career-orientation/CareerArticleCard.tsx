@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { CareerArticle } from '@/types/career';
+import { CAREER_ORIENTATION_MESSAGES } from '@/constants/career-orientation';
 import { Clock, Eye, ArrowUpRight } from 'lucide-react';
 
 interface CareerArticleCardProps {
@@ -80,7 +81,7 @@ export default function CareerArticleCard({ article }: CareerArticleCardProps) {
             href={articleUrl}
             className="text-primary inline-flex items-center gap-1 text-xs font-semibold hover:underline"
           >
-            <span>Chi tiết</span>
+            <span>{CAREER_ORIENTATION_MESSAGES.card.detailCta}</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         </div>

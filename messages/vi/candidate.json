@@ -1,0 +1,108 @@
+{
+  "profile": {
+    "title": "Hồ sơ ứng viên",
+    "subtitle": "Cập nhật thông tin cá nhân, kỹ năng và kinh nghiệm làm việc để thu hút nhà tuyển dụng",
+    "completionRate": "Hồ sơ đã hoàn thành {percent}%",
+    "viewPublicProfile": "Xem hồ sơ công khai",
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "basicInfo": {
+      "title": "Thông tin cơ bản",
+      "fullName": "Họ và tên",
+      "headline": "Chức danh nghề nghiệp / Tiêu đề",
+      "email": "Địa chỉ email",
+      "phone": "Số điện thoại",
+      "birthday": "Ngày sinh",
+      "gender": "Giới tính",
+      "city": "Tỉnh / Thành phố hiện tại",
+      "address": "Địa chỉ chi tiết",
+      "github": "Liên kết GitHub",
+      "linkedin": "Liên kết LinkedIn",
+      "portfolio": "Website cá nhân / Portfolio",
+      "genders": {
+        "male": "Nam",
+        "female": "Nữ",
+        "other": "Khác"
+      }
+    },
+    "summary": {
+      "title": "Giới thiệu bản thân",
+      "placeholder": "Mô tả ngắn gọn về kinh nghiệm chuyên môn, thành tựu nổi bật và mục tiêu phát triển..."
+    },
+    "experience": {
+      "title": "Kinh nghiệm làm việc",
+      "addBtn": "Thêm kinh nghiệm",
+      "company": "Tên công ty",
+      "position": "Chức danh / Vị trí",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "currentJob": "Tôi đang làm việc tại đây",
+      "description": "Trách nhiệm công việc và thành tích đạt được"
+    },
+    "education": {
+      "title": "Học vấn",
+      "addBtn": "Thêm học vấn",
+      "school": "Trường Đại học / Cao đẳng",
+      "major": "Chuyên ngành",
+      "degree": "Bằng cấp / Trình độ",
+      "startYear": "Năm bắt đầu",
+      "endYear": "Năm tốt nghiệp",
+      "gpa": "Điểm GPA (Không bắt buộc)"
+    },
+    "skills": {
+      "title": "Kỹ năng & Công nghệ",
+      "addSkill": "Thêm kỹ năng",
+      "techSkills": "Kỹ năng chuyên môn / Công nghệ",
+      "softSkills": "Kỹ năng mềm",
+      "languages": "Ngoại ngữ",
+      "proficiency": "Mức độ thành thạo"
+    },
+    "certificates": {
+      "title": "Chứng chỉ & Bằng cấp",
+      "addBtn": "Thêm chứng chỉ",
+      "name": "Tên chứng chỉ",
+      "organization": "Tổ chức cấp",
+      "issueDate": "Ngày cấp",
+      "credentialUrl": "Đường dẫn chứng chỉ"
+    },
+    "projects": {
+      "title": "Dự án tiêu biểu",
+      "addBtn": "Thêm dự án",
+      "projectName": "Tên dự án",
+      "role": "Vai trò của bạn",
+      "techStack": "Công nghệ sử dụng",
+      "projectUrl": "Liên kết Demo / Kho mã nguồn",
+      "description": "Tổng quan dự án và kết quả đạt được"
+    }
+  },
+  "cv": {
+    "title": "Quản lý CV",
+    "subtitle": "Tải lên và quản lý các file CV để ứng tuyển nhanh chóng vào các vị trí mong muốn",
+    "uploadBtn": "Tải lên CV mới",
+    "uploadHint": "Định dạng hỗ trợ: PDF (tối đa 10MB). File rõ nét, chuẩn text sẽ tối ưu bộ đọc tự động ATS.",
+    "defaultBadge": "CV mặc định",
+    "setDefaultBtn": "Đặt làm mặc định",
+    "downloadBtn": "Tải xuống CV",
+    "deleteBtn": "Xóa CV",
+    "previewBtn": "Xem trước",
+    "uploadSuccess": "Đã tải lên CV \"{name}\" thành công.",
+    "deleteSuccess": "Đã xóa CV thành công.",
+    "setDefaultSuccess": "Đã đặt CV \"{name}\" làm CV mặc định.",
+    "maxFilesReached": "Bạn chỉ có thể tải lên tối đa {max} file CV.",
+    "deleteCvConfirm": "Bạn có chắc chắn muốn xóa CV \"{name}\" không?"
+  },
+  "ekyc": {
+    "title": "Xác thực danh tính eKYC",
+    "subtitle": "Xác thực danh tính qua Căn cước công dân để mở khóa huy hiệu ứng viên uy tín và nộp hồ sơ ưu tiên",
+    "statusVerified": "Đã xác thực danh tính (eKYC thành công)",
+    "statusPending": "Đang chờ duyệt xác thực",
+    "statusUnverified": "Chưa xác thực",
+    "startKycBtn": "Bắt đầu xác thực eKYC",
+    "idCardFront": "Ảnh mặt trước CCCD / Hộ chiếu",
+    "idCardBack": "Ảnh mặt sau CCCD",
+    "selfie": "Chân dung khuôn mặt",
+    "instructions": "Vui lòng chụp ảnh rõ nét, đủ ánh sáng, không bị lóa hoặc mất góc.",
+    "verifySuccess": "Danh tính của bạn đã được xác thực thành công qua eKYC.",
+    "verifyFailed": "Xác thực eKYC không thành công. Lý do: {reason}"
+  }
+}
+

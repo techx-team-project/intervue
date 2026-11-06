@@ -1,0 +1,68 @@
+{
+  "page": {
+    "title": "Quản lý đơn ứng tuyển",
+    "subtitle": "Theo dõi tiến độ đơn ứng tuyển và lịch hẹn phỏng vấn của bạn",
+    "totalCount": "{count} đơn ứng tuyển",
+    "tabs": {
+      "all": "Tất cả đơn",
+      "applied": "Đã nộp",
+      "reviewing": "Đang duyệt",
+      "shortlisted": "Được chọn lọc",
+      "interview": "Phỏng vấn",
+      "offered": "Được mời nhận việc",
+      "rejected": "Chưa phù hợp",
+      "withdrawn": "Đã rút hồ sơ"
+    }
+  },
+  "item": {
+    "appliedDate": "Ứng tuyển ngày {date}",
+    "viewCv": "Xem CV đã nộp",
+    "viewJob": "Xem chi tiết công việc",
+    "withdrawBtn": "Rút đơn ứng tuyển",
+    "interviewScheduled": "Đã xếp lịch phỏng vấn",
+    "feedbackTitle": "Phản hồi từ Nhà tuyển dụng",
+    "rejectionReason": "Lý do: {reason}"
+  },
+  "status": {
+    "pending": "Đã nộp",
+    "reviewing": "Đang xem xét",
+    "shortlisted": "Hồ sơ tiềm năng",
+    "interviewScheduled": "Đã lên lịch phỏng vấn",
+    "offered": "Đã gửi lời mời nhận việc",
+    "rejected": "Chưa phù hợp",
+    "withdrawn": "Đã rút đơn"
+  },
+  "interview": {
+    "title": "Thư mời phỏng vấn",
+    "dateTime": "Lịch phỏng vấn lúc {time} ngày {date}",
+    "location": "Địa điểm: {location}",
+    "link": "Đường link phỏng vấn: {link}",
+    "notes": "Ghi chú từ Nhà tuyển dụng: {notes}",
+    "acceptBtn": "Xác nhận tham gia",
+    "rescheduleBtn": "Yêu cầu đổi lịch"
+  },
+  "withdraw": {
+    "title": "Rút đơn ứng tuyển",
+    "desc": "Bạn có chắc chắn muốn rút đơn ứng tuyển vị trí {jobTitle}? Hành động này không thể hoàn tác.",
+    "reasonLabel": "Lý do rút đơn (Không bắt buộc)",
+    "reasonPlaceholder": "Ví dụ: Đã nhận được lời mời công việc khác, thay đổi định hướng...",
+    "confirmBtn": "Đồng ý rút đơn",
+    "cancelBtn": "Giữ lại đơn",
+    "withdrawing": "Đang xử lý...",
+    "withdrawSuccess": "Đã rút đơn ứng tuyển vị trí {jobTitle} thành công."
+  },
+  "empty": {
+    "title": "Không có đơn ứng tuyển nào",
+    "desc": "Bạn chưa có hồ sơ ứng tuyển nào trong danh mục này.",
+    "exploreJobsCta": "Khám phá việc làm ngay"
+  },
+  "recruiterReview": {
+    "candidateCvTitle": "CV & Hồ sơ ứng viên",
+    "pipelineStage": "Giai đoạn: {stage}",
+    "statusChangeSuccess": "Đã cập nhật trạng thái đơn ứng tuyển thành {status}",
+    "scheduleInterviewBtn": "Lên lịch phỏng vấn",
+    "rejectBtn": "Từ chối ứng viên",
+    "offerBtn": "Gửi lời mời nhận việc"
+  }
+}
+

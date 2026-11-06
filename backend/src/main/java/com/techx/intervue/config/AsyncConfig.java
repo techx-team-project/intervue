@@ -21,6 +21,13 @@ public class AsyncConfig {
         return executor;
     }
 
+    @Bean(name = "aiTaskExecutor")
+    Executor aiTaskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(8);
+        executor.setQueueCapacity(200);
+        executor.setThreadNamePrefix("ai-async-");
     @Bean(name = "notificationTaskExecutor")
     Executor notificationTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

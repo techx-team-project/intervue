@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { CareerArticle } from '@/types/career';
+import { CAREER_ORIENTATION_MESSAGES } from '@/constants/career-orientation';
 import { ShieldCheck, FileText, Brain, Calculator, Bot, Clock, Sparkles } from 'lucide-react';
 
 interface CareerDetailSidebarProps {
@@ -10,12 +11,12 @@ interface CareerDetailSidebarProps {
 }
 
 export default function CareerDetailSidebar({ article }: CareerDetailSidebarProps) {
+  const { authorTitle, applyToolsTitle, relatedArticlesTitle, tools } = CAREER_ORIENTATION_MESSAGES.detailSidebar;
+
   return (
     <aside className="space-y-6">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-        <span className="mb-3 block text-[11px] font-bold tracking-wider text-[#7f878f] uppercase">
-          Tác giả bài viết
-        </span>
+        <span className="mb-3 block text-[11px] font-bold tracking-wider text-[#7f878f] uppercase">{authorTitle}</span>
         <div className="flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -44,7 +45,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
         <div className="mb-3 flex items-center gap-2">
           <Sparkles className="text-primary h-4 w-4" />
-          <h4 className="text-sm font-bold text-[#171717]">Công cụ hỗ trợ ứng tuyển</h4>
+          <h4 className="text-sm font-bold text-[#171717]">{applyToolsTitle}</h4>
         </div>
 
         <div className="space-y-2">
@@ -55,7 +56,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
             <div className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
               <FileText className="h-3.5 w-3.5" />
             </div>
-            <span className="font-semibold">Mẫu CV chuẩn hóa theo ngành</span>
+            <span className="font-semibold">{tools.cvTemplate}</span>
           </Link>
 
           <Link
@@ -65,7 +66,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
               <Brain className="h-3.5 w-3.5" />
             </div>
-            <span className="font-semibold">Trắc nghiệm tính cách MBTI</span>
+            <span className="font-semibold">{tools.mbti}</span>
           </Link>
 
           <Link
@@ -75,24 +76,24 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
               <Calculator className="h-3.5 w-3.5" />
             </div>
-            <span className="font-semibold">So sánh mức lương thị trường</span>
+            <span className="font-semibold">{tools.salaryCompare}</span>
           </Link>
 
           <Link
             href="/jobs"
             className="group bg-primary-light text-primary flex items-center gap-2.5 rounded-xl p-2.5 text-xs font-bold transition hover:bg-emerald-100/70"
           >
-            <div className="bg-primary flex h-7 w-7 items-center justify-center rounded-lg text-white">
+            <div className="bg-primary flex h-9 w-9 items-center justify-center rounded-lg text-white">
               <Bot className="h-3.5 w-3.5" />
             </div>
-            <span>Luyện phỏng vấn cùng InterVue AI</span>
+            <span>{tools.aiInterview}</span>
           </Link>
         </div>
       </div>
 
       {article.relatedArticles && article.relatedArticles.length > 0 && (
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-          <h4 className="mb-3 text-sm font-bold text-[#171717]">Bài viết liên quan</h4>
+          <h4 className="mb-3 text-sm font-bold text-[#171717]">{relatedArticlesTitle}</h4>
 
           <div className="space-y-4">
             {article.relatedArticles.map((rel) => (

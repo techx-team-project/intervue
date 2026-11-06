@@ -15,4 +15,8 @@ public record ToolExecutionResult(String content, List<String> sources, boolean 
     public static ToolExecutionResult error(String errorMessage) {
         return new ToolExecutionResult(errorMessage, List.of(), true);
     }
+
+    public boolean isSuccess() {
+        return !error;
+    }
 }

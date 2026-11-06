@@ -3,6 +3,7 @@ import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import CvTemplatesView from '@/components/cv-templates/CvTemplatesView';
 import { getAllCvTemplates, getCvStyles, getCvIndustries } from '@/mocks/cv-template.mock';
+import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
 
 interface CvTemplateSlugPageProps {
   params: Promise<{ slug: string }>;
@@ -13,14 +14,14 @@ export async function generateMetadata({ params }: CvTemplateSlugPageProps): Pro
   const styles = getCvStyles();
   const currentStyle = styles.find((s) => s.slug === slug);
 
-  const styleName = currentStyle ? currentStyle.name : 'Đơn giản';
+  const styleName = currentStyle ? currentStyle.name : CV_TEMPLATE_MESSAGES.slugMetadata.defaultStyleName;
 
   return {
-    title: `Tuyển Chọn Mẫu CV ${styleName} (Tiếng Việt) Chuẩn 2026 | InterVue`,
-    description: `Khám phá các mẫu CV ${styleName} chuẩn ATS 2026. Thiết kế tối ưu hóa khả năng đọc lướt cho nhà tuyển dụng và tương thích hệ thống quét hồ sơ tự động.`,
+    title: CV_TEMPLATE_MESSAGES.slugMetadata.title(styleName),
+    description: CV_TEMPLATE_MESSAGES.slugMetadata.description(styleName),
     openGraph: {
-      title: `Mẫu CV Xin Việc ${styleName} - InterVue`,
-      description: `Tạo CV ${styleName} miễn phí với hơn 21+ mẫu thiết kế chuyên nghiệp.`,
+      title: CV_TEMPLATE_MESSAGES.slugMetadata.ogTitle(styleName),
+      description: CV_TEMPLATE_MESSAGES.slugMetadata.ogDescription(styleName),
     },
   };
 }

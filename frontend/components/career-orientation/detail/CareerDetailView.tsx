@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { CareerArticle } from '@/types/career';
+import { CAREER_ORIENTATION_MESSAGES } from '@/constants/career-orientation';
 import CareerDetailBreadcrumb from './CareerDetailBreadcrumb';
 import CareerTableOfContents from './CareerTableOfContents';
 import CareerSalaryInteractive from './CareerSalaryInteractive';
@@ -18,6 +19,8 @@ interface CareerDetailViewProps {
 }
 
 export default function CareerDetailView({ article }: CareerDetailViewProps) {
+  const { updatedBadge, viewsCountSuffix, relatedTopicsTitle } = CAREER_ORIENTATION_MESSAGES.detailView;
+
   return (
     <div className="min-h-screen bg-[#f8faf9]">
       <CareerDetailBreadcrumb article={article} />
@@ -31,7 +34,7 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
               </span>
               <span className="text-primary inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold">
                 <Sparkles className="h-3 w-3" />
-                Cập nhật chuẩn 2026
+                {updatedBadge}
               </span>
             </div>
 
@@ -64,7 +67,7 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
               <span>•</span>
               <span className="flex items-center gap-1">
                 <Eye className="h-3.5 w-3.5" />
-                {article.viewsCount} lượt xem
+                {article.viewsCount} {viewsCountSuffix}
               </span>
             </div>
 
@@ -156,7 +159,9 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
             ))}
 
             <div className="border-t border-gray-100 pt-6">
-              <span className="text-navy mb-3 block text-xs font-bold tracking-wider uppercase">Chủ đề liên quan:</span>
+              <span className="text-navy mb-3 block text-xs font-bold tracking-wider uppercase">
+                {relatedTopicsTitle}
+              </span>
               <div className="flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
                   <Link

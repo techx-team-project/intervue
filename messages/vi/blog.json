@@ -1,0 +1,28 @@
+{
+  "hub": {
+    "title": "Blog Công nghệ & Sự nghiệp InterVue",
+    "subtitle": "Góc nhìn chuyên sâu về kỹ thuật lập trình, tuyển dụng AI, bí quyết phỏng vấn và thăng tiến nghề nghiệp IT",
+    "searchPlaceholder": "Tìm kiếm bài viết theo chủ đề, công nghệ hoặc từ khóa...",
+    "featuredBadge": "Lựa chọn của biên tập viên",
+    "latestArticlesTitle": "Bài viết kỹ thuật & tuyển dụng mới nhất",
+    "categoriesTitle": "Khám phá theo chủ đề"
+  },
+  "article": {
+    "publishedAt": "Xuất bản ngày {date}",
+    "readingTime": "{minutes} phút đọc",
+    "viewsCount": "{views} lượt xem",
+    "author": "Tác giả: {author}",
+    "shareArticle": "Chia sẻ bài viết",
+    "relatedArticles": "Bài viết liên quan",
+    "tableOfContents": "Mục lục bài viết"
+  },
+  "tools": {
+    "salaryCalculatorTitle": "Công cụ tính lương GROSS - NET",
+    "salaryCalculatorDesc": "Quy đổi chính xác thu nhập gross sang net và ngược lại theo biểu thuế TNCN và bảo hiểm xã hội mới nhất 2026.",
+    "grossNetBtn": "Tính lương ngay",
+    "interviewChecklistTitle": "Checklist chuẩn bị phỏng vấn IT",
+    "interviewChecklistDesc": "Danh sách kiểm tra chi tiết từ thiết kế hệ thống, coding phỏng vấn, câu hỏi tình huống đến kỹ năng trao đổi quyền lợi.",
+    "checklistBtn": "Xem toàn bộ checklist"
+  }
+}
+

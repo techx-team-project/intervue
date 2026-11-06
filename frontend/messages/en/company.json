@@ -1,0 +1,36 @@
+{
+  "directory": {
+    "title": "Top Tech Companies & Employers",
+    "subtitle": "Discover leading technology corporations, product companies, and innovative startups in Vietnam",
+    "searchPlaceholder": "Search companies by name, tech stack, or industry...",
+    "industryFilter": "Industry",
+    "locationFilter": "Headquarters Location",
+    "countFound": "{count} companies found",
+    "featuredCompaniesTitle": "Featured Tech Employers"
+  },
+  "detail": {
+    "verifiedBadge": "Verified Employer (eKYC & License Confirmed)",
+    "companySize": "Company Size: {size} employees",
+    "industry": "Industry: {industry}",
+    "website": "Official Website",
+    "headquarters": "Headquarters: {location}",
+    "foundedIn": "Founded in {year}",
+    "aboutCompany": "About the Company",
+    "workingCulture": "Work Culture & Engineering Philosophy",
+    "benefitsAndPerks": "Benefits & Perks",
+    "officeLocations": "Office Locations",
+    "openJobsTab": "Open Positions ({count})",
+    "activeHiringCount": "{count} Open Positions",
+    "reviewsTab": "Reviews ({count})",
+    "followCompanyBtn": "+ Follow Company",
+    "followingCompanyBtn": "Following"
+  },
+  "reviews": {
+    "overallRating": "Overall Culture & Leadership Rating",
+    "ratingCount": "{count} employee reviews",
+    "writeReviewBtn": "Write a Review",
+    "prosLabel": "What employees like:",
+    "consLabel": "Areas for improvement:",
+    "recommendationRate": "{percent}% would recommend this company to a friend"
+  }
+}

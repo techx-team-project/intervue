@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { CareerArticle } from '@/types/career';
+import { CAREER_ORIENTATION_MESSAGES } from '@/constants/career-orientation';
 import { Clock, Eye, ArrowUpRight, Flame, Sparkles } from 'lucide-react';
 
 interface CareerFeaturedGridProps {
@@ -11,6 +12,9 @@ interface CareerFeaturedGridProps {
 
 export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps) {
   if (!articles || articles.length === 0) return null;
+
+  const { title, subtitle, badgeHighlight, viewsSuffix, exploreCta, readMoreCta } =
+    CAREER_ORIENTATION_MESSAGES.featured;
 
   const mainArticle = articles[0];
   const sideArticles = articles.slice(1, 3);
@@ -22,9 +26,9 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
             <Flame className="h-5 w-5" />
           </div>
-          <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">Bài viết nổi bật</h2>
+          <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">{title}</h2>
         </div>
-        <span className="hidden text-xs text-[#7f878f] sm:inline-block">Cập nhật xu hướng tuyển dụng mới nhất</span>
+        <span className="hidden text-xs text-[#7f878f] sm:inline-block">{subtitle}</span>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
@@ -48,7 +52,7 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/90 px-2.5 py-1 text-xs font-semibold text-white shadow-md">
                   <Sparkles className="h-3 w-3" />
-                  Tiêu điểm
+                  {badgeHighlight}
                 </span>
               </div>
             </Link>
@@ -65,7 +69,7 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                   <span>•</span>
                   <span className="flex items-center gap-1">
                     <Eye className="h-3.5 w-3.5" />
-                    {mainArticle.viewsCount} lượt xem
+                    {mainArticle.viewsCount} {viewsSuffix}
                   </span>
                 </div>
 
@@ -98,7 +102,7 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                   href={`/career-orientation/${mainArticle.slug}`}
                   className="bg-primary-light text-primary hover:bg-primary inline-flex items-center gap-1 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition hover:text-white"
                 >
-                  <span>Khám phá ngay</span>
+                  <span>{exploreCta}</span>
                   <ArrowUpRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
@@ -166,7 +170,7 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                     href={`/career-orientation/${article.slug}`}
                     className="text-primary inline-flex items-center gap-0.5 text-xs font-semibold hover:underline"
                   >
-                    Đọc tiếp
+                    {readMoreCta}
                     <ArrowUpRight className="h-3 w-3" />
                   </Link>
                 </div>

@@ -1,0 +1,99 @@
+{
+  "dashboard": {
+    "title": "Bảng điều khiển Nhà tuyển dụng",
+    "subtitle": "Tổng quan về chiến dịch tuyển dụng, số liệu ứng viên và hiệu quả bài đăng",
+    "statsActiveJobs": "Tin tuyển dụng đang mở",
+    "statsTotalViews": "Tổng cộng {count} lượt xem",
+    "statsApplications": "Đơn ứng tuyển nhận được",
+    "statsInterviews": "Lịch phỏng vấn đã xếp",
+    "quickActions": {
+      "postJobBtn": "Đăng tin tuyển dụng",
+      "searchCandidatesBtn": "Tìm kiếm ứng viên",
+      "viewCompanyProfile": "Trang hồ sơ công ty"
+    }
+  },
+  "jobs": {
+    "title": "Quản lý tin tuyển dụng",
+    "subtitle": "Tạo, chỉnh sửa và theo dõi trạng thái các bài đăng tuyển dụng của tổ chức",
+    "postJobTitle": "Đăng tin tuyển dụng IT mới",
+    "editJobTitle": "Chỉnh sửa tin tuyển dụng",
+    "statusPublished": "Đang hiển thị",
+    "statusDraft": "Bản nháp",
+    "statusClosed": "Đã đóng",
+    "statusExpired": "Hết hạn",
+    "form": {
+      "jobTitle": "Chức danh công việc",
+      "workplaceModel": "Mô hình làm việc (Tại văn phòng, Hybrid, Remote)",
+      "jobType": "Hình thức làm việc",
+      "level": "Cấp bậc chuyên môn",
+      "experience": "Kinh nghiệm yêu cầu",
+      "salaryMin": "Mức lương tối thiểu (VND)",
+      "salaryMax": "Mức lương tối đa (VND)",
+      "negotiable": "Lương thỏa thuận",
+      "deadline": "Hạn chót nộp hồ sơ",
+      "requirements": "Yêu cầu ứng viên",
+      "benefits": "Quyền lợi đãi ngộ",
+      "description": "Mô tả công việc",
+      "quantity": "Số lượng tuyển dụng",
+      "city": "Địa điểm làm việc chính"
+    },
+    "actions": {
+      "editBtn": "Chỉnh sửa",
+      "closeBtn": "Đóng tin",
+      "reopenBtn": "Mở lại tin",
+      "duplicateBtn": "Nhân bản tin",
+      "viewApplicantsBtn": "Xem ứng viên ({count})"
+    },
+    "alerts": {
+      "postSuccess": "Tin tuyển dụng \"{title}\" đã được xuất bản thành công.",
+      "updateSuccess": "Đã cập nhật tin tuyển dụng thành công.",
+      "closeSuccess": "Đã đóng tin tuyển dụng."
+    }
+  },
+  "pipeline": {
+    "boardTitle": "Bảng theo dõi tiến độ ứng viên",
+    "applicantCount": "{count} ứng viên",
+    "columns": {
+      "applied": "Mới ứng tuyển",
+      "screening": "Lọc CV",
+      "interview": "Phỏng vấn",
+      "offered": "Mời nhận việc",
+      "rejected": "Từ chối"
+    },
+    "card": {
+      "appliedDate": "Nộp ngày: {date}",
+      "viewResume": "Xem CV",
+      "matchScore": "Độ khớp AI: {score}%"
+    }
+  },
+  "verification": {
+    "title": "Xác thực doanh nghiệp (eKYC & Giấy phép)",
+    "subtitle": "Cung cấp giấy phép đăng ký kinh doanh để đạt tích xanh Nhà tuyển dụng uy tín",
+    "businessLicense": "Giấy phép kinh doanh / Giấy chứng nhận ĐKKD",
+    "taxCode": "Mã số thuế doanh nghiệp",
+    "companyName": "Tên pháp nhân doanh nghiệp",
+    "uploadLicensePdf": "Tải lên Giấy phép kinh doanh (PDF hoặc Ảnh, tối đa 10MB)",
+    "submittedNotice": "Yêu cầu xác thực doanh nghiệp của bạn đã được gửi và đang chờ xét duyệt.",
+    "approvedNotice": "Doanh nghiệp của bạn đã được xác thực thành công.",
+    "rejectedNotice": "Hồ sơ xác thực bị từ chối. Lý do: {reason}"
+  },
+  "cart": {
+    "title": "Giỏ hàng & Gói tuyển dụng",
+    "cartEmpty": "Giỏ hàng của bạn đang trống.",
+    "subtotal": "Tạm tính",
+    "discount": "Chiết khấu giảm giá",
+    "vat": "Thuế VAT (10%)",
+    "total": "Tổng thanh toán",
+    "checkoutBtn": "Tiến hành thanh toán",
+    "itemUnitPrice": "{price} VND",
+    "itemQuantity": "Số lượng: {qty}",
+    "orderTotal": "{amount} VND",
+    "voucherModal": {
+      "title": "Áp dụng mã ưu đãi / Voucher",
+      "inputPlaceholder": "Nhập mã ưu đãi",
+      "applyBtn": "Áp dụng",
+      "minOrderWarning": "Mã {code} yêu cầu đơn hàng tối thiểu {min} VND.",
+      "voucherSuccess": "Đã áp dụng mã: Giảm {amount} VND"
+    }
+  }
+}

@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react';
 import { CV_FAQS } from '@/mocks/cv-template.mock';
+import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
 import { HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function CvFaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const { badge, title } = CV_TEMPLATE_MESSAGES.faq;
 
   const toggleFaq = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -17,11 +19,9 @@ export default function CvFaqSection() {
         <div className="mb-10 text-center">
           <div className="text-primary mb-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-semibold">
             <HelpCircle className="h-3.5 w-3.5" />
-            <span>Giải Đáp Thắc Mắc</span>
+            <span>{badge}</span>
           </div>
-          <h2 className="text-2xl font-black tracking-tight text-[#171717] sm:text-3xl">
-            Câu hỏi thường gặp về Mẫu CV đơn giản
-          </h2>
+          <h2 className="text-2xl font-black tracking-tight text-[#171717] sm:text-3xl">{title}</h2>
         </div>
 
         <div className="space-y-3.5">

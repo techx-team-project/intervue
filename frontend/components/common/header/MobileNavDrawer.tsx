@@ -44,7 +44,7 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
           <Link
             href={ROUTES.HOME}
             onClick={onClose}
-            className="flex items-center gap-1.5 py-2 text-sm font-semibold text-slate-600 hover:text-primary"
+            className="hover:text-primary flex items-center gap-1.5 py-2 text-sm font-semibold text-slate-600"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Dành cho Người tìm việc</span>
@@ -85,10 +85,7 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
             Khách hàng
           </Link>
           <div className="border-t border-slate-100 pt-2">
-            <a
-              href="tel:0812665001"
-              className="flex items-center gap-2 py-1.5 text-sm font-bold text-primary"
-            >
+            <a href="tel:0812665001" className="text-primary flex items-center gap-2 py-1.5 text-sm font-bold">
               <PhoneCall className="h-4 w-4" />
               <span>Hotline hỗ trợ: 0812.665.001</span>
             </a>
@@ -174,7 +171,11 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
         <Link href="/blog" onClick={onClose} className="text-navy hover:text-primary block py-2 text-sm font-semibold">
           Cẩm nang nghề nghiệp
         </Link>
-        <Link href="/upgrade" onClick={onClose} className="text-navy hover:text-primary block py-2 text-sm font-semibold">
+        <Link
+          href="/upgrade"
+          onClick={onClose}
+          className="text-navy hover:text-primary block py-2 text-sm font-semibold"
+        >
           Nâng cấp VIP
         </Link>
         <Link

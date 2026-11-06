@@ -1,0 +1,92 @@
+{
+  "pageMetadata": {
+    "title": "Professional ATS-Friendly CV Templates 2026 | InterVue",
+    "description": "Explore 21+ free ATS-friendly CV templates. Create and customize your CV online, optimize for automated recruiter scanners, and download high-quality PDF.",
+    "ogTitle": "Top ATS CV Templates - InterVue",
+    "ogDescription": "Free online CV templates designed to pass ATS screening for all IT and tech roles."
+  },
+  "slugMetadata": {
+    "title": "Selected {styleName} CV Templates (ATS Standard) | InterVue",
+    "description": "Discover {styleName} CV templates optimized for ATS parsers. Structured for recruiter skim-reading and high interview conversion."
+  },
+  "hero": {
+    "homeBreadcrumb": "Home",
+    "styleBreadcrumb": "CV Templates by Style",
+    "currentBreadcrumb": "{styleName} CV Templates",
+    "badge": "Curated ATS-Compliant CV Library",
+    "title": "Professional IT",
+    "titleHighlight": "CV Templates",
+    "titleSuffix": "ATS Standard 2026",
+    "description": "Hand-picked CV templates engineered with clean typography and ATS-friendly formatting. Built for tech candidates who want their skills and impact to stand out clearly.",
+    "badges": {
+      "atsPass": "100% Passes ATS Scanners",
+      "a4Standard": "International A4 Page Standard",
+      "freeExport": "Free Vector PDF Download"
+    },
+    "ctaCard": {
+      "title": "Build Your CV in Minutes",
+      "subtitle": "Only takes 3 minutes on InterVue",
+      "availableLabel": "Available Templates:",
+      "availableValue": "21+ Designs",
+      "usersLabel": "Candidates Served:",
+      "usersValue": "{count}+ Candidates",
+      "interviewRateLabel": "Interview Call Rate:",
+      "interviewRateValue": "+42% compared to standard resumes"
+    }
+  },
+  "filterBar": {
+    "searchPlaceholder": "Search by template name, tech stack, or industry...",
+    "industryLabel": "Industry:",
+    "languageLabel": "Language:",
+    "allLanguageLabel": "All Languages",
+    "languages": {
+      "all": "All",
+      "vi": "Vietnamese",
+      "en": "English"
+    }
+  },
+  "view": {
+    "listTitle": "{styleName} CV Templates ({count})",
+    "defaultStyleName": "Simple",
+    "freeAndAtsBadge": "All templates are 100% free and ATS-optimized",
+    "notFoundTitle": "No matching CV templates found",
+    "notFoundDesc": "Try selecting another style category, industry, or clearing your search keywords.",
+    "viewAllBtn": "View All CV Templates"
+  },
+  "templateCard": {
+    "useTemplateBtn": "Use this CV Template",
+    "previewBtn": "Quick Preview",
+    "atsScore": "ATS Score: {score}/100"
+  },
+  "previewModal": {
+    "title": "CV Template Preview: {name}",
+    "closeBtn": "Close Preview",
+    "customizeColor": "Color Scheme:",
+    "downloadPdfBtn": "Download PDF",
+    "useOnlineBtn": "Edit CV Online"
+  },
+  "benefits": {
+    "title": "Why Use InterVue CV Templates?",
+    "subtitle": "Engineered by senior tech recruiters to maximize your interview chances",
+    "itemAts": "Parsed seamlessly by modern ATS recruitment platforms without broken columns",
+    "itemDesign": "Clean, elegant layout that highlights your tech stack and measurable impacts",
+    "itemExport": "Export sharp, high-resolution vector PDFs suitable for both digital and print",
+    "itemFree": "Completely free with unlimited edits, downloads, and color customizations"
+  },
+  "stepGuide": {
+    "title": "How to Create an ATS CV in 3 Simple Steps",
+    "subtitle": "From template selection to job offer in record time",
+    "step1": "1. Pick an ATS-friendly CV template that suits your seniority level",
+    "step2": "2. Fill in your experience, skills, and projects with real-time AI guidance",
+    "step3": "3. Download your pristine PDF CV and apply directly to top tech companies"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions about CV & ATS",
+    "q1": "What is an ATS-friendly CV?",
+    "a1": "An ATS-friendly CV uses single or clean two-column layouts, standard fonts, and machine-readable text that recruitment parsing engines can extract accurately without dropping text.",
+    "q2": "Are all CV templates on InterVue free?",
+    "a2": "Yes, every CV template in our collection is 100% free to customize, preview, and download as a high-quality PDF.",
+    "q3": "Can I tailor my CV for Remote tech jobs?",
+    "a3": "Absolutely. You can highlight Remote work competencies, asynchronous collaboration tools, and distributed team experience."
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "dashboard": {
+    "title": "Recruiter Dashboard",
+    "subtitle": "Overview of your active hiring pipelines, applicant statistics, and recruitment metrics",
+    "statsActiveJobs": "Active Job Posts",
+    "statsTotalViews": "{count} total views",
+    "statsApplications": "Applications Received",
+    "statsInterviews": "Interviews Scheduled",
+    "quickActions": {
+      "postJobBtn": "Post New Job",
+      "searchCandidatesBtn": "Search Candidates",
+      "viewCompanyProfile": "Company Profile"
+    }
+  },
+  "jobs": {
+    "title": "Manage Job Posts",
+    "subtitle": "Create, edit, and track status of all job listings for your organization",
+    "postJobTitle": "Post a New IT Job",
+    "editJobTitle": "Edit Job Post",
+    "statusPublished": "Published",
+    "statusDraft": "Draft",
+    "statusClosed": "Closed",
+    "statusExpired": "Expired",
+    "form": {
+      "jobTitle": "Job Title",
+      "workplaceModel": "Workplace Model (On-site, Hybrid, Remote)",
+      "jobType": "Job Type",
+      "level": "Experience Level",
+      "experience": "Required Experience",
+      "salaryMin": "Minimum Salary (VND)",
+      "salaryMax": "Maximum Salary (VND)",
+      "negotiable": "Salary is Negotiable",
+      "deadline": "Application Deadline",
+      "requirements": "Job Requirements",
+      "benefits": "Benefits & Perks",
+      "description": "Job Description",
+      "quantity": "Number of Openings",
+      "city": "Primary Location"
+    },
+    "actions": {
+      "editBtn": "Edit",
+      "closeBtn": "Close Job",
+      "reopenBtn": "Reopen Job",
+      "duplicateBtn": "Duplicate",
+      "viewApplicantsBtn": "View Applicants ({count})"
+    },
+    "alerts": {
+      "postSuccess": "Job post \"{title}\" has been published successfully.",
+      "updateSuccess": "Job post updated successfully.",
+      "closeSuccess": "Job post closed."
+    }
+  },
+  "pipeline": {
+    "boardTitle": "Candidate Pipeline Board",
+    "applicantCount": "{count} applicants",
+    "columns": {
+      "applied": "New Applied",
+      "screening": "CV Screening",
+      "interview": "Interviewing",
+      "offered": "Offered",
+      "rejected": "Declined"
+    },
+    "card": {
+      "appliedDate": "Applied: {date}",
+      "viewResume": "View CV",
+      "matchScore": "AI Fit: {score}%"
+    }
+  },
+  "verification": {
+    "title": "Company Verification (eKYC & Business License)",
+    "subtitle": "Submit business registration documents to gain the Verified Employer badge",
+    "businessLicense": "Business License / Registration Certificate",
+    "taxCode": "Corporate Tax Identification Number",
+    "companyName": "Registered Company Name",
+    "uploadLicensePdf": "Upload Business License (PDF or Image, max 10MB)",
+    "submittedNotice": "Your business verification request has been submitted and is under review.",
+    "approvedNotice": "Your organization has been officially verified.",
+    "rejectedNotice": "Verification rejected. Reason: {reason}"
+  },
+  "cart": {
+    "title": "Recruitment Cart & Packages",
+    "cartEmpty": "Your cart is currently empty.",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "vat": "VAT (10%)",
+    "total": "Total Amount",
+    "checkoutBtn": "Proceed to Payment",
+    "itemUnitPrice": "{price} VND",
+    "itemQuantity": "Quantity: {qty}",
+    "orderTotal": "{amount} VND",
+    "voucherModal": {
+      "title": "Apply Voucher / Coupon",
+      "inputPlaceholder": "Enter coupon code",
+      "applyBtn": "Apply",
+      "minOrderWarning": "Coupon {code} requires a minimum order of {min} VND.",
+      "voucherSuccess": "Coupon applied: -{amount} VND discount"
+    }
+  }
+}
