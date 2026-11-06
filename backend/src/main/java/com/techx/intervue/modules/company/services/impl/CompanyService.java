@@ -1,32 +1,31 @@
 package com.techx.intervue.modules.company.services.impl;
 
 import com.techx.intervue.common.audit.enums.AuditAction;
-import com.techx.intervue.common.audit.enums.AuditActorType;
-import com.techx.intervue.common.audit.enums.AuditTargetType;
-import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
-import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.common.storage.StorageServiceInterface;
 import com.techx.intervue.common.storage.StorageTarget;
 import com.techx.intervue.common.storage.StoredFile;
+import com.techx.intervue.common.taxcode.TaxCodeLookupInterface;
+import com.techx.intervue.common.taxcode.TaxCodeRecord;
+import com.techx.intervue.common.taxcode.TaxCodes;
 import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.entities.Company;
 import com.techx.intervue.modules.company.entities.CompanyMember;
 import com.techx.intervue.modules.company.entities.CompanyPhoto;
-import com.techx.intervue.modules.company.enums.CompanyMemberRole;
+import com.techx.intervue.modules.company.entities.CompanyProfile;
 import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
+import com.techx.intervue.modules.company.enums.DocumentReviewStatus;
 import com.techx.intervue.modules.company.enums.PublishRightLossCause;
-import com.techx.intervue.modules.company.enums.PublishRightLossScope;
-import com.techx.intervue.modules.company.events.CompanyAssetsDiscardedEvent;
 import com.techx.intervue.modules.company.events.PublishRightLostEvent;
 import com.techx.intervue.modules.company.mappers.CompanyMapper;
 import com.techx.intervue.modules.company.repositories.BusinessDocumentRepository;
-import com.techx.intervue.modules.company.repositories.CompanyAgreementRepository;
 import com.techx.intervue.modules.company.repositories.CompanyMemberRepository;
 import com.techx.intervue.modules.company.repositories.CompanyPhotoRepository;
+import com.techx.intervue.modules.company.repositories.CompanyProfileRepository;
 import com.techx.intervue.modules.company.repositories.CompanyRepository;
 import com.techx.intervue.modules.company.repositories.CompanySpecifications;
+import com.techx.intervue.modules.company.requests.CreateCompanyRequest;
 import com.techx.intervue.modules.company.requests.JoinCompanyRequest;
 import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
@@ -35,23 +34,16 @@ import com.techx.intervue.modules.company.resources.CompanySummaryResource;
 import com.techx.intervue.modules.company.resources.TaxLookupResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.multipart.MultipartFile;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CompanyService implements CompanyServiceInterface {
@@ -62,66 +54,43 @@ public class CompanyService implements CompanyServiceInterface {
 
     private final CompanyRepository companyRepository;
     private final CompanyMemberRepository companyMemberRepository;
+    private final CompanyProfileRepository companyProfileRepository;
     private final CompanyPhotoRepository companyPhotoRepository;
     private final BusinessDocumentRepository businessDocumentRepository;
-    private final CompanyAgreementRepository companyAgreementRepository;
     private final StorageServiceInterface storageService;
+    private final TaxCodeLookupInterface taxCodeLookup;
     private final CompanyMapper companyMapper;
     private final CompanyProfileCompleteness completeness;
-    private final AuditLogServiceInterface auditLogService;
+    private final CompanyLinker companyLinker;
+    private final CompanyAuditor companyAuditor;
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional(readOnly = true)
     public CompanyResource findMyCompany(Long userId) {
-        CompanyMember membership = requireMembership(userId);
-        return buildResource(membership.getCompany(), membership.getRole());
+        return buildResource(requireMembership(userId));
     }
 
+    // Not transactional: the registry lookup is an external call and must not hold a transaction.
     @Override
-    @Transactional
-    public CompanyResource create(SaveCompanyProfileRequest request, RequestActor actor) {
-        requireNoMembership(actor.userId());
-        if (companyRepository.existsByTaxCode(request.taxCode())) {
-            throw new AppException(ErrorCode.TAX_CODE_ALREADY_USED);
-        }
-
-        Company company = companyRepository.save(companyMapper.toNewEntity(request));
-        companyMemberRepository.save(
-                CompanyMember.builder()
-                        .company(company)
-                        .userId(actor.userId())
-                        .role(CompanyMemberRole.OWNER)
-                        .status(CompanyMemberStatus.ACTIVE)
-                        .joinedAt(Instant.now())
-                        .build());
-
-        audit(actor, AuditAction.COMPANY_CREATED, company);
-        return buildResource(company, CompanyMemberRole.OWNER);
+    public CompanyResource create(CreateCompanyRequest request, RequestActor actor) {
+        String taxCode = TaxCodes.normalize(request.taxCode());
+        CompanyMember member =
+                companyRepository
+                        .findByTaxCode(taxCode)
+                        .map(existing -> companyLinker.link(existing, actor))
+                        .orElseGet(() -> companyLinker.registerAndLink(lookup(taxCode), actor));
+        return buildResource(member);
     }
 
     @Override
     @Transactional
     public CompanyResource update(SaveCompanyProfileRequest request, RequestActor actor) {
         CompanyMember membership = requireMembership(actor.userId());
-        Company company = membership.getCompany();
-
-        if (changesLegalFields(company, request)) {
-            if (!membership.isOwner()) {
-                throw new AppException(ErrorCode.ONLY_OWNER_CAN_EDIT_LEGAL_FIELDS);
-            }
-            if (company.isVerified()) {
-                throw new AppException(ErrorCode.COMPANY_LEGAL_FIELDS_LOCKED);
-            }
-            if (!Objects.equals(company.getTaxCode(), request.taxCode())
-                    && companyRepository.existsByTaxCode(request.taxCode())) {
-                throw new AppException(ErrorCode.TAX_CODE_ALREADY_USED);
-            }
-        }
-
-        companyMapper.applyUpdate(company, request);
-        audit(actor, AuditAction.COMPANY_UPDATED, company);
-        return buildResource(company, membership.getRole());
+        CompanyProfile profile = profileOf(membership);
+        companyMapper.applyProfile(profile, request);
+        companyAuditor.record(actor, AuditAction.COMPANY_UPDATED, membership.getCompany());
+        return buildResource(membership, profile);
     }
 
     @Override
@@ -133,71 +102,34 @@ public class CompanyService implements CompanyServiceInterface {
     }
 
     @Override
-    @Transactional
     public CompanyResource join(JoinCompanyRequest request, RequestActor actor) {
         Company company =
                 companyRepository
                         .findById(request.companyId())
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-
-        Optional<CompanyMember> previous =
-                companyMemberRepository.findByCompanyIdAndUserId(company.getId(), actor.userId());
-        if (previous.isPresent()) {
-            switch (previous.get().getStatus()) {
-                case ACTIVE -> throw new AppException(ErrorCode.ALREADY_COMPANY_MEMBER);
-                case REVOKED -> throw new AppException(ErrorCode.COMPANY_MEMBERSHIP_REVOKED);
-                case LEFT -> {
-                    /* rejoining is allowed below */
-                }
-            }
-        }
-        requireNoMembership(actor.userId());
-
-        CompanyMember member =
-                previous.orElseGet(
-                        () ->
-                                CompanyMember.builder()
-                                        .company(company)
-                                        .userId(actor.userId())
-                                        .build());
-        member.setRole(CompanyMemberRole.MEMBER);
-        member.setStatus(CompanyMemberStatus.ACTIVE);
-        member.setJoinedAt(Instant.now());
-        member.setRevokedAt(null);
-        member.setRevokedBy(null);
-        member.setRevokeReason(null);
-        companyMemberRepository.save(member);
-
-        audit(actor, AuditAction.COMPANY_MEMBER_JOINED, company);
-        return buildResource(company, CompanyMemberRole.MEMBER);
+        return buildResource(companyLinker.link(company, actor));
     }
 
     @Override
     @Transactional
     public void leave(RequestActor actor) {
+        if (businessDocumentRepository.existsBySubmittedByAndReviewStatus(
+                actor.userId(), DocumentReviewStatus.PENDING_REVIEW)) {
+            throw new AppException(ErrorCode.COMPANY_LINK_UNDER_REVIEW);
+        }
         CompanyMember membership = requireMembership(actor.userId());
         Company company = membership.getCompany();
-
-        if (membership.isOwner() && isLastOwner(company.getId())) {
-            if (hasOtherActiveMembers(company.getId()) || company.isVerified()) {
-                throw new AppException(ErrorCode.LAST_COMPANY_OWNER);
-            }
-            discardCompany(company, actor);
-            return;
-        }
 
         membership.setStatus(CompanyMemberStatus.LEFT);
         membership.setRevokedAt(Instant.now());
         companyMemberRepository.save(membership);
-        audit(actor, AuditAction.COMPANY_MEMBER_LEFT, company);
+        companyAuditor.record(actor, AuditAction.COMPANY_MEMBER_LEFT, company);
         eventPublisher.publishEvent(
                 PublishRightLostEvent.builder()
                         .userId(actor.userId())
                         .companyId(company.getId())
                         .companyName(company.getName())
-                        .scope(PublishRightLossScope.INDIVIDUAL)
                         .cause(PublishRightLossCause.MEMBERSHIP_LEFT)
-                        .reassignToUserId(ownerIdOf(company.getId()))
                         .occurredAt(Instant.now())
                         .build());
     }
@@ -207,94 +139,39 @@ public class CompanyService implements CompanyServiceInterface {
     @Override
     public CompanyResource replaceLogo(MultipartFile file, Long userId) {
         CompanyMember membership = requireMembership(userId);
-        Company company = membership.getCompany();
-        String previousLogo = company.getLogoPublicId();
+        CompanyProfile profile = profileOf(membership);
+        String previousLogo = profile.getLogoPublicId();
 
         StoredFile stored = storageService.upload(file, StorageTarget.IMAGE, LOGO_FOLDER);
-        company.setLogoPublicId(stored.publicId());
-        companyRepository.save(company);
+        profile.setLogoPublicId(stored.publicId());
+        companyProfileRepository.save(profile);
 
         if (previousLogo != null) {
             storageService.delete(previousLogo, StorageTarget.IMAGE);
         }
-        return buildResource(company, membership.getRole());
+        return buildResource(membership, profile);
     }
 
     @Override
     @Transactional(readOnly = true)
     public TaxLookupResource lookupTax(String taxCode) {
-        if (taxCode == null || taxCode.isBlank()) {
-            throw new AppException(ErrorCode.VALIDATION_FAILED);
-        }
-        String cleanTax = taxCode.trim().replaceAll("[^0-9]", "");
-        if (cleanTax.length() < 10 || cleanTax.length() > 14) {
-            throw new AppException(ErrorCode.VALIDATION_FAILED);
-        }
-
-        // 1. Check if already exists in InterVue database
-        Optional<Company> existing = companyRepository.findByTaxCode(cleanTax);
-        if (existing.isPresent()) {
-            Company c = existing.get();
-            return TaxLookupResource.builder()
-                    .taxCode(c.getTaxCode())
-                    .name(c.getName())
-                    .tradingName(c.getTradingName())
-                    .address(c.getAddress())
-                    .status("Active on InterVue")
-                    .existingOnPlatform(true)
-                    .existingCompanyId(c.getId())
-                    .build();
-        }
-
-        // 2. Query open tax registry API
-        try {
-            RestClient restClient =
-                    RestClient.builder()
-                            .defaultHeader(
-                                    HttpHeaders.USER_AGENT,
-                                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36")
-                            .build();
-
-            Map<?, ?> response =
-                    restClient
-                            .get()
-                            .uri("https://api.vietqr.io/v2/business/" + cleanTax)
-                            .retrieve()
-                            .body(Map.class);
-
-            if (response != null
-                    && "00".equals(String.valueOf(response.get("code")))
-                    && response.get("data") instanceof Map<?, ?> data) {
-                String name = (String) data.get("name");
-                String internationalName = (String) data.get("internationalName");
-                String shortName = (String) data.get("shortName");
-                String address = (String) data.get("address");
-                String status = (String) data.get("status");
-                String trading =
-                        (shortName != null && !shortName.isBlank()) ? shortName : internationalName;
-
-                return TaxLookupResource.builder()
-                        .taxCode(cleanTax)
-                        .name(name)
-                        .tradingName(trading)
-                        .address(address)
-                        .status(status)
-                        .existingOnPlatform(false)
-                        .build();
-            }
-        } catch (Exception e) {
-            log.warn("Tax lookup service unavailable for taxCode {}: {}", cleanTax, e.getMessage());
-        }
-
-        return TaxLookupResource.builder().taxCode(cleanTax).existingOnPlatform(false).build();
+        TaxCodeRecord record = lookup(taxCode);
+        Optional<Company> existing = companyRepository.findByTaxCode(record.taxCode());
+        return TaxLookupResource.builder()
+                .taxCode(record.taxCode())
+                .name(record.name())
+                .address(record.address())
+                .existingOnPlatform(existing.isPresent())
+                .existingCompanyId(existing.map(Company::getId).orElse(null))
+                .build();
     }
 
     @Override
     public CompanyResource addPhotos(List<MultipartFile> files, Long userId) {
         CompanyMember membership = requireMembership(userId);
-        Company company = membership.getCompany();
+        CompanyProfile profile = profileOf(membership);
 
-        long existing = companyPhotoRepository.countByCompanyId(company.getId());
+        long existing = companyPhotoRepository.countByProfileId(profile.getId());
         if (existing + files.size() > MAX_PHOTOS) {
             throw AppException.validation(
                     "photos", "A company can keep at most " + MAX_PHOTOS + " photos");
@@ -305,28 +182,34 @@ public class CompanyService implements CompanyServiceInterface {
             StoredFile stored = storageService.upload(file, StorageTarget.IMAGE, PHOTO_FOLDER);
             companyPhotoRepository.save(
                     CompanyPhoto.builder()
-                            .company(company)
+                            .profile(profile)
                             .publicId(stored.publicId())
                             .sortOrder(sortOrder++)
                             .build());
         }
-        return buildResource(company, membership.getRole());
+        return buildResource(membership, profile);
     }
 
     @Override
     public CompanyResource removePhoto(Long photoId, Long userId) {
         CompanyMember membership = requireMembership(userId);
-        Company company = membership.getCompany();
+        CompanyProfile profile = profileOf(membership);
 
         CompanyPhoto photo =
                 companyPhotoRepository
-                        .findByIdAndCompanyId(photoId, company.getId())
+                        .findByIdAndProfileId(photoId, profile.getId())
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
         String publicId = photo.getPublicId();
         companyPhotoRepository.delete(photo);
         storageService.delete(publicId, StorageTarget.IMAGE);
-        return buildResource(company, membership.getRole());
+        return buildResource(membership, profile);
+    }
+
+    private TaxCodeRecord lookup(String taxCode) {
+        return taxCodeLookup
+                .find(taxCode)
+                .orElseThrow(() -> new AppException(ErrorCode.TAX_CODE_NOT_FOUND));
     }
 
     private CompanyMember requireMembership(Long userId) {
@@ -335,86 +218,20 @@ public class CompanyService implements CompanyServiceInterface {
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
     }
 
-    private void requireNoMembership(Long userId) {
-        if (companyMemberRepository.existsByUserIdAndStatus(userId, CompanyMemberStatus.ACTIVE)) {
-            throw new AppException(ErrorCode.ALREADY_IN_ANOTHER_COMPANY);
-        }
+    private CompanyProfile profileOf(CompanyMember membership) {
+        return companyProfileRepository
+                .findByMemberId(membership.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
     }
 
-    private Long ownerIdOf(Long companyId) {
-        return companyMemberRepository
-                .findByCompanyIdAndStatus(companyId, CompanyMemberStatus.ACTIVE)
-                .stream()
-                .filter(CompanyMember::isOwner)
-                .map(CompanyMember::getUserId)
-                .findFirst()
-                .orElse(null);
+    private CompanyResource buildResource(CompanyMember membership) {
+        return buildResource(membership, profileOf(membership));
     }
 
-    private boolean isLastOwner(Long companyId) {
-        return companyMemberRepository.countByCompanyIdAndRoleAndStatus(
-                        companyId, CompanyMemberRole.OWNER, CompanyMemberStatus.ACTIVE)
-                <= 1;
-    }
-
-    private boolean hasOtherActiveMembers(Long companyId) {
-        return companyMemberRepository.countByCompanyIdAndStatus(
-                        companyId, CompanyMemberStatus.ACTIVE)
-                > 1;
-    }
-
-    // The owner is leaving a company nobody else uses and no document was ever filed for, so the
-    // record is a mistake: removing it frees the tax code instead of leaving an unreachable
-    // company.
-    private void discardCompany(Company company, RequestActor actor) {
+    private CompanyResource buildResource(CompanyMember membership, CompanyProfile profile) {
         List<CompanyPhoto> photos =
-                companyPhotoRepository.findByCompanyIdOrderBySortOrderAsc(company.getId());
-        List<String> storedImages = new ArrayList<>();
-        if (company.getLogoPublicId() != null) {
-            storedImages.add(company.getLogoPublicId());
-        }
-        photos.forEach(photo -> storedImages.add(photo.getPublicId()));
-
-        // Children must be deleted and flushed first: rows already loaded in this session still
-        // point at the company, and Hibernate rejects the flush before the database cascade runs.
-        businessDocumentRepository.deleteAll(
-                businessDocumentRepository.findByCompanyIdOrderBySubmittedAtDesc(company.getId()));
-        companyAgreementRepository.deleteByCompanyId(company.getId());
-        companyPhotoRepository.deleteAll(photos);
-        companyMemberRepository.deleteAll(companyMemberRepository.findByCompanyId(company.getId()));
-        companyMemberRepository.flush();
-        companyRepository.delete(company);
-        audit(actor, AuditAction.COMPANY_DELETED, company);
-        if (!storedImages.isEmpty()) {
-            eventPublisher.publishEvent(new CompanyAssetsDiscardedEvent(storedImages));
-        }
-    }
-
-    private boolean changesLegalFields(Company company, SaveCompanyProfileRequest request) {
-        return !Objects.equals(company.getName(), request.name())
-                || !Objects.equals(company.getTaxCode(), request.taxCode())
-                || !Objects.equals(company.getBusinessType(), request.businessType())
-                || !Objects.equals(company.getAddress(), request.address());
-    }
-
-    private CompanyResource buildResource(Company company, CompanyMemberRole myRole) {
-        List<CompanyPhoto> photos =
-                companyPhotoRepository.findByCompanyIdOrderBySortOrderAsc(company.getId());
+                companyPhotoRepository.findByProfileIdOrderBySortOrderAsc(profile.getId());
         return companyMapper.toResource(
-                company, myRole, photos, completeness.missingFields(company));
-    }
-
-    private void audit(RequestActor actor, AuditAction action, Company company) {
-        auditLogService.record(
-                AuditEntry.builder()
-                        .actorType(AuditActorType.USER)
-                        .actorId(actor.userId())
-                        .actorEmail(actor.email())
-                        .action(action)
-                        .targetType(AuditTargetType.COMPANY)
-                        .targetId(company.getId())
-                        .detail(company.getName())
-                        .ip(actor.ip())
-                        .build());
+                membership.getCompany(), profile, photos, completeness.missingFields(profile));
     }
 }

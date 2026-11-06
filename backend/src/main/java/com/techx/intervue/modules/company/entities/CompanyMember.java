@@ -1,7 +1,6 @@
 package com.techx.intervue.modules.company.entities;
 
 import com.techx.intervue.common.entities.BaseEntity;
-import com.techx.intervue.modules.company.enums.CompanyMemberRole;
 import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,10 +41,6 @@ public class CompanyMember extends BaseEntity {
     private Long userId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "member_role", nullable = false, length = 20)
-    private CompanyMemberRole role;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     @Builder.Default
     private CompanyMemberStatus status = CompanyMemberStatus.ACTIVE;
@@ -64,9 +59,5 @@ public class CompanyMember extends BaseEntity {
 
     public boolean isActive() {
         return status == CompanyMemberStatus.ACTIVE;
-    }
-
-    public boolean isOwner() {
-        return role == CompanyMemberRole.OWNER;
     }
 }

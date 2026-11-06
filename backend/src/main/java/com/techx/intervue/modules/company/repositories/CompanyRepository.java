@@ -10,7 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface CompanyRepository
         extends JpaRepository<Company, Long>, JpaSpecificationExecutor<Company> {
 
-    boolean existsByTaxCode(String taxCode);
-
     Optional<Company> findByTaxCode(String taxCode);
 }

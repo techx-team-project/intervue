@@ -14,9 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CompanyAgreementRepository extends JpaRepository<CompanyAgreement, Long> {
 
-    Optional<CompanyAgreement> findFirstByCompanyIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
-            Long companyId, AgreementScope scope, AgreementType agreementType);
-
     Optional<CompanyAgreement> findFirstByUserIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
             Long userId, AgreementScope scope, AgreementType agreementType);
 
@@ -38,4 +35,11 @@ public interface CompanyAgreementRepository extends JpaRepository<CompanyAgreeme
             Pageable pageable);
 
     void deleteByCompanyId(Long companyId);
+
+    default boolean hasAcceptedCandidateDataAgreement(Long recruiterId) {
+        return findFirstByUserIdAndScopeAndAgreementTypeOrderByAcceptedAtDesc(
+                        recruiterId, AgreementScope.USER, AgreementType.CANDIDATE_DATA)
+                .map(CompanyAgreement::isAccepted)
+                .orElse(false);
+    }
 }

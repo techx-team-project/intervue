@@ -222,7 +222,6 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `ACCOUNT_NOT_PENDING_DELETION` | 422 | The account is not pending deletion |
 | `DELETION_BLOCKED` | 422 | Account deletion is blocked while unresolved operations remain |
 | `IDENTITY_NOT_VERIFIED` | 422 | Candidate must complete eKYC to apply |
-| `COMPANY_NOT_VERIFIED` | 422 | Company must be verified to post |
 | `JOB_NOT_EDITABLE` | 422 | The job is closed, expired, hidden, or not a draft (for delete) |
 | `SKILL_NAME_ALREADY_USED` | 409 | A skill with this name already exists |
 | `PROFILE_SECTION_LIMIT_REACHED` | 409 | A candidate profile section already holds its maximum number of items |
@@ -235,7 +234,10 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `AI_PROVIDER_ERROR` | 502 | AI provider returned an error or an unreadable response |
 | `AI_REQUEST_REFUSED` | 422 | AI provider declined to process the content |
 | `AI_PROMPT_NOT_FOUND` | 500 | Server prompt file is missing |
-| `LAST_COMPANY_OWNER` | 422 | Cannot leave company as the sole owner while company is verified or has active members/documents |
+| `COMPANY_LINK_UNDER_REVIEW` | 409 | Leaving the company is blocked while the user's documents await review |
+| `TAX_CODE_NOT_FOUND` | 422 | The tax code was not found in the national business registry |
+| `TAX_LOOKUP_BUSY` | 429 | The registry lookup is rate limited; honor `Retry-After` |
+| `TAX_LOOKUP_UNAVAILABLE` | 503 | The registry lookup is not reachable right now |
 
 ## Recruiter Account
 
@@ -265,13 +267,23 @@ Recruiters are a separate account type stored in `recruiters`; the same email ma
 
 Not built yet: 2FA, admin management of recruiters. Company endpoints still key members by the principal id; point `company_members` and the other recruiter-owned columns at `recruiters.id`.
 
-## Recruiter Company Membership & Leave Contract
+## Recruiter Company Link
 
-- Endpoint: `POST /recruiter/company/leave`
-- Behavior:
-  - If user is a `MEMBER` → membership status changes to `LEFT`, `PublishRightLostEvent` is emitted.
-  - If user is the sole `OWNER` and company is unverified with no members/documents → company draft is discarded (`discardCompany`).
-  - If user is the sole `OWNER` of a **VERIFIED** company or has submitted legal documents/active members → rejected with HTTP 422 `LAST_COMPANY_OWNER`.
-- **Frontend Real Integration Requirement**:
-  - When wiring real backend, if user is sole `OWNER` of a verified company, the UI must display a **Transfer Ownership Dialog** allowing the owner to delegate ownership to another verified recruiter before leaving, or prompt them to contact Compliance to archive the entity.
-  - Temporary session-level unbind in `CompanyProfileView.tsx` was implemented to enable local dev testing and must be replaced by the Transfer Ownership modal once ownership transfer API is connected.
+- A company record holds identity only: `name`, `taxCode`, `registeredAddress`, all taken from the national business registry. It is created only when the tax code is found there.
+- `POST /recruiter/company` body `{ taxCode }`: 10 digits, optionally followed by a 3-digit branch code (`0101234567-001`). The registry is queried with the first 10 digits. An existing company with the same tax code is linked instead of duplicated. Errors: `TAX_CODE_NOT_FOUND`, `TAX_LOOKUP_BUSY`, `TAX_LOOKUP_UNAVAILABLE`.
+- `GET /recruiter/company/lookup-tax?taxCode=` looks the tax code up in the registry and returns `TaxLookupResource { taxCode, name, address, existingOnPlatform, existingCompanyId? }`. Same errors as the create call.
+- `POST /recruiter/company/join` links an existing company by `companyId`. `POST /recruiter/company/leave` unlinks; rejoining the same company is allowed, a revoked membership is not.
+- There are no company roles: every linked recruiter is equal and manages only their own profile.
+- `PUT /recruiter/company` saves the caller's own company profile (trading name, industry, size, address, description...). Logo and photos are also per recruiter. Name and tax code cannot be edited.
+- Verification is per person. The company itself is never "verified"; a verified company never makes a new member verified.
+- `GET /recruiter/company/verification` returns `linkState`:
+  - `NONE`: no company linked.
+  - `CHOSEN`: linked, no proof under review.
+  - `SUBMITTED`: an own document awaits review.
+  - `REJECTED`: the latest own document was rejected (reason in the `LICENSE` step).
+  - `VERIFIED`: the user holds their own approved, unexpired document.
+- Switching company is allowed in `CHOSEN`, `REJECTED` and `VERIFIED`; `leave` is blocked in `SUBMITTED` with `COMPANY_LINK_UNDER_REVIEW`.
+- Publishing a job requires `VERIFIED` plus verified email, phone and accepted personal agreements. Otherwise `blockedReason` and the gate return `EMAIL_NOT_VERIFIED`, `NOT_COMPANY_MEMBER`, `VERIFICATION_INCOMPLETE` or `RECRUITER_NOT_AUTHORIZED_FOR_COMPANY`.
+- `GET /recruiter/company/documents` lists only the caller's own documents.
+- Admin: `GET /admin/companies/{id}/members` and `DELETE /admin/companies/{id}/members/{userId}` remain; `transfer-owner` was removed with the roles.
+- Frontend: `CompanyResource` no longer carries `verified`, `verificationStatus`, `myRole` or `legalFieldsLocked`, and `CompanySummaryResource` is reduced to `id, name, taxCode, address`.

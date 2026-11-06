@@ -88,6 +88,11 @@ storage:
   max-image-size: 5MB
   fetch-timeout: 30s
 
+tax-lookup:
+  base-url: ${TAX_LOOKUP_BASE_URL:https://api.vietqr.io}
+  timeout: 10s
+  retry-after: 30s
+
 sms:
   esms:
     base-url: https://rest.esms.vn

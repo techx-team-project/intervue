@@ -3,7 +3,7 @@ package com.techx.intervue.modules.company.mappers;
 import com.techx.intervue.common.storage.StorageServiceInterface;
 import com.techx.intervue.modules.company.entities.Company;
 import com.techx.intervue.modules.company.entities.CompanyPhoto;
-import com.techx.intervue.modules.company.enums.CompanyMemberRole;
+import com.techx.intervue.modules.company.entities.CompanyProfile;
 import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.resources.CompanyPhotoResource;
 import com.techx.intervue.modules.company.resources.CompanyResource;
@@ -18,65 +18,49 @@ public class CompanyMapper {
 
     private final StorageServiceInterface storageService;
 
-    public Company toNewEntity(SaveCompanyProfileRequest request) {
-        Company company = new Company();
-        applyUpdate(company, request);
-        return company;
-    }
-
-    public void applyUpdate(Company company, SaveCompanyProfileRequest request) {
-        company.setName(request.name());
-        company.setTradingName(request.tradingName());
-        company.setTaxCode(request.taxCode());
-        company.setBusinessType(request.businessType());
-        String resolvedIndustry =
-                (request.industry() == null || request.industry().isBlank())
-                        ? "Software & Information Technology"
-                        : request.industry().trim();
-        company.setIndustry(resolvedIndustry);
-        company.setWebsite(request.website());
-        company.setMarket(request.market());
-        company.setTargetCustomers(request.targetCustomers());
-        company.setSize(request.size());
-        company.setEmail(request.email());
-        company.setPhone(request.phone());
-        company.setAddress(request.address());
-        company.setDescription(request.description());
-        company.setBenefits(request.benefits());
+    public void applyProfile(CompanyProfile profile, SaveCompanyProfileRequest request) {
+        profile.setTradingName(request.tradingName());
+        profile.setBusinessType(request.businessType());
+        profile.setIndustry(request.industry());
+        profile.setWebsite(request.website());
+        profile.setMarket(request.market());
+        profile.setTargetCustomers(request.targetCustomers());
+        profile.setSize(request.size());
+        profile.setEmail(request.email());
+        profile.setPhone(request.phone());
+        profile.setAddress(request.address());
+        profile.setDescription(request.description());
+        profile.setBenefits(request.benefits());
     }
 
     public CompanyResource toResource(
             Company company,
-            CompanyMemberRole myRole,
+            CompanyProfile profile,
             List<CompanyPhoto> photos,
             List<String> missingFields) {
         return CompanyResource.builder()
                 .id(company.getId())
                 .name(company.getName())
-                .tradingName(company.getTradingName())
                 .taxCode(company.getTaxCode())
-                .businessType(company.getBusinessType())
-                .industry(company.getIndustry())
-                .website(company.getWebsite())
-                .market(company.getMarket())
-                .targetCustomers(company.getTargetCustomers())
-                .size(company.getSize())
-                .email(company.getEmail())
-                .phone(company.getPhone())
-                .address(company.getAddress())
-                .description(company.getDescription())
-                .benefits(company.getBenefits())
-                .logoUrl(imageUrl(company.getLogoPublicId()))
+                .registeredAddress(company.getAddress())
+                .tradingName(profile.getTradingName())
+                .businessType(profile.getBusinessType())
+                .industry(profile.getIndustry())
+                .website(profile.getWebsite())
+                .market(profile.getMarket())
+                .targetCustomers(profile.getTargetCustomers())
+                .size(profile.getSize())
+                .email(profile.getEmail())
+                .phone(profile.getPhone())
+                .address(profile.getAddress())
+                .description(profile.getDescription())
+                .benefits(profile.getBenefits())
+                .logoUrl(imageUrl(profile.getLogoPublicId()))
                 .photos(photos.stream().map(this::toPhotoResource).toList())
-                .verificationStatus(company.getVerificationStatus())
-                .verified(company.isVerified())
-                .verifiedAt(company.getVerifiedAt())
-                .myRole(myRole)
-                .legalFieldsLocked(company.isVerified())
                 .profileComplete(missingFields.isEmpty())
                 .missingFields(missingFields)
-                .createdAt(company.getCreatedAt())
-                .updatedAt(company.getUpdatedAt())
+                .createdAt(profile.getCreatedAt())
+                .updatedAt(profile.getUpdatedAt())
                 .build();
     }
 
@@ -84,13 +68,8 @@ public class CompanyMapper {
         return CompanySummaryResource.builder()
                 .id(company.getId())
                 .name(company.getName())
-                .tradingName(company.getTradingName())
                 .taxCode(company.getTaxCode())
-                .industry(company.getIndustry())
-                .size(company.getSize())
                 .address(company.getAddress())
-                .logoUrl(imageUrl(company.getLogoPublicId()))
-                .verified(company.isVerified())
                 .build();
     }
 

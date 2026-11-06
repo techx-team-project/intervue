@@ -61,36 +61,31 @@ public enum ErrorCode {
     FILE_TOO_LARGE(HttpStatus.BAD_REQUEST, "The file exceeds the allowed size!"),
     STORAGE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "File storage is not available right now!"),
     SMS_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "SMS delivery is not available right now!"),
-    COMPANY_NOT_VERIFIED(
-            HttpStatus.UNPROCESSABLE_CONTENT,
-            "This company must be verified before it can publish jobs!"),
     RECRUITER_NOT_AUTHORIZED_FOR_COMPANY(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "You need an approved authorization document for this company!"),
     VERIFICATION_INCOMPLETE(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "Finish the remaining verification steps before publishing jobs!"),
-    COMPANY_AGREEMENT_MISSING(
-            HttpStatus.UNPROCESSABLE_CONTENT,
-            "This company has not signed the data processing agreement yet!"),
-    TAX_CODE_ALREADY_USED(HttpStatus.CONFLICT, "This tax code is already registered!"),
     ALREADY_COMPANY_MEMBER(HttpStatus.CONFLICT, "You already belong to this company!"),
     ALREADY_IN_ANOTHER_COMPANY(
             HttpStatus.CONFLICT,
-            "You already represent another company. Ask an administrator to move you!"),
-    ONLY_OWNER_CAN_EDIT_LEGAL_FIELDS(
-            HttpStatus.FORBIDDEN, "Only the company owner can change the legal details!"),
+            "You already belong to another company. Leave it before joining a new one!"),
     NOT_COMPANY_MEMBER(HttpStatus.FORBIDDEN, "You do not belong to this company!"),
     COMPANY_MEMBERSHIP_REVOKED(
             HttpStatus.FORBIDDEN, "Your membership of this company has been revoked!"),
-    LAST_COMPANY_OWNER(
+    TAX_CODE_NOT_FOUND(
             HttpStatus.UNPROCESSABLE_CONTENT,
-            "This is the last owner of the company and must stay in place!"),
-    ONLY_OWNER_CAN_SUBMIT_LICENSE(
-            HttpStatus.FORBIDDEN, "Only the company owner can submit a business license!"),
-    COMPANY_LEGAL_FIELDS_LOCKED(
-            HttpStatus.UNPROCESSABLE_CONTENT,
-            "Legal details cannot be changed once the company is verified!"),
+            "We could not find this tax code in the national business registry!"),
+    TAX_LOOKUP_BUSY(
+            HttpStatus.TOO_MANY_REQUESTS,
+            "The tax code lookup is busy, please try again in a moment!"),
+    TAX_LOOKUP_UNAVAILABLE(
+            HttpStatus.SERVICE_UNAVAILABLE,
+            "The tax code lookup is not available right now, please try again later!"),
+    COMPANY_LINK_UNDER_REVIEW(
+            HttpStatus.CONFLICT,
+            "Your documents are being reviewed. Wait for the result before leaving the company!"),
     COMPANY_PROFILE_INCOMPLETE(
             HttpStatus.UNPROCESSABLE_CONTENT, "Please complete the company profile first!"),
     DOCUMENT_ALREADY_UNDER_REVIEW(

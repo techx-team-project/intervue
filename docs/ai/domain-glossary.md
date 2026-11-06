@@ -10,7 +10,7 @@ Use these terms consistently in code, DB, API and UI. English identifier first; 
 | **Candidate** (Ứng viên) | IT job seeker or intern. Must pass **identity verification** before applying. |
 | **Recruiter** (Nhà tuyển dụng) | Person hiring for a company. Has its own account (table `recruiters`), registered through the employer portal; never an upgrade of a Candidate account. |
 | **Admin** (Quản trị viên) | Platform operator: accounts, verification review, moderation, reports. |
-| **Company** (Doanh nghiệp) | Entity a Recruiter represents. **Not a role.** Must be **verified** before posting jobs. |
+| **Company** (Doanh nghiệp) | Legal entity identified by tax code (name and address come from the national registry). **Not a role.** Choosing a company is only a claim; each Recruiter must verify themselves before posting jobs. |
 | **Guest** (Khách) | Not logged in. |
 
 ## Hiring
@@ -46,7 +46,7 @@ Use these terms consistently in code, DB, API and UI. English identifier first; 
 | Term | Meaning |
 |---|---|
 | **eKYC / Identity verification** | Candidate submits ID documents; statuses: pending, approved, rejected (with reason), manual review requested. |
-| **Company verification** | Admin-reviewed proof that a Company is real. |
+| **Company verification** | Admin-reviewed proof, per Recruiter, that the person acts for the chosen Company. A Company is never verified as a whole. |
 | **Two-factor authentication (2FA)** | TOTP + recovery codes. |
 | **Device / Session** | A refresh-token record; can be logged out individually or all at once. |
 | **Soft delete / Restore** | Account deletion is reversible within a retention window. |

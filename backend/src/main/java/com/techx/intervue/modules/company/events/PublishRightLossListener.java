@@ -14,11 +14,9 @@ public class PublishRightLossListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     public void onPublishRightLost(PublishRightLostEvent event) {
         log.info(
-                "Publish right lost: scope={} cause={} company={} user={} reassignTo={}",
-                event.scope(),
+                "Publish right lost: cause={} company={} user={}",
                 event.cause(),
                 event.companyId(),
-                event.userId(),
-                event.reassignToUserId());
+                event.userId());
     }
 }

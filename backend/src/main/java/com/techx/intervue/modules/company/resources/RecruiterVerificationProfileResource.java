@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.company.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.techx.intervue.modules.company.enums.CompanyLinkState;
 import java.util.List;
 import lombok.Builder;
 
@@ -14,4 +15,5 @@ public record RecruiterVerificationProfileResource(
         boolean canPublish,
         String blockedReason,
         Long companyId,
+        CompanyLinkState linkState,
         List<VerificationStepResource> steps) {}

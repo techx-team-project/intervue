@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.company.services.interfaces;
 
 import com.techx.intervue.common.web.RequestActor;
+import com.techx.intervue.modules.company.requests.CreateCompanyRequest;
 import com.techx.intervue.modules.company.requests.JoinCompanyRequest;
 import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
@@ -16,7 +17,7 @@ public interface CompanyServiceInterface {
 
     CompanyResource findMyCompany(Long userId);
 
-    CompanyResource create(SaveCompanyProfileRequest request, RequestActor actor);
+    CompanyResource create(CreateCompanyRequest request, RequestActor actor);
 
     CompanyResource update(SaveCompanyProfileRequest request, RequestActor actor);
 

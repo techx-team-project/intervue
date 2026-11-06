@@ -2,7 +2,6 @@ package com.techx.intervue.modules.company.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.techx.intervue.modules.company.enums.CompanyMemberRole;
 import com.techx.intervue.modules.company.enums.CompanyMemberStatus;
 import java.time.Instant;
 import lombok.Builder;
@@ -13,7 +12,6 @@ public record CompanyMemberResource(
         Long userId,
         String name,
         String email,
-        CompanyMemberRole role,
         CompanyMemberStatus status,
         Instant joinedAt,
         boolean canPublish,
