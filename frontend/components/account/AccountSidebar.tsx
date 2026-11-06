@@ -7,6 +7,7 @@ import { ROUTES } from '@/constants/routes';
 import { useLogout } from '@/hooks/useLogout';
 import {
   ArrowUpCircle,
+  Bell,
   Briefcase,
   Camera,
   Check,
@@ -47,6 +48,11 @@ const MENU_ITEMS = [
     href: '/account/two-factor',
     label: 'Two-factor authentication',
     icon: Smartphone,
+  },
+  {
+    href: '/account/notification-preferences',
+    label: 'Tuỳ chọn thông báo',
+    icon: Bell,
   },
 ];
 

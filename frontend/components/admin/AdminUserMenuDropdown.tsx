@@ -3,7 +3,7 @@
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
 import { useLogout } from '@/hooks/useLogout';
-import { Bell, LogOut, ScrollText, ShieldCheck } from 'lucide-react';
+import { Bell, BellRing, LogOut, ScrollText, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
 interface AdminUserMenuDropdownProps {
@@ -14,6 +14,7 @@ const LINKS = [
   { label: 'Notifications', href: ROUTES.ADMIN_NOTIFICATIONS, icon: Bell },
   { label: 'Audit log', href: ROUTES.ADMIN_AUDIT_LOG, icon: ScrollText },
   { label: 'Security & Two-Factor (2FA)', href: ROUTES.ADMIN_ACCOUNT_SECURITY, icon: ShieldCheck },
+  { label: 'Notification preferences', href: ROUTES.ADMIN_ACCOUNT_NOTIFICATIONS, icon: BellRing },
 ];
 
 export default function AdminUserMenuDropdown({ onClose }: AdminUserMenuDropdownProps) {
