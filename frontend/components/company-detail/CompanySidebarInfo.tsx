@@ -1,6 +1,6 @@
 'use client';
 
-import { Users, Briefcase, Calendar, Phone, Mail, Globe, ShieldCheck } from 'lucide-react';
+import { Briefcase, Globe, Mail, Phone, Users } from 'lucide-react';
 import type { CompanyDetail } from '@/types/company';
 
 interface CompanySidebarInfoProps {
@@ -12,17 +12,12 @@ export default function CompanySidebarInfo({ company }: CompanySidebarInfoProps)
     {
       icon: Users,
       label: 'Quy mô công ty',
-      value: company.size,
+      value: company.size || 'Đang cập nhật',
     },
     {
       icon: Briefcase,
       label: 'Lĩnh vực hoạt động',
-      value: company.industry,
-    },
-    {
-      icon: Calendar,
-      label: 'Năm thành lập',
-      value: company.foundedYear || 'Đang cập nhật',
+      value: company.industry || 'Đang cập nhật',
     },
     {
       icon: Phone,
@@ -37,7 +32,7 @@ export default function CompanySidebarInfo({ company }: CompanySidebarInfoProps)
     {
       icon: Globe,
       label: 'Website chính thức',
-      value: company.website ? company.website.replace('https://', '') : 'Đang cập nhật',
+      value: company.website ? company.website.replace(/^https?:\/\//, '') : 'Đang cập nhật',
       link: company.website,
     },
   ];
@@ -72,16 +67,6 @@ export default function CompanySidebarInfo({ company }: CompanySidebarInfoProps)
             </div>
           );
         })}
-      </div>
-
-      <div className="mt-5 rounded-xl border border-emerald-100 bg-linear-to-br from-emerald-50/70 to-teal-50/30 p-3.5 text-xs text-slate-700">
-        <div className="mb-1 flex items-center gap-1.5 font-bold text-emerald-900">
-          <ShieldCheck className="text-primary h-4 w-4" />
-          <span>Hồ sơ doanh nghiệp minh bạch</span>
-        </div>
-        <p className="text-[11px] leading-relaxed text-slate-600">
-          Đã được InterVue xác thực giấy phép hoạt động kinh doanh và thông tin pháp nhân hợp lệ.
-        </p>
       </div>
     </div>
   );

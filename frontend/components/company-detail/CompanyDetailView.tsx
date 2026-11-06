@@ -8,7 +8,6 @@ import CompanyAboutSection from './CompanyAboutSection';
 import CompanyJobsSection from './CompanyJobsSection';
 import CompanySidebarInfo from './CompanySidebarInfo';
 import CompanyLocationSidebar from './CompanyLocationSidebar';
-import CompanySimilarSidebar from './CompanySimilarSidebar';
 
 interface CompanyDetailViewProps {
   company: CompanyDetail;
@@ -29,17 +28,16 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
             {activeTab === 'overview' ? (
               <>
                 <CompanyAboutSection company={company} />
-                <CompanyJobsSection jobs={company.jobs} companyName={company.name} branches={company.branches} />
+                <CompanyJobsSection jobs={company.jobs} companyName={company.name} />
               </>
             ) : (
-              <CompanyJobsSection jobs={company.jobs} companyName={company.name} branches={company.branches} />
+              <CompanyJobsSection jobs={company.jobs} companyName={company.name} />
             )}
           </div>
 
           <div className="sticky top-20 space-y-6 lg:col-span-4">
             <CompanySidebarInfo company={company} />
-            <CompanyLocationSidebar address={company.address} mapEmbedUrl={company.mapEmbedUrl} />
-            <CompanySimilarSidebar currentCompanyId={company.id} />
+            <CompanyLocationSidebar address={company.address} />
           </div>
         </div>
       </div>

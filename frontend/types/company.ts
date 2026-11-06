@@ -4,46 +4,38 @@ export interface CompanyJobItem {
   salary: string;
   location: string;
   deadline: string;
-  experience: string;
-  type: string;
   tags: string[];
-  isHot?: boolean;
-  isUrgent?: boolean;
-}
-
-export interface CompanyBranch {
-  name: string;
-  address: string;
-  phone?: string;
-}
-
-export interface CompanyHighlight {
-  icon: string;
-  title: string;
-  desc: string;
 }
 
 export interface CompanyDetail {
   id: number | string;
   name: string;
-  slug?: string;
-  logo: string;
-  cover: string;
-  tagline?: string;
-  size: string;
-  industry: string;
-  foundedYear?: string;
+  logo?: string;
+  size?: string;
+  industry?: string;
   website?: string;
   email?: string;
   phone?: string;
   address: string;
-  branches: CompanyBranch[];
-  followers: string;
-  isVerified: boolean;
   description: string[];
-  highlights: CompanyHighlight[];
   benefits: string[];
+  photos: string[];
   openJobsCount: number;
   jobs: CompanyJobItem[];
-  mapEmbedUrl?: string;
+}
+
+export interface PublicCompanyResource {
+  id: number;
+  name: string;
+  tradingName?: string;
+  address?: string;
+  industry?: string;
+  size?: string;
+  website?: string;
+  email?: string;
+  phone?: string;
+  description?: string;
+  benefits?: string;
+  logoUrl?: string;
+  photoUrls: string[];
 }

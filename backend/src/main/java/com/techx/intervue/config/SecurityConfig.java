@@ -84,7 +84,10 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.GET, "/api/v1/skills")
                                         .permitAll()
                                         .requestMatchers(
-                                                HttpMethod.GET, "/api/v1/jobs", "/api/v1/jobs/*")
+                                                HttpMethod.GET,
+                                                "/api/v1/jobs",
+                                                "/api/v1/jobs/*",
+                                                "/api/v1/companies/*")
                                         .permitAll()
                                         // 2. Admin area
                                         .requestMatchers("/api/v1/admin/auth/login")

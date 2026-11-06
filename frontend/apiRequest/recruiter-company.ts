@@ -18,10 +18,10 @@ export const recruiterCompanyApi = {
   // Company management
   getMyCompany: () => request<CompanyResource>('/recruiter/company'),
 
-  createCompany: (data: SaveCompanyProfileRequest) =>
+  linkCompany: (taxCode: string) =>
     request<CompanyResource>('/recruiter/company', {
       method: 'POST',
-      body: data,
+      body: { taxCode },
     }),
 
   updateCompany: (data: SaveCompanyProfileRequest) =>

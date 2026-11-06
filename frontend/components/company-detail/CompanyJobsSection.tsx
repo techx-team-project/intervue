@@ -2,34 +2,23 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Briefcase, Search, MapPin, Clock, ArrowRight, Filter } from 'lucide-react';
-import type { CompanyBranch, CompanyJobItem } from '@/types/company';
+import { ArrowRight, Briefcase, Clock, MapPin, Search } from 'lucide-react';
+import type { CompanyJobItem } from '@/types/company';
 
 interface CompanyJobsSectionProps {
   jobs: CompanyJobItem[];
   companyName: string;
-  branches?: CompanyBranch[];
 }
 
-export default function CompanyJobsSection({ jobs, companyName, branches }: CompanyJobsSectionProps) {
+export default function CompanyJobsSection({ jobs, companyName }: CompanyJobsSectionProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedBranch, setSelectedBranch] = useState('all');
-
-  const locationOptions = Array.from(
-    new Set([...jobs.map((j) => j.location), ...(branches ? branches.map((b) => b.name) : [])]),
-  );
 
   const filteredJobs = jobs.filter((job) => {
     const matchSearch =
       job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       job.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    const matchLocation =
-      selectedBranch === 'all' ||
-      job.location.toLowerCase().includes(selectedBranch.toLowerCase()) ||
-      selectedBranch.toLowerCase().includes(job.location.toLowerCase());
-
-    return matchSearch && matchLocation;
+    return matchSearch;
   });
 
   return (
@@ -46,7 +35,7 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
         </div>
 
         <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-[#00873c]">
-          {filteredJobs.length} vị trí đang tuyển
+          {jobs.length} vị trí đang tuyển
         </span>
       </div>
 
@@ -60,22 +49,6 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
             onChange={(e) => setSearchTerm(e.target.value)}
             className="focus:border-primary focus:ring-primary w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pr-4 pl-10 text-xs text-slate-800 placeholder-slate-400 transition focus:bg-white focus:ring-1 focus:outline-none"
           />
-        </div>
-
-        <div className="relative sm:w-64">
-          <select
-            value={selectedBranch}
-            onChange={(e) => setSelectedBranch(e.target.value)}
-            className="focus:border-primary w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pr-8 pl-3.5 text-xs font-medium text-slate-700 transition focus:bg-white focus:outline-none"
-          >
-            <option value="all">Tất cả địa điểm</option>
-            {locationOptions.map((loc, idx) => (
-              <option key={idx} value={loc}>
-                {loc}
-              </option>
-            ))}
-          </select>
-          <Filter className="pointer-events-none absolute top-1/2 right-3 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
         </div>
       </div>
 
@@ -94,19 +67,6 @@ export default function CompanyJobsSection({ jobs, companyName, branches }: Comp
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    {job.isHot && (
-                      <span className="rounded border border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] font-black text-red-600 uppercase">
-                        HOT
-                      </span>
-                    )}
-                    {job.isUrgent && (
-                      <span className="rounded border border-amber-200 bg-amber-50 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
-                        Tuyển gấp
-                      </span>
-                    )}
-                  </div>
-
                   <Link href={`/jobs/${job.id}`}>
                     <h3 className="group-hover:text-primary mt-1 text-[15px] font-bold text-slate-900 transition-colors">
                       {job.title}

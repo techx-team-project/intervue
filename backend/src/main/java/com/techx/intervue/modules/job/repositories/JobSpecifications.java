@@ -50,6 +50,9 @@ public final class JobSpecifications {
             if (hasText(request.city())) {
                 predicates.add(builder.equal(root.get("city"), request.city().trim()));
             }
+            if (request.companyId() != null) {
+                predicates.add(builder.equal(root.get("companyId"), request.companyId()));
+            }
             if (request.contractType() != null) {
                 predicates.add(builder.equal(root.get("contractType"), request.contractType()));
             }

@@ -1,6 +1,54 @@
-import type { CompanyDetail } from '@/types/company';
+interface CompanyJobItem {
+  id: number | string;
+  title: string;
+  salary: string;
+  location: string;
+  deadline: string;
+  experience: string;
+  type: string;
+  tags: string[];
+  isHot?: boolean;
+  isUrgent?: boolean;
+}
 
-export const COMPANY_ME_GAU_PILATES: CompanyDetail = {
+interface CompanyBranch {
+  name: string;
+  address: string;
+  phone?: string;
+}
+
+interface CompanyHighlight {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
+export interface MockCompanyDetail {
+  id: number | string;
+  name: string;
+  slug?: string;
+  logo: string;
+  cover: string;
+  tagline?: string;
+  size: string;
+  industry: string;
+  foundedYear?: string;
+  website?: string;
+  email?: string;
+  phone?: string;
+  address: string;
+  branches: CompanyBranch[];
+  followers: string;
+  isVerified: boolean;
+  description: string[];
+  highlights: CompanyHighlight[];
+  benefits: string[];
+  openJobsCount: number;
+  jobs: CompanyJobItem[];
+  mapEmbedUrl?: string;
+}
+
+export const COMPANY_ME_GAU_PILATES: MockCompanyDetail = {
   id: 224996,
   slug: 'cong-ty-tnhh-me-gau-pilates',
   name: 'CÔNG TY TNHH MẸ GẤU PILATES',
@@ -127,7 +175,7 @@ export const COMPANY_ME_GAU_PILATES: CompanyDetail = {
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.9038287713437!2d105.81180297596985!3d21.036533887508496!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab7242131bfb%3A0xb35b71db3f05db72!2zMTEzIMSQw6BvIFThuqVuLCBOZ-G7jWMgS2jDoW5oLCBCYSDEkMOsbmgsIEjDoCBO4buZaQ!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s',
 };
 
-export const COMPANY_ADI_AUTOMATION: CompanyDetail = {
+export const COMPANY_ADI_AUTOMATION: MockCompanyDetail = {
   id: 237340,
   slug: 'cong-ty-co-phan-thuong-mai-va-tu-dong-hoa-adi',
   name: 'CÔNG TY CỔ PHẦN THƯƠNG MẠI VÀ TỰ ĐỘNG HÓA ADI',
@@ -224,7 +272,7 @@ export const COMPANY_ADI_AUTOMATION: CompanyDetail = {
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.646549221191!2d105.86714047596906!3d21.006798888528994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135abf760da938b%3A0xe54d6bf54b9d3637!2zxJDhuqdtIFRy4bqldSwgQuG6oWNoIMSQ4bqxbmcsIEhhaSBCw6AgVHLGsG5nLCBIw6AgTuG7mWk!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s',
 };
 
-export const COMPANY_VIETTEL: CompanyDetail = {
+export const COMPANY_VIETTEL: MockCompanyDetail = {
   id: 1,
   slug: 'viettel-group',
   name: 'Tập Đoàn Công Nghiệp - Viễn Thông Quân Đội (Viettel)',
@@ -304,7 +352,7 @@ export const COMPANY_VIETTEL: CompanyDetail = {
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.1132514101297!2d105.78363717596959!3d21.02815448779644!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab4b94f18635%3A0xe5a3068e1c6b12a8!2zVHLhu6Ugc-G7nyBjaMOtbmggVOG6rXAgxJFvw6BuIFZpZXR0ZWw!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s',
 };
 
-export const COMPANY_MB_BANK: CompanyDetail = {
+export const COMPANY_MB_BANK: MockCompanyDetail = {
   id: 2,
   slug: 'mb-bank',
   name: 'Ngân Hàng TMCP Quân Đội (MB Bank)',
@@ -383,7 +431,7 @@ export const COMPANY_MB_BANK: CompanyDetail = {
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.5888204123517!2d105.80164217596913!3d21.009104488448983!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab5ec0a6f0cf%3A0x6b6df5c68b7dcda5!2zVE_DgCBOSMOAIE1CIEdSQU5EIFRPV0VS!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s',
 };
 
-export const COMPANY_FPT_SOFTWARE: CompanyDetail = {
+export const COMPANY_FPT_SOFTWARE: MockCompanyDetail = {
   id: 3,
   slug: 'fpt-software',
   name: 'Công ty Cổ phần FPT Software',
@@ -463,7 +511,7 @@ export const COMPANY_FPT_SOFTWARE: CompanyDetail = {
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.863855881421!2d105.78161507596987!3d21.038132787453488!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab4a6015c7e7%3A0xe981977ad85e9fa0!2zVMOyYSBuaMOgIEZQVCAxNyBEdXkgVMOibg!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s',
 };
 
-export const COMPANY_TECHCOMBANK: CompanyDetail = {
+export const COMPANY_TECHCOMBANK: MockCompanyDetail = {
   id: 4,
   slug: 'techcombank',
   name: 'Ngân Hàng TMCP Kỹ Thương (Techcombank)',
@@ -519,7 +567,7 @@ export const COMPANY_TECHCOMBANK: CompanyDetail = {
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.237249111306!2d105.8504070759695!3d21.023191887965415!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab959828236d%3A0xa1936e2f1f0a1c97!2zNiBRdWFuZyBUcnVuZywgVHLhuqduIEjGsG5nIMSQ4bqhbywgSG_DoG4gS2nhur9tLCBIw6AgTuG7mWk!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s',
 };
 
-export const COMPANY_VNG: CompanyDetail = {
+export const COMPANY_VNG: MockCompanyDetail = {
   id: 5,
   slug: 'vng-corporation',
   name: 'Công ty Cổ phần VNG (VNG Corporation)',
@@ -572,7 +620,7 @@ export const COMPANY_VNG: CompanyDetail = {
   ],
 };
 
-export const COMPANY_SHOPEE: CompanyDetail = {
+export const COMPANY_SHOPEE: MockCompanyDetail = {
   id: 6,
   slug: 'shopee-vietnam',
   name: 'Shopee Việt Nam (Sea Group)',
@@ -625,7 +673,7 @@ export const COMPANY_SHOPEE: CompanyDetail = {
   ],
 };
 
-export const COMPANY_MASAN: CompanyDetail = {
+export const COMPANY_MASAN: MockCompanyDetail = {
   id: 7,
   slug: 'masan-group',
   name: 'Tập Đoàn Masan (Masan Group)',
@@ -678,7 +726,7 @@ export const COMPANY_MASAN: CompanyDetail = {
   ],
 };
 
-export const COMPANY_VPBANK: CompanyDetail = {
+export const COMPANY_VPBANK: MockCompanyDetail = {
   id: 8,
   slug: 'vpbank',
   name: 'Ngân Hàng TMCP Việt Nam Thịnh Vượng (VPBank)',
@@ -731,7 +779,7 @@ export const COMPANY_VPBANK: CompanyDetail = {
   ],
 };
 
-const COMPANY_DETAILS_MAP: Record<string | number, CompanyDetail> = {
+const COMPANY_DETAILS_MAP: Record<string | number, MockCompanyDetail> = {
   224996: COMPANY_ME_GAU_PILATES,
   237340: COMPANY_ADI_AUTOMATION,
   1: COMPANY_VIETTEL,
@@ -844,7 +892,7 @@ export function getSimilarCompanies(currentCompanyId: string | number): SimilarC
 
 export const SIMILAR_COMPANIES = getSimilarCompanies(224996);
 
-export function getCompanyDetailById(id: string | number): CompanyDetail {
+export function getCompanyDetailById(id: string | number): MockCompanyDetail {
   const numericId = Number(id);
   if (COMPANY_DETAILS_MAP[numericId]) {
     return COMPANY_DETAILS_MAP[numericId];
