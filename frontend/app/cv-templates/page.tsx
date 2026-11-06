@@ -3,14 +3,14 @@ import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
 import CvTemplatesView from '@/components/cv-templates/CvTemplatesView';
 import { getAllCvTemplates, getCvStyles, getCvIndustries } from '@/mocks/cv-template.mock';
+import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
 
 export const metadata: Metadata = {
-  title: 'Mẫu CV Xin Việc Tiếng Việt Đơn Giản Chuẩn 2026 | InterVue',
-  description:
-    'Tuyển chọn 21+ mẫu CV tiếng Việt thiết kế đơn giản, chuẩn ATS 2026. Tạo CV online miễn phí, dễ tùy biến màu sắc và tải file PDF chất lượng cao.',
+  title: CV_TEMPLATE_MESSAGES.pageMetadata.title,
+  description: CV_TEMPLATE_MESSAGES.pageMetadata.description,
   openGraph: {
-    title: 'Tuyển Chọn Mẫu CV Xin Việc Đơn Giản Chuẩn 2026 - InterVue',
-    description: 'Tạo CV online miễn phí với các mẫu CV được thiết kế sẵn tối ưu điểm số ATS cho mọi ngành nghề.',
+    title: CV_TEMPLATE_MESSAGES.pageMetadata.ogTitle,
+    description: CV_TEMPLATE_MESSAGES.pageMetadata.ogDescription,
   },
 };
 

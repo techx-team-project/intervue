@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CareerRoadmapStage } from '@/types/career';
+import { CAREER_ORIENTATION_MESSAGES } from '@/constants/career-orientation';
 import { Milestone, CheckCircle, Clock, ShieldCheck } from 'lucide-react';
 
 interface CareerRoadmapTimelineProps {
@@ -11,6 +12,8 @@ interface CareerRoadmapTimelineProps {
 export default function CareerRoadmapTimeline({ stages }: CareerRoadmapTimelineProps) {
   if (!stages || stages.length === 0) return null;
 
+  const { title, description, mainResponsibilitiesTitle, skillsTitle } = CAREER_ORIENTATION_MESSAGES.roadmapTimeline;
+
   return (
     <div className="my-8">
       <div className="mb-6 flex items-center gap-2">
@@ -18,10 +21,8 @@ export default function CareerRoadmapTimeline({ stages }: CareerRoadmapTimelineP
           <Milestone className="h-5 w-5" />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-[#171717] sm:text-2xl">Lộ trình thăng tiến trong ngành Marketing</h3>
-          <p className="mt-0.5 text-xs text-[#7f878f] sm:text-sm">
-            5 giai đoạn chuẩn hóa từ Thực tập sinh đến Giám đốc Tiếp thị (CMO)
-          </p>
+          <h3 className="text-xl font-bold text-[#171717] sm:text-2xl">{title}</h3>
+          <p className="mt-0.5 text-xs text-[#7f878f] sm:text-sm">{description}</p>
         </div>
       </div>
 
@@ -51,7 +52,7 @@ export default function CareerRoadmapTimeline({ stages }: CareerRoadmapTimelineP
                 <div>
                   <h5 className="text-navy mb-2 flex items-center gap-1 text-xs font-semibold tracking-wider uppercase">
                     <ShieldCheck className="text-primary h-3.5 w-3.5" />
-                    Trách nhiệm chính
+                    {mainResponsibilitiesTitle}
                   </h5>
                   <ul className="space-y-1.5 text-xs text-[#526475]">
                     {stage.keyResponsibilities.map((resp, idx) => (
@@ -66,7 +67,7 @@ export default function CareerRoadmapTimeline({ stages }: CareerRoadmapTimelineP
                 <div>
                   <h5 className="text-navy mb-2 flex items-center gap-1 text-xs font-semibold tracking-wider uppercase">
                     <CheckCircle className="h-3.5 w-3.5 text-blue-600" />
-                    Kỹ năng & Năng lực cần có
+                    {skillsTitle}
                   </h5>
                   <div className="flex flex-wrap gap-1.5">
                     {stage.skills.map((skill, sIdx) => (

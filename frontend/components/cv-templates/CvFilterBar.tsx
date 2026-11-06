@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CvTemplateStyle, CvTemplateIndustry } from '@/types/cv-template';
+import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
 import { Search, Filter, Globe } from 'lucide-react';
 
 interface CvFilterBarProps {
@@ -29,6 +30,15 @@ export default function CvFilterBar({
   searchQuery,
   onSearchChange,
 }: CvFilterBarProps) {
+  const { searchPlaceholder, industryLabel, languageLabel, allLanguageLabel, languages } =
+    CV_TEMPLATE_MESSAGES.filterBar;
+
+  const languageOptions = [
+    { key: 'all', label: allLanguageLabel },
+    { key: languages.vi, label: languages.vi },
+    { key: languages.en, label: languages.en },
+  ];
+
   return (
     <div className="sticky top-18 z-20 border-b border-gray-200 bg-white/95 shadow-xs">
       <div className="mx-auto max-w-7xl space-y-3 px-4 py-3.5 sm:px-6 lg:px-8">
@@ -66,7 +76,7 @@ export default function CvFilterBar({
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Tìm theo tên mẫu, ngành nghề..."
+              placeholder={searchPlaceholder}
               className="focus:border-primary focus:ring-primary w-full rounded-xl border border-gray-200 bg-gray-50/60 py-2 pr-8 pl-9.5 text-xs text-[#171717] placeholder:text-[#9ca3af] focus:bg-white focus:ring-1 focus:outline-hidden"
             />
             {searchQuery && (
@@ -85,7 +95,7 @@ export default function CvFilterBar({
           <div className="flex flex-wrap items-center gap-2">
             <span className="flex items-center gap-1 font-semibold text-[#7f878f]">
               <Filter className="text-primary h-3.5 w-3.5" />
-              Ngành nghề:
+              {industryLabel}
             </span>
             <select
               value={selectedIndustrySlug}
@@ -103,22 +113,21 @@ export default function CvFilterBar({
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1 font-semibold text-[#7f878f]">
               <Globe className="h-3.5 w-3.5 text-blue-600" />
-              Ngôn ngữ:
+              {languageLabel}
             </span>
             <div className="flex rounded-lg border border-gray-200 bg-gray-50 p-0.5">
-              {['all', 'Tiếng Việt', 'Tiếng Anh'].map((lang) => {
-                const isSelected = selectedLanguage === lang;
-                const label = lang === 'all' ? 'Tất cả' : lang;
+              {languageOptions.map((opt) => {
+                const isSelected = selectedLanguage === opt.key;
                 return (
                   <button
-                    key={lang}
+                    key={opt.key}
                     type="button"
-                    onClick={() => onSelectLanguage(lang)}
+                    onClick={() => onSelectLanguage(opt.key)}
                     className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
                       isSelected ? 'text-primary bg-white font-bold shadow-xs' : 'text-[#526475] hover:text-[#171717]'
                     }`}
                   >
-                    {label}
+                    {opt.label}
                   </button>
                 );
               })}

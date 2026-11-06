@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { CareerTableOfContentsItem } from '@/types/career';
+import { CAREER_ORIENTATION_MESSAGES } from '@/constants/career-orientation';
 import { ListFilter, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface CareerTableOfContentsProps {
@@ -61,7 +62,9 @@ export default function CareerTableOfContents({ items }: CareerTableOfContentsPr
           <div className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
             <ListFilter className="h-4 w-4" />
           </div>
-          <h3 className="text-sm font-bold text-[#171717] sm:text-base">Mục lục bài viết</h3>
+          <h3 className="text-sm font-bold text-[#171717] sm:text-base">
+            {CAREER_ORIENTATION_MESSAGES.tableOfContents.title}
+          </h3>
         </div>
 
         <button

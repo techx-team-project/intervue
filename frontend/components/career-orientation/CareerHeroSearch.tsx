@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Search, ChevronRight, Compass, TrendingUp } from 'lucide-react';
+import { CAREER_ORIENTATION_MESSAGES } from '@/constants/career-orientation';
 
 interface CareerHeroSearchProps {
   searchQuery: string;
@@ -11,22 +12,24 @@ interface CareerHeroSearchProps {
   onSelectTag: (tag: string | null) => void;
 }
 
-const TRENDING_TAGS = [
-  'Marketing',
-  'Digital Marketing',
-  'Sales',
-  'Logistics',
-  'Công nghệ thông tin (IT)',
-  'Tài chính - Ngân hàng',
-  'Mức lương',
-];
-
 export default function CareerHeroSearch({
   searchQuery,
   onSearchChange,
   selectedTag,
   onSelectTag,
 }: CareerHeroSearchProps) {
+  const {
+    breadcrumbHome,
+    breadcrumbHandbook,
+    breadcrumbCurrent,
+    badge,
+    title,
+    description,
+    searchPlaceholder,
+    trendingLabel,
+    trendingTags,
+  } = CAREER_ORIENTATION_MESSAGES.hero;
+
   return (
     <div className="from-primary/10 relative overflow-hidden border-b border-[#e9eaec] bg-linear-to-b via-[#f4fbf7] to-white py-10 lg:py-14">
       <div className="bg-primary/15 pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full blur-3xl" />
@@ -35,27 +38,22 @@ export default function CareerHeroSearch({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav className="mb-4 flex items-center gap-1.5 text-xs text-[#7f878f]">
           <Link href="/" className="hover:text-primary transition-colors">
-            Trang chủ
+            {breadcrumbHome}
           </Link>
           <ChevronRight className="h-3 w-3" />
-          <span className="text-navy font-medium">Cẩm nang nghề nghiệp</span>
+          <span className="text-navy font-medium">{breadcrumbHandbook}</span>
           <ChevronRight className="h-3 w-3" />
-          <span className="text-primary font-semibold">Định hướng nghề nghiệp</span>
+          <span className="text-primary font-semibold">{breadcrumbCurrent}</span>
         </nav>
 
         <div className="max-w-3xl">
           <div className="bg-primary/10 text-primary mb-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-semibold">
             <Compass className="h-3.5 w-3.5" />
-            <span>Cẩm Nang & Lộ Trình Sự Nghiệp Toàn Diện</span>
+            <span>{badge}</span>
           </div>
 
-          <h1 className="text-3xl font-extrabold tracking-tight text-[#171717] sm:text-4xl lg:text-5xl">
-            Định hướng nghề nghiệp
-          </h1>
-          <p className="mt-3 text-base leading-relaxed text-[#526475] sm:text-lg">
-            Chia sẻ thông tin, phân tích thị trường và lộ trình thăng tiến cần thiết giúp bạn sớm định hình sự nghiệp,
-            lựa chọn ngành nghề phù hợp với năng lực và bứt phá mức thu nhập.
-          </p>
+          <h1 className="text-3xl font-extrabold tracking-tight text-[#171717] sm:text-4xl lg:text-5xl">{title}</h1>
+          <p className="mt-3 text-base leading-relaxed text-[#526475] sm:text-lg">{description}</p>
         </div>
 
         <div className="mt-8 max-w-2xl">
@@ -65,7 +63,7 @@ export default function CareerHeroSearch({
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Tìm kiếm bài viết, chuyên ngành, mức lương, kỹ năng nghề nghiệp..."
+              placeholder={searchPlaceholder}
               className="focus:border-primary focus:ring-primary/20 w-full rounded-2xl border border-[#d1d5db] bg-white py-3.5 pr-10 pl-12 text-sm text-[#171717] shadow-sm transition placeholder:text-[#9ca3af] focus:ring-2 focus:outline-none"
             />
             {searchQuery && (
@@ -82,9 +80,9 @@ export default function CareerHeroSearch({
           <div className="mt-3.5 flex flex-wrap items-center gap-2 text-xs">
             <span className="flex items-center gap-1 font-medium text-[#7f878f]">
               <TrendingUp className="text-primary h-3.5 w-3.5" />
-              Xu hướng:
+              {trendingLabel}
             </span>
-            {TRENDING_TAGS.map((tag) => {
+            {trendingTags.map((tag) => {
               const isSelected = selectedTag === tag;
               return (
                 <button

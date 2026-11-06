@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { CareerArticle } from '@/types/career';
+import { CAREER_ORIENTATION_MESSAGES } from '@/constants/career-orientation';
 import { Share2, Bookmark, Check, Copy } from 'lucide-react';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 
@@ -13,6 +14,9 @@ export default function CareerDetailBreadcrumb({ article }: CareerDetailBreadcru
   const [copied, setCopied] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
 
+  const { handbookLabel, copyLink, copiedLink, saveArticle, savedArticle, shareFacebook } =
+    CAREER_ORIENTATION_MESSAGES.detailBreadcrumb;
+
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
       navigator.clipboard.writeText(window.location.href);
@@ -22,7 +26,7 @@ export default function CareerDetailBreadcrumb({ article }: CareerDetailBreadcru
   };
 
   const items = [
-    { label: 'Cẩm nang nghề nghiệp', href: '/career-orientation' },
+    { label: handbookLabel, href: '/career-orientation' },
     { label: article.category, href: '/career-orientation' },
     { label: article.title },
   ];
@@ -42,12 +46,12 @@ export default function CareerDetailBreadcrumb({ article }: CareerDetailBreadcru
               {copied ? (
                 <>
                   <Check className="text-primary h-3.5 w-3.5" />
-                  <span className="text-primary font-semibold">Đã sao chép link</span>
+                  <span className="text-primary font-semibold">{copiedLink}</span>
                 </>
               ) : (
                 <>
                   <Copy className="h-3.5 w-3.5" />
-                  <span>Sao chép link</span>
+                  <span>{copyLink}</span>
                 </>
               )}
             </button>
@@ -62,7 +66,7 @@ export default function CareerDetailBreadcrumb({ article }: CareerDetailBreadcru
               }`}
             >
               <Bookmark className={`h-3.5 w-3.5 ${bookmarked ? 'fill-current' : ''}`} />
-              <span>{bookmarked ? 'Đã lưu' : 'Lưu bài viết'}</span>
+              <span>{bookmarked ? savedArticle : saveArticle}</span>
             </button>
 
             <a
@@ -72,7 +76,7 @@ export default function CareerDetailBreadcrumb({ article }: CareerDetailBreadcru
               target="_blank"
               rel="noopener noreferrer"
               className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-blue-600 hover:text-blue-600"
-              title="Chia sẻ lên Facebook"
+              title={shareFacebook}
             >
               <Share2 className="h-3.5 w-3.5" />
             </a>

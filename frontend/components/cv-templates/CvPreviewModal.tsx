@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { CvTemplateItem } from '@/types/cv-template';
+import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
 import CvPaperPreview from './CvPaperPreview';
 import Badge from '@/components/ui/Badge';
 import { X, ShieldCheck, Star, Download, ArrowRight, ZoomIn, ZoomOut, Maximize2, FileCheck } from 'lucide-react';
@@ -16,6 +17,20 @@ interface CvPreviewModalProps {
 export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewModalProps) {
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const [isDownloaded, setIsDownloaded] = useState<boolean>(false);
+
+  const {
+    closeAria,
+    zoomOutTitle,
+    zoomInTitle,
+    zoomResetTitle,
+    usesCountSuffix,
+    atsScoreLabel,
+    atsScoreText,
+    bestForLabel,
+    useThisCta,
+    downloadPdfSuccess,
+    downloadPdfBtn,
+  } = CV_TEMPLATE_MESSAGES.preview;
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -60,7 +75,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
         <button
           type="button"
           onClick={onClose}
-          aria-label="Đóng xem trước"
+          aria-label={closeAria}
           className="absolute top-4 right-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition hover:bg-gray-200 hover:text-black"
         >
           <X className="h-5 w-5" />
@@ -80,7 +95,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
                 type="button"
                 onClick={() => setZoomLevel((z) => Math.max(70, z - 10))}
                 className="rounded p-1 text-gray-600 hover:bg-gray-100"
-                title="Thu nhỏ"
+                title={zoomOutTitle}
               >
                 <ZoomOut className="h-4 w-4" />
               </button>
@@ -89,7 +104,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
                 type="button"
                 onClick={() => setZoomLevel((z) => Math.min(130, z + 10))}
                 className="rounded p-1 text-gray-600 hover:bg-gray-100"
-                title="Phóng to"
+                title={zoomInTitle}
               >
                 <ZoomIn className="h-4 w-4" />
               </button>
@@ -97,7 +112,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
                 type="button"
                 onClick={() => setZoomLevel(100)}
                 className="rounded p-1 text-gray-600 hover:bg-gray-100"
-                title="Kích thước chuẩn"
+                title={zoomResetTitle}
               >
                 <Maximize2 className="h-3.5 w-3.5" />
               </button>
@@ -123,7 +138,9 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
                   {template.rating}
                 </span>
                 <span>•</span>
-                <span>{template.usesCount} lượt sử dụng</span>
+                <span>
+                  {template.usesCount} {usesCountSuffix}
+                </span>
               </div>
               <h3 className="text-xl font-bold text-[#171717]">{template.title}</h3>
               <p className="mt-2 text-xs leading-relaxed text-[#526475]">{template.description}</p>
@@ -133,20 +150,15 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="text-primary h-5 w-5" />
-                  <span className="text-xs font-bold text-[#171717]">Đánh giá chuẩn ATS</span>
+                  <span className="text-xs font-bold text-[#171717]">{atsScoreLabel}</span>
                 </div>
                 <span className="text-primary text-sm font-black">98 / 100</span>
               </div>
-              <p className="mt-2 text-[11px] leading-relaxed text-[#065f46]">
-                Mẫu CV này được định dạng phân cấp tiêu đề chuẩn, tỷ lệ khoảng trắng cân đối, tối ưu trích xuất dữ liệu
-                không lỗi bảng/font.
-              </p>
+              <p className="mt-2 text-[11px] leading-relaxed text-[#065f46]">{atsScoreText}</p>
             </div>
 
             <div>
-              <label className="text-navy mb-2 block text-xs font-bold tracking-wider uppercase">
-                Phù hợp nhất với:
-              </label>
+              <label className="text-navy mb-2 block text-xs font-bold tracking-wider uppercase">{bestForLabel}</label>
               <div className="flex flex-wrap gap-1.5">
                 {template.recommendedFor.map((rec, idx) => (
                   <span key={idx} className="text-navy rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-medium">
@@ -162,7 +174,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
               href="/candidate/profile"
               className="bg-primary shadow-primary/25 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-[#009b44]"
             >
-              <span>Dùng mẫu này để tạo CV</span>
+              <span>{useThisCta}</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
 
@@ -174,12 +186,12 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
               {isDownloaded ? (
                 <>
                   <FileCheck className="text-primary h-4 w-4" />
-                  <span className="text-primary">Đã tải file PDF mẫu thành công!</span>
+                  <span className="text-primary">{downloadPdfSuccess}</span>
                 </>
               ) : (
                 <>
                   <Download className="h-4 w-4 text-[#7f878f]" />
-                  <span>Tải bản mẫu định dạng PDF</span>
+                  <span>{downloadPdfBtn}</span>
                 </>
               )}
             </button>

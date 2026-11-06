@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CvTemplateItem } from '@/types/cv-template';
+import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
 import CvPaperPreview from './CvPaperPreview';
 import { Eye, Star, ShieldCheck, Sparkles, ArrowRight } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
@@ -13,6 +14,8 @@ interface CvTemplateCardProps {
 }
 
 export default function CvTemplateCard({ template, onPreview, onUseTemplate }: CvTemplateCardProps) {
+  const { hotBadge, atsBadge, previewBtn, useTemplateBtn, usesCountSuffix } = CV_TEMPLATE_MESSAGES.card;
+
   return (
     <div className="group hover:border-primary/60 flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-xs transition duration-300 hover:shadow-xl">
       <div>
@@ -25,13 +28,13 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
             {template.isHot && (
               <Badge variant="warning" size="sm" className="border-transparent bg-orange-500 text-white">
                 <Sparkles className="h-2.5 w-2.5" />
-                Hot
+                {hotBadge}
               </Badge>
             )}
             {template.isAtsOptimized && (
               <Badge variant="success" size="sm" className="bg-primary border-transparent text-white">
                 <ShieldCheck className="h-2.5 w-2.5" />
-                Chuẩn ATS
+                {atsBadge}
               </Badge>
             )}
           </div>
@@ -43,7 +46,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
               className="flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-2 text-xs font-bold text-[#171717] shadow-lg transition hover:bg-gray-100"
             >
               <Eye className="text-primary h-3.5 w-3.5" />
-              <span>Xem trước</span>
+              <span>{previewBtn}</span>
             </button>
 
             <button
@@ -51,7 +54,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
               onClick={() => onUseTemplate(template)}
               className="bg-primary flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-lg transition hover:bg-[#009b44]"
             >
-              <span>Dùng mẫu</span>
+              <span>{useTemplateBtn}</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>
@@ -82,7 +85,9 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
             {template.rating}
           </span>
           <span>•</span>
-          <span>{template.usesCount} dùng</span>
+          <span>
+            {template.usesCount} {usesCountSuffix}
+          </span>
         </div>
 
         <button
@@ -90,7 +95,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
           onClick={() => onUseTemplate(template)}
           className="text-primary inline-flex items-center gap-1 text-xs font-bold hover:underline"
         >
-          <span>Dùng mẫu</span>
+          <span>{useTemplateBtn}</span>
           <ArrowRight className="h-3 w-3" />
         </button>
       </div>

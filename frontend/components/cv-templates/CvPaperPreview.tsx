@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CvTemplateSampleData } from '@/types/cv-template';
+import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
 import { Mail, Phone, MapPin, Briefcase, GraduationCap, Award, Wrench } from 'lucide-react';
 
 interface CvPaperPreviewProps {
@@ -11,6 +12,8 @@ interface CvPaperPreviewProps {
 }
 
 export default function CvPaperPreview({ sampleData, primaryColor, isMini = false }: CvPaperPreviewProps) {
+  const { sections } = CV_TEMPLATE_MESSAGES.preview;
+
   if (isMini) {
     return (
       <div className="relative aspect-[1/1.414] w-full overflow-hidden rounded-xl border border-gray-200 bg-white p-3.5 text-[8px] leading-tight text-gray-700 shadow-inner select-none">
@@ -40,7 +43,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
                 className="border-b pb-0.5 text-[8px] font-bold"
                 style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
               >
-                MỤC TIÊU NGHỀ NGHIỆP
+                {sections.careerObjective}
               </div>
               <p className="mt-1 line-clamp-2 text-[7px] text-gray-600">{sampleData.summary}</p>
             </div>
@@ -50,7 +53,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
                 className="border-b pb-0.5 text-[8px] font-bold"
                 style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
               >
-                KINH NGHIỆM LÀM VIỆC
+                {sections.workExperience}
               </div>
               {sampleData.experience.slice(0, 1).map((exp, idx) => (
                 <div key={idx} className="mt-1 space-y-0.5">
@@ -78,7 +81,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
                 className="border-b pb-0.5 text-[8px] font-bold"
                 style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
               >
-                HỌC VẤN
+                {sections.education}
               </div>
               {sampleData.education.slice(0, 1).map((edu, idx) => (
                 <div key={idx} className="mt-1 text-[7px]">
@@ -95,7 +98,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
                 className="border-b pb-0.5 text-[7.5px] font-bold"
                 style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
               >
-                LIÊN HỆ
+                {sections.contact}
               </div>
               <div className="mt-1 space-y-0.5 text-[6.5px] text-gray-600">
                 <div className="line-clamp-1">{sampleData.phone}</div>
@@ -108,7 +111,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
                 className="border-b pb-0.5 text-[7.5px] font-bold"
                 style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
               >
-                KỸ NĂNG
+                {sections.skills}
               </div>
               <div className="mt-1 flex flex-wrap gap-0.5">
                 {sampleData.skills.slice(0, 4).map((skill, idx) => (
@@ -172,7 +175,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
               style={{ color: primaryColor, borderColor: primaryColor }}
             >
               <Award className="h-4 w-4" />
-              Mục tiêu nghề nghiệp
+              {sections.careerObjectiveFull}
             </h3>
             <p className="mt-2 text-justify text-xs text-gray-600">{sampleData.summary}</p>
           </div>
@@ -183,7 +186,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
               style={{ color: primaryColor, borderColor: primaryColor }}
             >
               <Briefcase className="h-4 w-4" />
-              Kinh nghiệm làm việc
+              {sections.workExperienceFull}
             </h3>
             <div className="mt-3 space-y-4">
               {sampleData.experience.map((exp, idx) => (
@@ -217,7 +220,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
               style={{ color: primaryColor, borderColor: primaryColor }}
             >
               <GraduationCap className="h-4 w-4" />
-              Học vấn
+              {sections.educationFull}
             </h3>
             <div className="mt-3 space-y-2">
               {sampleData.education.map((edu, idx) => (
@@ -241,7 +244,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
               style={{ color: primaryColor, borderColor: primaryColor }}
             >
               <Wrench className="h-3.5 w-3.5" />
-              Kỹ năng chuyên môn
+              {sections.skillsFull}
             </h3>
             <div className="mt-2.5 flex flex-wrap gap-1.5">
               {sampleData.skills.map((skill, idx) => (
@@ -262,7 +265,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
                 className="border-b-2 pb-1 text-xs font-bold tracking-wider uppercase"
                 style={{ color: primaryColor, borderColor: primaryColor }}
               >
-                Ngôn ngữ
+                {sections.languages}
               </h3>
               <div className="mt-2 space-y-1 text-xs text-gray-600">
                 {sampleData.languages.map((lang, idx) => (
@@ -278,7 +281,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
                 className="border-b-2 pb-1 text-xs font-bold tracking-wider uppercase"
                 style={{ color: primaryColor, borderColor: primaryColor }}
               >
-                Chứng chỉ
+                {sections.certifications}
               </h3>
               <div className="mt-2 space-y-1.5 text-xs text-gray-600">
                 {sampleData.certifications.map((cert, idx) => (
