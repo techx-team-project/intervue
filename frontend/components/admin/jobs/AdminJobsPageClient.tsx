@@ -1,0 +1,185 @@
+'use client';
+
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import Pagination from '@/components/common/Pagination';
+import Spinner from '@/components/common/Spinner';
+import { Button } from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
+import { useAdminJobCounts, useAdminJobList, useAdminJobModeration } from '@/hooks/useAdminJobs';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { cn } from '@/lib/utils';
+import type { AdminJobSummaryResource } from '@/types/admin-job';
+import type { JobStatus } from '@/types/recruiter-job';
+import { getErrorMessage } from '@/utils/error';
+import { Search, SearchX } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import AdminJobHideDialog from './AdminJobHideDialog';
+import AdminJobPreviewModal from './AdminJobPreviewModal';
+import AdminJobsList from './AdminJobsList';
+
+const PAGE_SIZE = 10;
+const SEARCH_DEBOUNCE_MS = 300;
+
+const TABS: Array<{ value: JobStatus | undefined; label: string }> = [
+  { value: undefined, label: 'All' },
+  { value: 'PUBLISHED', label: 'Live' },
+  { value: 'PAUSED', label: 'Paused' },
+  { value: 'HIDDEN_BY_ADMIN', label: 'Hidden' },
+  { value: 'EXPIRED', label: 'Expired' },
+  { value: 'CLOSED', label: 'Closed' },
+];
+
+export default function AdminJobsPageClient() {
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState<JobStatus | undefined>(undefined);
+  const [page, setPage] = useState(1);
+  const [viewing, setViewing] = useState<AdminJobSummaryResource | null>(null);
+  const [hiding, setHiding] = useState<AdminJobSummaryResource | null>(null);
+  const [restoring, setRestoring] = useState<AdminJobSummaryResource | null>(null);
+
+  const debouncedSearch = useDebouncedValue(search, SEARCH_DEBOUNCE_MS);
+  const list = useAdminJobList({ q: debouncedSearch, status, page: page - 1, size: PAGE_SIZE });
+  const counts = useAdminJobCounts();
+  const { hide, restore } = useAdminJobModeration();
+
+  const jobs = list.data?.items ?? [];
+  const totalItems = list.data?.totalItems ?? 0;
+
+  const countOf = (value: JobStatus | undefined) =>
+    value ? (counts.data?.byStatus[value] ?? 0) : (counts.data?.total ?? 0);
+
+  const confirmHide = (reason: string) => {
+    if (!hiding) return;
+    hide.mutate(
+      { id: hiding.id, reason },
+      {
+        onSuccess: () => {
+          toast.success('Job hidden and the recruiter was notified.');
+          setHiding(null);
+        },
+        onError: (error) => toast.error(getErrorMessage(error)),
+      },
+    );
+  };
+
+  const confirmRestore = () => {
+    if (!restoring) return;
+    restore.mutate(restoring.id, {
+      onSuccess: () => {
+        toast.success('Job restored.');
+        setRestoring(null);
+      },
+      onError: (error) => toast.error(getErrorMessage(error)),
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <AdminPageHeader
+        description="Review posted jobs, hide the ones that break the rules and restore them once fixed."
+        count={counts.data?.total}
+        countLabel="jobs"
+      />
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div role="tablist" aria-label="Job status" className="flex flex-wrap gap-1.5">
+          {TABS.map((tab) => (
+            <button
+              key={tab.label}
+              type="button"
+              role="tab"
+              aria-selected={status === tab.value}
+              onClick={() => {
+                setStatus(tab.value);
+                setPage(1);
+              }}
+              className={cn(
+                'rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
+                status === tab.value
+                  ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
+                  : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50',
+              )}
+            >
+              {tab.label} <span className="ml-0.5 text-slate-400">{countOf(tab.value)}</span>
+            </button>
+          ))}
+        </div>
+
+        <label className="relative block sm:w-72">
+          <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <input
+            value={search}
+            onChange={(event) => {
+              setSearch(event.target.value);
+              setPage(1);
+            }}
+            placeholder="Search by title or company"
+            aria-label="Search jobs"
+            className="h-10 w-full rounded-xl border border-slate-300 bg-white pr-3 pl-9 text-sm focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
+          />
+        </label>
+      </div>
+
+      {list.isLoading ? (
+        <div className="flex justify-center py-16">
+          <Spinner />
+        </div>
+      ) : list.isError ? (
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-6 py-12 text-center">
+          <p className="text-sm font-semibold text-rose-700">{getErrorMessage(list.error)}</p>
+          <Button variant="outline" size="sm" onClick={() => list.refetch()}>
+            Try again
+          </Button>
+        </div>
+      ) : jobs.length === 0 ? (
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-14 text-center">
+          <SearchX className="h-8 w-8 text-slate-300" />
+          <p className="text-sm font-semibold text-slate-700">No jobs match these filters</p>
+        </div>
+      ) : (
+        <>
+          <AdminJobsList jobs={jobs} onView={setViewing} onHide={setHiding} onRestore={setRestoring} />
+          <Pagination
+            page={page}
+            pageCount={Math.max(1, list.data?.totalPages ?? 1)}
+            totalItems={totalItems}
+            pageSize={PAGE_SIZE}
+            onPageChange={setPage}
+          />
+        </>
+      )}
+
+      {viewing && <AdminJobPreviewModal jobId={viewing.id} onClose={() => setViewing(null)} />}
+
+      {hiding && (
+        <AdminJobHideDialog
+          jobTitle={hiding.title}
+          isPending={hide.isPending}
+          onClose={() => setHiding(null)}
+          onConfirm={confirmHide}
+        />
+      )}
+
+      <Modal
+        isOpen={restoring !== null}
+        onClose={() => setRestoring(null)}
+        maxWidth="sm"
+        title="Restore this job?"
+        description={restoring ? `"${restoring.title}" returns to search if its deadline has not passed.` : undefined}
+        footer={
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setRestoring(null)} disabled={restore.isPending}>
+              Cancel
+            </Button>
+            <Button isLoading={restore.isPending} onClick={confirmRestore}>
+              Restore
+            </Button>
+          </div>
+        }
+      >
+        <p className="text-sm text-slate-600">The recruiter is notified when the job is restored.</p>
+      </Modal>
+    </div>
+  );
+}
