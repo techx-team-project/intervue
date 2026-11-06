@@ -67,13 +67,11 @@ public class GetPlatformGuideTool implements ChatTool {
         }
         String query = queryObj.toString().trim();
 
-        // 1. Check quick navigation feature matches
         String quickNav = matchQuickNavigation(query);
         if (quickNav != null) {
             return ToolExecutionResult.success(quickNav);
         }
 
-        // 2. Query knowledge base
         List<KnowledgeMatch> matches =
                 knowledgeBaseService.retrieve(query, CAPPED_RESULTS, MIN_SCORE_THRESHOLD);
         if (matches.isEmpty()) {

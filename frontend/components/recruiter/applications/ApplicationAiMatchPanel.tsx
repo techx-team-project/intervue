@@ -55,7 +55,6 @@ export default function ApplicationAiMatchPanel({
   const executeAnalysis = async () => {
     setIsAnalyzing(true);
     try {
-      // 1. Call backend async analysis API
       const result = await requestResumeMatch({
         applicationId,
         jobTitle,
@@ -84,7 +83,6 @@ export default function ApplicationAiMatchPanel({
       setMatchData(updated);
       onMatchUpdated?.(updated);
     } catch {
-      // Graceful fallback for offline / dev mock mode
       await new Promise((resolve) => setTimeout(resolve, 800));
 
       const generatedMatches: RequirementMatchItem[] = fallbackRequirements.map((req, idx) => {

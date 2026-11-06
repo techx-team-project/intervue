@@ -60,26 +60,19 @@ public class ResumeMatchService implements ResumeMatchServiceInterface {
             throw new AppException(ErrorCode.VALIDATION_FAILED);
         }
 
-        // 1. Sanitize candidate data to ensure no PII, KYC or screening questions leak
         String sanitizedCandidateData =
                 privacySanitizer.sanitizeCandidateData(request.candidateData(), request.cvText());
         privacySanitizer.validateNoSensitiveDataSent(sanitizedCandidateData);
 
-        // 2. Build prompt context
         String userMessage = buildUserPrompt(request, sanitizedCandidateData);
-
-        // 3. Load prompt template
         PromptTemplate systemPrompt = promptService.load(PROMPT_NAME, PROMPT_VERSION);
 
-        // 4. Execute AI call via AiGatewayService
         AiCallContext context = new AiCallContext(FEATURE_NAME, recruiterUserId, ip, true);
         AiChatRequest chatRequest =
                 new AiChatRequest(
                         systemPrompt, List.of(AiChatMessage.user(userMessage)), List.of());
 
         AiChatResult result = aiGatewayService.chat(context, chatRequest);
-
-        // 5. Parse output into structured RequirementEvidenceMatch items
         ParsedMatchPayload parsed = parseModelResponse(result.text(), request.jobRequirements());
 
         return new ResumeMatchResult(
@@ -168,7 +161,6 @@ public class ResumeMatchService implements ResumeMatchServiceInterface {
                     ex.getMessage());
         }
 
-        // Align exactly with original requirements
         List<RequirementEvidenceMatch> finalList = new ArrayList<>();
         for (String req : originalRequirements) {
             String norm = normalizeKey(req);

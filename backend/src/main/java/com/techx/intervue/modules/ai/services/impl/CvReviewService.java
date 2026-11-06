@@ -130,7 +130,6 @@ public class CvReviewService implements CvReviewServiceInterface {
             String fileHash,
             String targetPosition) {
 
-        // 1. Idempotency Check: Unchanged CV returns old result without using quota
         Optional<AiCvReview> cached =
                 aiCvReviewRepository.findFirstByCandidateProfileIdAndFileHashOrderByCreatedAtDesc(
                         profile.getId(), fileHash);
@@ -142,15 +141,12 @@ public class CvReviewService implements CvReviewServiceInterface {
             return toResult(cached.get(), true);
         }
 
-        // 2. Consume Quota: 3 uses per day combined (reset 00:00 Vietnam time)
         quotaService.checkAndConsumeQuota(candidateUserId);
 
         try {
-            // 3. Sanitize candidate data (exclude age, gender, photo, address, KYC)
             String sanitizedCv = privacySanitizer.sanitizeCandidateData(null, rawText);
             privacySanitizer.validateNoSensitiveDataSent(sanitizedCv);
 
-            // 4. Build prompt and invoke AI
             String position =
                     targetPosition != null && !targetPosition.isBlank()
                             ? targetPosition
@@ -175,7 +171,6 @@ public class CvReviewService implements CvReviewServiceInterface {
             AiChatResult aiResult = aiGatewayService.chat(callContext, chatRequest);
             ParsedCvReview parsed = parseAiResponse(aiResult.text());
 
-            // 5. Persist review
             String commentsJson = objectMapper.writeValueAsString(parsed.comments());
             AiCvReview entity =
                     AiCvReview.builder()
@@ -216,7 +211,6 @@ public class CvReviewService implements CvReviewServiceInterface {
                         .findById(reviewId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
-        // Enforce candidate-only access
         if (!review.getCandidateProfile().getUserId().equals(candidateUserId)) {
             throw new AppException(ErrorCode.FORBIDDEN);
         }

@@ -67,7 +67,6 @@ export function useAiPersonalDataConsent() {
 
   const hasConsented = useMemo(() => {
     if (!consentRecord || !consentRecord.consented) return false;
-    // Ask again when the version changes
     return consentRecord.version === AI_PERSONAL_DATA_CONSENT_CONFIG.version;
   }, [consentRecord]);
 
@@ -82,7 +81,7 @@ export function useAiPersonalDataConsent() {
       window.localStorage.setItem(AI_PERSONAL_DATA_CONSENT_STORAGE_KEY, JSON.stringify(newRecord));
       notifyConsentChange();
     } catch {
-      // Storage unavailable / private mode fallback
+      // Storage unavailable / private mode
     }
 
     setIsConsentDialogOpen(false);
@@ -104,7 +103,7 @@ export function useAiPersonalDataConsent() {
       window.localStorage.removeItem(AI_PERSONAL_DATA_CONSENT_STORAGE_KEY);
       notifyConsentChange();
     } catch {
-      // Storage unavailable
+      // Storage unavailable / private mode
     }
   }, []);
 

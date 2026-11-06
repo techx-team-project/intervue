@@ -249,8 +249,6 @@ public class JobSearchService implements JobSearchServiceInterface {
             }
         }
 
-        // Token-level check for multi-word queries like "remote java" or "find remote java jobs in
-        // ho chi minh city"
         String[] tokens = normalizedKeyword.split("\\s+");
         boolean allTokensMatch = true;
         boolean hasMeaningfulToken = false;

@@ -50,7 +50,6 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
           toast.success('Đã tạo bản nháp thư giới thiệu! Bạn hãy kiểm tra và chỉnh sửa trước khi gửi.');
         }
       } catch {
-        // Fallback to grounded factual draft if offline/mock
         setCoverLetter(
           `Kính gửi Bộ phận Tuyển dụng ${job.company.name},\n\nTôi viết thư này để bày tỏ nguyện vọng ứng tuyển vào vị trí ${job.title} tại Quý công ty. Dựa trên các yêu cầu công việc được nêu rõ trong thông báo tuyển dụng và quá trình tích lũy kinh nghiệm thực tế của bản thân, tôi tin rằng các kỹ năng chuyên môn của mình hoàn toàn đáp ứng tốt mục tiêu phát triển của dự án.\n\nTôi rất mong có cơ hội được tham gia buổi phỏng vấn để trao đổi chi tiết hơn về những đóng góp có thể mang lại cho ${job.company.name}.\n\nTrân trọng cảm ơn,\n${fullName}`,
         );

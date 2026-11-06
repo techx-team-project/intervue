@@ -30,9 +30,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
           setQuota(data);
         }
       },
-      () => {
-        // Ignore background quota fetch error
-      },
+      () => {},
     );
     return () => {
       active = false;

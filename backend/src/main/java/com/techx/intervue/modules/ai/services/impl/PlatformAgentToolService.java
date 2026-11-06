@@ -22,7 +22,6 @@ public class PlatformAgentToolService implements PlatformAgentToolServiceInterfa
     public static final String TOOL_GET_MY_APPLICATIONS = "get_my_applications";
     public static final String TOOL_GET_PLATFORM_GUIDE = "get_platform_guide";
 
-    // Backward-compatible legacy aliases
     public static final String ALIAS_SEARCH_KNOWLEDGE = "search_knowledge_base";
     public static final String ALIAS_SEARCH_COMPANIES = "search_companies";
     public static final String ALIAS_SUGGEST_NAVIGATION = "suggest_navigation";

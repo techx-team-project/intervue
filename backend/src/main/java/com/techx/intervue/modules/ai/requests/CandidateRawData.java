@@ -11,7 +11,6 @@ public record CandidateRawData(
         List<String> projects,
         List<String> educations,
         String cvText,
-        // Sensitive / KYC / Screening fields to be stripped by sanitizer
         Integer age,
         Integer birthYear,
         String dob,
