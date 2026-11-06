@@ -35,7 +35,7 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
               </Link>
               <span className="text-primary inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold">
                 <Sparkles className="h-3 w-3" />
-                Cập nhật chuẩn 2026
+                2026 Edition
               </span>
             </div>
 
@@ -68,7 +68,7 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
               <span>•</span>
               <span className="flex items-center gap-1">
                 <Eye className="h-3.5 w-3.5" />
-                {article.viewsCount} lượt xem
+                {article.viewsCount} views
               </span>
             </div>
 
@@ -107,7 +107,7 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
 
                   {section.highlights && section.highlights.length > 0 && (
                     <div className="bg-primary-light text-navy rounded-2xl border border-emerald-100 p-4 text-xs sm:text-sm">
-                      <div className="text-primary mb-2 font-bold">Điểm cốt lõi cần nhớ:</div>
+                      <div className="text-primary mb-2 font-bold">Key Takeaways:</div>
                       <ul className="space-y-1.5">
                         {section.highlights.map((h, hIdx) => (
                           <li key={hIdx} className="flex items-start gap-2">

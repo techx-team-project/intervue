@@ -24,10 +24,10 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
             <Flame className="h-5 w-5" />
           </div>
-          <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">Bài viết nổi bật</h2>
+          <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">Featured Articles</h2>
         </div>
         <span className="hidden text-xs text-[#7f878f] sm:inline-block">
-          Cập nhật xu hướng tuyển dụng & kiến thức mới nhất
+          Latest recruitment trends & career insights
         </span>
       </div>
 
@@ -52,7 +52,7 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/90 px-2.5 py-1 text-xs font-semibold text-white shadow-md">
                   <Sparkles className="h-3 w-3" />
-                  Tiêu điểm
+                  Spotlight
                 </span>
               </div>
             </Link>
@@ -110,7 +110,7 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
                   href={getArticleUrl(mainArticle)}
                   className="bg-primary/10 text-primary hover:bg-primary inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold transition hover:text-white"
                 >
-                  <span>Chi tiết</span>
+                  <span>Read full story</span>
                   <ArrowUpRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
@@ -122,11 +122,38 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
           {sideArticles.map((article) => (
             <div
               key={article.id}
-              className="group hover:border-primary/50 flex flex-1 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition duration-300 hover:shadow-xl sm:flex-row"
+              className="group hover:border-primary/50 flex flex-1 flex-col justify-between overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white p-5 shadow-xs transition duration-300 hover:shadow-xl sm:flex-row sm:gap-5"
             >
+              <div className="flex flex-1 flex-col justify-between">
+                <div>
+                  <div className="mb-2 flex items-center gap-2 text-xs text-[#7f878f]">
+                    <span className="text-primary font-semibold">{article.category}</span>
+                    <span>•</span>
+                    <span>{article.readTime}</span>
+                  </div>
+
+                  <h4 className="group-hover:text-primary line-clamp-2 text-sm font-bold text-[#171717] transition-colors sm:text-base">
+                    <Link href={getArticleUrl(article)}>{article.title}</Link>
+                  </h4>
+
+                  <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-[#526475]">{article.excerpt}</p>
+                </div>
+
+                <div className="mt-3 flex items-center justify-between text-xs text-[#7f878f]">
+                  <span className="text-navy font-medium">{article.author.name}</span>
+                  <Link
+                    href={getArticleUrl(article)}
+                    className="text-primary inline-flex items-center gap-1 font-semibold hover:underline"
+                  >
+                    <span>Read story</span>
+                    <ArrowUpRight className="h-3 w-3" />
+                  </Link>
+                </div>
+              </div>
+
               <Link
                 href={getArticleUrl(article)}
-                className="relative block aspect-video w-full overflow-hidden bg-gray-100 sm:aspect-square sm:w-44 sm:shrink-0"
+                className="relative mt-3 block aspect-video w-full shrink-0 overflow-hidden rounded-xl bg-gray-100 sm:mt-0 sm:aspect-square sm:w-28"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -136,37 +163,7 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
                   alt={article.title}
                   className="h-full w-full object-cover transition-transform duration-500"
                 />
-                <span className="bg-primary absolute top-2.5 left-2.5 rounded-full px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">
-                  {article.category}
-                </span>
               </Link>
-
-              <div className="flex flex-1 flex-col justify-between p-4">
-                <div>
-                  <div className="mb-1.5 flex items-center gap-2 text-[11px] text-[#7f878f]">
-                    <span>{article.publishedAt}</span>
-                    <span>•</span>
-                    <span>{article.readTime}</span>
-                  </div>
-
-                  <h4 className="group-hover:text-primary line-clamp-2 text-sm font-bold text-[#171717] transition-colors">
-                    <Link href={getArticleUrl(article)}>{article.title}</Link>
-                  </h4>
-
-                  <p className="mt-1 line-clamp-2 text-xs text-[#526475]">{article.excerpt}</p>
-                </div>
-
-                <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-2.5 text-xs">
-                  <span className="text-[11px] text-[#7f878f]">{article.viewsCount} lượt xem</span>
-                  <Link
-                    href={getArticleUrl(article)}
-                    className="text-primary flex items-center gap-0.5 font-semibold group-hover:translate-x-0.5"
-                  >
-                    <span>Xem ngay</span>
-                    <ArrowUpRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </div>
             </div>
           ))}
         </div>

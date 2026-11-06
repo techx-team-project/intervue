@@ -24,10 +24,10 @@ const CATEGORY_CARDS: CategoryCardItem[] = [
     slug: 'dinh-huong-nghe-nghiep',
     shortDesc: 'Khám phá tiềm năng, xác định đam mê Ikigai và lộ trình thăng tiến sự nghiệp bền vững.',
     icon: <Compass className="h-6 w-6 text-emerald-600" />,
-    tags: ['Mô hình Ikigai', 'Chọn ngành chọn nghề', 'Lộ trình thăng tiến', 'Sinh viên ra trường'],
+    tags: ['Ikigai Model', 'Career Path', 'Growth Roadmaps', 'Graduate Playbook'],
     articleCount: 6,
     gradientBg: 'from-emerald-500/10 via-teal-500/5 to-transparent',
-    badge: 'Định hướng',
+    badge: 'Roadmap',
     accentBorder: 'hover:border-emerald-500/60',
   },
   {
@@ -36,10 +36,10 @@ const CATEGORY_CARDS: CategoryCardItem[] = [
     slug: 'bi-kip-tim-viec',
     shortDesc: 'Viết CV chuẩn ATS, kịch bản trả lời 50+ câu hỏi phỏng vấn hóc búa và đàm phán offer.',
     icon: <Briefcase className="h-6 w-6 text-blue-600" />,
-    tags: ['CV chuẩn ATS', 'Kỹ năng phỏng vấn', 'Đàm phán lương', 'Vượt qua thử việc'],
+    tags: ['ATS Resume', 'STAR Interviews', 'Salary Negotiation', 'Probation Success'],
     articleCount: 6,
     gradientBg: 'from-blue-500/10 via-indigo-500/5 to-transparent',
-    badge: 'Chinh phục HR',
+    badge: 'Interviews',
     accentBorder: 'hover:border-blue-500/60',
   },
   {
@@ -48,10 +48,10 @@ const CATEGORY_CARDS: CategoryCardItem[] = [
     slug: 'che-do-luong-thuong',
     shortDesc: 'Công cụ tính Lương Gross sang Net 2026, chế độ bảo hiểm xã hội (BHXH) và quyền lợi lao động.',
     icon: <Calculator className="h-6 w-6 text-amber-600" />,
-    tags: ['Lương Gross ➔ Net', 'Bảo hiểm xã hội', 'Thưởng tháng 13', 'Thuế TNCN 7 bậc'],
+    tags: ['Gross ➔ Net', 'Social Insurance', '13th Month Bonus', '7-Tier PIT Tax'],
     articleCount: 6,
     gradientBg: 'from-amber-500/10 via-orange-500/5 to-transparent',
-    badge: 'Minh bạch quyền lợi',
+    badge: 'Compensation',
     accentBorder: 'hover:border-amber-500/60',
   },
   {
@@ -60,10 +60,10 @@ const CATEGORY_CARDS: CategoryCardItem[] = [
     slug: 'kien-thuc-chuyen-nganh',
     shortDesc: 'Kho tri thức thực chiến sâu rộng: Công nghệ thông tin / AI, Marketing số, Sales và Logistics.',
     icon: <GraduationCap className="h-6 w-6 text-violet-600" />,
-    tags: ['IT & Trí tuệ nhân tạo', 'Digital Marketing', 'B2B Sales', 'Xuất nhập khẩu C&B'],
+    tags: ['Software Engineering', 'Generative AI', 'Product Management', 'DevOps & Cloud'],
     articleCount: 6,
     gradientBg: 'from-violet-500/10 via-purple-500/5 to-transparent',
-    badge: 'Chuyên môn sâu',
+    badge: 'Expertise',
     accentBorder: 'hover:border-violet-500/60',
   },
 ];
@@ -77,14 +77,12 @@ export default function BlogCategoryShowcase() {
             <span className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
               <Sparkles className="h-4 w-4" />
             </span>
-            <span className="text-primary text-xs font-bold tracking-wider uppercase">4 Trụ Cột Tri Thức</span>
+            <span className="text-primary text-xs font-bold tracking-wider uppercase">4 Core Knowledge Pillars</span>
           </div>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-[#0f172a] sm:text-3xl">
-            Chuyên mục Cẩm nang Nghề nghiệp
-          </h2>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight text-[#0f172a] sm:text-3xl">Career Guidance Pillars</h2>
         </div>
         <p className="text-xs text-gray-500 sm:text-right">
-          Cập nhật thông tin thực chiến, chính sách pháp luật và xu hướng mới nhất 2026
+          Explore actionable industry insights, workplace policies, and 2026 hiring trends
         </p>
       </div>
 
@@ -105,7 +103,7 @@ export default function BlogCategoryShowcase() {
                   {cat.icon}
                 </div>
                 <span className="group-hover:bg-primary rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600 transition group-hover:text-white">
-                  {cat.articleCount} bài viết
+                  {cat.articleCount} articles
                 </span>
               </div>
 
@@ -125,7 +123,7 @@ export default function BlogCategoryShowcase() {
             </div>
 
             <div className="text-primary relative mt-6 flex items-center gap-1 text-xs font-bold transition duration-200 group-hover:translate-x-1">
-              <span>Khám phá chuyên mục</span>
+              <span>Explore category</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </div>
           </Link>

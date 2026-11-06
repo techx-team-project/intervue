@@ -13,7 +13,7 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
   return (
     <aside className="sticky top-24 space-y-6">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-        <h4 className="text-xs font-bold tracking-wider text-[#7f878f] uppercase">Tác giả bài viết</h4>
+        <h4 className="text-xs font-bold tracking-wider text-[#7f878f] uppercase">Article Author</h4>
         <div className="mt-3 flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -36,7 +36,7 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
           <div className="bg-primary flex h-6 w-6 items-center justify-center rounded-lg text-white">
             <Sparkles className="h-3.5 w-3.5" />
           </div>
-          <h4 className="text-sm font-bold text-[#171717]">Công cụ hỗ trợ</h4>
+          <h4 className="text-sm font-bold text-[#171717]">Interactive Tools</h4>
         </div>
 
         <div className="space-y-2">
@@ -47,7 +47,7 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
             <div className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
               <FileText className="h-3.5 w-3.5" />
             </div>
-            <span className="font-semibold">Tạo CV xin việc chuẩn ATS</span>
+            <span className="font-semibold">Build ATS-Proof Resume</span>
           </Link>
 
           <Link
@@ -57,7 +57,7 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
               <Calculator className="h-3.5 w-3.5" />
             </div>
-            <span className="font-semibold">Tính lương Gross ➔ Net 2026</span>
+            <span className="font-semibold">Gross ➔ Net Calculator</span>
           </Link>
 
           <Link
@@ -67,7 +67,7 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
               <Compass className="h-3.5 w-3.5" />
             </div>
-            <span className="font-semibold">Trắc nghiệm định hướng nghề</span>
+            <span className="font-semibold">Career Orientation Quiz</span>
           </Link>
 
           <Link
@@ -77,14 +77,14 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
             <div className="bg-primary flex h-7 w-7 items-center justify-center rounded-lg text-white">
               <Bot className="h-3.5 w-3.5" />
             </div>
-            <span>Luyện phỏng vấn cùng AI</span>
+            <span>AI Mock Interview Practice</span>
           </Link>
         </div>
       </div>
 
       {article.relatedArticles && article.relatedArticles.length > 0 && (
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-          <h4 className="mb-3 text-sm font-bold text-[#171717]">Bài viết liên quan</h4>
+          <h4 className="mb-3 text-sm font-bold text-[#171717]">Related Articles</h4>
 
           <div className="space-y-4">
             {article.relatedArticles.map((rel) => (
@@ -99,19 +99,15 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
                   decoding="async"
                   src={rel.coverImage}
                   alt={rel.title}
-                  className="h-16 w-20 shrink-0 rounded-xl object-cover group-hover:opacity-90"
+                  className="h-14 w-20 shrink-0 rounded-xl object-cover ring-1 ring-black/5"
                 />
-                <div className="flex flex-col justify-between">
-                  <h5 className="group-hover:text-primary line-clamp-2 text-xs leading-snug font-bold text-[#171717] transition-colors">
+                <div className="min-w-0 flex-1">
+                  <h5 className="group-hover:text-primary line-clamp-2 text-xs font-bold text-[#171717] transition-colors">
                     {rel.title}
                   </h5>
-                  <div className="mt-1 flex items-center gap-2 text-[10px] text-[#7f878f]">
-                    <span>{rel.publishedAt}</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-0.5">
-                      <Clock className="h-2.5 w-2.5" />
-                      {rel.readTime}
-                    </span>
+                  <div className="mt-1 flex items-center gap-2 text-[11px] text-[#7f878f]">
+                    <Clock className="h-3 w-3" />
+                    <span>{rel.readTime}</span>
                   </div>
                 </div>
               </Link>

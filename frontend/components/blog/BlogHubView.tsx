@@ -2,35 +2,47 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { BlogArticle, BlogCategoryMeta } from '@/types/blog';
+import { BlogArticle } from '@/types/blog';
 import BlogHeroSearch from './BlogHeroSearch';
 import BlogCategoryTabs from './BlogCategoryTabs';
-import BlogCategoryShowcase from './BlogCategoryShowcase';
-import BlogFeaturedGrid from './BlogFeaturedGrid';
 import BlogArticleCard from './BlogArticleCard';
+import BlogFeaturedGrid from './BlogFeaturedGrid';
+import BlogCategoryShowcase from './BlogCategoryShowcase';
 import BlogSidebar from './BlogSidebar';
 import { BookOpen, SearchX, Calculator, Compass, ArrowRight } from 'lucide-react';
 
 interface BlogHubViewProps {
   initialArticles: BlogArticle[];
-  categories: BlogCategoryMeta[];
+  categories?: import('@/types/blog').BlogCategoryMeta[];
 }
 
 const ITEMS_PER_PAGE = 6;
 
-export default function BlogHubView({ initialArticles, categories }: BlogHubViewProps) {
+export default function BlogHubView({ initialArticles }: BlogHubViewProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategoryId, setActiveCategoryId] = useState('all');
+  const [activeCategoryId, setActiveCategoryId] = useState<string>('all');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const categories = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const art of initialArticles) {
+      if (!map.has(art.categorySlug)) {
+        map.set(art.categorySlug, art.category);
+      }
+    }
+    return Array.from(map.entries()).map(([slug, name]) => ({ id: slug, name }));
+  }, [initialArticles]);
+
+  const featuredArticles = useMemo(() => {
+    const featured = initialArticles.filter((a) => a.isFeatured);
+    return featured.length > 0 ? featured : initialArticles.slice(0, 3);
+  }, [initialArticles]);
+
   const filteredArticles = useMemo(() => {
     return initialArticles.filter((article) => {
-      if (activeCategoryId !== 'all') {
-        const selectedCategory = categories.find((c) => c.id === activeCategoryId);
-        if (selectedCategory && article.categorySlug !== selectedCategory.slug) {
-          return false;
-        }
+      if (activeCategoryId !== 'all' && article.categorySlug !== activeCategoryId) {
+        return false;
       }
 
       if (selectedTag) {
@@ -49,11 +61,7 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
 
       return true;
     });
-  }, [initialArticles, activeCategoryId, selectedTag, searchQuery, categories]);
-
-  const featuredArticles = useMemo(() => {
-    return initialArticles.filter((art) => art.isFeatured);
-  }, [initialArticles]);
+  }, [initialArticles, activeCategoryId, selectedTag, searchQuery]);
 
   const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE);
   const paginatedArticles = useMemo(() => {
@@ -61,8 +69,8 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
     return filteredArticles.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredArticles, currentPage]);
 
-  const handleSelectCategory = (id: string) => {
-    setActiveCategoryId(id);
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
     setCurrentPage(1);
   };
 
@@ -71,8 +79,8 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
     setCurrentPage(1);
   };
 
-  const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
+  const handleSelectCategory = (catId: string) => {
+    setActiveCategoryId(catId);
     setCurrentPage(1);
   };
 
@@ -101,21 +109,21 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                   </div>
                   <div>
                     <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-800">
-                      Tiện ích mới
+                      Interactive Tool
                     </span>
-                    <h3 className="mt-1 text-lg font-bold text-[#0f172a]">Tính Lương Gross ➔ Net 2026</h3>
+                    <h3 className="mt-1 text-lg font-bold text-[#0f172a]">Gross ➔ Net Salary Calculator</h3>
                   </div>
                 </div>
                 <p className="mt-3 text-xs leading-relaxed text-gray-600">
-                  Tự động bóc tách tiền đóng bảo hiểm xã hội (10.5%), giảm trừ gia cảnh 11 triệu và biểu thuế TNCN 7 bậc
-                  chuẩn xác theo quy định mới nhất.
+                  Instantly calculate take-home pay, mandatory insurance (10.5%), personal deductions, and 7-bracket PIT
+                  tax.
                 </p>
                 <div className="mt-4">
                   <Link
                     href="/blog/che-do-luong-thuong"
                     className="inline-flex items-center gap-1.5 rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-amber-700"
                   >
-                    <span>Tính lương ngay</span>
+                    <span>Calculate Salary</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
@@ -128,21 +136,20 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                   </div>
                   <div>
                     <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
-                      Trắc nghiệm 3 phút
+                      3-Minute Quiz
                     </span>
-                    <h3 className="mt-1 text-lg font-bold text-[#0f172a]">Khám phá Ikigai & Định hướng nghề</h3>
+                    <h3 className="mt-1 text-lg font-bold text-[#0f172a]">Discover Your Ikigai Career Alignment</h3>
                   </div>
                 </div>
                 <p className="mt-3 text-xs leading-relaxed text-gray-600">
-                  Tìm điểm giao thoa giữa sở thích, năng lực cá nhân và nhu cầu thị trường để xây dựng lộ trình sự
-                  nghiệp vững chắc và hạnh phúc.
+                  Pinpoint the sweet spot between your passions, strengths, and market demand for long-term growth.
                 </p>
                 <div className="mt-4">
                   <Link
                     href="/blog/dinh-huong-nghe-nghiep"
                     className="bg-primary inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-600"
                   >
-                    <span>Làm bài trắc nghiệm</span>
+                    <span>Take Assessment</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
@@ -157,9 +164,7 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
               <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
                 <BookOpen className="h-5 w-5" />
               </div>
-              <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">
-                Khám phá bài viết ({filteredArticles.length})
-              </h2>
+              <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">All Articles ({filteredArticles.length})</h2>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
@@ -172,7 +177,7 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                     : 'hover:border-primary border border-gray-200 bg-white text-gray-600'
                 }`}
               >
-                Tất cả
+                All
               </button>
               {categories.map((c) => (
                 <button
@@ -209,7 +214,7 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                         onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                         className="rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-40"
                       >
-                        Trang trước
+                        Previous
                       </button>
                       {Array.from({ length: totalPages }).map((_, i) => (
                         <button
@@ -231,7 +236,7 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                         onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                         className="rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-40"
                       >
-                        Trang sau
+                        Next
                       </button>
                     </div>
                   )}
@@ -239,8 +244,8 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
               ) : (
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-white py-16 text-center">
                   <SearchX className="h-12 w-12 text-gray-300" />
-                  <h3 className="mt-4 text-base font-bold text-gray-700">Không tìm thấy bài viết nào</h3>
-                  <p className="mt-1 text-xs text-gray-400">Vui lòng thử tìm kiếm lại với từ khóa khác</p>
+                  <h3 className="mt-4 text-base font-bold text-gray-700">No matching articles found</h3>
+                  <p className="mt-1 text-xs text-gray-400">Try a different search keyword or reset filters</p>
                   <button
                     type="button"
                     onClick={() => {
@@ -248,16 +253,16 @@ export default function BlogHubView({ initialArticles, categories }: BlogHubView
                       setActiveCategoryId('all');
                       setSelectedTag(null);
                     }}
-                    className="bg-primary mt-4 rounded-xl px-4 py-2 text-xs font-bold text-white transition hover:bg-emerald-600"
+                    className="text-primary mt-4 text-xs font-bold hover:underline"
                   >
-                    Xóa tất cả bộ lọc
+                    Reset filters
                   </button>
                 </div>
               )}
             </div>
 
             <div className="lg:col-span-4">
-              <BlogSidebar popularArticles={initialArticles} selectedTag={selectedTag} onSelectTag={handleSelectTag} />
+              <BlogSidebar popularArticles={initialArticles} onSelectTag={handleSelectTag} selectedTag={selectedTag} />
             </div>
           </div>
         </div>
