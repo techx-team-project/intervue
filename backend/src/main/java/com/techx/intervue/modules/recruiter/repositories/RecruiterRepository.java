@@ -15,6 +15,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
 
+    @Query("SELECT r.id FROM Recruiter r WHERE r.status = :status")
+    List<Long> findIdsByStatus(@Param("status") RecruiterStatus status);
+
     boolean existsByEmail(String email);
 
     Optional<Recruiter> findByEmail(String email);

@@ -208,7 +208,6 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             label: 'Announcements',
             href: ROUTES.ADMIN_CONTENT_ANNOUNCEMENTS,
             permission: 'content.manage',
-            comingSoon: true,
           },
         ],
       },

@@ -12,7 +12,9 @@ import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.helpers.TokenHashUtil;
 import com.techx.intervue.modules.user.entities.RefreshToken;
+import com.techx.intervue.modules.user.enums.AccountType;
 import com.techx.intervue.modules.user.enums.TokenOrigin;
+import com.techx.intervue.modules.user.events.NewDeviceSignInEvent;
 import com.techx.intervue.modules.user.events.RefreshTokenLocationResolveEvent;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface;
@@ -86,8 +88,28 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
         if (cachedOrLocal == null && ip != null && !ip.isBlank()) {
             eventPublisher.publishEvent(new RefreshTokenLocationResolveEvent(entity.getId(), ip));
         }
+        announceIfNewDevice(entity, deviceLabel, location, ip);
 
         return new IssuedToken(token, entity.getId());
+    }
+
+    // A rotated token keeps the same device label, so only a genuinely unseen device notifies.
+    private void announceIfNewDevice(
+            RefreshToken issued, String deviceLabel, String location, String ip) {
+        if (repository.countByUserIdAndIdNot(issued.getUserId(), issued.getId()) == 0
+                || repository.existsByUserIdAndDeviceLabelAndIdNot(
+                        issued.getUserId(), deviceLabel, issued.getId())) {
+            return;
+        }
+        eventPublisher.publishEvent(
+                NewDeviceSignInEvent.builder()
+                        .accountType(AccountType.USER)
+                        .accountId(issued.getUserId())
+                        .deviceLabel(deviceLabel)
+                        .location(location)
+                        .ip(ip)
+                        .at(Instant.now())
+                        .build());
     }
 
     @Override

@@ -70,6 +70,10 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
 
     Optional<RefreshToken> findByIdAndUserId(Long id, Long userId);
 
+    long countByUserIdAndIdNot(Long userId, Long id);
+
+    boolean existsByUserIdAndDeviceLabelAndIdNot(Long userId, String deviceLabel, Long id);
+
     List<RefreshToken> findByUserIdAndRevokedFalseAndExpiryDateAfterOrderByCreatedAtDesc(
             Long userId, Instant now);
 

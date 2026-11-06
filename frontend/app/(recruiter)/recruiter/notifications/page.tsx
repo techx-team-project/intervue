@@ -8,6 +8,6 @@ export const metadata: Metadata = {
 
 export default function RecruiterNotificationsPage() {
   return (
-    <NotificationsListView target="recruiter" baseRoute="/recruiter/notifications" pageTitle="System Notifications" />
+    <NotificationsListView realm="recruiter" baseRoute="/recruiter/notifications" pageTitle="System Notifications" />
   );
 }

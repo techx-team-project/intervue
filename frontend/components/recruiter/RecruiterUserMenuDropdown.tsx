@@ -15,6 +15,7 @@ const LINKS = [
   { label: 'Account security', href: ROUTES.RECRUITER_ACCOUNT_SECURITY, icon: ShieldCheck },
   { label: 'Change password', href: ROUTES.RECRUITER_ACCOUNT_PASSWORD, icon: KeyRound },
   { label: 'Two-factor authentication', href: ROUTES.RECRUITER_ACCOUNT_TWO_FACTOR, icon: Smartphone },
+  { label: 'Notification preferences', href: ROUTES.RECRUITER_ACCOUNT_NOTIFICATIONS, icon: Bell },
 ];
 
 export default function RecruiterUserMenuDropdown({ onClose }: RecruiterUserMenuDropdownProps) {

@@ -194,6 +194,7 @@ public class CompanyService implements CompanyServiceInterface {
                 PublishRightLostEvent.builder()
                         .userId(actor.userId())
                         .companyId(company.getId())
+                        .companyName(company.getName())
                         .scope(PublishRightLossScope.INDIVIDUAL)
                         .cause(PublishRightLossCause.MEMBERSHIP_LEFT)
                         .reassignToUserId(ownerIdOf(company.getId()))

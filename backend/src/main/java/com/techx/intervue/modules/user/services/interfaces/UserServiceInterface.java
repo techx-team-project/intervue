@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.user.services.interfaces;
 
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.requests.RegisterRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.UserResource;
@@ -17,6 +18,8 @@ public interface UserServiceInterface {
     void updateBasicInfo(Long userId, String name, String address);
 
     List<UserResource> findByIds(Collection<Long> userIds);
+
+    List<Long> findActiveIdsByRole(RoleType role);
 
     void requestAccountDeletion(Long userId);
 

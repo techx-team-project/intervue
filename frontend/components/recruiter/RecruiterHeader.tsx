@@ -3,7 +3,7 @@
 import NotificationDropdown from '@/components/common/NotificationDropdown';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
-import { useNotificationCount } from '@/hooks/useNotifications';
+import { useUnreadCount } from '@/hooks/useNotifications';
 import { useRecruiterCartCount } from '@/hooks/useRecruiterCart';
 import { Bell, ChevronDown, Menu, PanelLeftClose, PanelLeftOpen, Plus, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
@@ -24,7 +24,7 @@ export default function RecruiterHeader({
 }: RecruiterHeaderProps) {
   const { user } = useAuth();
   const cartCount = useRecruiterCartCount();
-  const unreadCount = useNotificationCount('recruiter');
+  const { total: unreadCount } = useUnreadCount('recruiter');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -104,7 +104,8 @@ export default function RecruiterHeader({
             </button>
 
             <NotificationDropdown
-              target="recruiter"
+              realm="recruiter"
+              baseRoute={ROUTES.RECRUITER_NOTIFICATIONS}
               isOpen={isNotificationOpen}
               onClose={() => setIsNotificationOpen(false)}
             />

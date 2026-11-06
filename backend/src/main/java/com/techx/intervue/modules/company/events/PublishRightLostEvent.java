@@ -9,6 +9,7 @@ import lombok.Builder;
 public record PublishRightLostEvent(
         Long userId,
         Long companyId,
+        String companyName,
         PublishRightLossScope scope,
         PublishRightLossCause cause,
         Long reassignToUserId,

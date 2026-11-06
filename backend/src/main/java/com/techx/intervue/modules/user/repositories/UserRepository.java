@@ -92,6 +92,18 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query(
             """
+                SELECT DISTINCT u.id
+                FROM User u JOIN u.userRoles ur JOIN ur.role r
+                WHERE u.status = :status AND r.name = :role
+                  AND (ur.expiresAt IS NULL OR ur.expiresAt > :now)
+            """)
+    List<Long> findIdsByStatusAndActiveRole(
+            @Param("status") UserStatus status,
+            @Param("role") RoleType role,
+            @Param("now") Instant now);
+
+    @Query(
+            """
                 SELECT COUNT(DISTINCT u.id) FROM User u JOIN u.userRoles ur
                 WHERE ur.expiresAt > :from AND ur.expiresAt <= :to
             """)

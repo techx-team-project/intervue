@@ -1,149 +1,171 @@
 'use client';
 
-import { MOCK_ADMIN_NOTIFICATIONS, MOCK_RECRUITER_NOTIFICATIONS } from '@/mocks/notification.mock';
-import type { AppNotification, NotificationCategory, NotificationTarget } from '@/types/notification';
-import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
+import { notificationApi } from '@/apiRequest/notification';
+import type { NotificationCategory, NotificationCategoryFilter, NotificationRealm } from '@/types/notification';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useState } from 'react';
 
-const STORAGE_KEY_PREFIX = 'intervue.notifications.';
-const STORAGE_VERSION = 'v2';
-const NOTIFICATION_EVENT = 'intervue:notifications-updated';
+const UNREAD_POLL_MS = 60_000;
+const DEFAULT_PAGE_SIZE = 10;
 
-const listeners = new Set<() => void>();
+export type NotificationTimeRange = { from?: string; to?: string };
 
-function notifyListeners() {
-  listeners.forEach((listener) => listener());
-}
-
-const memoryCache: Record<NotificationTarget, AppNotification[] | null> = {
-  recruiter: null,
-  admin: null,
+export const notificationKeys = {
+  all: (realm: NotificationRealm) => ['notifications', realm] as const,
+  list: (
+    realm: NotificationRealm,
+    category: NotificationCategoryFilter,
+    page: number,
+    size: number,
+    range: NotificationTimeRange,
+  ) => ['notifications', realm, 'list', category, page, size, range.from ?? '', range.to ?? ''] as const,
+  detail: (realm: NotificationRealm, id: number) => ['notifications', realm, 'detail', id] as const,
+  unread: (realm: NotificationRealm) => ['notifications', realm, 'unread'] as const,
+  preferences: (realm: NotificationRealm) => ['notifications', realm, 'preferences'] as const,
 };
 
-function getInitialForTarget(target: NotificationTarget): AppNotification[] {
-  return target === 'admin' ? MOCK_ADMIN_NOTIFICATIONS : MOCK_RECRUITER_NOTIFICATIONS;
+function toCategory(filter: NotificationCategoryFilter): NotificationCategory | undefined {
+  return filter === 'ALL' ? undefined : filter;
 }
 
-function readNotifications(target: NotificationTarget): AppNotification[] {
-  if (typeof window === 'undefined') return getInitialForTarget(target);
-  try {
-    const raw = localStorage.getItem(`${STORAGE_KEY_PREFIX}${target}.${STORAGE_VERSION}`);
-    if (!raw) return getInitialForTarget(target);
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    return getInitialForTarget(target);
-  } catch {
-    return getInitialForTarget(target);
-  }
-}
-
-function writeNotifications(target: NotificationTarget, items: AppNotification[]) {
-  memoryCache[target] = items;
-  if (typeof window !== 'undefined') {
-    try {
-      localStorage.setItem(`${STORAGE_KEY_PREFIX}${target}.${STORAGE_VERSION}`, JSON.stringify(items));
-      window.dispatchEvent(
-        new CustomEvent(NOTIFICATION_EVENT, {
-          detail: { target, count: items.filter((n) => !n.isRead).length },
-        }),
-      );
-    } catch {
-      // Ignore quota errors
-    }
-  }
-  notifyListeners();
-}
-
-function getSnapshot(target: NotificationTarget): AppNotification[] {
-  if (memoryCache[target] === null) {
-    memoryCache[target] = readNotifications(target);
-  }
-  return memoryCache[target]!;
-}
-
-function subscribe(callback: () => void) {
-  listeners.add(callback);
-  const handleStorage = (e: StorageEvent) => {
-    if (e.key?.startsWith(STORAGE_KEY_PREFIX)) {
-      memoryCache.recruiter = null;
-      memoryCache.admin = null;
-      callback();
-    }
-  };
-  const handleCustom = () => {
-    memoryCache.recruiter = null;
-    memoryCache.admin = null;
-    callback();
-  };
-
-  if (typeof window !== 'undefined') {
-    window.addEventListener('storage', handleStorage);
-    window.addEventListener(NOTIFICATION_EVENT, handleCustom);
-  }
-
-  return () => {
-    listeners.delete(callback);
-    if (typeof window !== 'undefined') {
-      window.removeEventListener('storage', handleStorage);
-      window.removeEventListener(NOTIFICATION_EVENT, handleCustom);
-    }
-  };
-}
-
-export function useNotificationCount(target: NotificationTarget): number {
-  const all = useSyncExternalStore(
-    subscribe,
-    () => getSnapshot(target),
-    () => getInitialForTarget(target),
-  );
-  return all.filter((n) => !n.isRead).length;
-}
-
-export function useNotifications(target: NotificationTarget) {
-  const allNotifications = useSyncExternalStore(
-    subscribe,
-    () => getSnapshot(target),
-    () => getInitialForTarget(target),
-  );
-
-  const [activeCategory, setActiveCategory] = useState<NotificationCategory>('all');
-
-  const filteredNotifications = useMemo(() => {
-    if (activeCategory === 'all') return allNotifications;
-    return allNotifications.filter((n) => n.category === activeCategory);
-  }, [allNotifications, activeCategory]);
-
-  const unreadCount = useMemo(() => {
-    return allNotifications.filter((n) => !n.isRead).length;
-  }, [allNotifications]);
-
-  const markAsRead = useCallback(
-    (id: string) => {
-      const next = allNotifications.map((n) => (n.id === id ? { ...n, isRead: true } : n));
-      writeNotifications(target, next);
-    },
-    [allNotifications, target],
-  );
-
-  const markAllAsRead = useCallback(() => {
-    const next = allNotifications.map((n) => ({ ...n, isRead: true }));
-    writeNotifications(target, next);
-  }, [allNotifications, target]);
-
-  const getNotificationById = useCallback(
-    (id: string): AppNotification | undefined => {
-      return allNotifications.find((n) => n.id === id);
-    },
-    [allNotifications],
-  );
+export function useUnreadCount(realm: NotificationRealm, enabled = true) {
+  const query = useQuery({
+    queryKey: notificationKeys.unread(realm),
+    queryFn: () => notificationApi.unreadCount(realm),
+    enabled,
+    refetchInterval: UNREAD_POLL_MS,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+  });
 
   return {
-    notifications: allNotifications,
-    filteredNotifications,
+    total: query.data?.total ?? 0,
+    byCategory: query.data?.byCategory ?? {},
+    isLoading: query.isLoading,
+  };
+}
+
+export function useNotifications(realm: NotificationRealm, pageSize = DEFAULT_PAGE_SIZE) {
+  const queryClient = useQueryClient();
+  const [activeCategory, setActiveCategoryState] = useState<NotificationCategoryFilter>('ALL');
+  const [page, setPage] = useState(0);
+  const [timeRange, setTimeRangeState] = useState<NotificationTimeRange>({});
+
+  const listQuery = useQuery({
+    queryKey: notificationKeys.list(realm, activeCategory, page, pageSize, timeRange),
+    queryFn: () =>
+      notificationApi.search(realm, {
+        category: toCategory(activeCategory),
+        from: timeRange.from,
+        to: timeRange.to,
+        page,
+        size: pageSize,
+      }),
+    staleTime: 15_000,
+  });
+
+  const unread = useUnreadCount(realm);
+
+  const invalidate = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: notificationKeys.all(realm) });
+  }, [queryClient, realm]);
+
+  const markAsReadMutation = useMutation({
+    mutationFn: (id: number) => notificationApi.markRead(realm, id),
+    onSuccess: invalidate,
+  });
+
+  const markAllAsReadMutation = useMutation({
+    mutationFn: () => notificationApi.markAllRead(realm, toCategory(activeCategory)),
+    onSuccess: invalidate,
+  });
+
+  const markAllSeenMutation = useMutation({
+    mutationFn: () => notificationApi.markAllSeen(realm),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: notificationKeys.unread(realm) }),
+  });
+
+  const archiveMutation = useMutation({
+    mutationFn: (id: number) => notificationApi.archive(realm, id),
+    onSuccess: invalidate,
+  });
+
+  const setActiveCategory = useCallback((category: NotificationCategoryFilter) => {
+    setActiveCategoryState(category);
+    setPage(0);
+  }, []);
+
+  const setTimeRange = useCallback((range: NotificationTimeRange) => {
+    setTimeRangeState(range);
+    setPage(0);
+  }, []);
+
+  return {
+    notifications: listQuery.data?.items ?? [],
+    totalItems: listQuery.data?.totalItems ?? 0,
+    totalPages: listQuery.data?.totalPages ?? 0,
+    page,
+    setPage,
+    pageSize,
     activeCategory,
     setActiveCategory,
-    unreadCount,
-    markAsRead,
-    markAllAsRead,
-    getNotificationById,
+    timeRange,
+    setTimeRange,
+    unreadCount: unread.total,
+    unreadByCategory: unread.byCategory,
+    isLoading: listQuery.isLoading,
+    isError: listQuery.isError,
+    refetch: listQuery.refetch,
+    markAsRead: markAsReadMutation.mutate,
+    markAllAsRead: markAllAsReadMutation.mutate,
+    markAllSeen: markAllSeenMutation.mutate,
+    archive: archiveMutation.mutate,
+    isMarkingAll: markAllAsReadMutation.isPending,
+  };
+}
+
+export function useNotificationDetail(realm: NotificationRealm, id: number | null) {
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
+    queryKey: notificationKeys.detail(realm, id ?? 0),
+    queryFn: () => notificationApi.getById(realm, id as number),
+    enabled: id !== null,
+  });
+
+  const markAsRead = useMutation({
+    mutationFn: (notificationId: number) => notificationApi.markRead(realm, notificationId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: notificationKeys.all(realm) }),
+  });
+
+  return {
+    notification: query.data ?? null,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    markAsRead: markAsRead.mutate,
+  };
+}
+
+export function useNotificationPreferences(realm: NotificationRealm) {
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
+    queryKey: notificationKeys.preferences(realm),
+    queryFn: () => notificationApi.getPreferences(realm),
+  });
+
+  const update = useMutation({
+    mutationFn: (preferences: { category: NotificationCategory; inApp: boolean; email: boolean }[]) =>
+      notificationApi.updatePreferences(realm, preferences),
+    onSuccess: (data) => queryClient.setQueryData(notificationKeys.preferences(realm), data),
+  });
+
+  return {
+    preferences: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    update: update.mutate,
+    isUpdating: update.isPending,
   };
 }
