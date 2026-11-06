@@ -38,6 +38,8 @@ public interface CompanyServiceInterface {
 
     PublicCompanyResource findPublic(Long companyId);
 
+    boolean hasActiveMemberWithEmail(Long companyId, String email);
+
     Map<Long, String> findLogoUrlsByRecruiterIds(Collection<Long> recruiterIds);
 
     CompanyResource addPhotos(List<MultipartFile> files, Long userId);

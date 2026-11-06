@@ -211,6 +211,25 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `DELETE` | `/candidate/cvs/{id}` | candidate | Deleting the default promotes the newest remaining CV. The stored file is removed after commit. |
 | `GET` | `/candidate/cvs/{id}/download` | candidate | Streams the PDF through the backend after the ownership check; no storage URL reaches the browser. Another candidate's CV is `404`. |
 
+## Candidate Applications
+
+An application is one row per candidate and job (`UNIQUE job_id, candidate_id`); withdrawing and re-applying reuse the same row. Statuses: `DRAFT`, `APPLIED`, `VIEWED`, `IN_REVIEW`, `INTERVIEW`, `OFFER`, `HIRED`, `REJECTED`, `WITHDRAWN`, `JOB_CLOSED`. All transitions live in `ApplicationStatusPolicy`; the candidate can only withdraw (any non-terminal status) or re-apply (`WITHDRAWN` to `APPLIED`). Recruiter-side transitions and `JOB_CLOSED` are applied by the recruiter application management task.
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/candidate/applications?status=&jobId=&page=&size=` | candidate | Own applications, most recently updated first. `ApplicationSummaryResource { id, status, jobId, jobTitle, companyId, companyName, submittedAt?, updatedAt }`. |
+| `GET` | `/candidate/applications/form?jobId=` | candidate | `ApplyFormResource { jobId, jobTitle, companyName, open, questions: [{ id, type, prompt, required, options? }], application? }`. `application` is the candidate's own draft or submission. `404` for a draft job. |
+| `GET` | `/candidate/applications/{id}` | candidate | `ApplicationResource { id, status, jobId, jobTitle, companyId, companyName, resumeId?, cv?: { fileName, fileSizeBytes }, coverLetter?, answers: [{ questionId, prompt, answer }], history: [{ from?, to, actorType, at }], submittedAt?, viewedAt?, updatedAt }`. Someone else's application is `404`. |
+| `PUT` | `/candidate/applications/draft` | candidate | Auto-save. Body `SaveApplicationRequest { jobId, resumeId?, coverLetter? (max 5000), answers?: [{ questionId, answer (max 1000) }] }`. Partial answers are allowed; answers to questions the job no longer has are dropped. `409 ALREADY_APPLIED` once submitted. |
+| `POST` | `/candidate/applications` | candidate | Submit, same body, `resumeId` required. Every required question must be answered and a `CHOICE` answer must be one of the options (`400 VALIDATION_FAILED`, fields `answers[i]`). The chosen CV is copied at this moment, so later edits or deletion of the CV do not change the application. Notifies the job's recruiter. `409 ALREADY_APPLIED`, `422 JOB_NOT_OPEN`, `422 CANNOT_APPLY_TO_OWN_COMPANY`, `422 IDENTITY_NOT_VERIFIED`. |
+| `POST` | `/candidate/applications/{id}/withdraw` | candidate | `422 INVALID_STATUS_TRANSITION` from a terminal status. |
+| `POST` | `/candidate/applications/{id}/reapply` | candidate | Body `{ resumeId }`. Only from `WITHDRAWN`; the first answers and cover letter are kept, only the CV changes. |
+| `GET` | `/candidate/applications/{id}/cv` | candidate | Streams the application's own CV copy. |
+
+- A job belongs to the candidate's own company when a recruiter account with the same email is an active member of it; that is refused with `CANNOT_APPLY_TO_OWN_COMPANY`.
+- `applications.require-identity-verification` (env `APPLICATIONS_REQUIRE_IDENTITY_VERIFICATION`, default `false`) turns on the eKYC gate. Until the eKYC module supplies a real lookup, turning it on blocks every candidate.
+- Screening questions cannot change once the job has a submitted (non-draft) application (`SCREENING_QUESTIONS_LOCKED`).
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -236,6 +255,10 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `ACCOUNT_NOT_PENDING_DELETION` | 422 | The account is not pending deletion |
 | `DELETION_BLOCKED` | 422 | Account deletion is blocked while unresolved operations remain |
 | `JOB_NOT_EDITABLE` | 422 | The job is closed, expired, hidden, or not a draft (for delete) |
+| `ALREADY_APPLIED` | 409 | The candidate already has a submitted application for this job |
+| `JOB_NOT_OPEN` | 422 | The job is not published or its deadline has passed |
+| `CANNOT_APPLY_TO_OWN_COMPANY` | 422 | An active member of the job's company cannot apply to it |
+| `IDENTITY_NOT_VERIFIED` | 422 | The eKYC gate is on and the candidate is not verified |
 | `RESUME_LIMIT_REACHED` | 409 | The candidate already has the maximum number of CVs |
 | `SCREENING_QUESTIONS_LOCKED` | 422 | The job already has applications, so its screening questions cannot change |
 | `SKILL_NAME_ALREADY_USED` | 409 | A skill with this name already exists |

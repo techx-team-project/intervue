@@ -15,6 +15,8 @@ public enum NotificationType {
     COMPANY_VERIFIED(NotificationCategory.COMPANY, NotificationSeverity.SUCCESS, false),
     COMPANY_MEMBERSHIP_CHANGED(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
     AGREEMENT_REVIEWED(NotificationCategory.COMPANY, NotificationSeverity.INFO, true),
+    APPLICATION_RECEIVED(NotificationCategory.APPLICATIONS, NotificationSeverity.INFO, false),
+    APPLICATION_WITHDRAWN(NotificationCategory.APPLICATIONS, NotificationSeverity.INFO, false),
     ACCOUNT_RESTRICTED(NotificationCategory.ACCOUNT, NotificationSeverity.DANGER, true),
     ACCOUNT_RESTRICTION_LIFTED(NotificationCategory.ACCOUNT, NotificationSeverity.SUCCESS, true),
     ACCOUNT_ROLES_CHANGED(NotificationCategory.ACCOUNT, NotificationSeverity.INFO, true),
