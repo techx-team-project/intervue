@@ -21,17 +21,4 @@ public class AiConfig {
                 .requestFactory(requestFactory)
                 .build();
     }
-
-    @Bean
-    RestClient voyageRestClient(AiProperties properties) {
-        AiProperties.Voyage voyage = properties.voyage();
-        JdkClientHttpRequestFactory requestFactory =
-                new JdkClientHttpRequestFactory(
-                        HttpClient.newBuilder().connectTimeout(voyage.timeout()).build());
-        requestFactory.setReadTimeout(voyage.timeout());
-        return RestClient.builder()
-                .baseUrl(voyage.baseUrl())
-                .requestFactory(requestFactory)
-                .build();
-    }
 }
