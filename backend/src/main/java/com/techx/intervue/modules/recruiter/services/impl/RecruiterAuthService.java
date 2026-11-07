@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.recruiter.services.impl;
 
+import com.techx.intervue.common.text.Texts;
 import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
@@ -76,6 +77,10 @@ public class RecruiterAuthService implements RecruiterAuthServiceInterface {
                                 .name(request.name().trim())
                                 .email(email)
                                 .password(passwordEncoder.encode(request.password()))
+                                .gender(request.gender())
+                                .companyName(Texts.blankToNull(request.companyName()))
+                                .province(Texts.blankToNull(request.province()))
+                                .districtWard(Texts.blankToNull(request.districtWard()))
                                 .termsAcceptedAt(Instant.now())
                                 .build());
         eventPublisher.publishEvent(
