@@ -21,6 +21,25 @@ public class CookieHelper {
         return buildCookie(OAUTH_STATE_NONCE_COOKIE, "", OAUTH_STATE_NONCE_PATH, Duration.ZERO);
     }
 
+    public static final String RECRUITER_OAUTH_STATE_NONCE_COOKIE = "recruiter_oauth_state_nonce";
+    public static final String RECRUITER_OAUTH_STATE_NONCE_PATH = "/api/v1/recruiter/auth/oauth";
+
+    public static ResponseCookie buildRecruiterOAuthStateNonceCookie(String nonce) {
+        return buildCookie(
+                RECRUITER_OAUTH_STATE_NONCE_COOKIE,
+                nonce,
+                RECRUITER_OAUTH_STATE_NONCE_PATH,
+                OAUTH_STATE_MAX_AGE);
+    }
+
+    public static ResponseCookie clearRecruiterOAuthStateNonceCookie() {
+        return buildCookie(
+                RECRUITER_OAUTH_STATE_NONCE_COOKIE,
+                "",
+                RECRUITER_OAUTH_STATE_NONCE_PATH,
+                Duration.ZERO);
+    }
+
     public static ResponseCookie buildRefreshTokenCookie(String token, Duration maxAge) {
         return buildCookie(REFRESH_TOKEN_COOKIE, token, "/", maxAge);
     }

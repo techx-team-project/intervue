@@ -93,15 +93,23 @@ public class RecruiterAuthService implements RecruiterAuthServiceInterface {
         Recruiter recruiter = recruiterRepository.findByEmail(email).orElse(null);
 
         // Constant-cost comparison so response time does not reveal whether the email exists
-        String hash = recruiter != null ? recruiter.getPassword() : DUMMY_PASSWORD_HASH;
+        boolean hasPassword = recruiter != null && recruiter.getPassword() != null;
+        String hash = hasPassword ? recruiter.getPassword() : DUMMY_PASSWORD_HASH;
         boolean passwordMatches = passwordEncoder.matches(request.password(), hash);
-        if (recruiter == null || !passwordMatches) {
+        if (!hasPassword || !passwordMatches) {
             loginAttemptService.recordFailure(attemptKey, ip);
             throw AppException.invalidCredentials(
                     loginAttemptService.isCaptchaRequired(attemptKey, ip));
         }
 
         loginAttemptService.reset(attemptKey, ip);
+        return completeSignIn(recruiter, userAgent, ip, rawDeviceToken);
+    }
+
+    @Override
+    @Transactional
+    public RecruiterAuthResult completeSignIn(
+            Recruiter recruiter, String userAgent, String ip, String rawDeviceToken) {
         ensureSignInAllowed(recruiter);
 
         if (recruiterTwoFactorService.isTwoFactorEnabled(recruiter.getId())) {

@@ -7,6 +7,7 @@ import com.techx.intervue.modules.recruiter.enums.RecruiterStatus;
 import com.techx.intervue.modules.recruiter.mappers.RecruiterMapper;
 import com.techx.intervue.modules.recruiter.repositories.RecruiterRefreshTokenRepository;
 import com.techx.intervue.modules.recruiter.repositories.RecruiterRepository;
+import com.techx.intervue.modules.recruiter.repositories.RecruiterSocialAccountRepository;
 import com.techx.intervue.modules.recruiter.resources.RecruiterResource;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterServiceInterface;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterSessionCacheInterface;
@@ -33,6 +34,7 @@ public class RecruiterService implements RecruiterServiceInterface {
 
     private final RecruiterRepository recruiterRepository;
     private final RecruiterRefreshTokenRepository refreshTokenRepository;
+    private final RecruiterSocialAccountRepository socialAccountRepository;
     private final RecruiterSessionCacheInterface sessionCache;
     private final RecruiterMapper recruiterMapper;
 
@@ -131,6 +133,7 @@ public class RecruiterService implements RecruiterServiceInterface {
 
             refreshTokenRepository.revokeAllByRecruiterId(
                     recruiter.getId(), now, ACCOUNT_PURGED_REASON);
+            socialAccountRepository.deleteByRecruiterId(recruiter.getId());
             sessionCache.evict(recruiter.getId());
         }
         log.info("Purged {} expired pending-deletion recruiter accounts", expired.size());

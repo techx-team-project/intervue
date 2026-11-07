@@ -56,15 +56,17 @@ public class RecruiterAccountSecurityService implements RecruiterAccountSecurity
                 recruiterRepository
                         .findById(recruiterId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        if (request.currentPassword() == null || request.currentPassword().isBlank()) {
-            throw AppException.validation("currentPassword", "Current password is required!");
-        }
-        if (!passwordEncoder.matches(request.currentPassword(), recruiter.getPassword())) {
-            throw AppException.validation("currentPassword", "Current password is incorrect!");
-        }
-        if (passwordEncoder.matches(request.password(), recruiter.getPassword())) {
-            throw AppException.validation(
-                    "password", "New password must be different from the current password!");
+        if (recruiter.getPassword() != null) {
+            if (request.currentPassword() == null || request.currentPassword().isBlank()) {
+                throw AppException.validation("currentPassword", "Current password is required!");
+            }
+            if (!passwordEncoder.matches(request.currentPassword(), recruiter.getPassword())) {
+                throw AppException.validation("currentPassword", "Current password is incorrect!");
+            }
+            if (passwordEncoder.matches(request.password(), recruiter.getPassword())) {
+                throw AppException.validation(
+                        "password", "New password must be different from the current password!");
+            }
         }
         if (!request.password().equals(request.confirmPassword())) {
             throw AppException.validation("confirmPassword", "Confirm password does not match!");

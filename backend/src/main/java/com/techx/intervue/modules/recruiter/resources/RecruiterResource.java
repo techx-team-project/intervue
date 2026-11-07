@@ -15,5 +15,6 @@ public record RecruiterResource(
         RecruiterStatus status,
         boolean emailVerified,
         boolean phoneVerified,
+        boolean hasPassword,
         Instant deleteRequestedAt,
         Instant createdAt) {}

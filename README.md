@@ -217,7 +217,7 @@ seed:
 | `jwt.secret` | A **Base64-encoded** key of at least 32 bytes (256 bits), used to sign JWT tokens. Generate one with the command below |
 | `seed.accounts.<key>.password` | Optional. Password (at most 72 bytes) for a local test account created at startup when the `local` profile is active; existing accounts are never changed. An account without a password is skipped with a `WARN` log. Emails, names and roles live in the `local`-only section at the end of `application.yaml`: `local.admin@intervue.test` (ADMIN), `local.candidate@intervue.test` (CANDIDATE) |
 | `seed.recruiters.<key>.password` | Optional. Password for a local recruiter account created at startup in `recruiters` when the `local` profile is active: `local.recruiter@intervue.test`, email already verified. Existing accounts are never changed. A recruiter without a password is skipped with a `WARN` log |
-| `oauth.google.client-id` / `oauth.google.client-secret` | Optional. Credentials for Sign in with Google (also readable from `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`). Create an OAuth client of type "Web application" in Google Cloud Console with the authorized redirect URI `http://localhost:3000/auth/callback/google`. Without them the endpoints answer `OAUTH_NOT_CONFIGURED` |
+| `oauth.google.client-id` / `oauth.google.client-secret` | Optional. Credentials for Sign in with Google (also readable from `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`). Create an OAuth client of type "Web application" in Google Cloud Console with the authorized redirect URIs `http://localhost:3000/auth/callback/google` (candidates) and `http://localhost:3000/recruiter/auth/callback/google` (recruiters). Without them the endpoints answer `OAUTH_NOT_CONFIGURED` |
 
 Generate a JWT secret:
 
