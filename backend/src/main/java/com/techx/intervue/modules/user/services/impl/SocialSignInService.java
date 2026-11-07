@@ -6,9 +6,9 @@ import com.techx.intervue.common.audit.enums.AuditTargetType;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
 import com.techx.intervue.common.oauth.OAuthProfile;
+import com.techx.intervue.common.oauth.OAuthProfiles;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
-import com.techx.intervue.modules.helpers.EmailHelper;
 import com.techx.intervue.modules.user.entities.Role;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.entities.UserSocialAccount;
@@ -31,10 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class SocialSignInService implements SocialSignInServiceInterface {
-
-    private static final int MAX_NAME_LENGTH = 50;
-    private static final int MAX_EMAIL_LENGTH = 100;
-    private static final String GMAIL_SUFFIX = "@gmail.com";
 
     private final UserRepository userRepository;
     private final UserSocialAccountRepository userSocialAccountRepository;
@@ -70,7 +66,7 @@ public class SocialSignInService implements SocialSignInServiceInterface {
             return linked;
         }
 
-        String email = authoritativeEmail(profile);
+        String email = OAuthProfiles.authoritativeEmail(profile);
 
         User existing = userRepository.findByEmailWithRoles(email).orElse(null);
         if (existing != null) {
@@ -94,7 +90,7 @@ public class SocialSignInService implements SocialSignInServiceInterface {
         Instant now = Instant.now();
         User user =
                 User.builder()
-                        .name(displayName(profile.name(), email))
+                        .name(OAuthProfiles.displayName(profile.name(), email))
                         .email(email)
                         .password(null)
                         .emailVerifiedAt(now)
@@ -129,20 +125,6 @@ public class SocialSignInService implements SocialSignInServiceInterface {
                         .build());
     }
 
-    private String authoritativeEmail(OAuthProfile profile) {
-        if (profile.email() == null || profile.email().isBlank() || !profile.emailVerified()) {
-            throw new AppException(ErrorCode.OAUTH_EMAIL_UNVERIFIED);
-        }
-        String email = EmailHelper.normalize(profile.email());
-        boolean authoritative =
-                email.endsWith(GMAIL_SUFFIX)
-                        || (profile.hostedDomain() != null && !profile.hostedDomain().isBlank());
-        if (!authoritative || email.length() > MAX_EMAIL_LENGTH) {
-            throw new AppException(ErrorCode.OAUTH_EMAIL_UNVERIFIED);
-        }
-        return email;
-    }
-
     private void notifyLinked(User user, OAuthProvider provider, String ip) {
         auditLogService.record(
                 AuditEntry.builder()
@@ -166,16 +148,6 @@ public class SocialSignInService implements SocialSignInServiceInterface {
         if (user.hasRole(RoleType.ADMIN)) {
             throw new AppException(ErrorCode.SOCIAL_LOGIN_NOT_ALLOWED);
         }
-    }
-
-    private String displayName(String providerName, String email) {
-        String name =
-                providerName != null && !providerName.isBlank()
-                        ? providerName.trim()
-                        : email.substring(0, email.indexOf('@'));
-        return name.codePointCount(0, name.length()) > MAX_NAME_LENGTH
-                ? name.substring(0, name.offsetByCodePoints(0, MAX_NAME_LENGTH))
-                : name;
     }
 
     private Role findCandidateRole() {
