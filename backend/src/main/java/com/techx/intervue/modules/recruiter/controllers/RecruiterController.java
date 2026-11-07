@@ -3,6 +3,7 @@ package com.techx.intervue.modules.recruiter.controllers;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.helpers.CookieHelper;
 import com.techx.intervue.modules.helpers.IpHelper;
+import com.techx.intervue.modules.recruiter.requests.RecruiterProfileRequest;
 import com.techx.intervue.modules.recruiter.resources.RecruiterResource;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterAccountSecurityServiceInterface;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterEmailChangeServiceInterface;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,6 +50,15 @@ public class RecruiterController extends BaseController {
         return ok(
                 recruiterService.getMe(principal.getId()),
                 "Account information retrieved successfully!");
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<ApiResource<RecruiterResource>> updateProfile(
+            @Valid @RequestBody RecruiterProfileRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                recruiterService.updateProfile(principal.getId(), request),
+                "Profile updated successfully!");
     }
 
     @PostMapping("/phone/send-otp")

@@ -9,6 +9,7 @@ export type User = {
   phone?: string;
   emailVerified: boolean;
   phoneVerified?: boolean;
+  hasPassword?: boolean;
   deleteRequestedAt?: string | null;
   roles: RoleType[];
   createdAt: string;
@@ -26,12 +27,21 @@ export type AuthResponsePayload = {
   tempToken?: string;
 };
 
+export type OAuthAuthorizePayload = { intent: 'LOGIN' | 'REGISTER'; acceptTerms: boolean };
+
+export type OAuthAuthorizeResult = { authorizationUrl: string };
+
+export type OAuthCallbackPayload = { code: string; state: string };
+
 export type RecruiterAuthPayload = {
   accessToken?: string;
   recruiter?: Omit<User, 'roles'>;
   requiresTwoFactor?: boolean;
   tempToken?: string;
+  newAccount?: boolean;
 };
+
+export type OAuthOutcome = { tempToken?: string; session?: AuthSession; newAccount: boolean };
 
 export type AdminQueueCounts = {
   pendingVerifications: number;

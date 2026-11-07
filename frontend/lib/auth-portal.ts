@@ -38,16 +38,28 @@ export function toAdminSession({ accessToken, admin }: AdminAuthPayload): AuthSe
 
 export type AuthPortal = 'candidate' | 'recruiter' | 'admin';
 
-export const AUTH_PORTAL_ROUTES: Record<AuthPortal, { home: string; login: string; forgotPassword: string }> = {
-  candidate: { home: ROUTES.HOME, login: ROUTES.LOGIN, forgotPassword: ROUTES.FORGOT_PASSWORD },
+export type OAuthPortal = Exclude<AuthPortal, 'admin'>;
+
+export const AUTH_PORTAL_ROUTES: Record<
+  AuthPortal,
+  { home: string; login: string; register: string; forgotPassword: string }
+> = {
+  candidate: {
+    home: ROUTES.HOME,
+    login: ROUTES.LOGIN,
+    register: ROUTES.REGISTER,
+    forgotPassword: ROUTES.FORGOT_PASSWORD,
+  },
   recruiter: {
     home: ROUTES.RECRUITER_LANDING,
     login: ROUTES.RECRUITER_LOGIN,
+    register: ROUTES.RECRUITER_REGISTER,
     forgotPassword: ROUTES.RECRUITER_FORGOT_PASSWORD,
   },
   admin: {
     home: '/admin/dashboard',
     login: '/admin/login',
+    register: '/admin/login',
     forgotPassword: '/admin/login',
   },
 };

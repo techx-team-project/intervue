@@ -67,9 +67,10 @@ public class AdminAuthService implements AdminAuthServiceInterface {
         String attemptKey = ATTEMPT_KEY_PREFIX + email;
         User user = userRepository.findByEmailWithRoles(email).orElse(null);
 
-        String hash = user != null ? user.getPassword() : DUMMY_PASSWORD_HASH;
+        boolean missingPassword = user == null || user.getPassword() == null;
+        String hash = missingPassword ? DUMMY_PASSWORD_HASH : user.getPassword();
         boolean passwordMatches = passwordEncoder.matches(request.password(), hash);
-        if (user == null || !passwordMatches) {
+        if (user == null || missingPassword || !passwordMatches) {
             loginAttemptService.recordFailure(attemptKey, ip);
             throw AppException.invalidCredentials(
                     loginAttemptService.isCaptchaRequired(attemptKey, ip));
@@ -140,6 +141,9 @@ public class AdminAuthService implements AdminAuthServiceInterface {
                 userRepository
                         .findById(adminUserId)
                         .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        if (user.getPassword() == null) {
+            return false;
+        }
         return passwordEncoder.matches(password, user.getPassword());
     }
 

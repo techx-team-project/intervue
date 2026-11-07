@@ -1,6 +1,6 @@
 import { request } from '@/apiRequest/http';
 import type { AuthPortal } from '@/lib/auth-portal';
-import type { ChangeEmailFormData, ChangePasswordFormData } from '@/schemas/auth.schema';
+import type { ChangeEmailFormData, ChangePasswordFormData, SetPasswordFormData } from '@/schemas/auth.schema';
 import type { AccountSession } from '@/types/account-security';
 import type { UserProfilePatch } from '@/types/auth';
 
@@ -14,7 +14,7 @@ export function accountSecurityApiFor(portal: AuthPortal) {
   const base = BASE_PATHS[portal];
 
   return {
-    changePassword: (payload: ChangePasswordFormData) =>
+    changePassword: (payload: ChangePasswordFormData | SetPasswordFormData) =>
       request(`${base}/change-password`, { method: 'POST', body: payload }),
     sessions: () => request<AccountSession[]>(`${base}/sessions`),
     revokeSession: (sessionId: number) => request(`${base}/sessions/${sessionId}`, { method: 'DELETE' }),

@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.recruiter.requests;
 
+import com.techx.intervue.modules.recruiter.enums.RecruiterGender;
 import com.techx.intervue.modules.user.requests.StrongPassword;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
@@ -16,4 +17,10 @@ public record RecruiterRegisterRequest(
                 String email,
         @NotBlank(message = "Password is required!") @StrongPassword String password,
         @NotBlank(message = "Please confirm your password!") String confirmPassword,
-        @AssertTrue(message = "You must accept the Privacy Policy & Terms!") boolean acceptTerms) {}
+        @AssertTrue(message = "You must accept the Privacy Policy & Terms!") boolean acceptTerms,
+        RecruiterGender gender,
+        @Size(max = 255, message = "Company name must be at most 255 characters!")
+                String companyName,
+        @Size(max = 100, message = "Province must be at most 100 characters!") String province,
+        @Size(max = 255, message = "District / ward must be at most 255 characters!")
+                String districtWard) {}

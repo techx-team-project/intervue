@@ -14,13 +14,20 @@ import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterAuthSer
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterEmailChangeServiceInterface;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterEmailVerificationServiceInterface;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterPasswordResetServiceInterface;
+import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterSocialAuthServiceInterface;
+import com.techx.intervue.modules.user.enums.OAuthProvider;
 import com.techx.intervue.modules.user.requests.ForgotPasswordRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
+import com.techx.intervue.modules.user.requests.OAuthAuthorizeRequest;
+import com.techx.intervue.modules.user.requests.OAuthCallbackRequest;
 import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
 import com.techx.intervue.modules.user.requests.VerifyEmailRequest;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
+import com.techx.intervue.modules.user.resources.OAuthAuthorizeResource;
+import com.techx.intervue.modules.user.resources.OAuthAuthorizeResult;
 import com.techx.intervue.resources.ApiResource;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +36,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,6 +55,7 @@ public class RecruiterAuthController extends BaseController {
     private final RecruiterEmailVerificationServiceInterface emailVerificationService;
     private final RecruiterPasswordResetServiceInterface passwordResetService;
     private final RecruiterEmailChangeServiceInterface emailChangeService;
+    private final RecruiterSocialAuthServiceInterface socialAuthService;
     private final AuthConfig authConfig;
 
     @PostMapping("/register")
@@ -73,6 +82,59 @@ public class RecruiterAuthController extends BaseController {
                         IpHelper.getClientIp(httpRequest),
                         deviceTrustToken),
                 "Logged in successfully!");
+    }
+
+    @PostMapping("/oauth/{provider}/authorize")
+    public ResponseEntity<ApiResource<OAuthAuthorizeResource>> authorizeOAuth(
+            @PathVariable String provider,
+            @Valid @RequestBody OAuthAuthorizeRequest request,
+            HttpServletRequest httpRequest) {
+        OAuthProvider oauthProvider = OAuthProvider.fromPathSegment(provider);
+        OAuthAuthorizeResult result =
+                socialAuthService.authorize(
+                        oauthProvider, request, IpHelper.getClientIp(httpRequest));
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.SET_COOKIE,
+                        CookieHelper.buildRecruiterOAuthStateNonceCookie(result.nonce()).toString())
+                .body(
+                        ApiResource.success(
+                                new OAuthAuthorizeResource(result.authorizationUrl()),
+                                "Redirecting to " + oauthProvider.getDisplayName() + "..."));
+    }
+
+    @PostMapping("/oauth/{provider}")
+    public ResponseEntity<ApiResource<RecruiterAuthResource>> loginWithOAuth(
+            @PathVariable String provider,
+            @Valid @RequestBody OAuthCallbackRequest request,
+            @CookieValue(name = CookieHelper.RECRUITER_OAUTH_STATE_NONCE_COOKIE, required = false)
+                    String nonce,
+            @CookieValue(name = CookieHelper.RECRUITER_DEVICE_TRUST_COOKIE, required = false)
+                    String deviceTrustToken,
+            HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse) {
+        httpResponse.addHeader(
+                HttpHeaders.SET_COOKIE,
+                CookieHelper.clearRecruiterOAuthStateNonceCookie().toString());
+        RecruiterAuthResult result =
+                socialAuthService.callback(
+                        OAuthProvider.fromPathSegment(provider),
+                        request,
+                        nonce,
+                        httpRequest.getHeader(HttpHeaders.USER_AGENT),
+                        IpHelper.getClientIp(httpRequest),
+                        deviceTrustToken);
+        ResponseEntity<ApiResource<RecruiterAuthResource>> response =
+                withSession(result, "Logged in successfully!");
+        return ResponseEntity.status(response.getStatusCode())
+                .headers(
+                        headers -> {
+                            headers.addAll(response.getHeaders());
+                            headers.add(
+                                    HttpHeaders.SET_COOKIE,
+                                    CookieHelper.clearRecruiterOAuthStateNonceCookie().toString());
+                        })
+                .body(response.getBody());
     }
 
     @PostMapping("/verify-2fa")
@@ -179,7 +241,10 @@ public class RecruiterAuthController extends BaseController {
         }
 
         RecruiterAuthResource body =
-                new RecruiterAuthResource(result.accessToken(), result.recruiter());
+                new RecruiterAuthResource(
+                        result.accessToken(),
+                        result.recruiter(),
+                        Boolean.TRUE.equals(result.newAccount()));
         return responseBuilder.body(ApiResource.success(body, message));
     }
 }

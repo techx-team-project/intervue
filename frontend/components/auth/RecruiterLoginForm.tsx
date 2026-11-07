@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import FormErrorAlert from './FormErrorAlert';
+import RecruiterSocialLogin from './RecruiterSocialLogin';
 import TwoFactorChallengeModal from './TwoFactorChallengeModal';
 
 export default function RecruiterLoginForm() {
@@ -59,6 +60,7 @@ export default function RecruiterLoginForm() {
 
   return (
     <div className="w-full">
+      <RecruiterSocialLogin />
       <FormErrorAlert message={errors.root?.message} />
 
       <form onSubmit={onSubmit} noValidate className="space-y-4">

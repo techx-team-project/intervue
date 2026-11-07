@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.recruiter.services.impl;
 
+import com.techx.intervue.common.text.Texts;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.recruiter.entities.Recruiter;
@@ -7,6 +8,8 @@ import com.techx.intervue.modules.recruiter.enums.RecruiterStatus;
 import com.techx.intervue.modules.recruiter.mappers.RecruiterMapper;
 import com.techx.intervue.modules.recruiter.repositories.RecruiterRefreshTokenRepository;
 import com.techx.intervue.modules.recruiter.repositories.RecruiterRepository;
+import com.techx.intervue.modules.recruiter.repositories.RecruiterSocialAccountRepository;
+import com.techx.intervue.modules.recruiter.requests.RecruiterProfileRequest;
 import com.techx.intervue.modules.recruiter.resources.RecruiterResource;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterServiceInterface;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterSessionCacheInterface;
@@ -33,6 +36,7 @@ public class RecruiterService implements RecruiterServiceInterface {
 
     private final RecruiterRepository recruiterRepository;
     private final RecruiterRefreshTokenRepository refreshTokenRepository;
+    private final RecruiterSocialAccountRepository socialAccountRepository;
     private final RecruiterSessionCacheInterface sessionCache;
     private final RecruiterMapper recruiterMapper;
 
@@ -43,6 +47,18 @@ public class RecruiterService implements RecruiterServiceInterface {
                 .findById(recruiterId)
                 .map(recruiterMapper::toResource)
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+    }
+
+    @Override
+    @Transactional
+    public RecruiterResource updateProfile(Long recruiterId, RecruiterProfileRequest request) {
+        Recruiter recruiter = requireRecruiter(recruiterId);
+        recruiter.setName(request.name().trim());
+        recruiter.setGender(request.gender());
+        recruiter.setCompanyName(Texts.blankToNull(request.companyName()));
+        recruiter.setProvince(Texts.blankToNull(request.province()));
+        recruiter.setDistrictWard(Texts.blankToNull(request.districtWard()));
+        return recruiterMapper.toResource(recruiterRepository.save(recruiter));
     }
 
     @Override
@@ -131,6 +147,7 @@ public class RecruiterService implements RecruiterServiceInterface {
 
             refreshTokenRepository.revokeAllByRecruiterId(
                     recruiter.getId(), now, ACCOUNT_PURGED_REASON);
+            socialAccountRepository.deleteByRecruiterId(recruiter.getId());
             sessionCache.evict(recruiter.getId());
         }
         log.info("Purged {} expired pending-deletion recruiter accounts", expired.size());

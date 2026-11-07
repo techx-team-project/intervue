@@ -1,5 +1,11 @@
 import { JOB_LEVEL_LABELS } from '@/constants/recruiter-job';
-import type { RecruiterNeedsFormData } from '@/schemas/recruiter.schema';
+import type { RecruiterNeedsFormData, RecruiterProfileFormData } from '@/schemas/recruiter.schema';
+
+export const RECRUITER_GENDER_OPTIONS: { value: RecruiterProfileFormData['gender']; label: string }[] = [
+  { value: 'MALE', label: 'Male' },
+  { value: 'FEMALE', label: 'Female' },
+  { value: 'OTHER', label: 'Other' },
+];
 
 export const RECRUITER_CITY_OPTIONS = [
   { value: 'Hanoi', label: 'Hanoi' },

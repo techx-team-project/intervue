@@ -1,5 +1,6 @@
-import RecruiterGuestRedirect from '@/components/auth/RecruiterGuestRedirect';
 import RecruiterOnboardingView from '@/components/auth/RecruiterOnboardingView';
+import RequireAuth from '@/components/auth/RequireAuth';
+import { ROLES } from '@/constants/auth';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,9 +10,8 @@ export const metadata: Metadata = {
 
 export default function RecruiterOnboardingPage() {
   return (
-    <>
-      <RecruiterGuestRedirect />
+    <RequireAuth roles={[ROLES.RECRUITER]}>
       <RecruiterOnboardingView />
-    </>
+    </RequireAuth>
   );
 }

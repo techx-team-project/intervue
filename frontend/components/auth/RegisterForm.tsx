@@ -10,7 +10,7 @@ import { applyFormError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import FormErrorAlert from './FormErrorAlert';
 import SocialAuthButtons from './SocialAuthButtons';
 
@@ -22,6 +22,7 @@ export default function RegisterForm() {
     register,
     handleSubmit,
     setError,
+    control,
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -29,13 +30,15 @@ export default function RegisterForm() {
     defaultValues: { name: '', email: '', password: '', confirmPassword: '', acceptTerms: false },
   });
 
+  const acceptTerms = useWatch({ control, name: 'acceptTerms' });
+
   const onSubmit = handleSubmit((values) =>
     registerAccount.mutate(values, { onError: (error) => applyFormError(error, setError, FORM_FIELDS) }),
   );
 
   return (
     <div className="w-full">
-      <SocialAuthButtons mode="register" />
+      <SocialAuthButtons mode="register" acceptTerms={acceptTerms} />
 
       <div className="relative my-5 flex items-center justify-center">
         <div className="absolute inset-0 flex items-center">
@@ -106,6 +109,7 @@ export default function RegisterForm() {
         <Button
           type="submit"
           isLoading={registerAccount.isPending}
+          disabled={!acceptTerms}
           className="mt-2 w-full rounded-xl py-3 text-sm font-bold"
           rightIcon={<ArrowRight className="h-4 w-4 stroke-[2.5]" />}
         >

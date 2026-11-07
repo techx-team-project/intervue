@@ -27,7 +27,7 @@ export function proxy(request: NextRequest) {
 
   const normalizedPath = pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
 
-  if (PUBLIC_PATHS.includes(normalizedPath)) {
+  if (PUBLIC_PATHS.includes(normalizedPath) || normalizedPath.startsWith(`${ROUTES.RECRUITER_OAUTH_CALLBACK}/`)) {
     return NextResponse.next();
   }
 

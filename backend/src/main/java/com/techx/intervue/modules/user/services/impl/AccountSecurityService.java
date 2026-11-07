@@ -55,12 +55,17 @@ public class AccountSecurityService implements AccountSecurityServiceInterface {
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
-            throw AppException.validation("currentPassword", "Current password is incorrect!");
-        }
-        if (passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw AppException.validation(
-                    "password", "New password must be different from the current password!");
+        if (user.getPassword() != null) {
+            if (request.currentPassword() == null || request.currentPassword().isBlank()) {
+                throw AppException.validation("currentPassword", "Current password is required!");
+            }
+            if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+                throw AppException.validation("currentPassword", "Current password is incorrect!");
+            }
+            if (passwordEncoder.matches(request.password(), user.getPassword())) {
+                throw AppException.validation(
+                        "password", "New password must be different from the current password!");
+            }
         }
         PasswordPolicy.verify(request.password(), request.confirmPassword(), user.getEmail());
 

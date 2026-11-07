@@ -93,6 +93,11 @@ tax-lookup:
   timeout: 10s
   retry-after: 30s
 
+oauth:
+  google:
+    client-id: ${GOOGLE_CLIENT_ID:}
+    client-secret: ${GOOGLE_CLIENT_SECRET:}
+
 sms:
   esms:
     base-url: https://rest.esms.vn

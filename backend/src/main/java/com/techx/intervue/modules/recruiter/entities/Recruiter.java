@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.recruiter.entities;
 
 import com.techx.intervue.common.entities.BaseEntity;
+import com.techx.intervue.modules.recruiter.enums.RecruiterGender;
 import com.techx.intervue.modules.recruiter.enums.RecruiterStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +36,6 @@ public class Recruiter extends BaseEntity {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -54,6 +54,19 @@ public class Recruiter extends BaseEntity {
     private Instant phoneVerifiedAt;
 
     private String image;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private RecruiterGender gender;
+
+    @Column(name = "company_name")
+    private String companyName;
+
+    @Column(length = 100)
+    private String province;
+
+    @Column(name = "district_ward")
+    private String districtWard;
 
     @Column(name = "email_verified_at")
     private Instant emailVerifiedAt;

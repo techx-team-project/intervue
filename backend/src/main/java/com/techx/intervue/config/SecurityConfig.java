@@ -69,6 +69,8 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/recruiter/auth/reset-password")
                                         .permitAll()
+                                        .requestMatchers("/api/v1/recruiter/auth/oauth/**")
+                                        .permitAll()
                                         // Ping - health check
                                         .requestMatchers("/ping")
                                         .permitAll()
