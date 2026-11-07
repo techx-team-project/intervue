@@ -2,7 +2,7 @@
 
 import { accountSecurityApiFor } from '@/apiRequest/account-security';
 import type { AuthPortal } from '@/lib/auth-portal';
-import type { ChangePasswordFormData } from '@/schemas/auth.schema';
+import type { ChangePasswordFormData, SetPasswordFormData } from '@/schemas/auth.schema';
 import { getErrorMessage } from '@/utils/error';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -46,7 +46,8 @@ export function useChangePassword(portal: AuthPortal = 'candidate') {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: ChangePasswordFormData) => accountSecurityApiFor(portal).changePassword(payload),
+    mutationFn: (payload: ChangePasswordFormData | SetPasswordFormData) =>
+      accountSecurityApiFor(portal).changePassword(payload),
     onSuccess: () => {
       toast.success('Password changed successfully!');
       return queryClient.invalidateQueries({ queryKey: sessionsKey(portal) });

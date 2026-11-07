@@ -9,6 +9,7 @@ export type User = {
   phone?: string;
   emailVerified: boolean;
   phoneVerified?: boolean;
+  hasPassword?: boolean;
   deleteRequestedAt?: string | null;
   roles: RoleType[];
   createdAt: string;
@@ -25,6 +26,12 @@ export type AuthResponsePayload = {
   requiresTwoFactor?: boolean;
   tempToken?: string;
 };
+
+export type OAuthAuthorizePayload = { intent: 'LOGIN' | 'REGISTER'; acceptTerms: boolean };
+
+export type OAuthAuthorizeResult = { authorizationUrl: string };
+
+export type OAuthCallbackPayload = { code: string; state: string };
 
 export type RecruiterAuthPayload = {
   accessToken?: string;

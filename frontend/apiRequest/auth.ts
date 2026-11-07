@@ -1,12 +1,23 @@
 import { request } from '@/apiRequest/http';
 import type { ForgotPasswordPayload, LoginPayload, RegisterPayload, ResetPasswordPayload } from '@/schemas/auth.schema';
-import type { AuthResponsePayload, AuthSession, TwoFactorChallengePayload } from '@/types/auth';
+import type {
+  AuthResponsePayload,
+  OAuthAuthorizePayload,
+  OAuthAuthorizeResult,
+  OAuthCallbackPayload,
+  AuthSession,
+  TwoFactorChallengePayload,
+} from '@/types/auth';
 
 export const authApi = {
   register: (payload: RegisterPayload) =>
     request<AuthSession>('/auth/register', { method: 'POST', body: payload, auth: false }),
   login: (payload: LoginPayload) =>
     request<AuthResponsePayload>('/auth/login', { method: 'POST', body: payload, auth: false }),
+  oauthAuthorize: (provider: string, payload: OAuthAuthorizePayload) =>
+    request<OAuthAuthorizeResult>(`/auth/oauth/${provider}/authorize`, { method: 'POST', body: payload, auth: false }),
+  oauthCallback: (provider: string, payload: OAuthCallbackPayload) =>
+    request<AuthResponsePayload>(`/auth/oauth/${provider}`, { method: 'POST', body: payload, auth: false }),
   verifyTwoFactor: (payload: TwoFactorChallengePayload) =>
     request<AuthSession>('/auth/verify-2fa', { method: 'POST', body: payload, auth: false }),
   logout: () => request('/auth/logout', { method: 'POST' }),

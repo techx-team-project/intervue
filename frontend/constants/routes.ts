@@ -10,6 +10,7 @@ export const ROUTES = {
   CANDIDATE_CVS: '/candidate/cvs',
   JOBS: '/jobs',
   CANDIDATE_JOB_ALERTS: '/candidate/job-alerts',
+  ACCOUNT_PASSWORD: '/account/password',
   ACCOUNT_TWO_FACTOR: '/account/two-factor',
   NOTIFICATIONS: '/notifications',
   NOTIFICATION_PREFERENCES: '/account/notification-preferences',

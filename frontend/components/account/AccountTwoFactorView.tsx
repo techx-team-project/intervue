@@ -1,11 +1,13 @@
 'use client';
 
 import { recruiterTwoFactorApi, userTwoFactorApi } from '@/apiRequest/two-factor';
+import SetPasswordNotice from '@/components/account/SetPasswordNotice';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
 import PasswordInput from '@/components/ui/PasswordInput';
+import { useAuth } from '@/hooks/useAuth';
 import { isApiError } from '@/lib/api-error';
 import { cn } from '@/lib/utils';
 import type { TrustedDevice, TwoFactorSetup, TwoFactorStatus } from '@/types/auth';
@@ -36,6 +38,8 @@ type AccountTwoFactorViewProps = {
 
 export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTwoFactorViewProps) {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const needsPassword = portal === 'candidate' && user?.hasPassword === false;
   const isRecruiter = portal === 'recruiter';
   const api = isRecruiter ? recruiterTwoFactorApi : userTwoFactorApi;
   const statusQueryKey = [portal, 'two-factor-status'];
@@ -683,31 +687,35 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
           title={isRecruiter ? 'Disable Two-Factor Authentication' : 'Tắt xác thực 2 bước'}
           maxWidth="sm"
         >
-          <div className="space-y-4">
-            <p className="text-xs leading-relaxed text-slate-500">
-              {isRecruiter
-                ? 'Your account security will be lowered. Untrusted browsers will no longer be challenged. Please enter your password to confirm.'
-                : 'Tài khoản của bạn sẽ giảm mức độ an toàn. Vui lòng nhập mật khẩu hiện tại để xác nhận.'}
-            </p>
+          {needsPassword ? (
+            <SetPasswordNotice />
+          ) : (
+            <div className="space-y-4">
+              <p className="text-xs leading-relaxed text-slate-500">
+                {isRecruiter
+                  ? 'Your account security will be lowered. Untrusted browsers will no longer be challenged. Please enter your password to confirm.'
+                  : 'Tài khoản của bạn sẽ giảm mức độ an toàn. Vui lòng nhập mật khẩu hiện tại để xác nhận.'}
+              </p>
 
-            <form onSubmit={handleDisable2FA} className="space-y-4">
-              <PasswordInput
-                value={disablePassword}
-                onChange={(e) => setDisablePassword(e.target.value)}
-                placeholder={isRecruiter ? 'Enter your password' : 'Nhập mật khẩu của bạn'}
-                required
-              />
+              <form onSubmit={handleDisable2FA} className="space-y-4">
+                <PasswordInput
+                  value={disablePassword}
+                  onChange={(e) => setDisablePassword(e.target.value)}
+                  placeholder={isRecruiter ? 'Enter your password' : 'Nhập mật khẩu của bạn'}
+                  required
+                />
 
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setShowDisableModal(false)}>
-                  {isRecruiter ? 'Cancel' : 'Hủy'}
-                </Button>
-                <Button type="submit" variant="danger" isLoading={isSubmitting}>
-                  {isRecruiter ? 'Confirm and Disable' : 'Xác nhận tắt 2FA'}
-                </Button>
-              </div>
-            </form>
-          </div>
+                <div className="flex items-center justify-end gap-3 pt-2">
+                  <Button type="button" variant="outline" onClick={() => setShowDisableModal(false)}>
+                    {isRecruiter ? 'Cancel' : 'Hủy'}
+                  </Button>
+                  <Button type="submit" variant="danger" isLoading={isSubmitting}>
+                    {isRecruiter ? 'Confirm and Disable' : 'Xác nhận tắt 2FA'}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          )}
         </Modal>
       )}
 

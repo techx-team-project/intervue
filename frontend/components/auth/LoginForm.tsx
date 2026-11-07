@@ -4,16 +4,15 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { ROUTES } from '@/constants/routes';
+import { startCandidateSession } from '@/hooks/useCandidateSession';
 import { useLogin } from '@/hooks/useLogin';
 import { LoginFormData, loginSchema } from '@/schemas/auth.schema';
-import { useAuthStore } from '@/store/auth.store';
 import { applyFormError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import FormErrorAlert from './FormErrorAlert';
 import SocialAuthButtons from './SocialAuthButtons';
 import TwoFactorChallengeModal from './TwoFactorChallengeModal';
@@ -109,8 +108,7 @@ export default function LoginForm() {
           tempToken={challengeToken}
           portal="candidate"
           onSuccess={(session) => {
-            useAuthStore.getState().setSession(session, 'candidate');
-            toast.success('Đăng nhập thành công!');
+            startCandidateSession(session);
             setChallengeToken(null);
           }}
           onCancel={() => setChallengeToken(null)}
