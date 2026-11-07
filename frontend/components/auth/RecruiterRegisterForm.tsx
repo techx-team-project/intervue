@@ -80,7 +80,6 @@ export default function RecruiterRegisterForm() {
     defaultValues: {
       name: '',
       gender: 'MALE',
-      phone: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -105,6 +104,10 @@ export default function RecruiterRegisterForm() {
         password: values.password,
         confirmPassword: values.confirmPassword,
         acceptTerms: values.acceptTerms,
+        gender: values.gender,
+        companyName: values.companyName,
+        province: values.city,
+        districtWard: values.districtWard,
       });
       useAuthStore.getState().setSession(session);
 
@@ -117,8 +120,9 @@ export default function RecruiterRegisterForm() {
         'confirmPassword',
         'acceptTerms',
         'companyName',
-        'phone',
         'city',
+        'gender',
+        'districtWard',
       ]);
     } finally {
       setIsLoading(false);
@@ -284,22 +288,17 @@ export default function RecruiterRegisterForm() {
           </div>
 
           <div className="space-y-4 sm:space-y-5">
-            <div>
-              <Input
-                id="email"
-                label="Work email *"
-                type="email"
-                placeholder="Email"
-                autoComplete="email"
-                className="py-3 text-sm sm:text-base"
-                leftIcon={<Mail className="h-5 w-5" />}
-                error={errors.email?.message}
-                {...register('email')}
-              />
-              <p className="mt-1.5 text-xs leading-relaxed text-rose-600 sm:text-[13px]">
-                * If you sign up with an email outside your company domain, some services may be limited.
-              </p>
-            </div>
+            <Input
+              id="email"
+              label="Work email *"
+              type="email"
+              placeholder="Email"
+              autoComplete="email"
+              className="py-3 text-sm sm:text-base"
+              leftIcon={<Mail className="h-5 w-5" />}
+              error={errors.email?.message}
+              {...register('email')}
+            />
 
             <div>
               <PasswordInput
