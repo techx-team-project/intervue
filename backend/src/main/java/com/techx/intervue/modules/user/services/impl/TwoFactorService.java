@@ -142,6 +142,9 @@ public class TwoFactorService implements TwoFactorServiceInterface {
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        if (user.getPassword() == null) {
+            throw new AppException(ErrorCode.PASSWORD_NOT_SET);
+        }
         if (password != null && !passwordEncoder.matches(password, user.getPassword())) {
             throw AppException.validation("password", "Password is incorrect.");
         }

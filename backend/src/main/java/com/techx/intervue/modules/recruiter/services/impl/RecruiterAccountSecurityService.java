@@ -56,6 +56,9 @@ public class RecruiterAccountSecurityService implements RecruiterAccountSecurity
                 recruiterRepository
                         .findById(recruiterId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        if (request.currentPassword() == null || request.currentPassword().isBlank()) {
+            throw AppException.validation("currentPassword", "Current password is required!");
+        }
         if (!passwordEncoder.matches(request.currentPassword(), recruiter.getPassword())) {
             throw AppException.validation("currentPassword", "Current password is incorrect!");
         }

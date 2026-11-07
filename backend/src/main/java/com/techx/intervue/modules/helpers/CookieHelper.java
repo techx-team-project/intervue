@@ -8,6 +8,19 @@ public class CookieHelper {
     public static final String RECRUITER_REFRESH_TOKEN_COOKIE = "recruiter_refresh_token";
     public static final String ADMIN_REFRESH_TOKEN_COOKIE = "admin_refresh_token";
 
+    public static final String OAUTH_STATE_NONCE_COOKIE = "oauth_state_nonce";
+    public static final String OAUTH_STATE_NONCE_PATH = "/api/v1/auth/oauth";
+    public static final Duration OAUTH_STATE_MAX_AGE = Duration.ofMinutes(5);
+
+    public static ResponseCookie buildOAuthStateNonceCookie(String nonce) {
+        return buildCookie(
+                OAUTH_STATE_NONCE_COOKIE, nonce, OAUTH_STATE_NONCE_PATH, OAUTH_STATE_MAX_AGE);
+    }
+
+    public static ResponseCookie clearOAuthStateNonceCookie() {
+        return buildCookie(OAUTH_STATE_NONCE_COOKIE, "", OAUTH_STATE_NONCE_PATH, Duration.ZERO);
+    }
+
     public static ResponseCookie buildRefreshTokenCookie(String token, Duration maxAge) {
         return buildCookie(REFRESH_TOKEN_COOKIE, token, "/", maxAge);
     }

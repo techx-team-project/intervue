@@ -126,7 +126,24 @@ public enum ErrorCode {
     BLOG_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "Blog category not found!"),
     BLOG_SLUG_ALREADY_EXISTS(HttpStatus.CONFLICT, "A blog post with this slug already exists!"),
     BROADCAST_AUDIENCE_EMPTY(
-            HttpStatus.UNPROCESSABLE_CONTENT, "This broadcast has no recipients to send to!");
+            HttpStatus.UNPROCESSABLE_CONTENT, "This broadcast has no recipients to send to!"),
+    OAUTH_STATE_INVALID(
+            HttpStatus.BAD_REQUEST, "The sign-in request is invalid or has expired, please retry!"),
+    OAUTH_NOT_CONFIGURED(
+            HttpStatus.SERVICE_UNAVAILABLE, "This sign-in method is not available right now!"),
+    OAUTH_PROVIDER_ERROR(
+            HttpStatus.BAD_GATEWAY, "The sign-in provider returned an unexpected error!"),
+    OAUTH_EMAIL_UNVERIFIED(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "Your provider account has no verified email address!"),
+    OAUTH_LINK_REQUIRES_VERIFIED_EMAIL(
+            HttpStatus.CONFLICT,
+            "An account with this email already exists. Sign in with your password and verify your email first, then you can use Google."),
+    OAUTH_ACCOUNT_NOT_FOUND(
+            HttpStatus.NOT_FOUND, "No account yet, sign up and accept the terms first!"),
+    SOCIAL_LOGIN_NOT_ALLOWED(
+            HttpStatus.FORBIDDEN, "This account cannot sign in with a social provider!"),
+    PASSWORD_NOT_SET(HttpStatus.UNPROCESSABLE_CONTENT, "Set a password first!");
 
     private final HttpStatus status;
     private final String message;

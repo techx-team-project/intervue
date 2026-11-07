@@ -30,13 +30,15 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 |---|---|---|---|---|
 | ✅ | `POST /auth/register` | public | `{ name, email, password, confirmPassword, acceptTerms }` | `{ accessToken, user }` + refresh cookie; sends verification email |
 | ✅ | `POST /auth/login` | public | `{ email, password }` | `{ accessToken, user }` + cookie. Failure: `INVALID_CREDENTIALS` with `error.meta.captchaRequired`, or `ACCOUNT_BANNED` once the password is correct |
+| ✅ | `POST /auth/oauth/{provider}/authorize` | public | `OAuthAuthorizeRequest` `{ intent: "LOGIN" \| "REGISTER", acceptTerms? }` (`provider`: `google`; `acceptTerms` optional, default `false`) | `{ authorizationUrl }` ("Redirecting to Google...") and sets the HttpOnly `oauth_state_nonce` cookie (path `/api/v1/auth/oauth`, 5 min) that binds the flow to this browser. `REGISTER` without `acceptTerms=true` → `VALIDATION_FAILED` on `acceptTerms`. Errors: `NOT_FOUND` (unknown provider), `OAUTH_NOT_CONFIGURED` 503, `RATE_LIMITED` 429 with `Retry-After` (20 per 10 min per IP) |
+| ✅ | `POST /auth/oauth/{provider}` | public | `OAuthCallbackRequest` `{ code, state }`; requires the `oauth_state_nonce` cookie set by the authorize call (send with credentials) | Same as `POST /auth/login` (`{ accessToken, user }` + refresh cookie, or the 2FA challenge) ("Logged in successfully!"); the nonce cookie is always cleared. Errors: `OAUTH_STATE_INVALID` 400 (unknown, expired or reused `state`, missing or different nonce cookie), `OAUTH_PROVIDER_ERROR` 502, `OAUTH_NOT_CONFIGURED` 503, `OAUTH_EMAIL_UNVERIFIED` 422, `OAUTH_LINK_REQUIRES_VERIFIED_EMAIL` 409, `OAUTH_ACCOUNT_NOT_FOUND` 404, `SOCIAL_LOGIN_NOT_ALLOWED` 403, plus the login errors `ACCOUNT_BANNED` / `ACCOUNT_DELETED` |
 | ✅ | `POST /auth/refresh` | cookie | – | `{ accessToken, user }` (rotates cookie) |
 | ✅ | `POST /auth/logout` | user | – | – (clears cookie, blacklists access token; recruiter tokens get 403) |
 | ✅ | `POST /auth/verify-email` | public | `{ token }` | – (link valid 24h, single use) |
 | ✅ | `POST /auth/resend-verification` | user | – | – (60s cooldown, 3 per 15 min by email and IP; recruiter tokens get 403) |
 | ✅ | `POST /auth/forgot-password` | public | `{ email }` | – (same message whether or not the email exists; 60s cooldown, 3 per 15 min by email and IP) |
 | ✅ | `POST /auth/reset-password` | public | `{ token, password, confirmPassword }` | – (link valid 15 min, single use; logs out all devices) |
-| ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, roles, createdAt }` |
+| ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, hasPassword, roles, createdAt }` (`hasPassword` is `false` for an account created with Google that never set a password) |
 | ✅ | `POST /ai/chat` | public / optional user | `{ message, sessionId? }` | `{ answer, sources, remainingQuota }` |
 | ✅ | `POST /ai/resume-match` | public / recruiter / user | `{ applicationId?, jobTitle, jobRequirements, jobDescription?, candidateData?, cvText? }` | `ResumeMatchResult` `{ applicationId, experienceSummary, requirements, questionsToAsk, model, promptVersion, aiProcessedCandidateData, analyzedAt, disclaimer }` (Runs async; sensitive PII/KYC and screening questions strictly stripped) |
 | ✅ | `POST /ai/cv-reviews` | candidate | `{ resumeId?, cvText?, targetPosition? }` | `CvReviewResult` `{ fileHash, overallScore, summary, comments: [{ section, quote, problem, fix }], modelVersion, promptVersion, fromCache }` (3 uses/day, resets 00:00 VN time; unchanged CV returns cached result without using quota) |
@@ -56,15 +58,15 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `DELETE /admin/users/{id}/sessions/{sessionId}` | admin | – | – (revokes specific session) |
 | ✅ | `POST /admin/users/{id}/sessions/revoke-all` | admin | – | – (logs out all devices and evicts session cache) |
 | ✅ | `GET /admin/users/{id}/sign-ins` | admin | pagination | `PageResource<AdminUserSignInResource>` |
-| ✅ | `POST /admin/users/{id}/roles` | admin | `{ role, expiresAt?, reason? }` | `AdminUserDetailResource` (grants role; evicts session cache; 409 if already active) |
+| ✅ | `POST /admin/users/{id}/roles` | admin | `{ role, expiresAt?, reason? }` | `AdminUserDetailResource` (grants role; evicts session cache; 409 if already active; granting `ADMIN` to an account without a password → `PASSWORD_NOT_SET` 422) |
 | ✅ | `DELETE /admin/users/{id}/roles/{role}` | admin | `{ reason? }` | `AdminUserDetailResource` (revokes role; evicts session cache; guards last role & self admin) |
 | ✅ | `POST /admin/users/{id}/reset-two-factor` | admin | – | `AdminUserDetailResource` (clears authenticator secret and backup codes) |
 | ✅ | `POST /admin/users/{id}/send-password-reset` | admin | – | `AdminUserDetailResource` (sends a single-use 15-minute reset link; requires verified email) |
 | ✅ | `POST /users/me/delete-request` | user | – | – (starts 7-day grace period, sets status PENDING_DELETION, evicts session) |
 | ✅ | `POST /users/me/cancel-deletion` | user | – | `UserResource` (cancels pending deletion) |
-| ✅ | `POST /users/me/email/change-request` | user | `ChangeEmailRequest` (`newEmail`, `currentPassword`) | – (mails a confirmation link to the new email and a notice to the old one; field errors on `currentPassword` / `newEmail` (same as current email); `EMAIL_ALREADY_USED` for an email already in `users`; `RATE_LIMITED` 429 with `Retry-After`: 3 attempts per 15 min per account, and mails limited like resend-verification (60s cooldown, 3 per 15 min by email and IP) only when a mail is actually sent; the confirmation link is bound to the requested new email) |
+| ✅ | `POST /users/me/email/change-request` | user | `ChangeEmailRequest` (`newEmail`, `currentPassword`) | – (`PASSWORD_NOT_SET` 422 when the account has no password; mails a confirmation link to the new email and a notice to the old one; field errors on `currentPassword` / `newEmail` (same as current email); `EMAIL_ALREADY_USED` for an email already in `users`; `RATE_LIMITED` 429 with `Retry-After`: 3 attempts per 15 min per account, and mails limited like resend-verification (60s cooldown, 3 per 15 min by email and IP) only when a mail is actually sent; the confirmation link is bound to the requested new email) |
 | ✅ | `POST /auth/confirm-email-change` | public | `VerifyEmailRequest` (`token`) | – (sets the new email, marks it verified, signs out every device; link `{frontendUrl}/confirm-email-change?token=…` valid 24h, single use; `INVALID_OR_EXPIRED_TOKEN`, `EMAIL_ALREADY_USED` if the email was taken meanwhile) |
-| ✅ | `POST /users/me/change-password` | user | `ChangePasswordRequest` (`currentPassword`, `password`, `confirmPassword`) | – (signs out every other device, evicts session cache; field errors on `currentPassword` / `password` / `confirmPassword`; `RATE_LIMITED` 429 with `Retry-After` after 3 attempts per 15 min) |
+| ✅ | `POST /users/me/change-password` | user | `ChangePasswordRequest` (`currentPassword`, `password`, `confirmPassword`; `currentPassword` is ignored and optional when `hasPassword=false`, which sets the first password, and required otherwise) | – (signs out every other device, evicts session cache; field errors on `currentPassword` / `password` / `confirmPassword`; `RATE_LIMITED` 429 with `Retry-After` after 3 attempts per 15 min) |
 | ✅ | `GET /users/me/sessions` | user | – | `AccountSessionResource[] { id, deviceLabel, ipAddress, location?, createdAt, lastUsedAt, current }` (`current` marks the device making the request) |
 | ✅ | `DELETE /users/me/sessions/{sessionId}` | user | – | – (signs out one device; the current session cannot be revoked here, use logout (`VALIDATION_FAILED` on `sessionId`); `NOT_FOUND` for another user's session) |
 | ✅ | `POST /users/me/sessions/revoke-others` | user | – | – (signs out every other device; like change-password and `DELETE /users/me/sessions/{id}`, only refresh tokens are revoked, so an access token the device already holds keeps working until it expires, up to 15 min) |
@@ -104,6 +106,10 @@ Profile sections (`{section}` is `experiences` (max 20), `educations` (max 10), 
 - `SaveCandidateCertificationRequest`: `name` (required, max 150), `issuer` (required, max 150), `issueDate`, `credentialId` (max 100), `credentialUrl` (empty or http/https URL, max 255). Response items: `id, name, issuer, issueDate, credentialId, credentialUrl, imageUrl`, ordered by `issueDate` descending, undated last. Deleting a certification also discards its image.
 - `SaveCandidateLanguageRequest`: `language` (required, max 60), `proficiency` (required: `BASIC` `INTERMEDIATE` `ADVANCED` `FLUENT` `NATIVE`), `certificate` (max 100). A language that duplicates another one ignoring case and accents gives `VALIDATION_FAILED` on field `language`. Response items: `id, language, proficiency, certificate`, ordered by language.
 - `SaveCandidateSkillRequest`: `name` (required, max 60), `category` (required: `CORE` `AI_DATA` `TOOLS_DEVOPS` `SOFT`), `level` (required: `BASIC` `INTERMEDIATE` `PROFICIENT` `EXPERT`), `years` (required, 0 to 50). A duplicate name (ignoring case and accents) gives `VALIDATION_FAILED` on field `name`. Response items: `id, name, category, level, years`, ordered by name.
+
+## Social sign-in (candidate)
+
+Google only (`provider = google`); LinkedIn is not implemented. Flow: `POST /auth/oauth/google/authorize` returns the Google URL and sets the `oauth_state_nonce` cookie, the browser returns to `{frontend}/auth/callback/google?code&state`, the frontend posts `{ code, state }` (with credentials) to `POST /auth/oauth/google`. Sign-up through Google requires `acceptTerms=true` at the authorize step. The Google email counts as verified only when `email_verified` is true and the address ends with `@gmail.com` or the Google account has a hosted domain (`hd`); otherwise `OAUTH_EMAIL_UNVERIFIED` (also for emails longer than 100 characters). An existing account is linked automatically only when its own email is already verified (otherwise `OAUTH_LINK_REQUIRES_VERIFIED_EMAIL`); linking is audited and notifies the owner ("Google sign-in was linked to your account."). Accounts created this way have no password (`hasPassword=false`) until the user sets one; change email, disabling 2FA and being granted `ADMIN` need a password (`PASSWORD_NOT_SET`). Accounts holding `ADMIN` are refused (`SOCIAL_LOGIN_NOT_ALLOWED`). 2FA applies exactly as for `/auth/login`.
 
 ## Admin user management
 
@@ -268,6 +274,14 @@ An application is one row per candidate and job (`UNIQUE job_id, candidate_id`);
 | `SCREENING_QUESTIONS_LOCKED` | 422 | The job already has applications, so its screening questions cannot change |
 | `SKILL_NAME_ALREADY_USED` | 409 | A skill with this name already exists |
 | `PROFILE_SECTION_LIMIT_REACHED` | 409 | A candidate profile section already holds its maximum number of items |
+| `OAUTH_STATE_INVALID` | 400 | The social sign-in `state` is unknown, expired, already used, or issued for another provider |
+| `OAUTH_NOT_CONFIGURED` | 503 | The provider client id or secret is not configured |
+| `OAUTH_PROVIDER_ERROR` | 502 | The provider rejected the code or could not be reached |
+| `OAUTH_EMAIL_UNVERIFIED` | 422 | The provider account has no email, or the email is not verified; nothing is created |
+| `OAUTH_LINK_REQUIRES_VERIFIED_EMAIL` | 409 | An account with this email exists but its email is not verified; sign in with the password and verify the email first |
+| `OAUTH_ACCOUNT_NOT_FOUND` | 404 | No account for this provider identity and the terms were not accepted; send the user to `/register` |
+| `SOCIAL_LOGIN_NOT_ALLOWED` | 403 | The matching account holds the `ADMIN` role; admins sign in only through `/admin/login` |
+| `PASSWORD_NOT_SET` | 422 | The action needs a password and the account has none (change email, disable 2FA, grant `ADMIN`); set one first with `POST /users/me/change-password` |
 | `RATE_LIMITED` | 429 | Honor `Retry-After` |
 | `AI_USER_QUOTA_EXCEEDED` | 429 | Daily AI limit per user reached; honor `Retry-After` |
 | `AI_IP_QUOTA_EXCEEDED` | 429 | Hourly AI limit per IP reached; honor `Retry-After` |
