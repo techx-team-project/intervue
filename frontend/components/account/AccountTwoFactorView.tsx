@@ -39,7 +39,7 @@ type AccountTwoFactorViewProps = {
 export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTwoFactorViewProps) {
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const needsPassword = portal === 'candidate' && user?.hasPassword === false;
+  const needsPassword = user?.hasPassword === false;
   const isRecruiter = portal === 'recruiter';
   const api = isRecruiter ? recruiterTwoFactorApi : userTwoFactorApi;
   const statusQueryKey = [portal, 'two-factor-status'];
@@ -688,7 +688,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
           maxWidth="sm"
         >
           {needsPassword ? (
-            <SetPasswordNotice />
+            <SetPasswordNotice portal={portal} />
           ) : (
             <div className="space-y-4">
               <p className="text-xs leading-relaxed text-slate-500">
@@ -733,7 +733,9 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
           title="Reconfigure Authenticator App"
           maxWidth="md"
         >
-          {reconfigureStep === 'password' ? (
+          {reconfigureStep === 'password' && needsPassword ? (
+            <SetPasswordNotice portal={portal} />
+          ) : reconfigureStep === 'password' ? (
             <form onSubmit={handleInitiateReconfigure} className="space-y-4">
               <p className="text-xs text-slate-500">
                 To link a new phone or authenticator app, please confirm your current account password.

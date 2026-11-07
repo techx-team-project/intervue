@@ -22,6 +22,7 @@ export const ROUTES = {
   RECRUITER_RESET_PASSWORD: '/recruiter/reset-password',
   RECRUITER_VERIFY_EMAIL: '/recruiter/verify-email',
   RECRUITER_CONFIRM_EMAIL_CHANGE: '/recruiter/confirm-email-change',
+  RECRUITER_OAUTH_CALLBACK: '/recruiter/auth/callback',
   RECRUITER_DASHBOARD: '/recruiter/dashboard',
   RECRUITER_CAMPAIGNS: '/recruiter/campaigns',
   RECRUITER_JOBS: '/recruiter/jobs',

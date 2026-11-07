@@ -38,7 +38,10 @@ export type RecruiterAuthPayload = {
   recruiter?: Omit<User, 'roles'>;
   requiresTwoFactor?: boolean;
   tempToken?: string;
+  newAccount?: boolean;
 };
+
+export type OAuthOutcome = { tempToken?: string; session?: AuthSession; newAccount: boolean };
 
 export type AdminQueueCounts = {
   pendingVerifications: number;

@@ -1,15 +1,17 @@
 'use client';
 
-import { authApi } from '@/apiRequest/auth';
+import { exchangeOAuthCode } from '@/apiRequest/auth-portal';
 import Spinner from '@/components/common/Spinner';
 import { OAUTH_REDIRECT_STORAGE_KEY } from '@/constants/auth';
 import { ROUTES } from '@/constants/routes';
 import { startCandidateSession } from '@/hooks/useCandidateSession';
+import { startRecruiterSession } from '@/hooks/useRecruiterSession';
 import { isApiError } from '@/lib/api-error';
+import { AUTH_PORTAL_ROUTES, type OAuthPortal } from '@/lib/auth-portal';
+import type { OAuthOutcome } from '@/types/auth';
 import { getErrorMessage } from '@/utils/error';
 import { sanitizeRedirect } from '@/utils/redirect';
 import { homeFor } from '@/utils/role-home';
-import type { AuthResponsePayload } from '@/types/auth';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -21,31 +23,51 @@ function clearSavedRedirect() {
   sessionStorage.removeItem(OAUTH_REDIRECT_STORAGE_KEY);
 }
 
-type OAuthCallbackStatusProps = { provider: string; code?: string; state?: string; error?: string };
+type OAuthCallbackStatusProps = {
+  portal?: OAuthPortal;
+  provider: string;
+  code?: string;
+  state?: string;
+  error?: string;
+};
 
-export default function OAuthCallbackStatus({ provider, code, state, error }: OAuthCallbackStatusProps) {
+export default function OAuthCallbackStatus({
+  portal = 'candidate',
+  provider,
+  code,
+  state,
+  error,
+}: OAuthCallbackStatusProps) {
   const router = useRouter();
+  const routes = AUTH_PORTAL_ROUTES[portal];
+  const isRecruiter = portal === 'recruiter';
   const submittedRef = useRef(false);
   const [challengeToken, setChallengeToken] = useState<string | null>(null);
 
-  const finishSignIn = (res: AuthResponsePayload) => {
-    if (!startCandidateSession(res) || !res.user) return;
+  const finishSignIn = ({ session, newAccount }: OAuthOutcome) => {
+    if (!session) return;
+    if (isRecruiter) startRecruiterSession(session);
+    else startCandidateSession(session);
     const saved = sessionStorage.getItem(OAUTH_REDIRECT_STORAGE_KEY);
     clearSavedRedirect();
-    router.replace(sanitizeRedirect(saved, homeFor(res.user.roles)));
+    if (newAccount) {
+      router.replace(ROUTES.RECRUITER_ONBOARDING);
+      return;
+    }
+    router.replace(sanitizeRedirect(saved, isRecruiter ? ROUTES.RECRUITER_DASHBOARD : homeFor(session.user.roles)));
   };
 
   const callback = useMutation({
-    mutationFn: () => authApi.oauthCallback(provider, { code: code ?? '', state: state ?? '' }),
-    onSuccess: (res) => {
-      if (res.requiresTwoFactor && res.tempToken) setChallengeToken(res.tempToken);
-      else finishSignIn(res);
+    mutationFn: () => exchangeOAuthCode(portal, provider, { code: code ?? '', state: state ?? '' }),
+    onSuccess: (outcome) => {
+      if (outcome.tempToken) setChallengeToken(outcome.tempToken);
+      else finishSignIn(outcome);
     },
     onError: (err) => {
       clearSavedRedirect();
       if (isApiError(err) && err.code === 'OAUTH_ACCOUNT_NOT_FOUND') {
         toast.info('No account yet. Accept the terms to sign up with Google.');
-        router.replace(ROUTES.REGISTER);
+        router.replace(routes.register);
       }
     },
   });
@@ -57,20 +79,21 @@ export default function OAuthCallbackStatus({ provider, code, state, error }: OA
       submittedRef.current = true;
       clearSavedRedirect();
       toast.error('Sign-in was cancelled.');
-      router.replace(ROUTES.LOGIN);
+      router.replace(routes.login);
       return;
     }
     if (!code || !state) return;
     submittedRef.current = true;
     mutate();
-  }, [error, code, state, mutate, router]);
+  }, [error, code, state, mutate, router, routes.login]);
 
   if (!error && (!code || !state)) {
     return (
       <InvalidLinkNotice
         message="The sign-in link is invalid."
-        actionHref={ROUTES.LOGIN}
+        actionHref={routes.login}
         actionLabel="Back to sign in"
+        loginHref={routes.login}
       />
     );
   }
@@ -79,8 +102,9 @@ export default function OAuthCallbackStatus({ provider, code, state, error }: OA
     return (
       <InvalidLinkNotice
         message={getErrorMessage(callback.error)}
-        actionHref={ROUTES.LOGIN}
+        actionHref={routes.login}
         actionLabel="Back to sign in"
+        loginHref={routes.login}
       />
     );
   }
@@ -93,14 +117,14 @@ export default function OAuthCallbackStatus({ provider, code, state, error }: OA
         <TwoFactorChallengeModal
           isOpen={true}
           tempToken={challengeToken}
-          portal="candidate"
+          portal={portal}
           onSuccess={(session) => {
             setChallengeToken(null);
-            finishSignIn({ accessToken: session.accessToken, user: session.user });
+            finishSignIn({ session, newAccount: false });
           }}
           onCancel={() => {
             clearSavedRedirect();
-            router.replace(ROUTES.LOGIN);
+            router.replace(routes.login);
           }}
         />
       )}

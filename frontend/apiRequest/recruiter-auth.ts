@@ -1,7 +1,14 @@
 import { request } from '@/apiRequest/http';
 import { toRecruiterSession } from '@/lib/auth-portal';
 import type { ForgotPasswordPayload, LoginPayload, RegisterPayload, ResetPasswordPayload } from '@/schemas/auth.schema';
-import type { AuthSession, RecruiterAuthPayload, TwoFactorChallengePayload } from '@/types/auth';
+import type {
+  AuthSession,
+  OAuthAuthorizePayload,
+  OAuthAuthorizeResult,
+  OAuthCallbackPayload,
+  RecruiterAuthPayload,
+  TwoFactorChallengePayload,
+} from '@/types/auth';
 
 export const recruiterAuthApi = {
   register: (payload: RegisterPayload): Promise<AuthSession> =>
@@ -10,6 +17,14 @@ export const recruiterAuthApi = {
     ),
   login: (payload: LoginPayload): Promise<RecruiterAuthPayload> =>
     request<RecruiterAuthPayload>('/recruiter/auth/login', { method: 'POST', body: payload, auth: false }),
+  oauthAuthorize: (provider: string, payload: OAuthAuthorizePayload) =>
+    request<OAuthAuthorizeResult>(`/recruiter/auth/oauth/${provider}/authorize`, {
+      method: 'POST',
+      body: payload,
+      auth: false,
+    }),
+  oauthCallback: (provider: string, payload: OAuthCallbackPayload) =>
+    request<RecruiterAuthPayload>(`/recruiter/auth/oauth/${provider}`, { method: 'POST', body: payload, auth: false }),
   verifyTwoFactor: (payload: TwoFactorChallengePayload): Promise<AuthSession> =>
     request<RecruiterAuthPayload>('/recruiter/auth/verify-2fa', { method: 'POST', body: payload, auth: false }).then(
       toRecruiterSession,

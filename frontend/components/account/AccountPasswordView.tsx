@@ -21,7 +21,7 @@ const EMPTY_FORM: ChangePasswordFormData = { currentPassword: '', password: '', 
 
 export default function AccountPasswordView({ portal = 'candidate' }: AccountPasswordViewProps) {
   const { user } = useAuth();
-  if (portal === 'candidate' && user?.hasPassword === false) return <SetPasswordView />;
+  if (portal !== 'admin' && user?.hasPassword === false) return <SetPasswordView portal={portal} />;
   return <ChangePasswordView portal={portal} />;
 }
 

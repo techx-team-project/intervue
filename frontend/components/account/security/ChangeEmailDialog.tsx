@@ -21,7 +21,7 @@ const EMPTY_FORM: ChangeEmailFormData = { newEmail: '', currentPassword: '' };
 export default function ChangeEmailDialog({ isOpen, onClose, portal, currentEmail }: ChangeEmailDialogProps) {
   const requestEmailChange = useRequestEmailChange(portal);
   const { user } = useAuth();
-  const needsPassword = portal === 'candidate' && user?.hasPassword === false;
+  const needsPassword = portal !== 'admin' && user?.hasPassword === false;
   const {
     register,
     handleSubmit,
@@ -54,7 +54,7 @@ export default function ChangeEmailDialog({ isOpen, onClose, portal, currentEmai
       description={`Current email: ${currentEmail}. We will send a confirmation link to the new address.`}
     >
       {needsPassword ? (
-        <SetPasswordNotice />
+        <SetPasswordNotice portal={portal} />
       ) : (
         <>
           <FormErrorAlert message={errors.root?.message} />

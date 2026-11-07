@@ -1,8 +1,9 @@
 'use client';
 
-import { authApi } from '@/apiRequest/auth';
+import { authApiFor } from '@/apiRequest/auth-portal';
 import { OAUTH_REDIRECT_STORAGE_KEY } from '@/constants/auth';
 import { REDIRECT_PARAM, ROUTES } from '@/constants/routes';
+import type { OAuthPortal } from '@/lib/auth-portal';
 import { cn } from '@/lib/utils';
 import { getErrorMessage } from '@/utils/error';
 import { sanitizeRedirect } from '@/utils/redirect';
@@ -11,6 +12,7 @@ import { toast } from 'sonner';
 import { GoogleIcon, LinkedinIcon } from './SocialIcons';
 
 type SocialAuthButtonsProps = {
+  portal?: OAuthPortal;
   mode: 'login' | 'register';
   acceptTerms?: boolean;
 };
@@ -18,12 +20,13 @@ type SocialAuthButtonsProps = {
 const BUTTON_CLASS =
   'text-navy flex w-full items-center justify-center gap-2.5 rounded-full border border-[#e0e0e0] bg-white px-4 py-2.5 text-[13.5px] font-semibold transition';
 
-export default function SocialAuthButtons({ mode, acceptTerms = false }: SocialAuthButtonsProps) {
+export default function SocialAuthButtons({ portal = 'candidate', mode, acceptTerms = false }: SocialAuthButtonsProps) {
   const isRegister = mode === 'register';
   const termsPending = isRegister && !acceptTerms;
 
   const authorize = useMutation({
-    mutationFn: () => authApi.oauthAuthorize('google', { intent: isRegister ? 'REGISTER' : 'LOGIN', acceptTerms }),
+    mutationFn: () =>
+      authApiFor(portal).oauthAuthorize('google', { intent: isRegister ? 'REGISTER' : 'LOGIN', acceptTerms }),
     onSuccess: ({ authorizationUrl }) => {
       const target = new URLSearchParams(window.location.search).get(REDIRECT_PARAM);
       const redirect = sanitizeRedirect(target, ROUTES.HOME);
@@ -55,7 +58,9 @@ export default function SocialAuthButtons({ mode, acceptTerms = false }: SocialA
         </span>
       </button>
       {termsPending && (
-        <p className="text-center text-xs text-slate-500">Accept the terms below to continue with Google</p>
+        <p className="text-center text-xs text-slate-500">
+          Accept the terms {portal === 'recruiter' ? 'above' : 'below'} to continue with Google
+        </p>
       )}
 
       <button type="button" disabled className={cn(BUTTON_CLASS, 'cursor-not-allowed opacity-60')}>

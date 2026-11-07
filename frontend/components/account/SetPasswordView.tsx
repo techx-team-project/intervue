@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { useChangePassword } from '@/hooks/useAccountSecurity';
 import { setPasswordSchema, type SetPasswordFormData } from '@/schemas/auth.schema';
+import type { OAuthPortal } from '@/lib/auth-portal';
 import { useAuthStore } from '@/store/auth.store';
 import { applyFormError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,8 +15,8 @@ import PasswordRequirements, { PasswordStrengthMeter } from './security/Password
 
 const EMPTY_FORM: SetPasswordFormData = { password: '', confirmPassword: '' };
 
-export default function SetPasswordView() {
-  const changePassword = useChangePassword('candidate');
+export default function SetPasswordView({ portal = 'candidate' }: { portal?: OAuthPortal }) {
+  const changePassword = useChangePassword(portal);
   const {
     register,
     handleSubmit,
@@ -36,7 +37,7 @@ export default function SetPasswordView() {
       onSuccess: () => {
         reset(EMPTY_FORM);
         const { accessToken, user, setSession } = useAuthStore.getState();
-        if (accessToken && user) setSession({ accessToken, user: { ...user, hasPassword: true } }, 'candidate');
+        if (accessToken && user) setSession({ accessToken, user: { ...user, hasPassword: true } }, portal);
       },
       onError: (error) => applyFormError(error, setError, ['password', 'confirmPassword']),
     }),
