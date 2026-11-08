@@ -12,6 +12,7 @@ import {
 } from '@/constants/recruiter-job';
 import type { JobPostFormData } from '@/schemas/job.schema';
 import { Controller, useFormContext } from 'react-hook-form';
+import JobLocationPicker from '@/components/map/JobLocationPicker';
 import SkillPicker from './SkillPicker';
 
 const CITY_LIST_ID = 'job-city-suggestions';
@@ -25,8 +26,10 @@ export default function JobBasicsStep() {
     register,
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useFormContext<JobPostFormData>();
+  const [city, address, latitude, longitude] = watch(['city', 'address', 'latitude', 'longitude']);
   const negotiable = watch('salaryNegotiable');
   const currency = watch('currency');
   const salaryError = errors.salaryMax?.message ?? errors.salaryMin?.message;
@@ -78,6 +81,16 @@ export default function JobBasicsStep() {
           {...register('address')}
         />
       </div>
+
+      <JobLocationPicker
+        latitude={latitude}
+        longitude={longitude}
+        addressQuery={[address, city].filter(Boolean).join(', ')}
+        onChange={(point) => {
+          setValue('latitude', point?.lat, { shouldDirty: true });
+          setValue('longitude', point?.lng, { shouldDirty: true });
+        }}
+      />
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between gap-3">

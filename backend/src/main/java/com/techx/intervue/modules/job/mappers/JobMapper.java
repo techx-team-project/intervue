@@ -44,6 +44,8 @@ public class JobMapper {
                 request.location() == null
                         ? null
                         : Texts.blankToNull(request.location().address()));
+        job.setLatitude(request.location() == null ? null : request.location().latitude());
+        job.setLongitude(request.location() == null ? null : request.location().longitude());
         applySalary(job, request.salary());
         job.setDescription(Texts.blankToNull(request.description()));
         job.setRequirements(Texts.blankToNull(request.requirements()));
@@ -62,7 +64,12 @@ public class JobMapper {
                 .level(job.getLevel())
                 .contractType(job.getContractType())
                 .workingArrangement(job.getWorkingArrangement())
-                .location(new JobResource.Location(job.getCity(), job.getAddress()))
+                .location(
+                        new JobResource.Location(
+                                job.getCity(),
+                                job.getAddress(),
+                                job.getLatitude(),
+                                job.getLongitude()))
                 .salary(toSalary(job))
                 .skills(toSkills(job))
                 .description(job.getDescription())
@@ -138,7 +145,12 @@ public class JobMapper {
                 .level(job.getLevel())
                 .contractType(job.getContractType())
                 .workingArrangement(job.getWorkingArrangement())
-                .location(new JobResource.Location(job.getCity(), job.getAddress()))
+                .location(
+                        new JobResource.Location(
+                                job.getCity(),
+                                job.getAddress(),
+                                job.getLatitude(),
+                                job.getLongitude()))
                 .salary(toSalary(job))
                 .skills(toSkills(job))
                 .description(job.getDescription())
