@@ -258,6 +258,29 @@ A recruiter sees every non-draft application of the jobs of the company they are
 - Closing a job, or letting it expire, moves its unfinished applications (`APPLIED` to `OFFER`) to `JOB_CLOSED` (actor `SYSTEM`). A job hidden by an admin keeps its applications as they are.
 - Applications store the candidate's name and email at the time of the first draft, so a recruiter can search by name without reading the candidate's account.
 
+## Interviews
+
+Status: `PROPOSED` (invited), `CONFIRMED`, `DECLINED`, `RESCHEDULE_REQUESTED` (candidate suggested another time), `CANCELLED`. `PROPOSED`, `CONFIRMED` and `RESCHEDULE_REQUESTED` are active; an application has at most one active interview (`409 INTERVIEW_ALREADY_SCHEDULED`). Times are ISO-8601 UTC; the UI shows them in GMT+7. Transitions are enforced by `InterviewStatusPolicy` (`422 INVALID_STATUS_TRANSITION`).
+
+Resource: `{ id, applicationId, jobId, jobTitle, companyName, candidateName, startsAt, durationMinutes, format (ONLINE|OFFLINE), location, note, status, proposedStartsAt, candidateMessage, cancelReason, createdAt }`.
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/interviews` | recruiter | Paged, soonest first. Query `status`. |
+| `GET` | `/recruiter/interviews/by-application/{applicationId}` | recruiter | All interviews of one application, newest first. |
+| `POST` | `/recruiter/interviews/by-application/{applicationId}` | recruiter | Body `{ startsAt (future), durationMinutes (15-480), format, location (link or address, max 500), note? (max 1000) }`. Moves the application to `INTERVIEW` (through `IN_REVIEW` when needed) and invites the candidate by notification and email. |
+| `PUT` | `/recruiter/interviews/{id}` | recruiter | Same body. Resets to `PROPOSED`, clears the candidate's suggestion and reminders, and notifies the candidate. |
+| `POST` | `/recruiter/interviews/{id}/accept-proposal` | recruiter | Only from `RESCHEDULE_REQUESTED`; takes the candidate's time and sets `CONFIRMED`. |
+| `POST` | `/recruiter/interviews/{id}/cancel` | recruiter | Body `{ reason? (max 500) }`. |
+| `GET` | `/candidate/interviews` | candidate | Paged, newest start first. |
+| `POST` | `/candidate/interviews/{id}/confirm` | candidate | Only from `PROPOSED`, before the start time. |
+| `POST` | `/candidate/interviews/{id}/decline` | candidate | Body `{ reason? (max 500) }`. From `PROPOSED`, `CONFIRMED` or `RESCHEDULE_REQUESTED`. |
+| `POST` | `/candidate/interviews/{id}/reschedule-request` | candidate | Body `{ proposedStartsAt (future), message? (max 500) }`. From `PROPOSED` or `CONFIRMED`. |
+| `GET` | `/candidate/interviews/{id}/calendar` | candidate | `text/calendar` `.ics` file; not available once `DECLINED` or `CANCELLED`. |
+
+- Every event notifies the other side in-app and by email (`INTERVIEW_INVITED`, `_UPDATED`, `_CANCELLED` to the candidate; `_CONFIRMED`, `_DECLINED`, `_RESCHEDULE_REQUESTED` to the recruiter who scheduled it).
+- Confirmed interviews send `INTERVIEW_REMINDER` to both sides 24 hours and 1 hour before the start, each once (checked every 5 minutes).
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -272,6 +295,7 @@ A recruiter sees every non-draft application of the jobs of the company they are
 | `NOT_FOUND` | 404 | |
 | `METHOD_NOT_ALLOWED` | 405 | The HTTP method is not supported by this endpoint |
 | `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
+| `INTERVIEW_ALREADY_SCHEDULED` | 409 | The application already has an active interview |
 | `INTERNAL_ERROR` | 500 | Unexpected server error; the cause is logged server-side and never returned |
 | `EMAIL_ALREADY_USED` | 409 | |
 | `ACCOUNT_BANNED` | 403 | The account is banned, so signing in and refreshing are both refused. Only raised after the password matches, so it never reveals the state of an account to someone who does not hold its credentials |
