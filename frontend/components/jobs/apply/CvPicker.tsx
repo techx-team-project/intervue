@@ -63,7 +63,7 @@ export default function CvPicker({ resumes, value, onChange }: CvPickerProps) {
 
       {resumes.length === 0 ? (
         <p className="rounded-xl border border-dashed border-slate-300 px-4 py-5 text-center text-xs text-slate-500">
-          Bạn chưa có CV nào. Tải lên tệp PDF (tối đa 5 MB, 5 trang) để ứng tuyển.
+          Bạn chưa có CV nào. Tải lên tệp PDF (tối đa 5 MB) để ứng tuyển.
         </p>
       ) : (
         <ul role="radiogroup" aria-label="Chọn CV" className="space-y-2">

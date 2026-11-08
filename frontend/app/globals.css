@@ -170,6 +170,12 @@ html {
   scroll-behavior: smooth;
 }
 
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
 body {
   background-color: var(--bg-page);
   color: var(--text-dark);

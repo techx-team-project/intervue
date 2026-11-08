@@ -46,7 +46,7 @@ export default function PublicJobsFilterBar({ filters, onChange }: PublicJobsFil
   const hasFilters = Object.values(filters).some(Boolean);
 
   return (
-    <div className="border-outline-variant space-y-3 rounded-2xl border bg-white p-4 shadow-2xs">
+    <div className="bg-surface shadow-card space-y-3 rounded-3xl p-5">
       <form
         onSubmit={(event) => {
           event.preventDefault();

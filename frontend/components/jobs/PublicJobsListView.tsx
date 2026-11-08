@@ -1,5 +1,6 @@
 'use client';
 
+import PageHero from '@/components/common/PageHero';
 import Pagination from '@/components/common/Pagination';
 import Spinner from '@/components/common/Spinner';
 import { Button } from '@/components/ui/Button';
@@ -54,57 +55,62 @@ export default function PublicJobsListView() {
   const jobs = query.data?.items ?? [];
 
   return (
-    <div className="container-page space-y-5 py-6">
-      <header>
-        <h1 className="text-navy text-2xl font-bold">Việc làm IT mới nhất</h1>
-        {query.data && (
-          <p className="text-on-surface-variant mt-1 text-sm">
-            <strong className="text-on-surface">{query.data.totalItems.toLocaleString('vi-VN')}</strong> vị trí đang
-            tuyển
-          </p>
+    <>
+      <PageHero
+        id="jobs-title"
+        eyebrow="Tìm việc làm"
+        title="Việc làm IT mới nhất"
+        description={
+          query.data
+            ? `${query.data.totalItems.toLocaleString('vi-VN')} vị trí đang chờ ứng viên trên InterVue.`
+            : 'Lọc theo công nghệ, cấp bậc, địa điểm và mức lương.'
+        }
+        crumbs={[{ label: 'Trang chủ', href: '/' }, { label: 'Việc làm' }]}
+        overlap
+      />
+
+      <div className="container-page relative -mt-16 space-y-6 pb-16">
+        <PublicJobsFilterBar key={filters.q} filters={filters} onChange={(patch) => navigate(patch)} />
+
+        {query.isLoading ? (
+          <div className="flex justify-center py-20">
+            <Spinner />
+          </div>
+        ) : query.isError ? (
+          <div className="border-error/30 bg-error/10 flex flex-col items-center gap-3 rounded-2xl border px-6 py-12 text-center">
+            <p className="text-error text-sm font-semibold">{getErrorMessage(query.error)}</p>
+            <Button variant="outline" size="sm" onClick={() => query.refetch()}>
+              Thử lại
+            </Button>
+          </div>
+        ) : jobs.length === 0 ? (
+          <div className="border-outline-variant flex flex-col items-center gap-2 rounded-2xl border bg-white px-6 py-16 text-center">
+            <SearchX className="text-outline h-9 w-9" />
+            <p className="text-on-surface text-sm font-semibold">Chưa có việc làm phù hợp</p>
+            <p className="text-on-surface-variant text-xs">Thử đổi từ khóa hoặc bỏ bớt bộ lọc.</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {jobs.map((job) => (
+                <PublicJobCard key={job.id} job={job} />
+              ))}
+            </div>
+            <div className="border-outline-variant rounded-2xl border bg-white p-3.5 shadow-2xs">
+              <Pagination
+                page={page}
+                pageCount={Math.max(1, query.data?.totalPages ?? 1)}
+                totalItems={query.data?.totalItems ?? 0}
+                pageSize={PAGE_SIZE}
+                onPageChange={(next) => {
+                  navigate({}, next);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+            </div>
+          </>
         )}
-      </header>
-
-      <PublicJobsFilterBar key={filters.q} filters={filters} onChange={(patch) => navigate(patch)} />
-
-      {query.isLoading ? (
-        <div className="flex justify-center py-20">
-          <Spinner />
-        </div>
-      ) : query.isError ? (
-        <div className="border-error/30 bg-error/10 flex flex-col items-center gap-3 rounded-2xl border px-6 py-12 text-center">
-          <p className="text-error text-sm font-semibold">{getErrorMessage(query.error)}</p>
-          <Button variant="outline" size="sm" onClick={() => query.refetch()}>
-            Thử lại
-          </Button>
-        </div>
-      ) : jobs.length === 0 ? (
-        <div className="border-outline-variant flex flex-col items-center gap-2 rounded-2xl border bg-white px-6 py-16 text-center">
-          <SearchX className="text-outline h-9 w-9" />
-          <p className="text-on-surface text-sm font-semibold">Chưa có việc làm phù hợp</p>
-          <p className="text-on-surface-variant text-xs">Thử đổi từ khóa hoặc bỏ bớt bộ lọc.</p>
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {jobs.map((job) => (
-              <PublicJobCard key={job.id} job={job} />
-            ))}
-          </div>
-          <div className="border-outline-variant rounded-2xl border bg-white p-3.5 shadow-2xs">
-            <Pagination
-              page={page}
-              pageCount={Math.max(1, query.data?.totalPages ?? 1)}
-              totalItems={query.data?.totalItems ?? 0}
-              pageSize={PAGE_SIZE}
-              onPageChange={(next) => {
-                navigate({}, next);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
-          </div>
-        </>
-      )}
-    </div>
+      </div>
+    </>
   );
 }
