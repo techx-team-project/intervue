@@ -65,6 +65,20 @@ export function dayDifferenceFromToday(iso: string): number {
   return Math.round((startOfDayInTimeZone(new Date(iso)) - startOfDayInTimeZone(new Date())) / DAY_MS);
 }
 
+const VIETNAM_OFFSET_MS = 7 * 60 * 60 * 1000;
+
+export function toLocalInputValue(iso: string): string {
+  return new Date(new Date(iso).getTime() + VIETNAM_OFFSET_MS).toISOString().slice(0, 16);
+}
+
+export function fromLocalInputValue(value: string): string {
+  return new Date(`${value}:00+07:00`).toISOString();
+}
+
+export function currentLocalInputValue(): string {
+  return toLocalInputValue(new Date().toISOString());
+}
+
 export function formatRelativeDay(iso: string): string {
   const difference = dayDifferenceFromToday(iso);
 

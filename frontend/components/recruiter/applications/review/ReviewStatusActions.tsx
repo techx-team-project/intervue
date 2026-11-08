@@ -34,14 +34,16 @@ export default function ReviewStatusActions({ application }: ReviewStatusActions
     );
   };
 
-  if (application.nextStatuses.length === 0) {
+  const statuses = application.nextStatuses.filter((status) => status !== 'INTERVIEW');
+
+  if (statuses.length === 0) {
     return <p className="text-xs text-slate-500">Hồ sơ này không còn bước xử lý tiếp theo.</p>;
   }
 
   return (
     <>
       <div className="flex flex-wrap gap-2">
-        {application.nextStatuses.map((status) => (
+        {statuses.map((status) => (
           <Button
             key={status}
             size="sm"

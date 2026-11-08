@@ -17,7 +17,6 @@ import com.techx.intervue.modules.application.resources.RecruiterApplicationReso
 import com.techx.intervue.modules.application.resources.RecruiterApplicationSummaryResource;
 import com.techx.intervue.modules.application.services.interfaces.RecruiterApplicationServiceInterface;
 import com.techx.intervue.modules.candidate.services.interfaces.CandidateResumeServiceInterface.ResumeContent;
-import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import com.techx.intervue.modules.notification.enums.NotificationType;
 import com.techx.intervue.modules.notification.enums.RecipientType;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface;
@@ -65,7 +64,7 @@ public class RecruiterApplicationService implements RecruiterApplicationServiceI
     private final ApplicationStatusChanger statusChanger;
     private final CvSnapshotService cvSnapshots;
     private final RecruiterApplicationMapper mapper;
-    private final CompanyServiceInterface companyService;
+    private final RecruiterCompanyScope companyScope;
     private final RecruiterServiceInterface recruiterService;
     private final NotificationPublisherInterface notificationPublisher;
 
@@ -77,7 +76,8 @@ public class RecruiterApplicationService implements RecruiterApplicationServiceI
                 PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), NEWEST_FIRST);
         return applicationRepository
                 .findAll(
-                        ApplicationSpecifications.forCompany(companyOf(recruiterId), request),
+                        ApplicationSpecifications.forCompany(
+                                companyScope.companyIdOf(recruiterId), request),
                         newestFirst)
                 .map(mapper::toSummary);
     }
@@ -92,7 +92,7 @@ public class RecruiterApplicationService implements RecruiterApplicationServiceI
         long total = 0;
         for (StatusCount row :
                 applicationRepository.countByStatusForCompany(
-                        companyOf(recruiterId), jobId, ApplicationStatus.DRAFT)) {
+                        companyScope.companyIdOf(recruiterId), jobId, ApplicationStatus.DRAFT)) {
             counts.put(row.getStatus(), row.getTotal());
             total += row.getTotal();
         }
@@ -194,19 +194,10 @@ public class RecruiterApplicationService implements RecruiterApplicationServiceI
     private Application require(Long applicationId, Long recruiterId) {
         return applicationRepository
                 .findByIdAndCompanyIdAndStatusNot(
-                        applicationId, companyOf(recruiterId), ApplicationStatus.DRAFT)
+                        applicationId,
+                        companyScope.companyIdOf(recruiterId),
+                        ApplicationStatus.DRAFT)
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-    }
-
-    private Long companyOf(Long recruiterId) {
-        try {
-            return companyService.findMyCompany(recruiterId).id();
-        } catch (AppException e) {
-            if (e.getErrorCode() == ErrorCode.NOT_FOUND) {
-                throw new AppException(ErrorCode.NOT_COMPANY_MEMBER);
-            }
-            throw e;
-        }
     }
 
     private RecruiterApplicationResource render(Application application) {

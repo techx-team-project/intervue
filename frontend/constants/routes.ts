@@ -8,6 +8,7 @@ export const ROUTES = {
   CONFIRM_EMAIL_CHANGE: '/confirm-email-change',
   CANDIDATE_PROFILE: '/candidate/profile',
   CANDIDATE_CVS: '/candidate/cvs',
+  CANDIDATE_INTERVIEWS: '/candidate/interviews',
   JOBS: '/jobs',
   CANDIDATE_JOB_ALERTS: '/candidate/job-alerts',
   ACCOUNT_PASSWORD: '/account/password',

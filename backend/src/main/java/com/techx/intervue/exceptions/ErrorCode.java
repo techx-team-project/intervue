@@ -122,6 +122,8 @@ public enum ErrorCode {
     SKILL_NAME_ALREADY_USED(HttpStatus.CONFLICT, "A skill with this name already exists!"),
     INVALID_STATUS_TRANSITION(
             HttpStatus.UNPROCESSABLE_CONTENT, "This status change is not allowed!"),
+    INTERVIEW_ALREADY_SCHEDULED(
+            HttpStatus.CONFLICT, "This application already has an interview in progress!"),
     BLOG_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Blog post not found!"),
     BLOG_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "Blog category not found!"),
     BLOG_SLUG_ALREADY_EXISTS(HttpStatus.CONFLICT, "A blog post with this slug already exists!"),
