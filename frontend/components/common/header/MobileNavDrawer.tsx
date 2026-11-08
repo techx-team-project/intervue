@@ -1,11 +1,23 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import Link from 'next/link';
-import { ArrowLeft, PhoneCall } from 'lucide-react';
+import { buttonClassName } from '@/components/ui/Button';
+import {
+  CANDIDATE_CV_MENU,
+  CANDIDATE_GUIDE_MENU,
+  CANDIDATE_JOBS_MENU,
+  RECRUITER_NAV_LINKS,
+  SUPPORT_EMAIL,
+  SUPPORT_PHONE,
+  SUPPORT_PHONE_HREF,
+} from '@/constants/header';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
 import { useLogout } from '@/hooks/useLogout';
+import { ArrowLeft, PhoneCall } from 'lucide-react';
+import Link from 'next/link';
+import { useEffect } from 'react';
+
+const ITEM_CLASS = 'state-layer text-label-lg text-on-surface flex h-12 items-center rounded-full px-4';
 
 interface MobileNavDrawerProps {
   isOpen: boolean;
@@ -16,14 +28,13 @@ interface MobileNavDrawerProps {
 export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: MobileNavDrawerProps) {
   const { user, isLoading } = useAuth();
   const logout = useLogout();
+  const isRecruiter = portal === 'recruiter';
 
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
+      if (e.key === 'Escape') onClose();
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -32,172 +43,62 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
 
   if (!isOpen) return null;
 
-  if (portal === 'recruiter') {
-    return (
-      <>
-        <div
-          className="fixed inset-0 top-16 z-40 bg-black/40 backdrop-blur-xs lg:hidden"
-          onClick={onClose}
-          aria-hidden="true"
-        />
-        <div className="relative z-50 space-y-3 border-t border-slate-200 bg-white px-5 py-4 lg:hidden">
-          <Link
-            href={ROUTES.HOME}
-            onClick={onClose}
-            className="hover:text-primary flex items-center gap-1.5 py-2 text-sm font-semibold text-slate-600"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span>Dành cho Người tìm việc</span>
-          </Link>
-          <Link
-            href="/recruiter#features"
-            onClick={onClose}
-            className="text-navy hover:text-primary block py-2 text-sm font-semibold"
-          >
-            Giải pháp AI
-          </Link>
-          <Link
-            href="/recruiter#job-posting"
-            onClick={onClose}
-            className="text-navy hover:text-primary block py-2 text-sm font-semibold"
-          >
-            Đăng tin tuyển dụng
-          </Link>
-          <Link
-            href="/recruiter#candidate-sourcing"
-            onClick={onClose}
-            className="text-navy hover:text-primary block py-2 text-sm font-semibold"
-          >
-            Tìm kiếm hồ sơ
-          </Link>
-          <Link
-            href="/recruiter#pricing"
-            onClick={onClose}
-            className="text-navy hover:text-primary block py-2 text-sm font-semibold"
-          >
-            Bảng giá dịch vụ
-          </Link>
-          <Link
-            href="/recruiter#testimonials"
-            onClick={onClose}
-            className="text-navy hover:text-primary block py-2 text-sm font-semibold"
-          >
-            Khách hàng
-          </Link>
-          <div className="border-t border-slate-100 pt-2">
-            <a href="tel:0812665001" className="text-primary flex items-center gap-2 py-1.5 text-sm font-bold">
-              <PhoneCall className="h-4 w-4" />
-              <span>Hotline hỗ trợ: 0812.665.001</span>
-            </a>
-          </div>
-
-          {!isLoading && (
-            <div className="flex flex-col gap-2 border-t border-slate-100 pt-3">
-              {user ? (
-                <>
-                  <Link
-                    href={ROUTES.RECRUITER_DASHBOARD}
-                    onClick={onClose}
-                    className="border-primary text-primary hover:bg-primary-light w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-colors"
-                  >
-                    Vào trang quản trị ({user.name})
-                  </Link>
-                  <button
-                    type="button"
-                    disabled={logout.isPending}
-                    onClick={() => {
-                      logout.mutate();
-                      onClose();
-                    }}
-                    className="w-full cursor-pointer rounded-xl bg-slate-100 py-2.5 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    Đăng xuất
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href={ROUTES.RECRUITER_REGISTER}
-                    onClick={onClose}
-                    className="border-primary text-primary hover:bg-primary-light w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-colors"
-                  >
-                    Đăng ký
-                  </Link>
-                  <Link
-                    href={ROUTES.RECRUITER_LOGIN}
-                    onClick={onClose}
-                    className="bg-primary hover:bg-primary-hover w-full rounded-xl py-2.5 text-center text-sm font-semibold text-white transition-colors"
-                  >
-                    Đăng nhập
-                  </Link>
-                </>
-              )}
-            </div>
-          )}
-        </div>
-      </>
-    );
-  }
+  const links = isRecruiter
+    ? RECRUITER_NAV_LINKS
+    : [...CANDIDATE_JOBS_MENU, ...CANDIDATE_CV_MENU, ...CANDIDATE_GUIDE_MENU];
 
   return (
     <>
-      <div
-        className="fixed inset-0 top-16 z-40 bg-black/40 backdrop-blur-xs lg:hidden"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      <div className="relative z-50 space-y-3 border-t border-slate-200 bg-white px-5 py-4 lg:hidden">
-        <Link
-          href="#feature-jobs"
-          onClick={onClose}
-          className="text-navy hover:text-primary block py-2 text-sm font-semibold"
-        >
-          Việc làm
-        </Link>
-        <Link
-          href="/cv-templates"
-          onClick={onClose}
-          className="text-navy hover:text-primary block py-2 text-sm font-semibold"
-        >
-          Tạo CV
-        </Link>
-        <Link
-          href="#superior-tool"
-          onClick={onClose}
-          className="text-navy hover:text-primary block py-2 text-sm font-semibold"
-        >
-          Công cụ
-        </Link>
-        <Link href="/blog" onClick={onClose} className="text-navy hover:text-primary block py-2 text-sm font-semibold">
-          Cẩm nang nghề nghiệp
-        </Link>
-        <Link
-          href="/upgrade"
-          onClick={onClose}
-          className="text-navy hover:text-primary block py-2 text-sm font-semibold"
-        >
-          Nâng cấp VIP
-        </Link>
-        <Link
-          href={ROUTES.RECRUITER_LANDING}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onClose}
-          className="block rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-100"
-        >
-          Đăng tuyển & tìm hồ sơ (Dành cho NTD)
-        </Link>
+      <div className="fixed inset-0 top-22.5 z-40 bg-black/40 lg:hidden" onClick={onClose} aria-hidden="true" />
+      <nav
+        aria-label="Điều hướng di động"
+        className="bg-surface border-outline-variant relative z-50 space-y-1 border-t px-4 py-4 lg:hidden"
+      >
+        {isRecruiter && (
+          <Link href={ROUTES.HOME} onClick={onClose} className={ITEM_CLASS}>
+            <ArrowLeft className="mr-2 h-4 w-4" aria-hidden />
+            Dành cho người tìm việc
+          </Link>
+        )}
+
+        {links.map((item) => (
+          <Link key={item.href} href={item.href} onClick={onClose} className={ITEM_CLASS}>
+            {item.label}
+          </Link>
+        ))}
+
+        {isRecruiter ? (
+          <a href={SUPPORT_PHONE_HREF} className={ITEM_CLASS}>
+            <PhoneCall className="mr-2 h-4 w-4" aria-hidden />
+            Hotline: {SUPPORT_PHONE}
+          </a>
+        ) : (
+          <>
+            <a href={`mailto:${SUPPORT_EMAIL}`} className={ITEM_CLASS}>
+              Trợ giúp
+            </a>
+            <Link
+              href={ROUTES.RECRUITER_LANDING}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onClose}
+              className={ITEM_CLASS}
+            >
+              Dành cho nhà tuyển dụng
+            </Link>
+          </>
+        )}
 
         {!isLoading && (
-          <div className="flex flex-col gap-2 border-t border-slate-100 pt-3">
+          <div className="border-outline-variant flex flex-col gap-2 border-t pt-4">
             {user ? (
               <>
                 <Link
-                  href="/account"
+                  href={isRecruiter ? ROUTES.RECRUITER_DASHBOARD : '/account'}
                   onClick={onClose}
-                  className="border-primary text-primary hover:bg-primary-light w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-colors"
+                  className={buttonClassName({ variant: 'outline' })}
                 >
-                  {user.name}
+                  {isRecruiter ? `Vào trang quản trị (${user.name})` : user.name}
                 </Link>
                 <button
                   type="button"
@@ -206,7 +107,7 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
                     logout.mutate();
                     onClose();
                   }}
-                  className="w-full cursor-pointer rounded-xl bg-slate-100 py-2.5 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
+                  className={buttonClassName({ variant: 'secondary' })}
                 >
                   Đăng xuất
                 </button>
@@ -214,16 +115,16 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
             ) : (
               <>
                 <Link
-                  href={ROUTES.REGISTER}
+                  href={isRecruiter ? ROUTES.RECRUITER_REGISTER : ROUTES.REGISTER}
                   onClick={onClose}
-                  className="border-primary text-primary hover:bg-primary-light w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-colors"
+                  className={buttonClassName({ variant: 'outline' })}
                 >
                   Đăng ký
                 </Link>
                 <Link
-                  href={ROUTES.LOGIN}
+                  href={isRecruiter ? ROUTES.RECRUITER_LOGIN : ROUTES.LOGIN}
                   onClick={onClose}
-                  className="bg-primary hover:bg-primary-hover w-full rounded-xl py-2.5 text-center text-sm font-semibold text-white transition-colors"
+                  className={buttonClassName()}
                 >
                   Đăng nhập
                 </Link>
@@ -231,7 +132,7 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
             )}
           </div>
         )}
-      </div>
+      </nav>
     </>
   );
 }

@@ -47,7 +47,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
 
   return (
     <div
-      className="absolute top-12 right-0 z-50 max-h-[88vh] w-80 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-3.5 text-slate-800 shadow-2xl sm:w-84"
+      className="rounded-shape-lg border-outline-variant bg-surface text-on-surface shadow-elevation-2 absolute top-12 right-0 z-50 max-h-[88vh] w-80 overflow-y-auto border p-3.5 sm:w-84"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={(e) => e.stopPropagation()}

@@ -1,10 +1,11 @@
 'use client';
 
 import NotificationDropdown from '@/components/common/NotificationDropdown';
+import { buttonClassName } from '@/components/ui/Button';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
 import { useUnreadCount } from '@/hooks/useNotifications';
-import { Bell, ChevronDown, MessageSquare } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import UserMenuDropdown from './UserMenuDropdown';
@@ -44,10 +45,15 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
         setIsUserMenuOpen(false);
       }
     };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsUserMenuOpen(false);
+    };
 
     document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
       if (userCloseTimeoutRef.current) {
         clearTimeout(userCloseTimeoutRef.current);
       }
@@ -55,7 +61,7 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
   }, []);
 
   if (status === 'idle' || status === 'loading') {
-    return <div className="h-9 w-24 animate-pulse rounded-full bg-slate-100" aria-hidden />;
+    return <div className="bg-surface-container-high h-10 w-24 animate-pulse rounded-full" aria-hidden />;
   }
 
   if (!user) {
@@ -64,14 +70,11 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
       <div className="hidden items-center gap-2 sm:flex">
         <Link
           href={isRecruiter ? ROUTES.RECRUITER_REGISTER : ROUTES.REGISTER}
-          className="rounded-full border border-emerald-600 px-4 py-2 text-sm font-semibold text-emerald-600 transition-colors hover:bg-emerald-50"
+          className={buttonClassName({ variant: 'outline', size: 'xl' })}
         >
           Đăng ký
         </Link>
-        <Link
-          href={isRecruiter ? ROUTES.RECRUITER_LOGIN : ROUTES.LOGIN}
-          className="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
-        >
+        <Link href={isRecruiter ? ROUTES.RECRUITER_LOGIN : ROUTES.LOGIN} className={buttonClassName({ size: 'xl' })}>
           Đăng nhập
         </Link>
       </div>
@@ -83,14 +86,14 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
       <div className="relative">
         <button
           type="button"
-          title="Thông báo"
           aria-label="Thông báo"
+          aria-expanded={isNotificationOpen}
           onClick={() => setIsNotificationOpen((prev) => !prev)}
-          className="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200"
+          className="state-layer text-on-surface-variant relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
         >
-          <Bell className="h-4.5 w-4.5" />
+          <Bell className="h-5 w-5" aria-hidden />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-600 px-1 text-[10px] font-bold text-white shadow-xs">
+            <span className="bg-error text-on-error text-label-sm absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1">
               {unreadCount > 99 ? '99+' : unreadCount}
             </span>
           )}
@@ -104,14 +107,6 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
         />
       </div>
 
-      <button
-        type="button"
-        title="Messages"
-        className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200"
-      >
-        <MessageSquare className="h-4.5 w-4.5" />
-      </button>
-
       <div
         ref={userMenuRef}
         className="relative"
@@ -121,15 +116,14 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
         <button
           type="button"
           onClick={() => setIsUserMenuOpen((prev) => !prev)}
-          className="flex cursor-pointer items-center rounded-full p-0.5 transition-all hover:scale-105 active:scale-95"
-          aria-label="Account menu"
+          aria-label="Tài khoản"
+          aria-haspopup="menu"
+          aria-expanded={isUserMenuOpen}
+          className="state-layer flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
         >
-          <div className="relative flex h-9.5 w-9.5 items-center justify-center rounded-full bg-linear-to-tr from-emerald-500 via-emerald-600 to-teal-600 text-sm font-black text-white shadow-sm ring-2 ring-emerald-400/30 transition-all hover:ring-emerald-600">
-            <span>{user.name.charAt(0).toUpperCase()}</span>
-            <div className="absolute -right-0.5 -bottom-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white ring-1 ring-emerald-200">
-              <ChevronDown className="h-2 w-2 stroke-[2.5] text-emerald-700" />
-            </div>
-          </div>
+          <span className="bg-primary text-on-primary text-title-sm flex h-8 w-8 items-center justify-center rounded-full">
+            {user.name.charAt(0).toUpperCase()}
+          </span>
         </button>
 
         {isUserMenuOpen && (
