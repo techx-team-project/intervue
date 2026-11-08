@@ -1,85 +1,160 @@
 'use client';
 
-import Spinner from '@/components/common/Spinner';
+import EmptyState from '@/components/common/EmptyState';
 import PublicJobCard from '@/components/jobs/PublicJobCard';
+import Skeleton from '@/components/ui/Skeleton';
+import { FEATURED_CITY_FILTERS, SEARCH_CITIES } from '@/constants/home/search';
 import { usePublicJobs } from '@/hooks/usePublicJobs';
 import { cn } from '@/lib/utils';
-import { ArrowRight, Briefcase, Filter } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ListFilter, SearchX, WifiOff } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
 const FEATURED_COUNT = 9;
-
-const CITY_FILTERS = [
-  { id: '', label: 'Mới nhất' },
-  { id: 'Hà Nội', label: 'Hà Nội' },
-  { id: 'Hồ Chí Minh', label: 'TP. Hồ Chí Minh' },
-  { id: 'Đà Nẵng', label: 'Đà Nẵng' },
+const STAGGER_CLASSES = [
+  '[animation-delay:0ms]',
+  '[animation-delay:40ms]',
+  '[animation-delay:80ms]',
+  '[animation-delay:120ms]',
+  '[animation-delay:160ms]',
+  '[animation-delay:200ms]',
+  '[animation-delay:240ms]',
+  '[animation-delay:280ms]',
+  '[animation-delay:320ms]',
 ];
+const PAGER_BUTTON_CLASS =
+  'flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-primary text-primary transition-colors duration-150 hover:bg-primary-light disabled:cursor-not-allowed disabled:border-outline-variant disabled:text-outline disabled:hover:bg-transparent';
 
 export default function FeaturedJobsSection() {
   const [city, setCity] = useState('');
-  const { data, isLoading, isError } = usePublicJobs({ city, size: FEATURED_COUNT });
-  const jobs = data?.items ?? [];
+  const [page, setPage] = useState(0);
+  const query = usePublicJobs({ city, page, size: FEATURED_COUNT });
+  const totalPages = query.data?.totalPages ?? 0;
+
+  const changeCity = (next: string) => {
+    setCity(next);
+    setPage(0);
+  };
+  const jobs = query.data?.items ?? [];
+  const total = query.data?.totalItems;
+  const viewAllHref = city ? `/jobs?city=${encodeURIComponent(city)}` : '/jobs';
 
   return (
-    <section id="feature-jobs" className="container-topcv my-10">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
-        <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl">
-          Việc làm <span className="text-primary">nổi bật</span>
-        </h2>
-
-        <Link
-          href="/jobs"
-          className="group bg-primary inline-flex items-center gap-2 rounded-xl px-4.5 py-2 text-sm font-extrabold text-white shadow-xs transition duration-200 hover:bg-emerald-600 sm:px-5 sm:py-2.5"
-        >
-          <span>Xem tất cả</span>
-          <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-        </Link>
+    <section id="feature-jobs" aria-labelledby="featured-jobs-title" className="container-page py-8">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-baseline gap-3">
+          <h2 id="featured-jobs-title" className="text-headline-lg text-primary font-bold">
+            Việc làm IT nổi bật
+          </h2>
+          {total !== undefined && (
+            <span className="text-body-lg text-on-surface-variant">
+              {total.toLocaleString('vi-VN')} vị trí đang tuyển
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-4">
+          <Link href={viewAllHref} className="text-title-md text-on-surface underline">
+            Xem tất cả
+          </Link>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              aria-label="Trang trước"
+              disabled={page === 0}
+              onClick={() => setPage((prev) => prev - 1)}
+              className={PAGER_BUTTON_CLASS}
+            >
+              <ChevronLeft className="h-5 w-5" aria-hidden />
+            </button>
+            <button
+              type="button"
+              aria-label="Trang sau"
+              disabled={page + 1 >= totalPages}
+              onClick={() => setPage((prev) => prev + 1)}
+              className={PAGER_BUTTON_CLASS}
+            >
+              <ChevronRight className="h-5 w-5" aria-hidden />
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="mb-5 flex scrollbar-none items-center gap-2 overflow-x-auto pb-2">
-        <span className="mr-1 flex shrink-0 items-center gap-1.5 text-xs font-medium text-slate-500">
-          <Filter className="text-primary h-3.5 w-3.5" />
-          Lọc theo:
-        </span>
-        {CITY_FILTERS.map((item) => (
-          <button
-            key={item.label}
-            type="button"
-            onClick={() => setCity(item.id)}
-            className={cn(
-              'shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-xs transition',
-              city === item.id
-                ? 'bg-primary font-bold text-white shadow-xs'
-                : 'hover:text-primary border border-slate-200 bg-white font-medium text-slate-600 hover:border-emerald-300 hover:bg-emerald-50/50',
-            )}
+      <div className="mb-5 flex flex-wrap items-center gap-3">
+        <div className="bg-surface border-outline-variant relative flex h-12 w-full items-center gap-2 rounded-lg border px-4 sm:w-86">
+          <ListFilter className="text-on-surface-variant h-4 w-4 shrink-0" aria-hidden />
+          <span className="text-body-lg text-on-surface-variant shrink-0">Lọc theo:</span>
+          <select
+            aria-label="Lọc theo địa điểm"
+            value={city}
+            onChange={(event) => changeCity(event.target.value)}
+            className="text-body-lg text-on-surface h-full min-w-0 flex-1 cursor-pointer appearance-none bg-transparent pr-6 outline-none"
           >
-            {item.label}
-          </button>
-        ))}
-      </div>
+            <option value="">Địa điểm</option>
+            {SEARCH_CITIES.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="text-on-surface pointer-events-none absolute right-4 h-4 w-4" aria-hidden />
+        </div>
 
-      {isLoading ? (
-        <div className="flex justify-center py-14">
-          <Spinner />
-        </div>
-      ) : isError ? (
-        <p className="rounded-2xl border border-rose-200 bg-rose-50 px-6 py-10 text-center text-sm font-semibold text-rose-700">
-          Không tải được danh sách việc làm. Vui lòng thử lại sau.
-        </p>
-      ) : jobs.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-14 text-center">
-          <Briefcase className="h-9 w-9 text-slate-300" aria-hidden />
-          <p className="text-sm font-semibold text-slate-700">Chưa có tin tuyển dụng nào</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {jobs.map((job) => (
-            <PublicJobCard key={job.id} job={job} />
+        <div role="group" aria-label="Lọc nhanh theo địa điểm" className="flex flex-wrap gap-2">
+          {FEATURED_CITY_FILTERS.map((item) => (
+            <button
+              key={item.label}
+              type="button"
+              aria-pressed={city === item.id}
+              onClick={() => changeCity(item.id)}
+              className={cn(
+                'text-title-md ease-standard h-12 cursor-pointer rounded-full px-5 transition-colors duration-150',
+                city === item.id
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-surface-container-high text-on-surface hover:bg-primary-tag',
+              )}
+            >
+              {item.label}
+            </button>
           ))}
         </div>
-      )}
+      </div>
+
+      <div aria-live="polite" aria-busy={query.isFetching}>
+        {query.isLoading ? (
+          <div className="expanded:grid-cols-3 medium:grid-cols-2 grid grid-cols-1 gap-4.5">
+            {Array.from({ length: FEATURED_COUNT }, (_, index) => (
+              <Skeleton key={index} className="h-36 w-full rounded-xl" />
+            ))}
+          </div>
+        ) : query.isError ? (
+          <EmptyState
+            tone="error"
+            icon={WifiOff}
+            title="Không tải được việc làm"
+            description="Vui lòng kiểm tra kết nối và thử lại."
+            actionLabel="Thử lại"
+            onAction={() => query.refetch()}
+            className="bg-surface"
+          />
+        ) : jobs.length === 0 ? (
+          <EmptyState
+            icon={SearchX}
+            title="Chưa có việc làm phù hợp"
+            description="Hãy thử chọn địa điểm khác hoặc xem tất cả việc làm."
+            actionLabel="Xem tất cả địa điểm"
+            onAction={() => changeCity('')}
+            className="bg-surface"
+          />
+        ) : (
+          <ul key={`${city}-${page}`} className="expanded:grid-cols-3 medium:grid-cols-2 grid grid-cols-1 gap-4.5">
+            {jobs.map((job, index) => (
+              <li key={job.id} className={`animate-fade-in-up ${STAGGER_CLASSES[index % STAGGER_CLASSES.length]}`}>
+                <PublicJobCard job={job} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </section>
   );
 }
