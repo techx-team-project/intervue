@@ -331,12 +331,12 @@ function PhoneVerificationModalDialog({
       />
 
       {/* Modal Card */}
-      <div className="animate-in fade-in zoom-in-95 relative w-full max-w-lg rounded-lg border border-slate-200 bg-white p-6 shadow-2xl transition-all duration-150 sm:p-8">
+      <div className="animate-in fade-in zoom-in-95 border-outline-variant shadow-elevation-2 relative w-full max-w-lg rounded-lg border bg-white p-6 transition-all duration-150 sm:p-8">
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+          className="text-outline hover:bg-surface-container-high hover:text-on-surface-variant absolute top-4 right-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md transition"
           aria-label="Close dialog"
         >
           <X className="h-4 w-4" />
@@ -347,16 +347,16 @@ function PhoneVerificationModalDialog({
           <div className="space-y-5">
             {/* Header Title */}
             <div className="space-y-1.5 text-center">
-              <h3 className="text-base font-semibold text-[#00b14f] sm:text-lg">
+              <h3 className="text-primary text-base font-semibold sm:text-lg">
                 {mode === 'CHANGE' ? 'Change verified phone number' : 'Please confirm this action'}
               </h3>
-              <p className="mx-auto max-w-md text-xs leading-relaxed text-slate-600 sm:text-[13px]">
+              <p className="text-on-surface-variant sm:text-body-md mx-auto max-w-md text-xs leading-relaxed">
                 {mode === 'CHANGE' ? (
                   'To protect your recruiter account, please confirm your password and enter your new phone number.'
                 ) : (
                   <>
                     To ensure your recruiter account security and verify{' '}
-                    <strong className="text-slate-900">{formatPhoneNumber(currentPhoneNumber)}</strong>, please enter
+                    <strong className="text-on-surface">{formatPhoneNumber(currentPhoneNumber)}</strong>, please enter
                     your password to proceed.
                   </>
                 )}
@@ -365,10 +365,10 @@ function PhoneVerificationModalDialog({
 
             {/* In CHANGE mode: Show current phone info box */}
             {mode === 'CHANGE' && (
-              <div className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-xs">
-                <span className="text-slate-600">Current verified phone:</span>
-                <span className="flex items-center gap-1.5 font-semibold text-slate-900">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-[#00b14f]" />
+              <div className="border-outline-variant bg-surface-container-low/80 flex items-center justify-between rounded-md border px-4 py-2.5 text-xs">
+                <span className="text-on-surface-variant">Current verified phone:</span>
+                <span className="text-on-surface flex items-center gap-1.5 font-semibold">
+                  <CheckCircle2 className="text-primary h-3.5 w-3.5" />
                   {formatPhoneNumber(currentPhoneNumber)}
                 </span>
               </div>
@@ -379,9 +379,9 @@ function PhoneVerificationModalDialog({
               {/* Field: New Phone Number (Only in CHANGE mode) */}
               {mode === 'CHANGE' && (
                 <div className="space-y-1.5 text-left">
-                  <label className="text-xs font-semibold text-slate-700">New Mobile Phone Number</label>
+                  <label className="text-on-surface text-xs font-semibold">New Mobile Phone Number</label>
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                    <div className="text-outline pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
                       <Phone className="h-4 w-4" />
                     </div>
                     <input
@@ -393,10 +393,10 @@ function PhoneVerificationModalDialog({
                         if (phoneError) setPhoneError(null);
                       }}
                       placeholder="e.g. 0912345678"
-                      className={`h-11 w-full rounded-md border bg-white py-2.5 pr-4 pl-10 text-sm text-slate-900 placeholder-slate-400 focus:ring-1 focus:outline-none ${
+                      className={`text-on-surface h-11 w-full rounded-md border bg-white py-2.5 pr-4 pl-10 text-sm placeholder-slate-400 focus:ring-1 focus:outline-none ${
                         phoneError
                           ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                          : 'border-slate-300 focus:border-[#00b14f] focus:ring-emerald-200'
+                          : 'border-outline focus:border-primary focus:ring-emerald-200'
                       }`}
                     />
                   </div>
@@ -406,9 +406,9 @@ function PhoneVerificationModalDialog({
 
               {/* Field: Account Password */}
               <div className="space-y-1.5 text-left">
-                {mode === 'CHANGE' && <label className="text-xs font-semibold text-slate-700">Account Password</label>}
+                {mode === 'CHANGE' && <label className="text-on-surface text-xs font-semibold">Account Password</label>}
                 <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                  <div className="text-outline pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
                     <Lock className="h-4 w-4" />
                   </div>
                   <input
@@ -420,16 +420,16 @@ function PhoneVerificationModalDialog({
                       if (passwordError) setPasswordError(null);
                     }}
                     placeholder="Enter your account password"
-                    className={`h-11 w-full rounded-md border bg-white py-2.5 pr-11 pl-10 text-sm text-slate-900 placeholder-slate-400 focus:ring-1 focus:outline-none ${
+                    className={`text-on-surface h-11 w-full rounded-md border bg-white py-2.5 pr-11 pl-10 text-sm placeholder-slate-400 focus:ring-1 focus:outline-none ${
                       passwordError
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                        : 'border-slate-300 focus:border-[#00b14f] focus:ring-emerald-200'
+                        : 'border-outline focus:border-primary focus:ring-emerald-200'
                     }`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3.5 text-slate-400 transition hover:text-slate-600"
+                    className="text-outline hover:text-on-surface-variant absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3.5 transition"
                     tabIndex={-1}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -444,14 +444,14 @@ function PhoneVerificationModalDialog({
                   type="button"
                   onClick={onClose}
                   disabled={isSubmittingInput}
-                  className="h-10 w-28 cursor-pointer rounded-md bg-slate-100 text-xs font-medium text-slate-700 transition hover:bg-slate-200 sm:text-sm"
+                  className="bg-surface-container-high text-on-surface hover:bg-surface-container-high h-10 w-28 cursor-pointer rounded-md text-xs font-medium transition sm:text-sm"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingInput}
-                  className="flex h-10 min-w-32 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-[#00b14f] px-5 text-xs font-medium text-white shadow-xs transition hover:bg-emerald-600 disabled:opacity-60 sm:text-sm"
+                  className="bg-primary flex h-10 min-w-32 cursor-pointer items-center justify-center gap-1.5 rounded-md px-5 text-xs font-medium text-white shadow-xs transition hover:bg-emerald-600 disabled:opacity-60 sm:text-sm"
                 >
                   {isSubmittingInput ? (
                     <>
@@ -474,12 +474,12 @@ function PhoneVerificationModalDialog({
           <div className="animate-in fade-in space-y-6 duration-150">
             {/* Header Title */}
             <div className="space-y-2 text-center">
-              <h3 className="text-base font-semibold text-[#00b14f] sm:text-lg">
+              <h3 className="text-primary text-base font-semibold sm:text-lg">
                 {mode === 'CHANGE' ? 'Verify new phone number' : 'Enter verification code'}
               </h3>
-              <p className="mx-auto max-w-md text-xs leading-relaxed text-slate-600 sm:text-[13px]">
+              <p className="text-on-surface-variant sm:text-body-md mx-auto max-w-md text-xs leading-relaxed">
                 A 6-digit verification code has been sent via SMS to{' '}
-                <strong className="text-slate-900">{formatPhoneNumber(targetPhone)}</strong>
+                <strong className="text-on-surface">{formatPhoneNumber(targetPhone)}</strong>
                 {mode === 'INITIAL' && onChangePhoneNumber && (
                   <button
                     type="button"
@@ -487,7 +487,7 @@ function PhoneVerificationModalDialog({
                       onClose();
                       onChangePhoneNumber();
                     }}
-                    className="ml-2 cursor-pointer font-medium text-[#00b14f] hover:underline"
+                    className="text-primary ml-2 cursor-pointer font-medium hover:underline"
                   >
                     (Change)
                   </button>
@@ -515,10 +515,10 @@ function PhoneVerificationModalDialog({
                     onPaste={handleOtpPaste}
                     className={`h-12 w-11 rounded-md border text-center font-mono text-lg font-bold shadow-2xs transition sm:h-12 sm:w-12 ${
                       isOtpLocked
-                        ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400'
+                        ? 'border-outline-variant bg-surface-container-high text-outline cursor-not-allowed'
                         : isVerifyingOtp
                           ? 'border-emerald-400 bg-emerald-50/60 text-emerald-950 ring-1 ring-emerald-200'
-                          : 'border-slate-300 bg-white text-slate-900 focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none'
+                          : 'border-outline text-on-surface focus:border-primary bg-white focus:ring-1 focus:ring-emerald-200 focus:outline-none'
                     }`}
                   />
                 ))}
@@ -539,7 +539,7 @@ function PhoneVerificationModalDialog({
               )}
 
               {/* Resend & Expiry Info */}
-              <div className="flex flex-col items-center justify-center gap-1 pt-1 text-xs text-slate-500">
+              <div className="text-on-surface-variant flex flex-col items-center justify-center gap-1 pt-1 text-xs">
                 <div>
                   Didn&apos;t receive the code?{' '}
                   {countdown > 0 ? (
@@ -549,13 +549,13 @@ function PhoneVerificationModalDialog({
                       type="button"
                       onClick={handleResendOtp}
                       disabled={isResending}
-                      className="cursor-pointer font-semibold text-[#00b14f] hover:underline disabled:opacity-50"
+                      className="text-primary cursor-pointer font-semibold hover:underline disabled:opacity-50"
                     >
                       {isResending ? 'Sending...' : 'Resend code now'}
                     </button>
                   )}
                 </div>
-                <div className="text-[11px] text-slate-400">Code expires in 5 minutes</div>
+                <div className="text-label-sm text-outline">Code expires in 5 minutes</div>
               </div>
 
               {/* Action Buttons */}
@@ -568,7 +568,7 @@ function PhoneVerificationModalDialog({
                     setOtpError(null);
                   }}
                   disabled={isVerifyingOtp}
-                  className="flex h-10 cursor-pointer items-center gap-1.5 rounded-md bg-slate-100 px-4 text-xs font-medium text-slate-700 transition hover:bg-slate-200 sm:text-sm"
+                  className="bg-surface-container-high text-on-surface hover:bg-surface-container-high flex h-10 cursor-pointer items-center gap-1.5 rounded-md px-4 text-xs font-medium transition sm:text-sm"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" />
                   <span>Back</span>
@@ -576,7 +576,7 @@ function PhoneVerificationModalDialog({
                 <button
                   type="submit"
                   disabled={isVerifyingOtp || isOtpLocked || otpDigits.join('').length !== 6}
-                  className="flex h-10 min-w-36 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-[#00b14f] px-5 text-xs font-medium text-white shadow-xs transition hover:bg-emerald-600 disabled:opacity-50 sm:text-sm"
+                  className="bg-primary flex h-10 min-w-36 cursor-pointer items-center justify-center gap-1.5 rounded-md px-5 text-xs font-medium text-white shadow-xs transition hover:bg-emerald-600 disabled:opacity-50 sm:text-sm"
                 >
                   {isVerifyingOtp ? (
                     <>
@@ -596,22 +596,22 @@ function PhoneVerificationModalDialog({
         )}
 
         {/* Contact Support Hotline / Email Box */}
-        <div className="mt-7 rounded-lg border border-slate-100 bg-slate-50/80 p-3.5 text-left sm:p-4">
-          <p className="text-xs font-semibold text-slate-600">
+        <div className="border-outline-variant bg-surface-container-low/80 mt-7 rounded-lg border p-3.5 text-left sm:p-4">
+          <p className="text-on-surface-variant text-xs font-semibold">
             For any inquiries or assistance, please contact our official support desk:
           </p>
-          <div className="mt-2.5 flex flex-wrap items-center gap-4 text-xs font-medium text-slate-700">
+          <div className="text-on-surface mt-2.5 flex flex-wrap items-center gap-4 text-xs font-medium">
             <div className="flex items-center gap-1.5">
-              <Headphones className="h-4 w-4 text-[#00b14f]" />
+              <Headphones className="text-primary h-4 w-4" />
               <span>
-                Customer Hotline: <strong className="text-slate-900">1900 068 889 (Ext. 1)</strong>
+                Customer Hotline: <strong className="text-on-surface">1900 068 889 (Ext. 1)</strong>
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Mail className="h-4 w-4 text-[#00b14f]" />
+              <Mail className="text-primary h-4 w-4" />
               <span>
                 Email:{' '}
-                <a href="mailto:support@intervue.vn" className="font-medium text-[#00b14f] hover:underline">
+                <a href="mailto:support@intervue.vn" className="text-primary font-medium hover:underline">
                   support@intervue.vn
                 </a>
               </span>

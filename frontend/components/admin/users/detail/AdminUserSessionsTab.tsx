@@ -24,18 +24,18 @@ export default function AdminUserSessionsTab({ sessions, onRevokeAll, onRevokeSe
           <button
             type="button"
             onClick={onRevokeAll}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-rose-50 px-3.5 py-2 text-[12.5px] font-bold text-rose-700 transition-colors hover:bg-rose-100 dark:bg-rose-500/10"
+            className="text-body-sm inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-rose-50 px-3.5 py-2 font-bold text-rose-700 transition-colors hover:bg-rose-100 dark:bg-rose-500/10"
           >
             <LogOut className="h-3.5 w-3.5" />
             Revoke all sessions
           </button>
         ) : (
-          <span className="dark:text-forest-400 text-[11.5px] text-[#94a3b8]">No active session</span>
+          <span className="dark:text-forest-400 text-label-sm text-outline">No active session</span>
         )
       }
     >
       {sessions.length === 0 ? (
-        <p className="dark:text-forest-300 py-2 text-[12.5px] text-[#64748b]">
+        <p className="dark:text-forest-300 text-body-sm text-on-surface-variant py-2">
           This account has never signed in from a device that kept a session.
         </p>
       ) : (
@@ -46,7 +46,7 @@ export default function AdminUserSessionsTab({ sessions, onRevokeAll, onRevokeSe
                 <span
                   className={cn(
                     'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
-                    session.revoked ? 'bg-slate-100 text-slate-400' : 'bg-emerald-50 text-emerald-600',
+                    session.revoked ? 'bg-surface-container-high text-outline' : 'bg-emerald-50 text-emerald-600',
                   )}
                 >
                   {session.replacedByTokenId && session.revoked ? (
@@ -57,19 +57,19 @@ export default function AdminUserSessionsTab({ sessions, onRevokeAll, onRevokeSe
                 </span>
 
                 <div className="min-w-0">
-                  <p className="text-navy dark:text-forest-50 truncate text-[13px] font-bold">
+                  <p className="text-navy dark:text-forest-50 text-body-md truncate font-bold">
                     {session.deviceLabel}
                     {session.isCurrent && (
-                      <span className="bg-primary/10 text-primary ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-black">
+                      <span className="bg-primary/10 text-primary text-label-sm ml-2 rounded-full px-1.5 py-0.5 font-bold">
                         Current
                       </span>
                     )}
                   </p>
-                  <p className="dark:text-forest-300 text-[11.5px] text-[#64748b]">
+                  <p className="dark:text-forest-300 text-label-sm text-on-surface-variant">
                     {session.ipAddress} · signed in {formatDateTime(session.createdAt)}
                   </p>
                   {session.replacedByTokenId && (
-                    <p className="mt-0.5 text-[11.5px] font-semibold text-rose-600">
+                    <p className="text-label-sm mt-0.5 font-semibold text-rose-600">
                       Presented after it was rotated — every session was revoked
                     </p>
                   )}
@@ -77,17 +77,17 @@ export default function AdminUserSessionsTab({ sessions, onRevokeAll, onRevokeSe
               </div>
 
               <div className="shrink-0 text-right">
-                <p className={cn('text-[11.5px] font-bold', session.revoked ? 'text-slate-400' : 'text-emerald-600')}>
+                <p className={cn('text-label-sm font-bold', session.revoked ? 'text-outline' : 'text-emerald-600')}>
                   {session.revoked ? 'Revoked' : 'Active'}
                 </p>
-                <p className="text-[11px] text-[#94a3b8]">
+                <p className="text-label-sm text-outline">
                   {session.revoked ? 'Ended' : 'Expires'} {formatDateTime(session.expiresAt)}
                 </p>
                 {!session.revoked && onRevokeSession && (
                   <button
                     type="button"
                     onClick={() => onRevokeSession(session.id)}
-                    className="mt-1 cursor-pointer text-[11px] font-bold text-rose-600 transition-colors hover:text-rose-700 hover:underline"
+                    className="text-label-sm mt-1 cursor-pointer font-bold text-rose-600 transition-colors hover:text-rose-700 hover:underline"
                   >
                     Revoke session
                   </button>

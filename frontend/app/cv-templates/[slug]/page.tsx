@@ -40,7 +40,7 @@ export default async function CvTemplateSlugPage({ params }: CvTemplateSlugPageP
   const industries = getCvIndustries();
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f8faf9]">
+    <div className="bg-surface-container-low flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
         <CvTemplatesView initialTemplates={templates} styles={styles} industries={industries} defaultStyleSlug={slug} />

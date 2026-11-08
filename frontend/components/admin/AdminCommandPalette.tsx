@@ -96,10 +96,10 @@ export default function AdminCommandPalette({ onClose, queueCounts, permissions 
 
       <div
         onKeyDown={handleKeyDown}
-        className="absolute inset-x-4 top-20 mx-auto max-w-xl overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl sm:inset-x-6"
+        className="border-outline-variant shadow-elevation-2 absolute inset-x-4 top-20 mx-auto max-w-xl overflow-hidden rounded-xl border bg-white sm:inset-x-6"
       >
-        <div className="flex items-center gap-2.5 border-b border-slate-100 px-4 py-3">
-          <Search className="h-4 w-4 shrink-0 text-slate-400" />
+        <div className="border-outline-variant flex items-center gap-2.5 border-b px-4 py-3">
+          <Search className="text-outline h-4 w-4 shrink-0" />
           <input
             autoFocus
             value={query}
@@ -109,16 +109,16 @@ export default function AdminCommandPalette({ onClose, queueCounts, permissions 
             }}
             placeholder="Jump to a section…"
             aria-label="Jump to a section"
-            className="min-w-0 flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
+            className="text-on-surface placeholder:text-outline min-w-0 flex-1 bg-transparent text-sm outline-none"
           />
-          <kbd className="shrink-0 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-bold text-slate-500">
+          <kbd className="border-outline-variant bg-surface-container-low text-label-sm text-on-surface-variant shrink-0 rounded border px-1.5 py-0.5 font-bold">
             Esc
           </kbd>
         </div>
 
         <div className="scrollbar-on-hover max-h-80 overflow-y-auto p-2">
           {results.length === 0 ? (
-            <p className="px-3 py-6 text-center text-[13px] text-slate-500">No section matches “{query}”.</p>
+            <p className="text-body-md text-on-surface-variant px-3 py-6 text-center">No section matches “{query}”.</p>
           ) : (
             results.map((entry, index) => (
               <button
@@ -128,12 +128,12 @@ export default function AdminCommandPalette({ onClose, queueCounts, permissions 
                 onMouseEnter={() => setActiveIndex(index)}
                 className={cn(
                   'flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left transition-colors',
-                  index === activeIndex ? 'bg-emerald-50' : 'hover:bg-slate-50',
+                  index === activeIndex ? 'bg-emerald-50' : 'hover:bg-surface-container-low',
                 )}
               >
                 <span className="min-w-0">
-                  <span className="block truncate text-[13px] font-semibold text-slate-800">{entry.label}</span>
-                  <span className="block truncate text-xs text-slate-500">{entry.sectionTitle}</span>
+                  <span className="text-body-md text-on-surface block truncate font-semibold">{entry.label}</span>
+                  <span className="text-on-surface-variant block truncate text-xs">{entry.sectionTitle}</span>
                 </span>
 
                 <span className="flex shrink-0 items-center gap-2">
@@ -148,7 +148,7 @@ export default function AdminCommandPalette({ onClose, queueCounts, permissions 
         </div>
 
         {comingSoonCount > 0 && (
-          <p className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-400">
+          <p className="border-outline-variant text-outline border-t px-4 py-2.5 text-xs">
             {comingSoonCount} more sections are planned but not built yet.
           </p>
         )}

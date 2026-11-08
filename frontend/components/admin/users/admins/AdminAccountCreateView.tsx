@@ -35,7 +35,7 @@ export default function AdminAccountCreateView() {
         actions={
           <Link
             href={ROUTES.ADMIN_ADMINS}
-            className="dark:border-forest-800 dark:text-forest-100 dark:hover:bg-forest-850 inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3.5 py-2 text-[12.5px] font-bold text-slate-700 transition-colors hover:bg-slate-50"
+            className="dark:border-forest-800 dark:text-forest-100 dark:hover:bg-forest-850 border-outline-variant text-body-sm text-on-surface hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 font-bold transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to admin accounts
@@ -45,9 +45,9 @@ export default function AdminAccountCreateView() {
 
       <form onSubmit={handleSubmit(submit)} className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-4">
-          <section className="dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-[#e9eaec] bg-white p-5 shadow-xs">
-            <h2 className="text-navy dark:text-forest-50 text-[14px] font-bold">Who is being invited</h2>
-            <p className="dark:text-forest-300 mt-0.5 text-[12px] text-[#64748b]">
+          <section className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white p-5 shadow-xs">
+            <h2 className="text-navy dark:text-forest-50 text-body-md font-bold">Who is being invited</h2>
+            <p className="dark:text-forest-300 text-body-sm text-on-surface-variant mt-0.5">
               The invitee sets their own password from an email link. Admins never set a password for someone else.
             </p>
 
@@ -77,7 +77,7 @@ export default function AdminAccountCreateView() {
             </div>
           </section>
 
-          <section className="dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-[#e9eaec] bg-white p-5 shadow-xs">
+          <section className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white p-5 shadow-xs">
             <Controller
               control={control}
               name="permissions"
@@ -99,22 +99,22 @@ export default function AdminAccountCreateView() {
         </div>
 
         <aside className="space-y-3">
-          <div className="dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-[#e9eaec] bg-white p-4 shadow-xs">
-            <h2 className="text-navy dark:text-forest-50 text-[13px] font-bold">Before you invite</h2>
+          <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white p-4 shadow-xs">
+            <h2 className="text-navy dark:text-forest-50 text-body-md font-bold">Before you invite</h2>
 
-            <p className="mt-3 flex items-start gap-2 rounded-xl border border-sky-200 bg-sky-50 px-3 py-2.5 text-[12.5px] text-sky-800">
+            <p className="text-body-sm mt-3 flex items-start gap-2 rounded-xl border border-sky-200 bg-sky-50 px-3 py-2.5 text-sky-800">
               <MailCheck className="mt-0.5 h-4 w-4 shrink-0" />
               An invitation is emailed to this address. The account becomes an admin only after the invitee verifies the
               email and signs in.
             </p>
 
-            <p className="mt-2 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-[12.5px] text-amber-800">
+            <p className="text-body-sm mt-2 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-amber-800">
               <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
               Grant only the permissions the work needs, and prefer a dated grant for temporary help. Admin access
               cannot be self-assigned, so every grant is traceable to you.
             </p>
 
-            <p className="mt-2 flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+            <p className="bg-surface-container-low text-on-surface-variant mt-2 flex items-start gap-2 rounded-lg px-3 py-2 text-xs">
               <ScrollText className="mt-0.5 h-3.5 w-3.5 shrink-0" />
               Recorded against your admin account with a timestamp.
             </p>
@@ -123,7 +123,7 @@ export default function AdminAccountCreateView() {
               <Button type="submit">Send invitation</Button>
               <Link
                 href={ROUTES.ADMIN_ADMINS}
-                className="dark:text-forest-300 dark:hover:bg-forest-850 rounded-xl px-3 py-2 text-center text-[13px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+                className="dark:text-forest-300 dark:hover:bg-forest-850 text-body-md text-on-surface-variant hover:bg-surface-container-low rounded-xl px-3 py-2 text-center font-semibold transition-colors"
               >
                 Cancel
               </Link>

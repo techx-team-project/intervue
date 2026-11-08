@@ -9,16 +9,16 @@ export default function SecurityAlertsCard({ email }: SecurityAlertsCardProps) {
   const [loginAlerts, setLoginAlerts] = useState(true);
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-      <h2 className="text-base font-bold text-slate-800">Security alerts & notifications</h2>
+    <div className="border-outline-variant rounded-2xl border bg-white p-6 shadow-xs">
+      <h2 className="text-on-surface text-base font-bold">Security alerts & notifications</h2>
 
       <div className="mt-4 space-y-4">
         <label className="flex cursor-pointer items-start justify-between gap-4">
           <div>
-            <div className="text-sm font-bold text-slate-800">
+            <div className="text-on-surface text-sm font-bold">
               Email me when a new device or sign-in location is detected
             </div>
-            <div className="text-xs text-slate-500">
+            <div className="text-on-surface-variant text-xs">
               An instant alert is sent to {email} with the IP address and location.
             </div>
           </div>
@@ -30,14 +30,14 @@ export default function SecurityAlertsCard({ email }: SecurityAlertsCardProps) {
           />
         </label>
 
-        <div className="border-t border-slate-100" />
+        <div className="border-outline-variant border-t" />
 
         <label className="flex cursor-pointer items-start justify-between gap-4">
           <div>
-            <div className="text-sm font-bold text-slate-800">
+            <div className="text-on-surface text-sm font-bold">
               Send a security code when the password or 2FA changes
             </div>
-            <div className="text-xs text-slate-500">
+            <div className="text-on-surface-variant text-xs">
               Require OTP verification before any core account setting can be changed.
             </div>
           </div>

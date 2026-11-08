@@ -45,8 +45,8 @@ export default function AdminUsersMobileList({
           <article
             key={user.id}
             className={cn(
-              'dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-[#e2e8f0] bg-white p-3.5 shadow-xs transition',
-              isSelected && 'border-primary/40 dark:bg-forest-850/60 bg-[#f8fafc]',
+              'dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white p-3.5 shadow-xs transition',
+              isSelected && 'border-primary/40 dark:bg-forest-850/60 bg-surface-container-low',
             )}
           >
             <div className="flex items-start gap-3">
@@ -56,7 +56,7 @@ export default function AdminUsersMobileList({
                 disabled={isSelf}
                 onChange={() => onToggleSelect(user.id)}
                 aria-label={`Select ${user.name}`}
-                className="accent-primary mt-1 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 disabled:cursor-not-allowed disabled:opacity-40"
+                className="accent-primary border-outline mt-1 h-4 w-4 shrink-0 cursor-pointer rounded disabled:cursor-not-allowed disabled:opacity-40"
               />
 
               <UserAvatar fullName={user.name} image={user.image} size="sm" />
@@ -64,12 +64,12 @@ export default function AdminUsersMobileList({
               <div className="min-w-0 flex-1">
                 <Link
                   href={`${ROUTES.ADMIN_USERS}/${user.id}`}
-                  className="text-navy dark:text-forest-50 block truncate text-[13.5px] font-bold"
+                  className="text-navy dark:text-forest-50 text-body-md block truncate font-bold"
                 >
                   {user.name}
-                  {isSelf && <span className="ml-1.5 text-[11px] font-semibold text-[#94a3b8]">(you)</span>}
+                  {isSelf && <span className="text-label-sm text-outline ml-1.5 font-semibold">(you)</span>}
                 </Link>
-                <p className="dark:text-forest-300 truncate text-[12px] text-[#64748b]">{user.email}</p>
+                <p className="dark:text-forest-300 text-body-sm text-on-surface-variant truncate">{user.email}</p>
               </div>
 
               <AdminUserRowActionsMenu
@@ -85,15 +85,15 @@ export default function AdminUsersMobileList({
               <AdminUserRoleChips roles={user.roles} />
             </div>
 
-            <div className="dark:border-forest-800 mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[#f1f5f9] pt-2.5 pl-7">
+            <div className="dark:border-forest-800 border-outline-variant mt-3 flex flex-wrap items-center justify-between gap-2 border-t pt-2.5 pl-7">
               <AdminUserSignals user={user} />
 
               <span className="flex items-center gap-3">
-                <span className="inline-flex items-center gap-1.5 text-[11.5px] text-[#94a3b8]">
+                <span className="text-label-sm text-outline inline-flex items-center gap-1.5">
                   <Clock className="h-3.5 w-3.5" />
                   {user.lastSignInAt ? formatRelativeDay(user.lastSignInAt) : 'Never'}
                 </span>
-                <span className="inline-flex items-center gap-1.5 text-[11.5px] text-[#94a3b8]">
+                <span className="text-label-sm text-outline inline-flex items-center gap-1.5">
                   <CalendarClock className="h-3.5 w-3.5" />
                   {formatDate(user.createdAt)}
                 </span>

@@ -226,7 +226,7 @@ export default function RecruiterLandingView() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f4f5f5] text-[#263a4d] antialiased">
+    <div className="bg-surface-container-low flex min-h-screen flex-col text-[#263a4d] antialiased">
       <Header portal="recruiter" />
 
       <main className="flex-1">
@@ -237,8 +237,6 @@ export default function RecruiterLandingView() {
             backgroundImage: "url('/ai-hero-scene-desktop.png')",
           }}
         >
-          <div className="pointer-events-none absolute top-0 left-1/2 z-1 h-[266px] w-[492px] max-w-none -translate-x-1/2 bg-[#F4FBF9] blur-[35px] lg:hidden" />
-
           <div className="pointer-events-none absolute top-[128px] left-[5px] z-3 hidden sm:block lg:top-[220px] lg:left-[20px]">
             <Image
               src="/hero-left-pattern.png"
@@ -267,7 +265,7 @@ export default function RecruiterLandingView() {
               <button
                 type="button"
                 onClick={() => setConsultModalOpen(true)}
-                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#263A4D] px-7 py-3 text-center text-sm font-semibold text-white shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1a2936] hover:shadow-lg sm:w-auto sm:text-base"
+                className="shadow-elevation-1 hover:shadow-elevation-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#263A4D] px-7 py-3 text-center text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1a2936] sm:w-auto sm:text-base"
               >
                 <Headphones className="h-4 w-4" />
                 <span>Talk to our team</span>
@@ -275,7 +273,7 @@ export default function RecruiterLandingView() {
 
               <Link
                 href={postJobUrl}
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-[#009D46] px-8 py-3 text-center text-sm font-semibold text-white shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#00b14f] hover:shadow-lg sm:w-auto sm:text-base"
+                className="shadow-elevation-1 hover:bg-primary hover:shadow-elevation-2 flex w-full items-center justify-center gap-2 rounded-full bg-[#009D46] px-8 py-3 text-center text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 sm:w-auto sm:text-base"
               >
                 <span>Post a job</span>
                 <ArrowRight className="h-4 w-4" />
@@ -284,8 +282,11 @@ export default function RecruiterLandingView() {
           </div>
         </section>
 
-        <section id="analytics-stats" className="border-b border-[#e9eaec] bg-[#F8FAF9] py-8 lg:py-10">
-          <div className="container-topcv">
+        <section
+          id="analytics-stats"
+          className="border-outline-variant bg-surface-container-low border-b py-8 lg:py-10"
+        >
+          <div className="container-page">
             <div className="flex flex-col items-center justify-center gap-6 divide-y divide-[#D6E5DC] text-center sm:flex-row sm:justify-between sm:divide-x sm:divide-y-0">
               <div className="flex w-full flex-col items-center gap-1.5 px-4 sm:w-1/4">
                 <p className="text-3xl font-extrabold tracking-tight text-[#009D46] lg:text-4xl">AI</p>
@@ -309,28 +310,28 @@ export default function RecruiterLandingView() {
           </div>
         </section>
 
-        <section id="ecosystem" className="scroll-mt-20 border-b border-[#e9eaec] bg-white py-16 sm:py-20">
-          <div className="container-topcv">
+        <section id="ecosystem" className="border-outline-variant scroll-mt-20 border-b bg-white py-16 sm:py-20">
+          <div className="container-page">
             <div className="mx-auto max-w-3xl text-center">
               <div className="text-primary border-primary/20 bg-primary-light inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-xs font-bold">
                 <Globe className="h-3.5 w-3.5" />
                 <span>MULTI-CHANNEL REACH ECOSYSTEM</span>
               </div>
-              <h2 className="text-navy mt-3 text-2xl font-black tracking-tight sm:text-4xl">
+              <h2 className="text-navy mt-3 text-2xl font-bold tracking-tight sm:text-4xl">
                 How does InterVue attract candidates?
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-[#6f7882] sm:text-base">
+              <p className="text-on-surface-variant mt-3 text-sm leading-relaxed sm:text-base">
                 IT candidates use InterVue to find jobs, grow their careers and discover new opportunities every day.
               </p>
             </div>
 
             <div className="mt-14 grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
               <div className="lg:col-span-5">
-                <div className="relative mx-auto flex max-w-md flex-col items-center justify-center rounded-3xl border border-[#e9eaec] bg-gradient-to-b from-[#f8fafc] to-[#eef9f2] p-8 text-center shadow-xs">
+                <div className="border-outline-variant relative mx-auto flex max-w-md flex-col items-center justify-center rounded-3xl border bg-gradient-to-b from-[#f8fafc] to-[#eef9f2] p-8 text-center shadow-xs">
                   <div className="relative flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72">
                     <Image src="/srp/analytics/globe-grid.svg" alt="" fill className="object-contain opacity-70" />
 
-                    <div className="absolute inset-0 m-auto flex h-36 w-36 flex-col items-center justify-center rounded-full border border-emerald-300 bg-white/95 p-4 shadow-xl backdrop-blur-xs">
+                    <div className="shadow-elevation-2 absolute inset-0 m-auto flex h-36 w-36 flex-col items-center justify-center rounded-full border border-emerald-300 bg-white/95 p-4 backdrop-blur-xs">
                       <div className="text-3xl font-extrabold text-[#009D46] sm:text-4xl">IT</div>
                       <div className="mt-1 text-center text-xs font-semibold text-[#263a4d]">
                         Candidates focused on IT roles
@@ -338,7 +339,7 @@ export default function RecruiterLandingView() {
                     </div>
                   </div>
 
-                  <div className="mt-4 flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs">
+                  <div className="text-on-surface mt-4 flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-semibold shadow-2xs">
                     <span className="relative flex h-2 w-2">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                       <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
@@ -352,15 +353,15 @@ export default function RecruiterLandingView() {
                 <div className="relative pl-6 before:absolute before:top-4 before:bottom-4 before:left-3.5 before:w-0.5 before:bg-gradient-to-b before:from-emerald-500 before:via-emerald-400 before:to-emerald-200">
                   {TOUCHPOINTS.map((tp) => (
                     <div key={tp.step} className="group relative mb-6 last:mb-0">
-                      <div className="group-hover:bg-primary absolute -left-6 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-emerald-600 text-xs font-black text-white shadow-sm transition-colors">
+                      <div className="group-hover:bg-primary absolute -left-6 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-emerald-600 text-xs font-bold text-white shadow-sm transition-colors">
                         {tp.step}
                       </div>
 
-                      <div className="rounded-2xl border border-[#e9eaec] bg-white p-5 shadow-xs transition duration-200 group-hover:border-emerald-300 group-hover:shadow-md">
+                      <div className="border-outline-variant group-hover:shadow-elevation-1 rounded-2xl border bg-white p-5 shadow-xs transition duration-200 group-hover:border-emerald-300">
                         <h3 className="text-navy group-hover:text-primary text-base font-bold transition-colors">
                           {tp.title}
                         </h3>
-                        <p className="mt-2 text-xs leading-relaxed text-[#6f7882] sm:text-sm">{tp.desc}</p>
+                        <p className="text-on-surface-variant mt-2 text-xs leading-relaxed sm:text-sm">{tp.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -371,19 +372,21 @@ export default function RecruiterLandingView() {
         </section>
 
         <div className="border-y border-emerald-100 bg-gradient-to-r from-emerald-50 via-teal-50 to-green-50 py-6 sm:py-8">
-          <div className="container-topcv flex flex-col items-center justify-between gap-4 md:flex-row">
+          <div className="container-page flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="text-center md:text-left">
               <p className="text-navy text-base font-bold sm:text-lg">
                 A broad candidate ecosystem helps your job posts reach the right people at the right time.
               </p>
-              <p className="text-xs text-slate-600">Reduce costs and speed up hiring of high-quality tech talent.</p>
+              <p className="text-on-surface-variant text-xs">
+                Reduce costs and speed up hiring of high-quality tech talent.
+              </p>
             </div>
 
             <div className="flex shrink-0 items-center gap-3">
               <button
                 type="button"
                 onClick={() => setConsultModalOpen(true)}
-                className="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-xs font-bold text-slate-800 shadow-xs transition hover:bg-slate-50 sm:text-sm"
+                className="border-outline text-on-surface hover:bg-surface-container-low rounded-full border bg-white px-5 py-2.5 text-xs font-bold shadow-xs transition sm:text-sm"
               >
                 Talk to our team
               </button>
@@ -399,17 +402,17 @@ export default function RecruiterLandingView() {
           </div>
         </div>
 
-        <section id="university" className="scroll-mt-20 bg-[#f4f5f5] py-16 sm:py-20">
-          <div className="container-topcv">
+        <section id="university" className="bg-surface-container-low scroll-mt-20 py-16 sm:py-20">
+          <div className="container-page">
             <div className="mx-auto max-w-3xl text-center">
               <div className="text-primary border-primary/20 bg-primary-light inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-xs font-bold">
                 <GraduationCap className="h-3.5 w-3.5" />
                 <span>INTERVUE UNIVERSITY • PARTNER UNIVERSITY NETWORK</span>
               </div>
-              <h2 className="text-navy mt-3 text-2xl font-black tracking-tight sm:text-4xl">
+              <h2 className="text-navy mt-3 text-2xl font-bold tracking-tight sm:text-4xl">
                 InterVue University – Partner university network
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-[#6f7882] sm:text-base">
+              <p className="text-on-surface-variant mt-3 text-sm leading-relaxed sm:text-base">
                 InterVue works with universities and colleges across Vietnam to help students, young engineers and the
                 next generation of tech talent start their careers.
               </p>
@@ -418,7 +421,7 @@ export default function RecruiterLandingView() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
               {UNIVERSITIES.map((univ) => (
                 <div key={univ.code} className="flex flex-col items-center gap-1.5">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full border border-slate-200 bg-white p-2 shadow-xs transition-transform duration-200 hover:scale-105 hover:shadow-md sm:h-16 sm:w-16">
+                  <div className="border-outline-variant hover:shadow-elevation-1 flex h-14 w-14 items-center justify-center rounded-full border bg-white p-2 shadow-xs transition-transform duration-200 hover:scale-105 sm:h-16 sm:w-16">
                     <Image
                       src={univ.logo}
                       alt={univ.name}
@@ -427,7 +430,7 @@ export default function RecruiterLandingView() {
                       className="h-10 w-10 object-contain sm:h-11 sm:w-11"
                     />
                   </div>
-                  <span className="text-[11px] font-bold text-slate-600 sm:text-xs">{univ.code}</span>
+                  <span className="text-label-sm text-on-surface-variant font-bold sm:text-xs">{univ.code}</span>
                 </div>
               ))}
             </div>
@@ -447,20 +450,20 @@ export default function RecruiterLandingView() {
                         className={`w-full cursor-pointer rounded-2xl border p-5 text-left transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                           isActive
                             ? 'border-emerald-500 bg-emerald-50/40 shadow-xs ring-1 ring-emerald-500/30'
-                            : 'border-[#e9eaec] bg-white hover:border-slate-300'
+                            : 'border-outline-variant hover:border-outline bg-white'
                         }`}
                       >
                         <span className="flex items-center justify-between">
                           <span
                             className={`text-xs font-extrabold tracking-wide uppercase ${
-                              isActive ? 'text-primary' : 'text-slate-600'
+                              isActive ? 'text-primary' : 'text-on-surface-variant'
                             }`}
                           >
                             {tab.title}
                           </span>
                           <span
-                            className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
-                              isActive ? 'bg-primary text-white' : 'bg-slate-100 text-slate-600'
+                            className={`text-label-sm rounded-full px-2.5 py-0.5 font-bold ${
+                              isActive ? 'bg-primary text-white' : 'bg-surface-container-high text-on-surface-variant'
                             }`}
                           >
                             {tab.badge}
@@ -468,7 +471,7 @@ export default function RecruiterLandingView() {
                         </span>
 
                         <span className="text-navy mt-1.5 block text-sm font-bold sm:text-base">{tab.subtitle}</span>
-                        <span className="mt-1.5 block text-xs leading-relaxed text-[#6f7882] sm:text-sm">
+                        <span className="text-on-surface-variant mt-1.5 block text-xs leading-relaxed sm:text-sm">
                           {tab.description}
                         </span>
                       </button>
@@ -477,7 +480,7 @@ export default function RecruiterLandingView() {
                 </div>
 
                 <div className="lg:col-span-5">
-                  <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-slate-900 shadow-md">
+                  <div className="shadow-elevation-1 relative overflow-hidden rounded-2xl border border-emerald-200 bg-slate-900">
                     <div className="relative h-72 w-full sm:h-80">
                       <Image
                         src={currentUnivTab.image}
@@ -489,7 +492,7 @@ export default function RecruiterLandingView() {
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent" />
 
                       <div className="absolute right-4 bottom-4 left-4 text-white">
-                        <span className="inline-block rounded-md bg-emerald-500 px-2.5 py-1 text-[11px] font-bold text-white shadow-xs">
+                        <span className="text-label-sm inline-block rounded-md bg-emerald-500 px-2.5 py-1 font-bold text-white shadow-xs">
                           {currentUnivTab.badge}
                         </span>
                         <h3 className="mt-2 text-sm font-bold text-white sm:text-base">{currentUnivTab.eventTitle}</h3>
@@ -503,26 +506,23 @@ export default function RecruiterLandingView() {
           </div>
         </section>
 
-        <section id="pro" className="scroll-mt-20 border-t border-[#e9eaec] bg-[#fbfcfc] py-16 sm:py-20">
-          <div className="container-topcv">
+        <section id="pro" className="border-outline-variant scroll-mt-20 border-t bg-[#fbfcfc] py-16 sm:py-20">
+          <div className="container-page">
             <div className="mx-auto max-w-3xl text-center">
               <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-50 px-3.5 py-1 text-xs font-bold text-amber-800">
                 <Crown className="h-3.5 w-3.5 text-amber-600" />
                 <span>INTERVUE PRO • PREMIUM RECRUITMENT SPACE</span>
               </div>
-              <h2 className="text-navy mt-3 text-2xl font-black tracking-tight sm:text-4xl">
+              <h2 className="text-navy mt-3 text-2xl font-bold tracking-tight sm:text-4xl">
                 InterVue Pro – Reach experienced candidates
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-[#6f7882] sm:text-base">
+              <p className="text-on-surface-variant mt-3 text-sm leading-relaxed sm:text-base">
                 A dedicated hiring space for leading companies and high-quality candidates (Senior, Tech Lead, System
                 Architect).
               </p>
             </div>
 
-            <div className="relative mt-10 overflow-hidden rounded-3xl border border-amber-500/40 bg-gradient-to-br from-[#0f1722] via-[#162330] to-[#0a1017] p-8 text-white shadow-2xl sm:p-12">
-              <div className="pointer-events-none absolute -top-24 -right-24 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
-              <div className="pointer-events-none absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl" />
-
+            <div className="shadow-elevation-2 relative mt-10 overflow-hidden rounded-3xl border border-amber-500/40 bg-gradient-to-br from-[#0f1722] via-[#162330] to-[#0a1017] p-8 text-white sm:p-12">
               <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
                 <div className="space-y-6 lg:col-span-7">
                   <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-extrabold text-amber-300">
@@ -531,11 +531,11 @@ export default function RecruiterLandingView() {
                   </div>
 
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xs transition hover:border-amber-400/50">
-                    <div className="flex items-center gap-2 text-xs font-black tracking-wide text-amber-300 uppercase">
+                    <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-amber-300 uppercase">
                       <ShieldCheck className="h-4 w-4" />
                       <span>PLATFORM FOR HIGHLY EXPERIENCED CANDIDATES</span>
                     </div>
-                    <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
+                    <p className="text-outline mt-2 text-xs leading-relaxed sm:text-sm">
                       Senior engineer profiles are assessed through system design tests and management skill evaluation,
                       with strict two-way identity confidentiality so candidates can explore new opportunities with
                       peace of mind.
@@ -543,11 +543,11 @@ export default function RecruiterLandingView() {
                   </div>
 
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xs transition hover:border-amber-400/50">
-                    <div className="flex items-center gap-2 text-xs font-black tracking-wide text-amber-300 uppercase">
+                    <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-amber-300 uppercase">
                       <Zap className="h-4 w-4" />
                       <span>EXCLUSIVE TARGETED CAMPAIGNS</span>
                     </div>
-                    <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
+                    <p className="text-outline mt-2 text-xs leading-relaxed sm:text-sm">
                       Reach candidates through Tech Summit events, architecture seminars and elevator media in Grade A
                       office buildings (Elevator Pitch) in Hanoi and Ho Chi Minh City.
                     </p>
@@ -557,7 +557,7 @@ export default function RecruiterLandingView() {
                     <button
                       type="button"
                       onClick={() => setConsultModalOpen(true)}
-                      className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 px-7 py-3 text-xs font-extrabold text-slate-950 shadow-lg shadow-amber-500/20 transition hover:from-amber-300 hover:to-amber-400 sm:text-sm"
+                      className="text-on-surface shadow-elevation-2 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 px-7 py-3 text-xs font-extrabold shadow-amber-500/20 transition hover:from-amber-300 hover:to-amber-400 sm:text-sm"
                     >
                       <span>Talk to us about InterVue Pro</span>
                       <ArrowRight className="h-4 w-4" />
@@ -566,7 +566,7 @@ export default function RecruiterLandingView() {
                 </div>
 
                 <div className="lg:col-span-5">
-                  <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-[#1e293b] p-2 shadow-2xl">
+                  <div className="bg-primary-deeper shadow-elevation-2 relative overflow-hidden rounded-2xl border border-amber-500/30 p-2">
                     <div className="relative h-72 w-full overflow-hidden rounded-xl sm:h-80">
                       <Image
                         src="/landing/banner-company.jpg"
@@ -579,13 +579,13 @@ export default function RecruiterLandingView() {
 
                       <div className="absolute right-4 bottom-4 left-4 rounded-xl border border-amber-400/30 bg-slate-950/85 p-3.5 backdrop-blur-md">
                         <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-bold text-amber-300">Senior Tech Lead</span>
-                          <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-extrabold text-amber-300">
+                          <span className="text-label-sm font-bold text-amber-300">Senior Tech Lead</span>
+                          <span className="text-label-sm rounded-full bg-amber-400/20 px-2 py-0.5 font-extrabold text-amber-300">
                             Verified
                           </span>
                         </div>
                         <p className="mt-1 text-xs text-white">Distributed systems & AI architect</p>
-                        <div className="mt-2 flex items-center gap-1.5 text-[11px] text-emerald-400">
+                        <div className="text-label-sm mt-2 flex items-center gap-1.5 text-emerald-400">
                           <Check className="h-3.5 w-3.5" />
                           <span>Passed the InterVue Pro skills assessment</span>
                         </div>
@@ -598,14 +598,14 @@ export default function RecruiterLandingView() {
           </div>
         </section>
 
-        <section className="bg-[#f4f5f5] py-16 sm:py-20">
-          <div className="container-topcv">
+        <section className="bg-surface-container-low py-16 sm:py-20">
+          <div className="container-page">
             <div className="mx-auto max-w-3xl text-center">
               <span className="text-primary text-xs font-bold tracking-widest uppercase">Service pillars</span>
-              <h2 className="text-navy mt-2 text-3xl font-black tracking-tight sm:text-4xl">
+              <h2 className="text-navy mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
                 Two core hiring methods at InterVue
               </h2>
-              <p className="mt-3 text-base text-[#6f7882]">
+              <p className="text-on-surface-variant mt-3 text-base">
                 Choose between posting jobs to attract applications or proactively sourcing tech talent by the tech
                 stack you need.
               </p>
@@ -614,7 +614,7 @@ export default function RecruiterLandingView() {
             <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-2">
               <div
                 id="job-posting"
-                className="scroll-mt-24 rounded-3xl border border-[#e9eaec] bg-white p-8 shadow-xs transition hover:shadow-md sm:p-10"
+                className="border-outline-variant hover:shadow-elevation-1 scroll-mt-24 rounded-3xl border bg-white p-8 shadow-xs transition sm:p-10"
               >
                 <div className="flex items-center gap-3">
                   <div className="bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-2xl">
@@ -626,7 +626,7 @@ export default function RecruiterLandingView() {
                   </div>
                 </div>
 
-                <p className="mt-5 text-sm leading-relaxed text-[#4d5965]">
+                <p className="text-on-surface-variant mt-5 text-sm leading-relaxed">
                   Reach developers who are actively looking for jobs. InterVue matches your post with candidates whose
                   skills fit best.
                 </p>
@@ -655,7 +655,7 @@ export default function RecruiterLandingView() {
                   </li>
                 </ul>
 
-                <div className="mt-8 border-t border-[#f4f5f5] pt-6">
+                <div className="border-outline-variant mt-8 border-t pt-6">
                   <Link
                     href={postJobUrl}
                     className="bg-primary hover:bg-primary-hover inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white shadow-sm transition"
@@ -668,7 +668,7 @@ export default function RecruiterLandingView() {
 
               <div
                 id="candidate-sourcing"
-                className="scroll-mt-24 rounded-3xl border border-[#e9eaec] bg-white p-8 shadow-xs transition hover:shadow-md sm:p-10"
+                className="border-outline-variant hover:shadow-elevation-1 scroll-mt-24 rounded-3xl border bg-white p-8 shadow-xs transition sm:p-10"
               >
                 <div className="flex items-center gap-3">
                   <div className="bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-2xl">
@@ -680,7 +680,7 @@ export default function RecruiterLandingView() {
                   </div>
                 </div>
 
-                <p className="mt-5 text-sm leading-relaxed text-[#4d5965]">
+                <p className="text-on-surface-variant mt-5 text-sm leading-relaxed">
                   Proactively find tech talent without waiting for applications. Explore the tech talent pool with
                   advanced filters and AI match scoring.
                 </p>
@@ -709,7 +709,7 @@ export default function RecruiterLandingView() {
                   </li>
                 </ul>
 
-                <div className="mt-8 border-t border-[#f4f5f5] pt-6">
+                <div className="border-outline-variant mt-8 border-t pt-6">
                   <Link
                     href={
                       isRecruiter
@@ -727,17 +727,17 @@ export default function RecruiterLandingView() {
           </div>
         </section>
 
-        <section id="features" className="scroll-mt-20 border-t border-[#e9eaec] bg-white py-16 sm:py-20">
-          <div className="container-topcv">
+        <section id="features" className="border-outline-variant scroll-mt-20 border-t bg-white py-16 sm:py-20">
+          <div className="container-page">
             <div className="mb-12 text-center">
               <div className="text-primary border-primary/20 bg-primary-light mb-3 inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-xs font-bold">
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>A COMPLETE RECRUITMENT ECOSYSTEM</span>
               </div>
-              <h2 className="text-navy text-2xl font-black tracking-tight sm:text-3xl md:text-4xl">
+              <h2 className="text-navy text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
                 Smart tools <span className="text-primary">for tech HR</span>
               </h2>
-              <p className="mt-2 text-sm text-[#6f7882] sm:text-base">
+              <p className="text-on-surface-variant mt-2 text-sm sm:text-base">
                 InterVue combines AI with structured technical assessment to help tech recruiters and hiring managers
                 find the right candidates.
               </p>
@@ -749,14 +749,14 @@ export default function RecruiterLandingView() {
                 return (
                   <div
                     key={feat.title}
-                    className="hover:border-primary group flex flex-col justify-between rounded-2xl border border-[#e9eaec] bg-[#fbfcfc] p-6 transition duration-300 hover:bg-white hover:shadow-[0_12px_32px_rgba(0,177,79,0.12)]"
+                    className="hover:border-primary group border-outline-variant flex flex-col justify-between rounded-2xl border bg-[#fbfcfc] p-6 transition duration-300 hover:bg-white hover:shadow-[0_12px_32px_rgba(0,177,79,0.12)]"
                   >
                     <div>
                       <div className="mb-4 flex items-center justify-between">
                         <div className="border-primary/20 bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-2xl border">
                           <IconComponent className="h-6 w-6" />
                         </div>
-                        <span className="border-primary/20 bg-primary-light text-primary rounded-full border px-2.5 py-0.5 text-[11px] font-bold">
+                        <span className="border-primary/20 bg-primary-light text-primary text-label-sm rounded-full border px-2.5 py-0.5 font-bold">
                           {feat.tag}
                         </span>
                       </div>
@@ -765,18 +765,18 @@ export default function RecruiterLandingView() {
                         {feat.title}
                       </h3>
 
-                      <p className="mt-2 text-[13.5px] leading-relaxed text-[#6f7882]">{feat.desc}</p>
+                      <p className="text-body-md text-on-surface-variant mt-2 leading-relaxed">{feat.desc}</p>
                     </div>
 
-                    <div className="mt-6 flex items-center justify-between border-t border-[#f4f5f5] pt-3.5">
+                    <div className="border-outline-variant mt-6 flex items-center justify-between border-t pt-3.5">
                       <Link
                         href={ROUTES.RECRUITER_LOGIN}
-                        className="text-primary inline-flex items-center gap-1.5 text-[13px] font-bold transition group-hover:translate-x-1"
+                        className="text-primary text-body-md inline-flex items-center gap-1.5 font-bold transition group-hover:translate-x-1"
                       >
                         <span>Try it now</span>
                         <ArrowRight className="h-4 w-4" />
                       </Link>
-                      <span className="group-hover:bg-primary flex h-7 w-7 items-center justify-center rounded-full bg-[#f4f5f5] text-[#6f7882] transition-colors group-hover:text-white">
+                      <span className="group-hover:bg-primary bg-surface-container-low text-on-surface-variant flex h-7 w-7 items-center justify-center rounded-full transition-colors group-hover:text-white">
                         <ChevronRight className="h-3.5 w-3.5" />
                       </span>
                     </div>
@@ -787,14 +787,17 @@ export default function RecruiterLandingView() {
           </div>
         </section>
 
-        <section id="pricing" className="scroll-mt-20 border-t border-[#e9eaec] bg-[#f4f5f5] py-16 sm:py-20">
-          <div className="container-topcv">
+        <section
+          id="pricing"
+          className="border-outline-variant bg-surface-container-low scroll-mt-20 border-t py-16 sm:py-20"
+        >
+          <div className="container-page">
             <div className="mx-auto max-w-3xl text-center">
               <span className="text-primary text-xs font-bold tracking-widest uppercase">Pricing</span>
-              <h2 className="text-navy mt-2 text-3xl font-black tracking-tight sm:text-4xl">
+              <h2 className="text-navy mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
                 Flexible for companies of every size
               </h2>
-              <p className="mt-4 text-base text-[#6f7882]">
+              <p className="text-on-surface-variant mt-4 text-base">
                 Start completely free with your first 3 job posts, then upgrade as your hiring grows.
               </p>
             </div>
@@ -807,12 +810,14 @@ export default function RecruiterLandingView() {
                     <span>New employer offer</span>
                   </div>
                   <h3 className="text-navy mt-3 text-xl font-bold">Starter (Free)</h3>
-                  <p className="mt-1 text-xs text-[#6f7882]">For startups or small teams trying the platform</p>
+                  <p className="text-on-surface-variant mt-1 text-xs">
+                    For startups or small teams trying the platform
+                  </p>
                   <div className="mt-5">
                     <span className="text-navy text-3xl font-extrabold">Free</span>
-                    <span className="text-xs text-[#6f7882]"> / forever</span>
+                    <span className="text-on-surface-variant text-xs"> / forever</span>
                   </div>
-                  <ul className="mt-6 space-y-3 text-xs text-[#4d5965]">
+                  <ul className="text-on-surface-variant mt-6 space-y-3 text-xs">
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
                       <span className="text-navy font-semibold">3 free job posts</span>
@@ -839,7 +844,7 @@ export default function RecruiterLandingView() {
                 </Link>
               </div>
 
-              <div className="border-primary relative flex flex-col justify-between rounded-3xl border-2 bg-white p-8 shadow-xl">
+              <div className="border-primary shadow-elevation-2 relative flex flex-col justify-between rounded-3xl border-2 bg-white p-8">
                 <span className="bg-primary absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3.5 py-1 text-xs font-bold text-white uppercase shadow-sm">
                   Most popular
                 </span>
@@ -849,12 +854,12 @@ export default function RecruiterLandingView() {
                     <span>Growing companies</span>
                   </div>
                   <h3 className="text-navy mt-3 text-xl font-bold">Growth</h3>
-                  <p className="mt-1 text-xs text-[#6f7882]">For companies with continuous tech hiring</p>
+                  <p className="text-on-surface-variant mt-1 text-xs">For companies with continuous tech hiring</p>
                   <div className="mt-5">
                     <span className="text-primary text-3xl font-extrabold">1,490,000 VND</span>
-                    <span className="text-xs text-[#6f7882]"> / month</span>
+                    <span className="text-on-surface-variant text-xs"> / month</span>
                   </div>
-                  <ul className="mt-6 space-y-3 text-xs text-[#4d5965]">
+                  <ul className="text-on-surface-variant mt-6 space-y-3 text-xs">
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
                       <span className="text-navy font-semibold">Unlimited job posts</span>
@@ -879,24 +884,24 @@ export default function RecruiterLandingView() {
                 </div>
                 <Link
                   href={ROUTES.RECRUITER_LOGIN}
-                  className="bg-primary hover:bg-primary-hover shadow-primary/20 mt-8 block w-full rounded-xl py-3 text-center text-sm font-bold text-white shadow-md transition"
+                  className="bg-primary hover:bg-primary-hover shadow-primary/20 shadow-elevation-1 mt-8 block w-full rounded-xl py-3 text-center text-sm font-bold text-white transition"
                 >
                   Sign up for Growth
                 </Link>
               </div>
 
-              <div className="flex flex-col justify-between rounded-3xl border border-[#e9eaec] bg-white p-8 shadow-xs">
+              <div className="border-outline-variant flex flex-col justify-between rounded-3xl border bg-white p-8 shadow-xs">
                 <div>
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-[#f4f5f5] px-2.5 py-1 text-xs font-semibold text-[#4d5965]">
+                  <div className="bg-surface-container-low text-on-surface-variant inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold">
                     <Users className="h-3.5 w-3.5" />
                     <span>Large scale</span>
                   </div>
                   <h3 className="text-navy mt-3 text-xl font-bold">Enterprise</h3>
-                  <p className="mt-1 text-xs text-[#6f7882]">For technology groups or outsourcing companies</p>
+                  <p className="text-on-surface-variant mt-1 text-xs">For technology groups or outsourcing companies</p>
                   <div className="mt-5">
                     <span className="text-navy text-3xl font-extrabold">Contact us</span>
                   </div>
-                  <ul className="mt-6 space-y-3 text-xs text-[#4d5965]">
+                  <ul className="text-on-surface-variant mt-6 space-y-3 text-xs">
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />
                       <span>Internal ATS integration through API</span>
@@ -918,7 +923,7 @@ export default function RecruiterLandingView() {
                 <button
                   type="button"
                   onClick={() => setConsultModalOpen(true)}
-                  className="text-navy mt-8 block w-full rounded-xl border border-[#e9eaec] py-3 text-center text-sm font-bold transition hover:bg-[#f4f5f5]"
+                  className="text-navy border-outline-variant hover:bg-surface-container-low mt-8 block w-full rounded-xl border py-3 text-center text-sm font-bold transition"
                 >
                   Talk to our team
                 </button>
@@ -927,17 +932,17 @@ export default function RecruiterLandingView() {
           </div>
         </section>
 
-        <section id="testimonials" className="scroll-mt-20 border-t border-[#e9eaec] bg-white py-16 sm:py-20">
-          <div className="container-topcv">
+        <section id="testimonials" className="border-outline-variant scroll-mt-20 border-t bg-white py-16 sm:py-20">
+          <div className="container-page">
             <div className="relative mb-12 text-center">
-              <div className="text-primary border-primary/20 bg-primary-light mb-2.5 inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[12px] font-bold">
+              <div className="text-primary border-primary/20 bg-primary-light text-body-sm mb-2.5 inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 font-bold">
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>REVIEWS FROM COMPANIES</span>
               </div>
-              <h2 className="text-navy text-2xl font-black tracking-tight md:text-3xl">
+              <h2 className="text-navy text-2xl font-bold tracking-tight md:text-3xl">
                 What customers <span className="text-primary">say about InterVue</span>
               </h2>
-              <p className="mt-1 text-[14px] text-[#6f7882] sm:text-[15px]">
+              <p className="text-body-md text-on-surface-variant sm:text-body-lg mt-1">
                 Hear how technology companies hire with InterVue.
               </p>
             </div>
@@ -946,7 +951,7 @@ export default function RecruiterLandingView() {
               {TESTIMONIALS.map((item) => (
                 <div
                   key={item.name}
-                  className="hover:border-primary group flex h-full flex-col justify-between rounded-2xl border border-[#e9eaec] bg-white p-6 shadow-xs transition duration-300"
+                  className="hover:border-primary group border-outline-variant flex h-full flex-col justify-between rounded-2xl border bg-white p-6 shadow-xs transition duration-300"
                 >
                   <div>
                     <div className="mb-4 flex items-center justify-between">
@@ -959,21 +964,21 @@ export default function RecruiterLandingView() {
                     </div>
 
                     <div className="mb-3 flex flex-wrap items-center gap-2">
-                      <span className="border-primary/20 bg-primary-light text-primary rounded-full border px-2.5 py-0.5 text-[11px] font-bold">
+                      <span className="border-primary/20 bg-primary-light text-primary text-label-sm rounded-full border px-2.5 py-0.5 font-bold">
                         {item.tag}
                       </span>
-                      <span className="text-primary bg-primary-tag inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold">
+                      <span className="text-primary bg-primary-tag text-label-sm inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-bold">
                         <Sparkles className="h-3 w-3" />
                         {item.result}
                       </span>
                     </div>
 
-                    <p className="text-navy line-clamp-4 text-[13.5px] leading-relaxed text-[#4d5965]">
+                    <p className="text-navy text-body-md text-on-surface-variant line-clamp-4 leading-relaxed">
                       &ldquo;{item.content}&rdquo;
                     </p>
                   </div>
 
-                  <div className="mt-5 border-t border-[#f4f5f5] pt-4">
+                  <div className="border-outline-variant mt-5 border-t pt-4">
                     <div className="flex items-center gap-3">
                       <Image
                         src={item.avatar}
@@ -985,10 +990,10 @@ export default function RecruiterLandingView() {
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5">
-                          <h3 className="text-navy truncate text-[14.5px] font-bold">{item.name}</h3>
+                          <h3 className="text-navy text-body-md truncate font-bold">{item.name}</h3>
                           <CheckCircle2 className="text-primary h-3.5 w-3.5 shrink-0" />
                         </div>
-                        <p className="truncate text-[12px] font-medium text-[#6f7882]">
+                        <p className="text-body-sm text-on-surface-variant truncate font-medium">
                           {item.role} • <span className="text-primary font-bold">{item.company}</span>
                         </p>
                       </div>
@@ -998,18 +1003,18 @@ export default function RecruiterLandingView() {
               ))}
             </div>
 
-            <div className="mt-14 border-t border-[#f4f5f5] pt-10">
-              <p className="text-center text-xs font-bold tracking-wider text-[#6f7882] uppercase">
+            <div className="border-outline-variant mt-14 border-t pt-10">
+              <p className="text-on-surface-variant text-center text-xs font-bold tracking-wider uppercase">
                 Trusted recruitment partner of leading technology companies
               </p>
               <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
                 {PARTNERS.map((partner) => (
                   <div
                     key={partner.name}
-                    className="hover:border-primary/50 flex items-center gap-2 rounded-xl border border-[#e9eaec] bg-white px-5 py-3 shadow-2xs transition hover:shadow-sm"
+                    className="hover:border-primary/50 border-outline-variant flex items-center gap-2 rounded-xl border bg-white px-5 py-3 shadow-2xs transition hover:shadow-sm"
                   >
                     <span className="text-navy font-extrabold">{partner.name}</span>
-                    <span className="rounded-md bg-[#f4f5f5] px-2 py-0.5 text-[11px] font-medium text-[#6f7882]">
+                    <span className="bg-surface-container-low text-label-sm text-on-surface-variant rounded-md px-2 py-0.5 font-medium">
                       {partner.tag}
                     </span>
                   </div>
@@ -1020,19 +1025,19 @@ export default function RecruiterLandingView() {
         </section>
 
         <section className="bg-gradient-to-r from-[#00b14f] to-[#009643] px-4 py-16 text-white sm:px-6 lg:px-8">
-          <div className="container-topcv text-center">
+          <div className="container-page text-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1 text-xs font-bold text-white backdrop-blur-xs">
               <Sparkles className="h-3.5 w-3.5" />
               <span>New employer offer: get 3 free job posts</span>
             </div>
-            <h2 className="mt-4 text-2xl font-black sm:text-4xl">Ready to build your IT team with InterVue?</h2>
+            <h2 className="mt-4 text-2xl font-bold sm:text-4xl">Ready to build your IT team with InterVue?</h2>
             <p className="mx-auto mt-3 max-w-2xl text-sm text-white/90 sm:text-base">
               Sign up today to get 3 free job posts and try AI resume screening.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
               <Link
                 href={ROUTES.RECRUITER_LOGIN}
-                className="text-navy flex items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold shadow-lg transition hover:bg-slate-50"
+                className="text-navy shadow-elevation-2 hover:bg-surface-container-low flex items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold transition"
               >
                 <span>Sign in to the employer portal</span>
                 <ArrowRight className="h-4 w-4" />
@@ -1063,9 +1068,9 @@ export default function RecruiterLandingView() {
               <CheckCircle2 className="h-8 w-8" />
             </div>
             <h3 className="text-navy mt-4 text-lg font-bold">Request sent!</h3>
-            <p className="mt-2 text-xs text-slate-600">
+            <p className="text-on-surface-variant mt-2 text-xs">
               Thank you for choosing InterVue. A recruitment consultant will call you at{' '}
-              <strong className="text-slate-800">{submittedPhone}</strong> soon.
+              <strong className="text-on-surface">{submittedPhone}</strong> soon.
             </p>
             <div className="mt-6 flex justify-center gap-3">
               <a
@@ -1078,7 +1083,7 @@ export default function RecruiterLandingView() {
               <button
                 type="button"
                 onClick={handleCloseConsultModal}
-                className="rounded-xl border border-slate-300 px-5 py-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100"
+                className="border-outline text-on-surface hover:bg-surface-container-high rounded-xl border px-5 py-2.5 text-xs font-bold transition"
               >
                 Close
               </button>
@@ -1097,7 +1102,7 @@ export default function RecruiterLandingView() {
                 value={consultForm.fullName}
                 onChange={(e) => setConsultForm({ ...consultForm, fullName: e.target.value })}
                 placeholder="e.g. Nguyen Van A (HR Manager)"
-                className="focus:border-primary focus:ring-primary/20 mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:ring-2 focus:outline-none"
+                className="focus:border-primary focus:ring-primary/20 border-outline-variant text-on-surface mt-1 w-full rounded-xl border px-3.5 py-2.5 text-xs font-medium transition focus:ring-2 focus:outline-none"
               />
             </div>
 
@@ -1113,7 +1118,7 @@ export default function RecruiterLandingView() {
                   value={consultForm.phone}
                   onChange={(e) => setConsultForm({ ...consultForm, phone: e.target.value })}
                   placeholder="0987654321"
-                  className="focus:border-primary focus:ring-primary/20 mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:ring-2 focus:outline-none"
+                  className="focus:border-primary focus:ring-primary/20 border-outline-variant text-on-surface mt-1 w-full rounded-xl border px-3.5 py-2.5 text-xs font-medium transition focus:ring-2 focus:outline-none"
                 />
               </div>
 
@@ -1128,7 +1133,7 @@ export default function RecruiterLandingView() {
                   value={consultForm.email}
                   onChange={(e) => setConsultForm({ ...consultForm, email: e.target.value })}
                   placeholder="hr@company.com"
-                  className="focus:border-primary focus:ring-primary/20 mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:ring-2 focus:outline-none"
+                  className="focus:border-primary focus:ring-primary/20 border-outline-variant text-on-surface mt-1 w-full rounded-xl border px-3.5 py-2.5 text-xs font-medium transition focus:ring-2 focus:outline-none"
                 />
               </div>
             </div>
@@ -1144,7 +1149,7 @@ export default function RecruiterLandingView() {
                 value={consultForm.company}
                 onChange={(e) => setConsultForm({ ...consultForm, company: e.target.value })}
                 placeholder="Your company name"
-                className="focus:border-primary focus:ring-primary/20 mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:ring-2 focus:outline-none"
+                className="focus:border-primary focus:ring-primary/20 border-outline-variant text-on-surface mt-1 w-full rounded-xl border px-3.5 py-2.5 text-xs font-medium transition focus:ring-2 focus:outline-none"
               />
             </div>
 
@@ -1156,7 +1161,7 @@ export default function RecruiterLandingView() {
                 id="needs"
                 value={consultForm.needs}
                 onChange={(e) => setConsultForm({ ...consultForm, needs: e.target.value })}
-                className="focus:border-primary focus:ring-primary/20 mt-1 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 transition focus:ring-2 focus:outline-none"
+                className="focus:border-primary focus:ring-primary/20 border-outline-variant text-on-surface mt-1 w-full rounded-xl border px-3.5 py-2.5 text-xs font-medium transition focus:ring-2 focus:outline-none"
               >
                 <option value="IT job posting & AI matching packages">IT job posting & AI matching packages</option>
                 <option value="InterVue Pro (Senior / Tech Lead hiring)">
@@ -1171,7 +1176,7 @@ export default function RecruiterLandingView() {
               <button
                 type="button"
                 onClick={handleCloseConsultModal}
-                className="rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-600 transition hover:bg-slate-50"
+                className="border-outline-variant text-on-surface-variant hover:bg-surface-container-low rounded-xl border px-4 py-2.5 text-xs font-bold transition"
               >
                 Cancel
               </button>

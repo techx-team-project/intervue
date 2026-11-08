@@ -18,13 +18,13 @@ export default function JobBreadcrumb({
   const items = [{ label: 'Tìm việc làm', href: '/#feature-jobs' }, { label: category }, { label: title }];
 
   return (
-    <div className="mb-4 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+    <div className="text-on-surface-variant mb-4 flex flex-wrap items-center justify-between gap-2 text-xs">
       <Breadcrumb items={items} showHome className="text-xs" />
 
       <button
         type="button"
         onClick={onReport}
-        className="inline-flex cursor-pointer items-center gap-1 text-xs font-medium text-slate-500 transition-colors hover:text-rose-600"
+        className="text-on-surface-variant hover:text-error inline-flex cursor-pointer items-center gap-1 text-xs font-medium transition-colors"
         title="Báo cáo tin tuyển dụng không chính xác"
       >
         <ShieldAlert className="h-3.5 w-3.5 text-amber-500" />

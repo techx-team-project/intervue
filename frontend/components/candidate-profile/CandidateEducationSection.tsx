@@ -27,11 +27,11 @@ export default function CandidateEducationSection({ items }: CandidateEducationS
         <>
           <h3 className="text-navy text-base font-bold wrap-break-word">{item.school}</h3>
           {(item.degree || item.major) && (
-            <p className="text-sm font-semibold wrap-break-word text-slate-700">
+            <p className="text-on-surface text-sm font-semibold wrap-break-word">
               {[item.degree, item.major].filter(Boolean).join(' - ')}
             </p>
           )}
-          <p className="text-xs text-slate-500">
+          <p className="text-on-surface-variant text-xs">
             {formatYearRange(item.startYear, item.endYear)}
             {item.gpa ? ` | GPA ${item.gpa}` : ''}
           </p>

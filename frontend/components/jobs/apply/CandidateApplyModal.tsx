@@ -44,7 +44,7 @@ function ApplyContent({ job }: { job: ApplyJob }) {
   if (form.isError || resumes.isError || !form.data || !resumes.data) {
     return (
       <div className="flex flex-col items-center gap-3 py-8 text-center">
-        <p className="text-sm font-semibold text-rose-700">{getErrorMessage(form.error ?? resumes.error)}</p>
+        <p className="text-error text-sm font-semibold">{getErrorMessage(form.error ?? resumes.error)}</p>
         <Button
           variant="outline"
           size="sm"
@@ -53,7 +53,7 @@ function ApplyContent({ job }: { job: ApplyJob }) {
             resumes.refetch();
           }}
         >
-          Thử lại
+          Try again
         </Button>
       </div>
     );
@@ -71,7 +71,7 @@ function ApplyContent({ job }: { job: ApplyJob }) {
     return <ApplyReapplyView application={application} resumes={resumes.data} open={form.data.open} />;
   }
   if (!form.data.open) {
-    return <p className="py-8 text-center text-sm font-semibold text-slate-600">Tin tuyển dụng này đã đóng.</p>;
+    return <p className="text-on-surface-variant py-8 text-center text-sm font-semibold">This job post is closed.</p>;
   }
 
   return (
@@ -96,7 +96,7 @@ export default function CandidateApplyModal({ job, isOpen, onClose }: CandidateA
       isOpen={isOpen}
       onClose={onClose}
       maxWidth="xl"
-      title="Ứng tuyển việc làm"
+      title="Apply for this job"
       description={`${job.title} - ${job.companyName}`}
     >
       {isLoading ? (
@@ -106,15 +106,17 @@ export default function CandidateApplyModal({ job, isOpen, onClose }: CandidateA
       ) : isCandidate ? (
         <ApplyContent job={job} />
       ) : isAuthenticated ? (
-        <p className="py-8 text-center text-sm text-slate-600">
-          Tài khoản hiện tại không phải tài khoản ứng viên nên không thể ứng tuyển.
+        <p className="text-on-surface-variant py-8 text-center text-sm">
+          Your current account is not a candidate account, so you cannot apply.
         </p>
       ) : (
         <div className="space-y-4 py-6 text-center">
-          <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-500" aria-hidden />
-          <p className="text-sm text-slate-600">Đăng nhập bằng tài khoản ứng viên để nộp hồ sơ cho vị trí này.</p>
+          <CheckCircle2 className="text-primary mx-auto h-10 w-10" aria-hidden />
+          <p className="text-on-surface-variant text-sm">
+            Sign in with a candidate account to apply for this position.
+          </p>
           <Link href={`${ROUTES.LOGIN}?redirect=${encodeURIComponent(`/jobs/${job.id}`)}`}>
-            <Button>Đăng nhập để ứng tuyển</Button>
+            <Button>Sign in to apply</Button>
           </Link>
         </div>
       )}

@@ -11,7 +11,7 @@ export default function AdminUserSignals({ user, className }: AdminUserSignalsPr
   const isVerified = user.emailVerifiedAt !== null;
 
   return (
-    <span className={cn('flex items-center gap-2.5 text-[11.5px]', className)}>
+    <span className={cn('text-label-sm flex items-center gap-2.5', className)}>
       <span
         title={isVerified ? 'Email verified' : 'Email not verified'}
         className={cn('inline-flex items-center gap-1', isVerified ? 'text-emerald-600' : 'text-amber-600')}
@@ -22,7 +22,7 @@ export default function AdminUserSignals({ user, className }: AdminUserSignalsPr
 
       <span
         title={`${user.activeSessionCount} active session${user.activeSessionCount === 1 ? '' : 's'}`}
-        className="dark:text-forest-300 inline-flex items-center gap-1 text-[#64748b]"
+        className="dark:text-forest-300 text-on-surface-variant inline-flex items-center gap-1"
       >
         <Monitor className="h-3.5 w-3.5" />
         {user.activeSessionCount}

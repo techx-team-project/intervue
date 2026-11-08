@@ -58,10 +58,10 @@ export default function TaxCodeLinkPanel({ onLink }: TaxCodeLinkPanelProps) {
   };
 
   return (
-    <div className="space-y-4 rounded-lg border border-slate-200 bg-white p-5 shadow-2xs">
+    <div className="border-outline-variant space-y-4 rounded-lg border bg-white p-5 shadow-2xs">
       <div>
-        <h3 className="text-base font-bold text-slate-900">Liên kết công ty bằng mã số thuế</h3>
-        <p className="mt-0.5 text-xs text-slate-500">
+        <h3 className="text-on-surface text-base font-bold">Liên kết công ty bằng mã số thuế</h3>
+        <p className="text-on-surface-variant mt-0.5 text-xs">
           Tên và địa chỉ pháp lý được lấy từ cơ quan thuế. Bạn chỉ cần nhập mã số thuế.
         </p>
       </div>
@@ -101,9 +101,9 @@ export default function TaxCodeLinkPanel({ onLink }: TaxCodeLinkPanelProps) {
               <Building2 className="h-4 w-4" />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-bold text-slate-900">{result.name}</p>
-              <p className="mt-0.5 font-mono text-xs text-slate-600">MST: {result.taxCode}</p>
-              {result.address && <p className="mt-1 text-xs text-slate-600">{result.address}</p>}
+              <p className="text-on-surface text-sm font-bold">{result.name}</p>
+              <p className="text-on-surface-variant mt-0.5 font-mono text-xs">MST: {result.taxCode}</p>
+              {result.address && <p className="text-on-surface-variant mt-1 text-xs">{result.address}</p>}
               {result.existingOnPlatform && (
                 <p className="mt-1 text-xs font-medium text-emerald-700">
                   Công ty đã có trên InterVue, bạn sẽ được thêm vào cùng công ty.

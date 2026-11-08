@@ -64,19 +64,19 @@ export default function ForgotPasswordForm({ portal = 'candidate' }: ForgotPassw
 
   return (
     <div className="w-full">
-      <p className="mb-5 text-center text-sm leading-relaxed text-slate-500">
+      <p className="text-on-surface-variant mb-5 text-center text-sm leading-relaxed">
         Enter the email you registered with to receive a secure password reset link.
       </p>
 
       {sentEmail ? (
-        <div className="space-y-4 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-6 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+        <div className="border-primary/30 space-y-4 rounded-2xl border bg-emerald-50/70 p-6 text-center">
+          <div className="bg-primary-container text-primary mx-auto flex h-12 w-12 items-center justify-center rounded-full">
             <CheckCircle2 className="h-7 w-7" />
           </div>
 
           <div>
-            <h3 className="text-base font-bold text-slate-800">Recovery link sent</h3>
-            <p className="mt-1 text-sm leading-relaxed text-slate-600">
+            <h3 className="text-on-surface text-base font-bold">Recovery link sent</h3>
+            <p className="text-on-surface-variant mt-1 text-sm leading-relaxed">
               If <strong>{sentEmail}</strong> is registered, you will receive a password reset link within a few
               minutes.
             </p>
@@ -87,7 +87,7 @@ export default function ForgotPasswordForm({ portal = 'candidate' }: ForgotPassw
               type="button"
               disabled={countdown > 0 || forgotPassword.isPending}
               onClick={handleResend}
-              className="text-sm font-semibold text-emerald-600 transition-colors enabled:cursor-pointer enabled:hover:underline disabled:cursor-not-allowed disabled:text-slate-400"
+              className="text-primary disabled:text-outline text-sm font-semibold transition-colors enabled:cursor-pointer enabled:hover:underline disabled:cursor-not-allowed"
             >
               {countdown > 0 ? `Resend in ${countdown}s` : 'Resend email'}
             </button>
@@ -120,7 +120,7 @@ export default function ForgotPasswordForm({ portal = 'candidate' }: ForgotPassw
       <div className="mt-5 text-center">
         <Link
           href={AUTH_PORTAL_ROUTES[portal].login}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 transition-colors hover:underline"
+          className="text-primary inline-flex items-center gap-1.5 text-sm font-semibold transition-colors hover:underline"
         >
           <ArrowLeft className="h-4 w-4 stroke-[2.5]" />
           <span>Back to sign in</span>

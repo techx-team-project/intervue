@@ -29,8 +29,8 @@ export default function CandidateProjectSection({ items }: CandidateProjectSecti
       renderItem={(item) => (
         <>
           <h3 className="text-navy text-base font-bold wrap-break-word">{item.name}</h3>
-          {item.role && <p className="text-sm font-semibold wrap-break-word text-slate-700">{item.role}</p>}
-          <p className="text-xs text-slate-500">
+          {item.role && <p className="text-on-surface text-sm font-semibold wrap-break-word">{item.role}</p>}
+          <p className="text-on-surface-variant text-xs">
             {formatDateRange(item.startDate, item.endDate, item.current, 'Ongoing')}
           </p>
           <CandidateItemText label="Description" text={item.description} />

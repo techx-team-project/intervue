@@ -71,7 +71,7 @@ export default function CandidateSuggestInput({
 
   return (
     <div className="relative w-full space-y-1.5">
-      <label htmlFor={inputId} className="block text-sm font-semibold text-slate-800">
+      <label htmlFor={inputId} className="text-on-surface block text-sm font-semibold">
         {label}
       </label>
       <input
@@ -98,9 +98,9 @@ export default function CandidateSuggestInput({
           onBlur?.();
         }}
         className={cn(
-          'w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-slate-800 placeholder-slate-400 transition-colors',
-          'focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none',
-          error ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500/15' : 'border-slate-300',
+          'text-on-surface w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm placeholder-slate-400 transition-colors',
+          'focus:border-primary focus:ring-2 focus:ring-emerald-600/15 focus:outline-none',
+          error ? 'border-error focus:border-error focus:ring-rose-500/15' : 'border-outline',
         )}
       />
 
@@ -109,7 +109,7 @@ export default function CandidateSuggestInput({
         role="listbox"
         aria-label="Suggestions"
         hidden={!isOpen}
-        className="absolute top-full right-0 left-0 z-20 mt-1 max-h-60 overflow-y-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg"
+        className="border-outline-variant shadow-elevation-2 absolute top-full right-0 left-0 z-20 mt-1 max-h-60 overflow-y-auto rounded-xl border bg-white p-1"
       >
         {matches.map((item, index) => (
           <li
@@ -121,8 +121,8 @@ export default function CandidateSuggestInput({
             onClick={() => pick(item)}
             onMouseEnter={() => setActiveIndex(index)}
             className={cn(
-              'cursor-pointer rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors',
-              index === activeIndex ? 'bg-emerald-50 font-semibold text-emerald-700' : 'hover:bg-emerald-50',
+              'text-on-surface cursor-pointer rounded-lg px-3 py-2 text-sm transition-colors',
+              index === activeIndex ? 'bg-primary-light text-primary font-semibold' : 'hover:bg-primary-light',
             )}
           >
             {item}
@@ -131,7 +131,7 @@ export default function CandidateSuggestInput({
       </ul>
 
       {error && (
-        <p id={errorId} role="alert" className="text-xs font-medium text-rose-500">
+        <p id={errorId} role="alert" className="text-error text-xs font-medium">
           {error}
         </p>
       )}

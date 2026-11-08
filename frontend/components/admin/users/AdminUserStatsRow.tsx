@@ -32,7 +32,7 @@ export default function AdminUserStatsRow({ stats, activeSegment, onSelectSegmen
       value: stats.total,
       caption: `${stats.candidates} candidates · ${stats.admins} admins`,
       icon: Users,
-      tone: 'bg-slate-100 text-slate-600',
+      tone: 'bg-surface-container-high text-on-surface-variant',
       segment: 'all',
     },
     {
@@ -84,14 +84,14 @@ export default function AdminUserStatsRow({ stats, activeSegment, onSelectSegmen
               <span className={cn('flex h-8 w-8 items-center justify-center rounded-full', tile.tone)}>
                 <Icon className="h-4 w-4" />
               </span>
-              <span className="text-navy dark:text-forest-50 text-xl font-black">
+              <span className="text-navy dark:text-forest-50 text-xl font-bold">
                 {tile.value.toLocaleString('en-GB')}
               </span>
             </span>
 
             <span className="mt-2 block">
-              <span className="text-navy dark:text-forest-100 block text-[12.5px] font-bold">{tile.label}</span>
-              <span className="dark:text-forest-400 mt-0.5 block truncate text-[11px] text-[#94a3b8]">
+              <span className="text-navy dark:text-forest-100 text-body-sm block font-bold">{tile.label}</span>
+              <span className="dark:text-forest-400 text-label-sm text-outline mt-0.5 block truncate">
                 {tile.caption}
               </span>
             </span>
@@ -99,9 +99,10 @@ export default function AdminUserStatsRow({ stats, activeSegment, onSelectSegmen
         );
 
         const shell = cn(
-          'dark:border-forest-800 dark:bg-forest-900 block rounded-2xl border border-[#e9eaec] bg-white p-3.5 text-left shadow-xs transition',
+          'dark:border-forest-800 dark:bg-forest-900 block rounded-2xl border border-outline-variant bg-white p-3.5 text-left shadow-xs transition',
           isActive && 'border-primary/50 ring-primary/15 ring-2',
-          isClickable && 'dark:hover:bg-forest-850/40 cursor-pointer hover:border-[#cbd5e1] hover:bg-[#f8fafc]',
+          isClickable &&
+            'dark:hover:bg-forest-850/40 cursor-pointer hover:border-outline-variant hover:bg-surface-container-low',
         );
 
         if (!isClickable) {

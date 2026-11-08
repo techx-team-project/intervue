@@ -88,7 +88,7 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
     >
       <div className="space-y-4">
         <fieldset>
-          <legend className="text-[13px] font-semibold text-slate-700">Reason</legend>
+          <legend className="text-body-md text-on-surface font-semibold">Reason</legend>
 
           <div className="mt-2 space-y-1.5">
             {RESTRICTION_REASON_PRESETS[kind].map((preset) => (
@@ -97,10 +97,10 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
                 type="button"
                 onClick={() => selectReason(preset)}
                 className={cn(
-                  'flex w-full cursor-pointer items-center rounded-lg border px-3 py-2 text-left text-[13px] transition-colors',
+                  'text-body-md flex w-full cursor-pointer items-center rounded-lg border px-3 py-2 text-left transition-colors',
                   !isCustomReason && reason === preset
                     ? 'border-rose-300 bg-rose-50 font-semibold text-rose-800'
-                    : 'border-slate-200 text-slate-700 hover:bg-slate-50',
+                    : 'border-outline-variant text-on-surface hover:bg-surface-container-low',
                 )}
               >
                 {preset}
@@ -114,10 +114,10 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
                 setValue('reason', '', { shouldValidate: false });
               }}
               className={cn(
-                'flex w-full cursor-pointer items-center rounded-lg border px-3 py-2 text-left text-[13px] transition-colors',
+                'text-body-md flex w-full cursor-pointer items-center rounded-lg border px-3 py-2 text-left transition-colors',
                 isCustomReason
                   ? 'border-rose-300 bg-rose-50 font-semibold text-rose-800'
-                  : 'border-slate-200 text-slate-700 hover:bg-slate-50',
+                  : 'border-outline-variant text-on-surface hover:bg-surface-container-low',
               )}
             >
               Write another reason
@@ -141,8 +141,8 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
         </fieldset>
 
         <div>
-          <label htmlFor="admin-restrict-detail" className="text-[13px] font-semibold text-slate-700">
-            Note for the user <span className="font-normal text-slate-400">(optional)</span>
+          <label htmlFor="admin-restrict-detail" className="text-body-md text-on-surface font-semibold">
+            Note for the user <span className="text-outline font-normal">(optional)</span>
           </label>
           <Textarea
             id="admin-restrict-detail"
@@ -157,11 +157,11 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
         </div>
 
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-3.5">
-          <p className="flex items-center gap-2 text-[12.5px] font-bold text-amber-900">
+          <p className="text-body-sm flex items-center gap-2 font-bold text-amber-900">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             What this ban does
           </p>
-          <ul className="mt-2 space-y-1 text-[12.5px] text-amber-800">
+          <ul className="text-body-sm mt-2 space-y-1 text-amber-800">
             {consequences.map((consequence) => (
               <li key={consequence} className="flex gap-2">
                 <span aria-hidden>•</span>
@@ -171,15 +171,15 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
           </ul>
         </div>
 
-        <label className="flex cursor-pointer items-start gap-2.5 text-[13px] text-slate-700">
+        <label className="text-body-md text-on-surface flex cursor-pointer items-start gap-2.5">
           <input
             type="checkbox"
             {...register('isTemporary')}
-            className="accent-primary mt-0.5 h-4 w-4 cursor-pointer rounded border-slate-300"
+            className="accent-primary border-outline mt-0.5 h-4 w-4 cursor-pointer rounded"
           />
           <span>
             Lift automatically on a date
-            <span className="mt-0.5 block text-[11.5px] text-slate-500">
+            <span className="text-label-sm text-on-surface-variant mt-0.5 block">
               Leave off to keep it in place until an admin lifts it by hand.
             </span>
           </span>
@@ -189,16 +189,16 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
           <Input type="date" label="Lifts on" error={formState.errors.expiresAt?.message} {...register('expiresAt')} />
         )}
 
-        <label className="flex cursor-pointer items-center gap-2.5 text-[13px] text-slate-700">
+        <label className="text-body-md text-on-surface flex cursor-pointer items-center gap-2.5">
           <input
             type="checkbox"
             {...register('notifyUser')}
-            className="accent-primary h-4 w-4 cursor-pointer rounded border-slate-300"
+            className="accent-primary border-outline h-4 w-4 cursor-pointer rounded"
           />
           Email the user the reason
         </label>
 
-        <p className="flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+        <p className="bg-surface-container-low text-on-surface-variant flex items-start gap-2 rounded-lg px-3 py-2 text-xs">
           <ScrollText className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           Recorded against your admin account with a timestamp. {meta.liftVerb} is recorded too — neither entry can be
           deleted.

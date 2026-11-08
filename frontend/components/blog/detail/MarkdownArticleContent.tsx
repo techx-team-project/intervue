@@ -139,7 +139,7 @@ export default function MarkdownArticleContent({ content }: MarkdownArticleConte
   if (isHtml) {
     return (
       <div
-        className="prose prose-slate max-w-none text-sm leading-relaxed text-slate-800 sm:text-base sm:leading-relaxed [&_a]:font-semibold [&_a]:text-emerald-600 [&_a]:underline hover:[&_a]:text-emerald-800 [&_blockquote]:my-5 [&_blockquote]:rounded-r-2xl [&_blockquote]:border-l-4 [&_blockquote]:border-emerald-500 [&_blockquote]:bg-emerald-50/50 [&_blockquote]:p-4 [&_blockquote]:text-emerald-950 [&_blockquote]:italic [&_code]:rounded-md [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs [&_code]:text-emerald-700 [&_em]:text-slate-800 [&_em]:italic [&_h2]:mt-6 [&_h2]:mb-3 [&_h2]:border-b [&_h2]:border-slate-100 [&_h2]:pt-6 [&_h2]:pb-2 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-slate-900 sm:[&_h2]:text-2xl [&_h3]:mt-4 [&_h3]:mb-2 [&_h3]:pt-4 [&_h3]:pb-1 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-slate-800 sm:[&_h3]:text-xl [&_hr]:my-6 [&_hr]:border-slate-200 [&_li]:text-slate-700 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:space-y-1.5 [&_ol]:pl-6 [&_p]:mb-4 [&_p]:leading-relaxed [&_p]:text-slate-700 [&_pre]:my-4 [&_pre]:rounded-xl [&_pre]:bg-slate-900 [&_pre]:p-4 [&_pre]:text-slate-100 [&_strong]:font-bold [&_strong]:text-slate-900 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:space-y-1.5 [&_ul]:pl-6"
+        className="prose prose-slate text-on-surface [&_a]:text-primary hover:[&_a]:text-on-primary-container [&_blockquote]:border-primary [&_code]:bg-surface-container-high [&_code]:text-primary [&_em]:text-on-surface [&_h2]:border-outline-variant [&_h2]:text-on-surface [&_h3]:text-on-surface [&_hr]:border-outline-variant [&_li]:text-on-surface [&_p]:text-on-surface [&_strong]:text-on-surface max-w-none text-sm leading-relaxed sm:text-base sm:leading-relaxed [&_a]:font-semibold [&_a]:underline [&_blockquote]:my-5 [&_blockquote]:rounded-r-2xl [&_blockquote]:border-l-4 [&_blockquote]:bg-emerald-50/50 [&_blockquote]:p-4 [&_blockquote]:text-emerald-950 [&_blockquote]:italic [&_code]:rounded-md [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs [&_em]:italic [&_h2]:mt-6 [&_h2]:mb-3 [&_h2]:border-b [&_h2]:pt-6 [&_h2]:pb-2 [&_h2]:text-xl [&_h2]:font-bold sm:[&_h2]:text-2xl [&_h3]:mt-4 [&_h3]:mb-2 [&_h3]:pt-4 [&_h3]:pb-1 [&_h3]:text-lg [&_h3]:font-bold sm:[&_h3]:text-xl [&_hr]:my-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:space-y-1.5 [&_ol]:pl-6 [&_p]:mb-4 [&_p]:leading-relaxed [&_pre]:my-4 [&_pre]:rounded-xl [&_pre]:bg-slate-900 [&_pre]:p-4 [&_pre]:text-slate-100 [&_strong]:font-bold [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:space-y-1.5 [&_ul]:pl-6"
         dangerouslySetInnerHTML={{ __html: enhancedHtml }}
       />
     );
@@ -153,7 +153,7 @@ export default function MarkdownArticleContent({ content }: MarkdownArticleConte
             <h2
               key={idx}
               id={block.id}
-              className="scroll-mt-28 border-b border-gray-100 pt-6 pb-2 text-xl font-bold text-[#171717] sm:text-2xl"
+              className="text-on-surface scroll-mt-28 border-b border-gray-100 pt-6 pb-2 text-xl font-bold sm:text-2xl"
             >
               {block.title}
             </h2>
@@ -162,7 +162,7 @@ export default function MarkdownArticleContent({ content }: MarkdownArticleConte
 
         if (block.type === 'h3') {
           return (
-            <h3 key={idx} id={block.id} className="scroll-mt-28 pt-3 text-lg font-bold text-[#1e293b]">
+            <h3 key={idx} id={block.id} className="text-on-surface scroll-mt-28 pt-3 text-lg font-bold">
               {block.title}
             </h3>
           );
@@ -192,10 +192,10 @@ export default function MarkdownArticleContent({ content }: MarkdownArticleConte
 
         if (block.type === 'list') {
           return (
-            <ul key={idx} className="space-y-2.5 pl-2 text-sm leading-relaxed text-[#334155] sm:text-base">
+            <ul key={idx} className="text-on-surface-variant space-y-2.5 pl-2 text-sm leading-relaxed sm:text-base">
               {block.items.map((item, itemIdx) => (
                 <li key={itemIdx} className="flex items-start gap-2.5">
-                  <span className="text-primary mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
+                  <span className="text-primary bg-primary mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -204,7 +204,7 @@ export default function MarkdownArticleContent({ content }: MarkdownArticleConte
         }
 
         return (
-          <p key={idx} className="text-sm leading-relaxed text-[#334155] sm:text-base sm:leading-relaxed">
+          <p key={idx} className="text-on-surface-variant text-sm leading-relaxed sm:text-base sm:leading-relaxed">
             {block.text}
           </p>
         );

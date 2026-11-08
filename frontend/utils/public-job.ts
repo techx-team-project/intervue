@@ -12,7 +12,7 @@ export function daysLeft(deadline?: string): number | null {
 export function deadlineLabel(deadline?: string): string {
   const left = daysLeft(deadline);
   if (left === null) return '';
-  return left === 0 ? 'Hết hạn hôm nay' : `Còn ${left} ngày`;
+  return left === 0 ? 'Expires today' : `${left} days left`;
 }
 
 export function jobFacts(

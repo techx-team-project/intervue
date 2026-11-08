@@ -52,7 +52,7 @@ function renderInline(text: string, keyPrefix: string) {
     const key = `${keyPrefix}-${index}`;
     if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
       return (
-        <strong key={key} className="dark:text-forest-50 font-bold text-slate-900">
+        <strong key={key} className="dark:text-forest-50 text-on-surface font-bold">
           {part.slice(2, -2)}
         </strong>
       );
@@ -69,16 +69,16 @@ export default function NotificationMarkdown({ content }: NotificationMarkdownPr
       {blocks.map((block, index) => {
         if (block.kind === 'heading') {
           return (
-            <h3 key={index} className="dark:text-forest-50 text-sm font-bold text-slate-900 sm:text-base">
+            <h3 key={index} className="dark:text-forest-50 text-on-surface text-sm font-bold sm:text-base">
               {block.text}
             </h3>
           );
         }
         if (block.kind === 'list') {
           return (
-            <ul key={index} className="list-disc space-y-1.5 pl-5 marker:text-[#00b14f]">
+            <ul key={index} className="marker:text-primary list-disc space-y-1.5 pl-5">
               {block.items.map((item, itemIndex) => (
-                <li key={itemIndex} className="dark:text-forest-200 leading-relaxed text-slate-700">
+                <li key={itemIndex} className="dark:text-forest-200 text-on-surface leading-relaxed">
                   {renderInline(item, `${index}-${itemIndex}`)}
                 </li>
               ))}
@@ -86,7 +86,7 @@ export default function NotificationMarkdown({ content }: NotificationMarkdownPr
           );
         }
         return (
-          <p key={index} className="dark:text-forest-200 leading-relaxed text-slate-700">
+          <p key={index} className="dark:text-forest-200 text-on-surface leading-relaxed">
             {renderInline(block.text, String(index))}
           </p>
         );

@@ -49,13 +49,13 @@ export default function AdminUserRolesTab({
             <button
               type="button"
               onClick={() => setIsGranting(true)}
-              className="bg-primary hover:bg-primary-hover inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 text-[12.5px] font-bold text-white transition-colors"
+              className="bg-primary hover:bg-primary-hover text-body-sm inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 font-bold text-white transition-colors"
             >
               <Plus className="h-3.5 w-3.5" />
               Grant role
             </button>
           ) : (
-            <span className="dark:text-forest-400 text-[11.5px] text-[#94a3b8]">Every role is already active</span>
+            <span className="dark:text-forest-400 text-label-sm text-outline">Every role is already active</span>
           )
         }
       >
@@ -70,7 +70,7 @@ export default function AdminUserRolesTab({
                   <span className="flex items-center gap-2">
                     <span
                       className={cn(
-                        'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10.5px] font-bold tracking-wide uppercase ring-1 ring-inset',
+                        'text-label-sm inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 font-bold tracking-wide uppercase ring-1 ring-inset',
                         USER_ROLE_META[grant.role].chipClassName,
                         !active && 'opacity-50',
                       )}
@@ -78,17 +78,17 @@ export default function AdminUserRolesTab({
                       {USER_ROLE_META[grant.role].label}
                     </span>
 
-                    {!active && <span className="text-[11px] font-bold text-[#94a3b8] uppercase">Expired</span>}
+                    {!active && <span className="text-label-sm text-outline font-bold uppercase">Expired</span>}
 
                     {active && grant.expiresAt && (
-                      <span className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-amber-700">
+                      <span className="text-label-sm inline-flex items-center gap-1 font-semibold text-amber-700">
                         <Timer className="h-3 w-3" />
                         Until {formatDate(grant.expiresAt)}
                       </span>
                     )}
                   </span>
 
-                  <p className="dark:text-forest-300 mt-1 text-[11.5px] text-[#64748b]">
+                  <p className="dark:text-forest-300 text-label-sm text-on-surface-variant mt-1">
                     Granted by {grantSource(grant)} · {formatDate(grant.grantedAt)}
                   </p>
                 </div>
@@ -96,7 +96,7 @@ export default function AdminUserRolesTab({
                 {blocked ? (
                   <span
                     title={blocked}
-                    className="dark:text-forest-400 inline-flex shrink-0 cursor-not-allowed items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-bold text-slate-400"
+                    className="dark:text-forest-400 text-body-sm text-outline inline-flex shrink-0 cursor-not-allowed items-center gap-1.5 rounded-full px-3 py-1.5 font-bold"
                   >
                     <UserMinus className="h-3.5 w-3.5" />
                     Revoke
@@ -105,7 +105,7 @@ export default function AdminUserRolesTab({
                   <button
                     type="button"
                     onClick={() => onRevoke(grant.role)}
-                    className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1.5 text-[12px] font-bold text-rose-700 transition-colors hover:bg-rose-100 dark:bg-rose-500/10"
+                    className="text-body-sm inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1.5 font-bold text-rose-700 transition-colors hover:bg-rose-100 dark:bg-rose-500/10"
                   >
                     <UserMinus className="h-3.5 w-3.5" />
                     Revoke

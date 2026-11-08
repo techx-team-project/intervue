@@ -122,14 +122,16 @@ export default function JobPostsListView() {
           </Button>
         </div>
       ) : jobs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center shadow-xs">
+        <div className="border-outline-variant flex flex-col items-center justify-center gap-3 rounded-2xl border bg-white px-6 py-16 text-center shadow-xs">
           {isFiltered ? (
             <>
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+              <div className="bg-surface-container-high text-outline flex h-14 w-14 items-center justify-center rounded-2xl">
                 <SearchX className="h-7 w-7" />
               </div>
               <h3 className="text-navy text-base font-bold">Không tìm thấy tin phù hợp</h3>
-              <p className="max-w-md text-xs text-slate-500">Thử đổi từ khóa tìm kiếm hoặc chuyển sang nhóm khác.</p>
+              <p className="text-on-surface-variant max-w-md text-xs">
+                Thử đổi từ khóa tìm kiếm hoặc chuyển sang nhóm khác.
+              </p>
               <Button
                 variant="outline"
                 size="sm"
@@ -148,7 +150,7 @@ export default function JobPostsListView() {
                 <FilePlus className="h-7 w-7" />
               </div>
               <h3 className="text-navy text-base font-bold">Bạn chưa có tin tuyển dụng nào</h3>
-              <p className="max-w-md text-xs text-slate-500">
+              <p className="text-on-surface-variant max-w-md text-xs">
                 Đăng tin đầu tiên để bắt đầu tiếp cận ứng viên IT chất lượng trên InterVue.
               </p>
               <Link href={ROUTES.RECRUITER_JOBS_CREATE} className="mt-2">
@@ -168,7 +170,7 @@ export default function JobPostsListView() {
             isAllSelected={isAllSelected}
             onConfirm={setConfirm}
           />
-          <div className="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-xs sm:p-4">
+          <div className="border-outline-variant rounded-2xl border bg-white p-3.5 shadow-xs sm:p-4">
             <Pagination
               page={page}
               pageCount={pageCount}
@@ -214,7 +216,7 @@ export default function JobPostsListView() {
           </div>
         }
       >
-        <p className="text-sm text-slate-600">{confirm?.message}</p>
+        <p className="text-on-surface-variant text-sm">{confirm?.message}</p>
       </Modal>
     </div>
   );

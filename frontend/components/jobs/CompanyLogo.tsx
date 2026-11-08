@@ -11,7 +11,7 @@ export default function CompanyLogo({ name, src, className }: CompanyLogoProps) 
   return (
     <div
       className={cn(
-        'flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white',
+        'border-outline-variant flex shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-white',
         className ?? 'h-14 w-14',
       )}
     >
@@ -19,7 +19,7 @@ export default function CompanyLogo({ name, src, className }: CompanyLogoProps) 
         // eslint-disable-next-line @next/next/no-img-element
         <img src={src} alt={name} className="h-full w-full object-contain p-1.5" loading="lazy" />
       ) : (
-        <Building2 className="h-1/2 w-1/2 text-slate-300" aria-hidden />
+        <Building2 className="text-outline h-1/2 w-1/2" aria-hidden />
       )}
     </div>
   );

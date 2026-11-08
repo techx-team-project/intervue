@@ -180,7 +180,7 @@ export default function JobPostPreviewPageView({ initialJob }: JobPostPreviewPag
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f4f5f5]" onClickCapture={handlePreviewClickCapture}>
+    <div className="bg-surface-container-low flex min-h-screen flex-col" onClickCapture={handlePreviewClickCapture}>
       {/* 1. Sticky Recruiter Preview Mode Banner */}
       <div
         id="recruiter-preview-banner"

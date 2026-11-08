@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import { Search, ChevronRight, Compass, TrendingUp } from 'lucide-react';
+import PageHero from '@/components/common/PageHero';
 import { CAREER_ORIENTATION_MESSAGES } from '@/constants/career-orientation';
+import { cn } from '@/lib/utils';
+import { Search, X } from 'lucide-react';
 
 interface CareerHeroSearchProps {
   searchQuery: string;
@@ -31,77 +31,59 @@ export default function CareerHeroSearch({
   } = CAREER_ORIENTATION_MESSAGES.hero;
 
   return (
-    <div className="from-primary/10 relative overflow-hidden border-b border-[#e9eaec] bg-linear-to-b via-[#f4fbf7] to-white py-10 lg:py-14">
-      <div className="bg-primary/15 pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full blur-3xl" />
-      <div className="pointer-events-none absolute top-1/2 -right-20 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <nav className="mb-4 flex items-center gap-1.5 text-xs text-[#7f878f]">
-          <Link href="/" className="hover:text-primary transition-colors">
-            {breadcrumbHome}
-          </Link>
-          <ChevronRight className="h-3 w-3" />
-          <span className="text-navy font-medium">{breadcrumbHandbook}</span>
-          <ChevronRight className="h-3 w-3" />
-          <span className="text-primary font-semibold">{breadcrumbCurrent}</span>
-        </nav>
-
-        <div className="max-w-3xl">
-          <div className="bg-primary/10 text-primary mb-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-semibold">
-            <Compass className="h-3.5 w-3.5" />
-            <span>{badge}</span>
-          </div>
-
-          <h1 className="text-3xl font-extrabold tracking-tight text-[#171717] sm:text-4xl lg:text-5xl">{title}</h1>
-          <p className="mt-3 text-base leading-relaxed text-[#526475] sm:text-lg">{description}</p>
+    <PageHero
+      id="career-hero-title"
+      eyebrow={badge}
+      title={title}
+      description={description}
+      crumbs={[{ label: breadcrumbHome, href: '/' }, { label: breadcrumbHandbook }, { label: breadcrumbCurrent }]}
+    >
+      <div className="max-w-2xl">
+        <div className="bg-surface shadow-float relative flex h-14 items-center rounded-full">
+          <Search className="text-on-surface-variant absolute left-5 h-5 w-5" aria-hidden />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(event) => onSearchChange(event.target.value)}
+            placeholder={searchPlaceholder}
+            aria-label={searchPlaceholder}
+            className="text-body-lg text-on-surface placeholder:text-on-surface-variant h-full w-full rounded-full bg-transparent pr-12 pl-13 outline-none"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              aria-label="Clear keyword"
+              onClick={() => onSearchChange('')}
+              className="state-layer text-on-surface-variant absolute right-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full"
+            >
+              <X className="h-4 w-4" aria-hidden />
+            </button>
+          )}
         </div>
 
-        <div className="mt-8 max-w-2xl">
-          <div className="relative flex items-center">
-            <Search className="absolute left-4 h-5 w-5 text-[#9ca3af]" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => onSearchChange(e.target.value)}
-              placeholder={searchPlaceholder}
-              className="focus:border-primary focus:ring-primary/20 w-full rounded-2xl border border-[#d1d5db] bg-white py-3.5 pr-10 pl-12 text-sm text-[#171717] shadow-sm transition placeholder:text-[#9ca3af] focus:ring-2 focus:outline-none"
-            />
-            {searchQuery && (
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="text-label-lg text-white/60">{trendingLabel}</span>
+          {trendingTags.map((tag) => {
+            const isSelected = selectedTag === tag;
+            return (
               <button
+                key={tag}
                 type="button"
-                onClick={() => onSearchChange('')}
-                className="absolute right-3.5 rounded-full p-1 text-xs text-[#9ca3af] hover:bg-gray-100 hover:text-gray-700"
+                aria-pressed={isSelected}
+                onClick={() => onSelectTag(isSelected ? null : tag)}
+                className={cn(
+                  'text-label-lg ease-standard cursor-pointer rounded-full border px-3.5 py-1.5 transition-colors duration-150',
+                  isSelected
+                    ? 'text-primary-deeper border-white bg-white'
+                    : 'hover:text-primary-deeper border-white/20 text-white/90 hover:border-white hover:bg-white',
+                )}
               >
-                ✕
+                {tag}
               </button>
-            )}
-          </div>
-
-          <div className="mt-3.5 flex flex-wrap items-center gap-2 text-xs">
-            <span className="flex items-center gap-1 font-medium text-[#7f878f]">
-              <TrendingUp className="text-primary h-3.5 w-3.5" />
-              {trendingLabel}
-            </span>
-            {trendingTags.map((tag) => {
-              const isSelected = selectedTag === tag;
-              return (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => onSelectTag(isSelected ? null : tag)}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-                    isSelected
-                      ? 'bg-primary text-white shadow-sm'
-                      : 'hover:border-primary hover:text-primary border border-[#e5e7eb] bg-white text-[#4b5563]'
-                  }`}
-                >
-                  {tag}
-                </button>
-              );
-            })}
-          </div>
+            );
+          })}
         </div>
       </div>
-    </div>
+    </PageHero>
   );
 }

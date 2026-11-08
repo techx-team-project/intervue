@@ -17,7 +17,7 @@ export interface MascotSkeletonProps {
 }
 
 export function MascotSkeleton({
-  message = 'Đang tải dữ liệu...',
+  message = 'Loading data...',
   size = 95,
   shape = 'square',
   state = 'working',

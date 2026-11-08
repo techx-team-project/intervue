@@ -54,8 +54,8 @@ export default function PhoneCodeStep({ portal, phone, cooldown, onCooldown, onB
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-4">
       <FormErrorAlert message={errors.root?.message} />
-      <p className="text-sm text-slate-600">
-        Enter the 6-digit code we sent to <span className="font-semibold text-slate-800">{phone}</span>.
+      <p className="text-on-surface-variant text-sm">
+        Enter the 6-digit code we sent to <span className="text-on-surface font-semibold">{phone}</span>.
       </p>
       <Input
         label="Verification code"
@@ -70,7 +70,7 @@ export default function PhoneCodeStep({ portal, phone, cooldown, onCooldown, onB
         type="button"
         disabled={cooldown > 0 || resendOtp.isPending}
         onClick={resend}
-        className="text-primary cursor-pointer text-xs font-semibold hover:underline disabled:cursor-not-allowed disabled:text-slate-400 disabled:no-underline"
+        className="text-primary disabled:text-outline cursor-pointer text-xs font-semibold hover:underline disabled:cursor-not-allowed disabled:no-underline"
       >
         {cooldown > 0 ? `Resend code in ${cooldown}s` : 'Resend code'}
       </button>

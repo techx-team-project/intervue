@@ -193,7 +193,7 @@ export default function AdminUserDetailView({ detail, allUsers, currentAdminId }
         onRevokeSessions={() => requestConfirm('revokeSessions', [user])}
       />
 
-      <div className="dark:border-forest-800 -mx-1 overflow-x-auto border-b border-[#e9eaec] px-1">
+      <div className="dark:border-forest-800 border-outline-variant -mx-1 overflow-x-auto border-b px-1">
         <div role="tablist" aria-label="Account sections" className="flex min-w-max items-center gap-1">
           {TABS.map((tab) => {
             const isActive = tab.id === activeTab;
@@ -206,10 +206,10 @@ export default function AdminUserDetailView({ detail, allUsers, currentAdminId }
                 aria-selected={isActive}
                 onClick={() => selectTab(tab.id)}
                 className={cn(
-                  'relative cursor-pointer px-3 py-2.5 text-[13px] font-bold whitespace-nowrap transition-colors',
+                  'text-body-md relative cursor-pointer px-3 py-2.5 font-bold whitespace-nowrap transition-colors',
                   isActive
                     ? 'text-primary'
-                    : 'dark:text-forest-300 dark:hover:text-forest-100 text-[#64748b] hover:text-[#334155]',
+                    : 'dark:text-forest-300 dark:hover:text-forest-100 text-on-surface-variant hover:text-on-surface-variant',
                 )}
               >
                 {tab.label}

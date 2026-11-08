@@ -9,3 +9,5 @@ export const ROLES = {
   RECRUITER: 'RECRUITER',
   ADMIN: 'ADMIN',
 } as const;
+
+export const OAUTH_REDIRECT_STORAGE_KEY = 'oauth_post_login_redirect';

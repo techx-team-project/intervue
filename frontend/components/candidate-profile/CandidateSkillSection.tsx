@@ -30,10 +30,10 @@ export default function CandidateSkillSection({ items }: CandidateSkillSectionPr
       renderItem={(item) => (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <h3 className="text-navy text-base font-bold wrap-break-word">{item.name}</h3>
-          <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-600">
+          <span className="bg-surface-container-high text-on-surface-variant rounded-full px-2.5 py-0.5 text-xs font-semibold">
             {optionLabel(SKILL_CATEGORY_OPTIONS, item.category)}
           </span>
-          <span className="text-xs text-slate-500">
+          <span className="text-on-surface-variant text-xs">
             {optionLabel(SKILL_LEVEL_OPTIONS, item.level)} | {formatYears(item.years)}
           </span>
         </div>

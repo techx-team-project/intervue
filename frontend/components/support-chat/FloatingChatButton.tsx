@@ -51,7 +51,7 @@ export function FloatingChatButton({ isOpen, onToggle, remainingQuota, robotStat
             transform: 'translate3d(0, 0, 0)',
             contain: 'layout paint',
           }}
-          title={isOpen ? 'Nhấp để đóng khung chat trợ lý AI' : 'Nhấp để mở khung chat cùng InterVue Bot'}
+          title={isOpen ? 'Click to close the AI assistant chat' : 'Click to chat with InterVue Bot'}
         >
           <DynamicRobotHead
             shape={FIXED_SHAPE}

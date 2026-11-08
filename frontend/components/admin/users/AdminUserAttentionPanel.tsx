@@ -18,11 +18,11 @@ const TONE_CLASS: Record<AdminUserAttentionItem['tone'], string> = {
 export default function AdminUserAttentionPanel({ items, onSelectSegment }: AdminUserAttentionPanelProps) {
   if (items.length === 0) {
     return (
-      <div className="dark:border-forest-800 dark:bg-forest-900 flex items-center gap-3 rounded-2xl border border-[#e9eaec] bg-white p-3.5 shadow-xs">
+      <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex items-center gap-3 rounded-2xl border bg-white p-3.5 shadow-xs">
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
           <CheckCircle2 className="h-4 w-4" />
         </span>
-        <p className="dark:text-forest-200 text-[12.5px] text-[#475569]">
+        <p className="dark:text-forest-200 text-body-sm text-on-surface-variant">
           Nothing needs attention on these accounts right now.
         </p>
       </div>
@@ -30,11 +30,11 @@ export default function AdminUserAttentionPanel({ items, onSelectSegment }: Admi
   }
 
   return (
-    <section className="dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-[#e9eaec] bg-white p-3.5 shadow-xs">
+    <section className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white p-3.5 shadow-xs">
       <header className="flex items-center gap-2">
         <TriangleAlert className="h-4 w-4 shrink-0 text-amber-600" />
-        <h2 className="text-navy dark:text-forest-50 text-[13px] font-bold">Needs attention</h2>
-        <span className="dark:text-forest-400 text-[11.5px] text-[#94a3b8]">counted from the accounts below</span>
+        <h2 className="text-navy dark:text-forest-50 text-body-md font-bold">Needs attention</h2>
+        <span className="dark:text-forest-400 text-label-sm text-outline">counted from the accounts below</span>
       </header>
 
       <ul className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -43,19 +43,21 @@ export default function AdminUserAttentionPanel({ items, onSelectSegment }: Admi
             <>
               <span
                 className={cn(
-                  'flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full px-1.5 text-[11.5px] font-black ring-1 ring-inset',
+                  'text-label-sm flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full px-1.5 font-bold ring-1 ring-inset',
                   TONE_CLASS[item.tone],
                 )}
               >
                 {item.count}
               </span>
-              <span className="dark:text-forest-200 min-w-0 flex-1 text-[12.5px] text-[#475569]">{item.label}</span>
-              {item.segment && <ArrowRight className="h-3.5 w-3.5 shrink-0 text-[#cbd5e1]" />}
+              <span className="dark:text-forest-200 text-body-sm text-on-surface-variant min-w-0 flex-1">
+                {item.label}
+              </span>
+              {item.segment && <ArrowRight className="text-outline h-3.5 w-3.5 shrink-0" />}
             </>
           );
 
           const shell =
-            'dark:border-forest-800 flex items-center gap-2.5 rounded-xl border border-[#f1f5f9] px-3 py-2.5 text-left';
+            'dark:border-forest-800 flex items-center gap-2.5 rounded-xl border border-outline-variant px-3 py-2.5 text-left';
 
           if (!item.segment) {
             return (
@@ -70,7 +72,10 @@ export default function AdminUserAttentionPanel({ items, onSelectSegment }: Admi
               <button
                 type="button"
                 onClick={() => onSelectSegment(item.segment as AdminUserSegment)}
-                className={cn(shell, 'dark:hover:bg-forest-850/40 w-full cursor-pointer transition hover:bg-[#f8fafc]')}
+                className={cn(
+                  shell,
+                  'dark:hover:bg-forest-850/40 hover:bg-surface-container-low w-full cursor-pointer transition',
+                )}
               >
                 {body}
               </button>

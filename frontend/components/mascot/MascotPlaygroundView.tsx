@@ -36,84 +36,84 @@ interface StateInfo {
 const ALL_STATES: StateInfo[] = [
   {
     state: 'idle',
-    title: 'Chờ Đợi',
+    title: 'Idle',
     badge: 'Idle',
     icon: Eye,
     accentColor: 'text-emerald-500',
-    ledEffect: 'Mắt LED trắng xanh chớp theo chu kỳ, liếc nhìn xung quanh',
-    dialogue: 'Chào bạn! Mình là InterVue AI, tải CV lên hoặc chọn việc làm để bắt đầu nhé!',
+    ledEffect: 'White-blue LED eyes blink periodically and glance around',
+    dialogue: 'Hi! I am InterVue AI. Upload your CV or pick a job to get started!',
   },
   {
     state: 'working',
-    title: 'Đang Xử Lý',
+    title: 'Processing',
     badge: 'Working',
     icon: Activity,
     accentColor: 'text-blue-500',
-    ledEffect: 'Thanh tiến trình chạy ngang màn hình LED, đầu gật gù liên tục',
-    dialogue: 'Đang bóc tách dữ liệu học vấn, kinh nghiệm và kỹ năng từ file CV của bạn...',
+    ledEffect: 'A progress bar runs across the LED screen while the head keeps nodding',
+    dialogue: 'Extracting education, experience and skills data from your CV file...',
   },
   {
     state: 'thinking',
-    title: 'Đánh Giá',
+    title: 'Evaluating',
     badge: 'Thinking',
     icon: Sparkles,
     accentColor: 'text-amber-500',
-    ledEffect: '3 dấu chấm tròn nhấp nháy suy nghĩ, mắt ngước lên trên',
-    dialogue: 'Đang phân tích độ tương thích giữa hồ sơ và tiêu chuẩn tuyển dụng ATS...',
+    ledEffect: '3 dots blink as if thinking, eyes looking up',
+    dialogue: 'Analyzing how well your profile matches ATS hiring standards...',
   },
   {
     state: 'searching',
-    title: 'Tìm Việc',
+    title: 'Job search',
     badge: 'Searching',
     icon: Search,
     accentColor: 'text-teal-500',
-    ledEffect: 'Vệt sáng radar quét màn hình liên tục, mắt đảo nhanh',
-    dialogue: 'Đang quét toàn bộ hệ thống việc làm để tìm cơ hội đãi ngộ tốt nhất...',
+    ledEffect: 'A radar sweep scans the screen continuously, eyes dart quickly',
+    dialogue: 'Scanning the whole job system for the best opportunities...',
   },
   {
     state: 'listening',
-    title: 'Lắng Nghe',
+    title: 'Listening',
     badge: 'Listening',
     icon: Mic,
     accentColor: 'text-violet-500',
-    ledEffect: 'Cột sóng âm thanh Equalizer nhảy nhấp nhô theo giọng nói',
-    dialogue: 'Mình đang lắng nghe câu trả lời của bạn, hãy trình bày thật tự tin nhé...',
+    ledEffect: 'An equalizer sound-wave bar bounces with the voice',
+    dialogue: 'I am listening to your answer. Please present it with confidence...',
   },
   {
     state: 'speaking',
-    title: 'Phỏng Vấn',
+    title: 'Interview',
     badge: 'Speaking',
     icon: Volume2,
     accentColor: 'text-indigo-500',
-    ledEffect: 'Khuôn miệng mở - đóng nhịp nhàng theo câu nói',
-    dialogue: 'Hãy nêu một thử thách lớn nhất trong dự án gần đây và cách bạn giải quyết nó.',
+    ledEffect: 'The mouth opens and closes in rhythm with the speech',
+    dialogue: 'Describe the biggest challenge in your recent project and how you solved it.',
   },
   {
     state: 'happy',
-    title: 'Ăn Mừng',
+    title: 'Celebrating',
     badge: 'Happy',
     icon: CheckCircle2,
     accentColor: 'text-emerald-600',
-    ledEffect: 'Mắt cười cong ^ ^ cùng nụ cười rạng rỡ, nhảy tưng bừng 360°',
-    dialogue: 'Tuyệt vời quá! Hồ sơ của bạn đã hoàn tất xuất sắc. Chúc bạn may mắn!',
+    ledEffect: 'Smiling ^ ^ eyes with a bright grin, jumping 360° with joy',
+    dialogue: 'Wonderful! Your profile is complete. Good luck!',
   },
   {
     state: 'error',
-    title: 'Báo Lỗi',
+    title: 'Error',
     badge: 'Error',
     icon: AlertTriangle,
     accentColor: 'text-rose-500',
-    ledEffect: 'Mắt chữ X X đỏ rực và miệng zic-zac, đầu lắc từ chối',
-    dialogue: 'Tệp CV không đúng định dạng. Bạn vui lòng tải file PDF dưới 5MB nhé!',
+    ledEffect: 'Bright red X X eyes and a zigzag mouth, head shaking in refusal',
+    dialogue: 'The CV file has the wrong format. Please upload a PDF under 5MB!',
   },
   {
     state: 'sleeping',
-    title: 'Nghỉ Ngơi',
+    title: 'Resting',
     badge: 'Sleeping',
     icon: Moon,
     accentColor: 'text-slate-400',
-    ledEffect: 'Mắt nhắm và chữ Z Z Z bay lên cao, đầu gục xuống thở chậm',
-    dialogue: 'Trợ lý AI đang tạm chợp mắt. Nhấp vào mình nếu bạn cần hỗ trợ tiếp nhé!',
+    ledEffect: 'Eyes closed with Z Z Z floating up, head drooping with slow breathing',
+    dialogue: 'The AI assistant is taking a short nap. Click me if you need more help!',
   },
 ];
 
@@ -167,11 +167,11 @@ export default function MascotPlaygroundView() {
       <div className="mx-auto max-w-7xl space-y-6 px-4 pt-10 sm:pt-4">
         <div className="text-center">
           <h1 className="mt-3.5 text-2xl font-black tracking-tight text-slate-900 sm:text-4xl">
-            Làm Quen & Chơi Đùa Cùng <span className="text-emerald-600">InterVue Bot AI</span>
+            Meet & Play With <span className="text-emerald-600">InterVue Bot AI</span>
           </h1>
 
           <p className="mx-auto mt-2.5 max-w-xl text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
-            Chào bạn! Đây là bạn linh vật AI tinh nghịch của InterVue.
+            Hi! This is the playful AI mascot of InterVue.
           </p>
         </div>
 
@@ -183,7 +183,7 @@ export default function MascotPlaygroundView() {
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
               </span>
               <span className="text-xs font-black tracking-wider text-slate-800 uppercase">
-                Studio Tương Tác Trực Tuyến
+                Online Interactive Studio
               </span>
             </div>
           </div>
@@ -193,7 +193,7 @@ export default function MascotPlaygroundView() {
               <div>
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-[11px] font-black tracking-wider text-slate-700 uppercase">
-                    1. Bộ Biểu Cảm (9 Moods)
+                    1. Expressions (9 Moods)
                   </span>
                   <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
                     {activeStateInfo.title}
@@ -243,7 +243,7 @@ export default function MascotPlaygroundView() {
                   <div className="flex items-center gap-1.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                     <span className="font-mono text-[10px] font-bold tracking-wider text-emerald-400 uppercase">
-                      Màn hình LED
+                      LED screen
                     </span>
                   </div>
                   <span className="font-mono text-[9px] text-slate-400 uppercase">{selectedState}</span>
@@ -258,9 +258,9 @@ export default function MascotPlaygroundView() {
               <div className="flex w-full items-center justify-between text-xs text-slate-500">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100/80 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
-                  Bạn Nhỏ AI InterVue
+                  InterVue AI Buddy
                 </span>
-                <span className="text-[11px] text-slate-400 italic">Rê chuột hoặc bấm vào đầu Bot nha!</span>
+                <span className="text-[11px] text-slate-400 italic">Hover or click the Bot head!</span>
               </div>
 
               <div className="relative my-auto flex w-full flex-col items-center justify-center py-6">
@@ -302,7 +302,7 @@ export default function MascotPlaygroundView() {
                 <div className="mt-4 flex items-center gap-2">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white px-3.5 py-1 text-[11px] font-bold text-slate-700 shadow-2xs">
                     <RotateCw className="h-3 w-3 text-emerald-600" />
-                    Click vào đầu Bot để nhảy xoay 360°
+                    Click the Bot head to spin 360°
                   </span>
                 </div>
               </div>
@@ -329,14 +329,14 @@ export default function MascotPlaygroundView() {
 
             <div className="space-y-4 bg-slate-50/40 p-4 sm:p-5 lg:col-span-3">
               <span className="block text-[11px] font-black tracking-wider text-slate-700 uppercase">
-                2. Vóc Dáng & Phụ Kiện
+                2. Size & Accessories
               </span>
 
               <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs">
                 <div className="mb-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <Maximize2 className="h-3.5 w-3.5 text-slate-500" />
-                    <span className="text-xs font-bold text-slate-800">Kích thước vóc dáng</span>
+                    <span className="text-xs font-bold text-slate-800">Body size</span>
                   </div>
                   <span className="rounded-full border border-emerald-200/60 bg-emerald-50 px-2 py-0.5 font-mono text-[10.5px] font-bold text-emerald-600">
                     {size}px
@@ -354,7 +354,7 @@ export default function MascotPlaygroundView() {
                     }`}
                   >
                     <Minimize2 className="h-3.5 w-3.5 opacity-60" />
-                    <span>Vừa (160px)</span>
+                    <span>Medium (160px)</span>
                   </button>
                   <button
                     type="button"
@@ -366,7 +366,7 @@ export default function MascotPlaygroundView() {
                     }`}
                   >
                     <Maximize2 className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>Lớn (240px)</span>
+                    <span>Large (240px)</span>
                   </button>
                 </div>
               </div>
@@ -375,7 +375,7 @@ export default function MascotPlaygroundView() {
                 <div className="mb-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <Zap className="h-3.5 w-3.5 text-slate-500" />
-                    <span className="text-xs font-bold text-slate-800">Tốc độ phản ứng</span>
+                    <span className="text-xs font-bold text-slate-800">Reaction speed</span>
                   </div>
                   <span className="rounded-full border border-emerald-200/60 bg-emerald-50 px-2 py-0.5 font-mono text-[10.5px] font-bold text-emerald-600">
                     {speed}x
@@ -392,7 +392,7 @@ export default function MascotPlaygroundView() {
                         : 'text-slate-500 hover:text-slate-800'
                     }`}
                   >
-                    <span>⚡ Chuẩn (1.0x)</span>
+                    <span>⚡ Normal (1.0x)</span>
                   </button>
                   <button
                     type="button"
@@ -410,7 +410,7 @@ export default function MascotPlaygroundView() {
 
               <div className="space-y-1 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs">
                 <div className="mb-2 text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">
-                  Tùy Chọn Phụ Kiện & Hiệu Ứng
+                  Accessory & Effect Options
                 </div>
 
                 <button
@@ -425,9 +425,9 @@ export default function MascotPlaygroundView() {
                       <Radio className="h-3.5 w-3.5" />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-slate-800">Cần Ăng-ten đỉnh đầu</div>
+                      <div className="text-xs font-bold text-slate-800">Head antenna</div>
                       <div className="text-[10px] font-medium text-slate-400">
-                        {antenna ? 'Hiển thị ăng-ten 3D' : 'Thu gọn dạng avatar'}
+                        {antenna ? 'Show the 3D antenna' : 'Collapse to avatar style'}
                       </div>
                     </div>
                   </div>
@@ -452,9 +452,9 @@ export default function MascotPlaygroundView() {
                       <Layers className="h-3.5 w-3.5" />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-slate-800">Bóng sàn tiếp đất</div>
+                      <div className="text-xs font-bold text-slate-800">Floor shadow</div>
                       <div className="text-[10px] font-medium text-slate-400">
-                        {floorShadow ? 'Đổ bóng không gian 3D' : 'Ẩn bóng sàn'}
+                        {floorShadow ? 'Cast a 3D space shadow' : 'Hide the floor shadow'}
                       </div>
                     </div>
                   </div>
@@ -479,9 +479,9 @@ export default function MascotPlaygroundView() {
                       <MousePointer className="h-3.5 w-3.5" />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-slate-800">Dõi mắt theo trỏ chuột</div>
+                      <div className="text-xs font-bold text-slate-800">Eyes follow the cursor</div>
                       <div className="text-[10px] font-medium text-slate-400">
-                        {interactive ? 'Đầu xoay hướng về chuột' : 'Đứng yên'}
+                        {interactive ? 'Head turns toward the mouse' : 'Stay still'}
                       </div>
                     </div>
                   </div>
@@ -506,9 +506,9 @@ export default function MascotPlaygroundView() {
                       <Pause className="h-3.5 w-3.5" />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-slate-800">Đóng băng chuyển động</div>
+                      <div className="text-xs font-bold text-slate-800">Freeze motion</div>
                       <div className="text-[10px] font-medium text-slate-400">
-                        {paused ? 'Đang tạm dừng khung hình' : 'Hoạt hình tự do'}
+                        {paused ? 'Frame paused' : 'Free animation'}
                       </div>
                     </div>
                   </div>

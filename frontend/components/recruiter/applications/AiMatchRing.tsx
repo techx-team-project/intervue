@@ -8,8 +8,8 @@ interface AiMatchRingProps {
 }
 
 const SIZE_CLASS = {
-  sm: 'h-9 w-9 text-[11px]',
-  md: 'h-12 w-12 text-[14px]',
+  sm: 'h-9 w-9 text-label-sm',
+  md: 'h-12 w-12 text-body-md',
   lg: 'h-16 w-16 text-[19px]',
 };
 
@@ -26,7 +26,7 @@ export function getAiMatchTone(score: number): { color: string; track: string; l
   if (score >= AI_MATCH_MEDIUM_THRESHOLD) {
     return { color: '#f59e0b', track: '#fef3c7', label: 'Good match', text: 'text-amber-700' };
   }
-  return { color: '#64748b', track: '#e2e8f0', label: 'Needs a closer look', text: 'text-slate-600' };
+  return { color: '#64748b', track: '#e2e8f0', label: 'Needs a closer look', text: 'text-on-surface-variant' };
 }
 
 export default function AiMatchRing({ score, size = 'md', className }: AiMatchRingProps) {
@@ -45,7 +45,7 @@ export default function AiMatchRing({ score, size = 'md', className }: AiMatchRi
     >
       <span
         className={cn(
-          'absolute flex items-center justify-center rounded-full bg-white font-black',
+          'absolute flex items-center justify-center rounded-full bg-white font-bold',
           INNER_SIZE_CLASS[size],
           tone.text,
         )}

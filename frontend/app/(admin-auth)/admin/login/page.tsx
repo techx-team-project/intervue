@@ -125,15 +125,13 @@ function AdminLoginForm() {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-slate-100/90 px-4 py-8 antialiased sm:py-12">
+    <div className="bg-surface-container-high/90 relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-8 antialiased sm:py-12">
       {/* Brand accent patterns & ambient lighting */}
       <LeftChevronPattern />
-      <div className="pointer-events-none absolute -top-32 -right-32 h-[34rem] w-[34rem] rounded-full bg-emerald-500/15 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -left-32 h-[34rem] w-[34rem] rounded-full bg-teal-500/15 blur-3xl" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] bg-size-[28px_28px] opacity-25" />
 
       {/* Unified Elevated Card Container */}
-      <main className="relative z-10 w-full max-w-5xl overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-2xl shadow-slate-900/10">
+      <main className="border-outline-variant/90 shadow-elevation-2 relative z-10 w-full max-w-5xl overflow-hidden rounded-3xl border bg-white shadow-slate-900/10">
         <div className="grid min-h-[640px] grid-cols-1 lg:grid-cols-12">
           {/* Left Column: Visual Brand & Dynamic Floating Security Showcase */}
           <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-[#022c22] via-[#043d2e] to-[#011a14] p-8 text-white sm:p-10 lg:col-span-5 lg:flex">
@@ -151,8 +149,6 @@ function AdminLoginForm() {
             </div>
 
             {/* Glowing radial atmospheric accents */}
-            <div className="pointer-events-none absolute top-12 left-1/2 -ml-32 h-64 w-64 -translate-x-1/2 rounded-full bg-emerald-400/20 blur-3xl" />
-            <div className="pointer-events-none absolute right-0 -bottom-16 h-48 w-48 rounded-full bg-teal-400/20 blur-2xl" />
 
             {/* Header: Transparent Brand Logo & Mini Tag */}
             <div className="relative z-10 flex items-center justify-between">
@@ -166,7 +162,7 @@ function AdminLoginForm() {
                   className="h-8 w-auto object-contain"
                 />
               </Link>
-              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-emerald-300 uppercase backdrop-blur-xs">
+              <span className="text-label-sm inline-flex items-center gap-1 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-0.5 font-bold tracking-wider text-emerald-300 uppercase backdrop-blur-xs">
                 <Sparkles className="h-3 w-3 text-emerald-300" />
                 Operations
               </span>
@@ -177,7 +173,7 @@ function AdminLoginForm() {
               {/* Artwork Container with Glowing Border */}
               <div className="relative mx-auto flex w-full max-w-sm flex-col items-center">
                 {/* Background Artwork Image */}
-                <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl border border-emerald-400/30 bg-emerald-950/60 shadow-xl shadow-black/40">
+                <div className="shadow-elevation-2 relative aspect-4/3 w-full overflow-hidden rounded-2xl border border-emerald-400/30 bg-emerald-950/60 shadow-black/40">
                   <Image
                     src="/auth/recruiter-banner-02@2x.png"
                     alt="AI Matching & Platform Governance"
@@ -193,29 +189,29 @@ function AdminLoginForm() {
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
                       <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
                     </span>
-                    <span className="text-[11px] font-semibold text-white">Live Platform Status</span>
+                    <span className="text-label-sm font-semibold text-white">Live Platform Status</span>
                   </div>
                 </div>
 
                 {/* Floating Glassmorphism Card 1: Security Shield */}
-                <div className="animate-in fade-in slide-in-from-left-4 absolute -top-4 -left-3 flex items-center gap-2.5 rounded-xl border border-emerald-400/40 bg-slate-900/85 px-3.5 py-2 shadow-xl shadow-black/30 backdrop-blur-md duration-500">
+                <div className="animate-in fade-in slide-in-from-left-4 shadow-elevation-2 absolute -top-4 -left-3 flex items-center gap-2.5 rounded-xl border border-emerald-400/40 bg-slate-900/85 px-3.5 py-2 shadow-black/30 backdrop-blur-md duration-500">
                   <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
                     <ShieldCheck className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold tracking-wide text-emerald-300 uppercase">IAM Fortress</p>
+                    <p className="text-label-sm font-bold tracking-wide text-emerald-300 uppercase">IAM Fortress</p>
                     <p className="text-xs font-bold text-white">Zero-Trust Protected</p>
                   </div>
                 </div>
 
                 {/* Floating Glassmorphism Card 2: Real-Time Vector Wave Chart */}
-                <div className="animate-in fade-in slide-in-from-right-4 absolute -right-3 -bottom-4 flex items-center gap-3 rounded-xl border border-teal-400/40 bg-slate-900/85 px-3.5 py-2.5 shadow-xl shadow-black/30 backdrop-blur-md duration-700">
+                <div className="animate-in fade-in slide-in-from-right-4 shadow-elevation-2 absolute -right-3 -bottom-4 flex items-center gap-3 rounded-xl border border-teal-400/40 bg-slate-900/85 px-3.5 py-2.5 shadow-black/30 backdrop-blur-md duration-700">
                   <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-500/20 text-teal-300">
                     <Activity className="h-4 w-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <p className="text-[10px] font-bold tracking-wide text-teal-300 uppercase">Audit Trail</p>
+                      <p className="text-label-sm font-bold tracking-wide text-teal-300 uppercase">Audit Trail</p>
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                     </div>
                     {/* Mini SVG Sparkline Wave */}
@@ -229,7 +225,7 @@ function AdminLoginForm() {
                           strokeLinejoin="round"
                         />
                       </svg>
-                      <span className="font-mono text-[10px] font-bold text-white">100% OK</span>
+                      <span className="text-label-sm font-mono font-bold text-white">100% OK</span>
                     </div>
                   </div>
                 </div>
@@ -237,7 +233,7 @@ function AdminLoginForm() {
 
               {/* Inspiring Brand Slogan */}
               <div className="mt-8 text-center">
-                <h3 className="text-lg font-black tracking-tight text-white xl:text-xl">Empowering Tech Recruitment</h3>
+                <h3 className="text-lg font-bold tracking-tight text-white xl:text-xl">Empowering Tech Recruitment</h3>
                 <p className="mt-1 text-xs text-emerald-200/80">
                   Intelligent AI verification, audit trails, and platform integrity.
                 </p>
@@ -245,7 +241,7 @@ function AdminLoginForm() {
             </div>
 
             {/* Left Panel Footer */}
-            <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-4 text-[11px] font-medium text-emerald-200/60">
+            <div className="text-label-sm relative z-10 flex items-center justify-between border-t border-white/10 pt-4 font-medium text-emerald-200/60">
               <span>InterVue Security Console</span>
               <span className="inline-flex items-center gap-1">
                 <Shield className="h-3 w-3 text-emerald-400" /> High-Assurance
@@ -269,8 +265,8 @@ function AdminLoginForm() {
               <span className="rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">Console</span>
             </div>
 
-            <h1 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">Sign in</h1>
-            <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+            <h1 className="text-on-surface text-2xl font-bold tracking-tight sm:text-3xl">Sign in</h1>
+            <p className="text-on-surface-variant mt-1.5 text-xs sm:text-sm">
               Welcome back. Please enter your administrator credentials to continue.
             </p>
 
@@ -284,7 +280,7 @@ function AdminLoginForm() {
             {!is2FAStage ? (
               <form onSubmit={handlePasswordLogin} className="mt-6 space-y-4">
                 <div>
-                  <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">Work Email</label>
+                  <label className="text-on-surface block text-xs font-bold tracking-wider uppercase">Work Email</label>
                   <div className="mt-1.5">
                     <Input
                       type="email"
@@ -294,14 +290,14 @@ function AdminLoginForm() {
                       required
                       autoFocus
                       autoComplete="email"
-                      leftIcon={<Mail className="h-4 w-4 text-slate-400" />}
-                      className="border-slate-300 bg-white font-medium text-slate-900 placeholder:text-slate-400 focus:border-emerald-600 focus:ring-emerald-600/10"
+                      leftIcon={<Mail className="text-outline h-4 w-4" />}
+                      className="border-outline text-on-surface placeholder:text-outline bg-white font-medium focus:border-emerald-600 focus:ring-emerald-600/10"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">Password</label>
+                  <label className="text-on-surface block text-xs font-bold tracking-wider uppercase">Password</label>
                   <div className="mt-1.5">
                     <PasswordInput
                       value={password}
@@ -309,7 +305,7 @@ function AdminLoginForm() {
                       placeholder="••••••••••••"
                       required
                       autoComplete="current-password"
-                      className="border-slate-300 bg-white font-medium text-slate-900 placeholder:text-slate-400 focus:border-emerald-600 focus:ring-emerald-600/10"
+                      className="border-outline text-on-surface placeholder:text-outline bg-white font-medium focus:border-emerald-600 focus:ring-emerald-600/10"
                     />
                   </div>
                 </div>
@@ -319,7 +315,7 @@ function AdminLoginForm() {
                     type="submit"
                     size="lg"
                     isLoading={isLoading}
-                    className="w-full rounded-xl bg-emerald-600 py-3 text-sm font-bold text-white shadow-md shadow-emerald-600/20 hover:bg-emerald-500"
+                    className="shadow-elevation-1 w-full rounded-xl bg-emerald-600 py-3 text-sm font-bold text-white shadow-emerald-600/20 hover:bg-emerald-500"
                     leftIcon={<Lock className="h-4 w-4" />}
                   >
                     Sign in to Console
@@ -332,10 +328,10 @@ function AdminLoginForm() {
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
                     {useBackupCode ? <KeyRound className="h-6 w-6" /> : <Smartphone className="h-6 w-6" />}
                   </div>
-                  <h3 className="mt-3 text-base font-bold text-slate-900 sm:text-lg">
+                  <h3 className="text-on-surface mt-3 text-base font-bold sm:text-lg">
                     {useBackupCode ? 'Enter Backup Recovery Code' : 'Two-Factor Authentication'}
                   </h3>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="text-on-surface-variant mt-1 text-xs">
                     {useBackupCode
                       ? 'Enter one of your 8-character backup recovery codes generated when 2FA was configured.'
                       : 'Enter the 6-digit verification code from your authenticator app (Google Authenticator, Microsoft Authenticator).'}
@@ -343,7 +339,7 @@ function AdminLoginForm() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
+                  <label className="text-on-surface block text-xs font-bold tracking-wider uppercase">
                     {useBackupCode ? 'Backup Recovery Code' : '6-Digit Verification Code'}
                   </label>
                   <div className="mt-1.5">
@@ -355,7 +351,7 @@ function AdminLoginForm() {
                       required
                       autoFocus
                       maxLength={useBackupCode ? 12 : 6}
-                      className="border-slate-300 bg-white text-center font-mono text-2xl font-bold tracking-widest text-emerald-700 placeholder:text-slate-300 focus:border-emerald-600 focus:ring-emerald-600/10"
+                      className="border-outline placeholder:text-outline bg-white text-center font-mono text-2xl font-bold tracking-widest text-emerald-700 focus:border-emerald-600 focus:ring-emerald-600/10"
                     />
                   </div>
                 </div>
@@ -365,7 +361,7 @@ function AdminLoginForm() {
                     type="submit"
                     size="lg"
                     isLoading={isLoading}
-                    className="w-full rounded-xl bg-emerald-600 py-3 text-sm font-bold text-white shadow-md shadow-emerald-600/20 hover:bg-emerald-500"
+                    className="shadow-elevation-1 w-full rounded-xl bg-emerald-600 py-3 text-sm font-bold text-white shadow-emerald-600/20 hover:bg-emerald-500"
                     leftIcon={<CheckCircle2 className="h-4 w-4" />}
                   >
                     Verify & Complete Sign In
@@ -392,7 +388,7 @@ function AdminLoginForm() {
                         setTwoFactorCode('');
                         setErrorMsg('');
                       }}
-                      className="flex cursor-pointer items-center gap-1 font-semibold text-slate-500 hover:text-slate-800"
+                      className="text-on-surface-variant hover:text-on-surface flex cursor-pointer items-center gap-1 font-semibold"
                     >
                       <ArrowLeft className="h-3.5 w-3.5" /> Back
                     </button>
@@ -402,11 +398,11 @@ function AdminLoginForm() {
             )}
 
             {/* Form Footer */}
-            <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-5 text-xs text-slate-400">
+            <div className="border-outline-variant text-outline mt-8 flex items-center justify-between border-t pt-5 text-xs">
               <span className="inline-flex items-center gap-1 font-medium">
                 <Lock className="h-3 w-3 text-emerald-600" /> End-to-end encrypted session
               </span>
-              <Link href="/" className="font-medium text-slate-500 transition hover:text-slate-800">
+              <Link href="/" className="text-on-surface-variant hover:text-on-surface font-medium transition">
                 ← Return to InterVue
               </Link>
             </div>
@@ -419,7 +415,7 @@ function AdminLoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-100/80" />}>
+    <Suspense fallback={<div className="bg-surface-container-high/80 min-h-screen" />}>
       <AdminLoginForm />
     </Suspense>
   );

@@ -78,7 +78,7 @@ export function AdminBusinessVerificationDetailView({
   if (!currentDossier) {
     return (
       <div className="flex min-h-[300px] flex-col items-center justify-center gap-2">
-        <p className="dark:text-forest-200 text-sm font-semibold text-slate-700">Verification dossier not found.</p>
+        <p className="dark:text-forest-200 text-on-surface text-sm font-semibold">Verification dossier not found.</p>
         <Link
           href={ROUTES.ADMIN_VERIFICATION_BUSINESS}
           className="text-xs font-semibold text-emerald-600 hover:underline"
@@ -115,17 +115,17 @@ export function AdminBusinessVerificationDetailView({
   return (
     <div className="space-y-6 pb-8">
       {/* Top Header Navigation & Stepper */}
-      <div className="dark:border-forest-800 dark:bg-forest-900 flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs sm:flex-row sm:items-center sm:justify-between">
+      <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant/80 flex flex-col gap-3 rounded-2xl border bg-white p-4 shadow-xs sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <Link
             href={ROUTES.ADMIN_VERIFICATION_BUSINESS}
-            className="dark:text-forest-400 dark:hover:text-forest-200 inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-800"
+            className="dark:text-forest-400 dark:hover:text-forest-200 text-on-surface-variant hover:text-on-surface inline-flex items-center gap-1.5 text-xs font-medium"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Back to Verification Queue</span>
           </Link>
           <div className="flex flex-wrap items-center gap-2.5">
-            <h1 className="dark:text-forest-50 text-lg font-bold text-slate-900 sm:text-xl">
+            <h1 className="dark:text-forest-50 text-on-surface text-lg font-bold sm:text-xl">
               Verification Dossier #{document.id}: {company.name}
             </h1>
             <span
@@ -145,7 +145,9 @@ export function AdminBusinessVerificationDetailView({
                   SLA Overdue ({waitingHours}h)
                 </span>
               ) : (
-                <span className="dark:text-forest-400 text-xs font-medium text-slate-500">Waiting {waitingHours}h</span>
+                <span className="dark:text-forest-400 text-on-surface-variant text-xs font-medium">
+                  Waiting {waitingHours}h
+                </span>
               ))}
           </div>
         </div>
@@ -154,7 +156,7 @@ export function AdminBusinessVerificationDetailView({
         <div className="flex items-center gap-2">
           <Link
             href={ROUTES.ADMIN_VERIFICATION_BUSINESS}
-            className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50"
+            className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 border-outline-variant text-on-surface hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-lg border bg-white px-3 py-1.5 text-xs font-semibold shadow-2xs"
           >
             <ChevronLeft className="h-4 w-4" />
             <span>Back to Queue</span>
@@ -187,10 +189,10 @@ export function AdminBusinessVerificationDetailView({
               <div className="flex items-start gap-2.5">
                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
                 <div className="space-y-1 text-xs">
-                  <p className="font-semibold text-slate-900 dark:text-amber-100">
+                  <p className="text-on-surface font-semibold dark:text-amber-100">
                     Governance Notice: Member submitted Company License
                   </p>
-                  <p className="leading-relaxed text-slate-600 dark:text-amber-200/90">
+                  <p className="text-on-surface-variant leading-relaxed dark:text-amber-200/90">
                     The submitter holds a <strong>Member</strong> role but uploaded the company&apos;s Enterprise
                     Registration Certificate (ERC). By policy, members must submit a{' '}
                     <strong>Letter of Authorization (LOA)</strong> signed by the authorized legal representative.
@@ -204,9 +206,9 @@ export function AdminBusinessVerificationDetailView({
           )}
 
           {/* Section 1: Company Legal Facts Sheet */}
-          <div className="dark:border-forest-800 dark:bg-forest-900 space-y-3.5 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
-            <div className="dark:border-forest-800 flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="dark:text-forest-100 flex items-center gap-2 text-xs font-semibold text-slate-900">
+          <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant/80 space-y-3.5 rounded-2xl border bg-white p-5 shadow-xs">
+            <div className="dark:border-forest-800 border-outline-variant flex items-center justify-between border-b pb-3">
+              <div className="dark:text-forest-100 text-on-surface flex items-center gap-2 text-xs font-semibold">
                 <Building2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                 <span>Company Legal Facts</span>
               </div>
@@ -214,7 +216,7 @@ export function AdminBusinessVerificationDetailView({
                 href="https://dangkykinhdoanh.gov.vn/vn/Pages/Trangchu.aspx"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 hover:underline dark:text-emerald-400"
+                className="text-label-sm inline-flex items-center gap-1 font-medium text-emerald-700 hover:underline dark:text-emerald-400"
                 title="Lookup on National Business Portal"
               >
                 <span>dangkykinhdoanh.gov.vn</span>
@@ -224,25 +226,27 @@ export function AdminBusinessVerificationDetailView({
 
             <div className="space-y-2.5 text-xs">
               <div className="flex items-start justify-between gap-4">
-                <span className="dark:text-forest-400 shrink-0 text-slate-500">Company Name:</span>
-                <span className="dark:text-forest-100 text-right font-semibold text-slate-900">{company.name}</span>
+                <span className="dark:text-forest-400 text-on-surface-variant shrink-0">Company Name:</span>
+                <span className="dark:text-forest-100 text-on-surface text-right font-semibold">{company.name}</span>
               </div>
 
               {company.tradingName && (
                 <div className="flex items-start justify-between gap-4">
-                  <span className="dark:text-forest-400 shrink-0 text-slate-500">Trading Name:</span>
-                  <span className="dark:text-forest-200 text-right text-slate-700">{company.tradingName}</span>
+                  <span className="dark:text-forest-400 text-on-surface-variant shrink-0">Trading Name:</span>
+                  <span className="dark:text-forest-200 text-on-surface text-right">{company.tradingName}</span>
                 </div>
               )}
 
               <div className="flex items-center justify-between">
-                <span className="dark:text-forest-400 text-slate-500">Tax ID (Mã số thuế):</span>
+                <span className="dark:text-forest-400 text-on-surface-variant">Tax ID (Mã số thuế):</span>
                 <div className="flex items-center gap-1.5">
-                  <span className="dark:text-forest-100 font-mono font-semibold text-slate-900">{company.taxCode}</span>
+                  <span className="dark:text-forest-100 text-on-surface font-mono font-semibold">
+                    {company.taxCode}
+                  </span>
                   <button
                     type="button"
                     onClick={handleCopyTax}
-                    className="dark:hover:text-forest-200 rounded p-0.5 text-slate-400 hover:text-slate-700"
+                    className="dark:hover:text-forest-200 text-outline hover:text-on-surface rounded p-0.5"
                     title="Copy Tax ID"
                   >
                     {copiedTax ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
@@ -251,20 +255,20 @@ export function AdminBusinessVerificationDetailView({
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="dark:text-forest-400 text-slate-500">Business Entity:</span>
-                <span className="dark:text-forest-200 text-slate-700">
+                <span className="dark:text-forest-400 text-on-surface-variant">Business Entity:</span>
+                <span className="dark:text-forest-200 text-on-surface">
                   {company.businessType === 'ENTERPRISE' ? 'Enterprise' : 'Household Business'}
                 </span>
               </div>
 
               <div className="flex items-start justify-between gap-4">
-                <span className="dark:text-forest-400 shrink-0 text-slate-500">Headquarters Address:</span>
-                <span className="dark:text-forest-300 text-right text-slate-700">{company.address}</span>
+                <span className="dark:text-forest-400 text-on-surface-variant shrink-0">Headquarters Address:</span>
+                <span className="dark:text-forest-300 text-on-surface text-right">{company.address}</span>
               </div>
 
               {company.website && (
                 <div className="flex items-center justify-between">
-                  <span className="dark:text-forest-400 text-slate-500">Website:</span>
+                  <span className="dark:text-forest-400 text-on-surface-variant">Website:</span>
                   <a
                     href={company.website}
                     target="_blank"
@@ -278,15 +282,15 @@ export function AdminBusinessVerificationDetailView({
             </div>
 
             {/* Compliance Checklist */}
-            <div className="dark:border-forest-800 dark:bg-forest-950/40 rounded-xl border border-slate-100 bg-slate-50/60 p-3.5">
+            <div className="dark:border-forest-800 dark:bg-forest-950/40 border-outline-variant bg-surface-container-low/60 rounded-xl border p-3.5">
               <div className="flex items-center justify-between pb-2.5">
-                <span className="dark:text-forest-200 text-xs font-semibold text-slate-800">
+                <span className="dark:text-forest-200 text-on-surface text-xs font-semibold">
                   Compliance Audit Checklist
                 </span>
                 <button
                   type="button"
                   onClick={handleCheckAll}
-                  className="text-[11px] font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+                  className="text-label-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
                 >
                   Check all
                 </button>
@@ -298,9 +302,9 @@ export function AdminBusinessVerificationDetailView({
                     type="checkbox"
                     checked={checkedTax}
                     onChange={(e) => setCheckedTax(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                    className="border-outline h-3.5 w-3.5 rounded text-emerald-600 focus:ring-emerald-500"
                   />
-                  <span className="dark:text-forest-300 text-slate-700">
+                  <span className="dark:text-forest-300 text-on-surface">
                     Tax ID matches National Business Registry 100%
                   </span>
                 </label>
@@ -310,9 +314,9 @@ export function AdminBusinessVerificationDetailView({
                     type="checkbox"
                     checked={checkedRep}
                     onChange={(e) => setCheckedRep(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                    className="border-outline h-3.5 w-3.5 rounded text-emerald-600 focus:ring-emerald-500"
                   />
-                  <span className="dark:text-forest-300 text-slate-700">
+                  <span className="dark:text-forest-300 text-on-surface">
                     Signatory possesses legal authority (Legal rep or holds valid LOA)
                   </span>
                 </label>
@@ -322,9 +326,9 @@ export function AdminBusinessVerificationDetailView({
                     type="checkbox"
                     checked={checkedSeal}
                     onChange={(e) => setCheckedSeal(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                    className="border-outline h-3.5 w-3.5 rounded text-emerald-600 focus:ring-emerald-500"
                   />
-                  <span className="dark:text-forest-300 text-slate-700">
+                  <span className="dark:text-forest-300 text-on-surface">
                     Round seal and physical signature intact without digital alteration
                   </span>
                 </label>
@@ -334,16 +338,16 @@ export function AdminBusinessVerificationDetailView({
                     type="checkbox"
                     checked={checkedTaxStatus}
                     onChange={(e) => setCheckedTaxStatus(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                    className="border-outline h-3.5 w-3.5 rounded text-emerald-600 focus:ring-emerald-500"
                   />
-                  <span className="dark:text-forest-300 text-slate-700">
+                  <span className="dark:text-forest-300 text-on-surface">
                     Tax compliance status: Active with National Tax Authority
                   </span>
                 </label>
               </div>
 
               {allChecksPassed && (
-                <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-emerald-100/70 px-2.5 py-1.5 text-[11px] font-semibold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                <div className="text-label-sm mt-3 flex items-center gap-1.5 rounded-lg bg-emerald-100/70 px-2.5 py-1.5 font-semibold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
                   <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                   <span>All 4 compliance criteria verified!</span>
                 </div>
@@ -352,17 +356,17 @@ export function AdminBusinessVerificationDetailView({
           </div>
 
           {/* Section 2: Submitter & Governance */}
-          <div className="dark:border-forest-800 dark:bg-forest-900 space-y-3 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
-            <div className="dark:border-forest-800 flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="dark:text-forest-100 flex items-center gap-2 text-xs font-semibold text-slate-900">
+          <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant/80 space-y-3 rounded-2xl border bg-white p-5 shadow-xs">
+            <div className="dark:border-forest-800 border-outline-variant flex items-center justify-between border-b pb-3">
+              <div className="dark:text-forest-100 text-on-surface flex items-center gap-2 text-xs font-semibold">
                 <User className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                 <span>Submitter & Access Rights</span>
               </div>
               <span
-                className={`rounded px-2 py-0.5 text-[11px] font-medium ${
+                className={`text-label-sm rounded px-2 py-0.5 font-medium ${
                   submitter.role === 'OWNER'
                     ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
-                    : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-700'
+                    : 'dark:bg-forest-800 dark:text-forest-300 bg-surface-container-high text-on-surface'
                 }`}
               >
                 {submitter.role === 'OWNER' ? 'Owner' : 'Member'}
@@ -371,17 +375,17 @@ export function AdminBusinessVerificationDetailView({
 
             <div className="space-y-2 text-xs">
               <div className="flex items-center justify-between">
-                <span className="dark:text-forest-400 text-slate-500">Full Name:</span>
-                <span className="dark:text-forest-100 font-semibold text-slate-800">{submitter.fullName}</span>
+                <span className="dark:text-forest-400 text-on-surface-variant">Full Name:</span>
+                <span className="dark:text-forest-100 text-on-surface font-semibold">{submitter.fullName}</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="dark:text-forest-400 text-slate-500">Email:</span>
-                <span className="dark:text-forest-200 text-slate-600">{submitter.email}</span>
+                <span className="dark:text-forest-400 text-on-surface-variant">Email:</span>
+                <span className="dark:text-forest-200 text-on-surface-variant">{submitter.email}</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="dark:text-forest-400 text-slate-500">Phone Verification:</span>
+                <span className="dark:text-forest-400 text-on-surface-variant">Phone Verification:</span>
                 <span className="inline-flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400">
                   <Phone className="h-3 w-3" />
                   <span>{submitter.phoneVerified ? 'Verified via OTP' : 'Unverified'}</span>
@@ -389,12 +393,12 @@ export function AdminBusinessVerificationDetailView({
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="dark:text-forest-400 text-slate-500">Recruitment Publishing Rights:</span>
+                <span className="dark:text-forest-400 text-on-surface-variant">Recruitment Publishing Rights:</span>
                 <span
-                  className={`rounded px-2 py-0.5 text-[11px] font-medium ${
+                  className={`text-label-sm rounded px-2 py-0.5 font-medium ${
                     submitter.canPublish
                       ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
-                      : 'dark:bg-forest-800 dark:text-forest-400 bg-slate-100 text-slate-600'
+                      : 'dark:bg-forest-800 dark:text-forest-400 bg-surface-container-high text-on-surface-variant'
                   }`}
                 >
                   {submitter.canPublish ? 'Authorized to Publish' : 'Publishing Restricted'}
@@ -402,8 +406,8 @@ export function AdminBusinessVerificationDetailView({
               </div>
 
               {members && members.length > 1 && (
-                <div className="dark:border-forest-800 border-t border-slate-100 pt-2.5">
-                  <p className="dark:text-forest-300 pb-1.5 text-[11px] font-semibold text-slate-700">
+                <div className="dark:border-forest-800 border-outline-variant border-t pt-2.5">
+                  <p className="dark:text-forest-300 text-label-sm text-on-surface pb-1.5 font-semibold">
                     Other Company Members ({members.length - 1}):
                   </p>
                   <div className="space-y-1">
@@ -412,12 +416,12 @@ export function AdminBusinessVerificationDetailView({
                       .map((m) => (
                         <div
                           key={m.id}
-                          className="dark:bg-forest-950/60 flex items-center justify-between rounded-lg bg-slate-50 px-2.5 py-1 text-[11px]"
+                          className="dark:bg-forest-950/60 bg-surface-container-low text-label-sm flex items-center justify-between rounded-lg px-2.5 py-1"
                         >
-                          <span className="dark:text-forest-200 text-slate-700">
+                          <span className="dark:text-forest-200 text-on-surface">
                             {m.fullName} ({m.email})
                           </span>
-                          <span className="text-slate-500">{m.role}</span>
+                          <span className="text-on-surface-variant">{m.role}</span>
                         </div>
                       ))}
                   </div>
@@ -427,17 +431,17 @@ export function AdminBusinessVerificationDetailView({
           </div>
 
           {/* Section 3: Audit Trail Timeline */}
-          <div className="dark:border-forest-800 dark:bg-forest-900 space-y-3 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
-            <div className="dark:border-forest-800 dark:text-forest-100 flex items-center gap-2 border-b border-slate-100 pb-3 text-xs font-semibold text-slate-900">
+          <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant/80 space-y-3 rounded-2xl border bg-white p-5 shadow-xs">
+            <div className="dark:border-forest-800 dark:text-forest-100 border-outline-variant text-on-surface flex items-center gap-2 border-b pb-3 text-xs font-semibold">
               <History className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
               <span>Audit Trail & History</span>
             </div>
 
-            <div className="dark:before:bg-forest-800 relative space-y-3.5 pt-1 pl-5 before:absolute before:top-2 before:bottom-2 before:left-2 before:w-px before:bg-slate-200">
+            <div className="dark:before:bg-forest-800 before:bg-surface-container-high relative space-y-3.5 pt-1 pl-5 before:absolute before:top-2 before:bottom-2 before:left-2 before:w-px">
               {auditLogs && auditLogs.length > 0 ? (
                 auditLogs.map((log) => {
                   let dotColor = 'bg-slate-400';
-                  let actionBadge = 'bg-slate-100 text-slate-700';
+                  let actionBadge = 'bg-surface-container-high text-on-surface';
 
                   if (log.action === 'APPROVED') {
                     dotColor = 'bg-emerald-500';
@@ -461,26 +465,26 @@ export function AdminBusinessVerificationDetailView({
                       />
 
                       <div className="flex flex-wrap items-center justify-between gap-1">
-                        <span className={`py-0.2 rounded px-1.5 text-[10px] font-semibold ${actionBadge}`}>
+                        <span className={`py-0.2 text-label-sm rounded px-1.5 font-semibold ${actionBadge}`}>
                           {log.action}
                         </span>
-                        <span className="dark:text-forest-500 text-[10.5px] text-slate-400">
+                        <span className="dark:text-forest-500 text-label-sm text-outline">
                           {new Date(log.timestamp).toLocaleString('en-US')}
                         </span>
                       </div>
 
-                      <p className="dark:text-forest-100 font-semibold text-slate-800">
-                        {log.actorName} <span className="font-normal text-slate-400">({log.actorRole})</span>
+                      <p className="dark:text-forest-100 text-on-surface font-semibold">
+                        {log.actorName} <span className="text-outline font-normal">({log.actorRole})</span>
                       </p>
 
                       {log.reason && (
-                        <p className="dark:text-forest-300 text-slate-600">
+                        <p className="dark:text-forest-300 text-on-surface-variant">
                           <strong>Reason:</strong> {log.reason}
                         </p>
                       )}
 
                       {log.notes && (
-                        <p className="dark:text-forest-400 dark:bg-forest-950/60 rounded-lg bg-slate-50 p-2 text-[11px] text-slate-500 italic">
+                        <p className="dark:text-forest-400 dark:bg-forest-950/60 bg-surface-container-low text-label-sm text-on-surface-variant rounded-lg p-2 italic">
                           &ldquo;{log.notes}&rdquo;
                         </p>
                       )}
@@ -488,7 +492,7 @@ export function AdminBusinessVerificationDetailView({
                   );
                 })
               ) : (
-                <p className="dark:text-forest-500 text-xs text-slate-400">No audit history recorded.</p>
+                <p className="dark:text-forest-500 text-outline text-xs">No audit history recorded.</p>
               )}
             </div>
           </div>

@@ -51,7 +51,11 @@ export default function JobContentStep({ initialTab = 'description' }: JobConten
 
   return (
     <div className="space-y-4">
-      <div role="tablist" aria-label="Nội dung tin tuyển dụng" className="flex gap-1.5 rounded-xl bg-slate-100 p-1">
+      <div
+        role="tablist"
+        aria-label="Nội dung tin tuyển dụng"
+        className="bg-surface-container-high flex gap-1.5 rounded-xl p-1"
+      >
         {TABS.map((item) => {
           const hasError = Boolean(errors[item.field]);
           const filled = watch(item.field).trim().length > 0;
@@ -64,7 +68,9 @@ export default function JobContentStep({ initialTab = 'description' }: JobConten
               onClick={() => setActive(item.field)}
               className={cn(
                 'flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-xs font-semibold transition-colors sm:text-sm',
-                active === item.field ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-500 hover:text-slate-700',
+                active === item.field
+                  ? 'bg-white text-emerald-700 shadow-xs'
+                  : 'text-on-surface-variant hover:text-on-surface',
               )}
             >
               {item.label}
@@ -85,7 +91,7 @@ export default function JobContentStep({ initialTab = 'description' }: JobConten
             'flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-xs font-semibold transition-colors sm:text-sm',
             active === 'screeningQuestions'
               ? 'bg-white text-emerald-700 shadow-xs'
-              : 'text-slate-500 hover:text-slate-700',
+              : 'text-on-surface-variant hover:text-on-surface',
           )}
         >
           Câu hỏi{questionCount > 0 && ` (${questionCount})`}

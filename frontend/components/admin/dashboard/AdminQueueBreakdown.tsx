@@ -12,13 +12,16 @@ export default function AdminQueueBreakdown({ queues }: AdminQueueBreakdownProps
   if (total === 0) return null;
 
   return (
-    <section className="dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-[#e9eaec] bg-white p-4 shadow-xs">
+    <section className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white p-4 shadow-xs">
       <div className="flex items-baseline justify-between gap-3">
-        <h2 className="text-navy dark:text-forest-50 text-[14px] font-bold">What is waiting</h2>
-        <span className="text-[11.5px] text-[#94a3b8]">{pending.length} queues</span>
+        <h2 className="text-navy dark:text-forest-50 text-body-md font-bold">What is waiting</h2>
+        <span className="text-label-sm text-outline">{pending.length} queues</span>
       </div>
 
-      <div className="dark:bg-forest-850 mt-3 flex h-2.5 overflow-hidden rounded-full bg-[#f1f5f9]" role="presentation">
+      <div
+        className="dark:bg-forest-850 bg-surface-container-low mt-3 flex h-2.5 overflow-hidden rounded-full"
+        role="presentation"
+      >
         {pending.map((queue) => (
           <span
             key={queue.key}
@@ -30,9 +33,9 @@ export default function AdminQueueBreakdown({ queues }: AdminQueueBreakdownProps
 
       <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
         {pending.map((queue) => (
-          <li key={queue.key} className="flex items-center gap-1.5 text-[12px]">
+          <li key={queue.key} className="text-body-sm flex items-center gap-1.5">
             <span className={`h-2 w-2 shrink-0 rounded-full ${QUEUE_BAR_COLOR[queue.key]}`} aria-hidden="true" />
-            <span className="dark:text-forest-300 text-[#64748b]">{queue.label}</span>
+            <span className="dark:text-forest-300 text-on-surface-variant">{queue.label}</span>
             <span className="text-navy dark:text-forest-50 font-bold tabular-nums">{queue.count}</span>
           </li>
         ))}

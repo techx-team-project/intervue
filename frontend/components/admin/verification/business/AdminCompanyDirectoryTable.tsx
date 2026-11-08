@@ -51,9 +51,9 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
   return (
     <div className="space-y-4">
       {/* Directory Filter Bar */}
-      <div className="dark:border-forest-800 dark:bg-forest-900 flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+      <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant/80 flex flex-col gap-3 rounded-2xl border bg-white p-3.5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1">
-          <Search className="dark:text-forest-400 pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="dark:text-forest-400 text-outline pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
           <input
             type="text"
             value={searchTerm}
@@ -62,7 +62,7 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
               setCurrentPage(0);
             }}
             placeholder="Search by company name, Tax ID, or owner email..."
-            className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 dark:placeholder-forest-500 w-full rounded-xl border border-slate-200 bg-slate-50/70 py-2 pr-4 pl-9 text-xs font-medium text-slate-800 placeholder-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none"
+            className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 dark:placeholder-forest-500 border-outline-variant bg-surface-container-low/70 text-on-surface w-full rounded-xl border py-2 pr-4 pl-9 text-xs font-medium placeholder-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none"
           />
         </div>
 
@@ -73,7 +73,7 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
               setStatusFilter(e.target.value as 'ALL' | 'VERIFIED' | 'PENDING_VERIFICATION' | 'REJECTED');
               setCurrentPage(0);
             }}
-            className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-200 rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2 text-xs font-semibold text-slate-700 focus:border-emerald-500 focus:bg-white focus:outline-none"
+            className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-200 border-outline-variant bg-surface-container-low/70 text-on-surface rounded-xl border px-3 py-2 text-xs font-semibold focus:border-emerald-500 focus:bg-white focus:outline-none"
           >
             <option value="ALL">All Verification Statuses</option>
             <option value="VERIFIED">Verified</option>
@@ -84,12 +84,12 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
       </div>
 
       {/* Directory Table */}
-      <div className="dark:border-forest-800 dark:bg-forest-900 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
+      <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant/80 overflow-hidden rounded-2xl border bg-white shadow-xs">
         {totalItems === 0 ? (
           <div className="flex min-h-[260px] flex-col items-center justify-center gap-2 p-8 text-center">
-            <Building2 className="dark:text-forest-700 h-9 w-9 text-slate-300" />
-            <p className="dark:text-forest-200 text-sm font-semibold text-slate-700">No companies found</p>
-            <p className="dark:text-forest-400 text-xs text-slate-500">
+            <Building2 className="dark:text-forest-700 text-outline h-9 w-9" />
+            <p className="dark:text-forest-200 text-on-surface text-sm font-semibold">No companies found</p>
+            <p className="dark:text-forest-400 text-on-surface-variant text-xs">
               Try adjusting your search keyword or status filter.
             </p>
           </div>
@@ -97,7 +97,7 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
           <div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="dark:border-forest-800 dark:bg-forest-950/50 dark:text-forest-300 border-b border-slate-200/80 bg-slate-50/70 text-xs font-semibold text-slate-600">
+                <thead className="dark:border-forest-800 dark:bg-forest-950/50 dark:text-forest-300 border-outline-variant/80 bg-surface-container-low/70 text-on-surface-variant border-b text-xs font-semibold">
                   <tr>
                     <th className="px-5 py-3.5">Company & Tax ID</th>
                     <th className="px-4 py-3.5">Industry & Entity</th>
@@ -108,7 +108,7 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
                     <th className="px-5 py-3.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="dark:divide-forest-800/60 divide-y divide-slate-100">
+                <tbody className="dark:divide-forest-800/60 divide-outline-variant divide-y">
                   {paginatedCompanies.map((comp) => {
                     const isVerified = comp.verificationStatus === 'VERIFIED';
                     const isPending = comp.verificationStatus === 'PENDING_VERIFICATION';
@@ -116,22 +116,22 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
                     return (
                       <tr
                         key={comp.id}
-                        className="group dark:hover:bg-forest-800/30 transition-colors hover:bg-slate-50/80"
+                        className="group dark:hover:bg-forest-800/30 hover:bg-surface-container-low/80 transition-colors"
                       >
                         {/* Company Info */}
                         <td className="px-5 py-4">
                           <div className="space-y-1">
-                            <p className="dark:text-forest-100 text-[13.5px] font-semibold text-slate-900 transition-colors group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+                            <p className="dark:text-forest-100 text-body-md text-on-surface font-semibold transition-colors group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
                               {comp.name}
                             </p>
-                            <div className="dark:text-forest-400 flex items-center gap-1.5 text-xs text-slate-500">
-                              <span className="dark:text-forest-300 font-mono font-medium text-slate-600">
+                            <div className="dark:text-forest-400 text-on-surface-variant flex items-center gap-1.5 text-xs">
+                              <span className="dark:text-forest-300 text-on-surface-variant font-mono font-medium">
                                 Tax ID: {comp.taxCode}
                               </span>
                               <button
                                 type="button"
                                 onClick={() => handleCopyTax(comp.taxCode)}
-                                className="dark:hover:text-forest-200 rounded p-0.5 text-slate-400 hover:text-slate-700"
+                                className="dark:hover:text-forest-200 text-outline hover:text-on-surface rounded p-0.5"
                                 title="Copy Tax ID"
                               >
                                 {copiedTax === comp.taxCode ? (
@@ -147,10 +147,10 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
                         {/* Industry & Entity */}
                         <td className="px-4 py-4">
                           <div className="space-y-0.5">
-                            <p className="dark:text-forest-200 font-medium text-slate-800">
+                            <p className="dark:text-forest-200 text-on-surface font-medium">
                               {comp.businessType === 'ENTERPRISE' ? 'Enterprise' : 'Household'}
                             </p>
-                            <p className="dark:text-forest-400 max-w-[190px] truncate text-[11.5px] text-slate-500">
+                            <p className="dark:text-forest-400 text-label-sm text-on-surface-variant max-w-[190px] truncate">
                               {comp.industry}
                             </p>
                           </div>
@@ -177,20 +177,22 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
                         </td>
 
                         {/* Member Count */}
-                        <td className="dark:text-forest-300 px-4 py-4 font-medium text-slate-700">
+                        <td className="dark:text-forest-300 text-on-surface px-4 py-4 font-medium">
                           {comp.memberCount} members
                         </td>
 
                         {/* Active Jobs */}
-                        <td className="dark:text-forest-300 px-4 py-4 font-medium text-slate-700">
+                        <td className="dark:text-forest-300 text-on-surface px-4 py-4 font-medium">
                           {comp.activeJobCount} active jobs
                         </td>
 
                         {/* Owner Info */}
                         <td className="px-4 py-4">
                           <div className="space-y-0.5">
-                            <p className="dark:text-forest-100 font-semibold text-slate-800">{comp.ownerName}</p>
-                            <p className="dark:text-forest-400 text-[11.5px] text-slate-500">{comp.ownerEmail}</p>
+                            <p className="dark:text-forest-100 text-on-surface font-semibold">{comp.ownerName}</p>
+                            <p className="dark:text-forest-400 text-label-sm text-on-surface-variant">
+                              {comp.ownerEmail}
+                            </p>
                           </div>
                         </td>
 
@@ -201,7 +203,7 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
                               <button
                                 type="button"
                                 onClick={() => onSelectCompanyDossier(comp.taxCode)}
-                                className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:border-emerald-500 hover:bg-emerald-50/50 hover:text-emerald-700"
+                                className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 border-outline-variant text-on-surface inline-flex items-center gap-1 rounded-lg border bg-white px-2.5 py-1.5 text-xs font-semibold shadow-2xs transition hover:border-emerald-500 hover:bg-emerald-50/50 hover:text-emerald-700"
                                 title="Inspect verification dossiers for this company"
                               >
                                 <span>Dossiers</span>
@@ -211,7 +213,7 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
                               href="https://dangkykinhdoanh.gov.vn/vn/Pages/Trangchu.aspx"
                               target="_blank"
                               rel="noreferrer"
-                              className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-400 inline-flex items-center rounded-lg border border-slate-200 bg-white p-1.5 text-slate-400 transition hover:border-slate-300 hover:text-slate-700"
+                              className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-400 border-outline-variant text-outline hover:border-outline hover:text-on-surface inline-flex items-center rounded-lg border bg-white p-1.5 transition"
                               title="Lookup on National Business Portal"
                             >
                               <ExternalLink className="h-3.5 w-3.5" />
@@ -226,11 +228,11 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
             </div>
 
             {/* Integrated Table Pagination Footer */}
-            <div className="dark:border-forest-800 dark:bg-forest-950/40 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200/80 bg-slate-50/50 px-5 py-3">
-              <p className="dark:text-forest-400 text-xs text-slate-500">
-                Showing <span className="dark:text-forest-100 font-semibold text-slate-800">{firstItem}</span>–
-                <span className="dark:text-forest-100 font-semibold text-slate-800">{lastItem}</span> of{' '}
-                <span className="dark:text-forest-100 font-semibold text-slate-800">{totalItems}</span> companies
+            <div className="dark:border-forest-800 dark:bg-forest-950/40 border-outline-variant/80 bg-surface-container-low/50 flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3">
+              <p className="dark:text-forest-400 text-on-surface-variant text-xs">
+                Showing <span className="dark:text-forest-100 text-on-surface font-semibold">{firstItem}</span>–
+                <span className="dark:text-forest-100 text-on-surface font-semibold">{lastItem}</span> of{' '}
+                <span className="dark:text-forest-100 text-on-surface font-semibold">{totalItems}</span> companies
               </p>
 
               <div className="flex items-center gap-1.5">
@@ -239,7 +241,7 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
                   disabled={currentPage === 0}
                   onClick={() => setCurrentPage((p) => p - 1)}
                   aria-label="Previous page"
-                  className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 inline-flex h-8 items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 border-outline-variant text-on-surface-variant hover:bg-surface-container-high inline-flex h-8 items-center justify-center rounded-lg border bg-white px-2.5 text-xs font-semibold transition disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <ChevronLeft className="mr-0.5 h-3.5 w-3.5" />
                   Previous
@@ -253,7 +255,7 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
                     className={`h-8 min-w-8 rounded-lg px-2 text-xs font-bold transition ${
                       currentPage === idx
                         ? 'bg-emerald-600 text-white'
-                        : 'dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 border border-slate-200 bg-white text-slate-600 hover:bg-slate-100'
+                        : 'dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 border-outline-variant text-on-surface-variant hover:bg-surface-container-high border bg-white'
                     }`}
                   >
                     {idx + 1}
@@ -265,7 +267,7 @@ export function AdminCompanyDirectoryTable({ companies, onSelectCompanyDossier }
                   disabled={currentPage >= pageCount - 1}
                   onClick={() => setCurrentPage((p) => p + 1)}
                   aria-label="Next page"
-                  className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 inline-flex h-8 items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 border-outline-variant text-on-surface-variant hover:bg-surface-container-high inline-flex h-8 items-center justify-center rounded-lg border bg-white px-2.5 text-xs font-semibold transition disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   Next
                   <ChevronRight className="ml-0.5 h-3.5 w-3.5" />

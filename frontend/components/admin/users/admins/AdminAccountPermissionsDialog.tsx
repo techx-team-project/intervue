@@ -78,7 +78,7 @@ export default function AdminAccountPermissionsDialog({
           {...register('expiresAt')}
         />
 
-        <p className="flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+        <p className="bg-surface-container-low text-on-surface-variant flex items-start gap-2 rounded-lg px-3 py-2 text-xs">
           <ScrollText className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           Recorded against your admin account with a timestamp.
         </p>

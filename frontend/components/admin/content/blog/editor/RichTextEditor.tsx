@@ -136,15 +136,15 @@ export default function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          'prose prose-slate max-w-none focus:outline-none min-h-[360px] p-5 text-slate-800 text-sm leading-relaxed ' +
-          '[&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h2]:border-b [&_h2]:border-slate-100 [&_h2]:pb-2 [&_h2]:mt-6 [&_h2]:mb-3 ' +
-          '[&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-slate-800 [&_h3]:mt-4 [&_h3]:mb-2 ' +
-          '[&_p]:mb-3.5 [&_p]:text-slate-700 ' +
+          'prose prose-slate max-w-none focus:outline-none min-h-[360px] p-5 text-on-surface text-sm leading-relaxed ' +
+          '[&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-on-surface [&_h2]:border-b [&_h2]:border-outline-variant [&_h2]:pb-2 [&_h2]:mt-6 [&_h2]:mb-3 ' +
+          '[&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-on-surface [&_h3]:mt-4 [&_h3]:mb-2 ' +
+          '[&_p]:mb-3.5 [&_p]:text-on-surface ' +
           '[&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3.5 [&_ul]:space-y-1 ' +
           '[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-3.5 [&_ol]:space-y-1 ' +
-          '[&_li]:text-slate-700 ' +
+          '[&_li]:text-on-surface ' +
           '[&_blockquote]:border-l-4 [&_blockquote]:border-emerald-500 [&_blockquote]:bg-emerald-50/50 [&_blockquote]:p-3.5 [&_blockquote]:rounded-r-xl [&_blockquote]:my-4 [&_blockquote]:italic [&_blockquote]:text-emerald-950 ' +
-          '[&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:font-mono [&_code]:text-xs [&_code]:text-emerald-700 ' +
+          '[&_code]:bg-surface-container-high [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:font-mono [&_code]:text-xs [&_code]:text-emerald-700 ' +
           '[&_pre]:bg-slate-900 [&_pre]:text-slate-100 [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:my-4',
       },
     },
@@ -193,16 +193,16 @@ export default function RichTextEditor({
 
   if (!editor) {
     return (
-      <div className="flex min-h-[380px] items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-xs text-slate-400">
+      <div className="border-outline-variant bg-surface-container-low text-outline flex min-h-[380px] items-center justify-center rounded-2xl border text-xs">
         Loading editor...
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+    <div className="border-outline-variant/80 overflow-hidden rounded-2xl border bg-white shadow-2xs">
       {/* Editor Main Header & Mode Tabs */}
-      <div className="flex flex-wrap items-center justify-between border-b border-slate-200/80 bg-slate-50/80 px-3.5 py-2">
+      <div className="border-outline-variant/80 bg-surface-container-low/80 flex flex-wrap items-center justify-between border-b px-3.5 py-2">
         <div className="flex items-center gap-1">
           <button
             type="button"
@@ -210,7 +210,7 @@ export default function RichTextEditor({
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
               activeTab === 'visual'
                 ? 'bg-white text-emerald-700 shadow-2xs ring-1 ring-slate-200/60'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
             <Edit3 className="h-3.5 w-3.5" />
@@ -223,7 +223,7 @@ export default function RichTextEditor({
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
               activeTab === 'code'
                 ? 'bg-white text-emerald-700 shadow-2xs ring-1 ring-slate-200/60'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
             <FileCode className="h-3.5 w-3.5" />
@@ -236,7 +236,7 @@ export default function RichTextEditor({
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
               activeTab === 'preview'
                 ? 'bg-white text-emerald-700 shadow-2xs ring-1 ring-slate-200/60'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
             <Eye className="h-3.5 w-3.5" />
@@ -251,7 +251,7 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().undo().run()}
               disabled={!editor.can().undo()}
               title="Undo (Ctrl+Z)"
-              className="rounded-md p-1.5 text-slate-500 hover:bg-slate-200/60 disabled:opacity-30"
+              className="text-on-surface-variant hover:bg-surface-container-high/60 rounded-md p-1.5 disabled:opacity-30"
             >
               <RotateCcw className="h-3.5 w-3.5" />
             </button>
@@ -260,7 +260,7 @@ export default function RichTextEditor({
               onClick={() => editor.chain().focus().redo().run()}
               disabled={!editor.can().redo()}
               title="Redo (Ctrl+Y)"
-              className="rounded-md p-1.5 text-slate-500 hover:bg-slate-200/60 disabled:opacity-30"
+              className="text-on-surface-variant hover:bg-surface-container-high/60 rounded-md p-1.5 disabled:opacity-30"
             >
               <RotateCw className="h-3.5 w-3.5" />
             </button>
@@ -270,7 +270,7 @@ export default function RichTextEditor({
 
       {/* Formatting Toolbar (Only visible in Visual mode) */}
       {activeTab === 'visual' && (
-        <div className="flex flex-wrap items-center gap-0.5 border-b border-slate-100 bg-white px-3 py-1.5 text-slate-600">
+        <div className="border-outline-variant text-on-surface-variant flex flex-wrap items-center gap-0.5 border-b bg-white px-3 py-1.5">
           {/* Headings */}
           <button
             type="button"
@@ -278,7 +278,7 @@ export default function RichTextEditor({
             className={`rounded-md p-1.5 text-xs font-bold transition ${
               editor.isActive('heading', { level: 2 })
                 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-400/40'
-                : 'text-slate-700 hover:bg-slate-100'
+                : 'text-on-surface hover:bg-surface-container-high'
             }`}
             title="Heading 2 (H2)"
           >
@@ -291,14 +291,14 @@ export default function RichTextEditor({
             className={`rounded-md p-1.5 text-xs font-bold transition ${
               editor.isActive('heading', { level: 3 })
                 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-400/40'
-                : 'text-slate-700 hover:bg-slate-100'
+                : 'text-on-surface hover:bg-surface-container-high'
             }`}
             title="Heading 3 (H3)"
           >
             <Heading3 className="h-4 w-4" />
           </button>
 
-          <div className="mx-1 h-4 w-px bg-slate-200" />
+          <div className="bg-surface-container-high mx-1 h-4 w-px" />
 
           {/* Inline marks */}
           <button
@@ -307,7 +307,7 @@ export default function RichTextEditor({
             className={`rounded-md p-1.5 transition ${
               editor.isActive('bold')
                 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-400/40'
-                : 'text-slate-700 hover:bg-slate-100'
+                : 'text-on-surface hover:bg-surface-container-high'
             }`}
             title="Bold (Ctrl+B)"
           >
@@ -320,7 +320,7 @@ export default function RichTextEditor({
             className={`rounded-md p-1.5 transition ${
               editor.isActive('italic')
                 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-400/40'
-                : 'text-slate-700 hover:bg-slate-100'
+                : 'text-on-surface hover:bg-surface-container-high'
             }`}
             title="Italic (Ctrl+I)"
           >
@@ -333,7 +333,7 @@ export default function RichTextEditor({
             className={`rounded-md p-1.5 transition ${
               editor.isActive('underline')
                 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-400/40'
-                : 'text-slate-700 hover:bg-slate-100'
+                : 'text-on-surface hover:bg-surface-container-high'
             }`}
             title="Underline (Ctrl+U)"
           >
@@ -346,14 +346,14 @@ export default function RichTextEditor({
             className={`rounded-md p-1.5 transition ${
               editor.isActive('strike')
                 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-400/40'
-                : 'text-slate-700 hover:bg-slate-100'
+                : 'text-on-surface hover:bg-surface-container-high'
             }`}
             title="Strikethrough"
           >
             <Strikethrough className="h-4 w-4" />
           </button>
 
-          <div className="mx-1 h-4 w-px bg-slate-200" />
+          <div className="bg-surface-container-high mx-1 h-4 w-px" />
 
           {/* Lists */}
           <button
@@ -362,7 +362,7 @@ export default function RichTextEditor({
             className={`rounded-md p-1.5 transition ${
               editor.isActive('bulletList')
                 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-400/40'
-                : 'text-slate-700 hover:bg-slate-100'
+                : 'text-on-surface hover:bg-surface-container-high'
             }`}
             title="Bulleted List"
           >
@@ -375,14 +375,14 @@ export default function RichTextEditor({
             className={`rounded-md p-1.5 transition ${
               editor.isActive('orderedList')
                 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-400/40'
-                : 'text-slate-700 hover:bg-slate-100'
+                : 'text-on-surface hover:bg-surface-container-high'
             }`}
             title="Numbered List"
           >
             <ListOrdered className="h-4 w-4" />
           </button>
 
-          <div className="mx-1 h-4 w-px bg-slate-200" />
+          <div className="bg-surface-container-high mx-1 h-4 w-px" />
 
           {/* Blockquote & Code */}
           <button
@@ -391,7 +391,7 @@ export default function RichTextEditor({
             className={`rounded-md p-1.5 transition ${
               editor.isActive('blockquote')
                 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-400/40'
-                : 'text-slate-700 hover:bg-slate-100'
+                : 'text-on-surface hover:bg-surface-container-high'
             }`}
             title="Key Point / Blockquote"
           >
@@ -404,14 +404,14 @@ export default function RichTextEditor({
             className={`rounded-md p-1.5 transition ${
               editor.isActive('codeBlock')
                 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-400/40'
-                : 'text-slate-700 hover:bg-slate-100'
+                : 'text-on-surface hover:bg-surface-container-high'
             }`}
             title="Code Block"
           >
             <Code className="h-4 w-4" />
           </button>
 
-          <div className="mx-1 h-4 w-px bg-slate-200" />
+          <div className="bg-surface-container-high mx-1 h-4 w-px" />
 
           {/* Links & Dividers */}
           <button
@@ -420,7 +420,7 @@ export default function RichTextEditor({
             className={`rounded-md p-1.5 transition ${
               editor.isActive('link')
                 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-400/40'
-                : 'text-slate-700 hover:bg-slate-100'
+                : 'text-on-surface hover:bg-surface-container-high'
             }`}
             title="Insert Link"
           >
@@ -441,7 +441,7 @@ export default function RichTextEditor({
           <button
             type="button"
             onClick={() => editor.chain().focus().setHorizontalRule().run()}
-            className="rounded-md p-1.5 text-slate-600 transition hover:bg-slate-100"
+            className="text-on-surface-variant hover:bg-surface-container-high rounded-md p-1.5 transition"
             title="Horizontal Divider"
           >
             <Minus className="h-4 w-4" />
@@ -450,7 +450,7 @@ export default function RichTextEditor({
           <button
             type="button"
             onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
-            className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="text-outline hover:bg-surface-container-high hover:text-on-surface rounded-md p-1.5 transition"
             title="Clear Formatting"
           >
             <RemoveFormatting className="h-4 w-4" />
@@ -469,7 +469,7 @@ export default function RichTextEditor({
               value={sourceCode}
               onChange={(e) => handleSourceCodeChange(e.target.value)}
               placeholder="Paste or write HTML markup here..."
-              className="w-full rounded-xl border border-slate-200 bg-slate-900 p-4 font-mono text-xs leading-relaxed text-slate-200 focus:border-emerald-500 focus:outline-none"
+              className="border-outline-variant w-full rounded-xl border bg-slate-900 p-4 font-mono text-xs leading-relaxed text-slate-200 focus:border-emerald-500 focus:outline-none"
             />
           </div>
         )}
@@ -479,7 +479,7 @@ export default function RichTextEditor({
             {editor.getHTML().trim() ? (
               <MarkdownArticleContent content={editor.getHTML()} />
             ) : (
-              <p className="py-12 text-center text-xs text-slate-400">No article content to preview.</p>
+              <p className="text-outline py-12 text-center text-xs">No article content to preview.</p>
             )}
           </div>
         )}

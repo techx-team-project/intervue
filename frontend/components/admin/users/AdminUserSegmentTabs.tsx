@@ -14,7 +14,7 @@ export default function AdminUserSegmentTabs({ active, counts, onChange }: Admin
   const countFor = (segment: AdminUserSegment) => counts.find((entry) => entry.segment === segment)?.count ?? 0;
 
   return (
-    <div className="dark:border-forest-800 -mx-1 overflow-x-auto border-b border-[#e9eaec] px-1">
+    <div className="dark:border-forest-800 border-outline-variant -mx-1 overflow-x-auto border-b px-1">
       <div role="tablist" aria-label="User segments" className="flex min-w-max items-center gap-1">
         {USER_SEGMENTS.map(({ segment, label }) => {
           const isActive = segment === active;
@@ -28,19 +28,19 @@ export default function AdminUserSegmentTabs({ active, counts, onChange }: Admin
               aria-selected={isActive}
               onClick={() => onChange(segment)}
               className={cn(
-                'relative flex cursor-pointer items-center gap-1.5 px-3 py-2.5 text-[13px] font-bold whitespace-nowrap transition-colors',
+                'text-body-md relative flex cursor-pointer items-center gap-1.5 px-3 py-2.5 font-bold whitespace-nowrap transition-colors',
                 isActive
                   ? 'text-primary'
-                  : 'dark:text-forest-300 dark:hover:text-forest-100 text-[#64748b] hover:text-[#334155]',
+                  : 'dark:text-forest-300 dark:hover:text-forest-100 text-on-surface-variant hover:text-on-surface-variant',
               )}
             >
               {label}
               <span
                 className={cn(
-                  'rounded-full px-1.5 py-0.5 text-[10.5px] font-black',
+                  'text-label-sm rounded-full px-1.5 py-0.5 font-bold',
                   isActive
                     ? 'bg-primary/10 text-primary'
-                    : 'dark:bg-forest-850 dark:text-forest-300 bg-slate-100 text-slate-500',
+                    : 'dark:bg-forest-850 dark:text-forest-300 bg-surface-container-high text-on-surface-variant',
                 )}
               >
                 {count}

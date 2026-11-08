@@ -23,23 +23,23 @@ export function AdminBlogSummaryRow({ summary }: AdminBlogSummaryRowProps) {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <div className="flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
+      <div className="border-outline-variant/80 flex items-center gap-4 rounded-2xl border bg-white p-5 shadow-2xs">
+        <div className="bg-surface-container-high text-on-surface flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
           <FileText className="h-6 w-6" />
         </div>
         <div>
-          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Total Articles</p>
-          <p className="mt-0.5 text-2xl font-bold tracking-tight text-slate-900">{total}</p>
+          <p className="text-on-surface-variant text-xs font-semibold tracking-wider uppercase">Total Articles</p>
+          <p className="text-on-surface mt-0.5 text-2xl font-bold tracking-tight">{total}</p>
         </div>
       </div>
 
       <div className="flex items-center gap-4 rounded-2xl border border-emerald-100 bg-white p-5 shadow-2xs">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+        <div className="text-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
           <CheckCircle2 className="h-6 w-6" />
         </div>
         <div>
-          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Published</p>
-          <p className="mt-0.5 text-2xl font-bold tracking-tight text-[#00b14f]">{published}</p>
+          <p className="text-on-surface-variant text-xs font-semibold tracking-wider uppercase">Published</p>
+          <p className="text-primary mt-0.5 text-2xl font-bold tracking-tight">{published}</p>
         </div>
       </div>
 
@@ -48,7 +48,7 @@ export function AdminBlogSummaryRow({ summary }: AdminBlogSummaryRowProps) {
           <Clock className="h-6 w-6" />
         </div>
         <div>
-          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Drafts</p>
+          <p className="text-on-surface-variant text-xs font-semibold tracking-wider uppercase">Drafts</p>
           <p className="mt-0.5 text-2xl font-bold tracking-tight text-amber-600">{drafts}</p>
         </div>
       </div>
@@ -58,7 +58,7 @@ export function AdminBlogSummaryRow({ summary }: AdminBlogSummaryRowProps) {
           <Eye className="h-6 w-6" />
         </div>
         <div>
-          <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Total Views</p>
+          <p className="text-on-surface-variant text-xs font-semibold tracking-wider uppercase">Total Views</p>
           <p className="mt-0.5 text-2xl font-bold tracking-tight text-indigo-600">{formattedViews}</p>
         </div>
       </div>

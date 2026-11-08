@@ -18,7 +18,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>((props, r
           type="button"
           onClick={() => setVisible((prev) => !prev)}
           aria-label={visible ? 'Hide password' : 'Show password'}
-          className="cursor-pointer p-1 text-slate-400 hover:text-slate-600"
+          className="text-outline hover:text-on-surface-variant cursor-pointer p-1"
         >
           {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </button>

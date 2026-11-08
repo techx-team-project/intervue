@@ -29,7 +29,7 @@ export default function AdminHighlightRow({ highlights }: AdminHighlightRowProps
         return (
           <article
             key={highlight.key}
-            className="dark:border-forest-800 dark:bg-forest-900 relative overflow-hidden rounded-2xl border border-[#e9eaec] bg-white p-4 shadow-xs"
+            className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant relative overflow-hidden rounded-2xl border bg-white p-4 shadow-xs"
           >
             <span
               aria-hidden="true"
@@ -47,11 +47,13 @@ export default function AdminHighlightRow({ highlights }: AdminHighlightRowProps
               </span>
 
               <div className="min-w-0">
-                <p className="dark:text-forest-300 text-[12px] font-semibold text-[#64748b]">{highlight.label}</p>
-                <p className="text-navy dark:text-forest-50 mt-0.5 text-2xl leading-none font-black">
+                <p className="dark:text-forest-300 text-body-sm text-on-surface-variant font-semibold">
+                  {highlight.label}
+                </p>
+                <p className="text-navy dark:text-forest-50 mt-0.5 text-2xl leading-none font-bold">
                   {highlight.value}
                 </p>
-                <p className="mt-1 truncate text-[11.5px] text-[#94a3b8]">{highlight.caption}</p>
+                <p className="text-label-sm text-outline mt-1 truncate">{highlight.caption}</p>
               </div>
             </div>
           </article>

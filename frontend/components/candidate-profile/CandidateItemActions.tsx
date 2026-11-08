@@ -7,7 +7,7 @@ type CandidateItemActionsProps = {
 };
 
 const BUTTON_CLASS =
-  'flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-[#6f7882] transition-colors hover:bg-[#f4f5f5]';
+  'flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-surface-container-low';
 
 export default function CandidateItemActions({ name, onEdit, onDelete }: CandidateItemActionsProps) {
   return (
@@ -24,7 +24,7 @@ export default function CandidateItemActions({ name, onEdit, onDelete }: Candida
       <button
         type="button"
         onClick={onDelete}
-        className={`${BUTTON_CLASS} hover:text-rose-600`}
+        className={`${BUTTON_CLASS} hover:text-error`}
         title={`Delete ${name}`}
         aria-label={`Delete ${name}`}
       >

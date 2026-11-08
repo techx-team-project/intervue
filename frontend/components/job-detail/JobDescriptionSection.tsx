@@ -38,12 +38,15 @@ const PERK_ICONS: Record<string, React.ElementType> = {
 export default function JobDescriptionSection({ job, onApply, onReport }: JobDescriptionSectionProps) {
   return (
     <div className="space-y-6">
-      <section id="job-description" className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
-        <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
-          <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
+      <section
+        id="job-description"
+        className="border-outline-variant/90 rounded-2xl border bg-white p-5 shadow-2xs sm:p-7"
+      >
+        <div className="border-outline-variant flex items-center gap-2.5 border-b pb-4">
+          <div className="text-primary bg-primary-light flex h-8 w-8 items-center justify-center rounded-lg">
             <Briefcase className="h-4.5 w-4.5" />
           </div>
-          <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Mô tả công việc</h2>
+          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Mô tả công việc</h2>
         </div>
 
         <div className="mt-5 space-y-3">
@@ -52,29 +55,32 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
               <div className="text-primary mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-100/70">
                 <div className="bg-primary h-1.5 w-1.5 rounded-full" />
               </div>
-              <p className="text-[14.5px] leading-relaxed text-slate-700">{item}</p>
+              <p className="text-body-md text-on-surface leading-relaxed">{item}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section id="job-requirements" className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
-        <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
-          <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
+      <section
+        id="job-requirements"
+        className="border-outline-variant/90 rounded-2xl border bg-white p-5 shadow-2xs sm:p-7"
+      >
+        <div className="border-outline-variant flex items-center gap-2.5 border-b pb-4">
+          <div className="text-primary bg-primary-light flex h-8 w-8 items-center justify-center rounded-lg">
             <Layers className="h-4.5 w-4.5" />
           </div>
-          <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Yêu cầu ứng viên</h2>
+          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Yêu cầu ứng viên</h2>
         </div>
 
         <div className="mt-5">
-          <div className="mb-2.5 text-xs font-bold tracking-wider text-slate-500 uppercase">
+          <div className="text-on-surface-variant mb-2.5 text-xs font-bold tracking-wider uppercase">
             Kỹ năng & Chuyên môn ưu tiên
           </div>
           <div className="flex flex-wrap gap-2">
             {job.skills.map((skill, index) => (
               <span
                 key={index}
-                className="inline-flex items-center rounded-lg border border-emerald-200 bg-emerald-50/70 px-3 py-1.5 text-xs font-semibold text-emerald-800 transition-colors hover:bg-emerald-100"
+                className="border-primary/30 text-on-primary-container hover:bg-primary-container inline-flex items-center rounded-lg border bg-emerald-50/70 px-3 py-1.5 text-xs font-semibold transition-colors"
               >
                 {skill}
               </span>
@@ -86,18 +92,21 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
           {job.requirements.map((item, index) => (
             <div key={index} className="flex items-start gap-3">
               <CheckCircle className="text-primary mt-0.5 h-4.5 w-4.5 shrink-0" />
-              <p className="text-[14.5px] leading-relaxed text-slate-700">{item}</p>
+              <p className="text-body-md text-on-surface leading-relaxed">{item}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section id="job-benefits" className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
-        <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
-          <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
+      <section
+        id="job-benefits"
+        className="border-outline-variant/90 rounded-2xl border bg-white p-5 shadow-2xs sm:p-7"
+      >
+        <div className="border-outline-variant flex items-center gap-2.5 border-b pb-4">
+          <div className="text-primary bg-primary-light flex h-8 w-8 items-center justify-center rounded-lg">
             <Gift className="h-4.5 w-4.5" />
           </div>
-          <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Quyền lợi ứng viên</h2>
+          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Quyền lợi ứng viên</h2>
         </div>
 
         {job.perks && job.perks.length > 0 && (
@@ -107,13 +116,13 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
               return (
                 <div
                   key={index}
-                  className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-3.5 transition hover:border-emerald-200 hover:bg-emerald-50/40"
+                  className="border-outline-variant/80 bg-surface-container-low/70 hover:border-primary/30 rounded-xl border p-3.5 transition hover:bg-emerald-50/40"
                 >
-                  <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200/60 bg-white shadow-2xs">
+                  <div className="text-primary border-outline-variant/60 flex h-8 w-8 items-center justify-center rounded-lg border bg-white shadow-2xs">
                     <IconComp className="h-4 w-4" />
                   </div>
-                  <div className="mt-2 text-[13px] font-bold text-slate-800">{perk.title}</div>
-                  <div className="mt-0.5 text-[11.5px] leading-snug text-slate-500">{perk.desc}</div>
+                  <div className="text-body-md text-on-surface mt-2 font-bold">{perk.title}</div>
+                  <div className="text-label-sm text-on-surface-variant mt-0.5 leading-snug">{perk.desc}</div>
                 </div>
               );
             })}
@@ -123,37 +132,40 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
         <div className="mt-5 space-y-3">
           {job.benefits.map((item, index) => (
             <div key={index} className="flex items-start gap-3">
-              <div className="text-primary mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-100">
+              <div className="text-primary bg-primary-container mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full">
                 <div className="bg-primary h-1.5 w-1.5 rounded-full" />
               </div>
-              <p className="text-[14.5px] leading-relaxed text-slate-700">{item}</p>
+              <p className="text-body-md text-on-surface leading-relaxed">{item}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section id="job-location" className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs sm:p-7">
-        <div className="flex items-center gap-2.5 border-b border-slate-100 pb-4">
-          <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
+      <section
+        id="job-location"
+        className="border-outline-variant/90 rounded-2xl border bg-white p-5 shadow-2xs sm:p-7"
+      >
+        <div className="border-outline-variant flex items-center gap-2.5 border-b pb-4">
+          <div className="text-primary bg-primary-light flex h-8 w-8 items-center justify-center rounded-lg">
             <MapPin className="h-4.5 w-4.5" />
           </div>
-          <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Địa điểm & Thời gian làm việc</h2>
+          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Địa điểm & Thời gian làm việc</h2>
         </div>
 
         <div className="mt-5 space-y-4">
-          <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+          <div className="border-outline-variant bg-surface-container-low/60 rounded-xl border p-4">
             <div className="flex items-start gap-3">
               <MapPin className="text-primary mt-0.5 h-5 w-5 shrink-0" />
               <div className="flex-1">
-                <div className="text-[14.5px] font-bold text-slate-800">Địa điểm làm việc:</div>
-                <div className="mt-1 text-[14px] text-slate-600">{job.location.specificAddress}</div>
+                <div className="text-body-md text-on-surface font-bold">Địa điểm làm việc:</div>
+                <div className="text-body-md text-on-surface-variant mt-1">{job.location.specificAddress}</div>
                 {job.location.allLocations && (
                   <div className="mt-2 flex flex-wrap gap-1.5">
-                    <span className="mr-1 text-xs text-slate-500">Khu vực liên quan:</span>
+                    <span className="text-on-surface-variant mr-1 text-xs">Khu vực liên quan:</span>
                     {job.location.allLocations.map((loc, idx) => (
                       <span
                         key={idx}
-                        className="rounded border border-slate-200 bg-white px-2 py-0.5 text-xs font-medium text-slate-600"
+                        className="border-outline-variant text-on-surface-variant rounded border bg-white px-2 py-0.5 text-xs font-medium"
                       >
                         {loc}
                       </span>
@@ -164,23 +176,23 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+          <div className="border-outline-variant bg-surface-container-low/60 rounded-xl border p-4">
             <div className="flex items-start gap-3">
               <Clock className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
               <div>
-                <div className="text-[14.5px] font-bold text-slate-800">Thời gian làm việc:</div>
-                <div className="mt-1 text-[14px] font-medium text-slate-700">{job.workSchedule.days}</div>
-                <div className="mt-0.5 text-[13px] text-slate-500">Giờ làm việc: {job.workSchedule.time}</div>
+                <div className="text-body-md text-on-surface font-bold">Thời gian làm việc:</div>
+                <div className="text-body-md text-on-surface mt-1 font-medium">{job.workSchedule.days}</div>
+                <div className="text-body-md text-on-surface-variant mt-0.5">Giờ làm việc: {job.workSchedule.time}</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="rounded-2xl border border-emerald-200 bg-linear-to-br from-emerald-50/60 via-white to-teal-50/30 p-5 shadow-xs sm:p-7">
+      <section className="border-primary/30 bg-primary-light rounded-2xl border p-5 shadow-xs sm:p-7">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-extrabold text-[#00873c]">
+            <div className="bg-primary-container text-primary inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-extrabold">
               <Calendar className="h-3.5 w-3.5" />
               <span>Hạn nộp hồ sơ: {job.deadline}</span>
               {job.daysRemaining && (
@@ -188,10 +200,10 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
               )}
             </div>
 
-            <h3 className="mt-2.5 text-lg font-bold text-slate-900 sm:text-xl">
+            <h3 className="text-on-surface mt-2.5 text-lg font-bold sm:text-xl">
               Sẵn sàng gia nhập đội ngũ {job.company.name}?
             </h3>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="text-on-surface-variant mt-1 text-sm">
               Nhà tuyển dụng phản hồi hồ sơ trong vòng 24 - 48 giờ làm việc.
             </p>
           </div>
@@ -199,7 +211,7 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
           <button
             type="button"
             onClick={onApply}
-            className="from-primary to-primary-hover shadow-primary/30 hover:shadow-primary/40 flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r px-7 py-3.5 text-[15px] font-black text-white shadow-md transition hover:shadow-lg active:translate-y-0"
+            className="shadow-primary/30 hover:shadow-primary/40 bg-primary text-body-lg shadow-elevation-1 hover:shadow-elevation-2 flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-7 py-3.5 font-bold text-white transition active:translate-y-0"
           >
             <Send className="h-4 w-4" />
             <span>Ứng tuyển ngay</span>

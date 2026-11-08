@@ -19,15 +19,15 @@ const OUTCOME_STYLE: Record<AdminAuditOutcome, string> = {
   rejected: 'bg-rose-50 text-rose-600 dark:bg-rose-500/10',
   locked: 'bg-rose-50 text-rose-600 dark:bg-rose-500/10',
   updated: 'bg-sky-50 text-sky-600 dark:bg-sky-500/10',
-  dismissed: 'bg-[#f1f5f9] text-[#94a3b8] dark:bg-forest-850',
+  dismissed: 'bg-surface-container-low text-outline dark:bg-forest-850',
 };
 
 export default function AdminAuditFeed({ entries }: AdminAuditFeedProps) {
   return (
-    <section className="dark:border-forest-800 dark:bg-forest-900 flex h-full max-h-[34rem] flex-col overflow-hidden rounded-2xl border border-[#e9eaec] bg-white shadow-xs">
-      <header className="dark:border-forest-800 flex shrink-0 items-baseline justify-between gap-2 border-b border-[#f1f5f9] px-4 py-3.5">
-        <h2 className="text-navy dark:text-forest-50 text-[14px] font-bold">Admin activity</h2>
-        <span className="text-[11.5px] text-[#94a3b8]">Today</span>
+    <section className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex h-full max-h-[34rem] flex-col overflow-hidden rounded-2xl border bg-white shadow-xs">
+      <header className="dark:border-forest-800 border-outline-variant flex shrink-0 items-baseline justify-between gap-2 border-b px-4 py-3.5">
+        <h2 className="text-navy dark:text-forest-50 text-body-md font-bold">Admin activity</h2>
+        <span className="text-label-sm text-outline">Today</span>
       </header>
 
       <ol className="scrollbar-on-hover dark:divide-forest-800 min-h-0 flex-1 divide-y divide-[#f1f5f9] overflow-y-auto">
@@ -43,17 +43,17 @@ export default function AdminAuditFeed({ entries }: AdminAuditFeedProps) {
               </span>
 
               <div className="min-w-0 flex-1">
-                <p className="dark:text-forest-200 text-[12.5px] leading-snug text-[#475569]">
+                <p className="dark:text-forest-200 text-body-sm text-on-surface-variant leading-snug">
                   <span className="text-navy dark:text-forest-50 font-bold">{entry.actorName}</span>{' '}
                   {entry.action.toLowerCase()} <span className="font-semibold">{entry.targetLabel}</span>
                 </p>
 
-                <p className="mt-0.5 text-[11.5px] text-[#94a3b8]">
+                <p className="text-label-sm text-outline mt-0.5">
                   {entry.actorRoleLabel} · {entry.at}
                 </p>
 
                 {entry.reason && (
-                  <p className="dark:text-forest-300 mt-1 text-[11.5px] leading-snug text-[#64748b]">
+                  <p className="dark:text-forest-300 text-label-sm text-on-surface-variant mt-1 leading-snug">
                     “{entry.reason}”
                   </p>
                 )}

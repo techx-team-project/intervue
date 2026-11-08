@@ -19,7 +19,7 @@ export default async function SavedCandidatesPage() {
         actions={
           <Link
             href={ROUTES.RECRUITER_APPLICATIONS}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-[13px] font-bold text-slate-700 transition-colors hover:bg-slate-50"
+            className="border-outline-variant text-body-md text-on-surface hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-xl border bg-white px-3.5 py-2.5 font-bold transition-colors"
           >
             <LayoutDashboard className="h-4 w-4" />
             Applications

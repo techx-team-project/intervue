@@ -17,15 +17,15 @@ export interface BreadcrumbProps {
 
 export function Breadcrumb({ items, showHome = true, className }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className={cn('flex items-center text-sm text-slate-500', className)}>
+    <nav aria-label="Breadcrumb" className={cn('text-on-surface-variant flex items-center text-sm', className)}>
       <ol className="flex flex-wrap items-center gap-1.5 sm:gap-2">
         {showHome && (
           <li className="flex items-center">
-            <Link href="/" className="flex items-center gap-1.5 transition-colors hover:text-emerald-600">
-              <Home className="h-3.5 w-3.5 text-slate-400" />
+            <Link href="/" className="hover:text-primary flex items-center gap-1.5 transition-colors">
+              <Home className="text-outline h-3.5 w-3.5" />
               <span>Home</span>
             </Link>
-            <ChevronRight className="ml-1.5 h-3.5 w-3.5 text-slate-300 sm:ml-2" />
+            <ChevronRight className="text-outline ml-1.5 h-3.5 w-3.5 sm:ml-2" />
           </li>
         )}
 
@@ -35,18 +35,18 @@ export function Breadcrumb({ items, showHome = true, className }: BreadcrumbProp
           return (
             <li key={index} className="flex items-center">
               {item.href && !isLast ? (
-                <Link href={item.href} className="flex items-center gap-1.5 transition-colors hover:text-emerald-600">
+                <Link href={item.href} className="hover:text-primary flex items-center gap-1.5 transition-colors">
                   {item.icon}
                   <span>{item.label}</span>
                 </Link>
               ) : (
-                <span className="flex items-center gap-1.5 font-semibold text-slate-800">
+                <span className="text-on-surface flex items-center gap-1.5 font-semibold">
                   {item.icon}
                   <span>{item.label}</span>
                 </span>
               )}
 
-              {!isLast && <ChevronRight className="ml-1.5 h-3.5 w-3.5 text-slate-300 sm:ml-2" />}
+              {!isLast && <ChevronRight className="text-outline ml-1.5 h-3.5 w-3.5 sm:ml-2" />}
             </li>
           );
         })}

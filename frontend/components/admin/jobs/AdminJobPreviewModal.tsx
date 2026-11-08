@@ -18,8 +18,8 @@ function Block({ title, text }: { title: string; text?: string }) {
   if (!text) return null;
   return (
     <section className="space-y-1">
-      <h4 className="text-xs font-bold tracking-wide text-slate-500 uppercase">{title}</h4>
-      <p className="text-[13px] leading-relaxed whitespace-pre-line text-slate-700">{text}</p>
+      <h4 className="text-on-surface-variant text-xs font-bold tracking-wide uppercase">{title}</h4>
+      <p className="text-body-md text-on-surface leading-relaxed whitespace-pre-line">{text}</p>
     </section>
   );
 }
@@ -49,9 +49,9 @@ export default function AdminJobPreviewModal({ jobId, onClose }: AdminJobPreview
         <p className="py-6 text-center text-sm font-semibold text-rose-600">{getErrorMessage(error)}</p>
       ) : (
         <div className="space-y-4">
-          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600">
+          <div className="text-on-surface-variant flex flex-wrap items-center gap-2 text-xs">
             <JobPostStatusBadge status={job.status} />
-            <span className="font-semibold text-slate-800">{job.companyName}</span>
+            <span className="text-on-surface font-semibold">{job.companyName}</span>
             {job.location.city && <span>· {job.location.city}</span>}
             {job.level && <span>· {JOB_LEVEL_LABELS[job.level]}</span>}
             {job.contractType && <span>· {JOB_CONTRACT_LABELS[job.contractType]}</span>}
@@ -70,7 +70,7 @@ export default function AdminJobPreviewModal({ jobId, onClose }: AdminJobPreview
               {job.skills.map((skill) => (
                 <span
                   key={skill.id}
-                  className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600"
+                  className="bg-surface-container-high text-label-sm text-on-surface-variant rounded-md px-2 py-0.5 font-medium"
                 >
                   {skill.name}
                 </span>

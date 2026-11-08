@@ -54,13 +54,13 @@ export default function CvFilterBar({
                   className={`flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition sm:text-sm ${
                     isActive
                       ? 'bg-primary text-white shadow-xs'
-                      : 'hover:bg-primary-light hover:text-primary text-[#526475]'
+                      : 'hover:bg-primary-light hover:text-primary text-on-surface-variant'
                   }`}
                 >
                   <span>{style.name}</span>
                   <span
-                    className={`py-0.2 rounded-full px-1.5 text-[10px] font-bold ${
-                      isActive ? 'bg-white/25 text-white' : 'bg-gray-100 text-[#7f878f]'
+                    className={`py-0.2 text-label-sm rounded-full px-1.5 font-bold ${
+                      isActive ? 'bg-white/25 text-white' : 'text-on-surface-variant bg-gray-100'
                     }`}
                   >
                     {style.count}
@@ -71,19 +71,19 @@ export default function CvFilterBar({
           </div>
 
           <div className="relative hidden w-72 shrink-0 md:block">
-            <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#9ca3af]" />
+            <Search className="text-outline absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder={searchPlaceholder}
-              className="focus:border-primary focus:ring-primary w-full rounded-xl border border-gray-200 bg-gray-50/60 py-2 pr-8 pl-9.5 text-xs text-[#171717] placeholder:text-[#9ca3af] focus:bg-white focus:ring-1 focus:outline-hidden"
+              className="focus:border-primary focus:ring-primary text-on-surface placeholder:text-outline w-full rounded-xl border border-gray-200 bg-gray-50/60 py-2 pr-8 pl-9.5 text-xs focus:bg-white focus:ring-1 focus:outline-hidden"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => onSearchChange('')}
-                className="absolute top-1/2 right-2.5 -translate-y-1/2 text-xs text-[#9ca3af] hover:text-gray-700"
+                className="text-outline absolute top-1/2 right-2.5 -translate-y-1/2 text-xs hover:text-gray-700"
               >
                 ✕
               </button>
@@ -93,7 +93,7 @@ export default function CvFilterBar({
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-2 text-xs">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="flex items-center gap-1 font-semibold text-[#7f878f]">
+            <span className="text-on-surface-variant flex items-center gap-1 font-semibold">
               <Filter className="text-primary h-3.5 w-3.5" />
               {industryLabel}
             </span>
@@ -111,8 +111,8 @@ export default function CvFilterBar({
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1 font-semibold text-[#7f878f]">
-              <Globe className="h-3.5 w-3.5 text-blue-600" />
+            <span className="text-on-surface-variant flex items-center gap-1 font-semibold">
+              <Globe className="text-primary h-3.5 w-3.5" />
               {languageLabel}
             </span>
             <div className="flex rounded-lg border border-gray-200 bg-gray-50 p-0.5">
@@ -124,7 +124,9 @@ export default function CvFilterBar({
                     type="button"
                     onClick={() => onSelectLanguage(opt.key)}
                     className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
-                      isSelected ? 'text-primary bg-white font-bold shadow-xs' : 'text-[#526475] hover:text-[#171717]'
+                      isSelected
+                        ? 'text-primary bg-white font-bold shadow-xs'
+                        : 'text-on-surface-variant hover:text-on-surface'
                     }`}
                   >
                     {opt.label}

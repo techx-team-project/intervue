@@ -102,25 +102,25 @@ export function AccountSettingsLayout({
       </div>
 
       {/* Main Settings Frame (TopCV Sharp Clean Frame) */}
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-lg border border-slate-200/90 bg-white shadow-2xs">
+      <div className="border-outline-variant/90 mx-auto max-w-7xl overflow-hidden rounded-lg border bg-white shadow-2xs">
         {/* Header */}
-        <div className="border-b border-slate-200 bg-slate-50/80 px-6 py-3.5">
-          <h1 className="text-base font-bold text-slate-800 sm:text-lg">{pageTitle}</h1>
+        <div className="border-outline-variant bg-surface-container-low/80 border-b px-6 py-3.5">
+          <h1 className="text-on-surface text-base font-bold sm:text-lg">{pageTitle}</h1>
         </div>
 
         {/* 2-column settings grid */}
         <div className="grid min-h-[600px] grid-cols-1 md:grid-cols-12">
           {/* Left Settings Sidebar */}
-          <aside className="space-y-1 border-b border-slate-200 bg-slate-50/40 p-4 md:col-span-4 md:border-r md:border-b-0 lg:col-span-3">
+          <aside className="border-outline-variant bg-surface-container-low/40 space-y-1 border-b p-4 md:col-span-4 md:border-r md:border-b-0 lg:col-span-3">
             {navItems.map((item) => {
               const Icon = item.icon;
               if (item.disabled) {
                 return (
                   <div
                     key={item.id}
-                    className="flex cursor-not-allowed items-center gap-3 rounded-md px-3.5 py-2 text-xs font-medium text-slate-400 select-none sm:text-sm"
+                    className="text-outline flex cursor-not-allowed items-center gap-3 rounded-md px-3.5 py-2 text-xs font-medium select-none sm:text-sm"
                   >
-                    <Icon className="h-4 w-4 shrink-0 text-slate-400" />
+                    <Icon className="text-outline h-4 w-4 shrink-0" />
                     <span>{item.label}</span>
                   </div>
                 );
@@ -132,11 +132,11 @@ export function AccountSettingsLayout({
                   href={item.href}
                   className={`flex items-center gap-3 rounded-md px-3.5 py-2 text-xs font-medium transition-colors sm:text-sm ${
                     item.isActive
-                      ? 'bg-emerald-50/80 font-semibold text-[#00b14f]'
-                      : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'text-primary bg-emerald-50/80 font-semibold'
+                      : 'text-on-surface hover:bg-surface-container-high hover:text-on-surface'
                   }`}
                 >
-                  <Icon className={`h-4 w-4 shrink-0 ${item.isActive ? 'text-[#00b14f]' : 'text-slate-500'}`} />
+                  <Icon className={`h-4 w-4 shrink-0 ${item.isActive ? 'text-primary' : 'text-on-surface-variant'}`} />
                   <span>{item.label}</span>
                 </Link>
               );

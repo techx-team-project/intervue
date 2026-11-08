@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import FormErrorAlert from './FormErrorAlert';
+import RecruiterSocialLogin from './RecruiterSocialLogin';
 import TwoFactorChallengeModal from './TwoFactorChallengeModal';
 
 export default function RecruiterLoginForm() {
@@ -48,7 +49,7 @@ export default function RecruiterLoginForm() {
       }
       const session = toRecruiterSession(res);
       useAuthStore.getState().setSession(session, 'recruiter');
-      toast.success('Đã đăng nhập vào cổng nhà tuyển dụng.');
+      toast.success('Signed in to the recruiter portal.');
       router.replace(sanitizeRedirect(searchParams?.get(REDIRECT_PARAM), ROUTES.RECRUITER_DASHBOARD));
     } catch (error: unknown) {
       applyFormError(error, setError, ['email', 'password']);
@@ -59,6 +60,7 @@ export default function RecruiterLoginForm() {
 
   return (
     <div className="w-full">
+      <RecruiterSocialLogin />
       <FormErrorAlert message={errors.root?.message} />
 
       <form onSubmit={onSubmit} noValidate className="space-y-4">
@@ -81,12 +83,12 @@ export default function RecruiterLoginForm() {
         />
 
         <div className="flex items-center justify-between pt-1">
-          <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-[#4d5965] select-none">
+          <label className="text-on-surface-variant flex cursor-pointer items-center gap-2 text-xs font-medium select-none">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="text-primary focus:ring-primary h-4 w-4 rounded border-[#e9eaec]"
+              className="text-primary focus:ring-primary border-outline-variant h-4 w-4 rounded"
             />
             <span>Remember me</span>
           </label>
@@ -101,7 +103,7 @@ export default function RecruiterLoginForm() {
         <Button
           type="submit"
           isLoading={isLoading}
-          className="bg-primary hover:bg-primary-hover shadow-primary/20 mt-3 w-full rounded-xl py-3.5 text-sm font-bold text-white shadow-md transition"
+          className="bg-primary hover:bg-primary-hover shadow-primary/20 shadow-elevation-1 mt-3 w-full rounded-xl py-3.5 text-sm font-bold text-white transition"
           rightIcon={<ArrowRight className="h-4 w-4 stroke-[2.5]" />}
         >
           Sign in to the employer portal
@@ -109,7 +111,7 @@ export default function RecruiterLoginForm() {
       </form>
 
       {/* Switch to Register */}
-      <div className="mt-5 border-t border-[#f4f5f5] pt-4 text-center text-sm text-[#6f7882]">
+      <div className="border-outline-variant text-on-surface-variant mt-5 border-t pt-4 text-center text-sm">
         <span>New to InterVue for Employers? </span>
         <Link
           href={ROUTES.RECRUITER_REGISTER}
@@ -120,7 +122,7 @@ export default function RecruiterLoginForm() {
       </div>
 
       {/* Switch to Candidate Login */}
-      <div className="mt-3 rounded-xl border border-[#e9eaec] bg-[#f8fafc] p-3 text-center text-xs text-[#6f7882]">
+      <div className="border-outline-variant bg-surface-container-low text-on-surface-variant mt-3 rounded-xl border p-3 text-center text-xs">
         <span>Looking for a job? </span>
         <Link href={ROUTES.LOGIN} className="text-navy hover:text-primary font-bold hover:underline">
           Candidate sign in
@@ -134,7 +136,7 @@ export default function RecruiterLoginForm() {
           portal="recruiter"
           onSuccess={(session) => {
             useAuthStore.getState().setSession(session, 'recruiter');
-            toast.success('Đã đăng nhập vào cổng nhà tuyển dụng.');
+            toast.success('Signed in to the recruiter portal.');
             router.replace(sanitizeRedirect(searchParams?.get(REDIRECT_PARAM), ROUTES.RECRUITER_DASHBOARD));
           }}
           onCancel={() => setChallengeToken(null)}

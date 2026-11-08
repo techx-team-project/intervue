@@ -18,5 +18,6 @@ public record UserResource(
         UserStatus status,
         boolean emailVerified,
         boolean phoneVerified,
+        boolean hasPassword,
         Set<RoleType> roles,
         Instant createdAt) {}

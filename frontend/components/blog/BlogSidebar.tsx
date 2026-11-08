@@ -30,14 +30,14 @@ const SIDEBAR_TAGS = [
 export default function BlogSidebar({ popularArticles, selectedTag, onSelectTag }: BlogSidebarProps) {
   return (
     <aside className="space-y-6">
-      <div className="overflow-hidden rounded-2xl border border-emerald-100 bg-linear-to-b from-emerald-50/60 to-white p-5 shadow-xs">
+      <div className="bg-primary-light overflow-hidden rounded-2xl border border-emerald-100 p-5 shadow-xs">
         <div className="mb-4 flex items-center gap-2">
           <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg text-white">
             <Sparkles className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[#171717]">Career Toolkit</h3>
-            <p className="text-[11px] text-[#7f878f]">Free career accelerators</p>
+            <h3 className="text-on-surface text-sm font-bold">Career Toolkit</h3>
+            <p className="text-label-sm text-on-surface-variant">Free career accelerators</p>
           </div>
         </div>
 
@@ -55,35 +55,35 @@ export default function BlogSidebar({ popularArticles, selectedTag, onSelectTag 
 
           <Link
             href="/cv-templates"
-            className="group flex items-center justify-between rounded-xl border border-blue-200/60 bg-white p-3 text-xs transition hover:border-blue-500 hover:shadow-xs"
+            className="group border-outline-variant/60 hover:border-outline-variant flex items-center justify-between rounded-xl border bg-white p-3 text-xs transition hover:shadow-xs"
           >
             <div className="flex items-center gap-2.5">
-              <FileText className="h-4 w-4 text-blue-600" />
-              <span className="text-navy font-semibold group-hover:text-blue-600">Build ATS Resume</span>
+              <FileText className="text-primary h-4 w-4" />
+              <span className="text-navy group-hover:text-primary font-semibold">Build ATS Resume</span>
             </div>
-            <ArrowRight className="h-3.5 w-3.5 text-gray-400 group-hover:translate-x-0.5 group-hover:text-blue-600" />
+            <ArrowRight className="group-hover:text-primary h-3.5 w-3.5 text-gray-400 group-hover:translate-x-0.5" />
           </Link>
 
           <Link
             href="/blog/dinh-huong-nghe-nghiep"
-            className="group flex items-center justify-between rounded-xl border border-purple-200/60 bg-white p-3 text-xs transition hover:border-purple-500 hover:shadow-xs"
+            className="group border-outline-variant/60 hover:border-outline-variant flex items-center justify-between rounded-xl border bg-white p-3 text-xs transition hover:shadow-xs"
           >
             <div className="flex items-center gap-2.5">
-              <Compass className="h-4 w-4 text-purple-600" />
-              <span className="text-navy font-semibold group-hover:text-purple-600">Ikigai Career Quiz</span>
+              <Compass className="text-primary h-4 w-4" />
+              <span className="text-navy group-hover:text-primary font-semibold">Ikigai Career Quiz</span>
             </div>
-            <ArrowRight className="h-3.5 w-3.5 text-gray-400 group-hover:translate-x-0.5 group-hover:text-purple-600" />
+            <ArrowRight className="group-hover:text-primary h-3.5 w-3.5 text-gray-400 group-hover:translate-x-0.5" />
           </Link>
         </div>
       </div>
 
-      <div className="rounded-2xl border border-[#e5e7eb] bg-white p-5 shadow-xs">
+      <div className="border-outline-variant rounded-2xl border bg-white p-5 shadow-xs">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-red-500" />
-            <h3 className="text-sm font-bold text-[#171717]">Trending Articles</h3>
+            <TrendingUp className="text-error h-4 w-4" />
+            <h3 className="text-on-surface text-sm font-bold">Trending Articles</h3>
           </div>
-          <span className="text-[11px] text-[#7f878f]">This week</span>
+          <span className="text-label-sm text-on-surface-variant">This week</span>
         </div>
 
         <div className="space-y-3.5">
@@ -93,14 +93,14 @@ export default function BlogSidebar({ popularArticles, selectedTag, onSelectTag 
               href={`/blog/${article.categorySlug}/${article.slug}`}
               className="group flex items-start gap-3 transition"
             >
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-gray-100 text-xs font-bold text-gray-500 group-hover:bg-emerald-100 group-hover:text-emerald-700">
+              <span className="group-hover:bg-primary-container group-hover:text-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-gray-100 text-xs font-bold text-gray-500">
                 {idx + 1}
               </span>
               <div className="min-w-0 flex-1">
-                <h4 className="group-hover:text-primary line-clamp-2 text-xs font-bold text-[#171717] transition-colors">
+                <h4 className="group-hover:text-primary text-on-surface line-clamp-2 text-xs font-bold transition-colors">
                   {article.title}
                 </h4>
-                <div className="mt-1 flex items-center gap-2 text-[11px] text-[#7f878f]">
+                <div className="text-label-sm text-on-surface-variant mt-1 flex items-center gap-2">
                   <span>{article.readTime}</span>
                   <span>•</span>
                   <span>{article.viewsCount} views</span>
@@ -111,10 +111,10 @@ export default function BlogSidebar({ popularArticles, selectedTag, onSelectTag 
         </div>
       </div>
 
-      <div className="rounded-2xl border border-[#e5e7eb] bg-white p-5 shadow-xs">
+      <div className="border-outline-variant rounded-2xl border bg-white p-5 shadow-xs">
         <div className="mb-3 flex items-center gap-2">
-          <Tag className="h-4 w-4 text-blue-600" />
-          <h3 className="text-sm font-bold text-[#171717]">Popular Topics</h3>
+          <Tag className="text-primary h-4 w-4" />
+          <h3 className="text-on-surface text-sm font-bold">Popular Topics</h3>
         </div>
 
         <div className="flex flex-wrap gap-1.5">
@@ -128,7 +128,7 @@ export default function BlogSidebar({ popularArticles, selectedTag, onSelectTag 
                 className={`rounded-lg px-2.5 py-1 text-xs font-medium transition ${
                   isSelected
                     ? 'bg-primary text-white shadow-2xs'
-                    : 'bg-gray-100 text-[#475569] hover:bg-gray-200 hover:text-black'
+                    : 'text-on-surface-variant bg-gray-100 hover:bg-gray-200 hover:text-black'
                 }`}
               >
                 #{tag}
@@ -138,14 +138,14 @@ export default function BlogSidebar({ popularArticles, selectedTag, onSelectTag 
         </div>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-linear-to-br from-slate-900 to-slate-800 p-5 text-white shadow-xs">
+      <div className="bg-primary-deeper rounded-2xl border border-gray-200 p-5 text-white shadow-xs">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-emerald-400">
+          <div className="text-primary-bright flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
             <Mail className="h-4 w-4" />
           </div>
           <div>
             <h4 className="text-sm font-bold text-white">Career Newsletter</h4>
-            <p className="text-[11px] text-gray-400">Weekly job market trends</p>
+            <p className="text-label-sm text-gray-400">Weekly job market trends</p>
           </div>
         </div>
 
@@ -161,7 +161,7 @@ export default function BlogSidebar({ popularArticles, selectedTag, onSelectTag 
           />
           <button
             type="submit"
-            className="bg-primary w-full rounded-xl py-2 text-xs font-bold text-white transition hover:bg-emerald-600"
+            className="bg-primary hover:bg-primary w-full rounded-xl py-2 text-xs font-bold text-white transition"
           >
             Subscribe Now
           </button>

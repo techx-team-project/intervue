@@ -59,6 +59,9 @@ public class RecruiterEmailChangeService implements RecruiterEmailChangeServiceI
                 recruiterRepository
                         .findById(recruiterId)
                         .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        if (recruiter.getPassword() == null) {
+            throw new AppException(ErrorCode.PASSWORD_NOT_SET);
+        }
         if (!passwordEncoder.matches(request.currentPassword(), recruiter.getPassword())) {
             throw AppException.validation("currentPassword", "Current password is incorrect!");
         }

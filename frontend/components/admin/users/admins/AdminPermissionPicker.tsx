@@ -13,8 +13,8 @@ interface AdminPermissionPickerProps {
 export default function AdminPermissionPicker({ selected, error, onToggle }: AdminPermissionPickerProps) {
   return (
     <fieldset>
-      <legend className="text-[13px] font-semibold text-slate-700">
-        Permissions <span className="font-normal text-slate-400">({selected.length} granted)</span>
+      <legend className="text-body-md text-on-surface font-semibold">
+        Permissions <span className="text-outline font-normal">({selected.length} granted)</span>
       </legend>
 
       <div className="mt-2 max-h-72 space-y-1.5 overflow-y-auto pr-1">
@@ -27,18 +27,18 @@ export default function AdminPermissionPicker({ selected, error, onToggle }: Adm
               key={permission}
               className={cn(
                 'flex cursor-pointer items-start gap-2.5 rounded-lg border px-3 py-2 transition-colors',
-                isSelected ? 'border-primary/40 bg-primary/5' : 'border-slate-200 hover:bg-slate-50',
+                isSelected ? 'border-primary/40 bg-primary/5' : 'border-outline-variant hover:bg-surface-container-low',
               )}
             >
               <input
                 type="checkbox"
                 checked={isSelected}
                 onChange={() => onToggle(permission)}
-                className="accent-primary mt-0.5 h-4 w-4 cursor-pointer rounded border-slate-300"
+                className="accent-primary border-outline mt-0.5 h-4 w-4 cursor-pointer rounded"
               />
               <span className="min-w-0">
-                <span className="block text-[13px] font-semibold text-slate-800">{meta.label}</span>
-                <span className="mt-0.5 block text-[11.5px] text-slate-500">{meta.description}</span>
+                <span className="text-body-md text-on-surface block font-semibold">{meta.label}</span>
+                <span className="text-label-sm text-on-surface-variant mt-0.5 block">{meta.description}</span>
               </span>
             </label>
           );

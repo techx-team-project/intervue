@@ -38,7 +38,7 @@ export function Switch({ checked, onChange, disabled = false, size = 'md', ariaL
       <span
         aria-hidden="true"
         className={cn(
-          'pointer-events-none inline-block transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out',
+          'shadow-elevation-1 pointer-events-none inline-block transform rounded-full bg-white ring-0 transition duration-200 ease-in-out',
           isSm ? 'h-4 w-4 translate-y-0.5' : 'h-5 w-5 translate-y-0.5',
           checked ? (isSm ? 'translate-x-4.5' : 'translate-x-5.5') : 'translate-x-0.5',
         )}

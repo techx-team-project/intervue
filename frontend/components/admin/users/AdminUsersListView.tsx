@@ -265,7 +265,7 @@ export default function AdminUsersListView({
         actions={
           <Link
             href={ROUTES.ADMIN_ADMINS}
-            className="dark:border-forest-800 dark:text-forest-100 dark:hover:bg-forest-850 inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3.5 py-2 text-[12.5px] font-bold text-slate-700 transition-colors hover:bg-slate-50"
+            className="dark:border-forest-800 dark:text-forest-100 dark:hover:bg-forest-850 border-outline-variant text-body-sm text-on-surface hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 font-bold transition-colors"
           >
             <ShieldCheck className="h-4 w-4" />
             Admin accounts
@@ -309,17 +309,17 @@ export default function AdminUsersListView({
         )}
 
         {usersPage.totalItems === 0 ? (
-          <div className="dark:border-forest-800 dark:bg-forest-900 flex flex-col items-center justify-center gap-3 rounded-2xl border border-[#e2e8f0] bg-white px-6 py-16 text-center shadow-xs">
-            <UsersRound className="h-10 w-10 text-[#cbd5e1]" />
-            <p className="text-navy dark:text-forest-50 text-[14px] font-bold">No account matches these filters</p>
-            <p className="dark:text-forest-300 max-w-sm text-[12.5px] text-[#64748b]">
+          <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex flex-col items-center justify-center gap-3 rounded-2xl border bg-white px-6 py-16 text-center shadow-xs">
+            <UsersRound className="text-outline h-10 w-10" />
+            <p className="text-navy dark:text-forest-50 text-body-md font-bold">No account matches these filters</p>
+            <p className="dark:text-forest-300 text-body-sm text-on-surface-variant max-w-sm">
               Try a different keyword, or widen the segment, role and status filters.
             </p>
             {hasActiveFilters(filters) && (
               <button
                 type="button"
                 onClick={clearFilters}
-                className="text-primary mt-1 cursor-pointer text-[12.5px] font-bold hover:underline"
+                className="text-primary text-body-sm mt-1 cursor-pointer font-bold hover:underline"
               >
                 Clear all filters
               </button>

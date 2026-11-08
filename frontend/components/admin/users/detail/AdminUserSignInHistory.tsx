@@ -15,7 +15,7 @@ export default function AdminUserSignInHistory({ signIns }: AdminUserSignInHisto
       description="Reconstructed from the refresh tokens the account has been issued — one row per successful sign-in."
     >
       {signIns.length === 0 ? (
-        <p className="dark:text-forest-300 py-2 text-[12.5px] text-[#64748b]">
+        <p className="dark:text-forest-300 text-body-sm text-on-surface-variant py-2">
           No sign-in has ever been recorded for this account.
         </p>
       ) : (
@@ -23,12 +23,12 @@ export default function AdminUserSignInHistory({ signIns }: AdminUserSignInHisto
           {signIns.map((signIn) => (
             <li key={signIn.id} className="flex flex-wrap items-center justify-between gap-3 py-2.5">
               <div className="flex min-w-0 items-center gap-3">
-                <span className="dark:bg-forest-850 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+                <span className="dark:bg-forest-850 bg-surface-container-high text-on-surface-variant flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
                   <Monitor className="h-4 w-4" />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-navy dark:text-forest-50 truncate text-[12.5px] font-bold">{signIn.deviceLabel}</p>
-                  <p className="dark:text-forest-300 flex items-center gap-1 text-[11.5px] text-[#64748b]">
+                  <p className="text-navy dark:text-forest-50 text-body-sm truncate font-bold">{signIn.deviceLabel}</p>
+                  <p className="dark:text-forest-300 text-label-sm text-on-surface-variant flex items-center gap-1">
                     <MapPin className="h-3 w-3 shrink-0" />
                     {signIn.location} · {signIn.ipAddress}
                   </p>
@@ -36,13 +36,13 @@ export default function AdminUserSignInHistory({ signIns }: AdminUserSignInHisto
               </div>
 
               <div className="shrink-0 text-right">
-                <p className="dark:text-forest-200 text-[11.5px] font-semibold text-[#475569]">
+                <p className="dark:text-forest-200 text-label-sm text-on-surface-variant font-semibold">
                   {formatDateTime(signIn.at)}
                 </p>
                 <p
                   className={cn(
-                    'text-[11px] font-bold',
-                    signIn.outcome === 'revoked' ? 'text-slate-400' : 'text-emerald-600',
+                    'text-label-sm font-bold',
+                    signIn.outcome === 'revoked' ? 'text-outline' : 'text-emerald-600',
                   )}
                 >
                   {signIn.outcome === 'revoked' ? 'Session later revoked' : 'Session still valid'}

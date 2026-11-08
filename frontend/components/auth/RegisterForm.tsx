@@ -10,7 +10,7 @@ import { applyFormError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import FormErrorAlert from './FormErrorAlert';
 import SocialAuthButtons from './SocialAuthButtons';
 
@@ -22,6 +22,7 @@ export default function RegisterForm() {
     register,
     handleSubmit,
     setError,
+    control,
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -29,19 +30,21 @@ export default function RegisterForm() {
     defaultValues: { name: '', email: '', password: '', confirmPassword: '', acceptTerms: false },
   });
 
+  const acceptTerms = useWatch({ control, name: 'acceptTerms' });
+
   const onSubmit = handleSubmit((values) =>
     registerAccount.mutate(values, { onError: (error) => applyFormError(error, setError, FORM_FIELDS) }),
   );
 
   return (
     <div className="w-full">
-      <SocialAuthButtons mode="register" />
+      <SocialAuthButtons mode="register" acceptTerms={acceptTerms} />
 
       <div className="relative my-5 flex items-center justify-center">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-dashed border-slate-200" />
+          <div className="border-outline-variant w-full border-t border-dashed" />
         </div>
-        <span className="relative bg-white px-3 text-xs text-slate-400 italic">Or sign up with email</span>
+        <span className="text-outline relative bg-white px-3 text-xs italic">Or sign up with email</span>
       </div>
 
       <FormErrorAlert message={errors.root?.message} />
@@ -82,30 +85,31 @@ export default function RegisterForm() {
         />
 
         <div>
-          <label className="flex cursor-pointer items-start gap-2.5 text-xs text-slate-600 select-none">
+          <label className="text-on-surface-variant flex cursor-pointer items-start gap-2.5 text-xs select-none">
             <input
               type="checkbox"
-              className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+              className="border-outline text-primary focus:ring-primary mt-0.5 h-4 w-4 rounded"
               {...register('acceptTerms')}
             />
             <span>
               I agree to the{' '}
-              <a href="#" className="font-semibold text-emerald-600 hover:underline">
+              <a href="#" className="text-primary font-semibold hover:underline">
                 Terms of Service
               </a>{' '}
               and{' '}
-              <a href="#" className="font-semibold text-emerald-600 hover:underline">
+              <a href="#" className="text-primary font-semibold hover:underline">
                 Privacy Policy
               </a>{' '}
               of InterVue.
             </span>
           </label>
-          {errors.acceptTerms && <p className="mt-1 text-xs font-medium text-rose-500">{errors.acceptTerms.message}</p>}
+          {errors.acceptTerms && <p className="text-error mt-1 text-xs font-medium">{errors.acceptTerms.message}</p>}
         </div>
 
         <Button
           type="submit"
           isLoading={registerAccount.isPending}
+          disabled={!acceptTerms}
           className="mt-2 w-full rounded-xl py-3 text-sm font-bold"
           rightIcon={<ArrowRight className="h-4 w-4 stroke-[2.5]" />}
         >
@@ -113,9 +117,9 @@ export default function RegisterForm() {
         </Button>
       </form>
 
-      <div className="mt-4 text-center text-sm text-slate-700">
+      <div className="text-on-surface mt-4 text-center text-sm">
         <span>Already have an account? </span>
-        <Link href={ROUTES.LOGIN} className="font-bold text-emerald-600 hover:underline">
+        <Link href={ROUTES.LOGIN} className="text-primary font-bold hover:underline">
           Sign in now
         </Link>
       </div>

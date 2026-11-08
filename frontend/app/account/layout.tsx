@@ -7,7 +7,7 @@ import RequireAuth from '@/components/auth/RequireAuth';
 
 export default function AccountLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="text-navy flex min-h-screen flex-col bg-[#f4f5f5] antialiased">
+    <div className="text-navy bg-surface-container-low flex min-h-screen flex-col antialiased">
       <Header />
 
       <AccountBreadcrumbs />

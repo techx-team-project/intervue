@@ -43,16 +43,16 @@ export default function NotificationDetailView({ realm, baseRoute }: Notificatio
   }, [notification, markAsRead]);
 
   const backBar = (
-    <div className="dark:border-forest-800 flex items-center gap-3 border-b border-slate-200 pb-3">
+    <div className="dark:border-forest-800 border-outline-variant flex items-center gap-3 border-b pb-3">
       <button
         type="button"
         onClick={() => router.push(baseRoute)}
-        className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-200 dark:hover:bg-forest-800 dark:hover:text-forest-50 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50 hover:text-slate-900"
+        className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-200 dark:hover:bg-forest-800 dark:hover:text-forest-50 border-outline-variant text-on-surface hover:bg-surface-container-low hover:text-on-surface inline-flex items-center gap-1.5 rounded-lg border bg-white px-3 py-1.5 text-xs font-semibold shadow-2xs transition"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span>{copy.back}</span>
       </button>
-      <h1 className="dark:text-forest-300 text-sm font-bold text-slate-700 sm:text-base">{copy.detailsHeading}</h1>
+      <h1 className="dark:text-forest-300 text-on-surface text-sm font-bold sm:text-base">{copy.detailsHeading}</h1>
     </div>
   );
 
@@ -60,11 +60,11 @@ export default function NotificationDetailView({ realm, baseRoute }: Notificatio
     return (
       <div className="space-y-4 pb-16">
         {backBar}
-        <div className="dark:border-forest-800 dark:bg-forest-900 space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
-          <div className="dark:bg-forest-800 h-5 w-32 animate-pulse rounded-md bg-slate-100" />
-          <div className="dark:bg-forest-800 h-7 w-3/4 animate-pulse rounded bg-slate-100" />
-          <div className="dark:bg-forest-800 h-4 w-full animate-pulse rounded bg-slate-100" />
-          <div className="dark:bg-forest-800 h-4 w-5/6 animate-pulse rounded bg-slate-100" />
+        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant space-y-4 rounded-xl border bg-white p-6 shadow-xs sm:p-8">
+          <div className="dark:bg-forest-800 bg-surface-container-high h-5 w-32 animate-pulse rounded-md" />
+          <div className="dark:bg-forest-800 bg-surface-container-high h-7 w-3/4 animate-pulse rounded" />
+          <div className="dark:bg-forest-800 bg-surface-container-high h-4 w-full animate-pulse rounded" />
+          <div className="dark:bg-forest-800 bg-surface-container-high h-4 w-5/6 animate-pulse rounded" />
         </div>
       </div>
     );
@@ -74,14 +74,14 @@ export default function NotificationDetailView({ realm, baseRoute }: Notificatio
     return (
       <div className="space-y-4 pb-16">
         {backBar}
-        <div className="dark:border-forest-800 dark:bg-forest-900 rounded-xl border border-slate-200 bg-white p-12 text-center">
-          <Sparkles className="dark:text-forest-600 mx-auto h-10 w-10 stroke-[1.5] text-slate-300" />
-          <h2 className="dark:text-forest-100 mt-3 text-base font-bold text-slate-800">{copy.notFoundTitle}</h2>
-          <p className="dark:text-forest-400 mt-1 text-xs text-slate-500">{copy.notFoundBody}</p>
+        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-xl border bg-white p-12 text-center">
+          <Sparkles className="dark:text-forest-600 text-outline mx-auto h-10 w-10 stroke-[1.5]" />
+          <h2 className="dark:text-forest-100 text-on-surface mt-3 text-base font-bold">{copy.notFoundTitle}</h2>
+          <p className="dark:text-forest-400 text-on-surface-variant mt-1 text-xs">{copy.notFoundBody}</p>
           <div className="mt-5">
             <Link
               href={baseRoute}
-              className="inline-flex items-center gap-2 rounded-lg bg-[#00b14f] px-4 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#00873c]"
+              className="bg-primary hover:bg-primary inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-bold text-white shadow-xs transition"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>{copy.backToList}</span>
@@ -98,8 +98,8 @@ export default function NotificationDetailView({ realm, baseRoute }: Notificatio
     <div className="space-y-4 pb-16">
       {backBar}
 
-      <div className="dark:border-forest-800 dark:bg-forest-900 overflow-hidden rounded-xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
-        <div className="dark:border-forest-800 border-b border-slate-100 pb-5">
+      <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant overflow-hidden rounded-xl border bg-white p-6 shadow-xs sm:p-8">
+        <div className="dark:border-forest-800 border-outline-variant border-b pb-5">
           <div className="flex flex-wrap items-center gap-2">
             <span className={`inline-block rounded-md border px-2.5 py-0.5 text-xs font-semibold ${tagClasses}`}>
               {realm === 'recruiter'
@@ -109,40 +109,41 @@ export default function NotificationDetailView({ realm, baseRoute }: Notificatio
                   : NOTIFICATION_CATEGORY_LABELS[notification.category]}
             </span>
 
-            <span className="dark:text-forest-400 inline-flex items-center gap-1 font-mono text-xs text-slate-400">
+            <span className="dark:text-forest-400 text-outline inline-flex items-center gap-1 font-mono text-xs">
               <Calendar className="h-3.5 w-3.5" />
               {formatNotificationDateTime(notification.createdAt)}
             </span>
           </div>
 
-          <h2 className="dark:text-forest-50 mt-3 text-lg leading-snug font-black text-slate-900 sm:text-xl lg:text-2xl">
+          <h2 className="dark:text-forest-50 text-on-surface mt-3 text-lg leading-snug font-bold sm:text-xl lg:text-2xl">
             {notification.title}
           </h2>
         </div>
 
-        <div className="dark:text-forest-200 mt-6 space-y-5 text-sm leading-relaxed text-slate-700">
+        <div className="dark:text-forest-200 text-on-surface mt-6 space-y-5 text-sm leading-relaxed">
           {notification.bodyMarkdown ? (
             <NotificationMarkdown content={notification.bodyMarkdown} />
           ) : (
-            <p className="dark:text-forest-200 leading-relaxed text-slate-700">{notification.summary}</p>
+            <p className="dark:text-forest-200 text-on-surface leading-relaxed">{notification.summary}</p>
           )}
 
-          <div className="dark:border-forest-800 dark:bg-forest-850/70 mt-8 rounded-xl border border-slate-100 bg-slate-50/80 p-4.5 sm:p-5">
-            <p className="dark:text-forest-300 text-xs font-semibold text-slate-600 sm:text-[13px]">
+          <div className="dark:border-forest-800 dark:bg-forest-850/70 border-outline-variant bg-surface-container-low/80 mt-8 rounded-xl border p-4.5 sm:p-5">
+            <p className="dark:text-forest-300 text-on-surface-variant sm:text-body-md text-xs font-semibold">
               {copy.supportIntro}
             </p>
-            <div className="dark:text-forest-200 mt-3 flex flex-wrap items-center gap-4 text-xs font-medium text-slate-700 sm:text-sm">
+            <div className="dark:text-forest-200 text-on-surface mt-3 flex flex-wrap items-center gap-4 text-xs font-medium sm:text-sm">
               <div className="flex items-center gap-2">
-                <Headphones className="h-4 w-4 text-[#00b14f]" />
+                <Headphones className="text-primary h-4 w-4" />
                 <span>
-                  {copy.hotlineLabel}: <strong className="dark:text-forest-50 text-slate-900">{SUPPORT_HOTLINE}</strong>
+                  {copy.hotlineLabel}:{' '}
+                  <strong className="dark:text-forest-50 text-on-surface">{SUPPORT_HOTLINE}</strong>
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-[#00b14f]" />
+                <Mail className="text-primary h-4 w-4" />
                 <span>
                   Email:{' '}
-                  <a href={`mailto:${SUPPORT_EMAIL}`} className="font-medium text-[#00b14f] hover:underline">
+                  <a href={`mailto:${SUPPORT_EMAIL}`} className="text-primary font-medium hover:underline">
                     {SUPPORT_EMAIL}
                   </a>
                 </span>
@@ -154,7 +155,7 @@ export default function NotificationDetailView({ realm, baseRoute }: Notificatio
             <div className="mt-6 pt-2">
               <Link
                 href={notification.actionUrl}
-                className="inline-flex items-center gap-2 rounded-lg bg-[#00b14f] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#00873c] active:scale-95"
+                className="bg-primary hover:bg-primary inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-xs font-bold text-white shadow-sm transition active:scale-95"
               >
                 <span>{notification.actionLabel}</span>
                 <ExternalLink className="h-3.5 w-3.5" />

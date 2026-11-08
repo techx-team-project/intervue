@@ -4,9 +4,9 @@ import Footer from '@/components/common/Footer';
 import UpgradeLandingView from '@/components/account/UpgradeLandingView';
 
 export const metadata: Metadata = {
-  title: 'Nâng cấp tài khoản VIP | InterVue - CV xịn việc làm chất',
+  title: 'Upgrade to VIP | InterVue',
   description:
-    'Nâng cấp tài khoản VIP trên InterVue để mở khóa nhiều quyền lợi hơn: Tạo không giới hạn CV, thời gian tải siêu tốc, ưu tiên đẩy Top hồ sơ với NTD.',
+    'Upgrade to VIP on InterVue to unlock more benefits: unlimited CVs, faster downloads and priority profile boosts with recruiters.',
 };
 
 export default function UpgradePage() {

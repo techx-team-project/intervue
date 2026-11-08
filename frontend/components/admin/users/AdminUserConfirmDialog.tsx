@@ -38,10 +38,10 @@ export default function AdminUserConfirmDialog({
       }
     >
       <div className="space-y-4">
-        <ul className="space-y-1.5 text-[13px] text-slate-700">
+        <ul className="text-body-md text-on-surface space-y-1.5">
           {consequences.map((consequence) => (
             <li key={consequence} className="flex gap-2">
-              <span aria-hidden className="text-slate-400">
+              <span aria-hidden className="text-outline">
                 •
               </span>
               <span>{consequence}</span>
@@ -49,7 +49,7 @@ export default function AdminUserConfirmDialog({
           ))}
         </ul>
 
-        <p className="flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+        <p className="bg-surface-container-low text-on-surface-variant flex items-start gap-2 rounded-lg px-3 py-2 text-xs">
           <ScrollText className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           Recorded against your admin account with a timestamp.
         </p>

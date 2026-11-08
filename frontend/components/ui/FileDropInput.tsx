@@ -29,7 +29,7 @@ export function FileDropInput({
   return (
     <div className="w-full space-y-1.5">
       {label && (
-        <label htmlFor={inputId} className="block text-sm font-semibold text-slate-800">
+        <label htmlFor={inputId} className="text-on-surface block text-sm font-semibold">
           {label}
         </label>
       )}
@@ -39,24 +39,24 @@ export function FileDropInput({
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center transition-colors hover:border-emerald-400 hover:bg-emerald-50/50"
+        className="border-outline bg-surface-container-low flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-6 text-center transition-colors hover:border-emerald-400 hover:bg-emerald-50/50"
       >
         {selectedFileName ? (
           <>
-            <FileText className="h-6 w-6 text-emerald-600" />
-            <span className="text-sm font-semibold text-slate-800">{selectedFileName}</span>
-            <span className="text-xs text-slate-500">Click to choose another file</span>
+            <FileText className="text-primary h-6 w-6" />
+            <span className="text-on-surface text-sm font-semibold">{selectedFileName}</span>
+            <span className="text-on-surface-variant text-xs">Click to choose another file</span>
           </>
         ) : (
           <>
-            <UploadCloud className="h-6 w-6 text-slate-400" />
-            <span className="text-sm font-semibold text-slate-700">Choose a JD file to upload</span>
-            <span className="text-xs text-slate-500">Supports PDF, DOC, DOCX</span>
+            <UploadCloud className="text-outline h-6 w-6" />
+            <span className="text-on-surface text-sm font-semibold">Choose a JD file to upload</span>
+            <span className="text-on-surface-variant text-xs">Supports PDF, DOC, DOCX</span>
           </>
         )}
       </button>
 
-      {helperText && <p className="text-xs text-slate-500">{helperText}</p>}
+      {helperText && <p className="text-on-surface-variant text-xs">{helperText}</p>}
     </div>
   );
 }

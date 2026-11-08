@@ -98,16 +98,16 @@ export default function AdminJobsPageClient() {
                 'rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
                 status === tab.value
                   ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
-                  : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50',
+                  : 'border-outline-variant text-on-surface-variant hover:bg-surface-container-low bg-white',
               )}
             >
-              {tab.label} <span className="ml-0.5 text-slate-400">{countOf(tab.value)}</span>
+              {tab.label} <span className="text-outline ml-0.5">{countOf(tab.value)}</span>
             </button>
           ))}
         </div>
 
         <label className="relative block sm:w-72">
-          <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="text-outline pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <input
             value={search}
             onChange={(event) => {
@@ -116,7 +116,7 @@ export default function AdminJobsPageClient() {
             }}
             placeholder="Search by title or company"
             aria-label="Search jobs"
-            className="h-10 w-full rounded-xl border border-slate-300 bg-white pr-3 pl-9 text-sm focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
+            className="border-outline h-10 w-full rounded-xl border bg-white pr-3 pl-9 text-sm focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
           />
         </label>
       </div>
@@ -133,9 +133,9 @@ export default function AdminJobsPageClient() {
           </Button>
         </div>
       ) : jobs.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-14 text-center">
-          <SearchX className="h-8 w-8 text-slate-300" />
-          <p className="text-sm font-semibold text-slate-700">No jobs match these filters</p>
+        <div className="border-outline-variant flex flex-col items-center gap-2 rounded-2xl border bg-white px-6 py-14 text-center">
+          <SearchX className="text-outline h-8 w-8" />
+          <p className="text-on-surface text-sm font-semibold">No jobs match these filters</p>
         </div>
       ) : (
         <>
@@ -178,7 +178,7 @@ export default function AdminJobsPageClient() {
           </div>
         }
       >
-        <p className="text-sm text-slate-600">The recruiter is notified when the job is restored.</p>
+        <p className="text-on-surface-variant text-sm">The recruiter is notified when the job is restored.</p>
       </Modal>
     </div>
   );

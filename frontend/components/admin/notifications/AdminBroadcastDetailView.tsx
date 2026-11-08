@@ -36,15 +36,15 @@ export default function AdminBroadcastDetailView({ broadcastId }: AdminBroadcast
   const [pending, setPending] = useState<PendingAction | null>(null);
 
   const backBar = (
-    <div className="dark:border-forest-800 flex items-center gap-3 border-b border-slate-200 pb-3">
+    <div className="dark:border-forest-800 border-outline-variant flex items-center gap-3 border-b pb-3">
       <Link
         href={ROUTES.ADMIN_CONTENT_ANNOUNCEMENTS}
-        className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-200 dark:hover:bg-forest-800 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50"
+        className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-200 dark:hover:bg-forest-800 border-outline-variant text-on-surface hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-lg border bg-white px-3 py-1.5 text-xs font-semibold shadow-2xs transition"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span>Back</span>
       </Link>
-      <h1 className="dark:text-forest-300 text-sm font-bold text-slate-700 sm:text-base">Announcement details</h1>
+      <h1 className="dark:text-forest-300 text-on-surface text-sm font-bold sm:text-base">Announcement details</h1>
     </div>
   );
 
@@ -52,9 +52,9 @@ export default function AdminBroadcastDetailView({ broadcastId }: AdminBroadcast
     return (
       <div className="space-y-4 pb-16">
         {backBar}
-        <div className="dark:border-forest-800 dark:bg-forest-900 space-y-4 rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant space-y-4 rounded-2xl border bg-white p-6">
           {Array.from({ length: 5 }, (_, index) => (
-            <div key={index} className="dark:bg-forest-800 h-10 animate-pulse rounded-lg bg-slate-100" />
+            <div key={index} className="dark:bg-forest-800 bg-surface-container-high h-10 animate-pulse rounded-lg" />
           ))}
         </div>
       </div>
@@ -65,9 +65,11 @@ export default function AdminBroadcastDetailView({ broadcastId }: AdminBroadcast
     return (
       <div className="space-y-4 pb-16">
         {backBar}
-        <div className="dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-slate-200 bg-white py-16 text-center">
+        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white py-16 text-center">
           <AlertTriangle className="mx-auto h-10 w-10 stroke-[1.5] text-amber-500" />
-          <p className="dark:text-forest-300 mt-3 text-sm font-semibold text-slate-600">Announcement not found</p>
+          <p className="dark:text-forest-300 text-on-surface-variant mt-3 text-sm font-semibold">
+            Announcement not found
+          </p>
         </div>
       </div>
     );
@@ -138,7 +140,7 @@ export default function AdminBroadcastDetailView({ broadcastId }: AdminBroadcast
         {can.canEdit && (
           <Link
             href={`${ROUTES.ADMIN_CONTENT_ANNOUNCEMENTS}/${broadcast.id}/edit`}
-            className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-200 dark:hover:bg-forest-800 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+            className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-200 dark:hover:bg-forest-800 border-outline-variant text-on-surface hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-lg border bg-white px-3 py-1.5 text-xs font-semibold transition"
           >
             <Edit className="h-3.5 w-3.5" />
             Edit
@@ -164,11 +166,11 @@ export default function AdminBroadcastDetailView({ broadcastId }: AdminBroadcast
 
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
-          <article className="dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-slate-200 bg-white p-6 shadow-2xs sm:p-8">
-            <div className="dark:border-forest-800 border-b border-slate-100 pb-5">
+          <article className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white p-6 shadow-2xs sm:p-8">
+            <div className="dark:border-forest-800 border-outline-variant border-b pb-5">
               <div className="flex flex-wrap items-center gap-2">
                 <span
-                  className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${BROADCAST_STATUS_STYLES[broadcast.status]}`}
+                  className={`text-label-sm inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 font-bold ${BROADCAST_STATUS_STYLES[broadcast.status]}`}
                 >
                   {broadcast.status}
                 </span>
@@ -177,67 +179,65 @@ export default function AdminBroadcastDetailView({ broadcastId }: AdminBroadcast
                 >
                   {broadcast.severity}
                 </span>
-                <span className="dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-700">
+                <span className="dark:bg-forest-800 dark:text-forest-200 bg-surface-container-high text-label-sm text-on-surface inline-flex items-center gap-1 rounded-lg px-2.5 py-1 font-semibold">
                   <Users className="h-3 w-3" />
                   {broadcast.audience}
                 </span>
               </div>
 
-              <h2 className="dark:text-forest-50 mt-3 text-lg leading-snug font-black text-slate-900 sm:text-xl lg:text-2xl">
+              <h2 className="dark:text-forest-50 text-on-surface mt-3 text-lg leading-snug font-bold sm:text-xl lg:text-2xl">
                 {broadcast.title}
               </h2>
-              <p className="dark:text-forest-300 mt-2 text-sm text-slate-600">{broadcast.summary}</p>
+              <p className="dark:text-forest-300 text-on-surface-variant mt-2 text-sm">{broadcast.summary}</p>
             </div>
 
-            <div className="dark:text-forest-200 mt-6 text-sm leading-relaxed text-slate-700">
+            <div className="dark:text-forest-200 text-on-surface mt-6 text-sm leading-relaxed">
               <NotificationMarkdown content={broadcast.bodyMarkdown} />
             </div>
 
             {broadcast.actionUrl && broadcast.actionLabel && (
-              <div className="dark:border-forest-800 mt-6 border-t border-slate-100 pt-5">
-                <p className="dark:text-forest-400 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+              <div className="dark:border-forest-800 border-outline-variant mt-6 border-t pt-5">
+                <p className="dark:text-forest-400 text-label-sm text-outline font-bold tracking-wider uppercase">
                   Call to action
                 </p>
                 <Link
                   href={broadcast.actionUrl}
-                  className="mt-2 inline-flex items-center gap-2 rounded-lg bg-[#00b14f] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#00873c]"
+                  className="bg-primary hover:bg-primary mt-2 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-bold text-white transition"
                 >
                   <span>{broadcast.actionLabel}</span>
                   <ExternalLink className="h-3.5 w-3.5" />
                 </Link>
-                <p className="dark:text-forest-500 mt-2 text-[11px] text-slate-400">{broadcast.actionUrl}</p>
+                <p className="dark:text-forest-500 text-label-sm text-outline mt-2">{broadcast.actionUrl}</p>
               </div>
             )}
           </article>
         </div>
 
         <aside className="space-y-4">
-          <div className="dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs">
-            <p className="dark:text-forest-400 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+          <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white p-5 shadow-2xs">
+            <p className="dark:text-forest-400 text-label-sm text-outline font-bold tracking-wider uppercase">
               Delivery
             </p>
             <dl className="mt-3 space-y-3">
               <div className="flex items-baseline justify-between">
-                <dt className="dark:text-forest-300 text-xs text-slate-500">Delivered</dt>
-                <dd className="dark:text-forest-50 text-xl font-black text-slate-900">
+                <dt className="dark:text-forest-300 text-on-surface-variant text-xs">Delivered</dt>
+                <dd className="dark:text-forest-50 text-on-surface text-xl font-bold">
                   {broadcast.deliveredCount.toLocaleString()}
                 </dd>
               </div>
               <div className="flex items-baseline justify-between">
-                <dt className="dark:text-forest-300 text-xs text-slate-500">Read</dt>
-                <dd className="dark:text-forest-50 text-xl font-black text-slate-900">
+                <dt className="dark:text-forest-300 text-on-surface-variant text-xs">Read</dt>
+                <dd className="dark:text-forest-50 text-on-surface text-xl font-bold">
                   {broadcast.readCount.toLocaleString()}
                   {readRate !== null && (
-                    <span className="dark:text-forest-400 ml-1 text-xs font-semibold text-slate-400">
-                      ({readRate}%)
-                    </span>
+                    <span className="dark:text-forest-400 text-outline ml-1 text-xs font-semibold">({readRate}%)</span>
                   )}
                 </dd>
               </div>
               {audience && broadcast.status !== 'SENT' && (
                 <div className="flex items-baseline justify-between">
-                  <dt className="dark:text-forest-300 text-xs text-slate-500">Will reach</dt>
-                  <dd className="dark:text-forest-50 text-xl font-black text-slate-900">
+                  <dt className="dark:text-forest-300 text-on-surface-variant text-xs">Will reach</dt>
+                  <dd className="dark:text-forest-50 text-on-surface text-xl font-bold">
                     {audience.estimatedRecipients.toLocaleString()}
                   </dd>
                 </div>
@@ -245,11 +245,11 @@ export default function AdminBroadcastDetailView({ broadcastId }: AdminBroadcast
             </dl>
           </div>
 
-          <div className="dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs">
-            <p className="dark:text-forest-400 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+          <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white p-5 shadow-2xs">
+            <p className="dark:text-forest-400 text-label-sm text-outline font-bold tracking-wider uppercase">
               Timeline
             </p>
-            <dl className="dark:divide-forest-800 mt-3 divide-y divide-slate-100 text-xs">
+            <dl className="dark:divide-forest-800 divide-outline-variant mt-3 divide-y text-xs">
               {[
                 { label: 'Created', value: broadcast.createdAt },
                 { label: 'Last updated', value: broadcast.updatedAt },
@@ -257,8 +257,8 @@ export default function AdminBroadcastDetailView({ broadcastId }: AdminBroadcast
                 { label: 'Sent at', value: broadcast.sentAt },
               ].map((row) => (
                 <div key={row.label} className="flex items-center justify-between gap-3 py-2">
-                  <dt className="dark:text-forest-400 text-slate-500">{row.label}</dt>
-                  <dd className="dark:text-forest-200 text-right font-medium text-slate-700">
+                  <dt className="dark:text-forest-400 text-on-surface-variant">{row.label}</dt>
+                  <dd className="dark:text-forest-200 text-on-surface text-right font-medium">
                     {formatBroadcastDateTime(row.value)}
                   </dd>
                 </div>

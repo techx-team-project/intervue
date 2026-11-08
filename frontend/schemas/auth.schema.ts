@@ -71,6 +71,16 @@ export const changePasswordSchema = z
     path: ['password'],
   });
 
+export const setPasswordSchema = z
+  .object({
+    password: strongPassword,
+    confirmPassword: z.string().min(1, 'Please confirm your new password.'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Confirmation does not match the new password.',
+    path: ['confirmPassword'],
+  });
+
 export const VIETNAM_MOBILE_PATTERN = /^0[35789]\d{8}$/;
 
 export const sendPhoneOtpSchema = z.object({
@@ -98,6 +108,7 @@ export type RegisterFormData = z.infer<typeof registerSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+export type SetPasswordFormData = z.infer<typeof setPasswordSchema>;
 
 export type SendPhoneOtpFormData = z.infer<typeof sendPhoneOtpSchema>;
 export type VerifyPhoneOtpFormData = z.infer<typeof verifyPhoneOtpSchema>;

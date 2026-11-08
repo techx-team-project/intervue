@@ -20,17 +20,17 @@ export default function VerificationStatusBanner({ verification }: VerificationS
       <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 sm:mt-0" />
 
       <div className="min-w-0 flex-1">
-        <p className="text-navy text-[13.5px] font-bold">
+        <p className="text-navy text-body-md font-bold">
           Account verified: {verification.stepsCompleted}/{verification.stepsTotal} steps
         </p>
-        <p className="mt-0.5 text-[12.5px] text-[#64748b]">
+        <p className="text-body-sm text-on-surface-variant mt-0.5">
           Finish verification to publish job posts and reach candidates more effectively.
         </p>
       </div>
 
       <Link
         href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
-        className="shrink-0 rounded-full bg-amber-600 px-4 py-1.5 text-[12.5px] font-bold text-white transition-colors hover:bg-amber-700"
+        className="text-body-sm shrink-0 rounded-full bg-amber-600 px-4 py-1.5 font-bold text-white transition-colors hover:bg-amber-700"
       >
         {verification.nextStepLabel}
       </Link>

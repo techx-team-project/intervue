@@ -1,0 +1,1 @@
+ALTER TABLE recruiters MODIFY password VARCHAR(255) NULL;
