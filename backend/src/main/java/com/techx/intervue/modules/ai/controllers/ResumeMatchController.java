@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@PreAuthorize("hasRole('RECRUITER')")
 @RestController
 @RequestMapping("/api/v1/ai")
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class ResumeMatchController extends BaseController {
             @AuthenticationPrincipal CustomUserDetails principal,
             @Valid @RequestBody ResumeMatchRequest request,
             HttpServletRequest httpRequest) {
-        Long userId = principal != null ? principal.getId() : null;
+        Long userId = principal.getId();
         String ip = resolveClientIp(httpRequest);
 
         return resumeMatchService
@@ -45,7 +47,7 @@ public class ResumeMatchController extends BaseController {
             @AuthenticationPrincipal CustomUserDetails principal,
             @Valid @RequestBody ResumeMatchRequest request,
             HttpServletRequest httpRequest) {
-        Long userId = principal != null ? principal.getId() : null;
+        Long userId = principal.getId();
         String ip = resolveClientIp(httpRequest);
 
         ResumeMatchRequest effectiveRequest =
