@@ -71,7 +71,7 @@ export default function SearchBar() {
         event.preventDefault();
         search(keyword);
       }}
-      className="bg-surface shadow-float medium:h-19 medium:flex-row medium:items-center medium:rounded-full flex flex-col gap-2 rounded-2xl p-2"
+      className="bg-surface shadow-float ease-standard focus-within:ring-primary-bright/40 medium:h-19 medium:flex-row medium:items-center medium:rounded-full flex flex-col gap-2 rounded-2xl p-2 transition-shadow duration-200 focus-within:ring-4"
     >
       <div ref={containerRef} className="relative min-w-0 flex-1">
         <div className="flex h-14 items-center gap-2 pr-2 pl-6">

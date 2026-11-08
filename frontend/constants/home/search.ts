@@ -19,3 +19,24 @@ export const FEATURED_CITY_FILTERS = [
   { id: 'Hồ Chí Minh', label: 'TP. Hồ Chí Minh' },
   { id: 'Đà Nẵng', label: 'Đà Nẵng' },
 ];
+
+export const TECH_STACK = [
+  'Java',
+  'React',
+  'Node.js',
+  'Python',
+  'Spring Boot',
+  'TypeScript',
+  'DevOps',
+  'Flutter',
+  'Kotlin',
+  '.NET',
+  'Docker',
+  'AWS',
+  'Go',
+  'Next.js',
+  'SQL',
+  'Kubernetes',
+];
+
+export const HERO_ROLE_WORDS = ['Backend', 'Frontend', 'Mobile', 'DevOps', 'Data', 'QA', 'UI/UX'];

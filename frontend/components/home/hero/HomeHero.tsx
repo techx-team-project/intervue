@@ -1,22 +1,38 @@
 import { POPULAR_KEYWORDS } from '@/constants/home/search';
 import Link from 'next/link';
-import LatestJobsCard from './LatestJobsCard';
+import JobDeck from './JobDeck';
+import RotatingWord from './RotatingWord';
 import SearchBar from './SearchBar';
+import TechMarquee from './TechMarquee';
 
 const HERO_KEYWORD_COUNT = 6;
 
 export default function HomeHero() {
   return (
-    <section aria-labelledby="home-hero-title" className="bg-primary-deeper pb-28">
-      <div className="container-page grid items-center gap-14 pt-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:pt-20">
+    <section aria-labelledby="home-hero-title" className="bg-primary-deeper relative overflow-hidden pb-28">
+      <div aria-hidden className="bg-primary-deep absolute -top-48 -right-40 h-[720px] w-[720px] rounded-full" />
+      <div
+        aria-hidden
+        className="absolute bottom-16 left-[38%] h-[380px] w-[380px] rounded-full border border-white/10"
+      />
+      <div aria-hidden className="bg-noise absolute inset-0 opacity-[0.07]" />
+
+      <div className="container-page relative grid items-center gap-14 pt-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:pt-20">
         <div>
-          <h1 id="home-hero-title" className="font-display text-display-lg expanded:text-display-xl text-white">
-            Tìm công việc IT <span className="text-primary-bright">bạn thực sự muốn làm</span>
+          <p className="text-label-lg text-primary-bright flex items-center gap-3 font-bold tracking-widest uppercase">
+            <span aria-hidden className="bg-primary-bright h-px w-10" />
+            Việc làm IT từ công ty đã xác thực
+          </p>
+
+          <h1 id="home-hero-title" className="font-display text-display-lg expanded:text-display-xl mt-6 text-white">
+            Tìm việc <RotatingWord />
+            <br />
+            bạn thực sự muốn làm
           </h1>
 
           <p className="text-title-lg mt-6 max-w-xl font-normal text-white/75">
-            Việc làm từ những công ty đã được xác thực. Bạn có thể nhờ AI xem lại CV, còn người quyết định tuyển hay
-            không vẫn là nhà tuyển dụng.
+            Bạn có thể nhờ AI xem lại CV và luyện phỏng vấn trước khi ứng tuyển. Còn người quyết định tuyển hay không
+            vẫn là nhà tuyển dụng.
           </p>
 
           <div className="mt-10 max-w-3xl">
@@ -37,7 +53,11 @@ export default function HomeHero() {
           </div>
         </div>
 
-        <LatestJobsCard />
+        <JobDeck />
+      </div>
+
+      <div className="relative mt-20">
+        <TechMarquee />
       </div>
     </section>
   );
