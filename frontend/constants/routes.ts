@@ -11,6 +11,7 @@ export const ROUTES = {
   CANDIDATE_INTERVIEWS: '/candidate/interviews',
   CANDIDATE_SAVED_JOBS: '/candidate/saved-jobs',
   JOBS: '/jobs',
+  JOBS_NEAR_ME: '/jobs/near-me',
   CANDIDATE_JOB_ALERTS: '/candidate/job-alerts',
   ACCOUNT_PASSWORD: '/account/password',
   ACCOUNT_TWO_FACTOR: '/account/two-factor',

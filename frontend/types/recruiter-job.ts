@@ -22,6 +22,8 @@ export interface JobSalary {
 export interface JobLocation {
   city?: string | null;
   address?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface SkillResource {
@@ -94,7 +96,7 @@ export interface SaveJobRequest {
   level?: JobLevel;
   contractType?: ContractType;
   workingArrangement?: WorkingArrangement;
-  location: { city?: string; address?: string };
+  location: { city?: string; address?: string; latitude?: number; longitude?: number };
   salary: { negotiable: boolean; min?: number; max?: number; currency?: SalaryCurrency };
   skillIds: number[];
   description?: string;
