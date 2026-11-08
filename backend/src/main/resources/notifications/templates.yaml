@@ -119,6 +119,13 @@ templates:
       Hãy xem hồ sơ và cập nhật trạng thái để ứng viên biết tiến độ.
     actionLabel: "Xem hồ sơ ứng tuyển"
 
+  APPLICATION_STATUS_CHANGED:
+    title: "Hồ sơ {jobTitle} {status}"
+    summary: "Hồ sơ ứng tuyển của bạn tại {companyName} {status}."
+    body: |
+      Hồ sơ ứng tuyển vị trí **{jobTitle}** tại **{companyName}** {status}.
+    actionLabel: "Xem tin tuyển dụng"
+
   APPLICATION_WITHDRAWN:
     title: "Ứng viên đã rút hồ sơ khỏi {jobTitle}"
     summary: "Một ứng viên đã rút hồ sơ khỏi vị trí {jobTitle}."

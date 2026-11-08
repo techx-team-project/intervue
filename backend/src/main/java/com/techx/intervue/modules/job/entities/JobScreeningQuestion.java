@@ -39,6 +39,7 @@ public class JobScreeningQuestion extends BaseEntity {
     @JoinColumn(name = "job_id", nullable = false, updatable = false)
     private Job job;
 
+    @JdbcTypeCode(SqlTypes.TINYINT)
     @Column(nullable = false)
     private int position;
 

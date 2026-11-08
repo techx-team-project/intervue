@@ -8,6 +8,7 @@ import com.techx.intervue.modules.company.services.interfaces.CompanyVerificatio
 import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.entities.Skill;
 import com.techx.intervue.modules.job.enums.JobStatus;
+import com.techx.intervue.modules.job.events.JobClosedEvent;
 import com.techx.intervue.modules.job.mappers.JobMapper;
 import com.techx.intervue.modules.job.repositories.JobRepository;
 import com.techx.intervue.modules.job.repositories.JobRepository.StatusCount;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,7 @@ public class JobService implements JobServiceInterface {
     private final JobPublishRules publishRules;
     private final ScreeningQuestionRules screeningRules;
     private final JobApplicationLookupInterface applicationLookup;
+    private final ApplicationEventPublisher eventPublisher;
     private final CompanyServiceInterface companyService;
     private final CompanyVerificationServiceInterface companyVerificationService;
 
@@ -143,6 +146,7 @@ public class JobService implements JobServiceInterface {
         requireStatus(job, CLOSABLE);
         statusPolicy.requireTransition(job.getStatus(), JobStatus.CLOSED);
         job.setStatus(JobStatus.CLOSED);
+        eventPublisher.publishEvent(new JobClosedEvent(job.getId()));
         return jobMapper.toResource(job);
     }
 

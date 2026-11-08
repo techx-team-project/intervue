@@ -216,7 +216,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
 | `GET` | `/candidate/cvs` | candidate | `CandidateResumeResource[] { id, fileName, url, fileSizeBytes, contentType, isDefault, parsedSummary?, createdAt }`, newest first. `url` is the download path. |
-| `POST` | `/candidate/cvs` | candidate | multipart `file`. PDF only (checked by content, not extension), max 5 MB, max 5 pages, no password. A rejected file returns `400 VALIDATION_FAILED` on field `file` with the reason. Max 3 CVs per candidate (`409 RESUME_LIMIT_REACHED`). The first CV becomes the default. |
+| `POST` | `/candidate/cvs` | candidate | multipart `file`. PDF only (checked by the file signature, not the extension) and max 5 MB; the file is not parsed on upload, so page count and passwords are not checked. A rejected file returns `400 VALIDATION_FAILED` on field `file` with the reason. Max 3 CVs per candidate (`409 RESUME_LIMIT_REACHED`). The first CV becomes the default. |
 | `PATCH` | `/candidate/cvs/{id}` | candidate | Body `{ fileName }` (max 150). |
 | `POST` | `/candidate/cvs/{id}/default` | candidate | Makes this CV the default. |
 | `DELETE` | `/candidate/cvs/{id}` | candidate | Deleting the default promotes the newest remaining CV. The stored file is removed after commit. |
@@ -240,6 +240,23 @@ An application is one row per candidate and job (`UNIQUE job_id, candidate_id`);
 - A job belongs to the candidate's own company when a recruiter account with the same email is an active member of it; that is refused with `CANNOT_APPLY_TO_OWN_COMPANY`.
 - `applications.require-identity-verification` (env `APPLICATIONS_REQUIRE_IDENTITY_VERIFICATION`, default `false`) turns on the eKYC gate. Until the eKYC module supplies a real lookup, turning it on blocks every candidate.
 - Screening questions cannot change once the job has a submitted (non-draft) application (`SCREENING_QUESTIONS_LOCKED`).
+
+## Recruiter Applications
+
+A recruiter sees every non-draft application of the jobs of the company they are linked to (`NOT_COMPANY_MEMBER` without one). Another company's application is `404`.
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/applications?jobId=&status=&q=&page=&size=` | recruiter | Newest submission first. `RecruiterApplicationSummaryResource { id, status, jobId, jobTitle, candidateName, candidateEmail, viewed, submittedAt, updatedAt }`. `q` matches candidate name, email or job title. |
+| `GET` | `/recruiter/applications/summary?jobId=` | recruiter | `{ total, byStatus }` for the company, optionally one job. |
+| `GET` | `/recruiter/applications/{id}` | recruiter | Opening an `APPLIED` application moves it to `VIEWED` and stamps `viewedAt`. `RecruiterApplicationResource` adds `cv?`, `coverLetter?`, `answers`, `history: [{ from?, to, actorType, note?, at }]`, `notes: [{ id, authorId, authorName, content, createdAt }]` and `nextStatuses`, the statuses this recruiter can move it to right now. |
+| `POST` | `/recruiter/applications/{id}/status` | recruiter | Body `{ status, note? (max 500) }`. Targets: `IN_REVIEW`, `INTERVIEW`, `OFFER`, `HIRED`, `REJECTED`; the move must be allowed by `ApplicationStatusPolicy` or `422 INVALID_STATUS_TRANSITION`. The note is stored on the history entry and is not shown to the candidate, who is notified (`APPLICATION_STATUS_CHANGED`). |
+| `POST` | `/recruiter/applications/{id}/notes` | recruiter | Body `{ content }` (max 2000). Internal, never shown to the candidate. Returns the full resource. |
+| `DELETE` | `/recruiter/applications/{id}/notes/{noteId}` | recruiter | Only the author can delete a note. |
+| `GET` | `/recruiter/applications/{id}/cv` | recruiter | Streams the application's own CV copy. |
+
+- Closing a job, or letting it expire, moves its unfinished applications (`APPLIED` to `OFFER`) to `JOB_CLOSED` (actor `SYSTEM`). A job hidden by an admin keeps its applications as they are.
+- Applications store the candidate's name and email at the time of the first draft, so a recruiter can search by name without reading the candidate's account.
 
 ## Error codes
 

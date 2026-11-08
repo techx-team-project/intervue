@@ -45,6 +45,12 @@ public class Application extends BaseEntity {
     @Column(name = "company_id", nullable = false, updatable = false)
     private Long companyId;
 
+    @Column(name = "candidate_name", nullable = false, updatable = false, length = 150)
+    private String candidateName;
+
+    @Column(name = "candidate_email", nullable = false, updatable = false)
+    private String candidateEmail;
+
     @Column(name = "job_title", nullable = false, updatable = false)
     private String jobTitle;
 

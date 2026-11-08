@@ -35,6 +35,10 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
     @Query("SELECT j.status AS status, COUNT(j) AS total FROM Job j GROUP BY j.status")
     List<StatusCount> countByStatus();
 
+    @Query("SELECT j.id FROM Job j WHERE j.status IN :sources AND j.deadline < :today")
+    List<Long> findOverdueIds(
+            @Param("sources") Collection<JobStatus> sources, @Param("today") LocalDate today);
+
     @Modifying
     @Query(
             "UPDATE Job j SET j.status = :target, j.updatedAt = :now"

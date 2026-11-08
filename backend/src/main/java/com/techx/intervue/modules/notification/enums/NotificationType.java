@@ -18,6 +18,7 @@ public enum NotificationType {
     JOB_HIDDEN_BY_ADMIN(NotificationCategory.JOBS, NotificationSeverity.DANGER, true),
     JOB_RESTORED_BY_ADMIN(NotificationCategory.JOBS, NotificationSeverity.SUCCESS, false),
     APPLICATION_RECEIVED(NotificationCategory.APPLICATIONS, NotificationSeverity.INFO, false),
+    APPLICATION_STATUS_CHANGED(NotificationCategory.APPLICATIONS, NotificationSeverity.INFO, false),
     APPLICATION_WITHDRAWN(NotificationCategory.APPLICATIONS, NotificationSeverity.INFO, false),
     ACCOUNT_RESTRICTED(NotificationCategory.ACCOUNT, NotificationSeverity.DANGER, true),
     ACCOUNT_RESTRICTION_LIFTED(NotificationCategory.ACCOUNT, NotificationSeverity.SUCCESS, true),
