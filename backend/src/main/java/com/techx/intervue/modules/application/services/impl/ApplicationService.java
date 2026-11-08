@@ -5,7 +5,6 @@ import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.application.entities.Application;
 import com.techx.intervue.modules.application.entities.ApplicationAnswer;
-import com.techx.intervue.modules.application.entities.ApplicationStatusHistory;
 import com.techx.intervue.modules.application.enums.ApplicationActorType;
 import com.techx.intervue.modules.application.enums.ApplicationStatus;
 import com.techx.intervue.modules.application.mappers.ApplicationMapper;
@@ -26,6 +25,7 @@ import com.techx.intervue.modules.notification.enums.NotificationType;
 import com.techx.intervue.modules.notification.enums.RecipientType;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface.NotificationCommand;
+import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,7 +53,8 @@ public class ApplicationService implements ApplicationServiceInterface {
     private final JobLookupInterface jobLookup;
     private final ApplicationEligibility eligibility;
     private final ApplicationAnswerRules answerRules;
-    private final ApplicationStatusPolicy statusPolicy;
+    private final ApplicationStatusChanger statusChanger;
+    private final UserServiceInterface userService;
     private final CvSnapshotService cvSnapshots;
     private final ApplicationMapper applicationMapper;
     private final NotificationPublisherInterface notificationPublisher;
@@ -93,8 +94,7 @@ public class ApplicationService implements ApplicationServiceInterface {
                                             applicationRepository
                                                     .findByJobIdAndCandidateId(
                                                             target.jobId(), actor.userId())
-                                                    .orElseGet(
-                                                            () -> draftOf(target, actor.userId()));
+                                                    .orElseGet(() -> draftOf(target, actor));
                                     requireStatus(application, ApplicationStatus.DRAFT);
                                     application.setCoverLetter(blankToNull(request.coverLetter()));
                                     application.setDraftResumeId(request.resumeId());
@@ -127,11 +127,7 @@ public class ApplicationService implements ApplicationServiceInterface {
                                                 applicationRepository
                                                         .findByJobIdAndCandidateId(
                                                                 target.jobId(), actor.userId())
-                                                        .orElseGet(
-                                                                () ->
-                                                                        draftOf(
-                                                                                target,
-                                                                                actor.userId()));
+                                                        .orElseGet(() -> draftOf(target, actor));
                                         requireStatus(application, ApplicationStatus.DRAFT);
                                         application.setCoverLetter(
                                                 blankToNull(request.coverLetter()));
@@ -260,11 +256,13 @@ public class ApplicationService implements ApplicationServiceInterface {
         }
     }
 
-    private Application draftOf(ApplyTarget target, Long candidateId) {
+    private Application draftOf(ApplyTarget target, RequestActor actor) {
         return Application.builder()
                 .jobId(target.jobId())
-                .candidateId(candidateId)
+                .candidateId(actor.userId())
                 .companyId(target.companyId())
+                .candidateName(userService.getMe(actor.userId()).name())
+                .candidateEmail(actor.email())
                 .jobTitle(target.title())
                 .companyName(target.companyName())
                 .status(ApplicationStatus.DRAFT)
@@ -272,19 +270,7 @@ public class ApplicationService implements ApplicationServiceInterface {
     }
 
     private void changeStatus(Application application, ApplicationStatus next, Long candidateId) {
-        ApplicationStatus previous = application.getStatus();
-        statusPolicy.requireTransition(previous, next);
-        application.setStatus(next);
-        application
-                .getHistory()
-                .add(
-                        ApplicationStatusHistory.builder()
-                                .application(application)
-                                .fromStatus(previous)
-                                .toStatus(next)
-                                .actorType(ApplicationActorType.CANDIDATE)
-                                .actorId(candidateId)
-                                .build());
+        statusChanger.change(application, next, ApplicationActorType.CANDIDATE, candidateId, null);
     }
 
     // Updated in place: replacing rows would insert before deleting and break the unique key.
