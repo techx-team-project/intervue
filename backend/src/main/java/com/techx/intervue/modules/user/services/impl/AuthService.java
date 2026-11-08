@@ -62,17 +62,23 @@ public class AuthService implements AuthServiceInterface {
     public AuthResult login(LoginRequest request, String userAgent, String ip) {
         String email = EmailHelper.normalize(request.email());
         Optional<User> found = userRepository.findByEmailWithRoles(email);
+        boolean hasPassword = found.isPresent() && found.get().getPassword() != null;
 
         // Constant-cost comparison so response time does not reveal whether the email exists
-        String hash = found.map(User::getPassword).orElse(DUMMY_PASSWORD_HASH);
+        String hash = hasPassword ? found.get().getPassword() : DUMMY_PASSWORD_HASH;
         boolean passwordMatches = passwordEncoder.matches(request.password(), hash);
-        if (found.isEmpty() || !passwordMatches) {
+        if (!hasPassword || !passwordMatches) {
             loginAttemptService.recordFailure(email, ip);
             throw AppException.invalidCredentials(loginAttemptService.isCaptchaRequired(email, ip));
         }
 
         loginAttemptService.reset(email, ip);
-        User user = found.get();
+        return completeSignIn(found.get(), userAgent, ip);
+    }
+
+    @Override
+    @Transactional
+    public AuthResult completeSignIn(User user, String userAgent, String ip) {
         ensureSignInAllowed(user);
 
         if (twoFactorService.isTwoFactorEnabled(user.getId())) {

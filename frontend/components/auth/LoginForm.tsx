@@ -4,16 +4,15 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { ROUTES } from '@/constants/routes';
+import { startCandidateSession } from '@/hooks/useCandidateSession';
 import { useLogin } from '@/hooks/useLogin';
 import { LoginFormData, loginSchema } from '@/schemas/auth.schema';
-import { useAuthStore } from '@/store/auth.store';
 import { applyFormError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import FormErrorAlert from './FormErrorAlert';
 import SocialAuthButtons from './SocialAuthButtons';
 import TwoFactorChallengeModal from './TwoFactorChallengeModal';
@@ -50,9 +49,9 @@ export default function LoginForm() {
 
       <div className="relative my-5 flex items-center justify-center">
         <div className="absolute inset-0 flex items-center">
-          <div className="border-outline-variant w-full border-t border-dashed" />
+          <div className="w-full border-t border-dashed border-slate-200" />
         </div>
-        <span className="text-outline relative bg-white px-3 text-xs italic">Or sign in with email</span>
+        <span className="relative bg-white px-3 text-xs text-slate-400 italic">Or sign in with email</span>
       </div>
 
       <FormErrorAlert message={errors.root?.message} />
@@ -69,10 +68,10 @@ export default function LoginForm() {
 
         <div>
           <div className="mb-1.5 flex items-center justify-between">
-            <label htmlFor="login-password" className="text-on-surface text-sm font-semibold">
+            <label htmlFor="login-password" className="text-sm font-semibold text-slate-800">
               Password
             </label>
-            <Link href={ROUTES.FORGOT_PASSWORD} className="text-primary text-xs font-semibold hover:underline">
+            <Link href={ROUTES.FORGOT_PASSWORD} className="text-xs font-semibold text-emerald-600 hover:underline">
               Forgot password?
             </Link>
           </div>
@@ -96,9 +95,9 @@ export default function LoginForm() {
         </Button>
       </form>
 
-      <div className="text-on-surface mt-4 text-center text-sm">
+      <div className="mt-4 text-center text-sm text-slate-700">
         <span>Don&apos;t have an account? </span>
-        <Link href={ROUTES.REGISTER} className="text-primary font-bold hover:underline">
+        <Link href={ROUTES.REGISTER} className="font-bold text-emerald-600 hover:underline">
           Sign up now
         </Link>
       </div>
@@ -109,8 +108,7 @@ export default function LoginForm() {
           tempToken={challengeToken}
           portal="candidate"
           onSuccess={(session) => {
-            useAuthStore.getState().setSession(session, 'candidate');
-            toast.success('Signed in successfully!');
+            startCandidateSession(session);
             setChallengeToken(null);
           }}
           onCancel={() => setChallengeToken(null)}

@@ -147,6 +147,9 @@ public class RecruiterTwoFactorService implements RecruiterTwoFactorServiceInter
                 recruiterRepository
                         .findById(recruiterId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        if (recruiter.getPassword() == null) {
+            throw new AppException(ErrorCode.PASSWORD_NOT_SET);
+        }
         if (password != null && !passwordEncoder.matches(password, recruiter.getPassword())) {
             throw AppException.validation("password", "Password is incorrect.");
         }
@@ -315,6 +318,8 @@ public class RecruiterTwoFactorService implements RecruiterTwoFactorServiceInter
                 recruiterRepository
                         .findById(recruiterId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        return password != null && passwordEncoder.matches(password, recruiter.getPassword());
+        return recruiter.getPassword() != null
+                && password != null
+                && passwordEncoder.matches(password, recruiter.getPassword());
     }
 }

@@ -1,0 +1,5 @@
+ALTER TABLE recruiters
+    ADD COLUMN gender VARCHAR(10) NULL,
+    ADD COLUMN company_name VARCHAR(255) NULL,
+    ADD COLUMN province VARCHAR(100) NULL,
+    ADD COLUMN district_ward VARCHAR(255) NULL;

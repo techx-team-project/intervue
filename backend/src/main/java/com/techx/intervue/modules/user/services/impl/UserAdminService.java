@@ -31,6 +31,7 @@ import com.techx.intervue.modules.user.repositories.RoleRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.repositories.UserRestrictionRepository;
 import com.techx.intervue.modules.user.repositories.UserRoleRepository;
+import com.techx.intervue.modules.user.repositories.UserSocialAccountRepository;
 import com.techx.intervue.modules.user.repositories.UserSpecifications;
 import com.techx.intervue.modules.user.repositories.UserTwoFactorRecoveryCodeRepository;
 import com.techx.intervue.modules.user.repositories.UserTwoFactorRepository;
@@ -95,6 +96,7 @@ public class UserAdminService implements UserAdminServiceInterface {
     private final UserRoleRepository userRoleRepository;
     private final UserTwoFactorRepository userTwoFactorRepository;
     private final UserTwoFactorRecoveryCodeRepository userTwoFactorRecoveryCodeRepository;
+    private final UserSocialAccountRepository userSocialAccountRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserSessionCacheInterface userSessionCache;
     private final AuditLogServiceInterface auditLogService;
@@ -478,7 +480,7 @@ public class UserAdminService implements UserAdminServiceInterface {
             case USER_BANNED -> "banned";
             case USER_UNBANNED, USER_RESTRICTION_EXPIRED -> "unbanned";
             case USER_REGISTERED -> "accountCreated";
-            case EMAIL_VERIFIED -> "emailVerified";
+            case EMAIL_VERIFIED, SOCIAL_ACCOUNT_LINKED -> "emailVerified";
             case ROLE_GRANTED -> "roleGranted";
             case ROLE_REVOKED -> "roleRevoked";
             case SESSIONS_REVOKED -> "sessionsRevoked";
@@ -529,6 +531,7 @@ public class UserAdminService implements UserAdminServiceInterface {
             case USER_RESTRICTION_EXPIRED -> "Account ban expired";
             case USER_REGISTERED -> "Account registered";
             case EMAIL_VERIFIED -> "Email address verified";
+            case SOCIAL_ACCOUNT_LINKED -> "Google sign-in linked";
             case ROLE_GRANTED ->
                     detail != null && !detail.isBlank()
                             ? "Role granted: " + detail
@@ -691,6 +694,9 @@ public class UserAdminService implements UserAdminServiceInterface {
         User target = loadWithRoles(userId);
 
         RoleType roleType = request.role();
+        if (roleType == RoleType.ADMIN && target.getPassword() == null) {
+            throw new AppException(ErrorCode.PASSWORD_NOT_SET);
+        }
         if (target.activeRoleTypes().contains(roleType)) {
             throw new AppException(ErrorCode.ROLE_ALREADY_GRANTED);
         }
@@ -920,6 +926,7 @@ public class UserAdminService implements UserAdminServiceInterface {
             userSessionCache.evict(user.getId());
             userTwoFactorRepository.deleteByUserId(user.getId());
             userTwoFactorRecoveryCodeRepository.deleteByUserId(user.getId());
+            userSocialAccountRepository.deleteByUserId(user.getId());
             eventPublisher.publishEvent(new UserPurgedEvent(user.getId()));
 
             auditLogService.record(

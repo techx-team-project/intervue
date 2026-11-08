@@ -1,11 +1,13 @@
 'use client';
 
 import { recruiterTwoFactorApi, userTwoFactorApi } from '@/apiRequest/two-factor';
+import SetPasswordNotice from '@/components/account/SetPasswordNotice';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
 import PasswordInput from '@/components/ui/PasswordInput';
+import { useAuth } from '@/hooks/useAuth';
 import { isApiError } from '@/lib/api-error';
 import { cn } from '@/lib/utils';
 import type { TrustedDevice, TwoFactorSetup, TwoFactorStatus } from '@/types/auth';
@@ -36,6 +38,8 @@ type AccountTwoFactorViewProps = {
 
 export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTwoFactorViewProps) {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const needsPassword = user?.hasPassword === false;
   const isRecruiter = portal === 'recruiter';
   const api = isRecruiter ? recruiterTwoFactorApi : userTwoFactorApi;
   const statusQueryKey = [portal, 'two-factor-status'];
@@ -173,14 +177,10 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
       if (isApiError(err)) {
         setErrorMsg(
           err.message ||
-            (isRecruiter
-              ? 'Incorrect verification code. Please try again.'
-              : 'Incorrect verification code. Please try again.'),
+            (isRecruiter ? 'Incorrect verification code. Please try again.' : 'Incorrect verification code. Please try again.'),
         );
       } else {
-        setErrorMsg(
-          isRecruiter ? 'Failed to enable 2FA. Please try again.' : 'Failed to enable 2FA. Please try again.',
-        );
+        setErrorMsg(isRecruiter ? 'Failed to enable 2FA. Please try again.' : 'Failed to enable 2FA. Please try again.');
       }
     } finally {
       setIsSubmitting(false);
@@ -201,8 +201,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
     } catch (err) {
       if (isApiError(err)) {
         setErrorMsg(
-          err.message ||
-            (isRecruiter ? 'Incorrect password. Please try again.' : 'Incorrect password. Please try again.'),
+          err.message || (isRecruiter ? 'Incorrect password. Please try again.' : 'Incorrect password. Please try again.'),
         );
       } else {
         setErrorMsg(isRecruiter ? 'Failed to disable 2FA.' : 'Failed to disable 2FA.');
@@ -270,16 +269,16 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="border-outline-variant rounded-2xl border bg-white p-6 shadow-xs">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <Smartphone className="text-primary h-5 w-5" />
-              <h1 className="text-on-surface text-xl font-bold sm:text-2xl">
+              <Smartphone className="h-5 w-5 text-emerald-600" />
+              <h1 className="text-xl font-black text-slate-800 sm:text-2xl">
                 {isRecruiter ? 'Two-Factor Authentication (2FA)' : 'Two-Factor Authentication (2FA)'}
               </h1>
             </div>
-            <p className="text-on-surface-variant mt-1 text-sm">
+            <p className="mt-1 text-sm text-slate-500">
               {isRecruiter
                 ? 'Protect your employer account with an additional layer of security via Google Authenticator, 1Password or Authy.'
                 : 'Protect your account with an extra layer of security using Google Authenticator or Microsoft Authenticator.'}
@@ -305,45 +304,47 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
       </div>
 
       {errorMsg && (
-        <div className="border-error/30 bg-error/10 text-error flex items-center gap-2.5 rounded-2xl border p-4 text-sm font-semibold">
+        <div className="flex items-center gap-2.5 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-800">
           <span>⚠️</span>
           <span>{errorMsg}</span>
         </div>
       )}
 
       {isStatusLoading ? (
-        <div className="border-outline-variant rounded-2xl border bg-white p-12 text-center shadow-xs">
-          <div className="border-primary mx-auto h-8 w-8 animate-spin rounded-full border-2 border-t-transparent" />
-          <p className="text-on-surface-variant mt-3 text-xs font-semibold">
+        <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-xs">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent" />
+          <p className="mt-3 text-xs font-semibold text-slate-500">
             {isRecruiter ? 'Checking security status...' : 'Checking security status...'}
           </p>
         </div>
       ) : isEnabled ? (
         <div className="space-y-6">
           {/* Active Status Card */}
-          <div className="border-primary/30 rounded-2xl border bg-emerald-50/60 p-6 sm:p-8">
+          <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-6 sm:p-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-              <div className="bg-primary shadow-elevation-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-md">
                 <ShieldCheck className="h-7 w-7" />
               </div>
               <div className="flex-1">
-                <h3 className="text-on-surface text-lg font-bold">
-                  {isRecruiter ? 'Your employer account is protected with 2FA' : 'Your account is protected with 2FA'}
+                <h3 className="text-lg font-bold text-slate-900">
+                  {isRecruiter
+                    ? 'Your employer account is protected with 2FA'
+                    : 'Your account is protected with 2FA'}
                 </h3>
-                <p className="text-on-surface-variant mt-1 text-sm leading-relaxed">
+                <p className="mt-1 text-sm leading-relaxed text-slate-600">
                   {isRecruiter
                     ? 'Primary method: Time-based One-Time Password (TOTP). Untrusted browsers and devices will be challenged for a 6-digit verification code.'
                     : 'Primary method: authenticator app one-time code (TOTP). Each time you sign in on a new device, we ask for the code from your phone.'}
                 </p>
 
                 {status?.remainingBackupCodes !== undefined && (
-                  <div className="text-on-surface-variant mt-3 flex items-center gap-2 text-xs font-semibold">
+                  <div className="mt-3 flex items-center gap-2 text-xs font-semibold text-slate-600">
                     <span>
                       {isRecruiter ? 'Remaining emergency recovery codes:' : 'Remaining emergency recovery codes:'}{' '}
-                      <strong className="text-on-surface">{status.remainingBackupCodes}</strong>
+                      <strong className="text-slate-900">{status.remainingBackupCodes}</strong>
                     </span>
                     {status.remainingBackupCodes <= 2 && (
-                      <span className="text-label-sm rounded-full bg-amber-100 px-2 py-0.5 font-bold text-amber-800">
+                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
                         {isRecruiter ? 'Low backup codes' : 'Low backup codes'}
                       </span>
                     )}
@@ -362,7 +363,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                           setReconfigureError('');
                           setShowReconfigureModal(true);
                         }}
-                        leftIcon={<RefreshCw className="text-on-surface-variant h-3.5 w-3.5" />}
+                        leftIcon={<RefreshCw className="h-3.5 w-3.5 text-slate-500" />}
                       >
                         Reconfigure Authenticator
                       </Button>
@@ -374,7 +375,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                           setRegenerateError('');
                           setShowRegenerateModal(true);
                         }}
-                        leftIcon={<KeyRound className="text-on-surface-variant h-3.5 w-3.5" />}
+                        leftIcon={<KeyRound className="h-3.5 w-3.5 text-slate-500" />}
                       >
                         Regenerate Backup Codes
                       </Button>
@@ -384,7 +385,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                   <button
                     type="button"
                     onClick={() => setShowDisableModal(true)}
-                    className="text-error cursor-pointer text-xs font-bold transition hover:underline"
+                    className="cursor-pointer text-xs font-bold text-rose-600 transition hover:underline"
                   >
                     {isRecruiter ? 'Disable Two-Factor Authentication' : 'Disable Two-Factor Authentication'}
                   </button>
@@ -395,11 +396,11 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
 
           {/* Trusted Devices Section (Recruiter Only) */}
           {isRecruiter && (
-            <div className="border-outline-variant rounded-2xl border bg-white p-6 shadow-xs">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-on-surface text-base font-bold">Trusted Browsers & Workstations</h2>
-                  <p className="text-on-surface-variant text-xs">
+                  <h2 className="text-base font-bold text-slate-800">Trusted Browsers & Workstations</h2>
+                  <p className="text-xs text-slate-500">
                     Browsers remembered for 30 days that bypass two-factor verification at sign in.
                   </p>
                 </div>
@@ -412,7 +413,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                     isLoading={revokeAllDevicesMutation.isPending}
                     onClick={() => revokeAllDevicesMutation.mutate()}
                     leftIcon={<LogOut className="h-3.5 w-3.5" />}
-                    className="border-error/30 bg-error/10 text-error hover:bg-error/10 hover:text-error"
+                    className="border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 hover:text-rose-800"
                   >
                     Revoke all trusted devices
                   </Button>
@@ -422,11 +423,11 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
               <div className="mt-5 space-y-3">
                 {isDevicesLoading ? (
                   <div className="space-y-3" aria-busy="true">
-                    <div className="bg-surface-container-high h-16 animate-pulse rounded-xl" />
-                    <div className="bg-surface-container-high h-16 animate-pulse rounded-xl" />
+                    <div className="h-16 animate-pulse rounded-xl bg-slate-100" />
+                    <div className="h-16 animate-pulse rounded-xl bg-slate-100" />
                   </div>
                 ) : !trustedDevices || trustedDevices.length === 0 ? (
-                  <div className="border-outline-variant bg-surface-container-low/60 text-on-surface-variant rounded-xl border border-dashed p-6 text-center text-xs">
+                  <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 p-6 text-center text-xs text-slate-500">
                     No trusted browsers recorded yet. Check &quot;Trust this browser for 30 days&quot; during sign-in to
                     remember your workstation.
                   </div>
@@ -437,17 +438,15 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                       className={cn(
                         'flex items-center justify-between gap-3 rounded-xl border p-4 transition',
                         device.current
-                          ? 'border-primary/30 bg-emerald-50/40'
-                          : 'border-outline-variant bg-surface-container-low hover:bg-white',
+                          ? 'border-emerald-200 bg-emerald-50/40'
+                          : 'border-slate-100 bg-slate-50 hover:bg-white',
                       )}
                     >
                       <div className="flex min-w-0 items-center gap-3.5">
                         <div
                           className={cn(
                             'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl',
-                            device.current
-                              ? 'bg-primary-container text-primary'
-                              : 'bg-surface-container-high text-on-surface-variant',
+                            device.current ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500',
                           )}
                         >
                           <Laptop className="h-5 w-5" />
@@ -455,20 +454,20 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
 
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-on-surface truncate text-sm font-bold">{device.deviceName}</span>
+                            <span className="truncate text-sm font-bold text-slate-800">{device.deviceName}</span>
                             {device.current && (
-                              <span className="bg-primary text-label-sm shrink-0 rounded-full px-2 py-0.5 font-bold text-white">
+                              <span className="shrink-0 rounded-full bg-emerald-600 px-2 py-0.5 text-[10px] font-black text-white">
                                 This browser
                               </span>
                             )}
                           </div>
-                          <div className="text-on-surface-variant flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs">
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-slate-500">
                             <span className="flex items-center gap-1">
-                              <Globe className="text-outline h-3.5 w-3.5" />
+                              <Globe className="h-3.5 w-3.5 text-slate-400" />
                               {device.ipAddress}
                             </span>
                             <span className="flex items-center gap-1">
-                              <Clock className="text-outline h-3.5 w-3.5" />
+                              <Clock className="h-3.5 w-3.5 text-slate-400" />
                               Expires: {formatDate(device.expiresAt)}
                             </span>
                           </div>
@@ -480,7 +479,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                           type="button"
                           disabled={revokeDeviceMutation.isPending}
                           onClick={() => revokeDeviceMutation.mutate(device.id)}
-                          className="text-error shrink-0 cursor-pointer text-xs font-bold hover:underline disabled:cursor-not-allowed disabled:opacity-60"
+                          className="shrink-0 cursor-pointer text-xs font-bold text-rose-600 hover:underline disabled:cursor-not-allowed disabled:opacity-60"
                         >
                           Revoke trust
                         </button>
@@ -494,13 +493,13 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
         </div>
       ) : (
         /* Inactive State: Step-by-Step Setup */
-        <div className="border-outline-variant rounded-2xl border bg-white p-6 shadow-xs sm:p-8">
-          <h2 className="text-on-surface text-base font-bold">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
+          <h2 className="text-base font-bold text-slate-800">
             {isRecruiter
               ? 'Pair an authenticator application with your account'
               : 'Pair an authenticator application with your account'}
           </h2>
-          <p className="text-on-surface-variant mt-1 text-sm">
+          <p className="mt-1 text-sm text-slate-500">
             {isRecruiter
               ? 'Supports Google Authenticator, 1Password, Microsoft Authenticator & Authy.'
               : 'Works with Google Authenticator, Microsoft Authenticator, 1Password or Authy.'}
@@ -509,17 +508,15 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
           <div className="mt-6 space-y-6">
             {/* Step 1 */}
             <div className="flex items-start gap-4">
-              <div className="bg-primary flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
                 1
               </div>
               <div className="flex-1">
-                <div className="text-on-surface text-sm font-bold">
-                  {isRecruiter
-                    ? 'Scan the QR code with your authenticator app'
-                    : 'Scan the QR code with your authenticator app'}
+                <div className="text-sm font-bold text-slate-800">
+                  {isRecruiter ? 'Scan the QR code with your authenticator app' : 'Scan the QR code with your authenticator app'}
                 </div>
                 <div className="mt-4 flex flex-col gap-6 sm:flex-row sm:items-center">
-                  <div className="border-outline-variant flex h-44 w-44 shrink-0 items-center justify-center rounded-2xl border bg-white p-3 shadow-xs">
+                  <div className="flex h-44 w-44 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white p-3 shadow-xs">
                     {setupData?.qrCodeDataUrl ? (
                       <Image
                         src={setupData.qrCodeDataUrl}
@@ -530,21 +527,21 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                         className="h-full w-full object-contain"
                       />
                     ) : (
-                      <div className="text-outline flex flex-col items-center justify-center text-xs">
-                        <QrCode className="text-outline h-8 w-8 animate-pulse" />
+                      <div className="flex flex-col items-center justify-center text-xs text-slate-400">
+                        <QrCode className="h-8 w-8 animate-pulse text-slate-300" />
                         <span className="mt-2">{isRecruiter ? 'Generating QR code...' : 'Generating QR code...'}</span>
                       </div>
                     )}
                   </div>
 
                   <div className="flex-1 space-y-3">
-                    <div className="text-on-surface-variant text-xs">
+                    <div className="text-xs text-slate-500">
                       {isRecruiter
                         ? 'If you cannot scan the QR code, copy and paste this manual secret key into your app:'
                         : 'If you cannot scan the QR code, copy and paste this manual secret key into your app:'}
                     </div>
                     <div className="flex items-center gap-2">
-                      <code className="border-outline-variant bg-surface-container-low text-on-surface rounded-lg border px-3 py-2 font-mono text-xs font-bold tracking-wider select-all">
+                      <code className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-xs font-bold tracking-wider text-slate-800 select-all">
                         {setupData?.secret || (isRecruiter ? 'Generating key...' : 'Generating key...')}
                       </code>
                       <Button
@@ -554,7 +551,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                         onClick={handleCopyKey}
                         leftIcon={
                           isCopiedKey ? (
-                            <Check className="text-primary h-3.5 w-3.5" />
+                            <Check className="h-3.5 w-3.5 text-emerald-600" />
                           ) : (
                             <Copy className="h-3.5 w-3.5" />
                           )
@@ -571,16 +568,16 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
             {/* Step 2 */}
             {setupData?.backupCodes && setupData.backupCodes.length > 0 && (
               <div className="flex items-start gap-4">
-                <div className="bg-primary flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
                   2
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <div className="text-on-surface text-sm font-bold">
+                      <div className="text-sm font-bold text-slate-800">
                         {isRecruiter ? 'Save your emergency recovery codes' : 'Save your emergency recovery codes'}
                       </div>
-                      <div className="text-on-surface-variant text-xs">
+                      <div className="text-xs text-slate-500">
                         {isRecruiter
                           ? 'Each code can be used once if you ever lose access to your phone or authenticator app.'
                           : 'Use these if you lose your phone or cannot access your authenticator app.'}
@@ -594,13 +591,19 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                         onClick={handleCopyBackupCodes}
                         leftIcon={
                           isCopiedBackup ? (
-                            <Check className="text-primary h-3.5 w-3.5" />
+                            <Check className="h-3.5 w-3.5 text-emerald-600" />
                           ) : (
                             <Copy className="h-3.5 w-3.5" />
                           )
                         }
                       >
-                        {isCopiedBackup ? (isRecruiter ? 'Copied' : 'Copied') : isRecruiter ? 'Copy all' : 'Copy all'}
+                        {isCopiedBackup
+                          ? isRecruiter
+                            ? 'Copied'
+                            : 'Copied'
+                          : isRecruiter
+                            ? 'Copy all'
+                            : 'Copy all'}
                       </Button>
                       <Button
                         type="button"
@@ -614,11 +617,11 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                     </div>
                   </div>
 
-                  <div className="border-outline-variant bg-surface-container-low text-on-surface mt-3 grid grid-cols-2 gap-2 rounded-xl border p-3 font-mono text-xs font-bold sm:grid-cols-4">
+                  <div className="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-slate-100 bg-slate-50 p-3 font-mono text-xs font-bold text-slate-700 sm:grid-cols-4">
                     {setupData.backupCodes.map((code, idx) => (
                       <div
                         key={idx}
-                        className="border-outline-variant/80 rounded-md border bg-white p-2 text-center shadow-2xs"
+                        className="rounded-md border border-slate-200/80 bg-white p-2 text-center shadow-2xs"
                       >
                         {code}
                       </div>
@@ -626,12 +629,12 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                   </div>
 
                   {isRecruiter && (
-                    <label className="text-on-surface-variant mt-3.5 flex cursor-pointer items-start gap-2 text-xs select-none">
+                    <label className="mt-3.5 flex cursor-pointer items-start gap-2 text-xs text-slate-600 select-none">
                       <input
                         type="checkbox"
                         checked={hasConfirmedBackup}
                         onChange={(e) => setHasConfirmedBackup(e.target.checked)}
-                        className="border-outline text-primary focus:ring-primary mt-0.5 h-4 w-4 rounded"
+                        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                       />
                       <span>I have securely saved these 8 emergency recovery codes in a safe vault.</span>
                     </label>
@@ -642,11 +645,11 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
 
             {/* Step 3 */}
             <div className="flex items-start gap-4">
-              <div className="bg-primary flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
                 3
               </div>
               <div className="flex-1">
-                <div className="text-on-surface text-sm font-bold">
+                <div className="text-sm font-bold text-slate-800">
                   {isRecruiter
                     ? 'Enter 6-digit verification code to activate'
                     : 'Enter 6-digit verification code to activate'}
@@ -659,12 +662,12 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                     placeholder="123456"
                     maxLength={6}
                     required
-                    className="text-on-surface w-48 text-center font-mono text-base font-bold tracking-widest"
+                    className="w-48 text-center font-mono text-base font-bold tracking-widest text-slate-900"
                   />
                   <Button
                     type="submit"
                     isLoading={isSubmitting}
-                    className="bg-primary hover:bg-primary font-bold"
+                    className="bg-emerald-600 font-bold hover:bg-emerald-500"
                     leftIcon={<CheckCircle2 className="h-4 w-4" />}
                   >
                     {isRecruiter ? 'Activate Two-Factor Authentication' : 'Activate Two-Factor Authentication'}
@@ -684,31 +687,35 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
           title={isRecruiter ? 'Disable Two-Factor Authentication' : 'Disable Two-Factor Authentication'}
           maxWidth="sm"
         >
-          <div className="space-y-4">
-            <p className="text-on-surface-variant text-xs leading-relaxed">
-              {isRecruiter
-                ? 'Your account security will be lowered. Untrusted browsers will no longer be challenged. Please enter your password to confirm.'
-                : 'Your account security will be lowered. Please enter your current password to confirm.'}
-            </p>
+          {needsPassword ? (
+            <SetPasswordNotice portal={portal} />
+          ) : (
+            <div className="space-y-4">
+              <p className="text-xs leading-relaxed text-slate-500">
+                {isRecruiter
+                  ? 'Your account security will be lowered. Untrusted browsers will no longer be challenged. Please enter your password to confirm.'
+                  : 'Your account security will be lowered. Please enter your current password to confirm.'}
+              </p>
 
-            <form onSubmit={handleDisable2FA} className="space-y-4">
-              <PasswordInput
-                value={disablePassword}
-                onChange={(e) => setDisablePassword(e.target.value)}
-                placeholder={isRecruiter ? 'Enter your password' : 'Enter your password'}
-                required
-              />
+              <form onSubmit={handleDisable2FA} className="space-y-4">
+                <PasswordInput
+                  value={disablePassword}
+                  onChange={(e) => setDisablePassword(e.target.value)}
+                  placeholder={isRecruiter ? 'Enter your password' : 'Enter your password'}
+                  required
+                />
 
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setShowDisableModal(false)}>
-                  {isRecruiter ? 'Cancel' : 'Cancel'}
-                </Button>
-                <Button type="submit" variant="danger" isLoading={isSubmitting}>
-                  {isRecruiter ? 'Confirm and Disable' : 'Confirm and Disable'}
-                </Button>
-              </div>
-            </form>
-          </div>
+                <div className="flex items-center justify-end gap-3 pt-2">
+                  <Button type="button" variant="outline" onClick={() => setShowDisableModal(false)}>
+                    {isRecruiter ? 'Cancel' : 'Cancel'}
+                  </Button>
+                  <Button type="submit" variant="danger" isLoading={isSubmitting}>
+                    {isRecruiter ? 'Confirm and Disable' : 'Confirm and Disable'}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          )}
         </Modal>
       )}
 
@@ -726,14 +733,16 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
           title="Reconfigure Authenticator App"
           maxWidth="md"
         >
-          {reconfigureStep === 'password' ? (
+          {reconfigureStep === 'password' && needsPassword ? (
+            <SetPasswordNotice portal={portal} />
+          ) : reconfigureStep === 'password' ? (
             <form onSubmit={handleInitiateReconfigure} className="space-y-4">
-              <p className="text-on-surface-variant text-xs">
+              <p className="text-xs text-slate-500">
                 To link a new phone or authenticator app, please confirm your current account password.
               </p>
 
               {reconfigureError && (
-                <div className="border-error/30 bg-error/10 text-error rounded-xl border p-3 text-xs font-semibold">
+                <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-semibold text-rose-800">
                   {reconfigureError}
                 </div>
               )}
@@ -751,25 +760,29 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                 <Button type="button" variant="outline" onClick={() => setShowReconfigureModal(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" isLoading={isReconfiguring} className="bg-primary hover:bg-primary font-bold">
+                <Button
+                  type="submit"
+                  isLoading={isReconfiguring}
+                  className="bg-emerald-600 font-bold hover:bg-emerald-500"
+                >
                   Continue
                 </Button>
               </div>
             </form>
           ) : (
             <form onSubmit={handleConfirmReconfigure} className="space-y-5">
-              <p className="text-on-surface-variant text-xs">
+              <p className="text-xs text-slate-500">
                 Scan the new QR code with your authenticator app and enter the 6-digit code below:
               </p>
 
               {reconfigureError && (
-                <div className="border-error/30 bg-error/10 text-error rounded-xl border p-3 text-xs font-semibold">
+                <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-semibold text-rose-800">
                   {reconfigureError}
                 </div>
               )}
 
               <div className="flex flex-col items-center gap-4 sm:flex-row">
-                <div className="border-outline-variant flex h-36 w-36 shrink-0 items-center justify-center rounded-2xl border bg-white p-2 shadow-xs">
+                <div className="flex h-36 w-36 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white p-2 shadow-xs">
                   {reconfigureSetupData?.qrCodeDataUrl ? (
                     <Image
                       src={reconfigureSetupData.qrCodeDataUrl}
@@ -783,15 +796,15 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                 </div>
 
                 <div className="flex-1 space-y-2">
-                  <div className="text-on-surface-variant text-xs">Manual secret key:</div>
-                  <code className="border-outline-variant bg-surface-container-low text-on-surface block rounded-lg border px-3 py-2 font-mono text-xs font-bold select-all">
+                  <div className="text-xs text-slate-500">Manual secret key:</div>
+                  <code className="block rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-xs font-bold text-slate-800 select-all">
                     {reconfigureSetupData?.secret}
                   </code>
                 </div>
               </div>
 
               <div>
-                <label className="text-on-surface-variant block text-xs font-bold tracking-wider uppercase">
+                <label className="block text-xs font-bold tracking-wider text-slate-600 uppercase">
                   6-Digit Verification Code
                 </label>
                 <div className="mt-1.5">
@@ -803,7 +816,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                     maxLength={6}
                     required
                     autoFocus
-                    className="text-on-surface text-center font-mono text-base font-bold tracking-widest"
+                    className="text-center font-mono text-base font-bold tracking-widest text-slate-900"
                   />
                 </div>
               </div>
@@ -812,7 +825,11 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                 <Button type="button" variant="outline" onClick={() => setShowReconfigureModal(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" isLoading={isReconfiguring} className="bg-primary hover:bg-primary font-bold">
+                <Button
+                  type="submit"
+                  isLoading={isReconfiguring}
+                  className="bg-emerald-600 font-bold hover:bg-emerald-500"
+                >
                   Confirm and Switch Key
                 </Button>
               </div>
@@ -836,13 +853,13 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
         >
           {regenerateStep === 'password' ? (
             <form onSubmit={handleRegenerateCodes} className="space-y-4">
-              <p className="text-on-surface-variant text-xs leading-relaxed">
+              <p className="text-xs leading-relaxed text-slate-500">
                 Regenerating new recovery codes will permanently invalidate and burn all previous codes. Enter your
                 password to proceed.
               </p>
 
               {regenerateError && (
-                <div className="border-error/30 bg-error/10 text-error rounded-xl border p-3 text-xs font-semibold">
+                <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-semibold text-rose-800">
                   {regenerateError}
                 </div>
               )}
@@ -860,7 +877,11 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                 <Button type="button" variant="outline" onClick={() => setShowRegenerateModal(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" isLoading={isRegenerating} className="bg-primary hover:bg-primary font-bold">
+                <Button
+                  type="submit"
+                  isLoading={isRegenerating}
+                  className="bg-emerald-600 font-bold hover:bg-emerald-500"
+                >
                   Regenerate Codes
                 </Button>
               </div>
@@ -871,12 +892,9 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                 Your old recovery codes have been revoked. Please save these 8 fresh codes immediately.
               </div>
 
-              <div className="border-outline-variant bg-surface-container-low text-on-surface grid grid-cols-2 gap-2 rounded-xl border p-3 font-mono text-xs font-bold sm:grid-cols-4">
+              <div className="grid grid-cols-2 gap-2 rounded-xl border border-slate-100 bg-slate-50 p-3 font-mono text-xs font-bold text-slate-800 sm:grid-cols-4">
                 {newBackupCodes.map((code, idx) => (
-                  <div
-                    key={idx}
-                    className="border-outline-variant rounded-md border bg-white p-2 text-center shadow-2xs"
-                  >
+                  <div key={idx} className="rounded-md border border-slate-200 bg-white p-2 text-center shadow-2xs">
                     {code}
                   </div>
                 ))}
@@ -895,7 +913,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                     }}
                     leftIcon={
                       isCopiedNewCodes ? (
-                        <Check className="text-primary h-3.5 w-3.5" />
+                        <Check className="h-3.5 w-3.5 text-emerald-600" />
                       ) : (
                         <Copy className="h-3.5 w-3.5" />
                       )
@@ -924,7 +942,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
 
                 <Button
                   type="button"
-                  className="bg-primary hover:bg-primary font-bold"
+                  className="bg-emerald-600 font-bold hover:bg-emerald-500"
                   onClick={() => setShowRegenerateModal(false)}
                 >
                   Done

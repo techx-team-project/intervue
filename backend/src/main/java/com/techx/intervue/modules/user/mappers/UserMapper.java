@@ -17,6 +17,7 @@ public class UserMapper {
                 .status(user.getStatus())
                 .emailVerified(user.isEmailVerified())
                 .phoneVerified(user.getPhoneVerifiedAt() != null)
+                .hasPassword(user.getPassword() != null)
                 .roles(user.activeRoleTypes())
                 .createdAt(user.getCreatedAt())
                 .build();

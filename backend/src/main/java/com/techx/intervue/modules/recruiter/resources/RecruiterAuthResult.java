@@ -6,11 +6,12 @@ public record RecruiterAuthResult(
         RecruiterResource recruiter,
         Boolean requiresTwoFactor,
         String tempToken,
-        String deviceTrustToken) {
+        String deviceTrustToken,
+        Boolean newAccount) {
 
     public RecruiterAuthResult(
             String accessToken, String refreshToken, RecruiterResource recruiter) {
-        this(accessToken, refreshToken, recruiter, false, null, null);
+        this(accessToken, refreshToken, recruiter, false, null, null, false);
     }
 
     public RecruiterAuthResult(
@@ -18,10 +19,21 @@ public record RecruiterAuthResult(
             String refreshToken,
             RecruiterResource recruiter,
             String deviceTrustToken) {
-        this(accessToken, refreshToken, recruiter, false, null, deviceTrustToken);
+        this(accessToken, refreshToken, recruiter, false, null, deviceTrustToken, false);
     }
 
     public static RecruiterAuthResult challenge(String tempToken) {
-        return new RecruiterAuthResult(null, null, null, true, tempToken, null);
+        return new RecruiterAuthResult(null, null, null, true, tempToken, null, false);
+    }
+
+    public RecruiterAuthResult asNewAccount() {
+        return new RecruiterAuthResult(
+                accessToken,
+                refreshToken,
+                recruiter,
+                requiresTwoFactor,
+                tempToken,
+                deviceTrustToken,
+                true);
     }
 }
