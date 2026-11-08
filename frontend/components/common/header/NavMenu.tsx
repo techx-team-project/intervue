@@ -26,7 +26,7 @@ export default function NavMenu({ label, items }: NavMenuProps) {
         aria-expanded={isOpen}
         aria-controls={menuId}
         onClick={() => setIsOpen((prev) => !prev)}
-        className="text-title-md text-on-surface hover:text-primary ease-standard flex h-12 cursor-pointer items-center gap-1.5 px-5 transition-colors duration-150"
+        className="text-title-md text-on-surface hover:text-primary ease-standard flex h-12 cursor-pointer items-center gap-1.5 px-4 whitespace-nowrap transition-colors duration-150"
       >
         {label}
         <ChevronDown className={cn('h-4 w-4 transition-transform duration-200', isOpen && 'rotate-180')} aria-hidden />

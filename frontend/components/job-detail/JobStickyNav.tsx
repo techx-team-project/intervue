@@ -57,8 +57,8 @@ export default function JobStickyNav({ job, onApply }: JobStickyNavProps) {
   };
 
   return (
-    <div className="sticky top-17.5 z-40 border-b border-slate-200 bg-white/95 shadow-xs transition">
-      <div className="container-topcv flex items-center justify-between gap-4 py-2">
+    <div className="border-outline-variant sticky top-17.5 z-40 border-b bg-white/95 shadow-xs transition">
+      <div className="container-page flex items-center justify-between gap-4 py-2">
         <div className="flex scrollbar-none items-center gap-1 overflow-x-auto py-1">
           {NAV_TABS.map((tab) => {
             const isActive = activeTab === tab.id;
@@ -67,10 +67,10 @@ export default function JobStickyNav({ job, onApply }: JobStickyNavProps) {
                 key={tab.id}
                 type="button"
                 onClick={() => scrollToSection(tab.id)}
-                className={`shrink-0 cursor-pointer rounded-lg px-3.5 py-1.5 text-[13.5px] font-bold transition ${
+                className={`text-body-md shrink-0 cursor-pointer rounded-lg px-3.5 py-1.5 font-bold transition ${
                   isActive
-                    ? 'text-primary bg-emerald-50 shadow-2xs'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    ? 'text-primary bg-primary-light shadow-2xs'
+                    : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
                 }`}
               >
                 {tab.label}
@@ -82,8 +82,8 @@ export default function JobStickyNav({ job, onApply }: JobStickyNavProps) {
         {showCompactBar && (
           <div className="hidden shrink-0 items-center gap-3 md:flex">
             <div className="text-right">
-              <div className="line-clamp-1 max-w-50 text-xs font-bold text-slate-800 lg:max-w-70">{job.title}</div>
-              <div className="text-[11.5px] font-black text-[#00873c]">{job.salary.display}</div>
+              <div className="text-on-surface line-clamp-1 max-w-50 text-xs font-bold lg:max-w-70">{job.title}</div>
+              <div className="text-label-sm text-primary font-bold">{job.salary.display}</div>
             </div>
 
             <button

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="vi" className={inter.variable}>
-      <body className="text-navy min-h-screen bg-[#f4f5f5] antialiased">
+      <body className="text-navy bg-surface-container-low min-h-screen antialiased">
         <AppProviders>
           {children}
           <SupportChatbot />

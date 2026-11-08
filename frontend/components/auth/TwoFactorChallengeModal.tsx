@@ -84,10 +84,10 @@ export default function TwoFactorChallengeModal({
     >
       <div className="space-y-4">
         <div className="text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+          <div className="bg-primary-light text-primary mx-auto flex h-12 w-12 items-center justify-center rounded-2xl">
             {useBackupCode ? <KeyRound className="h-6 w-6" /> : <Smartphone className="h-6 w-6" />}
           </div>
-          <p className="mt-2 text-xs leading-relaxed text-slate-500">
+          <p className="text-on-surface-variant mt-2 text-xs leading-relaxed">
             {useBackupCode
               ? isRecruiter
                 ? 'Enter one of your 8-character single-use emergency recovery codes saved during setup.'
@@ -99,14 +99,14 @@ export default function TwoFactorChallengeModal({
         </div>
 
         {errorMsg && (
-          <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-semibold text-rose-800">
+          <div className="border-error/30 bg-error/10 text-error rounded-xl border p-3 text-xs font-semibold">
             {errorMsg}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold tracking-wider text-slate-600 uppercase">
+            <label className="text-on-surface-variant block text-xs font-bold tracking-wider uppercase">
               {useBackupCode
                 ? isRecruiter
                   ? 'Emergency Recovery Code'
@@ -124,22 +124,22 @@ export default function TwoFactorChallengeModal({
                 required
                 autoFocus
                 maxLength={useBackupCode ? 12 : 6}
-                className="text-center font-mono text-base font-bold tracking-widest text-slate-900"
+                className="text-on-surface text-center font-mono text-base font-bold tracking-widest"
               />
             </div>
           </div>
 
           {isRecruiter && (
-            <label className="flex cursor-pointer items-start gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/70 p-3 text-xs transition select-none hover:bg-slate-50">
+            <label className="border-outline-variant/80 bg-surface-container-low/70 hover:bg-surface-container-low flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 text-xs transition select-none">
               <input
                 type="checkbox"
                 checked={trustDevice}
                 onChange={(e) => setTrustDevice(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                className="border-outline text-primary focus:ring-primary mt-0.5 h-4 w-4 rounded"
               />
               <div className="flex flex-col">
-                <span className="font-bold text-slate-800">Trust this browser for 30 days</span>
-                <span className="text-[11px] text-slate-500">
+                <span className="text-on-surface font-bold">Trust this browser for 30 days</span>
+                <span className="text-label-sm text-on-surface-variant">
                   Do not challenge for 2FA on this workstation or laptop for the next 30 days.
                 </span>
               </div>
@@ -154,7 +154,7 @@ export default function TwoFactorChallengeModal({
                 setCode('');
                 setErrorMsg('');
               }}
-              className="cursor-pointer font-semibold text-emerald-600 hover:underline"
+              className="text-primary cursor-pointer font-semibold hover:underline"
             >
               {useBackupCode
                 ? isRecruiter
@@ -173,7 +173,7 @@ export default function TwoFactorChallengeModal({
             <Button
               type="submit"
               isLoading={isLoading}
-              className="bg-emerald-600 font-bold hover:bg-emerald-500"
+              className="bg-primary hover:bg-primary font-bold"
               leftIcon={<CheckCircle2 className="h-4 w-4" />}
             >
               {isRecruiter ? 'Verify and Sign in' : 'Xác nhận'}

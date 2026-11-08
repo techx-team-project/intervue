@@ -85,7 +85,7 @@ export default async function BlogArticleDetailPage({ params }: BlogArticleDetai
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f8faf9]">
+    <div className="bg-surface-container-low flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
         <BlogDetailView article={article} />

@@ -25,7 +25,7 @@ export default function CandidateLanguageSection({ items }: CandidateLanguageSec
       renderItem={(item) => (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <h3 className="text-navy text-base font-bold wrap-break-word">{item.language}</h3>
-          <span className="text-xs text-slate-500">
+          <span className="text-on-surface-variant text-xs">
             {optionLabel(LANGUAGE_PROFICIENCY_OPTIONS, item.proficiency)}
             {item.certificate ? ` | ${item.certificate}` : ''}
           </span>

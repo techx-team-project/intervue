@@ -64,31 +64,31 @@ export default function NotificationPreferencesView({ realm }: NotificationPrefe
   };
 
   return (
-    <section className="dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs sm:p-6">
-      <h2 className="dark:text-forest-50 text-base font-bold text-slate-900">{copy.heading}</h2>
-      <p className="dark:text-forest-400 mt-1 text-xs text-slate-500">{copy.intro}</p>
+    <section className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white p-5 shadow-2xs sm:p-6">
+      <h2 className="dark:text-forest-50 text-on-surface text-base font-bold">{copy.heading}</h2>
+      <p className="dark:text-forest-400 text-on-surface-variant mt-1 text-xs">{copy.intro}</p>
 
       {isLoading ? (
         <div className="mt-5 space-y-3">
           {Array.from({ length: 4 }, (_, index) => (
-            <div key={index} className="dark:bg-forest-800 h-12 animate-pulse rounded-xl bg-slate-100" />
+            <div key={index} className="dark:bg-forest-800 bg-surface-container-high h-12 animate-pulse rounded-xl" />
           ))}
         </div>
       ) : isError ? (
         <div className="mt-6 text-center">
           <AlertTriangle className="mx-auto h-8 w-8 stroke-[1.5] text-amber-500" />
-          <p className="dark:text-forest-300 mt-2 text-sm font-semibold text-slate-600">{copy.loadError}</p>
+          <p className="dark:text-forest-300 text-on-surface-variant mt-2 text-sm font-semibold">{copy.loadError}</p>
         </div>
       ) : (
         <>
-          <ul className="dark:divide-forest-800 mt-5 divide-y divide-slate-100">
+          <ul className="dark:divide-forest-800 divide-outline-variant mt-5 divide-y">
             {preferences.map((preference) => (
               <li key={preference.category} className="flex flex-wrap items-center gap-4 py-3.5">
                 <div className="min-w-0 flex-1">
-                  <p className="dark:text-forest-100 flex items-center gap-1.5 text-sm font-semibold text-slate-800">
+                  <p className="dark:text-forest-100 text-on-surface flex items-center gap-1.5 text-sm font-semibold">
                     {labels[preference.category]}
                     {preference.mandatory && (
-                      <span className="dark:bg-forest-800 dark:text-forest-300 inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">
+                      <span className="dark:bg-forest-800 dark:text-forest-300 bg-surface-container-high text-label-sm text-on-surface-variant inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-bold">
                         <Lock className="h-2.5 w-2.5" />
                         {copy.locked}
                       </span>
@@ -98,7 +98,9 @@ export default function NotificationPreferencesView({ realm }: NotificationPrefe
 
                 <div className="flex items-center gap-5">
                   <label className="flex items-center gap-2">
-                    <span className="dark:text-forest-400 text-xs font-medium text-slate-500">{copy.inApp}</span>
+                    <span className="dark:text-forest-400 text-on-surface-variant text-xs font-medium">
+                      {copy.inApp}
+                    </span>
                     <Switch
                       size="sm"
                       checked={preference.inApp}
@@ -109,7 +111,9 @@ export default function NotificationPreferencesView({ realm }: NotificationPrefe
                   </label>
 
                   <label className="flex items-center gap-2">
-                    <span className="dark:text-forest-400 text-xs font-medium text-slate-500">{copy.email}</span>
+                    <span className="dark:text-forest-400 text-on-surface-variant text-xs font-medium">
+                      {copy.email}
+                    </span>
                     <Switch
                       size="sm"
                       checked={preference.email}
@@ -123,7 +127,7 @@ export default function NotificationPreferencesView({ realm }: NotificationPrefe
             ))}
           </ul>
 
-          <p className="dark:border-forest-800 dark:bg-forest-850/60 dark:text-forest-400 mt-5 flex items-start gap-2 rounded-xl border border-slate-100 bg-slate-50/80 px-3.5 py-2.5 text-xs text-slate-500">
+          <p className="dark:border-forest-800 dark:bg-forest-850/60 dark:text-forest-400 border-outline-variant bg-surface-container-low/80 text-on-surface-variant mt-5 flex items-start gap-2 rounded-xl border px-3.5 py-2.5 text-xs">
             <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0" />
             {copy.lockedHint}
           </p>

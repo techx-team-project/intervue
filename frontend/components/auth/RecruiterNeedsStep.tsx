@@ -26,8 +26,8 @@ export default function RecruiterNeedsStep({ onSubmit, onSkip }: RecruiterNeedsS
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-5">
       <div>
-        <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Hiring needs</h2>
-        <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
+        <h2 className="text-on-surface text-lg font-bold sm:text-xl">Hiring needs</h2>
+        <p className="text-on-surface-variant mt-1.5 text-sm leading-relaxed">
           Tell us about the role you most need to fill right now. You can add or edit other roles anytime in{' '}
           <Link
             href={ROUTES.RECRUITER_COMPANY_NEEDS}

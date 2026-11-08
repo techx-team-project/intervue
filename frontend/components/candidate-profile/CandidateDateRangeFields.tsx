@@ -37,7 +37,7 @@ export default function CandidateDateRangeFields({ currentLabel }: CandidateDate
           {...register('endDate')}
         />
       </div>
-      <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+      <label className="text-on-surface flex cursor-pointer items-center gap-2 text-sm">
         <input type="checkbox" className="h-4 w-4 accent-emerald-600" {...register('current', revalidateEnd)} />
         {currentLabel}
       </label>

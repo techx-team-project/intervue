@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function JobsPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#f4f5f5]">
+    <div className="bg-surface-container-low flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
         <Suspense>

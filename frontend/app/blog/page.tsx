@@ -52,7 +52,7 @@ export default async function BlogPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f8faf9]">
+    <div className="bg-surface-container-low flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
         <BlogHubView initialArticles={articles} categories={categories} />

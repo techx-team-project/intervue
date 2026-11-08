@@ -17,8 +17,8 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'jobs'>('overview');
 
   return (
-    <div className="min-h-screen bg-[#f4f5f5] pb-16">
-      <div className="container-topcv pt-4">
+    <div className="bg-surface-container-low min-h-screen pb-16">
+      <div className="container-page pt-4">
         <CompanyBreadcrumb companyName={company.name} />
 
         <CompanyHeaderCover company={company} activeTab={activeTab} onTabChange={setActiveTab} />

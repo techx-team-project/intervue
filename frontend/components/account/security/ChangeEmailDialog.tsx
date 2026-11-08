@@ -66,7 +66,7 @@ export default function ChangeEmailDialog({ isOpen, onClose, portal, currentEmai
           error={errors.currentPassword?.message}
           {...register('currentPassword')}
         />
-        <p className="text-xs text-slate-500">
+        <p className="text-on-surface-variant text-xs">
           The link is valid for 24 hours. After you confirm it, you will be signed out of every device.
         </p>
         <div className="flex justify-end gap-2 pt-1">

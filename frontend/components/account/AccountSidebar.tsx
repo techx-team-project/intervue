@@ -65,15 +65,15 @@ export default function AccountSidebar() {
 
   return (
     <aside className="w-full shrink-0 space-y-4 lg:w-80">
-      <div className="rounded-2xl border border-[#e2e8f0] bg-white p-5 shadow-xs">
+      <div className="border-outline-variant rounded-2xl border bg-white p-5 shadow-xs">
         <div className="flex items-start gap-3.5">
           <div className="relative shrink-0">
-            <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded bg-[#526477] px-1.5 py-0.5 text-[8.5px] font-bold tracking-wider text-white uppercase shadow-2xs">
+            <span className="text-label-sm absolute -top-2 left-1/2 -translate-x-1/2 rounded bg-[#526477] px-1.5 py-0.5 font-bold tracking-wider text-white uppercase shadow-2xs">
               VERIFIED
             </span>
 
-            <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-slate-400 ring-2 ring-slate-200/80">
-              <User className="h-10 w-10 translate-y-1 text-slate-400" />
+            <div className="bg-surface-container-high text-outline flex h-16 w-16 items-center justify-center overflow-hidden rounded-full ring-2 ring-slate-200/80">
+              <User className="text-outline h-10 w-10 translate-y-1" />
             </div>
 
             <button
@@ -86,16 +86,16 @@ export default function AccountSidebar() {
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="text-[12px] text-[#64748b]">Welcome back,</p>
-            <h3 className="text-navy truncate text-[16px] font-bold">An Lâm Hoàng</h3>
+            <p className="text-body-sm text-on-surface-variant">Welcome back,</p>
+            <h3 className="text-navy text-body-lg truncate font-bold">An Lâm Hoàng</h3>
             <div className="mt-1">
-              <span className="inline-block rounded bg-[#526477] px-2 py-0.5 text-[10.5px] font-semibold text-white">
+              <span className="text-label-sm inline-block rounded bg-[#526477] px-2 py-0.5 font-semibold text-white">
                 Verified account
               </span>
             </div>
             <Link
               href="/upgrade"
-              className="text-navy mt-1.5 inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#f1f5f9] px-2.5 py-0.5 text-[11px] font-semibold transition-colors hover:bg-slate-200"
+              className="text-navy bg-surface-container-low text-label-sm hover:bg-surface-container-high mt-1.5 inline-flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-0.5 font-semibold transition-colors"
             >
               <ArrowUpCircle className="text-primary h-3.5 w-3.5" />
               <span>Upgrade account</span>
@@ -103,14 +103,14 @@ export default function AccountSidebar() {
           </div>
         </div>
 
-        <div className="mt-4 border-t border-[#f1f5f9] pt-3.5">
+        <div className="border-outline-variant mt-4 border-t pt-3.5">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-1">
-              <span className="text-navy text-[13px] font-bold">Job suggestions</span>
+              <span className="text-navy text-body-md font-bold">Job suggestions</span>
               <button
                 type="button"
                 title="Turn on notifications about matching job opportunities"
-                className="text-[#94a3b8] hover:text-[#64748b]"
+                className="text-outline hover:text-on-surface-variant"
               >
                 <HelpCircle className="h-3.5 w-3.5" />
               </button>
@@ -119,10 +119,10 @@ export default function AccountSidebar() {
             <button
               type="button"
               onClick={() => setIsSuggestJob(!isSuggestJob)}
-              className={`cursor-pointer rounded-full border px-3 py-1 text-[11.5px] font-bold transition ${
+              className={`text-label-sm cursor-pointer rounded-full border px-3 py-1 font-bold transition ${
                 isSuggestJob
-                  ? 'border-primary bg-emerald-50 text-[#00873c]'
-                  : 'border-primary text-primary hover:bg-emerald-50'
+                  ? 'border-primary bg-primary-light text-primary'
+                  : 'border-primary text-primary hover:bg-primary-light'
               }`}
             >
               {isSuggestJob ? 'On' : 'Turn on'}
@@ -130,9 +130,9 @@ export default function AccountSidebar() {
           </div>
         </div>
 
-        <div className="mt-4 border-t border-[#f1f5f9] pt-3.5">
+        <div className="border-outline-variant mt-4 border-t pt-3.5">
           <div className="flex items-center justify-between gap-2">
-            <span className={`text-[13.5px] font-bold ${isJobSeeking ? 'text-[#00873c]' : 'text-[#64748b]'}`}>
+            <span className={`text-body-md font-bold ${isJobSeeking ? 'text-primary' : 'text-on-surface-variant'}`}>
               {isJobSeeking ? 'Job search is on' : 'Job search is off'}
             </span>
 
@@ -154,17 +154,17 @@ export default function AccountSidebar() {
           </div>
 
           <div className="mt-2.5">
-            <p className="text-[11.5px] text-[#64748b]">When job search is on:</p>
-            <div className="mt-1.5 space-y-1.5 text-[11.5px] leading-relaxed text-[#64748b]">
+            <p className="text-label-sm text-on-surface-variant">When job search is on:</p>
+            <div className="text-label-sm text-on-surface-variant mt-1.5 space-y-1.5 leading-relaxed">
               <div className="flex items-start gap-1.5">
-                <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 stroke-2 text-slate-400" />
+                <Check className="text-outline mt-0.5 h-3.5 w-3.5 shrink-0 stroke-2" />
                 <span>
                   Recruiters can <strong className="text-navy font-semibold">find you</strong> and bring you relevant
                   opportunities (see the recruiter search setting below).
                 </span>
               </div>
               <div className="flex items-start gap-1.5">
-                <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 stroke-2 text-slate-400" />
+                <Check className="text-outline mt-0.5 h-3.5 w-3.5 shrink-0 stroke-2" />
                 <span>
                   Your profile is <strong className="text-navy font-semibold">highlighted</strong> in recruiter search
                   results.
@@ -174,20 +174,20 @@ export default function AccountSidebar() {
           </div>
         </div>
 
-        <div className="mt-4 border-t border-[#f1f5f9] pt-3.5">
-          <h4 className="text-navy text-[13.5px] font-bold">Let recruiters find your profile</h4>
-          <p className="mt-1 text-[11.5px] leading-relaxed text-[#64748b]">
+        <div className="border-outline-variant mt-4 border-t pt-3.5">
+          <h4 className="text-navy text-body-md font-bold">Let recruiters find your profile</h4>
+          <p className="text-label-sm text-on-surface-variant mt-1 leading-relaxed">
             You do not have a CV yet. Create one to start receiving invitations from trusted recruiters.
           </p>
 
           <Link
             href={ROUTES.CANDIDATE_PROFILE}
-            className="border-primary text-primary mt-2.5 inline-flex items-center justify-center rounded-full border bg-white px-3.5 py-1 text-[12px] font-bold transition hover:bg-emerald-50 active:scale-[0.98]"
+            className="border-primary text-primary text-body-sm hover:bg-primary-light mt-2.5 inline-flex items-center justify-center rounded-full border bg-white px-3.5 py-1 font-bold transition active:scale-[0.98]"
           >
             Create a CV
           </Link>
 
-          <div className="mt-3 rounded-xl border border-slate-100 bg-[#f8fafc] p-2.5 text-[11.5px] leading-relaxed text-[#64748b]">
+          <div className="border-outline-variant bg-surface-container-low text-label-sm text-on-surface-variant mt-3 rounded-xl border p-2.5 leading-relaxed">
             <p>
               When you let recruiters search for your profile, trusted recruiters can see the work experience, education
               and skills on your CV.
@@ -203,7 +203,7 @@ export default function AccountSidebar() {
             </button>
 
             {showMoreInfo && (
-              <div className="mt-2 border-t border-slate-200/70 pt-2 text-[11px] text-[#64748b]">
+              <div className="border-outline-variant/70 text-label-sm text-on-surface-variant mt-2 border-t pt-2">
                 InterVue only shares your data with companies that passed identity verification. You can change this
                 setting at any time in Account settings.
               </div>
@@ -212,8 +212,8 @@ export default function AccountSidebar() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-[#e2e8f0] bg-white p-3 shadow-xs">
-        <div className="px-3 py-2 text-[11px] font-bold tracking-wider text-[#94a3b8] uppercase">Account</div>
+      <div className="border-outline-variant rounded-2xl border bg-white p-3 shadow-xs">
+        <div className="text-label-sm text-outline px-3 py-2 font-bold tracking-wider uppercase">Account</div>
 
         <nav className="space-y-1">
           {MENU_ITEMS.map((item) => {
@@ -224,14 +224,14 @@ export default function AccountSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[13px] font-medium transition ${
+                className={`text-body-md flex items-center justify-between rounded-xl px-3.5 py-2.5 font-medium transition ${
                   isActive
-                    ? 'border-primary/30 border bg-emerald-50/70 font-bold text-[#00873c]'
-                    : 'hover:text-navy text-[#475569] hover:bg-[#f8fafc]'
+                    ? 'border-primary/30 text-primary border bg-emerald-50/70 font-bold'
+                    : 'hover:text-navy text-on-surface-variant hover:bg-surface-container-low'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`h-4.5 w-4.5 shrink-0 ${isActive ? 'text-primary' : 'text-[#64748b]'}`} />
+                  <Icon className={`h-4.5 w-4.5 shrink-0 ${isActive ? 'text-primary' : 'text-on-surface-variant'}`} />
                   <span>{item.label}</span>
                 </div>
               </Link>
@@ -239,46 +239,46 @@ export default function AccountSidebar() {
           })}
         </nav>
 
-        <div className="my-2 border-t border-[#f1f5f9]" />
+        <div className="border-outline-variant my-2 border-t" />
 
         <Link
           href={ROUTES.CANDIDATE_PROFILE}
-          className="hover:text-primary flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[13px] font-medium text-[#475569] transition hover:bg-emerald-50/50"
+          className="hover:text-primary text-body-md text-on-surface-variant flex items-center justify-between rounded-xl px-3.5 py-2.5 font-medium transition hover:bg-emerald-50/50"
         >
           <div className="flex items-center gap-3">
-            <User className="h-4.5 w-4.5 shrink-0 text-[#64748b]" />
+            <User className="text-on-surface-variant h-4.5 w-4.5 shrink-0" />
             <span>Candidate profile</span>
           </div>
-          <ExternalLink className="h-3.5 w-3.5 text-[#94a3b8]" />
+          <ExternalLink className="text-outline h-3.5 w-3.5" />
         </Link>
 
         <button
           type="button"
           disabled={logout.isPending}
           onClick={() => logout.mutate()}
-          className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3.5 py-2.5 text-[13px] font-medium text-rose-600 transition-colors hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60"
+          className="text-body-md text-error hover:bg-error/10 flex w-full cursor-pointer items-center gap-3 rounded-xl px-3.5 py-2.5 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60"
         >
           <LogOut className="h-4.5 w-4.5 shrink-0" />
           <span>Sign out</span>
         </button>
       </div>
 
-      <div className="to-primary relative overflow-hidden rounded-2xl bg-linear-to-br from-[#0c2e24] via-[#103a2e] p-4 text-white shadow-xs">
+      <div className="bg-primary relative overflow-hidden rounded-2xl p-4 text-white shadow-xs">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1 text-[15px] font-black tracking-tight">
+            <div className="text-body-lg flex items-center gap-1 font-bold tracking-tight">
               <span className="text-white">inter</span>
               <span className="text-[#00e066]">vue</span>
               <span className="h-1.5 w-1.5 rounded-full bg-[#00e066]" />
             </div>
 
-            <div className="mt-2 text-[12.5px] leading-snug font-bold">Get the InterVue app!</div>
-            <p className="mt-1 text-[11px] leading-relaxed text-white/80">
+            <div className="text-body-sm mt-2 leading-snug font-bold">Get the InterVue app!</div>
+            <p className="text-label-sm mt-1 leading-relaxed text-white/80">
               So you never miss an opportunity from a recruiter
             </p>
           </div>
 
-          <div className="shrink-0 rounded-xl bg-white p-1.5 shadow-md">
+          <div className="shadow-elevation-1 shrink-0 rounded-xl bg-white p-1.5">
             <svg
               viewBox="0 0 29 29"
               className="h-16 w-16 text-[#0f2c25]"

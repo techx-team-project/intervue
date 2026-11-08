@@ -16,7 +16,9 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
   return (
     <aside className="space-y-6">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-        <span className="mb-3 block text-[11px] font-bold tracking-wider text-[#7f878f] uppercase">{authorTitle}</span>
+        <span className="text-label-sm text-on-surface-variant mb-3 block font-bold tracking-wider uppercase">
+          {authorTitle}
+        </span>
         <div className="flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -28,7 +30,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
           />
           <div>
             <div className="flex items-center gap-1.5">
-              <h4 className="text-sm font-bold text-[#171717]">{article.author.name}</h4>
+              <h4 className="text-on-surface text-sm font-bold">{article.author.name}</h4>
               <ShieldCheck className="text-primary h-4 w-4 shrink-0" />
             </div>
             <p className="text-primary mt-0.5 text-xs font-semibold">{article.author.role}</p>
@@ -36,7 +38,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
         </div>
 
         {article.author.bio && (
-          <p className="mt-3 border-t border-gray-100 pt-3 text-xs leading-relaxed text-[#526475]">
+          <p className="text-on-surface-variant mt-3 border-t border-gray-100 pt-3 text-xs leading-relaxed">
             {article.author.bio}
           </p>
         )}
@@ -45,7 +47,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
         <div className="mb-3 flex items-center gap-2">
           <Sparkles className="text-primary h-4 w-4" />
-          <h4 className="text-sm font-bold text-[#171717]">{applyToolsTitle}</h4>
+          <h4 className="text-on-surface text-sm font-bold">{applyToolsTitle}</h4>
         </div>
 
         <div className="space-y-2">
@@ -53,7 +55,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
             href="/candidate/profile"
             className="group text-navy hover:bg-primary-light hover:text-primary flex items-center gap-2.5 rounded-xl p-2.5 text-xs transition"
           >
-            <div className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
+            <div className="text-primary bg-primary-container flex h-7 w-7 items-center justify-center rounded-lg">
               <FileText className="h-3.5 w-3.5" />
             </div>
             <span className="font-semibold">{tools.cvTemplate}</span>
@@ -63,7 +65,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
             href="#self-growth"
             className="group text-navy hover:bg-primary-light hover:text-primary flex items-center gap-2.5 rounded-xl p-2.5 text-xs transition"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+            <div className="bg-primary-light text-primary flex h-7 w-7 items-center justify-center rounded-lg">
               <Brain className="h-3.5 w-3.5" />
             </div>
             <span className="font-semibold">{tools.mbti}</span>
@@ -73,7 +75,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
             href="#salary-calculator"
             className="group text-navy hover:bg-primary-light hover:text-primary flex items-center gap-2.5 rounded-xl p-2.5 text-xs transition"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
+            <div className="bg-primary-light text-primary flex h-7 w-7 items-center justify-center rounded-lg">
               <Calculator className="h-3.5 w-3.5" />
             </div>
             <span className="font-semibold">{tools.salaryCompare}</span>
@@ -93,7 +95,7 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
 
       {article.relatedArticles && article.relatedArticles.length > 0 && (
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-          <h4 className="mb-3 text-sm font-bold text-[#171717]">{relatedArticlesTitle}</h4>
+          <h4 className="text-on-surface mb-3 text-sm font-bold">{relatedArticlesTitle}</h4>
 
           <div className="space-y-4">
             {article.relatedArticles.map((rel) => (
@@ -107,10 +109,10 @@ export default function CareerDetailSidebar({ article }: CareerDetailSidebarProp
                   className="h-16 w-20 shrink-0 rounded-xl object-cover group-hover:opacity-90"
                 />
                 <div className="flex flex-col justify-between">
-                  <h5 className="group-hover:text-primary line-clamp-2 text-xs leading-snug font-bold text-[#171717] transition-colors">
+                  <h5 className="group-hover:text-primary text-on-surface line-clamp-2 text-xs leading-snug font-bold transition-colors">
                     {rel.title}
                   </h5>
-                  <div className="mt-1 flex items-center gap-2 text-[10px] text-[#7f878f]">
+                  <div className="text-label-sm text-on-surface-variant mt-1 flex items-center gap-2">
                     <span>{rel.publishedAt}</span>
                     <span>•</span>
                     <span className="flex items-center gap-0.5">

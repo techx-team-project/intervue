@@ -31,7 +31,7 @@ type ButtonStyleOptions = Pick<ButtonProps, 'variant' | 'size' | 'className'>;
 
 export function buttonClassName({ variant = 'primary', size = 'md', className }: ButtonStyleOptions = {}): string {
   return cn(
-    'state-layer touch-target ease-standard inline-flex cursor-pointer items-center justify-center rounded-full transition-[color,background-color,transform] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed',
+    'state-layer touch-target ease-standard inline-flex cursor-pointer whitespace-nowrap items-center justify-center rounded-full transition-[color,background-color,transform] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed',
     variantStyles[variant],
     sizeStyles[size],
     className,
@@ -60,7 +60,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={disabled || isLoading}
         className={cn(
-          'state-layer touch-target ease-standard inline-flex cursor-pointer items-center justify-center rounded-full transition-colors duration-150 select-none disabled:cursor-not-allowed',
+          'state-layer touch-target ease-standard inline-flex cursor-pointer items-center justify-center rounded-full whitespace-nowrap transition-colors duration-150 select-none disabled:cursor-not-allowed',
           variantStyles[variant],
           sizeStyles[size],
           className,

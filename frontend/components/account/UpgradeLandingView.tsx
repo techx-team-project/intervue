@@ -36,7 +36,7 @@ export default function UpgradeLandingView() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-800 antialiased">
+    <div className="text-on-surface min-h-screen bg-white antialiased">
       <UpgradeHero />
 
       <PricingComparisonTable features={UPGRADE_FEATURES} plans={PRICING_PLANS} onSelectPlan={handleSelectPlan} />

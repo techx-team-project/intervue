@@ -6,7 +6,7 @@ export default function FormErrorAlert({ message }: FormErrorAlertProps) {
   return (
     <div
       role="alert"
-      className="mb-4 rounded-lg border border-rose-200 bg-rose-50 p-2.5 text-center text-xs font-medium text-rose-600"
+      className="border-error/30 bg-error/10 text-error mb-4 rounded-lg border p-2.5 text-center text-xs font-medium"
     >
       {message}
     </div>

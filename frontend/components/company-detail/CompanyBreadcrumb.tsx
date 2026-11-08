@@ -13,7 +13,7 @@ export default function CompanyBreadcrumb({ companyName }: CompanyBreadcrumbProp
     {
       label: 'Danh sách công ty',
       href: '/#top-companies',
-      icon: <Building2 className="h-3.5 w-3.5 text-slate-400" />,
+      icon: <Building2 className="text-outline h-3.5 w-3.5" />,
     },
     { label: companyName },
   ];

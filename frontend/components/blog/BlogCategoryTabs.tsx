@@ -58,7 +58,7 @@ export default function BlogCategoryTabs({ currentCategorySlug }: BlogCategoryTa
   const pathname = usePathname();
 
   return (
-    <div className="sticky top-16 z-30 border-b border-[#e5e7eb] bg-white/95">
+    <div className="border-outline-variant sticky top-16 z-30 border-b bg-white/95">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="no-scrollbar -mb-px flex items-center gap-2 overflow-x-auto py-2.5 sm:gap-3">
           {TABS.map((tab) => {
@@ -72,20 +72,20 @@ export default function BlogCategoryTabs({ currentCategorySlug }: BlogCategoryTa
                 href={tab.href}
                 className={`group flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition duration-200 sm:text-sm ${
                   isActive
-                    ? 'bg-primary text-white shadow-md shadow-emerald-500/20'
-                    : 'bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] hover:text-[#0f172a]'
+                    ? 'bg-primary shadow-elevation-1 text-white shadow-emerald-500/20'
+                    : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
                 }`}
               >
                 <span
-                  className={`transition-colors ${isActive ? 'text-white' : 'group-hover:text-primary text-[#64748b]'}`}
+                  className={`transition-colors ${isActive ? 'text-white' : 'group-hover:text-primary text-on-surface-variant'}`}
                 >
                   {tab.icon}
                 </span>
                 <span>{tab.name}</span>
                 {tab.count !== undefined && (
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-white text-[#64748b] shadow-2xs'
+                    className={`text-label-sm rounded-full px-2 py-0.5 font-bold ${
+                      isActive ? 'bg-white/20 text-white' : 'text-on-surface-variant bg-white shadow-2xs'
                     }`}
                   >
                     {tab.count}

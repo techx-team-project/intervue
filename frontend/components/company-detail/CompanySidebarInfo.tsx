@@ -38,30 +38,30 @@ export default function CompanySidebarInfo({ company }: CompanySidebarInfoProps)
   ];
 
   return (
-    <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs">
-      <h3 className="border-b border-slate-100 pb-3 text-sm font-bold text-slate-900">Thông tin chung</h3>
+    <div className="border-outline-variant/90 rounded-2xl border bg-white p-5 shadow-2xs">
+      <h3 className="border-outline-variant text-on-surface border-b pb-3 text-sm font-bold">Thông tin chung</h3>
 
       <div className="mt-4 space-y-3.5">
         {infoItems.map((item, idx) => {
           const IconComp = item.icon;
           return (
             <div key={idx} className="flex items-start gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200/80 bg-slate-50 text-slate-600">
+              <div className="border-outline-variant/80 bg-surface-container-low text-on-surface-variant flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border">
                 <IconComp className="h-4 w-4" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-[11.5px] font-medium text-slate-400">{item.label}</div>
+                <div className="text-label-sm text-outline font-medium">{item.label}</div>
                 {item.link ? (
                   <a
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary mt-0.5 block truncate text-[13px] font-bold hover:underline"
+                    className="text-primary text-body-md mt-0.5 block truncate font-bold hover:underline"
                   >
                     {item.value}
                   </a>
                 ) : (
-                  <div className="mt-0.5 text-[13px] leading-snug font-bold text-slate-800">{item.value}</div>
+                  <div className="text-body-md text-on-surface mt-0.5 leading-snug font-bold">{item.value}</div>
                 )}
               </div>
             </div>

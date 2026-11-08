@@ -93,23 +93,23 @@ export function Modal({
         ref={panelRef}
         tabIndex={-1}
         className={cn(
-          'relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl transition duration-200 outline-none sm:p-7',
+          'border-outline-variant shadow-elevation-2 relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-3xl border bg-white p-6 transition duration-200 outline-none sm:p-7',
           maxWidthMap[maxWidth],
           className,
         )}
       >
         {(title || showCloseButton) && (
-          <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+          <div className="border-outline-variant flex items-start justify-between gap-4 border-b pb-4">
             <div>
               {title && typeof title === 'string' ? (
-                <h3 id={titleId} className="text-lg font-bold text-slate-800 sm:text-xl">
+                <h3 id={titleId} className="text-on-surface text-lg font-bold sm:text-xl">
                   {title}
                 </h3>
               ) : (
                 title && <div id={titleId}>{title}</div>
               )}
               {description && (
-                <p id={descriptionId} className="mt-1 text-sm leading-relaxed text-slate-500">
+                <p id={descriptionId} className="text-on-surface-variant mt-1 text-sm leading-relaxed">
                   {description}
                 </p>
               )}
@@ -120,7 +120,7 @@ export function Modal({
                 type="button"
                 onClick={onClose}
                 aria-label="Close"
-                className="shrink-0 cursor-pointer rounded-xl p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                className="text-outline hover:bg-surface-container-high hover:text-on-surface shrink-0 cursor-pointer rounded-xl p-1.5 transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -130,7 +130,7 @@ export function Modal({
 
         <div className="py-4">{children}</div>
 
-        {footer && <div className="mt-2 flex justify-end gap-2 border-t border-slate-100 pt-4">{footer}</div>}
+        {footer && <div className="border-outline-variant mt-2 flex justify-end gap-2 border-t pt-4">{footer}</div>}
       </div>
     </div>,
     document.body,

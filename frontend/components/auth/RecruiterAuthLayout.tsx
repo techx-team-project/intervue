@@ -19,8 +19,6 @@ export default function RecruiterAuthLayout({ title, subtitle, children }: Recru
   return (
     <div className="text-navy relative flex min-h-screen flex-col justify-between overflow-hidden bg-[#f4f6f8] antialiased">
       <LeftChevronPattern />
-      <div className="bg-primary/5 pointer-events-none absolute -top-20 -right-20 h-96 w-96 rounded-full blur-3xl" />
-      <div className="bg-primary/5 pointer-events-none absolute -bottom-20 -left-20 h-96 w-96 rounded-full blur-3xl" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] bg-size-[24px_24px] opacity-50" />
 
       <Header portal="recruiter" />
@@ -28,7 +26,7 @@ export default function RecruiterAuthLayout({ title, subtitle, children }: Recru
       <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-8 sm:py-12">
         <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-8 lg:grid-cols-12">
           <div className="hidden lg:col-span-6 lg:block xl:col-span-7">
-            <div className="flex flex-col justify-between rounded-3xl border border-[#e9eaec] bg-gradient-to-br from-[#f2fbf6] via-[#f8fafc] to-[#e8f7ee] p-8 shadow-sm xl:p-10">
+            <div className="border-outline-variant bg-surface flex flex-col justify-between rounded-3xl border p-8 shadow-sm xl:p-10">
               <div className="flex items-center justify-between">
                 <Link href={ROUTES.RECRUITER_LANDING} className="flex items-center gap-2.5">
                   <Image
@@ -55,44 +53,44 @@ export default function RecruiterAuthLayout({ title, subtitle, children }: Recru
                   <h2 className="text-navy text-2xl leading-tight font-extrabold xl:text-3xl">
                     Hire IT talent faster and more accurately with InterVue
                   </h2>
-                  <p className="text-sm leading-relaxed text-[#4d5965]">
+                  <p className="text-on-surface-variant text-sm leading-relaxed">
                     Post IT jobs, receive applications and let AI help you screen candidates, while you always make the
                     final hiring decision.
                   </p>
                 </div>
 
                 <div className="space-y-3">
-                  <div className="hover:border-primary/40 flex items-start gap-3 rounded-2xl border border-[#e9eaec] bg-white p-4 shadow-2xs transition">
+                  <div className="hover:border-primary/40 border-outline-variant flex items-start gap-3 rounded-2xl border bg-white p-4 shadow-2xs transition">
                     <div className="bg-primary-light text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl">
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <div>
                       <h4 className="text-navy text-xs font-bold">AI resume matching</h4>
-                      <p className="mt-0.5 text-xs text-[#6f7882]">
+                      <p className="text-on-surface-variant mt-0.5 text-xs">
                         Match every resume against your job requirements and get a summary of relevant experience.
                       </p>
                     </div>
                   </div>
 
-                  <div className="hover:border-primary/40 flex items-start gap-3 rounded-2xl border border-[#e9eaec] bg-white p-4 shadow-2xs transition">
+                  <div className="hover:border-primary/40 border-outline-variant flex items-start gap-3 rounded-2xl border bg-white p-4 shadow-2xs transition">
                     <div className="bg-primary-light text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl">
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <div>
                       <h4 className="text-navy text-xs font-bold">Verified company profile</h4>
-                      <p className="mt-0.5 text-xs text-[#6f7882]">
+                      <p className="text-on-surface-variant mt-0.5 text-xs">
                         Verify your company once to start posting jobs and earn candidates&apos; trust.
                       </p>
                     </div>
                   </div>
 
-                  <div className="hover:border-primary/40 flex items-start gap-3 rounded-2xl border border-[#e9eaec] bg-white p-4 shadow-2xs transition">
+                  <div className="hover:border-primary/40 border-outline-variant flex items-start gap-3 rounded-2xl border bg-white p-4 shadow-2xs transition">
                     <div className="bg-primary-light text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl">
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <div>
                       <h4 className="text-navy text-xs font-bold">Dedicated employer support</h4>
-                      <p className="mt-0.5 text-xs text-[#6f7882]">
+                      <p className="text-on-surface-variant mt-0.5 text-xs">
                         Call our employer hotline (0812.665.001) for help with job posts and candidate search.
                       </p>
                     </div>
@@ -100,7 +98,7 @@ export default function RecruiterAuthLayout({ title, subtitle, children }: Recru
                 </div>
               </div>
 
-              <div className="flex items-center justify-between border-t border-[#e9eaec] pt-5 text-xs font-medium text-[#6f7882]">
+              <div className="border-outline-variant text-on-surface-variant flex items-center justify-between border-t pt-5 text-xs font-medium">
                 <div className="flex items-center gap-1.5">
                   <PhoneCall className="text-primary h-4 w-4" />
                   <span>
@@ -115,13 +113,13 @@ export default function RecruiterAuthLayout({ title, subtitle, children }: Recru
           <div className="lg:col-span-6 xl:col-span-5">
             <div className="relative z-10 w-full rounded-3xl border border-[#edf0f2] bg-white p-7 shadow-[0_8px_30px_rgb(0,0,0,0.06)] sm:p-10">
               <header className="mb-6">
-                <h1 className="text-navy text-2xl font-black tracking-tight sm:text-3xl">{title}</h1>
-                <p className="mt-1.5 text-sm text-[#6f7882]">{subtitle}</p>
+                <h1 className="text-navy text-2xl font-bold tracking-tight sm:text-3xl">{title}</h1>
+                <p className="text-on-surface-variant mt-1.5 text-sm">{subtitle}</p>
               </header>
 
               {children}
 
-              <footer className="mt-6 border-t border-[#f4f5f5] pt-4 text-center text-xs text-[#6f7882]">
+              <footer className="border-outline-variant text-on-surface-variant mt-6 border-t pt-4 text-center text-xs">
                 By signing in or signing up, you agree to InterVue&apos;s{' '}
                 <span className="text-navy font-semibold">Employer Terms of Service</span>.
               </footer>

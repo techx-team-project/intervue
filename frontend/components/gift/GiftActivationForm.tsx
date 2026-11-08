@@ -75,33 +75,33 @@ export function GiftActivationForm({
   return (
     <div
       ref={formRef}
-      className="mx-auto w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-9 md:p-10"
+      className="border-outline-variant mx-auto w-full max-w-2xl rounded-2xl border bg-white p-6 shadow-sm sm:p-9 md:p-10"
     >
       <div className="mb-6 text-left">
-        <h1 className="text-2xl font-bold tracking-tight text-emerald-600 sm:text-3xl">Kích hoạt mã quà tặng</h1>
-        <p className="mt-2 text-sm leading-relaxed text-slate-600">
+        <h1 className="text-primary text-2xl font-bold tracking-tight sm:text-3xl">Kích hoạt mã quà tặng</h1>
+        <p className="text-on-surface-variant mt-2 text-sm leading-relaxed">
           Chúc mừng bạn đã nhận được mã quà tặng InterVue. Kích hoạt ngay bằng cách chọn gói tài khoản và nhập mã code
           để nhận được những đặc quyền hấp dẫn!
         </p>
       </div>
 
       {errorMsg && (
-        <div className="mb-5 flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-sm text-rose-600">
+        <div className="border-error/30 bg-error/10 text-error mb-5 flex items-start gap-3 rounded-xl border p-3.5 text-sm">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <div className="flex-1 font-medium">{errorMsg}</div>
-          <button type="button" onClick={() => setErrorMsg('')} className="text-rose-700 hover:text-rose-900">
+          <button type="button" onClick={() => setErrorMsg('')} className="text-error hover:text-error">
             <X className="h-4 w-4" />
           </button>
         </div>
       )}
 
       {successInfo && (
-        <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-5 text-emerald-900">
-          <div className="flex items-center gap-2 font-bold text-emerald-700">
+        <div className="border-primary/30 text-on-primary-container mb-6 rounded-2xl border bg-emerald-50/70 p-5">
+          <div className="text-primary flex items-center gap-2 font-bold">
             <CheckCircle2 className="h-5 w-5" />
             <span>Kích hoạt mã thành công!</span>
           </div>
-          <p className="mt-1 text-sm text-emerald-800">
+          <p className="text-on-primary-container mt-1 text-sm">
             Bạn đã mở khóa thành công <strong>{successInfo.packageName}</strong>. Thời hạn sử dụng:{' '}
             {successInfo.expiryText}.
           </p>
@@ -110,9 +110,9 @@ export function GiftActivationForm({
 
       <form onSubmit={handleApplyCoupon} className="space-y-4">
         <div>
-          <label className="mb-1.5 block text-sm font-semibold text-slate-800">Chọn gói tài khoản kích hoạt</label>
+          <label className="text-on-surface mb-1.5 block text-sm font-semibold">Chọn gói tài khoản kích hoạt</label>
           <div className="relative">
-            <span className="pointer-events-none absolute top-3 left-3.5 z-10 flex items-center text-emerald-600">
+            <span className="text-primary pointer-events-none absolute top-3 left-3.5 z-10 flex items-center">
               <CircleUser className="h-5 w-5" />
             </span>
             <select
@@ -120,7 +120,7 @@ export function GiftActivationForm({
               name="type"
               value={packageType}
               onChange={(e) => setPackageType(e.target.value)}
-              className="h-11 w-full appearance-none rounded-xl border border-slate-300 bg-white pr-10 pl-11 text-sm font-medium text-slate-800 transition hover:border-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
+              className="border-outline text-on-surface focus:border-primary h-11 w-full appearance-none rounded-xl border bg-white pr-10 pl-11 text-sm font-medium transition hover:border-slate-400 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
             >
               <option value="300">Tài khoản Education VIP (1 năm)</option>
               <option value="400">Tài khoản Pro VIP (1 tháng)</option>
@@ -140,12 +140,12 @@ export function GiftActivationForm({
         />
 
         <div className="pt-1">
-          <label className="flex cursor-pointer items-start gap-2.5 text-xs text-slate-600 select-none">
+          <label className="text-on-surface-variant flex cursor-pointer items-start gap-2.5 text-xs select-none">
             <input
               type="checkbox"
               checked={agreePartner}
               onChange={(e) => setAgreePartner(e.target.checked)}
-              className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+              className="border-outline text-primary focus:ring-primary mt-0.5 h-4 w-4 rounded"
             />
             <span>
               Tôi đồng ý chia sẻ thông tin đăng ký để nhận quà tặng khoá học và ưu đãi độc quyền từ đối tác liên kết

@@ -9,13 +9,11 @@ import {
   CANDIDATE_JOBS_MENU,
   RECRUITER_NAV_LINKS,
   SUPPORT_EMAIL,
-  SUPPORT_PHONE,
-  SUPPORT_PHONE_HREF,
 } from '@/constants/header';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, Menu, PhoneCall, PlusCircle, X } from 'lucide-react';
+import { ArrowLeft, Menu, PlusCircle, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -25,7 +23,7 @@ import NavMenu from './header/NavMenu';
 import RecruiterEntryButton from './header/RecruiterEntryButton';
 
 const NAV_LINK_CLASS =
-  'text-title-md text-on-surface hover:text-primary ease-standard flex h-11 items-center px-5 transition-colors duration-150';
+  'text-title-md text-on-surface hover:text-primary ease-standard flex h-12 items-center px-4 whitespace-nowrap transition-colors duration-150';
 
 interface HeaderProps {
   portal?: 'candidate' | 'recruiter';
@@ -100,11 +98,7 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
         <div className="flex items-center gap-2">
           {isRecruiterPortal && (
             <>
-              <a href={SUPPORT_PHONE_HREF} className={`${NAV_LINK_CLASS} hidden xl:flex`}>
-                <PhoneCall className="mr-2 h-4 w-4" aria-hidden />
-                {SUPPORT_PHONE}
-              </a>
-              <Link href={ROUTES.HOME} className={`${NAV_LINK_CLASS} hidden sm:flex`}>
+              <Link href={ROUTES.HOME} className={`${NAV_LINK_CLASS} hidden xl:flex`}>
                 <ArrowLeft className="mr-2 h-4 w-4" aria-hidden />
                 Dành cho người tìm việc
               </Link>

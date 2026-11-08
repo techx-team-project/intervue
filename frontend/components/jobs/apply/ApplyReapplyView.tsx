@@ -42,14 +42,14 @@ export default function ApplyReapplyView({ application, resumes, open }: ApplyRe
       {open ? (
         <>
           <CvPicker resumes={resumes} value={resumeId} onChange={setResumeId} />
-          <div className="flex justify-end border-t border-slate-100 pt-4">
+          <div className="border-outline-variant flex justify-end border-t pt-4">
             <Button isLoading={reapply.isPending} onClick={handleReapply}>
               Nộp lại hồ sơ
             </Button>
           </div>
         </>
       ) : (
-        <p className="text-center text-sm font-semibold text-slate-600">Tin tuyển dụng này đã đóng.</p>
+        <p className="text-on-surface-variant text-center text-sm font-semibold">Tin tuyển dụng này đã đóng.</p>
       )}
     </div>
   );

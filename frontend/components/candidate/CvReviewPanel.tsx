@@ -59,43 +59,43 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
   };
 
   return (
-    <div className={`rounded-xl border border-slate-200 bg-white p-5 shadow-sm ${className}`}>
+    <div className={`border-outline-variant rounded-xl border bg-white p-5 shadow-sm ${className}`}>
       {consentDialog}
 
       {/* Header and Quota status */}
-      <div className="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="border-outline-variant flex flex-col gap-3 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+            <span className="bg-primary-container text-primary flex h-8 w-8 items-center justify-center rounded-lg">
               <Sparkles className="h-4 w-4" />
             </span>
-            <h3 className="text-base font-bold text-slate-800">Đánh giá & Gợi ý cải thiện CV bằng AI</h3>
+            <h3 className="text-on-surface text-base font-bold">Đánh giá & Gợi ý cải thiện CV bằng AI</h3>
           </div>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="text-on-surface-variant mt-1 text-xs">
             Phân tích câu chữ, tối ưu hóa bộ lọc ATS và phát hiện các điểm chưa có số liệu định lượng.
           </p>
         </div>
 
         {quota && (
           <div className="flex flex-col sm:items-end">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
-              <Clock className="h-3.5 w-3.5 text-emerald-600" />
+            <div className="text-on-surface flex items-center gap-1.5 text-xs font-semibold">
+              <Clock className="text-primary h-3.5 w-3.5" />
               <span>
                 Còn{' '}
-                <strong className={quota.remaining > 0 ? 'text-emerald-600' : 'text-red-500'}>
+                <strong className={quota.remaining > 0 ? 'text-primary' : 'text-error'}>
                   {quota.remaining}/{quota.maxDaily}
                 </strong>{' '}
                 lượt hôm nay
               </span>
             </div>
-            <span className="text-[11px] text-slate-400">(Làm mới lúc 00:00 giờ Việt Nam)</span>
+            <span className="text-label-sm text-outline">(Làm mới lúc 00:00 giờ Việt Nam)</span>
           </div>
         )}
       </div>
 
       {/* Privacy disclaimer - Only Candidate Sees It */}
-      <div className="mt-3 flex items-center gap-2 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs text-slate-600">
-        <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" />
+      <div className="border-outline-variant bg-surface-container-low text-on-surface-variant mt-3 flex items-center gap-2 rounded-lg border px-3 py-2 text-xs">
+        <ShieldCheck className="text-primary h-4 w-4 shrink-0" />
         <span>
           <strong>Bảo mật riêng tư:</strong> Chỉ bạn mới xem được các nhận xét chẩn đoán này. Nhà tuyển dụng không thể
           xem.
@@ -104,18 +104,18 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
 
       {/* Action CTA */}
       {!reviewResult && (
-        <div className="mt-5 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 py-6 text-center">
-          <FileText className="mx-auto mb-2 h-10 w-10 text-slate-400" />
-          <p className="mb-1 text-sm font-medium text-slate-700">
+        <div className="border-outline-variant bg-surface-container-low/50 mt-5 rounded-xl border-2 border-dashed py-6 text-center">
+          <FileText className="text-outline mx-auto mb-2 h-10 w-10" />
+          <p className="text-on-surface mb-1 text-sm font-medium">
             Nhận góp ý chi tiết cho từng dòng kinh nghiệm trong CV
           </p>
-          <p className="mx-auto mb-4 max-w-md text-xs text-slate-500">
+          <p className="text-on-surface-variant mx-auto mb-4 max-w-md text-xs">
             Mỗi nhận xét bám sát trích dẫn thực tế từ CV, chỉ ra lý do chưa tối ưu và cung cấp mẫu viết lại chuẩn STAR.
           </p>
           <Button
             onClick={handleReviewClick}
             disabled={isPending || (quota !== null && quota.remaining <= 0)}
-            className="rounded-lg bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700"
+            className="bg-primary hover:bg-primary-hover rounded-lg px-5 py-2.5 text-xs font-semibold text-white shadow-sm"
           >
             {isPending ? (
               <span className="flex items-center gap-2">
@@ -130,7 +130,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
             )}
           </Button>
           {quota && quota.remaining <= 0 && (
-            <p className="mt-2 text-xs text-red-500">
+            <p className="text-error mt-2 text-xs">
               Bạn đã sử dụng hết 3 lượt đánh giá miễn phí hôm nay. Vui lòng quay lại sau 00:00.
             </p>
           )}
@@ -139,7 +139,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
 
       {/* Error Banner */}
       {error && (
-        <div className="mt-4 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700">
+        <div className="border-error/30 bg-error/10 text-error mt-4 flex items-center gap-2 rounded-lg border p-3 text-xs">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -149,39 +149,41 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
       {reviewResult && (
         <div className="mt-5 space-y-4">
           {/* Summary Banner */}
-          <div className="flex flex-col items-start justify-between gap-3 rounded-xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-teal-50 p-4 sm:flex-row sm:items-center">
+          <div className="bg-primary-light flex flex-col items-start justify-between gap-3 rounded-xl border border-emerald-100 p-4 sm:flex-row sm:items-center">
             <div>
               <div className="mb-1 flex items-center gap-2">
-                <span className="text-xs font-bold tracking-wider text-emerald-800 uppercase">Tổng quan đánh giá</span>
+                <span className="text-on-primary-container text-xs font-bold tracking-wider uppercase">
+                  Tổng quan đánh giá
+                </span>
                 {reviewResult.fromCache && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+                  <span className="text-label-sm inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 font-bold text-amber-800">
                     ⚡ CV không đổi: Đã tải kết quả đã lưu (Không tốn lượt)
                   </span>
                 )}
               </div>
-              <p className="text-xs leading-relaxed text-slate-700">{reviewResult.summary}</p>
+              <p className="text-on-surface text-xs leading-relaxed">{reviewResult.summary}</p>
             </div>
             {reviewResult.overallScore > 0 && (
-              <div className="flex shrink-0 flex-col items-center justify-center rounded-lg border border-emerald-200 bg-white px-3 py-2 shadow-xs">
-                <span className="text-[10px] font-semibold text-slate-500 uppercase">Điểm ATS ước tính</span>
-                <span className="text-xl font-black text-emerald-600">{reviewResult.overallScore}/100</span>
+              <div className="border-primary/30 flex shrink-0 flex-col items-center justify-center rounded-lg border bg-white px-3 py-2 shadow-xs">
+                <span className="text-label-sm text-on-surface-variant font-semibold uppercase">Điểm ATS ước tính</span>
+                <span className="text-primary text-xl font-bold">{reviewResult.overallScore}/100</span>
               </div>
             )}
           </div>
 
           {/* Comments List (Quote → Problem → Fix) */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold tracking-wider text-slate-500 uppercase">
+            <h4 className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">
               Chi tiết các điểm cần hoàn thiện ({reviewResult.comments.length} nhận xét)
             </h4>
 
             {reviewResult.comments.map((comment, idx) => (
               <div
                 key={idx}
-                className="rounded-lg border border-slate-200 bg-white p-4 shadow-2xs transition-colors hover:border-slate-300"
+                className="border-outline-variant hover:border-outline rounded-lg border bg-white p-4 shadow-2xs transition-colors"
               >
                 {comment.section && (
-                  <span className="mb-2.5 inline-block rounded bg-slate-100 px-2 py-0.5 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                  <span className="bg-surface-container-high text-label-sm text-on-surface-variant mb-2.5 inline-block rounded px-2 py-0.5 font-bold tracking-wider uppercase">
                     Mục: {comment.section}
                   </span>
                 )}
@@ -192,29 +194,29 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
                     <Quote className="h-3.5 w-3.5" />
                     <span>Trích dẫn từ CV của bạn:</span>
                   </div>
-                  <blockquote className="rounded-md border-l-3 border-amber-400 bg-amber-50/70 p-2.5 font-mono text-xs text-slate-800 italic">
+                  <blockquote className="text-on-surface rounded-md border-l-3 border-amber-400 bg-amber-50/70 p-2.5 font-mono text-xs italic">
                     &ldquo;{comment.quote}&rdquo;
                   </blockquote>
                 </div>
 
                 {/* 2. Problem */}
                 <div className="mb-2.5">
-                  <div className="mb-1 flex items-center gap-1.5 text-xs font-bold text-red-700">
+                  <div className="text-error mb-1 flex items-center gap-1.5 text-xs font-bold">
                     <AlertCircle className="h-3.5 w-3.5" />
                     <span>Vấn đề phát hiện:</span>
                   </div>
-                  <p className="rounded-md border border-red-100 bg-red-50/50 p-2.5 text-xs leading-relaxed text-slate-700">
+                  <p className="border-error/30 bg-error/10 text-on-surface rounded-md border p-2.5 text-xs leading-relaxed">
                     {comment.problem}
                   </p>
                 </div>
 
                 {/* 3. Fix */}
                 <div>
-                  <div className="mb-1 flex items-center gap-1.5 text-xs font-bold text-emerald-800">
+                  <div className="text-on-primary-container mb-1 flex items-center gap-1.5 text-xs font-bold">
                     <Wrench className="h-3.5 w-3.5" />
                     <span>Đề xuất sửa đổi & Câu viết mẫu:</span>
                   </div>
-                  <div className="rounded-md border border-emerald-200 bg-emerald-50/80 p-2.5 text-xs leading-relaxed font-medium text-emerald-900">
+                  <div className="border-primary/30 text-on-primary-container rounded-md border bg-emerald-50/80 p-2.5 text-xs leading-relaxed font-medium">
                     {comment.fix}
                   </div>
                 </div>
@@ -228,7 +230,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
               onClick={handleReviewClick}
               disabled={isPending || (quota !== null && quota.remaining <= 0)}
               variant="outline"
-              className="border-slate-300 px-4 py-2 text-xs hover:bg-slate-50"
+              className="border-outline hover:bg-surface-container-low px-4 py-2 text-xs"
             >
               <RefreshCw className={`mr-1.5 h-3 w-3 ${isPending ? 'animate-spin' : ''}`} />
               Đánh giá lại CV

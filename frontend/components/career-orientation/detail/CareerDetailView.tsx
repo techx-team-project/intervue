@@ -22,7 +22,7 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
   const { updatedBadge, viewsCountSuffix, relatedTopicsTitle } = CAREER_ORIENTATION_MESSAGES.detailView;
 
   return (
-    <div className="min-h-screen bg-[#f8faf9]">
+    <div className="bg-surface-container-low min-h-screen">
       <CareerDetailBreadcrumb article={article} />
 
       <div className="border-b border-gray-200 bg-white py-8 lg:py-12">
@@ -32,17 +32,17 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
               <span className="bg-primary rounded-full px-3.5 py-1 text-xs font-bold text-white shadow-xs">
                 {article.category}
               </span>
-              <span className="text-primary inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold">
+              <span className="text-primary border-primary/30 bg-primary-light inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold">
                 <Sparkles className="h-3 w-3" />
                 {updatedBadge}
               </span>
             </div>
 
-            <h1 className="text-2xl leading-tight font-extrabold tracking-tight text-[#171717] sm:text-3xl lg:text-4xl">
+            <h1 className="text-on-surface text-2xl leading-tight font-extrabold tracking-tight sm:text-3xl lg:text-4xl">
               {article.title}
             </h1>
 
-            <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-[#7f878f]">
+            <div className="text-on-surface-variant mt-4 flex flex-wrap items-center gap-4 text-xs">
               <div className="flex items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -98,7 +98,7 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
 
             {article.sections.map((section) => (
               <section key={section.id} id={section.id} className="scroll-mt-24 space-y-4">
-                <h2 className="border-b border-gray-100 pb-3 text-xl font-bold tracking-tight text-[#171717] sm:text-2xl">
+                <h2 className="text-on-surface border-b border-gray-100 pb-3 text-xl font-bold tracking-tight sm:text-2xl">
                   {section.title}
                 </h2>
 
@@ -107,7 +107,7 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
                 )}
 
                 {section.paragraphs.map((p, pIdx) => (
-                  <p key={pIdx} className="text-sm leading-relaxed text-[#526475] sm:text-[15px]">
+                  <p key={pIdx} className="text-on-surface-variant sm:text-body-lg text-sm leading-relaxed">
                     {p}
                   </p>
                 ))}
@@ -127,10 +127,10 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
                   <div className="mt-5 space-y-4">
                     {section.subsections.map((sub, sIdx) => (
                       <div key={sIdx} className="rounded-xl border border-gray-100 bg-gray-50/80 p-4">
-                        <h3 className="mb-2 text-sm font-bold text-[#171717] sm:text-base">{sub.title}</h3>
+                        <h3 className="text-on-surface mb-2 text-sm font-bold sm:text-base">{sub.title}</h3>
                         <div className="space-y-1.5">
                           {sub.content.map((c, cIdx) => (
-                            <p key={cIdx} className="text-xs leading-relaxed text-[#526475] sm:text-sm">
+                            <p key={cIdx} className="text-on-surface-variant text-xs leading-relaxed sm:text-sm">
                               {c}
                             </p>
                           ))}
@@ -167,7 +167,7 @@ export default function CareerDetailView({ article }: CareerDetailViewProps) {
                   <Link
                     key={tag}
                     href={`/career-orientation?tag=${encodeURIComponent(tag)}`}
-                    className="hover:bg-primary-light hover:text-primary rounded-lg bg-gray-100 px-3 py-1 text-xs font-medium text-[#526475] transition"
+                    className="hover:bg-primary-light hover:text-primary text-on-surface-variant rounded-lg bg-gray-100 px-3 py-1 text-xs font-medium transition"
                   >
                     #{tag}
                   </Link>

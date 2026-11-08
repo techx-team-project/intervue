@@ -31,14 +31,14 @@ export function VoucherSection() {
   };
 
   return (
-    <section className="border-y border-slate-200 bg-slate-50 px-4 py-12 sm:px-6">
+    <section className="border-outline-variant bg-surface-container-low border-y px-4 py-12 sm:px-6">
       <div className="mx-auto max-w-2xl text-center">
-        <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600">
+        <div className="bg-primary-container text-primary mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl">
           <Gift className="h-6 w-6" />
         </div>
 
-        <h2 className="text-xl font-black text-slate-800 sm:text-2xl">Bạn có mã ưu đãi hoặc quà tặng đối tác?</h2>
-        <p className="mt-1 text-sm text-slate-500">
+        <h2 className="text-on-surface text-xl font-bold sm:text-2xl">Bạn có mã ưu đãi hoặc quà tặng đối tác?</h2>
+        <p className="text-on-surface-variant mt-1 text-sm">
           Nhập mã voucher để kích hoạt miễn phí quyền lợi VIP Education hoặc Pro
         </p>
 
@@ -61,7 +61,7 @@ export function VoucherSection() {
         </form>
 
         {voucherSuccess && (
-          <div className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-700">
+          <div className="border-primary/30 bg-primary-light text-primary mt-4 flex items-center justify-center gap-2 rounded-xl border p-3 text-sm font-bold">
             <CheckCircle2 className="h-4 w-4" />
             <span>Mã quà tặng hợp lệ! Gói tài khoản đã được nâng cấp thành công.</span>
           </div>

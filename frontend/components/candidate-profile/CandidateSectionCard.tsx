@@ -22,10 +22,10 @@ export default function CandidateSectionCard({
   children,
 }: CandidateSectionCardProps) {
   return (
-    <section className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-8">
+    <section className="border-outline-variant rounded-3xl border bg-white p-6 shadow-xs sm:p-8">
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2.5">
-          <div className="text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
+          <div className="text-primary bg-primary-light flex h-9 w-9 shrink-0 items-center justify-center rounded-xl">
             <Icon className="h-5 w-5" />
           </div>
           <h2 className="text-navy truncate text-lg font-bold sm:text-xl">{title}</h2>
@@ -36,11 +36,11 @@ export default function CandidateSectionCard({
       </div>
 
       {isEmpty ? (
-        <p className="mt-4 rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
+        <p className="border-outline-variant bg-surface-container-low text-on-surface-variant mt-4 rounded-2xl border border-dashed px-4 py-6 text-center text-sm">
           {emptyText}
         </p>
       ) : (
-        <ul className="mt-4 divide-y divide-slate-100">{children}</ul>
+        <ul className="divide-outline-variant mt-4 divide-y">{children}</ul>
       )}
     </section>
   );

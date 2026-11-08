@@ -76,27 +76,27 @@ export default function JobAlertUnsubscribeView() {
     <div className="mx-auto max-w-xl px-4 py-12 sm:px-6">
       {/* Top Logo / Icon */}
       <div className="mb-6 text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 shadow-xs">
+        <div className="bg-primary-light text-primary mx-auto flex h-14 w-14 items-center justify-center rounded-2xl shadow-xs">
           <BellOff className="h-7 w-7" />
         </div>
-        <h1 className="mt-4 text-2xl font-black text-slate-900 sm:text-3xl">Job Alert Preferences</h1>
-        <p className="mt-1.5 text-sm text-slate-500">Manage or unsubscribe from your automated email digest</p>
+        <h1 className="text-on-surface mt-4 text-2xl font-bold sm:text-3xl">Job Alert Preferences</h1>
+        <p className="text-on-surface-variant mt-1.5 text-sm">Manage or unsubscribe from your automated email digest</p>
       </div>
 
       {/* Main Container Card */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <div className="border-outline-variant rounded-2xl border bg-white p-6 shadow-sm sm:p-8">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-            <p className="mt-3 text-sm text-slate-500">Retrieving alert information...</p>
+            <Loader2 className="text-primary h-8 w-8 animate-spin" />
+            <p className="text-on-surface-variant mt-3 text-sm">Retrieving alert information...</p>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center py-6 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-600">
+            <div className="bg-error/10 text-error flex h-12 w-12 items-center justify-center rounded-full">
               <AlertCircle className="h-6 w-6" />
             </div>
-            <h3 className="mt-3 text-base font-bold text-slate-900">Unable to proceed</h3>
-            <p className="mt-1 text-sm text-slate-500">{error}</p>
+            <h3 className="text-on-surface mt-3 text-base font-bold">Unable to proceed</h3>
+            <p className="text-on-surface-variant mt-1 text-sm">{error}</p>
             <Link
               href="/"
               className="mt-6 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800"
@@ -108,13 +108,13 @@ export default function JobAlertUnsubscribeView() {
         ) : completedAction ? (
           /* Confirmation Success State */
           <div className="flex flex-col items-center py-4 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+            <div className="bg-primary-light text-primary flex h-14 w-14 items-center justify-center rounded-full">
               <CheckCircle2 className="h-8 w-8" />
             </div>
-            <h3 className="mt-4 text-lg font-black text-slate-900">
+            <h3 className="text-on-surface mt-4 text-lg font-bold">
               {completedAction === 'PAUSE' ? 'Job Alert Paused' : 'Unsubscribed Successfully'}
             </h3>
-            <p className="mt-2 max-w-sm text-sm leading-relaxed text-slate-600">
+            <p className="text-on-surface-variant mt-2 max-w-sm text-sm leading-relaxed">
               {completedAction === 'PAUSE'
                 ? `You have temporarily paused email digests for "${alertInfo?.title}". You will no longer receive daily emails, but your criteria remains saved in your candidate dashboard.`
                 : `You have successfully deleted "${alertInfo?.title}". You will no longer receive any emails regarding this alert.`}
@@ -122,14 +122,14 @@ export default function JobAlertUnsubscribeView() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700"
+                className="bg-primary hover:bg-primary-hover inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-sm transition"
               >
                 <Home className="h-4 w-4" />
                 <span>Return to InterVue</span>
               </Link>
               <Link
                 href="/candidate/job-alerts"
-                className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+                className="border-outline-variant text-on-surface hover:bg-surface-container-low rounded-xl border px-4 py-2.5 text-sm font-bold transition"
               >
                 Manage Other Alerts
               </Link>
@@ -138,31 +138,33 @@ export default function JobAlertUnsubscribeView() {
         ) : (
           /* Decision Form */
           <div>
-            <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-4">
-              <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">Subscribed Alert</span>
-              <h3 className="mt-1 text-base font-bold text-slate-900">{alertInfo?.title}</h3>
+            <div className="border-outline-variant bg-surface-container-low/70 rounded-xl border p-4">
+              <span className="text-label-sm text-outline font-bold tracking-wider uppercase">Subscribed Alert</span>
+              <h3 className="text-on-surface mt-1 text-base font-bold">{alertInfo?.title}</h3>
 
               <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
                 {alertInfo?.keyword && (
-                  <span className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-0.5 text-slate-700">
-                    <Search className="h-3 w-3 text-slate-400" />
+                  <span className="border-outline-variant text-on-surface inline-flex items-center gap-1 rounded-md border bg-white px-2 py-0.5">
+                    <Search className="text-outline h-3 w-3" />
                     <span>{alertInfo.keyword}</span>
                   </span>
                 )}
                 {alertInfo?.city && (
-                  <span className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-0.5 text-slate-700">
-                    <MapPin className="h-3 w-3 text-slate-400" />
+                  <span className="border-outline-variant text-on-surface inline-flex items-center gap-1 rounded-md border bg-white px-2 py-0.5">
+                    <MapPin className="text-outline h-3 w-3" />
                     <span>{alertInfo.city}</span>
                   </span>
                 )}
-                <span className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-0.5 text-slate-700">
-                  <Clock className="h-3 w-3 text-slate-400" />
+                <span className="border-outline-variant text-on-surface inline-flex items-center gap-1 rounded-md border bg-white px-2 py-0.5">
+                  <Clock className="text-outline h-3 w-3" />
                   <span>{alertInfo?.frequency === 'DAILY' ? 'Daily Digest' : 'Weekly Digest'}</span>
                 </span>
               </div>
             </div>
 
-            <p className="mt-5 text-sm text-slate-600">Please choose how you would like to update your subscription:</p>
+            <p className="text-on-surface-variant mt-5 text-sm">
+              Please choose how you would like to update your subscription:
+            </p>
 
             <div className="mt-4 space-y-3">
               {/* Option 1: Pause */}
@@ -170,19 +172,19 @@ export default function JobAlertUnsubscribeView() {
                 type="button"
                 disabled={isProcessing}
                 onClick={() => handleAction('PAUSE')}
-                className="group flex w-full cursor-pointer items-start gap-3.5 rounded-xl border border-slate-200 bg-white p-4 text-left transition hover:border-emerald-500 hover:bg-emerald-50/30"
+                className="group border-outline-variant hover:border-primary flex w-full cursor-pointer items-start gap-3.5 rounded-xl border bg-white p-4 text-left transition hover:bg-emerald-50/30"
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 transition group-hover:bg-emerald-600 group-hover:text-white">
+                <div className="bg-primary-container text-primary group-hover:bg-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition group-hover:text-white">
                   <PauseCircle className="h-5 w-5" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-slate-900">Pause Email Digests</span>
-                    <span className="py-0.2 rounded-full bg-emerald-100 px-2 text-[10px] font-bold text-emerald-800">
+                    <span className="text-on-surface text-sm font-bold">Pause Email Digests</span>
+                    <span className="py-0.2 bg-primary-container text-label-sm text-on-primary-container rounded-full px-2 font-bold">
                       Recommended
                     </span>
                   </div>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="text-on-surface-variant mt-0.5 text-xs">
                     Temporarily stop receiving emails while keeping your criteria saved. You can re-enable anytime.
                   </p>
                 </div>
@@ -193,16 +195,16 @@ export default function JobAlertUnsubscribeView() {
                 type="button"
                 disabled={isProcessing}
                 onClick={() => handleAction('DELETE')}
-                className="group flex w-full cursor-pointer items-start gap-3.5 rounded-xl border border-slate-200 bg-white p-4 text-left transition hover:border-red-400 hover:bg-red-50/30"
+                className="group border-outline-variant hover:border-error hover:bg-error/10 flex w-full cursor-pointer items-start gap-3.5 rounded-xl border bg-white p-4 text-left transition"
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600 transition group-hover:bg-red-600 group-hover:text-white">
+                <div className="bg-surface-container-high text-on-surface-variant group-hover:bg-error flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition group-hover:text-white">
                   <Trash2 className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="text-sm font-bold text-slate-900 transition group-hover:text-red-700">
+                  <span className="text-on-surface group-hover:text-error text-sm font-bold transition">
                     Unsubscribe & Delete Alert
                   </span>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="text-on-surface-variant mt-0.5 text-xs">
                     Permanently delete this alert and remove all associated preferences.
                   </p>
                 </div>
@@ -210,8 +212,8 @@ export default function JobAlertUnsubscribeView() {
             </div>
 
             {isProcessing && (
-              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-500">
-                <Loader2 className="h-4 w-4 animate-spin text-emerald-600" />
+              <div className="text-on-surface-variant mt-4 flex items-center justify-center gap-2 text-xs">
+                <Loader2 className="text-primary h-4 w-4 animate-spin" />
                 <span>Processing your request...</span>
               </div>
             )}

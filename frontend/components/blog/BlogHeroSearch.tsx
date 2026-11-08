@@ -46,23 +46,20 @@ export default function BlogHeroSearch({
     if (!categoryMeta) return null;
     switch (categoryMeta.iconName) {
       case 'Compass':
-        return <Compass className="h-7 w-7 text-emerald-400" />;
+        return <Compass className="text-primary-bright h-7 w-7" />;
       case 'Briefcase':
-        return <Briefcase className="h-7 w-7 text-blue-400" />;
+        return <Briefcase className="text-primary h-7 w-7" />;
       case 'Calculator':
         return <Calculator className="h-7 w-7 text-amber-400" />;
       case 'GraduationCap':
-        return <GraduationCap className="h-7 w-7 text-purple-400" />;
+        return <GraduationCap className="text-primary h-7 w-7" />;
       default:
-        return <BookOpen className="h-7 w-7 text-emerald-400" />;
+        return <BookOpen className="text-primary-bright h-7 w-7" />;
     }
   };
 
   return (
-    <section className="relative overflow-hidden bg-linear-to-b from-[#0f172a] via-[#1e293b] to-[#0f172a] py-12 text-white sm:py-16">
-      <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
-
+    <section className="bg-primary-deeper relative overflow-hidden py-12 text-white sm:py-16">
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {categoryMeta && (
           <nav className="mb-4 flex items-center gap-1.5 text-xs text-gray-400">
@@ -74,14 +71,14 @@ export default function BlogHeroSearch({
               Career Guides
             </Link>
             <ChevronRight className="h-3 w-3" />
-            <span className="font-semibold text-emerald-400">{categoryMeta.name}</span>
+            <span className="text-primary-bright font-semibold">{categoryMeta.name}</span>
           </nav>
         )}
 
         <div className="text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold ring-1 ring-white/15 backdrop-blur-md">
-            <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
-            <span className="text-emerald-300">
+            <Sparkles className="text-primary-bright h-3.5 w-3.5" />
+            <span className="text-primary-bright">
               {categoryMeta ? categoryMeta.badge : 'Career Guides & Recruitment 2026'}
             </span>
           </div>
@@ -132,7 +129,7 @@ export default function BlogHeroSearch({
 
             <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5 text-xs text-gray-300">
               <span className="inline-flex items-center gap-1 text-gray-400">
-                <TrendingUp className="h-3 w-3 text-emerald-400" />
+                <TrendingUp className="text-primary-bright h-3 w-3" />
                 Trending topics:
               </span>
               {DEFAULT_POPULAR_TAGS.map((tag) => {

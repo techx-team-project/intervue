@@ -30,7 +30,7 @@ export default function RecruiterOnboardingStepper({ current }: RecruiterOnboard
                 aria-hidden="true"
                 className={cn(
                   'absolute top-3 right-1/2 -left-1/2 h-0.5',
-                  index <= currentIndex ? 'bg-primary' : 'bg-slate-200',
+                  index <= currentIndex ? 'bg-primary' : 'bg-surface-container-high',
                 )}
               />
             )}
@@ -39,7 +39,7 @@ export default function RecruiterOnboardingStepper({ current }: RecruiterOnboard
                 'relative z-10 flex h-6 w-6 items-center justify-center rounded-full border-2',
                 isDone && 'border-primary bg-primary text-white',
                 isActive && 'border-primary bg-white',
-                !isDone && !isActive && 'border-slate-300 bg-white',
+                !isDone && !isActive && 'border-outline bg-white',
               )}
             >
               {isDone ? (
@@ -51,7 +51,7 @@ export default function RecruiterOnboardingStepper({ current }: RecruiterOnboard
             <span
               className={cn(
                 'text-xs font-semibold sm:text-sm',
-                isDone || isActive ? 'text-slate-800' : 'text-slate-400',
+                isDone || isActive ? 'text-on-surface' : 'text-outline',
               )}
             >
               {step.label}

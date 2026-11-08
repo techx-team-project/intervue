@@ -1,20 +1,16 @@
 'use client';
 
-import React from 'react';
+import { ArrowRight, Briefcase, Calculator, Compass, GraduationCap, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
-import { Compass, Briefcase, Calculator, GraduationCap, ArrowRight, Sparkles } from 'lucide-react';
 
 interface CategoryCardItem {
   id: string;
   name: string;
   slug: string;
   shortDesc: string;
-  icon: React.ReactNode;
+  icon: LucideIcon;
   tags: string[];
   articleCount: number;
-  gradientBg: string;
-  badge: string;
-  accentBorder: string;
 }
 
 const CATEGORY_CARDS: CategoryCardItem[] = [
@@ -23,48 +19,36 @@ const CATEGORY_CARDS: CategoryCardItem[] = [
     name: 'Định hướng nghề nghiệp',
     slug: 'dinh-huong-nghe-nghiep',
     shortDesc: 'Khám phá tiềm năng, xác định đam mê Ikigai và lộ trình thăng tiến sự nghiệp bền vững.',
-    icon: <Compass className="h-6 w-6 text-emerald-600" />,
+    icon: Compass,
     tags: ['Ikigai Model', 'Career Path', 'Growth Roadmaps', 'Graduate Playbook'],
     articleCount: 6,
-    gradientBg: 'from-emerald-500/10 via-teal-500/5 to-transparent',
-    badge: 'Roadmap',
-    accentBorder: 'hover:border-emerald-500/60',
   },
   {
     id: 'tips',
     name: 'Bí quyết tìm việc',
     slug: 'bi-kip-tim-viec',
     shortDesc: 'Viết CV chuẩn ATS, kịch bản trả lời 50+ câu hỏi phỏng vấn hóc búa và đàm phán offer.',
-    icon: <Briefcase className="h-6 w-6 text-blue-600" />,
+    icon: Briefcase,
     tags: ['ATS Resume', 'STAR Interviews', 'Salary Negotiation', 'Probation Success'],
     articleCount: 6,
-    gradientBg: 'from-blue-500/10 via-indigo-500/5 to-transparent',
-    badge: 'Interviews',
-    accentBorder: 'hover:border-blue-500/60',
   },
   {
     id: 'salary',
     name: 'Chế độ hưởng lương',
     slug: 'che-do-luong-thuong',
     shortDesc: 'Công cụ tính Lương Gross sang Net 2026, chế độ bảo hiểm xã hội (BHXH) và quyền lợi lao động.',
-    icon: <Calculator className="h-6 w-6 text-amber-600" />,
+    icon: Calculator,
     tags: ['Gross ➔ Net', 'Social Insurance', '13th Month Bonus', '7-Tier PIT Tax'],
     articleCount: 6,
-    gradientBg: 'from-amber-500/10 via-orange-500/5 to-transparent',
-    badge: 'Compensation',
-    accentBorder: 'hover:border-amber-500/60',
   },
   {
     id: 'skills',
     name: 'Kiến thức chuyên ngành',
     slug: 'kien-thuc-chuyen-nganh',
     shortDesc: 'Kho tri thức thực chiến sâu rộng: Công nghệ thông tin / AI, Marketing số, Sales và Logistics.',
-    icon: <GraduationCap className="h-6 w-6 text-violet-600" />,
+    icon: GraduationCap,
     tags: ['Software Engineering', 'Generative AI', 'Product Management', 'DevOps & Cloud'],
     articleCount: 6,
-    gradientBg: 'from-violet-500/10 via-purple-500/5 to-transparent',
-    badge: 'Expertise',
-    accentBorder: 'hover:border-violet-500/60',
   },
 ];
 
@@ -73,59 +57,54 @@ export default function BlogCategoryShowcase() {
     <section className="py-8">
       <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
-              <Sparkles className="h-4 w-4" />
-            </span>
-            <span className="text-primary text-xs font-bold tracking-wider uppercase">4 Core Knowledge Pillars</span>
-          </div>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-[#0f172a] sm:text-3xl">Career Guidance Pillars</h2>
+          <h2 className="text-headline-lg text-primary font-bold">Chuyên mục cẩm nang</h2>
+          <p className="text-body-md text-on-surface-variant mt-1">
+            Kiến thức ngành, chính sách lao động và xu hướng tuyển dụng 2026
+          </p>
         </div>
-        <p className="text-xs text-gray-500 sm:text-right">
-          Explore actionable industry insights, workplace policies, and 2026 hiring trends
-        </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {CATEGORY_CARDS.map((cat) => (
+      <div className="grid grid-cols-1 gap-4.5 md:grid-cols-2 lg:grid-cols-4">
+        {CATEGORY_CARDS.map(({ id, name, slug, shortDesc, icon: Icon, tags, articleCount }) => (
           <Link
-            key={cat.id}
-            href={`/blog/${cat.slug}`}
-            className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-gray-200 bg-white p-6 shadow-xs transition duration-300 hover:shadow-xl ${cat.accentBorder}`}
+            key={id}
+            href={`/blog/${slug}`}
+            className="group bg-surface ease-standard hover:shadow-elevation-1 hover:border-primary flex flex-col justify-between rounded-xl border border-transparent p-6 transition-all duration-200 hover:-translate-y-0.5"
           >
-            <div
-              className={`pointer-events-none absolute inset-0 bg-linear-to-b ${cat.gradientBg} opacity-60 transition duration-300 group-hover:opacity-100`}
-            />
-
-            <div className="relative">
+            <div>
               <div className="flex items-center justify-between">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-black/5 transition-transform duration-300">
-                  {cat.icon}
-                </div>
-                <span className="group-hover:bg-primary rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600 transition group-hover:text-white">
-                  {cat.articleCount} articles
+                <span className="bg-primary-container text-primary flex h-12 w-12 items-center justify-center rounded-lg">
+                  <Icon className="h-6 w-6" aria-hidden />
+                </span>
+                <span className="bg-surface-container-low text-label-md text-on-surface-variant rounded-full px-3 py-1">
+                  {articleCount} bài viết
                 </span>
               </div>
 
-              <h3 className="group-hover:text-primary mt-5 text-lg font-bold text-[#0f172a] transition">{cat.name}</h3>
-              <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-gray-600">{cat.shortDesc}</p>
+              <h3 className="text-title-lg text-on-surface group-hover:text-primary mt-5 font-bold transition-colors">
+                {name}
+              </h3>
+              <p className="text-body-md text-on-surface-variant mt-2 line-clamp-3">{shortDesc}</p>
 
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                {cat.tags.map((tag, idx) => (
-                  <span
-                    key={idx}
-                    className="rounded-md bg-white/80 px-2 py-0.5 text-[11px] font-medium text-gray-600 ring-1 ring-gray-200/60"
+              <ul className="mt-4 flex flex-wrap gap-1.5">
+                {tags.map((tag) => (
+                  <li
+                    key={tag}
+                    className="bg-surface-container-low text-label-md text-on-surface-variant rounded-full px-2.5 py-1"
                   >
                     #{tag}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            <div className="text-primary relative mt-6 flex items-center gap-1 text-xs font-bold transition duration-200 group-hover:translate-x-1">
-              <span>Explore category</span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </div>
+            <span className="text-label-lg text-primary mt-6 flex items-center gap-1 font-semibold">
+              Xem chuyên mục
+              <ArrowRight
+                className="ease-standard h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
+                aria-hidden
+              />
+            </span>
           </Link>
         ))}
       </div>

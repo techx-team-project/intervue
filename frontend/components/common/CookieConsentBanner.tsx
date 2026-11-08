@@ -41,16 +41,16 @@ export default function CookieConsentBanner() {
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 fixed right-4 bottom-4 left-4 z-50 mx-auto max-w-3xl duration-300 sm:right-6 sm:bottom-6 sm:left-6">
-      <div className="flex flex-col gap-3.5 rounded-2xl border border-slate-200/90 bg-white/95 p-4 shadow-xl shadow-slate-900/5 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-3.5">
+      <div className="border-outline-variant/90 shadow-elevation-2 flex flex-col gap-3.5 rounded-2xl border bg-white/95 p-4 shadow-slate-900/5 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-3.5">
         <div className="flex items-start gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+          <div className="bg-primary-light text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl">
             <ShieldCheck className="h-4 w-4" />
           </div>
           <div className="space-y-0.5">
-            <h4 className="text-xs font-bold text-slate-900">Bảo vệ quyền riêng tư & Cookie</h4>
-            <p className="text-[11px] leading-relaxed text-slate-600">
+            <h4 className="text-on-surface text-xs font-bold">Bảo vệ quyền riêng tư & Cookie</h4>
+            <p className="text-label-sm text-on-surface-variant leading-relaxed">
               InterVue sử dụng cookie bảo mật duy trì phiên làm việc và tuân thủ Nghị định 13/2023/NĐ-CP. Xem{' '}
-              <Link href="/data-processing-agreement" className="font-semibold text-emerald-600 hover:underline">
+              <Link href="/data-processing-agreement" className="text-primary font-semibold hover:underline">
                 Thỏa thuận xử lý dữ liệu
               </Link>
               .
@@ -64,7 +64,7 @@ export default function CookieConsentBanner() {
             variant="outline"
             size="sm"
             onClick={handleEssentialOnly}
-            className="h-8 rounded-lg px-2.5 text-[11px] font-semibold text-slate-600"
+            className="text-label-sm text-on-surface-variant h-8 rounded-lg px-2.5 font-semibold"
           >
             Chỉ cần thiết
           </Button>
@@ -72,7 +72,7 @@ export default function CookieConsentBanner() {
             type="button"
             size="sm"
             onClick={handleAcceptAll}
-            className="h-8 rounded-lg bg-emerald-600 px-3 text-[11px] font-bold text-white hover:bg-emerald-500"
+            className="bg-primary text-label-sm hover:bg-primary h-8 rounded-lg px-3 font-bold text-white"
           >
             Đồng ý
           </Button>
@@ -80,7 +80,7 @@ export default function CookieConsentBanner() {
             type="button"
             onClick={handleEssentialOnly}
             aria-label="Đóng"
-            className="cursor-pointer p-1 text-slate-400 hover:text-slate-600"
+            className="text-outline hover:text-on-surface-variant cursor-pointer p-1"
           >
             <X className="h-3.5 w-3.5" />
           </button>

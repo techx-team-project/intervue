@@ -25,7 +25,7 @@ export default function RecruiterProfileStep({ name, onSubmit }: RecruiterProfil
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
-      <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Recruiter information</h2>
+      <h2 className="text-on-surface text-lg font-bold sm:text-xl">Recruiter information</h2>
       <RecruiterProfileFields register={register} errors={errors} />
       <div className="flex justify-end">
         <Button type="submit" rightIcon={<ArrowRight className="h-4 w-4" />}>

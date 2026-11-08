@@ -26,8 +26,8 @@ export default function CandidateCertificationSection({ items }: CandidateCertif
       renderItem={(item) => (
         <>
           <h3 className="text-navy text-base font-bold wrap-break-word">{item.name}</h3>
-          <p className="text-sm font-semibold wrap-break-word text-slate-700">{item.issuer}</p>
-          <p className="text-xs text-slate-500">
+          <p className="text-on-surface text-sm font-semibold wrap-break-word">{item.issuer}</p>
+          <p className="text-on-surface-variant text-xs">
             {[formatMonth(item.issueDate), item.credentialId && `ID ${item.credentialId}`].filter(Boolean).join(' | ')}
           </p>
           {item.credentialUrl && (

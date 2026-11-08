@@ -16,7 +16,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
 
   if (isMini) {
     return (
-      <div className="relative aspect-[1/1.414] w-full overflow-hidden rounded-xl border border-gray-200 bg-white p-3.5 text-[8px] leading-tight text-gray-700 shadow-inner select-none">
+      <div className="text-label-sm relative aspect-[1/1.414] w-full overflow-hidden rounded-xl border border-gray-200 bg-white p-3.5 leading-tight text-gray-700 shadow-inner select-none">
         <div className="mb-2.5 rounded-lg p-2 text-white" style={{ backgroundColor: primaryColor }}>
           <div className="flex items-center gap-2">
             <div className="h-6 w-6 shrink-0 overflow-hidden rounded-full border border-white/40 bg-white/20">
@@ -30,8 +30,8 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
               />
             </div>
             <div>
-              <div className="line-clamp-1 text-[9px] font-bold tracking-wide">{sampleData.name}</div>
-              <div className="line-clamp-1 text-[7px] text-white/90">{sampleData.title}</div>
+              <div className="text-label-sm line-clamp-1 font-bold tracking-wide">{sampleData.name}</div>
+              <div className="text-label-sm line-clamp-1 text-white/90">{sampleData.title}</div>
             </div>
           </div>
         </div>
@@ -40,28 +40,28 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
           <div className="col-span-8 space-y-2">
             <div>
               <div
-                className="border-b pb-0.5 text-[8px] font-bold"
+                className="text-label-sm border-b pb-0.5 font-bold"
                 style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
               >
                 {sections.careerObjective}
               </div>
-              <p className="mt-1 line-clamp-2 text-[7px] text-gray-600">{sampleData.summary}</p>
+              <p className="text-label-sm mt-1 line-clamp-2 text-gray-600">{sampleData.summary}</p>
             </div>
 
             <div>
               <div
-                className="border-b pb-0.5 text-[8px] font-bold"
+                className="text-label-sm border-b pb-0.5 font-bold"
                 style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
               >
                 {sections.workExperience}
               </div>
               {sampleData.experience.slice(0, 1).map((exp, idx) => (
                 <div key={idx} className="mt-1 space-y-0.5">
-                  <div className="line-clamp-1 text-[7.5px] font-semibold text-gray-900">{exp.role}</div>
-                  <div className="line-clamp-1 text-[6.5px] text-gray-500">
+                  <div className="text-label-sm line-clamp-1 font-semibold text-gray-900">{exp.role}</div>
+                  <div className="text-label-sm line-clamp-1 text-gray-500">
                     {exp.company} • {exp.period}
                   </div>
-                  <ul className="mt-0.5 space-y-0.5 text-[6.5px] text-gray-600">
+                  <ul className="text-label-sm mt-0.5 space-y-0.5 text-gray-600">
                     {exp.highlights.slice(0, 2).map((h, hIdx) => (
                       <li key={hIdx} className="line-clamp-1 flex items-start gap-1">
                         <span
@@ -78,15 +78,15 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
 
             <div>
               <div
-                className="border-b pb-0.5 text-[8px] font-bold"
+                className="text-label-sm border-b pb-0.5 font-bold"
                 style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
               >
                 {sections.education}
               </div>
               {sampleData.education.slice(0, 1).map((edu, idx) => (
-                <div key={idx} className="mt-1 text-[7px]">
+                <div key={idx} className="text-label-sm mt-1">
                   <div className="line-clamp-1 font-semibold text-gray-900">{edu.degree}</div>
-                  <div className="line-clamp-1 text-[6.5px] text-gray-500">{edu.school}</div>
+                  <div className="text-label-sm line-clamp-1 text-gray-500">{edu.school}</div>
                 </div>
               ))}
             </div>
@@ -95,12 +95,12 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
           <div className="col-span-4 space-y-2 border-l border-gray-100 pl-1.5">
             <div>
               <div
-                className="border-b pb-0.5 text-[7.5px] font-bold"
+                className="text-label-sm border-b pb-0.5 font-bold"
                 style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
               >
                 {sections.contact}
               </div>
-              <div className="mt-1 space-y-0.5 text-[6.5px] text-gray-600">
+              <div className="text-label-sm mt-1 space-y-0.5 text-gray-600">
                 <div className="line-clamp-1">{sampleData.phone}</div>
                 <div className="line-clamp-1">{sampleData.address}</div>
               </div>
@@ -108,7 +108,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
 
             <div>
               <div
-                className="border-b pb-0.5 text-[7.5px] font-bold"
+                className="text-label-sm border-b pb-0.5 font-bold"
                 style={{ color: primaryColor, borderColor: `${primaryColor}40` }}
               >
                 {sections.skills}
@@ -117,7 +117,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
                 {sampleData.skills.slice(0, 4).map((skill, idx) => (
                   <span
                     key={idx}
-                    className="rounded px-1 py-0.5 text-[6px] font-medium"
+                    className="text-label-sm rounded px-1 py-0.5 font-medium"
                     style={{ backgroundColor: `${primaryColor}15`, color: primaryColor }}
                   >
                     {skill}
@@ -132,8 +132,11 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
   }
 
   return (
-    <div className="aspect-[1/1.414] w-full max-w-2xl overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 text-xs leading-relaxed text-gray-800 shadow-2xl sm:p-10 sm:text-sm">
-      <div className="mb-6 rounded-2xl p-6 text-white shadow-md sm:p-7" style={{ backgroundColor: primaryColor }}>
+    <div className="shadow-elevation-2 aspect-[1/1.414] w-full max-w-2xl overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 text-xs leading-relaxed text-gray-800 sm:p-10 sm:text-sm">
+      <div
+        className="shadow-elevation-1 mb-6 rounded-2xl p-6 text-white sm:p-7"
+        style={{ backgroundColor: primaryColor }}
+      >
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -145,7 +148,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
               className="h-16 w-16 shrink-0 rounded-full object-cover ring-4 ring-white/30 sm:h-20 sm:w-20"
             />
             <div>
-              <h2 className="text-lg font-black tracking-wide uppercase sm:text-2xl">{sampleData.name}</h2>
+              <h2 className="text-lg font-bold tracking-wide uppercase sm:text-2xl">{sampleData.name}</h2>
               <p className="mt-0.5 text-xs font-medium text-white/90 sm:text-sm">{sampleData.title}</p>
             </div>
           </div>
@@ -193,7 +196,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
                 <div key={idx} className="space-y-1">
                   <div className="flex flex-col justify-between gap-0.5 sm:flex-row sm:items-center">
                     <span className="text-xs font-bold text-gray-900 sm:text-sm">{exp.role}</span>
-                    <span className="text-[11px] font-medium text-gray-500">{exp.period}</span>
+                    <span className="text-label-sm font-medium text-gray-500">{exp.period}</span>
                   </div>
                   <div className="text-xs font-semibold" style={{ color: primaryColor }}>
                     {exp.company}
@@ -227,10 +230,10 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
                 <div key={idx} className="text-xs">
                   <div className="flex justify-between font-bold text-gray-900">
                     <span>{edu.degree}</span>
-                    <span className="text-[11px] font-normal text-gray-500">{edu.period}</span>
+                    <span className="text-label-sm font-normal text-gray-500">{edu.period}</span>
                   </div>
                   <div className="text-gray-600">{edu.school}</div>
-                  {edu.gpa && <div className="text-[11px] font-medium text-emerald-600">{edu.gpa}</div>}
+                  {edu.gpa && <div className="text-label-sm text-primary font-medium">{edu.gpa}</div>}
                 </div>
               ))}
             </div>
@@ -250,7 +253,7 @@ export default function CvPaperPreview({ sampleData, primaryColor, isMini = fals
               {sampleData.skills.map((skill, idx) => (
                 <span
                   key={idx}
-                  className="rounded-md px-2 py-1 text-[11px] font-medium"
+                  className="text-label-sm rounded-md px-2 py-1 font-medium"
                   style={{ backgroundColor: `${primaryColor}15`, color: primaryColor }}
                 >
                   {skill}

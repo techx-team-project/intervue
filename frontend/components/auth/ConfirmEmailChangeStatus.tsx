@@ -38,12 +38,12 @@ export default function ConfirmEmailChangeStatus({ token, portal = 'candidate' }
   if (confirmEmailChange.isSuccess) {
     return (
       <div className="space-y-4 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+        <div className="bg-primary-container text-primary mx-auto flex h-12 w-12 items-center justify-center rounded-full">
           <CheckCircle2 className="h-7 w-7" />
         </div>
         <div>
-          <h3 className="text-base font-bold text-slate-800">Email changed</h3>
-          <p className="mt-1 text-sm leading-relaxed text-slate-600">
+          <h3 className="text-on-surface text-base font-bold">Email changed</h3>
+          <p className="text-on-surface-variant mt-1 text-sm leading-relaxed">
             Your email has been updated and you were signed out of every device. Please sign in again with your new
             email.
           </p>
@@ -58,7 +58,7 @@ export default function ConfirmEmailChangeStatus({ token, portal = 'candidate' }
   return (
     <div className="flex flex-col items-center gap-3 py-6">
       <Spinner />
-      <p className="text-sm text-slate-500">Confirming your new email...</p>
+      <p className="text-on-surface-variant text-sm">Confirming your new email...</p>
     </div>
   );
 }

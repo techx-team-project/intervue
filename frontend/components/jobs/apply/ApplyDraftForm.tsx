@@ -142,7 +142,7 @@ export default function ApplyDraftForm({
 
       {form.questions.length > 0 && (
         <div className="space-y-4">
-          <h4 className="text-sm font-bold text-slate-900">Câu hỏi từ nhà tuyển dụng</h4>
+          <h4 className="text-on-surface text-sm font-bold">Câu hỏi từ nhà tuyển dụng</h4>
           {form.questions.map((question, index) => (
             <ApplyQuestionField
               key={question.id}
@@ -158,7 +158,7 @@ export default function ApplyDraftForm({
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold text-slate-800">Thư giới thiệu (không bắt buộc)</span>
+          <span className="text-on-surface text-sm font-semibold">Thư giới thiệu (không bắt buộc)</span>
           <Button
             type="button"
             variant="ghost"
@@ -180,13 +180,13 @@ export default function ApplyDraftForm({
         />
       </div>
 
-      <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
-        <span className="flex items-center gap-1.5 text-xs text-slate-400" aria-live="polite">
+      <div className="border-outline-variant flex items-center justify-between gap-3 border-t pt-4">
+        <span className="text-outline flex items-center gap-1.5 text-xs" aria-live="polite">
           {saveDraft.isPending ? (
             'Đang lưu nháp…'
           ) : saveDraft.isSuccess ? (
             <>
-              <Check className="h-3.5 w-3.5 text-emerald-500" aria-hidden /> Đã lưu nháp
+              <Check className="text-primary h-3.5 w-3.5" aria-hidden /> Đã lưu nháp
             </>
           ) : (
             'Tự động lưu nháp'

@@ -26,30 +26,30 @@ export default function DataProcessingAgreementPage() {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col justify-between bg-[#f4f5f5] font-sans text-slate-800 antialiased">
+    <div className="bg-surface-container-low text-on-surface flex min-h-screen flex-col justify-between font-sans antialiased">
       {/* Official Header */}
       <Header portal="recruiter" />
 
       {/* Main Content Area */}
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 lg:px-8">
         {/* Breadcrumb & Actions Bar */}
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
-          <nav className="flex items-center gap-2 text-xs text-slate-500">
-            <Link href="/" className="hover:text-[#00b14f]">
+        <div className="border-outline-variant/80 mb-6 flex flex-wrap items-center justify-between gap-4 border-b pb-4">
+          <nav className="text-on-surface-variant flex items-center gap-2 text-xs">
+            <Link href="/" className="hover:text-primary">
               Trang chủ
             </Link>
             <span>/</span>
-            <Link href={ROUTES.RECRUITER_COMPANY} className="hover:text-[#00b14f]">
+            <Link href={ROUTES.RECRUITER_COMPANY} className="hover:text-primary">
               Nhà tuyển dụng
             </Link>
             <span>/</span>
-            <span className="font-semibold text-slate-800">Thỏa thuận xử lý dữ liệu cá nhân</span>
+            <span className="text-on-surface font-semibold">Thỏa thuận xử lý dữ liệu cá nhân</span>
           </nav>
 
           <div className="flex items-center gap-3">
             <Link
               href={ROUTES.RECRUITER_COMPANY_AGREEMENTS}
-              className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50"
+              className="border-outline text-on-surface hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-md border bg-white px-3.5 py-1.5 text-xs font-semibold shadow-2xs transition"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Quay lại Cài đặt tài khoản</span>
@@ -57,7 +57,7 @@ export default function DataProcessingAgreementPage() {
             <a
               href="/templates/intervue-candidate-data-processing-agreement-template.docx"
               download="intervue-candidate-data-processing-agreement-template.docx"
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#00b14f] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50 active:scale-95"
+              className="border-primary text-primary hover:bg-primary-light inline-flex items-center gap-1.5 rounded-md border bg-white px-3.5 py-1.5 text-xs font-semibold shadow-2xs transition active:scale-95"
             >
               <Download className="h-3.5 w-3.5" />
               <span>Tải mẫu văn bản (.docx)</span>
@@ -69,10 +69,10 @@ export default function DataProcessingAgreementPage() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           {/* Left Column: Sticky Table of Contents (4 cols) */}
           <aside className="lg:col-span-4">
-            <div className="sticky top-20 rounded-lg border border-slate-200/90 bg-white p-5 shadow-2xs">
-              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-                <FileText className="h-4 w-4 text-[#00b14f]" />
-                <h2 className="text-xs font-bold tracking-wider text-slate-800 uppercase">Mục lục văn bản</h2>
+            <div className="border-outline-variant/90 sticky top-20 rounded-lg border bg-white p-5 shadow-2xs">
+              <div className="border-outline-variant flex items-center gap-2 border-b pb-3">
+                <FileText className="text-primary h-4 w-4" />
+                <h2 className="text-on-surface text-xs font-bold tracking-wider uppercase">Mục lục văn bản</h2>
               </div>
 
               <nav className="mt-3 space-y-1 text-xs leading-relaxed">
@@ -80,14 +80,14 @@ export default function DataProcessingAgreementPage() {
                   <a
                     key={item.id}
                     href={`#${item.id}`}
-                    className="block rounded-md px-2.5 py-2 font-medium text-slate-600 transition hover:bg-emerald-50 hover:text-[#00b14f]"
+                    className="text-on-surface-variant hover:bg-primary-light hover:text-primary block rounded-md px-2.5 py-2 font-medium transition"
                   >
                     {item.title}
                   </a>
                 ))}
               </nav>
 
-              <div className="mt-6 space-y-1 border-t border-slate-100 pt-4 text-[11px] text-slate-500">
+              <div className="border-outline-variant text-label-sm text-on-surface-variant mt-6 space-y-1 border-t pt-4">
                 <p>
                   <strong>Hiệu lực:</strong> Từ 17 tháng 06 năm 2026
                 </p>
@@ -102,46 +102,48 @@ export default function DataProcessingAgreementPage() {
           </aside>
 
           {/* Right Column: Full Document Body (8 cols) */}
-          <article className="space-y-8 rounded-lg border border-slate-200/90 bg-white p-6 shadow-2xs sm:p-10 lg:col-span-8">
+          <article className="border-outline-variant/90 space-y-8 rounded-lg border bg-white p-6 shadow-2xs sm:p-10 lg:col-span-8">
             {/* Title Section */}
-            <div className="border-b border-slate-200 pb-6 text-center">
-              <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-[#00b14f]">
+            <div className="border-outline-variant border-b pb-6 text-center">
+              <div className="border-primary/30 bg-primary-light text-primary mb-2 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold">
                 <ShieldCheck className="h-3.5 w-3.5" />
                 <span>Bảo vệ dữ liệu cá nhân theo quy định pháp luật</span>
               </div>
-              <h1 className="text-xl font-extrabold tracking-tight text-slate-900 uppercase sm:text-2xl">
+              <h1 className="text-on-surface text-xl font-extrabold tracking-tight uppercase sm:text-2xl">
                 THỎA THUẬN VỀ XỬ LÝ DỮ LIỆU CÁ NHÂN GIỮA INTERVUE VÀ NHÀ TUYỂN DỤNG
               </h1>
-              <p className="mt-2 text-xs text-slate-500 italic sm:text-sm">Có hiệu lực từ 17 tháng 06 năm 2026</p>
+              <p className="text-on-surface-variant mt-2 text-xs italic sm:text-sm">
+                Có hiệu lực từ 17 tháng 06 năm 2026
+              </p>
             </div>
 
             {/* Preamble / Cơ sở xác lập */}
-            <section id="preamble" className="space-y-3 text-xs leading-relaxed text-slate-700 sm:text-sm">
+            <section id="preamble" className="text-on-surface space-y-3 text-xs leading-relaxed sm:text-sm">
               <p>
                 Thỏa thuận về xử lý dữ liệu cá nhân này (Sau đây gọi tắt là “Thỏa Thuận”) được thiết lập, giao kết giữa:
               </p>
-              <div className="space-y-2 rounded-lg border border-slate-100 bg-slate-50/60 p-4 text-xs">
+              <div className="border-outline-variant bg-surface-container-low/60 space-y-2 rounded-lg border p-4 text-xs">
                 <p>
                   <strong>1. CÔNG TY CỔ PHẦN CÔNG NGHỆ TECHX GLOBAL</strong>
                   <br />
-                  <span className="text-slate-500">(Sau đây gọi tắt là &ldquo;InterVue&rdquo;)</span>
+                  <span className="text-on-surface-variant">(Sau đây gọi tắt là &ldquo;InterVue&rdquo;)</span>
                 </p>
-                <p className="font-semibold text-slate-500">Và</p>
+                <p className="text-on-surface-variant font-semibold">Và</p>
                 <p>
                   <strong>2. ĐƠN VỊ TUYỂN DỤNG</strong> là tổ chức, doanh nghiệp hoặc cá nhân đăng ký, sử dụng tài khoản
                   Nhà tuyển dụng trên nền tảng InterVue
                   <br />
-                  <span className="text-slate-500">(Sau đây gọi tắt là &ldquo;Đơn vị tuyển dụng&rdquo;)</span>
+                  <span className="text-on-surface-variant">(Sau đây gọi tắt là &ldquo;Đơn vị tuyển dụng&rdquo;)</span>
                 </p>
               </div>
 
-              <p className="text-slate-600 italic">
+              <p className="text-on-surface-variant italic">
                 InterVue và Đơn vị tuyển dụng sau đây được gọi chung là “Các Bên” / “Hai Bên” và được gọi riêng là
                 “Bên”.
               </p>
 
               <div className="space-y-1.5 pt-2">
-                <p className="font-bold text-slate-800">TRÊN CƠ SỞ:</p>
+                <p className="text-on-surface font-bold">TRÊN CƠ SỞ:</p>
                 <p>
                   (i). Đơn vị tuyển dụng là một pháp nhân được thành lập và hoạt động hợp pháp theo pháp luật Việt Nam,
                   có nhu cầu sử dụng các dịch vụ do InterVue cung cấp.
@@ -159,16 +161,16 @@ export default function DataProcessingAgreementPage() {
                 </p>
               </div>
 
-              <p className="pt-2 font-semibold text-slate-800">
+              <p className="text-on-surface pt-2 font-semibold">
                 DO ĐÓ, Các Bên thống nhất ký kết Thỏa thuận về xử lý dữ liệu cá nhân này (&ldquo;Thỏa Thuận&rdquo;) với
                 các điều khoản cụ thể như sau:
               </p>
             </section>
 
             {/* ĐIỀU 1 */}
-            <section id="dieu-1" className="space-y-3 border-t border-slate-100 pt-4">
-              <h3 className="text-base font-bold text-slate-900">ĐIỀU 1. GIẢI THÍCH THUẬT NGỮ</h3>
-              <div className="space-y-2.5 text-xs leading-relaxed text-slate-700 sm:text-sm">
+            <section id="dieu-1" className="border-outline-variant space-y-3 border-t pt-4">
+              <h3 className="text-on-surface text-base font-bold">ĐIỀU 1. GIẢI THÍCH THUẬT NGỮ</h3>
+              <div className="text-on-surface space-y-2.5 text-xs leading-relaxed sm:text-sm">
                 <p>
                   <strong>1.1. &ldquo;Workplace&rdquo;</strong> là không gian làm việc kỹ thuật số biệt lập được
                   InterVue thiết lập và duy trì dành riêng cho Đơn vị tuyển dụng trên nền tảng của InterVue.
@@ -237,9 +239,9 @@ export default function DataProcessingAgreementPage() {
             </section>
 
             {/* ĐIỀU 2 */}
-            <section id="dieu-2" className="space-y-3 border-t border-slate-100 pt-4">
-              <h3 className="text-base font-bold text-slate-900">ĐIỀU 2. MỤC ĐÍCH XỬ LÝ DỮ LIỆU CÁ NHÂN</h3>
-              <div className="space-y-2.5 text-xs leading-relaxed text-slate-700 sm:text-sm">
+            <section id="dieu-2" className="border-outline-variant space-y-3 border-t pt-4">
+              <h3 className="text-on-surface text-base font-bold">ĐIỀU 2. MỤC ĐÍCH XỬ LÝ DỮ LIỆU CÁ NHÂN</h3>
+              <div className="text-on-surface space-y-2.5 text-xs leading-relaxed sm:text-sm">
                 <p>
                   <strong>2.1. Mục đích xử lý dữ liệu cá nhân:</strong> Các Bên ghi nhận và đồng ý rằng, để phục vụ mục
                   đích thực hiện hỗ trợ quá trình tuyển dụng của Đơn vị tuyển dụng, mỗi Bên có quyền Kiểm soát và Xử lý
@@ -256,11 +258,11 @@ export default function DataProcessingAgreementPage() {
             </section>
 
             {/* ĐIỀU 3 */}
-            <section id="dieu-3" className="space-y-3 border-t border-slate-100 pt-4">
-              <h3 className="text-base font-bold text-slate-900">ĐIỀU 3. TRÁCH NHIỆM CỦA CÁC BÊN</h3>
-              <div className="space-y-3 text-xs leading-relaxed text-slate-700 sm:text-sm">
+            <section id="dieu-3" className="border-outline-variant space-y-3 border-t pt-4">
+              <h3 className="text-on-surface text-base font-bold">ĐIỀU 3. TRÁCH NHIỆM CỦA CÁC BÊN</h3>
+              <div className="text-on-surface space-y-3 text-xs leading-relaxed sm:text-sm">
                 <div className="space-y-1">
-                  <h4 className="font-bold text-slate-800">
+                  <h4 className="text-on-surface font-bold">
                     3.1. Đối với Dữ liệu cá nhân thuộc nền tảng chung của InterVue (Ngoài phạm vi Workplace của Đơn vị
                     tuyển dụng)
                   </h4>
@@ -276,7 +278,7 @@ export default function DataProcessingAgreementPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <h4 className="font-bold text-slate-800">3.2. Trách nhiệm trong phạm vi Workplace</h4>
+                  <h4 className="text-on-surface font-bold">3.2. Trách nhiệm trong phạm vi Workplace</h4>
                   <p>
                     Đối với phạm vi Dữ liệu cá nhân tại khoản 1.2, Đơn vị tuyển dụng đóng vai trò là Bên Kiểm soát dữ
                     liệu cá nhân, chịu trách nhiệm quyết định mục đích và phương tiện xử lý dữ liệu phù hợp với quy định
@@ -286,8 +288,8 @@ export default function DataProcessingAgreementPage() {
                   </p>
                 </div>
 
-                <div className="space-y-2 rounded-lg border border-slate-200/80 bg-slate-50/40 p-4">
-                  <h5 className="font-bold text-slate-800">3.2.1. InterVue có trách nhiệm:</h5>
+                <div className="border-outline-variant/80 bg-surface-container-low/40 space-y-2 rounded-lg border p-4">
+                  <h5 className="text-on-surface font-bold">3.2.1. InterVue có trách nhiệm:</h5>
                   <p>
                     <strong>a)</strong> Xử lý dữ liệu cá nhân theo đúng nguyên tắc bảo vệ dữ liệu cá nhân, quy định liên
                     quan đến bảo vệ dữ liệu cá nhân áp dụng cho Bên Xử lý dữ liệu cá nhân theo Luật số 91/2025/QH15, Hợp
@@ -338,8 +340,8 @@ export default function DataProcessingAgreementPage() {
                   </p>
                 </div>
 
-                <div className="space-y-2 rounded-lg border border-slate-200/80 bg-slate-50/40 p-4">
-                  <h5 className="font-bold text-slate-800">3.2.2. Đơn vị tuyển dụng có trách nhiệm:</h5>
+                <div className="border-outline-variant/80 bg-surface-container-low/40 space-y-2 rounded-lg border p-4">
+                  <h5 className="text-on-surface font-bold">3.2.2. Đơn vị tuyển dụng có trách nhiệm:</h5>
                   <p>
                     <strong>a)</strong> Cam kết việc thu thập dữ liệu đã đạt được sự đồng ý hợp lệ của Chủ thể dữ liệu
                     về mục đích tuyển dụng và các hoạt động xử lý dữ liệu liên quan theo Pháp luật bảo vệ dữ liệu cá
@@ -378,9 +380,9 @@ export default function DataProcessingAgreementPage() {
             </section>
 
             {/* ĐIỀU 4 */}
-            <section id="dieu-4" className="space-y-3 border-t border-slate-100 pt-4">
-              <h3 className="text-base font-bold text-slate-900">ĐIỀU 4. LƯU TRỮ DỮ LIỆU CÁ NHÂN</h3>
-              <div className="space-y-2 text-xs leading-relaxed text-slate-700 sm:text-sm">
+            <section id="dieu-4" className="border-outline-variant space-y-3 border-t pt-4">
+              <h3 className="text-on-surface text-base font-bold">ĐIỀU 4. LƯU TRỮ DỮ LIỆU CÁ NHÂN</h3>
+              <div className="text-on-surface space-y-2 text-xs leading-relaxed sm:text-sm">
                 <p>
                   <strong>4.1.</strong> Dữ liệu cá nhân sẽ được xử lý cho đến khi các mục đích xử lý dữ liệu đã được
                   hoàn thành.
@@ -401,9 +403,9 @@ export default function DataProcessingAgreementPage() {
             </section>
 
             {/* ĐIỀU 5 */}
-            <section id="dieu-5" className="space-y-3 border-t border-slate-100 pt-4">
-              <h3 className="text-base font-bold text-slate-900">ĐIỀU 5. QUYỀN YÊU CẦU</h3>
-              <div className="space-y-2 text-xs leading-relaxed text-slate-700 sm:text-sm">
+            <section id="dieu-5" className="border-outline-variant space-y-3 border-t pt-4">
+              <h3 className="text-on-surface text-base font-bold">ĐIỀU 5. QUYỀN YÊU CẦU</h3>
+              <div className="text-on-surface space-y-2 text-xs leading-relaxed sm:text-sm">
                 <p>
                   <strong>5.1.</strong> Mỗi Bên (sau đây gọi là &ldquo;Bên Yêu Cầu&rdquo;) có quyền gửi văn bản yêu cầu
                   Bên còn lại (sau đây gọi là &ldquo;Bên Đáp Ứng&rdquo;) cung cấp bằng chứng, tài liệu tường trình hoặc
@@ -433,9 +435,9 @@ export default function DataProcessingAgreementPage() {
             </section>
 
             {/* ĐIỀU 6 */}
-            <section id="dieu-6" className="space-y-3 border-t border-slate-100 pt-4">
-              <h3 className="text-base font-bold text-slate-900">ĐIỀU 6. KIỂM TRA TUÂN THỦ</h3>
-              <div className="space-y-2 text-xs leading-relaxed text-slate-700 sm:text-sm">
+            <section id="dieu-6" className="border-outline-variant space-y-3 border-t pt-4">
+              <h3 className="text-on-surface text-base font-bold">ĐIỀU 6. KIỂM TRA TUÂN THỦ</h3>
+              <div className="text-on-surface space-y-2 text-xs leading-relaxed sm:text-sm">
                 <p>
                   <strong>6.1.</strong> Mỗi Bên có quyền thực hiện việc kiểm tra, đánh giá nhằm xác nhận tính tuân thủ
                   các cam kết về bảo vệ dữ liệu cá nhân, ưu tiên thực hiện thông qua Bảng câu hỏi đánh giá bảo mật hoặc
@@ -456,9 +458,9 @@ export default function DataProcessingAgreementPage() {
             </section>
 
             {/* ĐIỀU 7 */}
-            <section id="dieu-7" className="space-y-3 border-t border-slate-100 pt-4">
-              <h3 className="text-base font-bold text-slate-900">ĐIỀU 7. NGUYÊN TẮC BỒI THƯỜNG</h3>
-              <div className="space-y-2 text-xs leading-relaxed text-slate-700 sm:text-sm">
+            <section id="dieu-7" className="border-outline-variant space-y-3 border-t pt-4">
+              <h3 className="text-on-surface text-base font-bold">ĐIỀU 7. NGUYÊN TẮC BỒI THƯỜNG</h3>
+              <div className="text-on-surface space-y-2 text-xs leading-relaxed sm:text-sm">
                 <p>
                   <strong>7.1.</strong> Mỗi Bên (&ldquo;Bên Vi Phạm&rdquo;) có trách nhiệm bồi thường và giữ cho Bên còn
                   lại không bị thiệt hại trước mọi chi phí, tổn thất, tiền phạt vi phạm từ cơ quan Nhà nước phát sinh
@@ -478,20 +480,20 @@ export default function DataProcessingAgreementPage() {
             </section>
 
             {/* ĐIỀU 8 */}
-            <section id="dieu-8" className="space-y-3 border-t border-slate-100 pt-4">
-              <h3 className="text-base font-bold text-slate-900">
+            <section id="dieu-8" className="border-outline-variant space-y-3 border-t pt-4">
+              <h3 className="text-on-surface text-base font-bold">
                 ĐIỀU 8. CÁCH THỨC GIẢI QUYẾT TRANH CHẤP VÀ ĐẦU MỐI LIÊN HỆ
               </h3>
-              <div className="space-y-3 text-xs leading-relaxed text-slate-700 sm:text-sm">
+              <div className="text-on-surface space-y-3 text-xs leading-relaxed sm:text-sm">
                 <p>
                   <strong>8.1.</strong> Khi phát hiện sự cố vi phạm hoặc nhận được yêu cầu thực hiện quyền của Chủ thể
                   dữ liệu, Bên phát hiện phải thông báo bằng văn bản cho Bên còn lại trong vòng 24 (hai mươi tư) giờ.
                 </p>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="space-y-1 rounded-lg border border-slate-200 bg-slate-50/70 p-4">
-                    <p className="font-bold text-slate-800">Đầu mối liên hệ của InterVue:</p>
-                    <p className="text-xs text-slate-600">
+                  <div className="border-outline-variant bg-surface-container-low/70 space-y-1 rounded-lg border p-4">
+                    <p className="text-on-surface font-bold">Đầu mối liên hệ của InterVue:</p>
+                    <p className="text-on-surface-variant text-xs">
                       <strong>Người nhận:</strong> Ban Bảo vệ dữ liệu cá nhân (Ban DPO)
                       <br />
                       <strong>Địa chỉ:</strong> Tầng 12, Keangnam Landmark 72, Mễ Trì, Nam Từ Liêm, Hà Nội, Việt Nam
@@ -502,9 +504,9 @@ export default function DataProcessingAgreementPage() {
                     </p>
                   </div>
 
-                  <div className="space-y-1 rounded-lg border border-slate-200 bg-slate-50/70 p-4">
-                    <p className="font-bold text-slate-800">Đầu mối liên hệ của Đơn vị tuyển dụng:</p>
-                    <p className="text-xs text-slate-600">
+                  <div className="border-outline-variant bg-surface-container-low/70 space-y-1 rounded-lg border p-4">
+                    <p className="text-on-surface font-bold">Đầu mối liên hệ của Đơn vị tuyển dụng:</p>
+                    <p className="text-on-surface-variant text-xs">
                       Được xác định theo thông tin định danh và thông tin liên hệ (Người nhận, Địa chỉ, Số điện thoại,
                       Email) mà Đơn vị tuyển dụng đã đăng ký và quản lý trên tài khoản Nhà tuyển dụng tại từng thời
                       điểm.
@@ -521,9 +523,9 @@ export default function DataProcessingAgreementPage() {
             </section>
 
             {/* ĐIỀU 9 */}
-            <section id="dieu-9" className="space-y-3 border-t border-slate-100 pt-4">
-              <h3 className="text-base font-bold text-slate-900">ĐIỀU 9. HIỆU LỰC</h3>
-              <div className="space-y-2 text-xs leading-relaxed text-slate-700 sm:text-sm">
+            <section id="dieu-9" className="border-outline-variant space-y-3 border-t pt-4">
+              <h3 className="text-on-surface text-base font-bold">ĐIỀU 9. HIỆU LỰC</h3>
+              <div className="text-on-surface space-y-2 text-xs leading-relaxed sm:text-sm">
                 <p>
                   <strong>9.1. Hợp đồng điện tử:</strong> Thỏa thuận này được thiết lập và giao kết dưới hình thức hợp
                   đồng điện tử. Giá trị pháp lý của Thỏa thuận không thể bị phủ nhận theo Luật Giao dịch điện tử. Bằng
@@ -556,12 +558,12 @@ export default function DataProcessingAgreementPage() {
             </section>
 
             {/* Signature Box Banner */}
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50/70 p-5 text-emerald-950">
+            <div className="border-primary/30 rounded-lg border bg-emerald-50/70 p-5 text-emerald-950">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-[#00b14f]" />
+                <CheckCircle2 className="text-primary h-5 w-5" />
                 <p className="text-sm font-bold">Xác nhận giao kết hợp đồng điện tử</p>
               </div>
-              <p className="mt-1 text-xs text-emerald-800">
+              <p className="text-on-primary-container mt-1 text-xs">
                 Thỏa thuận này là văn bản chính thức được quy định tại Mục 2 trong phần Cài đặt Bảo vệ Dữ liệu cá nhân
                 của Nhà tuyển dụng. Thao tác xác nhận đồng ý trên hệ thống có giá trị pháp lý ràng buộc đầy đủ theo quy
                 định của Luật Giao dịch điện tử và Luật Bảo vệ dữ liệu cá nhân Việt Nam.

@@ -54,12 +54,12 @@ export default function PublicJobsListView() {
   const jobs = query.data?.items ?? [];
 
   return (
-    <div className="container-topcv space-y-5 py-6">
+    <div className="container-page space-y-5 py-6">
       <header>
-        <h1 className="text-navy text-2xl font-black">Việc làm IT mới nhất</h1>
+        <h1 className="text-navy text-2xl font-bold">Việc làm IT mới nhất</h1>
         {query.data && (
-          <p className="mt-1 text-sm text-slate-500">
-            <strong className="text-slate-800">{query.data.totalItems.toLocaleString('vi-VN')}</strong> vị trí đang
+          <p className="text-on-surface-variant mt-1 text-sm">
+            <strong className="text-on-surface">{query.data.totalItems.toLocaleString('vi-VN')}</strong> vị trí đang
             tuyển
           </p>
         )}
@@ -72,17 +72,17 @@ export default function PublicJobsListView() {
           <Spinner />
         </div>
       ) : query.isError ? (
-        <div className="flex flex-col items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-6 py-12 text-center">
-          <p className="text-sm font-semibold text-rose-700">{getErrorMessage(query.error)}</p>
+        <div className="border-error/30 bg-error/10 flex flex-col items-center gap-3 rounded-2xl border px-6 py-12 text-center">
+          <p className="text-error text-sm font-semibold">{getErrorMessage(query.error)}</p>
           <Button variant="outline" size="sm" onClick={() => query.refetch()}>
             Thử lại
           </Button>
         </div>
       ) : jobs.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center">
-          <SearchX className="h-9 w-9 text-slate-300" />
-          <p className="text-sm font-semibold text-slate-700">Chưa có việc làm phù hợp</p>
-          <p className="text-xs text-slate-500">Thử đổi từ khóa hoặc bỏ bớt bộ lọc.</p>
+        <div className="border-outline-variant flex flex-col items-center gap-2 rounded-2xl border bg-white px-6 py-16 text-center">
+          <SearchX className="text-outline h-9 w-9" />
+          <p className="text-on-surface text-sm font-semibold">Chưa có việc làm phù hợp</p>
+          <p className="text-on-surface-variant text-xs">Thử đổi từ khóa hoặc bỏ bớt bộ lọc.</p>
         </div>
       ) : (
         <>
@@ -91,7 +91,7 @@ export default function PublicJobsListView() {
               <PublicJobCard key={job.id} job={job} />
             ))}
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-2xs">
+          <div className="border-outline-variant rounded-2xl border bg-white p-3.5 shadow-2xs">
             <Pagination
               page={page}
               pageCount={Math.max(1, query.data?.totalPages ?? 1)}

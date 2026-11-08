@@ -31,12 +31,9 @@ export default function CareerHeroSearch({
   } = CAREER_ORIENTATION_MESSAGES.hero;
 
   return (
-    <div className="from-primary/10 relative overflow-hidden border-b border-[#e9eaec] bg-linear-to-b via-[#f4fbf7] to-white py-10 lg:py-14">
-      <div className="bg-primary/15 pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full blur-3xl" />
-      <div className="pointer-events-none absolute top-1/2 -right-20 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
-
+    <div className="border-outline-variant bg-primary-light relative overflow-hidden border-b py-10 lg:py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <nav className="mb-4 flex items-center gap-1.5 text-xs text-[#7f878f]">
+        <nav className="text-on-surface-variant mb-4 flex items-center gap-1.5 text-xs">
           <Link href="/" className="hover:text-primary transition-colors">
             {breadcrumbHome}
           </Link>
@@ -52,25 +49,25 @@ export default function CareerHeroSearch({
             <span>{badge}</span>
           </div>
 
-          <h1 className="text-3xl font-extrabold tracking-tight text-[#171717] sm:text-4xl lg:text-5xl">{title}</h1>
-          <p className="mt-3 text-base leading-relaxed text-[#526475] sm:text-lg">{description}</p>
+          <h1 className="text-on-surface text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">{title}</h1>
+          <p className="text-on-surface-variant mt-3 text-base leading-relaxed sm:text-lg">{description}</p>
         </div>
 
         <div className="mt-8 max-w-2xl">
           <div className="relative flex items-center">
-            <Search className="absolute left-4 h-5 w-5 text-[#9ca3af]" />
+            <Search className="text-outline absolute left-4 h-5 w-5" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder={searchPlaceholder}
-              className="focus:border-primary focus:ring-primary/20 w-full rounded-2xl border border-[#d1d5db] bg-white py-3.5 pr-10 pl-12 text-sm text-[#171717] shadow-sm transition placeholder:text-[#9ca3af] focus:ring-2 focus:outline-none"
+              className="focus:border-primary focus:ring-primary/20 text-on-surface placeholder:text-outline w-full rounded-2xl border border-[#d1d5db] bg-white py-3.5 pr-10 pl-12 text-sm shadow-sm transition focus:ring-2 focus:outline-none"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => onSearchChange('')}
-                className="absolute right-3.5 rounded-full p-1 text-xs text-[#9ca3af] hover:bg-gray-100 hover:text-gray-700"
+                className="text-outline absolute right-3.5 rounded-full p-1 text-xs hover:bg-gray-100 hover:text-gray-700"
               >
                 ✕
               </button>
@@ -78,7 +75,7 @@ export default function CareerHeroSearch({
           </div>
 
           <div className="mt-3.5 flex flex-wrap items-center gap-2 text-xs">
-            <span className="flex items-center gap-1 font-medium text-[#7f878f]">
+            <span className="text-on-surface-variant flex items-center gap-1 font-medium">
               <TrendingUp className="text-primary h-3.5 w-3.5" />
               {trendingLabel}
             </span>
@@ -92,7 +89,7 @@ export default function CareerHeroSearch({
                   className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                     isSelected
                       ? 'bg-primary text-white shadow-sm'
-                      : 'hover:border-primary hover:text-primary border border-[#e5e7eb] bg-white text-[#4b5563]'
+                      : 'hover:border-primary hover:text-primary border-outline-variant border bg-white text-[#4b5563]'
                   }`}
                 >
                   {tag}

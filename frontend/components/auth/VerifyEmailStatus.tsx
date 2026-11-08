@@ -50,12 +50,12 @@ export default function VerifyEmailStatus({ token, portal = 'candidate' }: Verif
   if (verifyEmail.isSuccess) {
     return (
       <div className="space-y-4 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+        <div className="bg-primary-container text-primary mx-auto flex h-12 w-12 items-center justify-center rounded-full">
           <CheckCircle2 className="h-7 w-7" />
         </div>
         <div>
-          <h3 className="text-base font-bold text-slate-800">Email verified</h3>
-          <p className="mt-1 text-sm leading-relaxed text-slate-600">Your account is ready to use.</p>
+          <h3 className="text-on-surface text-base font-bold">Email verified</h3>
+          <p className="text-on-surface-variant mt-1 text-sm leading-relaxed">Your account is ready to use.</p>
         </div>
         <Link href={routes.login} className="block">
           <Button className="w-full rounded-xl py-3 text-sm font-bold">Continue</Button>
@@ -67,7 +67,7 @@ export default function VerifyEmailStatus({ token, portal = 'candidate' }: Verif
   return (
     <div className="flex flex-col items-center gap-3 py-6">
       <Spinner />
-      <p className="text-sm text-slate-500">Verifying your email...</p>
+      <p className="text-on-surface-variant text-sm">Verifying your email...</p>
     </div>
   );
 }

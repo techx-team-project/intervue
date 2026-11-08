@@ -59,7 +59,7 @@ export default function RecruiterRegisterCarousel() {
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
-      className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#00132b] select-none"
+      className="bg-primary-deeper relative flex h-screen w-full flex-col items-center justify-center overflow-hidden select-none"
     >
       {SLIDES.map((slide, index) => {
         const isActive = index === currentIndex;
@@ -82,15 +82,15 @@ export default function RecruiterRegisterCarousel() {
                 unoptimized
                 className="h-full w-full object-cover object-center"
               />
-              <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-36 bg-gradient-to-b from-[#00132b]/80 via-[#00132b]/20 to-transparent" />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-[#00132b]/85 via-[#00132b]/20 to-transparent" />
+              <div className="bg-primary-deeper pointer-events-none absolute inset-x-0 top-0 z-10 h-36" />
+              <div className="bg-primary-deeper pointer-events-none absolute inset-x-0 bottom-0 z-10 h-36" />
             </div>
 
             {/* Overlay caption positioned exactly like TopCV (top: 12-14%) */}
             <div className="absolute inset-x-0 top-[12%] z-20 px-6 text-center xl:top-[13%]">
               <p className="text-xl font-bold tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:text-2xl xl:text-[26px]">
                 {slide.prefix}
-                <span className="text-[#00b14f]">{slide.highlight}</span>
+                <span className="text-primary">{slide.highlight}</span>
               </p>
             </div>
           </div>
@@ -116,7 +116,7 @@ export default function RecruiterRegisterCarousel() {
               className={cn(
                 'cursor-pointer transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00b14f]',
                 isActive
-                  ? 'h-2 w-7 rounded-full bg-[#00b14f] shadow-sm shadow-[#00b14f]/50'
+                  ? 'bg-primary h-2 w-7 rounded-full shadow-sm shadow-[#00b14f]/50'
                   : 'h-2 w-2 rounded-full bg-white/40 hover:bg-white/70',
               )}
             />
@@ -133,7 +133,7 @@ export default function RecruiterRegisterCarousel() {
           height={32}
           className="h-7 w-auto object-contain opacity-95 drop-shadow-md"
         />
-        <p className="mt-1 text-[11px] font-medium tracking-wide text-white/80 drop-shadow">
+        <p className="text-label-sm mt-1 font-medium tracking-wide text-white/80 drop-shadow">
           Smarter IT hiring with AI
         </p>
       </div>
