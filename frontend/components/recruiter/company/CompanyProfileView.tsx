@@ -4,7 +4,7 @@ import { recruiterCompanyApi } from '@/apiRequest/recruiter-company';
 import Modal from '@/components/ui/Modal';
 import { ROUTES } from '@/constants/routes';
 import { useCompanyVerification } from '@/hooks/useCompanyVerification';
-import { isApiError } from '@/lib/api-error';
+import { getErrorMessage } from '@/utils/error';
 import type { CompanySummaryResource, SaveCompanyProfileRequest } from '@/types/recruiter-company';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -20,12 +20,10 @@ import {
   List,
   ListOrdered,
   Loader2,
-  Lock,
   LogOut,
   Pencil,
   Plus,
   Search,
-  ShieldCheck,
   Trash2,
   Underline,
 } from 'lucide-react';
@@ -35,21 +33,16 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { AccountSettingsLayout } from './AccountSettingsLayout';
+import TaxCodeLinkPanel from './TaxCodeLinkPanel';
 
 // Mock dataset of real market companies in Vietnam (matching TopCV directory & IT leaders)
 export interface MarketCompany {
   id: number;
   name: string;
-  tradingName?: string;
   taxCode: string;
   address: string;
-  size: string;
-  industry: string;
-  website?: string;
   initials: string;
   avatarBg: string;
-  logoUrl?: string;
-  verified?: boolean;
 }
 
 const BG_COLORS = ['bg-emerald-600', 'bg-blue-600', 'bg-slate-700', 'bg-amber-600', 'bg-teal-600', 'bg-purple-600'];
@@ -65,22 +58,15 @@ function toMarketCompany(c: CompanySummaryResource, idx = 0): MarketCompany {
   return {
     id: c.id,
     name: c.name,
-    tradingName: c.tradingName,
     taxCode: c.taxCode,
     address: c.address || 'Vietnam',
-    size: c.size || 'Technology & Enterprise',
-    industry: c.industry || 'Software & Information Technology',
     initials,
     avatarBg: BG_COLORS[idx % BG_COLORS.length],
-    logoUrl: c.logoUrl,
-    verified: c.verified,
   };
 }
 
 const companyFormSchema = z.object({
-  name: z.string().min(2, 'Official company name is required'),
   tradingName: z.string().optional(),
-  taxCode: z.string().regex(/^\d{10}(\d{3})?$/, 'Tax ID must be 10 or 13 digits'),
   businessType: z.enum(['ENTERPRISE', 'HOUSEHOLD']),
   industry: z.string().optional(),
   website: z.string().url('Invalid website URL').or(z.literal('')).optional(),
@@ -89,7 +75,7 @@ const companyFormSchema = z.object({
   size: z.string().optional(),
   email: z.string().email('Invalid email').or(z.literal('')).optional(),
   phone: z.string().optional(),
-  address: z.string().min(5, 'Registered headquarters address is required'),
+  address: z.string().max(500, 'Address is too long').optional(),
   description: z.string().optional(),
   benefits: z.string().optional(),
 });
@@ -97,6 +83,7 @@ const companyFormSchema = z.object({
 type CompanyFormData = z.infer<typeof companyFormSchema>;
 
 const ITEMS_PER_PAGE = 6;
+const MAX_LOGO_BYTES = 2 * 1024 * 1024;
 
 export function CompanyProfileView() {
   const {
@@ -104,6 +91,7 @@ export function CompanyProfileView() {
     profile,
     refreshProfile,
     handleSaveCompany,
+    handleLinkCompany,
     handleChooseCompany,
     handleLeaveCompany,
     handleUploadLogo,
@@ -111,12 +99,8 @@ export function CompanyProfileView() {
     handleRemovePhoto,
   } = useCompanyVerification();
 
-  // Explicit unbind state: allows testing unlinking even if backend blocks sole owner
-  const [hasExplicitlyLeft, setHasExplicitlyLeft] = useState(false);
-  const [selectedLinkedCompany, setSelectedLinkedCompany] = useState<MarketCompany | null>(null);
-
   // Computed linked status
-  const hasLinkedCompany = (!!company && !hasExplicitlyLeft) || !!selectedLinkedCompany;
+  const hasLinkedCompany = !!company;
 
   // Tab 1: 'search' | Tab 2: 'create'
   const [activeTab, setActiveTab] = useState<'search' | 'create'>('search');
@@ -128,12 +112,10 @@ export function CompanyProfileView() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSearching, setIsSearching] = useState(false);
   const [isLoadingCompanies, setIsLoadingCompanies] = useState(false);
-  const [isLookingUpTax, setIsLookingUpTax] = useState(false);
 
   // Form options state
   const [noLogo, setNoLogo] = useState(false);
   const [noWebsite, setNoWebsite] = useState(false);
-  const [tradingNameSameAsLegal, setTradingNameSameAsLegal] = useState(false);
 
   // Modals state
   const [pendingCompanyToSelect, setPendingCompanyToSelect] = useState<MarketCompany | null>(null);
@@ -148,25 +130,17 @@ export function CompanyProfileView() {
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [isUploadingPhotos, setIsUploadingPhotos] = useState(false);
 
-  // Instant thumbnail previews and pending upload files (for new company creation before record exists)
-  const [pendingLogoFile, setPendingLogoFile] = useState<File | null>(null);
-  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
-  const [pendingPhotoFiles, setPendingPhotoFiles] = useState<{ id: string; file: File; previewUrl: string }[]>([]);
-
   const {
     register,
     handleSubmit,
     reset,
     setValue,
-    getValues,
     watch,
     formState: { errors, isSubmitting },
   } = useForm<CompanyFormData>({
     resolver: zodResolver(companyFormSchema),
     defaultValues: {
-      name: company?.name || '',
       tradingName: company?.tradingName || '',
-      taxCode: company?.taxCode || '',
       businessType: company?.businessType || 'ENTERPRISE',
       industry: company?.industry || 'Software & Information Technology',
       website: company?.website || '',
@@ -181,25 +155,15 @@ export function CompanyProfileView() {
     },
   });
 
-  const watchedName = watch('name');
   const watchedBusinessType = watch('businessType');
   const watchedDesc = watch('description') || '';
   const watchedBenefits = watch('benefits') || '';
 
-  // Auto-sync trading name when checkbox is checked
-  useEffect(() => {
-    if (tradingNameSameAsLegal && watchedName) {
-      setValue('tradingName', watchedName);
-    }
-  }, [tradingNameSameAsLegal, watchedName, setValue]);
-
   // Sync form when company state loads or updates
   useEffect(() => {
-    if (company && !hasExplicitlyLeft) {
+    if (company) {
       reset({
-        name: company.name || '',
         tradingName: company.tradingName || '',
-        taxCode: company.taxCode || '',
         businessType: company.businessType || 'ENTERPRISE',
         industry: company.industry || 'Software & Information Technology',
         website: company.website || '',
@@ -213,7 +177,7 @@ export function CompanyProfileView() {
         benefits: company.benefits || '',
       });
     }
-  }, [company, hasExplicitlyLeft, reset]);
+  }, [company, reset]);
 
   const [liveCompanies, setLiveCompanies] = useState<CompanySummaryResource[]>([]);
   const [liveTotal, setLiveTotal] = useState(0);
@@ -261,39 +225,9 @@ export function CompanyProfileView() {
     setTimeout(() => setIsSearching(false), 200);
   };
 
-  // Tra cứu mã số thuế (Tab 2: Create New Company)
-  const handleLookupTax = async () => {
-    const rawTax = getValues('taxCode')?.trim();
-    if (!rawTax || !/^\d{10}(\d{3})?$/.test(rawTax)) {
-      toast.error('Vui lòng nhập Mã số thuế hợp lệ (10 hoặc 13 chữ số) để tra cứu.');
-      return;
-    }
-    setIsLookingUpTax(true);
-    try {
-      const res = await recruiterCompanyApi.lookupTax(rawTax);
-      if (res) {
-        if (res.name) setValue('name', res.name, { shouldValidate: true });
-        if (res.tradingName) setValue('tradingName', res.tradingName, { shouldValidate: true });
-        if (res.address) setValue('address', res.address, { shouldValidate: true });
-
-        if (res.existingOnPlatform) {
-          toast.info(
-            `Doanh nghiệp "${res.name}" đã có trên InterVue! Bạn có thể chọn doanh nghiệp này ở Tab "Tìm kiếm thông tin doanh nghiệp" để tham gia.`,
-            { duration: 6000 },
-          );
-        } else {
-          toast.success(`Đã tự động lấy dữ liệu Tổng cục Thuế cho "${res.name}".`);
-        }
-      }
-    } catch (err) {
-      if (isApiError(err)) {
-        toast.error(err.message);
-      } else {
-        toast.error('Không tìm thấy thông tin doanh nghiệp theo mã số thuế này.');
-      }
-    } finally {
-      setIsLookingUpTax(false);
-    }
+  const onLinkByTaxCode = async (taxCode: string) => {
+    await handleLinkCompany(taxCode);
+    setIsEditingProfile(true);
   };
 
   // When recruiter clicks "Select" on a company card in Tab 1
@@ -309,57 +243,25 @@ export function CompanyProfileView() {
     try {
       await handleChooseCompany(pendingCompanyToSelect.id);
 
-      setSelectedLinkedCompany(pendingCompanyToSelect);
-      setHasExplicitlyLeft(false);
       setIsSelectModalOpen(false);
       setPendingCompanyToSelect(null);
       setIsEditingProfile(false);
-
-      toast.success(
-        `Đã liên kết với "${pendingCompanyToSelect.name}". Hồ sơ công ty hiện đã được gắn kết với tài khoản của bạn.`,
-      );
     } catch (err) {
-      if (isApiError(err)) {
-        toast.error(err.message);
-      } else {
-        toast.error('Không thể liên kết với công ty này.');
-      }
+      toast.error(getErrorMessage(err));
     } finally {
       setIsSelecting(false);
     }
   };
 
-  // Leave company: resets linked company and restores Search / Create tabs
   const onConfirmLeave = async () => {
     setIsLeaving(true);
     try {
       await handleLeaveCompany();
-      setHasExplicitlyLeft(true);
-      setSelectedLinkedCompany(null);
       setIsLeaveModalOpen(false);
       setIsEditingProfile(false);
       setActiveTab('search');
-      toast.success('Successfully left company profile.');
     } catch (err) {
-      // NOTE [BACKEND_INTEGRATION_TODO]:
-      // In production, when recruiter is the sole owner of a verified company (ErrorCode.LAST_COMPANY_OWNER - 422),
-      // the real backend business flow requires either:
-      //   1) An explicit "Transfer Ownership" dialog to delegate ownership to another active member before leaving, OR
-      //   2) Contacting Compliance / support to archive/disband the verified enterprise entity.
-      // Currently, during UI/UX testing on local dev with pre-seeded verified company data,
-      // we allow session-level unbind so the recruiter can explore the search & create tabs.
-      // When wiring real backend membership transfer endpoint, replace this session unbind with the Transfer Ownership dialog!
-      if (isApiError(err) && (err.message?.includes('last owner') || err.status === 422)) {
-        setHasExplicitlyLeft(true);
-        setSelectedLinkedCompany(null);
-        setIsLeaveModalOpen(false);
-        setActiveTab('search');
-        toast.info(
-          'Unlinked company profile for this session. (In production, transferring ownership is required before leaving).',
-        );
-      } else {
-        toast.error('Could not leave company.');
-      }
+      toast.error(getErrorMessage(err));
     } finally {
       setIsLeaving(false);
     }
@@ -367,153 +269,61 @@ export function CompanyProfileView() {
 
   const onSubmitForm = async (data: CompanyFormData) => {
     try {
-      const saved = await handleSaveCompany(data as SaveCompanyProfileRequest);
-
-      // If a pending logo was selected prior to company creation, upload it now
-      if (pendingLogoFile) {
-        try {
-          await handleUploadLogo(pendingLogoFile);
-          setPendingLogoFile(null);
-        } catch (logoErr) {
-          console.error('Deferred logo upload error:', logoErr);
-        }
-      }
-
-      // If pending workplace photos were selected prior to company creation, upload them now
-      if (pendingPhotoFiles.length > 0) {
-        try {
-          await handleUploadPhotos(pendingPhotoFiles.map((p) => p.file));
-          setPendingPhotoFiles([]);
-        } catch (photoErr) {
-          console.error('Deferred photos upload error:', photoErr);
-        }
-      }
-
-      setHasExplicitlyLeft(false);
-      if (saved) {
-        setSelectedLinkedCompany({
-          id: saved.id,
-          name: saved.name,
-          tradingName: saved.tradingName,
-          taxCode: saved.taxCode,
-          address: saved.address || '',
-          size: saved.size || '',
-          industry: saved.industry || '',
-          initials: saved.name.substring(0, 2).toUpperCase(),
-          avatarBg: 'bg-emerald-600',
-          logoUrl: saved.logoUrl,
-          verified: saved.verified,
-        });
-      }
+      await handleSaveCompany(data as SaveCompanyProfileRequest);
       setIsEditingProfile(false);
-      setActiveTab('search');
       refreshProfile();
-
-      toast.success('Hồ sơ công ty đã được lưu thành công!');
     } catch (err) {
-      if (isApiError(err)) {
-        toast.error(err.message);
-      } else {
-        toast.error('Không thể lưu hồ sơ công ty.');
-      }
+      toast.error(getErrorMessage(err));
     }
   };
 
   const onLogoSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error('Logo file size must not exceed 2MB.');
+    if (file.size > MAX_LOGO_BYTES) {
+      toast.error('Logo không được vượt quá 2MB.');
       return;
     }
-
-    // Instant local thumbnail preview
-    const preview = URL.createObjectURL(file);
-    setLogoPreviewUrl(preview);
-    setPendingLogoFile(file);
-    setNoLogo(false);
-
-    // If company is already established in backend, upload immediately
-    if (company && !hasExplicitlyLeft) {
-      setIsUploadingLogo(true);
-      try {
-        await handleUploadLogo(file);
-        toast.success('Logo uploaded successfully!');
-      } catch (err) {
-        if (isApiError(err)) toast.error(err.message);
-        else toast.error('Could not upload logo.');
-      } finally {
-        setIsUploadingLogo(false);
-      }
-    } else {
-      toast.info('Logo selected! It will be saved with your company profile.');
+    setIsUploadingLogo(true);
+    try {
+      await handleUploadLogo(file);
+      setNoLogo(false);
+      toast.success('Đã cập nhật logo.');
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsUploadingLogo(false);
     }
   };
 
   const onPhotosSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
-
-    // Instant local thumbnail previews
-    const newItems = files.map((file) => ({
-      id: `pending-${Math.random().toString(36).slice(2, 8)}`,
-      file,
-      previewUrl: URL.createObjectURL(file),
-    }));
-
-    // If company is already established in backend, upload immediately
-    if (company && !hasExplicitlyLeft) {
-      setIsUploadingPhotos(true);
-      try {
-        await handleUploadPhotos(files);
-        toast.success(`Added ${files.length} workplace photos!`);
-      } catch (err) {
-        if (isApiError(err)) toast.error(err.message);
-        else toast.error('Could not upload photos.');
-      } finally {
-        setIsUploadingPhotos(false);
-      }
-    } else {
-      setPendingPhotoFiles((prev) => [...prev, ...newItems].slice(0, 5));
-      toast.info(`Selected ${files.length} photo(s). They will be saved with your profile.`);
+    setIsUploadingPhotos(true);
+    try {
+      await handleUploadPhotos(files);
+      toast.success(`Đã thêm ${files.length} ảnh.`);
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsUploadingPhotos(false);
     }
   };
 
-  const onRemovePhotoItem = async (photoItem: { id: string; isPending: boolean }) => {
-    if (photoItem.isPending) {
-      setPendingPhotoFiles((prev) => prev.filter((p) => p.id !== photoItem.id));
-      toast.success('Workplace photo removed.');
-    } else {
-      try {
-        await handleRemovePhoto(Number(photoItem.id));
-        toast.success('Workplace photo removed.');
-      } catch (err) {
-        if (isApiError(err)) toast.error(err.message);
-        else toast.error('Could not remove photo.');
-      }
+  const onRemovePhotoItem = async (photoId: number) => {
+    try {
+      await handleRemovePhoto(photoId);
+      toast.success('Đã xóa ảnh.');
+    } catch (err) {
+      toast.error(getErrorMessage(err));
     }
   };
 
-  const allPhotos = useMemo(() => {
-    const existing = (company?.photos || []).map((p) => ({
-      id: String(p.id),
-      url: p.url || p.photoUrl || '',
-      isPending: false,
-    }));
-    const pending = pendingPhotoFiles.map((p) => ({
-      id: p.id,
-      url: p.previewUrl,
-      isPending: true,
-    }));
-    return [...existing, ...pending];
-  }, [company?.photos, pendingPhotoFiles]);
+  const allPhotos = company?.photos ?? [];
 
-  const displayedLogoUrl = !noLogo ? logoPreviewUrl || company?.logoUrl : null;
+  const displayedLogoUrl = !noLogo ? company?.logoUrl : null;
 
-  const isLegalLocked = company?.legalFieldsLocked === true && !hasExplicitlyLeft;
-  const currentDisplayedCompanyName =
-    selectedLinkedCompany?.name || company?.name || watchedName || 'Your Enterprise Profile';
-  const currentRole = company?.myRole || 'OWNER';
+  const currentDisplayedCompanyName = company?.tradingName || company?.name || 'Hồ sơ doanh nghiệp';
 
   const companyInitials = useMemo(() => {
     const name = currentDisplayedCompanyName || 'InterVue';
@@ -713,17 +523,11 @@ export function CompanyProfileView() {
                           {/* Left: Avatar / Logo + Details */}
                           <div className="flex min-w-0 flex-1 items-start gap-3.5 pr-3">
                             {/* Company Logo or Initials Avatar */}
-                            {item.logoUrl ? (
-                              <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-white p-1.5 shadow-2xs">
-                                <img src={item.logoUrl} alt={item.name} className="h-full w-full object-contain" />
-                              </div>
-                            ) : (
-                              <div
-                                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white shadow-2xs ${item.avatarBg}`}
-                              >
-                                {item.initials}
-                              </div>
-                            )}
+                            <div
+                              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white shadow-2xs ${item.avatarBg}`}
+                            >
+                              {item.initials}
+                            </div>
 
                             {/* Company Details */}
                             <div className="min-w-0 flex-1 space-y-1">
@@ -734,25 +538,14 @@ export function CompanyProfileView() {
                                 >
                                   {item.name}
                                 </h4>
-                                {item.verified && (
-                                  <span title="Verified Enterprise">
-                                    <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-[#00b14f]" />
-                                  </span>
-                                )}
                               </div>
-
-                              {item.tradingName && (
-                                <p className="truncate text-[11px] text-slate-500" title={item.tradingName}>
-                                  Trading Name: <strong className="text-slate-700">{item.tradingName}</strong>
-                                </p>
-                              )}
 
                               <p className="text-[11px] text-slate-600">
                                 Tax ID: <strong className="font-mono text-slate-800">{item.taxCode}</strong>
                               </p>
 
                               <p className="truncate text-[11px] text-slate-500" title={item.address}>
-                                {item.address} | <span className="font-medium text-slate-700">{item.size}</span>
+                                {item.address}
                               </p>
                             </div>
                           </div>
@@ -1036,40 +829,25 @@ export function CompanyProfileView() {
         ) : null}
 
         {/* ================= CONDITION 3: EDIT MODE OR NEW COMPANY CREATION ================= */}
-        {(!hasLinkedCompany && activeTab === 'create') || (hasLinkedCompany && isEditingProfile) ? (
+        {!hasLinkedCompany && activeTab === 'create' ? <TaxCodeLinkPanel onLink={onLinkByTaxCode} /> : null}
+
+        {hasLinkedCompany && isEditingProfile ? (
           <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6 pt-1">
             {/* Header when editing linked company */}
-            {hasLinkedCompany && isEditingProfile && (
-              <div className="flex flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h3 className="text-base font-bold text-slate-900">Yêu cầu cập nhật thông tin công ty</h3>
-                  <p className="text-xs text-slate-500">Chỉnh sửa thông tin hồ sơ doanh nghiệp hiển thị tới ứng viên</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsEditingProfile(false)}
-                  className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50"
-                >
-                  <ArrowLeft className="h-3.5 w-3.5" />
-                  <span>Quay lại xem thông tin</span>
-                </button>
+            <div className="flex flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Yêu cầu cập nhật thông tin công ty</h3>
+                <p className="text-xs text-slate-500">Chỉnh sửa thông tin hồ sơ doanh nghiệp hiển thị tới ứng viên</p>
               </div>
-            )}
-            {/* Legal Status Notice (If enterprise already verified & locked) */}
-            {isLegalLocked && (
-              <div className="flex items-start gap-3 rounded-md border border-emerald-200 bg-emerald-50/80 p-4 text-emerald-950">
-                <Lock className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                <div className="space-y-1">
-                  <p className="text-xs font-bold sm:text-sm">Legal Corporate Fields Locked</p>
-                  <p className="text-xs leading-relaxed text-emerald-800">
-                    Your company is officially verified on InterVue. Primary legal fields (Official Name, Tax ID,
-                    Business Structure, Headquarters Address) are locked to protect enterprise authenticity. Contact
-                    compliance to request official amendments.
-                  </p>
-                </div>
-              </div>
-            )}
-
+              <button
+                type="button"
+                onClick={() => setIsEditingProfile(false)}
+                className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                <span>Quay lại xem thông tin</span>
+              </button>
+            </div>
             {/* 1. Logo Upload Section (TopCV Style) */}
             <div className="flex flex-col items-center justify-center gap-3 rounded-md border border-slate-200 bg-slate-50/50 p-6 text-center">
               <div className="group relative">
@@ -1102,13 +880,7 @@ export function CompanyProfileView() {
                 <input
                   type="checkbox"
                   checked={noLogo}
-                  onChange={(e) => {
-                    setNoLogo(e.target.checked);
-                    if (e.target.checked) {
-                      setPendingLogoFile(null);
-                      setLogoPreviewUrl(null);
-                    }
-                  }}
+                  onChange={(e) => setNoLogo(e.target.checked)}
                   className="h-4 w-4 rounded border-slate-300 text-[#00b14f] focus:ring-emerald-400"
                 />
                 <span>I don&apos;t have a logo</span>
@@ -1178,65 +950,18 @@ export function CompanyProfileView() {
 
             {/* 4. Form Fields Grid (TopCV 2-Column Standard) */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {/* Field 1: Tax Identification Number */}
               <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <label className="text-xs font-bold text-slate-700">
-                      Tax Identification Number (Tax ID) <span className="text-rose-500">*</span>
-                    </label>
-                    <span title="10 or 13-digit Tax Identification Number on business license">
-                      <HelpCircle className="h-3.5 w-3.5 text-slate-400" />
-                    </span>
-                  </div>
-                  {!isLegalLocked && <span className="text-[11px] text-slate-500">Tra cứu tự động dữ liệu Thuế</span>}
+                <label className="text-xs font-bold text-slate-700">Mã số thuế</label>
+                <div className="flex h-11 items-center rounded-md border border-slate-200 bg-slate-50 px-3.5 font-mono text-xs text-slate-700 sm:text-sm">
+                  {company?.taxCode}
                 </div>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    disabled={isLegalLocked || isLookingUpTax}
-                    {...register('taxCode')}
-                    placeholder="Enter 10 or 13-digit Tax ID"
-                    className="h-11 flex-1 rounded-md border border-slate-300 bg-white px-3.5 font-mono text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500 sm:text-sm"
-                  />
-                  {!isLegalLocked && (
-                    <button
-                      type="button"
-                      onClick={handleLookupTax}
-                      disabled={isLookingUpTax}
-                      title="Tra cứu thông tin pháp lý từ Tổng cục Thuế / Masothue"
-                      className="flex h-11 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-[#00b14f] bg-white px-3.5 text-xs font-semibold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50 active:scale-98 disabled:opacity-50"
-                    >
-                      {isLookingUpTax ? (
-                        <>
-                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          <span>Đang tra cứu...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Search className="h-3.5 w-3.5" />
-                          <span>Tra cứu MST</span>
-                        </>
-                      )}
-                    </button>
-                  )}
-                </div>
-                {errors.taxCode && <p className="text-xs text-rose-600">{errors.taxCode.message}</p>}
               </div>
 
-              {/* Field 2: Official Registered Company Name */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700">
-                  Official Registered Company Name <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  disabled={isLegalLocked}
-                  {...register('name')}
-                  placeholder="Official legal name on business license"
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500 sm:text-sm"
-                />
-                {errors.name && <p className="text-xs text-rose-600">{errors.name.message}</p>}
+                <label className="text-xs font-bold text-slate-700">Tên pháp lý</label>
+                <div className="flex h-11 items-center rounded-md border border-slate-200 bg-slate-50 px-3.5 text-xs text-slate-700 sm:text-sm">
+                  <span className="truncate">{company?.name}</span>
+                </div>
               </div>
 
               {/* Field 3: Primary Industry */}
@@ -1283,17 +1008,6 @@ export function CompanyProfileView() {
                   placeholder="e.g. TechX, Shopee, MoMo"
                   className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 />
-                <div className="flex flex-col gap-1 pt-1">
-                  <label className="flex cursor-pointer items-center gap-1.5 text-xs text-slate-600 select-none">
-                    <input
-                      type="checkbox"
-                      checked={tradingNameSameAsLegal}
-                      onChange={(e) => setTradingNameSameAsLegal(e.target.checked)}
-                      className="h-3.5 w-3.5 rounded border-slate-300 text-[#00b14f] focus:ring-emerald-400"
-                    />
-                    <span>Trading name matches registered company name</span>
-                  </label>
-                </div>
               </div>
 
               {/* Field 5: Website */}
@@ -1399,16 +1113,16 @@ export function CompanyProfileView() {
 
               {/* Field 11: Registered Address (Span 2 cols) */}
               <div className="space-y-1.5 md:col-span-2">
-                <label className="text-xs font-bold text-slate-700">
-                  Registered Headquarters Address <span className="text-rose-500">*</span>
-                </label>
+                <label className="text-xs font-bold text-slate-700">Địa chỉ văn phòng</label>
                 <input
                   type="text"
-                  disabled={isLegalLocked}
                   {...register('address')}
-                  placeholder="Official registered headquarters address on business license"
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500 sm:text-sm"
+                  placeholder={company?.registeredAddress || 'Địa chỉ văn phòng hiển thị cho ứng viên'}
+                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 />
+                {company?.registeredAddress && (
+                  <p className="text-[11px] text-slate-500">Địa chỉ đăng ký: {company.registeredAddress}</p>
+                )}
                 {errors.address && <p className="text-xs text-rose-600">{errors.address.message}</p>}
               </div>
             </div>
@@ -1535,10 +1249,10 @@ export function CompanyProfileView() {
                       key={p.id}
                       className="group relative h-28 overflow-hidden rounded-md border border-slate-200 bg-slate-100"
                     >
-                      <img src={p.url} alt="Workplace" className="h-full w-full object-cover" />
+                      <img src={p.url || p.photoUrl} alt="Workplace" className="h-full w-full object-cover" />
                       <button
                         type="button"
-                        onClick={() => onRemovePhotoItem(p)}
+                        onClick={() => onRemovePhotoItem(p.id)}
                         className="absolute top-1.5 right-1.5 cursor-pointer rounded bg-black/60 p-1 text-white opacity-0 transition group-hover:opacity-100 hover:bg-rose-600"
                       >
                         <Trash2 className="h-3.5 w-3.5" />

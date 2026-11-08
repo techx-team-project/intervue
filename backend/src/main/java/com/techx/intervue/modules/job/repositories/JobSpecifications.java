@@ -5,6 +5,7 @@ import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.entities.Skill;
 import com.techx.intervue.modules.job.enums.JobStatus;
 import com.techx.intervue.modules.job.enums.SalaryCurrency;
+import com.techx.intervue.modules.job.requests.AdminSearchJobsRequest;
 import com.techx.intervue.modules.job.requests.SearchJobsRequest;
 import com.techx.intervue.modules.job.requests.SearchRecruiterJobsRequest;
 import jakarta.persistence.criteria.Join;
@@ -35,6 +36,27 @@ public final class JobSpecifications {
         };
     }
 
+    public static Specification<Job> adminListing(AdminSearchJobsRequest request) {
+        return (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(builder.notEqual(root.get("status"), JobStatus.DRAFT));
+            if (request.status() != null) {
+                predicates.add(builder.equal(root.get("status"), request.status()));
+            }
+            if (request.companyId() != null) {
+                predicates.add(builder.equal(root.get("companyId"), request.companyId()));
+            }
+            if (hasText(request.q())) {
+                String pattern = SpecificationSupport.containsPattern(request.q());
+                predicates.add(
+                        builder.or(
+                                builder.like(builder.lower(root.get("title")), pattern),
+                                builder.like(builder.lower(root.get("companyName")), pattern)));
+            }
+            return builder.and(predicates.toArray(Predicate[]::new));
+        };
+    }
+
     public static Specification<Job> publicListing(SearchJobsRequest request, LocalDate today) {
         return (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -49,6 +71,9 @@ public final class JobSpecifications {
             }
             if (hasText(request.city())) {
                 predicates.add(builder.equal(root.get("city"), request.city().trim()));
+            }
+            if (request.companyId() != null) {
+                predicates.add(builder.equal(root.get("companyId"), request.companyId()));
             }
             if (request.contractType() != null) {
                 predicates.add(builder.equal(root.get("contractType"), request.contractType()));

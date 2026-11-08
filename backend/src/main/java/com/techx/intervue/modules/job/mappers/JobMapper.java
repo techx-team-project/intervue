@@ -2,14 +2,21 @@ package com.techx.intervue.modules.job.mappers;
 
 import com.techx.intervue.common.text.Texts;
 import com.techx.intervue.modules.job.entities.Job;
+import com.techx.intervue.modules.job.entities.JobScreeningQuestion;
 import com.techx.intervue.modules.job.entities.Skill;
+import com.techx.intervue.modules.job.enums.ApplicationMode;
+import com.techx.intervue.modules.job.enums.ScreeningQuestionType;
 import com.techx.intervue.modules.job.requests.SaveJobRequest;
+import com.techx.intervue.modules.job.resources.AdminJobSummaryResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobSummaryResource;
 import com.techx.intervue.modules.job.resources.PublicJobCompanyResource;
 import com.techx.intervue.modules.job.resources.PublicJobResource;
 import com.techx.intervue.modules.job.resources.PublicJobSummaryResource;
+import com.techx.intervue.modules.job.resources.ScreeningQuestionResource;
+import com.techx.intervue.modules.job.resources.ScreeningSummaryResource;
 import com.techx.intervue.modules.job.resources.SkillResource;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +27,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class JobMapper {
+
+    private static final int SECONDS_PER_CHOICE = 20;
+    private static final int SECONDS_PER_TEXT = 60;
 
     private final SkillMapper skillMapper;
 
@@ -59,9 +69,12 @@ public class JobMapper {
                 .requirements(job.getRequirements())
                 .benefits(job.getBenefits())
                 .applicationMode(job.getApplicationMode())
+                .screeningQuestions(toQuestions(job))
                 .openings(job.getOpenings())
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
+                .hiddenReason(job.getHiddenReason())
+                .hiddenAt(job.getHiddenAt())
                 .createdAt(job.getCreatedAt())
                 .updatedAt(job.getUpdatedAt())
                 .build();
@@ -80,6 +93,23 @@ public class JobMapper {
                 .openings(job.getOpenings())
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
+                .updatedAt(job.getUpdatedAt())
+                .build();
+    }
+
+    public AdminJobSummaryResource toAdminSummary(Job job) {
+        return AdminJobSummaryResource.builder()
+                .id(job.getId())
+                .title(job.getTitle())
+                .status(job.getStatus())
+                .companyId(job.getCompanyId())
+                .companyName(job.getCompanyName())
+                .level(job.getLevel())
+                .city(job.getCity())
+                .salary(toSalary(job))
+                .deadline(job.getDeadline())
+                .publishedAt(job.getPublishedAt())
+                .hiddenReason(job.getHiddenReason())
                 .updatedAt(job.getUpdatedAt())
                 .build();
     }
@@ -115,6 +145,7 @@ public class JobMapper {
                 .requirements(job.getRequirements())
                 .benefits(job.getBenefits())
                 .openings(job.getOpenings())
+                .screening(toScreeningSummary(job))
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
                 .build();
@@ -131,6 +162,74 @@ public class JobMapper {
                 .sorted(Comparator.comparing(Skill::getName))
                 .map(skillMapper::toResource)
                 .toList();
+    }
+
+    public boolean hasSameScreeningQuestions(
+            Job job, List<SaveJobRequest.ScreeningQuestion> questions) {
+        List<SaveJobRequest.ScreeningQuestion> current =
+                job.getScreeningQuestions().stream()
+                        .map(
+                                question ->
+                                        new SaveJobRequest.ScreeningQuestion(
+                                                question.getType(),
+                                                question.getPrompt(),
+                                                question.isRequired(),
+                                                question.getOptions() == null
+                                                        ? List.of()
+                                                        : question.getOptions()))
+                        .toList();
+        return current.equals(questions);
+    }
+
+    public void replaceScreeningQuestions(
+            Job job, List<SaveJobRequest.ScreeningQuestion> questions) {
+        job.getScreeningQuestions().clear();
+        for (int index = 0; index < questions.size(); index++) {
+            SaveJobRequest.ScreeningQuestion question = questions.get(index);
+            job.getScreeningQuestions()
+                    .add(
+                            JobScreeningQuestion.builder()
+                                    .job(job)
+                                    .position(index)
+                                    .type(question.type())
+                                    .prompt(question.prompt())
+                                    .required(question.required())
+                                    .options(
+                                            question.type() == ScreeningQuestionType.CHOICE
+                                                    ? new ArrayList<>(question.options())
+                                                    : null)
+                                    .build());
+        }
+        job.setApplicationMode(
+                questions.isEmpty() ? ApplicationMode.CV_ONLY : ApplicationMode.CV_AND_QUESTIONS);
+    }
+
+    private List<ScreeningQuestionResource> toQuestions(Job job) {
+        return job.getScreeningQuestions().stream()
+                .map(
+                        question ->
+                                new ScreeningQuestionResource(
+                                        question.getId(),
+                                        question.getType(),
+                                        question.getPrompt(),
+                                        question.isRequired(),
+                                        question.getOptions()))
+                .toList();
+    }
+
+    private ScreeningSummaryResource toScreeningSummary(Job job) {
+        List<JobScreeningQuestion> questions = job.getScreeningQuestions();
+        int seconds =
+                questions.stream()
+                        .mapToInt(
+                                question ->
+                                        question.getType() == ScreeningQuestionType.CHOICE
+                                                ? SECONDS_PER_CHOICE
+                                                : SECONDS_PER_TEXT)
+                        .sum();
+        int minutes = questions.isEmpty() ? 0 : Math.max(1, (seconds + 59) / 60);
+        int required = (int) questions.stream().filter(JobScreeningQuestion::isRequired).count();
+        return new ScreeningSummaryResource(questions.size(), required, minutes);
     }
 
     private void applySalary(Job job, SaveJobRequest.Salary salary) {

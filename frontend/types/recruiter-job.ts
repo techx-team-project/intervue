@@ -8,6 +8,8 @@ export type JobLevel = 'INTERN' | 'JUNIOR' | 'MID' | 'SENIOR' | 'LEAD';
 
 export type SalaryCurrency = 'VND' | 'USD';
 
+export type ScreeningQuestionType = 'CHOICE' | 'SHORT_TEXT';
+
 export type SkillGroup = 'CORE' | 'AI_DATA' | 'TOOLS_DEVOPS' | 'SOFT_SKILLS';
 
 export interface JobSalary {
@@ -26,6 +28,21 @@ export interface SkillResource {
   id: number;
   name: string;
   group: SkillGroup;
+}
+
+export interface ScreeningQuestionResource {
+  id: number;
+  type: ScreeningQuestionType;
+  prompt: string;
+  required: boolean;
+  options?: string[];
+}
+
+export interface SaveScreeningQuestion {
+  type: ScreeningQuestionType;
+  prompt: string;
+  required: boolean;
+  options: string[];
 }
 
 export interface RecruiterJobSummaryResource {
@@ -57,9 +74,12 @@ export interface RecruiterJobResource {
   description?: string;
   requirements?: string;
   benefits?: string;
+  screeningQuestions: ScreeningQuestionResource[];
   openings: number;
   deadline?: string;
   publishedAt?: string;
+  hiddenReason?: string;
+  hiddenAt?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -82,6 +102,7 @@ export interface SaveJobRequest {
   benefits?: string;
   deadline?: string;
   openings: number;
+  screeningQuestions?: SaveScreeningQuestion[];
 }
 
 export type RecruiterJobSegment = 'all' | 'published' | 'paused' | 'expired' | 'draft' | 'closed';
@@ -102,6 +123,7 @@ export interface RecruiterJobPost {
   description?: string;
   requirements?: string;
   benefits?: string;
+  screeningQuestions?: ScreeningQuestionResource[];
   recruitsCount: number;
   createdAt?: string;
   updatedAt: string;

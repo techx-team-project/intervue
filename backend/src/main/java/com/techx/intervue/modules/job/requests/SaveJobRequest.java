@@ -3,6 +3,7 @@ package com.techx.intervue.modules.job.requests;
 import com.techx.intervue.modules.job.enums.ContractType;
 import com.techx.intervue.modules.job.enums.JobLevel;
 import com.techx.intervue.modules.job.enums.SalaryCurrency;
+import com.techx.intervue.modules.job.enums.ScreeningQuestionType;
 import com.techx.intervue.modules.job.enums.WorkingArrangement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -27,9 +28,16 @@ public record SaveJobRequest(
         @Size(max = 20000) String requirements,
         @Size(max = 20000) String benefits,
         @FutureOrPresent LocalDate deadline,
-        @Min(1) @Max(1000) Integer openings) {
+        @Min(1) @Max(1000) Integer openings,
+        @Valid @Size(max = 5) List<@NotNull ScreeningQuestion> screeningQuestions) {
 
     public record Location(@Size(max = 100) String city, @Size(max = 500) String address) {}
+
+    public record ScreeningQuestion(
+            @NotNull ScreeningQuestionType type,
+            @NotBlank @Size(max = 300) String prompt,
+            boolean required,
+            @Size(max = 6) List<@NotBlank @Size(max = 100) String> options) {}
 
     public record Salary(
             boolean negotiable,

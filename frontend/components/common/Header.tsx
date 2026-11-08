@@ -133,6 +133,10 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
           </Link>
 
           <nav className="hidden items-center gap-1 text-sm font-medium text-slate-800 lg:flex xl:gap-2">
+            <Link href="/jobs" className="rounded-md px-2 py-1 transition-colors hover:text-emerald-600">
+              Việc làm
+            </Link>
+
             <div
               className="group relative cursor-pointer py-5"
               onMouseEnter={() => setActiveDropdown('jobs')}

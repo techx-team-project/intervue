@@ -3,6 +3,7 @@
 import FormErrorAlert from '@/components/auth/FormErrorAlert';
 import Button from '@/components/ui/Button';
 import PasswordInput from '@/components/ui/PasswordInput';
+import { useAuth } from '@/hooks/useAuth';
 import { useChangePassword } from '@/hooks/useAccountSecurity';
 import { AUTH_PORTAL_ROUTES, type AuthPortal } from '@/lib/auth-portal';
 import { changePasswordSchema, type ChangePasswordFormData } from '@/schemas/auth.schema';
@@ -11,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Info, KeyRound, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useForm, useWatch } from 'react-hook-form';
+import SetPasswordView from './SetPasswordView';
 import PasswordRequirements, { PasswordStrengthMeter } from './security/PasswordRequirements';
 
 type AccountPasswordViewProps = { portal?: AuthPortal };
@@ -18,6 +20,12 @@ type AccountPasswordViewProps = { portal?: AuthPortal };
 const EMPTY_FORM: ChangePasswordFormData = { currentPassword: '', password: '', confirmPassword: '' };
 
 export default function AccountPasswordView({ portal = 'candidate' }: AccountPasswordViewProps) {
+  const { user } = useAuth();
+  if (portal !== 'admin' && user?.hasPassword === false) return <SetPasswordView portal={portal} />;
+  return <ChangePasswordView portal={portal} />;
+}
+
+function ChangePasswordView({ portal }: { portal: AuthPortal }) {
   const changePassword = useChangePassword(portal);
   const {
     register,

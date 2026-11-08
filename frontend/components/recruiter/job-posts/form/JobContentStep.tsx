@@ -6,8 +6,10 @@ import type { JobPostFormData } from '@/schemas/job.schema';
 import { CheckCircle2, CircleAlert } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import ScreeningQuestionsEditor from './ScreeningQuestionsEditor';
 
 type ContentField = 'description' | 'requirements' | 'benefits';
+type ContentTab = ContentField | 'screeningQuestions';
 
 const TABS: Array<{ field: ContentField; label: string; hint: string; placeholder: string; required: boolean }> = [
   {
@@ -34,7 +36,7 @@ const TABS: Array<{ field: ContentField; label: string; hint: string; placeholde
 ];
 
 interface JobContentStepProps {
-  initialTab?: ContentField;
+  initialTab?: ContentTab;
 }
 
 export default function JobContentStep({ initialTab = 'description' }: JobContentStepProps) {
@@ -43,8 +45,9 @@ export default function JobContentStep({ initialTab = 'description' }: JobConten
     watch,
     formState: { errors },
   } = useFormContext<JobPostFormData>();
-  const [active, setActive] = useState<ContentField>(initialTab);
+  const [active, setActive] = useState<ContentTab>(initialTab);
   const tab = TABS.find((item) => item.field === active) ?? TABS[0];
+  const questionCount = watch('screeningQuestions').length;
 
   return (
     <div className="space-y-4">
@@ -73,27 +76,46 @@ export default function JobContentStep({ initialTab = 'description' }: JobConten
             </button>
           );
         })}
+        <button
+          type="button"
+          role="tab"
+          aria-selected={active === 'screeningQuestions'}
+          onClick={() => setActive('screeningQuestions')}
+          className={cn(
+            'flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-xs font-semibold transition-colors sm:text-sm',
+            active === 'screeningQuestions'
+              ? 'bg-white text-emerald-700 shadow-xs'
+              : 'text-slate-500 hover:text-slate-700',
+          )}
+        >
+          Câu hỏi{questionCount > 0 && ` (${questionCount})`}
+          {errors.screeningQuestions && <CircleAlert className="h-3.5 w-3.5 text-rose-500" />}
+        </button>
       </div>
 
-      <Controller
-        key={tab.field}
-        control={control}
-        name={tab.field}
-        render={({ field }) => (
-          <FormattedTextarea
-            ref={field.ref}
-            name={field.name}
-            value={field.value}
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            rows={12}
-            placeholder={tab.placeholder}
-            helperText={tab.hint}
-            error={errors[tab.field]?.message}
-            aria-label={tab.label}
-          />
-        )}
-      />
+      {active === 'screeningQuestions' ? (
+        <ScreeningQuestionsEditor />
+      ) : (
+        <Controller
+          key={tab.field}
+          control={control}
+          name={tab.field}
+          render={({ field }) => (
+            <FormattedTextarea
+              ref={field.ref}
+              name={field.name}
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              rows={12}
+              placeholder={tab.placeholder}
+              helperText={tab.hint}
+              error={errors[tab.field]?.message}
+              aria-label={tab.label}
+            />
+          )}
+        />
+      )}
     </div>
   );
 }

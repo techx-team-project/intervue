@@ -12,6 +12,7 @@ import java.util.List;
 public record SearchJobsRequest(
         @Size(max = 100) String q,
         @Size(max = 100) String city,
+        Long companyId,
         ContractType contractType,
         WorkingArrangement workingArrangement,
         JobLevel level,

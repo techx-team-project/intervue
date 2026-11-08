@@ -8,6 +8,7 @@ import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.resources.CompanyPhotoResource;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.resources.CompanySummaryResource;
+import com.techx.intervue.modules.company.resources.PublicCompanyResource;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -62,6 +63,34 @@ public class CompanyMapper {
                 .createdAt(profile.getCreatedAt())
                 .updatedAt(profile.getUpdatedAt())
                 .build();
+    }
+
+    public PublicCompanyResource toPublicResource(
+            Company company, CompanyProfile profile, List<CompanyPhoto> photos) {
+        PublicCompanyResource.PublicCompanyResourceBuilder builder =
+                PublicCompanyResource.builder()
+                        .id(company.getId())
+                        .name(company.getName())
+                        .address(company.getAddress())
+                        .photoUrls(
+                                photos.stream()
+                                        .map(photo -> imageUrl(photo.getPublicId()))
+                                        .toList());
+        if (profile != null) {
+            builder.tradingName(profile.getTradingName())
+                    .industry(profile.getIndustry())
+                    .size(profile.getSize())
+                    .website(profile.getWebsite())
+                    .email(profile.getEmail())
+                    .phone(profile.getPhone())
+                    .description(profile.getDescription())
+                    .benefits(profile.getBenefits())
+                    .logoUrl(imageUrl(profile.getLogoPublicId()));
+            if (profile.getAddress() != null && !profile.getAddress().isBlank()) {
+                builder.address(profile.getAddress());
+            }
+        }
+        return builder.build();
     }
 
     public CompanySummaryResource toSummaryResource(Company company) {

@@ -18,6 +18,7 @@ import com.techx.intervue.modules.job.requests.SearchRecruiterJobsRequest;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.resources.JobSummaryResource;
+import com.techx.intervue.modules.job.services.interfaces.JobApplicationLookupInterface;
 import com.techx.intervue.modules.job.services.interfaces.JobServiceInterface;
 import java.time.Instant;
 import java.util.EnumMap;
@@ -44,6 +45,8 @@ public class JobService implements JobServiceInterface {
     private final JobMapper jobMapper;
     private final JobStatusPolicy statusPolicy;
     private final JobPublishRules publishRules;
+    private final ScreeningQuestionRules screeningRules;
+    private final JobApplicationLookupInterface applicationLookup;
     private final CompanyServiceInterface companyService;
     private final CompanyVerificationServiceInterface companyVerificationService;
 
@@ -58,6 +61,7 @@ public class JobService implements JobServiceInterface {
                         .companyName(company.name())
                         .build();
         jobMapper.apply(job, request, resolveSkills(request.skillIds()));
+        applyScreeningQuestions(job, request);
         return jobMapper.toResource(jobRepository.save(job));
     }
 
@@ -69,6 +73,7 @@ public class JobService implements JobServiceInterface {
             throw new AppException(ErrorCode.JOB_NOT_EDITABLE);
         }
         jobMapper.apply(job, request, resolveSkills(request.skillIds()));
+        applyScreeningQuestions(job, request);
         if (job.getStatus() != JobStatus.DRAFT) {
             publishRules.assertComplete(job);
         }
@@ -149,6 +154,21 @@ public class JobService implements JobServiceInterface {
             throw new AppException(ErrorCode.JOB_NOT_EDITABLE);
         }
         jobRepository.delete(job);
+    }
+
+    private void applyScreeningQuestions(Job job, SaveJobRequest request) {
+        if (request.screeningQuestions() == null) {
+            return;
+        }
+        List<SaveJobRequest.ScreeningQuestion> questions =
+                screeningRules.normalise(request.screeningQuestions());
+        if (jobMapper.hasSameScreeningQuestions(job, questions)) {
+            return;
+        }
+        if (job.getId() != null && applicationLookup.hasApplications(job.getId())) {
+            throw new AppException(ErrorCode.SCREENING_QUESTIONS_LOCKED);
+        }
+        jobMapper.replaceScreeningQuestions(job, questions);
     }
 
     private JobResource goLive(Job job, Long recruiterId) {

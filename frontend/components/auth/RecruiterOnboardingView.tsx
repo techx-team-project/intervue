@@ -1,7 +1,7 @@
 'use client';
 
 import { ROUTES } from '@/constants/routes';
-import { MOCK_GOOGLE_RECRUITER_PROFILE } from '@/mocks/recruiter-onboarding.mock';
+import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import { toast } from 'sonner';
@@ -10,6 +10,7 @@ import RecruiterOnboarding from './RecruiterOnboarding';
 
 export default function RecruiterOnboardingView() {
   const router = useRouter();
+  const { user } = useAuth();
 
   const isFinishedRef = useRef(false);
 
@@ -17,12 +18,12 @@ export default function RecruiterOnboardingView() {
     if (isFinishedRef.current) return;
     isFinishedRef.current = true;
     toast.success('Welcome to InterVue for Employers!');
-    router.replace(ROUTES.RECRUITER_LANDING);
+    router.replace(ROUTES.RECRUITER_DASHBOARD);
   };
 
   return (
     <RecruiterAuthSplitLayout>
-      <RecruiterOnboarding startStep="profile" name={MOCK_GOOGLE_RECRUITER_PROFILE.name} onFinish={handleFinish} />
+      <RecruiterOnboarding startStep="profile" name={user?.name ?? ''} onFinish={handleFinish} />
     </RecruiterAuthSplitLayout>
   );
 }

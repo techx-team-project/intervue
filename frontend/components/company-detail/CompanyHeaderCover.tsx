@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Globe, Users, CheckCircle2, Plus, Check, Share2, Briefcase, MapPin } from 'lucide-react';
+import { Briefcase, Building2, Globe, MapPin, Share2, Users } from 'lucide-react';
 import type { CompanyDetail } from '@/types/company';
 
 interface CompanyHeaderCoverProps {
@@ -11,7 +11,6 @@ interface CompanyHeaderCoverProps {
 }
 
 export default function CompanyHeaderCover({ company, activeTab, onTabChange }: CompanyHeaderCoverProps) {
-  const [isFollowing, setIsFollowing] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const handleShare = () => {
@@ -24,45 +23,30 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
 
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm">
-      <div className="relative h-48 w-full overflow-hidden bg-slate-900 sm:h-64 lg:h-72">
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-          style={{ backgroundImage: `url(${company.cover})` }}
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-slate-950/85 via-slate-900/40 to-transparent" />
-
-        <div className="absolute top-4 right-4 flex items-center gap-2">
-          {company.isVerified && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-slate-900/70 px-3 py-1 text-xs font-semibold text-emerald-300 backdrop-blur-md">
-              <CheckCircle2 className="text-primary h-3.5 w-3.5" />
-              <span>Doanh nghiệp xác thực</span>
-            </span>
-          )}
-        </div>
-      </div>
+      <div className="h-28 w-full bg-linear-to-r from-emerald-700 via-emerald-600 to-teal-500 sm:h-40" />
 
       <div className="relative px-5 pt-0 pb-5 sm:px-7">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
             <div className="relative -mt-16 flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-white p-2 shadow-md sm:-mt-20 sm:h-32 sm:w-32">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                loading="lazy"
-                decoding="async"
-                src={company.logo}
-                alt={company.name}
-                className="h-full w-full object-contain"
-              />
+              {company.logo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  loading="lazy"
+                  decoding="async"
+                  src={company.logo}
+                  alt={company.name}
+                  className="h-full w-full object-contain"
+                />
+              ) : (
+                <Building2 className="h-12 w-12 text-slate-300" />
+              )}
             </div>
 
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{company.name}</h1>
               </div>
-
-              {company.tagline && (
-                <p className="mt-1 text-xs text-slate-500 italic sm:text-[13px]">&ldquo;{company.tagline}&rdquo;</p>
-              )}
 
               <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-600">
                 {company.website && (
@@ -73,52 +57,26 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
                     className="text-primary inline-flex items-center gap-1 hover:underline"
                   >
                     <Globe className="h-3.5 w-3.5" />
-                    <span>{company.website.replace('https://', '')}</span>
+                    <span>{company.website.replace(/^https?:\/\//, '')}</span>
                   </a>
                 )}
 
-                <span className="inline-flex items-center gap-1">
-                  <Users className="h-3.5 w-3.5 text-slate-400" />
-                  <span>{company.size}</span>
-                </span>
+                {company.size && (
+                  <span className="inline-flex items-center gap-1">
+                    <Users className="h-3.5 w-3.5 text-slate-400" />
+                    <span>{company.size}</span>
+                  </span>
+                )}
 
                 <span className="inline-flex items-center gap-1">
                   <MapPin className="h-3.5 w-3.5 text-slate-400" />
-                  <span title={company.address}>
-                    {company.address ? company.address.split(',').slice(-2).join(', ').trim() : 'Việt Nam'}
-                  </span>
-                </span>
-
-                <span className="inline-flex items-center gap-1 font-medium text-slate-500">
-                  <span>{company.followers} người theo dõi</span>
+                  <span title={company.address}>{company.address.split(',').slice(-2).join(', ').trim()}</span>
                 </span>
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-2.5 pt-2 sm:pt-0">
-            <button
-              type="button"
-              onClick={() => setIsFollowing((prev) => !prev)}
-              className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold transition ${
-                isFollowing
-                  ? 'text-primary border border-emerald-300 bg-emerald-50'
-                  : 'bg-primary hover:bg-primary-hover text-white shadow-xs'
-              }`}
-            >
-              {isFollowing ? (
-                <>
-                  <Check className="h-4 w-4" />
-                  <span>Đang theo dõi</span>
-                </>
-              ) : (
-                <>
-                  <Plus className="h-4 w-4" />
-                  <span>Theo dõi</span>
-                </>
-              )}
-            </button>
-
             <button
               type="button"
               onClick={handleShare}

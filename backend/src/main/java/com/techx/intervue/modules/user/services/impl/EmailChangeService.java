@@ -59,6 +59,9 @@ public class EmailChangeService implements EmailChangeServiceInterface {
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        if (user.getPassword() == null) {
+            throw new AppException(ErrorCode.PASSWORD_NOT_SET);
+        }
         if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
             throw AppException.validation("currentPassword", "Current password is incorrect!");
         }

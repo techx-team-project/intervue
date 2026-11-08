@@ -92,6 +92,40 @@ templates:
       **Ghi chú của quản trị viên:** {reason}
     actionLabel: "Xem thoả thuận"
 
+  JOB_HIDDEN_BY_ADMIN:
+    title: "Tin tuyển dụng {jobTitle} đã bị ẩn"
+    summary: "Quản trị viên đã ẩn tin {jobTitle} khỏi kết quả tìm kiếm."
+    body: |
+      Quản trị viên InterVue đã ẩn tin tuyển dụng **{jobTitle}** khỏi kết quả tìm kiếm.
+
+      **Lý do:** {reason}
+
+      Nếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ bộ phận hỗ trợ.
+    actionLabel: "Xem tin tuyển dụng"
+
+  JOB_RESTORED_BY_ADMIN:
+    title: "Tin tuyển dụng {jobTitle} đã được khôi phục"
+    summary: "Tin {jobTitle} đã được quản trị viên khôi phục."
+    body: |
+      Tin tuyển dụng **{jobTitle}** đã được quản trị viên InterVue khôi phục.
+    actionLabel: "Xem tin tuyển dụng"
+
+  APPLICATION_RECEIVED:
+    title: "Có hồ sơ ứng tuyển mới cho {jobTitle}"
+    summary: "Một ứng viên vừa nộp hồ sơ vào vị trí {jobTitle}."
+    body: |
+      Một ứng viên vừa nộp hồ sơ vào vị trí **{jobTitle}**.
+
+      Hãy xem hồ sơ và cập nhật trạng thái để ứng viên biết tiến độ.
+    actionLabel: "Xem hồ sơ ứng tuyển"
+
+  APPLICATION_WITHDRAWN:
+    title: "Ứng viên đã rút hồ sơ khỏi {jobTitle}"
+    summary: "Một ứng viên đã rút hồ sơ khỏi vị trí {jobTitle}."
+    body: |
+      Một ứng viên đã rút hồ sơ khỏi vị trí **{jobTitle}**.
+    actionLabel: "Xem hồ sơ ứng tuyển"
+
   ACCOUNT_RESTRICTED:
     title: "Tài khoản của bạn đã bị hạn chế"
     summary: "Tài khoản của bạn đang bị hạn chế truy cập một số tính năng."
