@@ -7,6 +7,7 @@ export const SUPPORT_PHONE_HREF = 'tel:0812665001';
 export const CANDIDATE_JOBS_MENU = [
   { href: ROUTES.JOBS, label: 'Find jobs' },
   { href: ROUTES.CANDIDATE_JOB_ALERTS, label: 'Job alerts' },
+  { href: ROUTES.CANDIDATE_INTERVIEWS, label: 'Interviews' },
 ];
 
 export const CANDIDATE_CV_MENU = [

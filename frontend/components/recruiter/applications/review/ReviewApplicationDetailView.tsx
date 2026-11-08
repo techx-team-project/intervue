@@ -11,6 +11,7 @@ import { ArrowLeft, Download, ExternalLink, FileText, Mail } from 'lucide-react'
 import Link from 'next/link';
 import { toast } from 'sonner';
 import ReviewHistoryTimeline from './ReviewHistoryTimeline';
+import ReviewInterviewPanel from './ReviewInterviewPanel';
 import ReviewNotesPanel from './ReviewNotesPanel';
 import ReviewStatusActions from './ReviewStatusActions';
 import ReviewStatusBadge from './ReviewStatusBadge';
@@ -101,6 +102,8 @@ export default function ReviewApplicationDetailView({ applicationId }: { applica
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
         <div className="space-y-5 lg:col-span-8">
+          <ReviewInterviewPanel applicationId={application.id} applicationStatus={application.status} />
+
           <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs">
             <h3 className="text-sm font-bold text-slate-900">CV</h3>
             {application.cv ? (
