@@ -5,7 +5,7 @@ import { AlertCircle, Bot, RotateCcw, X } from 'lucide-react';
 import { ChatInput } from './ChatInput';
 import { ChatMessageItem } from './ChatMessageItem';
 import { SuggestedQuestions } from './SuggestedQuestions';
-import type { ChatMessage } from '@/types/ai-chat';
+import type { ChatContext, ChatMessage } from '@/types/ai-chat';
 
 interface ChatPanelProps {
   isOpen: boolean;
@@ -13,12 +13,13 @@ interface ChatPanelProps {
   messages: ChatMessage[];
   isLoading: boolean;
   remainingQuota: number | null;
+  context?: ChatContext;
   error: {
     message: string;
     retryAfter?: number | null;
     code?: string;
   } | null;
-  onSendMessage: (message: string) => void;
+  onSendMessage: (message: string, faqCode?: string) => void;
   onResetSession: () => void;
 }
 
@@ -28,6 +29,7 @@ export function ChatPanel({
   messages,
   isLoading,
   remainingQuota,
+  context,
   error,
   onSendMessage,
   onResetSession,
@@ -95,6 +97,32 @@ export function ChatPanel({
         {messages.map((message, idx) => (
           <ChatMessageItem key={message.id} message={message} isLatest={idx === messages.length - 1} />
         ))}
+
+        {context?.jobTitle && (
+          <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/70 p-3 text-xs text-emerald-950">
+            <p className="font-semibold text-emerald-900">
+              Đang xem: {context.jobTitle} {context.companyName ? `(${context.companyName})` : ''}
+            </p>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                disabled={isLoading}
+                onClick={() => onSendMessage('So khớp CV của tôi với vị trí này')}
+                className="cursor-pointer rounded-lg border border-emerald-300 bg-white px-2.5 py-1 font-medium text-emerald-800 shadow-2xs hover:bg-emerald-100 disabled:opacity-50"
+              >
+                🎯 So khớp CV với việc này
+              </button>
+              <button
+                type="button"
+                disabled={isLoading}
+                onClick={() => onSendMessage('Soạn giúp tôi một bức thư ứng tuyển cho vị trí này')}
+                className="cursor-pointer rounded-lg border border-emerald-300 bg-white px-2.5 py-1 font-medium text-emerald-800 shadow-2xs hover:bg-emerald-100 disabled:opacity-50"
+              >
+                ✍️ Soạn thư ứng tuyển mẫu
+              </button>
+            </div>
+          </div>
+        )}
 
         {showSuggested && <SuggestedQuestions onSelect={onSendMessage} disabled={isLoading} />}
 

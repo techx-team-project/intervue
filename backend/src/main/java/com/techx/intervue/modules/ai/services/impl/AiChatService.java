@@ -8,6 +8,7 @@ import com.techx.intervue.modules.ai.requests.AiChatRequest;
 import com.techx.intervue.modules.ai.requests.AiContentBlock;
 import com.techx.intervue.modules.ai.requests.AiRole;
 import com.techx.intervue.modules.ai.requests.AiToolDefinition;
+import com.techx.intervue.modules.ai.requests.ChatContext;
 import com.techx.intervue.modules.ai.requests.UserChatRequest;
 import com.techx.intervue.modules.ai.resources.AiChatResult;
 import com.techx.intervue.modules.ai.resources.AiStopReason;
@@ -16,8 +17,10 @@ import com.techx.intervue.modules.ai.resources.PromptTemplate;
 import com.techx.intervue.modules.ai.resources.ToolExecutionResult;
 import com.techx.intervue.modules.ai.resources.UserChatResponse;
 import com.techx.intervue.modules.ai.services.interfaces.AiChatServiceInterface;
+import com.techx.intervue.modules.ai.services.interfaces.AiFaqServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.AiQuotaServiceInterface;
+import com.techx.intervue.modules.ai.services.interfaces.AiResponseCacheServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.KnowledgeBaseServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PlatformAgentToolServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
@@ -26,14 +29,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class AiChatService implements AiChatServiceInterface {
 
     private static final String FEATURE_NAME = "support-chatbot";
@@ -45,6 +48,7 @@ public class AiChatService implements AiChatServiceInterface {
     private static final int TOP_K_CHUNKS = 3;
     private static final double MIN_SCORE_THRESHOLD = 0.60;
     private static final int MAX_AGENT_STEPS = 3;
+    private static final double FAQ_SEMANTIC_MATCH_THRESHOLD = 0.88;
 
     private final AiGatewayServiceInterface aiGatewayService;
     private final KnowledgeBaseServiceInterface knowledgeBaseService;
@@ -53,11 +57,86 @@ public class AiChatService implements AiChatServiceInterface {
     private final PlatformAgentToolServiceInterface agentToolService;
     private final StringRedisTemplate redis;
     private final ObjectMapper objectMapper;
+    private final AiFaqServiceInterface faqService;
+    private final AiResponseCacheServiceInterface responseCache;
+
+    @Autowired
+    public AiChatService(
+            AiGatewayServiceInterface aiGatewayService,
+            KnowledgeBaseServiceInterface knowledgeBaseService,
+            AiQuotaServiceInterface quotaService,
+            PromptServiceInterface promptService,
+            PlatformAgentToolServiceInterface agentToolService,
+            StringRedisTemplate redis,
+            ObjectMapper objectMapper,
+            @Nullable AiFaqServiceInterface faqService,
+            @Nullable AiResponseCacheServiceInterface responseCache) {
+        this.aiGatewayService = aiGatewayService;
+        this.knowledgeBaseService = knowledgeBaseService;
+        this.quotaService = quotaService;
+        this.promptService = promptService;
+        this.agentToolService = agentToolService;
+        this.redis = redis;
+        this.objectMapper = objectMapper;
+        this.faqService = faqService;
+        this.responseCache = responseCache;
+    }
+
+    public AiChatService(
+            AiGatewayServiceInterface aiGatewayService,
+            KnowledgeBaseServiceInterface knowledgeBaseService,
+            AiQuotaServiceInterface quotaService,
+            PromptServiceInterface promptService,
+            PlatformAgentToolServiceInterface agentToolService,
+            StringRedisTemplate redis,
+            ObjectMapper objectMapper) {
+        this(
+                aiGatewayService,
+                knowledgeBaseService,
+                quotaService,
+                promptService,
+                agentToolService,
+                redis,
+                objectMapper,
+                null,
+                null);
+    }
 
     @Override
     public UserChatResponse chat(Long userId, String ip, UserChatRequest request) {
         String historyKey = buildHistoryKey(userId, ip, request.sessionId());
+        int remainingQuota = quotaService.getRemaining(userId, ip);
 
+        if (faqService != null) {
+            // Tier 1: Direct FAQ Code Match (From Chip click or explicit faqCode)
+            if (request.faqCode() != null && !request.faqCode().isBlank()) {
+                var directMatch = faqService.findByCode(request.faqCode(), remainingQuota);
+                if (directMatch.isPresent()) {
+                    saveHistory(historyKey, request.message(), directMatch.get().answer());
+                    return directMatch.get();
+                }
+            }
+
+            // Tier 2: Semantic FAQ Match (Cosine similarity >= 0.88 against FAQ index)
+            var semanticMatch =
+                    faqService.findSemanticMatch(
+                            request.message(), FAQ_SEMANTIC_MATCH_THRESHOLD, remainingQuota);
+            if (semanticMatch.isPresent()) {
+                saveHistory(historyKey, request.message(), semanticMatch.get().answer());
+                return semanticMatch.get();
+            }
+        }
+
+        // Tier 2.5: Cross-User Public Response Cache Check
+        if (responseCache != null) {
+            var cached = responseCache.get(request.message(), remainingQuota);
+            if (cached.isPresent()) {
+                saveHistory(historyKey, request.message(), cached.get().answer());
+                return cached.get();
+            }
+        }
+
+        // Tier 3: Full RAG + Agent ReAct loop with Gemini LLM
         List<KnowledgeMatch> matches =
                 knowledgeBaseService.retrieve(request.message(), TOP_K_CHUNKS, MIN_SCORE_THRESHOLD);
 
@@ -70,7 +149,8 @@ public class AiChatService implements AiChatServiceInterface {
 
         List<AiChatMessage> messages = new ArrayList<>(loadHistory(historyKey));
 
-        String augmentedUserMessage = buildAugmentedUserMessage(matches, request.message());
+        String augmentedUserMessage =
+                buildAugmentedUserMessage(matches, request.message(), request.context());
         messages.add(AiChatMessage.user(augmentedUserMessage));
 
         List<AiToolDefinition> tools = agentToolService.getAvailableTools();
@@ -82,6 +162,9 @@ public class AiChatService implements AiChatServiceInterface {
         int steps = 0;
         int totalToolCalls = 0;
         final int maxToolCalls = 3;
+        boolean calledPrivateTool = false;
+        boolean calledJobTool = false;
+
         while (steps < MAX_AGENT_STEPS
                 && totalToolCalls < maxToolCalls
                 && result.stopReason() == AiStopReason.TOOL_USE
@@ -91,6 +174,15 @@ public class AiChatService implements AiChatServiceInterface {
 
             List<AiContentBlock.ToolResult> toolResults = new ArrayList<>();
             for (AiContentBlock.ToolUse call : result.toolCalls()) {
+                if ("get_my_applications".equals(call.name())
+                        || "match_my_cv".equals(call.name())
+                        || "draft_cover_letter".equals(call.name())) {
+                    calledPrivateTool = true;
+                }
+                if ("search_jobs".equals(call.name())) {
+                    calledJobTool = true;
+                }
+
                 if (totalToolCalls >= maxToolCalls) {
                     toolResults.add(
                             new AiContentBlock.ToolResult(
@@ -119,14 +211,40 @@ public class AiChatService implements AiChatServiceInterface {
 
         saveHistory(historyKey, request.message(), result.text());
 
-        int remainingQuota = quotaService.getRemaining(userId, ip);
+        remainingQuota = quotaService.getRemaining(userId, ip);
 
-        return new UserChatResponse(
-                result.text(), new ArrayList<>(aggregatedSources), remainingQuota);
+        UserChatResponse finalResponse =
+                new UserChatResponse(
+                        result.text(), new ArrayList<>(aggregatedSources), remainingQuota);
+
+        if (responseCache != null && !calledPrivateTool) {
+            responseCache.put(request.message(), finalResponse, false, calledJobTool);
+        }
+
+        return finalResponse;
     }
 
-    private String buildAugmentedUserMessage(List<KnowledgeMatch> matches, String userMessage) {
+    private String buildAugmentedUserMessage(
+            List<KnowledgeMatch> matches, String userMessage, @Nullable ChatContext context) {
         StringBuilder builder = new StringBuilder();
+
+        if (context != null) {
+            builder.append("<current_page_context>\n");
+            if (context.pageType() != null) {
+                builder.append("Page: ").append(context.pageType()).append("\n");
+            }
+            if (context.entityId() != null) {
+                builder.append("Entity ID: ").append(context.entityId()).append("\n");
+            }
+            if (context.jobTitle() != null) {
+                builder.append("Job Title: ").append(context.jobTitle()).append("\n");
+            }
+            if (context.companyName() != null) {
+                builder.append("Company Name: ").append(context.companyName()).append("\n");
+            }
+            builder.append("</current_page_context>\n\n");
+        }
+
         if (!matches.isEmpty()) {
             builder.append("<platform_knowledge>\n");
             for (KnowledgeMatch match : matches) {
