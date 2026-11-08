@@ -47,35 +47,35 @@ function LocalFilePreviewModal({ isOpen, onClose, fileUrl, fileName, isImage, is
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-xs">
-      <div className="relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="border-outline-variant shadow-elevation-2 relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border bg-white">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+        <div className="border-outline-variant flex items-center justify-between border-b px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+            <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50">
               {isPdf ? <FileText className="h-5 w-5 text-rose-500" /> : <Eye className="h-5 w-5" />}
             </div>
             <div>
-              <h3 className="max-w-[420px] truncate text-sm font-bold text-slate-900">{fileName}</h3>
-              <p className="text-xs text-slate-500">Document Preview (Before Submission)</p>
+              <h3 className="text-on-surface max-w-[420px] truncate text-sm font-bold">{fileName}</h3>
+              <p className="text-on-surface-variant text-xs">Document Preview (Before Submission)</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             {isImage && (
-              <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 p-1">
+              <div className="border-outline-variant bg-surface-container-low flex items-center gap-1 rounded-lg border p-1">
                 <button
                   type="button"
                   onClick={() => setZoom((z) => Math.max(0.5, z - 0.25))}
-                  className="rounded p-1 text-slate-600 hover:bg-slate-200"
+                  className="text-on-surface-variant hover:bg-surface-container-high rounded p-1"
                   title="Zoom Out"
                 >
                   <ZoomOut className="h-3.5 w-3.5" />
                 </button>
-                <span className="px-1.5 text-[11px] font-semibold text-slate-700">{Math.round(zoom * 100)}%</span>
+                <span className="text-label-sm text-on-surface px-1.5 font-semibold">{Math.round(zoom * 100)}%</span>
                 <button
                   type="button"
                   onClick={() => setZoom((z) => Math.min(2.5, z + 0.25))}
-                  className="rounded p-1 text-slate-600 hover:bg-slate-200"
+                  className="text-on-surface-variant hover:bg-surface-container-high rounded p-1"
                   title="Zoom In"
                 >
                   <ZoomIn className="h-3.5 w-3.5" />
@@ -83,7 +83,7 @@ function LocalFilePreviewModal({ isOpen, onClose, fileUrl, fileName, isImage, is
                 <button
                   type="button"
                   onClick={() => setRotation((r) => (r + 90) % 360)}
-                  className="rounded p-1 text-slate-600 hover:bg-slate-200"
+                  className="text-on-surface-variant hover:bg-surface-container-high rounded p-1"
                   title="Rotate 90°"
                 >
                   <RotateCw className="h-3.5 w-3.5" />
@@ -93,7 +93,7 @@ function LocalFilePreviewModal({ isOpen, onClose, fileUrl, fileName, isImage, is
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+              className="text-outline hover:bg-surface-container-high hover:text-on-surface rounded-xl p-2 transition"
               aria-label="Close preview"
             >
               <X className="h-5 w-5" />
@@ -102,7 +102,7 @@ function LocalFilePreviewModal({ isOpen, onClose, fileUrl, fileName, isImage, is
         </div>
 
         {/* Viewer Body */}
-        <div className="relative flex min-h-[460px] flex-1 items-center justify-center overflow-auto bg-slate-100/90 p-4">
+        <div className="bg-surface-container-high/90 relative flex min-h-[460px] flex-1 items-center justify-center overflow-auto p-4">
           {isPdf ? (
             <iframe
               src={fileUrl}
@@ -119,11 +119,11 @@ function LocalFilePreviewModal({ isOpen, onClose, fileUrl, fileName, isImage, is
                   transform: `scale(${zoom}) rotate(${rotation}deg)`,
                   transition: 'transform 0.2s ease',
                 }}
-                className="max-h-[65vh] w-auto max-w-full rounded-lg object-contain shadow-md"
+                className="shadow-elevation-1 max-h-[65vh] w-auto max-w-full rounded-lg object-contain"
               />
             </div>
           ) : (
-            <div className="text-center text-xs text-slate-500">
+            <div className="text-on-surface-variant text-center text-xs">
               <p>Cannot render preview for this file format directly.</p>
             </div>
           )}
@@ -329,15 +329,15 @@ export function PersonalDataProtectionView() {
         <section className="space-y-4">
           {/* Section Header */}
           <div className="space-y-1">
-            <h2 className="text-sm font-bold text-slate-800 sm:text-base">
+            <h2 className="text-on-surface text-sm font-bold sm:text-base">
               Candidate - Recruiter Personal Data Processing Agreement
             </h2>
-            <p className="text-xs text-slate-600">
+            <p className="text-on-surface-variant text-xs">
               View purpose of use and upload guidelines{' '}
               <button
                 type="button"
                 onClick={() => setIsGuidelinesOpen(true)}
-                className="font-semibold text-[#00b14f] hover:underline"
+                className="text-primary font-semibold hover:underline"
               >
                 here
               </button>
@@ -352,8 +352,8 @@ export function PersonalDataProtectionView() {
                   <Clock className="h-5 w-5" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-sm font-bold text-slate-900 sm:text-base">Awaiting Compliance Review</h3>
-                  <p className="text-xs leading-relaxed text-slate-600">
+                  <h3 className="text-on-surface text-sm font-bold sm:text-base">Awaiting Compliance Review</h3>
+                  <p className="text-on-surface-variant text-xs leading-relaxed">
                     Your customized Candidate Data Processing Agreement has been submitted and is currently being
                     evaluated by compliance officers. Standard review turnaround is within 24 business hours.
                   </p>
@@ -363,28 +363,28 @@ export function PersonalDataProtectionView() {
               <div className="grid grid-cols-1 gap-3 border-t border-amber-200/60 pt-2 text-xs sm:grid-cols-3">
                 {profile.candidateAgreement.agreedAt && (
                   <div>
-                    <span className="font-semibold text-slate-700">Submitted On:</span>
-                    <p className="text-slate-800">{formatDate(profile.candidateAgreement.agreedAt)}</p>
+                    <span className="text-on-surface font-semibold">Submitted On:</span>
+                    <p className="text-on-surface">{formatDate(profile.candidateAgreement.agreedAt)}</p>
                   </div>
                 )}
                 <div>
-                  <span className="font-semibold text-slate-700">Reviewing Authority:</span>
-                  <p className="text-slate-800">InterVue Trust &amp; Safety Compliance Team</p>
+                  <span className="text-on-surface font-semibold">Reviewing Authority:</span>
+                  <p className="text-on-surface">InterVue Trust &amp; Safety Compliance Team</p>
                 </div>
                 <div>
-                  <span className="font-semibold text-slate-700">Estimated Turnaround (SLA):</span>
-                  <p className="text-slate-800">Within 24 business hours</p>
+                  <span className="text-on-surface font-semibold">Estimated Turnaround (SLA):</span>
+                  <p className="text-on-surface">Within 24 business hours</p>
                 </div>
               </div>
 
               <div className="flex items-center justify-between border-t border-amber-200/60 pt-2 text-xs">
-                <span className="text-slate-500 italic">
+                <span className="text-on-surface-variant italic">
                   Data processing privileges will be activated automatically once approved.
                 </span>
                 <button
                   type="button"
                   onClick={() => setIsTemplateModalOpen(true)}
-                  className="inline-flex items-center gap-1.5 font-semibold text-[#00b14f] hover:underline"
+                  className="text-primary inline-flex items-center gap-1.5 font-semibold hover:underline"
                 >
                   <Download className="h-3.5 w-3.5" />
                   <span>Download Template (.docx)</span>
@@ -397,12 +397,12 @@ export function PersonalDataProtectionView() {
           {isCandidateAgreed && (
             <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50/60 p-4 shadow-2xs">
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="h-5 w-5 text-[#00b14f]" />
+                <CheckCircle2 className="text-primary h-5 w-5" />
                 <div>
-                  <p className="text-xs font-bold text-slate-900 sm:text-sm">
+                  <p className="text-on-surface text-xs font-bold sm:text-sm">
                     Candidate Agreement Active &amp; Approved
                   </p>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-label-sm text-on-surface-variant">
                     Your custom agreement is officially recorded under Decree 13/2023/ND-CP.
                     {profile.candidateAgreement.agreedAt &&
                       ` Effective since ${formatDate(profile.candidateAgreement.agreedAt)}.`}
@@ -413,7 +413,7 @@ export function PersonalDataProtectionView() {
               <button
                 type="button"
                 onClick={() => setShowUpdateForm(!showUpdateForm)}
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50"
+                className="border-outline text-on-surface hover:bg-surface-container-low rounded-md border bg-white px-3 py-1.5 text-xs font-semibold shadow-2xs transition"
               >
                 {showUpdateForm ? 'Close Form' : 'Update Agreement'}
               </button>
@@ -443,8 +443,8 @@ export function PersonalDataProtectionView() {
                 <label
                   className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3.5 transition ${
                     candidateMethod === 'STANDARD'
-                      ? 'border-[#00b14f] bg-emerald-50/30 ring-1 ring-[#00b14f]'
-                      : 'border-slate-200 bg-white hover:border-slate-300'
+                      ? 'border-primary bg-emerald-50/30 ring-1 ring-[#00b14f]'
+                      : 'border-outline-variant hover:border-outline bg-white'
                   }`}
                 >
                   <input
@@ -452,16 +452,16 @@ export function PersonalDataProtectionView() {
                     name="candidate-agreement-method"
                     checked={candidateMethod === 'STANDARD'}
                     onChange={() => setCandidateMethod('STANDARD')}
-                    className="mt-0.5 h-4 w-4 text-[#00b14f] focus:ring-[#00b14f]"
+                    className="text-primary mt-0.5 h-4 w-4 focus:ring-[#00b14f]"
                   />
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-slate-800">Standard Agreement</span>
-                      <span className="py-0.2 rounded bg-emerald-100 px-1.5 text-[10px] font-semibold text-[#00b14f]">
+                      <span className="text-on-surface text-xs font-bold">Standard Agreement</span>
+                      <span className="py-0.2 text-label-sm text-primary rounded bg-emerald-100 px-1.5 font-semibold">
                         Recommended
                       </span>
                     </div>
-                    <p className="text-[11px] leading-relaxed text-slate-500">
+                    <p className="text-label-sm text-on-surface-variant leading-relaxed">
                       Use InterVue&apos;s standard terms under Decree 13/2023/ND-CP. Immediate activation, no upload
                       needed.
                     </p>
@@ -471,8 +471,8 @@ export function PersonalDataProtectionView() {
                 <label
                   className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3.5 transition ${
                     candidateMethod === 'CUSTOM'
-                      ? 'border-[#00b14f] bg-emerald-50/30 ring-1 ring-[#00b14f]'
-                      : 'border-slate-200 bg-white hover:border-slate-300'
+                      ? 'border-primary bg-emerald-50/30 ring-1 ring-[#00b14f]'
+                      : 'border-outline-variant hover:border-outline bg-white'
                   }`}
                 >
                   <input
@@ -480,16 +480,16 @@ export function PersonalDataProtectionView() {
                     name="candidate-agreement-method"
                     checked={candidateMethod === 'CUSTOM'}
                     onChange={() => setCandidateMethod('CUSTOM')}
-                    className="mt-0.5 h-4 w-4 text-[#00b14f] focus:ring-[#00b14f]"
+                    className="text-primary mt-0.5 h-4 w-4 focus:ring-[#00b14f]"
                   />
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-slate-800">Custom Enterprise Document</span>
-                      <span className="py-0.2 rounded bg-slate-100 px-1.5 text-[10px] font-semibold text-slate-600">
+                      <span className="text-on-surface text-xs font-bold">Custom Enterprise Document</span>
+                      <span className="py-0.2 bg-surface-container-high text-label-sm text-on-surface-variant rounded px-1.5 font-semibold">
                         Review Required
                       </span>
                     </div>
-                    <p className="text-[11px] leading-relaxed text-slate-500">
+                    <p className="text-label-sm text-on-surface-variant leading-relaxed">
                       Upload your enterprise-specific agreement with legal representative signature or company seal.
                     </p>
                   </div>
@@ -498,12 +498,12 @@ export function PersonalDataProtectionView() {
 
               {/* Method 1: Standard Template Confirmation Card */}
               {candidateMethod === 'STANDARD' && (
-                <div className="space-y-4 rounded-lg border border-slate-200/90 bg-white p-5 shadow-2xs">
+                <div className="border-outline-variant/90 space-y-4 rounded-lg border bg-white p-5 shadow-2xs">
                   <div className="space-y-1">
-                    <h3 className="text-xs font-bold text-slate-800 sm:text-sm">
+                    <h3 className="text-on-surface text-xs font-bold sm:text-sm">
                       InterVue Standard Candidate Data Processing Terms
                     </h3>
-                    <p className="text-xs leading-relaxed text-slate-600">
+                    <p className="text-on-surface-variant text-xs leading-relaxed">
                       Pursuant to Decree No. 13/2023/ND-CP and Law on Personal Data Protection No. 91/2025/QH15, by
                       confirming this standard agreement, your Enterprise authorizes InterVue to present standard data
                       consent terms to candidates upon application. Your Enterprise agrees to handle candidate personal
@@ -515,19 +515,19 @@ export function PersonalDataProtectionView() {
                     <Link
                       href="/data-processing-agreement"
                       target="_blank"
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#00b14f] hover:underline"
+                      className="text-primary inline-flex items-center gap-1.5 text-xs font-semibold hover:underline"
                     >
                       <span>Read full standard agreement text</span>
                       <ExternalLink className="h-3.5 w-3.5" />
                     </Link>
                   </div>
 
-                  <div className="flex items-center justify-end border-t border-slate-100 pt-4">
+                  <div className="border-outline-variant flex items-center justify-end border-t pt-4">
                     <button
                       type="button"
                       onClick={handleConfirmStandardCandidateAgreement}
                       disabled={isSubmittingCandidate}
-                      className="inline-flex items-center justify-center rounded-md bg-[#00b14f] px-7 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#009b45] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                      className="bg-primary inline-flex items-center justify-center rounded-md px-7 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#009b45] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
                     >
                       {isSubmittingCandidate ? 'Activating...' : 'Confirm Standard Agreement'}
                     </button>
@@ -537,12 +537,12 @@ export function PersonalDataProtectionView() {
 
               {/* Method 2: Custom Enterprise Document Upload Form */}
               {candidateMethod === 'CUSTOM' && (
-                <div className="space-y-5 rounded-lg border border-slate-200/90 bg-white p-5 shadow-2xs">
+                <div className="border-outline-variant/90 space-y-5 rounded-lg border bg-white p-5 shadow-2xs">
                   <div className="space-y-1">
-                    <label className="block text-xs font-bold text-slate-800">
+                    <label className="text-on-surface block text-xs font-bold">
                       Agreement Document <span className="text-rose-500">*</span>
                     </label>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-on-surface-variant text-xs">
                       Document demonstrating candidate consent for the Employer to collect, store, and process personal
                       data for recruitment purposes.
                     </p>
@@ -563,16 +563,16 @@ export function PersonalDataProtectionView() {
                         /* Selected File Box with Preview Button */
                         <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50/50 p-4 shadow-2xs transition">
                           <div className="flex min-w-0 items-center gap-3">
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-emerald-100 text-[#00b14f]">
+                            <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-emerald-100">
                               {isLocalPdf ? (
                                 <FileText className="h-5 w-5 text-rose-500" />
                               ) : (
-                                <FileCheck2 className="h-5 w-5 text-[#00b14f]" />
+                                <FileCheck2 className="text-primary h-5 w-5" />
                               )}
                             </div>
                             <div className="min-w-0">
-                              <p className="truncate text-xs font-bold text-slate-900">{candidateFile.name}</p>
-                              <p className="text-[11px] text-slate-500">
+                              <p className="text-on-surface truncate text-xs font-bold">{candidateFile.name}</p>
+                              <p className="text-label-sm text-on-surface-variant">
                                 {(candidateFile.size / (1024 * 1024)).toFixed(2)} MB • Ready to submit
                               </p>
                             </div>
@@ -581,15 +581,15 @@ export function PersonalDataProtectionView() {
                             <button
                               type="button"
                               onClick={handleOpenPreview}
-                              className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:border-[#00b14f] hover:text-[#00b14f]"
+                              className="border-outline text-on-surface hover:border-primary hover:text-primary inline-flex items-center gap-1 rounded-md border bg-white px-2.5 py-1 text-xs font-semibold transition"
                             >
-                              <Eye className="h-3.5 w-3.5 text-[#00b14f]" />
+                              <Eye className="text-primary h-3.5 w-3.5" />
                               <span>Preview</span>
                             </button>
                             <button
                               type="button"
                               onClick={() => fileInputRef.current?.click()}
-                              className="rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                              className="border-outline text-on-surface hover:bg-surface-container-low rounded-md border bg-white px-2.5 py-1 text-xs font-semibold transition"
                             >
                               Change
                             </button>
@@ -600,7 +600,7 @@ export function PersonalDataProtectionView() {
                                 setCandidateFile(null);
                                 setLocalPreviewUrl('');
                               }}
-                              className="rounded-md p-1 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"
+                              className="text-outline rounded-md p-1 transition hover:bg-rose-50 hover:text-rose-600"
                               aria-label="Remove file"
                             >
                               <X className="h-4 w-4" />
@@ -616,17 +616,19 @@ export function PersonalDataProtectionView() {
                           onClick={() => fileInputRef.current?.click()}
                           className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-5 py-7 text-center transition ${
                             isDragOver
-                              ? 'border-[#00b14f] bg-emerald-50/40'
-                              : 'border-slate-300 bg-slate-50/30 hover:border-[#00b14f] hover:bg-emerald-50/20'
+                              ? 'border-primary bg-emerald-50/40'
+                              : 'border-outline bg-surface-container-low/30 hover:border-primary hover:bg-emerald-50/20'
                           }`}
                         >
-                          <p className="text-xs font-bold text-slate-800">Choose or drag file here</p>
-                          <p className="text-[11px] text-slate-500">Maximum file size 5MB, format: pdf, jpg, png</p>
+                          <p className="text-on-surface text-xs font-bold">Choose or drag file here</p>
+                          <p className="text-label-sm text-on-surface-variant">
+                            Maximum file size 5MB, format: pdf, jpg, png
+                          </p>
 
                           <button
                             type="button"
                             tabIndex={-1}
-                            className="mt-1 inline-flex items-center gap-1.5 rounded-md border border-[#00b14f] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50"
+                            className="border-primary text-primary mt-1 inline-flex items-center gap-1.5 rounded-md border bg-white px-3.5 py-1.5 text-xs font-semibold shadow-2xs transition hover:bg-emerald-50"
                           >
                             <UploadCloud className="h-3.5 w-3.5" />
                             <span>Choose file</span>
@@ -634,19 +636,19 @@ export function PersonalDataProtectionView() {
                         </div>
                       )}
 
-                      <p className="text-[11px] text-amber-700">
+                      <p className="text-label-sm text-amber-700">
                         * Uploaded documents must show all pages and have no signs of modification, covering, or
                         cropping.
                       </p>
                     </div>
 
                     {/* Right Column: Template Box (4 cols) */}
-                    <div className="flex flex-col items-center justify-start space-y-2 lg:col-span-4 lg:border-l lg:border-slate-100 lg:pl-6">
-                      <p className="text-xs font-bold text-slate-700">Template Document</p>
+                    <div className="lg:border-outline-variant flex flex-col items-center justify-start space-y-2 lg:col-span-4 lg:border-l lg:pl-6">
+                      <p className="text-on-surface text-xs font-bold">Template Document</p>
                       <button
                         type="button"
                         onClick={() => setIsTemplateModalOpen(true)}
-                        className="inline-flex items-center gap-2 rounded-md border border-[#00b14f] bg-white px-4 py-2 text-xs font-semibold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50 active:scale-95"
+                        className="border-primary text-primary inline-flex items-center gap-2 rounded-md border bg-white px-4 py-2 text-xs font-semibold shadow-2xs transition hover:bg-emerald-50 active:scale-95"
                       >
                         <Download className="h-3.5 w-3.5" />
                         <span>Download Template</span>
@@ -658,7 +660,7 @@ export function PersonalDataProtectionView() {
                   <div className="pt-2">
                     <label
                       htmlFor="candidate-affirmation-consent"
-                      className="flex cursor-pointer items-start gap-2.5 text-xs leading-relaxed text-slate-700 select-none"
+                      className="text-on-surface flex cursor-pointer items-start gap-2.5 text-xs leading-relaxed select-none"
                     >
                       <input
                         id="candidate-affirmation-consent"
@@ -666,7 +668,7 @@ export function PersonalDataProtectionView() {
                         checked={isCandidateAffirmed}
                         disabled={isSubmittingCandidate}
                         onChange={(e) => setIsCandidateAffirmed(e.target.checked)}
-                        className="mt-0.5 h-4 w-4 cursor-pointer rounded border-slate-300 text-[#00b14f] focus:ring-[#00b14f]"
+                        className="border-outline text-primary mt-0.5 h-4 w-4 cursor-pointer rounded focus:ring-[#00b14f]"
                       />
                       <span>
                         I affirm that this document is a lawful legal document of the enterprise and assume full
@@ -677,12 +679,12 @@ export function PersonalDataProtectionView() {
                   </div>
 
                   {/* Action Footer */}
-                  <div className="flex items-center justify-end border-t border-slate-100 pt-4">
+                  <div className="border-outline-variant flex items-center justify-end border-t pt-4">
                     <button
                       type="button"
                       onClick={handleSaveCandidateAgreement}
                       disabled={isSubmittingCandidate || !candidateFile || !isCandidateAffirmed}
-                      className="inline-flex items-center justify-center rounded-md bg-[#00b14f] px-7 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#009b45] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                      className="bg-primary inline-flex items-center justify-center rounded-md px-7 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#009b45] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
                     >
                       {isSubmittingCandidate ? 'Saving...' : 'Save Changes'}
                     </button>
@@ -699,14 +701,14 @@ export function PersonalDataProtectionView() {
         <section className="space-y-4">
           {/* Section Header */}
           <div className="space-y-1">
-            <h2 className="text-sm font-bold text-slate-800 sm:text-base">
+            <h2 className="text-on-surface text-sm font-bold sm:text-base">
               InterVue - Recruiter Personal Data Processing Agreement
             </h2>
           </div>
 
           {/* Form Card Container */}
-          <div className="space-y-4 rounded-lg border border-slate-200/90 bg-white p-5 shadow-2xs">
-            <p className="text-xs leading-relaxed text-slate-600 sm:text-sm">
+          <div className="border-outline-variant/90 space-y-4 rounded-lg border bg-white p-5 shadow-2xs">
+            <p className="text-on-surface-variant text-xs leading-relaxed sm:text-sm">
               Pursuant to the Law on Personal Data Protection No. 91/2025/QH15 and Decree No. 13/2023/ND-CP, InterVue
               officially enforces the Personal Data Processing Agreement across the platform. This agreement clarifies
               the respective roles and legal obligations of your Enterprise and InterVue regarding candidate CVs
@@ -718,12 +720,12 @@ export function PersonalDataProtectionView() {
               /* Confirmed Status Box */
               <div className="flex flex-col gap-3 rounded-lg border border-emerald-200 bg-emerald-50/70 p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2.5">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 text-[#00b14f]" />
+                  <CheckCircle2 className="text-primary h-5 w-5 shrink-0" />
                   <div>
-                    <p className="text-xs font-bold text-slate-900 sm:text-sm">
+                    <p className="text-on-surface text-xs font-bold sm:text-sm">
                       Platform Agreement Confirmed &amp; Active
                     </p>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-label-sm text-on-surface-variant">
                       Your Enterprise has officially consented to the InterVue Personal Data Processing Agreement
                       {profile.platformAgreement.agreedAt && ` on ${formatDate(profile.platformAgreement.agreedAt)}`}.
                     </p>
@@ -733,7 +735,7 @@ export function PersonalDataProtectionView() {
                 <Link
                   href="/data-processing-agreement"
                   target="_blank"
-                  className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50 sm:self-auto"
+                  className="border-outline text-on-surface hover:bg-surface-container-low inline-flex shrink-0 items-center gap-1.5 self-start rounded-md border bg-white px-3 py-1.5 text-xs font-semibold shadow-2xs transition sm:self-auto"
                 >
                   <span>Review Terms</span>
                   <ExternalLink className="h-3.5 w-3.5" />
@@ -746,7 +748,7 @@ export function PersonalDataProtectionView() {
                   <Link
                     href="/data-processing-agreement"
                     target="_blank"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#00b14f] hover:underline"
+                    className="text-primary inline-flex items-center gap-1.5 text-xs font-semibold hover:underline"
                   >
                     <span>View full text of agreement</span>
                     <ExternalLink className="h-3.5 w-3.5" />
@@ -756,7 +758,7 @@ export function PersonalDataProtectionView() {
                 <div className="pt-2">
                   <label
                     htmlFor="platform-agreement-consent"
-                    className="flex cursor-pointer items-center gap-2.5 text-xs font-medium text-slate-700 select-none sm:text-sm"
+                    className="text-on-surface flex cursor-pointer items-center gap-2.5 text-xs font-medium select-none sm:text-sm"
                   >
                     <input
                       id="platform-agreement-consent"
@@ -764,7 +766,7 @@ export function PersonalDataProtectionView() {
                       checked={Boolean(userToggledConsent)}
                       disabled={isSubmittingPlatform}
                       onChange={(e) => setUserToggledConsent(e.target.checked)}
-                      className="h-4 w-4 cursor-pointer rounded border-slate-300 text-[#00b14f] focus:ring-[#00b14f]"
+                      className="border-outline text-primary h-4 w-4 cursor-pointer rounded focus:ring-[#00b14f]"
                     />
                     <span>
                       Confirm agreement to the terms of the{' '}
@@ -772,7 +774,7 @@ export function PersonalDataProtectionView() {
                         href="/data-processing-agreement"
                         target="_blank"
                         onClick={(e) => e.stopPropagation()}
-                        className="font-semibold text-[#00b14f] hover:underline"
+                        className="text-primary font-semibold hover:underline"
                       >
                         Personal Data Processing Agreement
                       </Link>
@@ -781,12 +783,12 @@ export function PersonalDataProtectionView() {
                 </div>
 
                 {/* Action Footer */}
-                <div className="flex items-center justify-end border-t border-slate-100 pt-4">
+                <div className="border-outline-variant flex items-center justify-end border-t pt-4">
                   <button
                     type="button"
                     onClick={handleConfirmPlatformAgreement}
                     disabled={isSubmittingPlatform || !userToggledConsent}
-                    className="inline-flex items-center justify-center rounded-md bg-[#00b14f] px-7 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#009b45] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                    className="bg-primary inline-flex items-center justify-center rounded-md px-7 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#009b45] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
                   >
                     {isSubmittingPlatform ? 'Confirming...' : 'Confirm Agreement'}
                   </button>
@@ -800,10 +802,10 @@ export function PersonalDataProtectionView() {
         <div className="fixed right-6 bottom-4 z-40">
           <Link
             href={ROUTES.RECRUITER_COMPANY}
-            className="flex items-center gap-2 rounded-full bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-white shadow-lg backdrop-blur-xs transition hover:scale-102 hover:bg-slate-900"
+            className="shadow-elevation-2 flex items-center gap-2 rounded-full bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-white backdrop-blur-xs transition hover:scale-102 hover:bg-slate-900"
           >
             <span>Next: Company Profile</span>
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00b14f] text-white">
+            <div className="bg-primary flex h-5 w-5 items-center justify-center rounded-full text-white">
               <ArrowRight className="h-3 w-3" />
             </div>
           </Link>
@@ -815,19 +817,19 @@ export function PersonalDataProtectionView() {
       {/* ======================================================== */}
       {isTemplateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
-          <div className="relative w-full max-w-lg rounded-lg border border-slate-200 bg-white p-6 shadow-xl">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-bold text-slate-900">Download Template Document</h3>
+          <div className="border-outline-variant shadow-elevation-2 relative w-full max-w-lg rounded-lg border bg-white p-6">
+            <div className="border-outline-variant flex items-center justify-between border-b pb-3">
+              <h3 className="text-on-surface text-base font-bold">Download Template Document</h3>
               <button
                 type="button"
                 onClick={() => setIsTemplateModalOpen(false)}
-                className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                className="text-outline hover:bg-surface-container-high hover:text-on-surface rounded-md p-1.5"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="mt-4 space-y-3 text-xs leading-relaxed text-slate-600 sm:text-sm">
+            <div className="text-on-surface-variant mt-4 space-y-3 text-xs leading-relaxed sm:text-sm">
               <p className="flex items-start gap-2">
                 <span className="font-bold">•</span>
                 <span>
@@ -843,17 +845,17 @@ export function PersonalDataProtectionView() {
                   JPG/PNG.
                 </span>
               </p>
-              <p className="pt-2 text-xs font-semibold text-slate-800">
+              <p className="text-on-surface pt-2 text-xs font-semibold">
                 After reviewing the above notice, click &ldquo;Download&rdquo; to save the Word template (.docx) to your
                 device.
               </p>
             </div>
 
-            <div className="mt-6 flex items-center justify-end gap-3 border-t border-slate-100 pt-3">
+            <div className="border-outline-variant mt-6 flex items-center justify-end gap-3 border-t pt-3">
               <button
                 type="button"
                 onClick={() => setIsTemplateModalOpen(false)}
-                className="rounded-md border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                className="border-outline text-on-surface hover:bg-surface-container-low rounded-md border bg-white px-4 py-2 text-xs font-semibold transition"
               >
                 Close
               </button>
@@ -861,7 +863,7 @@ export function PersonalDataProtectionView() {
                 href="/templates/intervue-candidate-data-processing-agreement-template.docx"
                 download="intervue-candidate-data-processing-agreement-template.docx"
                 onClick={() => setIsTemplateModalOpen(false)}
-                className="inline-flex items-center gap-1.5 rounded-md bg-[#00b14f] px-5 py-2 text-xs font-bold text-white transition hover:bg-[#009b45]"
+                className="bg-primary inline-flex items-center gap-1.5 rounded-md px-5 py-2 text-xs font-bold text-white transition hover:bg-[#009b45]"
               >
                 <Download className="h-3.5 w-3.5" />
                 <span>Download</span>
@@ -876,36 +878,36 @@ export function PersonalDataProtectionView() {
       {/* ======================================================== */}
       {isGuidelinesOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
-          <div className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-slate-200 bg-white p-6 shadow-xl sm:p-7">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="border-outline-variant shadow-elevation-2 relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border bg-white p-6 sm:p-7">
+            <div className="border-outline-variant flex items-center justify-between border-b pb-3">
               <div className="flex items-center gap-2">
-                <HelpCircle className="h-5 w-5 text-[#00b14f]" />
-                <h3 className="text-base font-bold text-slate-900">
+                <HelpCircle className="text-primary h-5 w-5" />
+                <h3 className="text-on-surface text-base font-bold">
                   Data Processing Agreement Purpose &amp; Guidelines
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsGuidelinesOpen(false)}
-                className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                className="text-outline hover:bg-surface-container-high hover:text-on-surface rounded-md p-1.5"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="mt-4 space-y-4 text-xs leading-relaxed text-slate-600 sm:text-sm">
-              <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-4">
-                <h4 className="font-bold text-slate-800">1. Purpose of Candidate Agreement</h4>
-                <p className="mt-1 text-xs text-slate-600">
+            <div className="text-on-surface-variant mt-4 space-y-4 text-xs leading-relaxed sm:text-sm">
+              <div className="border-outline-variant bg-surface-container-low/50 rounded-lg border p-4">
+                <h4 className="text-on-surface font-bold">1. Purpose of Candidate Agreement</h4>
+                <p className="text-on-surface-variant mt-1 text-xs">
                   Under Decree 13/2023/ND-CP and Law No. 91/2025/QH15, employers processing candidate personal data
                   (CVs, contact numbers, portfolios, references) must obtain explicit consent from the data subject for
                   recruitment purposes.
                 </p>
               </div>
 
-              <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-4">
-                <h4 className="font-bold text-slate-800">2. Document Requirements</h4>
-                <ul className="mt-2 list-disc space-y-1 pl-4 text-xs text-slate-600">
+              <div className="border-outline-variant bg-surface-container-low/50 rounded-lg border p-4">
+                <h4 className="text-on-surface font-bold">2. Document Requirements</h4>
+                <ul className="text-on-surface-variant mt-2 list-disc space-y-1 pl-4 text-xs">
                   <li>Accepted file formats: PDF (recommended), JPG, JPEG, PNG (maximum 5MB).</li>
                   <li>Word documents (.docx) must be exported or scanned to PDF after signing/stamping.</li>
                   <li>Must clearly state the Enterprise Name matching your official business registration.</li>
@@ -923,11 +925,11 @@ export function PersonalDataProtectionView() {
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end border-t border-slate-100 pt-3">
+            <div className="border-outline-variant mt-6 flex justify-end border-t pt-3">
               <button
                 type="button"
                 onClick={() => setIsGuidelinesOpen(false)}
-                className="rounded-md bg-[#00b14f] px-5 py-2 text-xs font-bold text-white transition hover:bg-[#009b45]"
+                className="bg-primary rounded-md px-5 py-2 text-xs font-bold text-white transition hover:bg-[#009b45]"
               >
                 I Understand
               </button>

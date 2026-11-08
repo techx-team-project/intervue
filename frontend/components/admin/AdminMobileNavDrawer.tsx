@@ -40,14 +40,14 @@ export default function AdminMobileNavDrawer({
     <div role="dialog" aria-modal="true" aria-label="Admin menu" className="fixed inset-0 z-50 lg:hidden">
       <div onClick={onClose} className="absolute inset-0 bg-slate-950/50" />
 
-      <div className="dark:bg-forest-900 absolute inset-y-0 left-0 flex w-[88%] max-w-xs flex-col bg-white shadow-2xl">
+      <div className="dark:bg-forest-900 shadow-elevation-2 absolute inset-y-0 left-0 flex w-[88%] max-w-xs flex-col bg-white">
         <div className="dark:border-forest-800 flex h-14 shrink-0 items-center justify-between border-b border-[#eef1f5] px-4">
-          <span className="text-navy dark:text-forest-50 text-[13px] font-bold">Menu</span>
+          <span className="text-navy dark:text-forest-50 text-body-md font-bold">Menu</span>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close the menu"
-            className="dark:hover:bg-forest-850 flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800"
+            className="dark:hover:bg-forest-850 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl transition-colors"
           >
             <X className="h-5 w-5" />
           </button>

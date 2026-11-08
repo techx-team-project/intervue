@@ -57,22 +57,22 @@ export default function AdminUserGrantRoleDialog({
         />
 
         {role === ROLES.ADMIN && (
-          <p className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-[12.5px] text-amber-800">
+          <p className="text-body-sm flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-amber-800">
             <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
             An admin role grants access to this panel. Prefer a temporary grant and keep permissions as narrow as the
             work needs.
           </p>
         )}
 
-        <label className="flex cursor-pointer items-start gap-2.5 text-[13px] text-slate-700">
+        <label className="text-body-md text-on-surface flex cursor-pointer items-start gap-2.5">
           <input
             type="checkbox"
             {...register('isTemporary')}
-            className="accent-primary mt-0.5 h-4 w-4 cursor-pointer rounded border-slate-300"
+            className="accent-primary border-outline mt-0.5 h-4 w-4 cursor-pointer rounded"
           />
           <span>
             Temporary grant
-            <span className="mt-0.5 block text-[11.5px] text-slate-500">
+            <span className="text-label-sm text-on-surface-variant mt-0.5 block">
               The role stops counting as active after the expiry date — nothing has to be revoked by hand.
             </span>
           </span>
@@ -88,7 +88,7 @@ export default function AdminUserGrantRoleDialog({
         )}
 
         <div>
-          <label htmlFor="admin-grant-reason" className="text-[13px] font-semibold text-slate-700">
+          <label htmlFor="admin-grant-reason" className="text-body-md text-on-surface font-semibold">
             Reason
           </label>
           <Textarea
@@ -103,7 +103,7 @@ export default function AdminUserGrantRoleDialog({
           )}
         </div>
 
-        <p className="flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+        <p className="bg-surface-container-low text-on-surface-variant flex items-start gap-2 rounded-lg px-3 py-2 text-xs">
           <ScrollText className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           Recorded against your admin account with a timestamp. The next token refresh picks up the new role.
         </p>

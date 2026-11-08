@@ -40,7 +40,7 @@ export default function RecruiterBottomCta() {
 
   return (
     <div className="fixed right-4 bottom-4 z-30 w-[calc(100%-2rem)] max-w-sm sm:right-6 sm:bottom-6 sm:w-auto">
-      <div className="to-primary relative flex items-start gap-3 rounded-2xl bg-linear-to-br from-[#0c2e24] via-[#103a2e] p-4 pr-8 text-white shadow-xl">
+      <div className="to-primary shadow-elevation-2 relative flex items-start gap-3 rounded-2xl bg-linear-to-br from-[#0c2e24] via-[#103a2e] p-4 pr-8 text-white">
         <button
           type="button"
           onClick={dismiss}
@@ -55,13 +55,13 @@ export default function RecruiterBottomCta() {
         </div>
 
         <div className="min-w-0">
-          <p className="text-[13px] font-bold">Need to hire faster?</p>
-          <p className="mt-0.5 text-[12px] leading-relaxed text-white/80">
+          <p className="text-body-md font-bold">Need to hire faster?</p>
+          <p className="text-body-sm mt-0.5 leading-relaxed text-white/80">
             Explore service packages that make your job posts stand out to the right IT candidates.
           </p>
           <Link
             href={ROUTES.RECRUITER_SERVICES}
-            className="mt-2 inline-flex items-center gap-1 text-[12px] font-bold text-white hover:underline"
+            className="text-body-sm mt-2 inline-flex items-center gap-1 font-bold text-white hover:underline"
           >
             <span>View packages</span>
             <ArrowRight className="h-3.5 w-3.5" />

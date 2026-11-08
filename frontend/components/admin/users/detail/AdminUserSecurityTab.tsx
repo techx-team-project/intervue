@@ -34,10 +34,10 @@ export default function AdminUserSecurityTab({
           </span>
 
           <div className="min-w-0 flex-1">
-            <p className="text-navy dark:text-forest-50 text-[13px] font-bold">
+            <p className="text-navy dark:text-forest-50 text-body-md font-bold">
               {twoFactorEnabled ? 'Enabled' : 'Not enabled'}
             </p>
-            <p className="dark:text-forest-300 mt-0.5 text-[12px] text-[#64748b]">
+            <p className="dark:text-forest-300 text-body-sm text-on-surface-variant mt-0.5">
               {twoFactorEnabled
                 ? 'Resetting removes the authenticator secret and every recovery code. Only do it when the user has lost access.'
                 : 'The account signs in with its password alone. Nothing to reset.'}
@@ -47,7 +47,7 @@ export default function AdminUserSecurityTab({
               <button
                 type="button"
                 onClick={onResetTwoFactor}
-                className="mt-2.5 inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-rose-50 px-3.5 py-2 text-[12.5px] font-bold text-rose-700 transition-colors hover:bg-rose-100 dark:bg-rose-500/10"
+                className="text-body-sm mt-2.5 inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-rose-50 px-3.5 py-2 font-bold text-rose-700 transition-colors hover:bg-rose-100 dark:bg-rose-500/10"
               >
                 <ShieldOff className="h-3.5 w-3.5" />
                 Reset two-factor
@@ -64,8 +64,8 @@ export default function AdminUserSecurityTab({
           </span>
 
           <div className="min-w-0 flex-1">
-            <p className="text-navy dark:text-forest-50 text-[13px] font-bold">Send a reset link</p>
-            <p className="dark:text-forest-300 mt-0.5 text-[12px] text-[#64748b]">
+            <p className="text-navy dark:text-forest-50 text-body-md font-bold">Send a reset link</p>
+            <p className="dark:text-forest-300 text-body-sm text-on-surface-variant mt-0.5">
               {isVerified
                 ? 'Emails a single-use link. Admins never see or set a password on behalf of a user.'
                 : 'The email address is not verified, so a reset link cannot be delivered.'}
@@ -75,7 +75,7 @@ export default function AdminUserSecurityTab({
               type="button"
               disabled={!isVerified}
               onClick={onSendPasswordReset}
-              className="dark:border-forest-800 dark:text-forest-100 dark:hover:bg-forest-850 mt-2.5 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-slate-200 px-3.5 py-2 text-[12.5px] font-bold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="dark:border-forest-800 dark:text-forest-100 dark:hover:bg-forest-850 border-outline-variant text-body-sm text-on-surface hover:bg-surface-container-low mt-2.5 inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-2 font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
               <KeyRound className="h-3.5 w-3.5" />
               Send password reset
@@ -93,15 +93,15 @@ export default function AdminUserSecurityTab({
           <div className="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-3.5">
             <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
             <div className="min-w-0">
-              <p className="text-[13px] font-bold text-rose-800">Refresh token reuse detected</p>
-              <p className="mt-1 text-[12.5px] text-rose-700">
+              <p className="text-body-md font-bold text-rose-800">Refresh token reuse detected</p>
+              <p className="text-body-sm mt-1 text-rose-700">
                 A refresh token was presented after it had already been rotated. Every session on the account was
                 revoked automatically. Treat the credentials as compromised and ask the user to change their password.
               </p>
             </div>
           </div>
         ) : (
-          <p className="dark:text-forest-300 py-2 text-[12.5px] text-[#64748b]">
+          <p className="dark:text-forest-300 text-body-sm text-on-surface-variant py-2">
             No token reuse has been detected on this account.
           </p>
         )}

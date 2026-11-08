@@ -54,13 +54,13 @@ export default function HiringNeedFields({ form }: HiringNeedFieldsProps) {
             label="When do you need to finish hiring? *"
             min={todayIsoDate()}
             disabled={continuous}
-            className="disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+            className="disabled:bg-surface-container-low disabled:text-outline disabled:cursor-not-allowed"
             error={errors.hireBy?.message}
             {...register('hireBy')}
           />
           <label
             htmlFor="continuous"
-            className="flex cursor-pointer items-center gap-2 text-sm text-slate-700 select-none"
+            className="text-on-surface flex cursor-pointer items-center gap-2 text-sm select-none"
           >
             <input
               id="continuous"
@@ -97,7 +97,7 @@ export default function HiringNeedFields({ form }: HiringNeedFieldsProps) {
       </div>
 
       <fieldset>
-        <legend className="mb-1.5 block text-sm font-semibold text-slate-800">
+        <legend className="text-on-surface mb-1.5 block text-sm font-semibold">
           What is your hiring budget for this role?
         </legend>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -123,13 +123,13 @@ export default function HiringNeedFields({ form }: HiringNeedFieldsProps) {
       </fieldset>
 
       <fieldset>
-        <legend className="mb-1.5 block text-sm font-semibold text-slate-800">Budget source</legend>
+        <legend className="text-on-surface mb-1.5 block text-sm font-semibold">Budget source</legend>
         <div className="flex items-center gap-6">
           {RECRUITER_BUDGET_SOURCE_OPTIONS.map((option) => (
             <label
               key={option.value}
               htmlFor={`budgetSource-${option.value}`}
-              className="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-700"
+              className="text-on-surface flex cursor-pointer items-center gap-2 text-sm font-medium"
             >
               <input
                 id={`budgetSource-${option.value}`}

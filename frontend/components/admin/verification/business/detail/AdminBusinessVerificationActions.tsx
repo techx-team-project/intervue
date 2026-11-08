@@ -154,10 +154,10 @@ export function AdminBusinessVerificationActions({
   };
 
   return (
-    <div className="dark:border-forest-800 dark:bg-forest-900 space-y-4 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
+    <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant/80 space-y-4 rounded-2xl border bg-white p-5 shadow-xs">
       <div>
-        <h3 className="dark:text-forest-50 text-sm font-semibold text-slate-900">Compliance Decision Hub</h3>
-        <p className="dark:text-forest-400 mt-0.5 text-xs text-slate-500">
+        <h3 className="dark:text-forest-50 text-on-surface text-sm font-semibold">Compliance Decision Hub</h3>
+        <p className="dark:text-forest-400 text-on-surface-variant mt-0.5 text-xs">
           Review document validity and select the appropriate compliance decision.
         </p>
       </div>
@@ -180,7 +180,7 @@ export function AdminBusinessVerificationActions({
             <button
               type="button"
               onClick={() => setIsRevokeOpen(true)}
-              className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-300 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-rose-300 hover:bg-rose-50/50 hover:text-rose-700"
+              className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-300 border-outline-variant text-on-surface-variant inline-flex items-center gap-1.5 rounded-lg border bg-white px-3 py-1.5 text-xs font-medium transition hover:border-rose-300 hover:bg-rose-50/50 hover:text-rose-700"
             >
               <ShieldAlert className="h-3.5 w-3.5" />
               <span>Revoke Publishing Rights</span>
@@ -262,7 +262,7 @@ export function AdminBusinessVerificationActions({
       >
         <div className="space-y-4 pt-2">
           <div>
-            <label className="dark:text-forest-200 block text-xs font-semibold text-slate-700">
+            <label className="dark:text-forest-200 text-on-surface block text-xs font-semibold">
               Validity duration for {isErc ? 'Enterprise License (ERC)' : 'Letter of Authorization (LOA)'}:
             </label>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -272,7 +272,7 @@ export function AdminBusinessVerificationActions({
                 className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
                   selectedPresetYears === 1
                     ? 'border-emerald-600 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'dark:border-forest-700 dark:bg-forest-800 dark:text-forest-300 border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                    : 'dark:border-forest-700 dark:bg-forest-800 dark:text-forest-300 border-outline-variant text-on-surface hover:bg-surface-container-low bg-white'
                 }`}
               >
                 1 Year (Recommended for LOA)
@@ -283,7 +283,7 @@ export function AdminBusinessVerificationActions({
                 className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
                   selectedPresetYears === 2
                     ? 'border-emerald-600 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'dark:border-forest-700 dark:bg-forest-800 dark:text-forest-300 border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                    : 'dark:border-forest-700 dark:bg-forest-800 dark:text-forest-300 border-outline-variant text-on-surface hover:bg-surface-container-low bg-white'
                 }`}
               >
                 2 Years
@@ -294,7 +294,7 @@ export function AdminBusinessVerificationActions({
                 className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
                   selectedPresetYears === 5
                     ? 'border-emerald-600 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'dark:border-forest-700 dark:bg-forest-800 dark:text-forest-300 border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                    : 'dark:border-forest-700 dark:bg-forest-800 dark:text-forest-300 border-outline-variant text-on-surface hover:bg-surface-container-low bg-white'
                 }`}
               >
                 5 Years (Recommended for ERC)
@@ -308,7 +308,7 @@ export function AdminBusinessVerificationActions({
                 className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
                   selectedPresetYears === null && !approveExpiry
                     ? 'border-emerald-600 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'dark:border-forest-700 dark:bg-forest-800 dark:text-forest-300 border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                    : 'dark:border-forest-700 dark:bg-forest-800 dark:text-forest-300 border-outline-variant text-on-surface hover:bg-surface-container-low bg-white'
                 }`}
               >
                 Indefinite
@@ -316,7 +316,7 @@ export function AdminBusinessVerificationActions({
             </div>
 
             <div className="mt-3 flex items-center gap-2">
-              <span className="dark:text-forest-400 text-xs text-slate-500">Or specific date:</span>
+              <span className="dark:text-forest-400 text-on-surface-variant text-xs">Or specific date:</span>
               <input
                 type="date"
                 value={approveExpiry}
@@ -324,7 +324,7 @@ export function AdminBusinessVerificationActions({
                   setApproveExpiry(e.target.value);
                   setSelectedPresetYears(null);
                 }}
-                className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-800 focus:border-emerald-500 focus:bg-white focus:outline-none"
+                className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 border-outline-variant bg-surface-container-low text-on-surface rounded-lg border px-3 py-1 text-xs font-medium focus:border-emerald-500 focus:bg-white focus:outline-none"
               />
             </div>
           </div>
@@ -337,11 +337,11 @@ export function AdminBusinessVerificationActions({
             </span>
           </div>
 
-          <div className="dark:border-forest-800 flex justify-end gap-2 border-t border-slate-100 pt-3">
+          <div className="dark:border-forest-800 border-outline-variant flex justify-end gap-2 border-t pt-3">
             <button
               type="button"
               onClick={() => setIsApproveOpen(false)}
-              className="dark:border-forest-700 dark:text-forest-300 rounded-xl border border-slate-200 px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
+              className="dark:border-forest-700 dark:text-forest-300 border-outline-variant text-on-surface-variant hover:bg-surface-container-low rounded-xl border px-4 py-2 text-xs font-medium"
             >
               Cancel
             </button>
@@ -366,13 +366,13 @@ export function AdminBusinessVerificationActions({
       >
         <div className="space-y-4 pt-2">
           <div>
-            <label className="dark:text-forest-200 block text-xs font-semibold text-slate-700">
+            <label className="dark:text-forest-200 text-on-surface block text-xs font-semibold">
               Select request reason:
             </label>
             <select
               value={requestReason}
               onChange={(e) => setRequestReason(e.target.value)}
-              className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-800 focus:border-sky-500 focus:bg-white focus:outline-none"
+              className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 border-outline-variant bg-surface-container-low text-on-surface mt-1.5 w-full rounded-xl border px-3 py-2 text-xs focus:border-sky-500 focus:bg-white focus:outline-none"
             >
               {REQUEST_INFO_PRESETS.map((preset) => (
                 <option key={preset} value={preset}>
@@ -383,7 +383,7 @@ export function AdminBusinessVerificationActions({
           </div>
 
           <div>
-            <label className="dark:text-forest-200 block text-xs font-semibold text-slate-700">
+            <label className="dark:text-forest-200 text-on-surface block text-xs font-semibold">
               Detailed instructions for recruiter (optional):
             </label>
             <Textarea
@@ -395,11 +395,11 @@ export function AdminBusinessVerificationActions({
             />
           </div>
 
-          <div className="dark:border-forest-800 flex justify-end gap-2 border-t border-slate-100 pt-3">
+          <div className="dark:border-forest-800 border-outline-variant flex justify-end gap-2 border-t pt-3">
             <button
               type="button"
               onClick={() => setIsRequestOpen(false)}
-              className="dark:border-forest-700 dark:text-forest-300 rounded-xl border border-slate-200 px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
+              className="dark:border-forest-700 dark:text-forest-300 border-outline-variant text-on-surface-variant hover:bg-surface-container-low rounded-xl border px-4 py-2 text-xs font-medium"
             >
               Cancel
             </button>
@@ -424,13 +424,13 @@ export function AdminBusinessVerificationActions({
       >
         <div className="space-y-4 pt-2">
           <div>
-            <label className="dark:text-forest-200 block text-xs font-semibold text-slate-700">
+            <label className="dark:text-forest-200 text-on-surface block text-xs font-semibold">
               Legal basis for rejection:
             </label>
             <select
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
-              className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-800 focus:border-rose-500 focus:bg-white focus:outline-none"
+              className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 border-outline-variant bg-surface-container-low text-on-surface mt-1.5 w-full rounded-xl border px-3 py-2 text-xs focus:border-rose-500 focus:bg-white focus:outline-none"
             >
               {REJECT_PRESETS.map((preset) => (
                 <option key={preset} value={preset}>
@@ -441,7 +441,7 @@ export function AdminBusinessVerificationActions({
           </div>
 
           <div>
-            <label className="dark:text-forest-200 block text-xs font-semibold text-slate-700">
+            <label className="dark:text-forest-200 text-on-surface block text-xs font-semibold">
               Violation details / Audit findings:
             </label>
             <Textarea
@@ -453,11 +453,11 @@ export function AdminBusinessVerificationActions({
             />
           </div>
 
-          <div className="dark:border-forest-800 flex justify-end gap-2 border-t border-slate-100 pt-3">
+          <div className="dark:border-forest-800 border-outline-variant flex justify-end gap-2 border-t pt-3">
             <button
               type="button"
               onClick={() => setIsRejectOpen(false)}
-              className="dark:border-forest-700 dark:text-forest-300 rounded-xl border border-slate-200 px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
+              className="dark:border-forest-700 dark:text-forest-300 border-outline-variant text-on-surface-variant hover:bg-surface-container-low rounded-xl border px-4 py-2 text-xs font-medium"
             >
               Cancel
             </button>
@@ -482,13 +482,13 @@ export function AdminBusinessVerificationActions({
       >
         <div className="space-y-4 pt-2">
           <div>
-            <label className="dark:text-forest-200 block text-xs font-semibold text-slate-700">
+            <label className="dark:text-forest-200 text-on-surface block text-xs font-semibold">
               Reason for revocation:
             </label>
             <select
               value={revokeReason}
               onChange={(e) => setRevokeReason(e.target.value)}
-              className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-800 focus:border-rose-500 focus:bg-white focus:outline-none"
+              className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 border-outline-variant bg-surface-container-low text-on-surface mt-1.5 w-full rounded-xl border px-3 py-2 text-xs focus:border-rose-500 focus:bg-white focus:outline-none"
             >
               {REVOKE_PRESETS.map((preset) => (
                 <option key={preset} value={preset}>
@@ -499,7 +499,7 @@ export function AdminBusinessVerificationActions({
           </div>
 
           <div>
-            <label className="dark:text-forest-200 block text-xs font-semibold text-slate-700">
+            <label className="dark:text-forest-200 text-on-surface block text-xs font-semibold">
               Additional notes (official dispatch / violation reference):
             </label>
             <Textarea
@@ -511,11 +511,11 @@ export function AdminBusinessVerificationActions({
             />
           </div>
 
-          <div className="dark:border-forest-800 flex justify-end gap-2 border-t border-slate-100 pt-3">
+          <div className="dark:border-forest-800 border-outline-variant flex justify-end gap-2 border-t pt-3">
             <button
               type="button"
               onClick={() => setIsRevokeOpen(false)}
-              className="dark:border-forest-700 dark:text-forest-300 rounded-xl border border-slate-200 px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
+              className="dark:border-forest-700 dark:text-forest-300 border-outline-variant text-on-surface-variant hover:bg-surface-container-low rounded-xl border px-4 py-2 text-xs font-medium"
             >
               Cancel
             </button>

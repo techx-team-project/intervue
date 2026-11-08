@@ -12,7 +12,7 @@ interface AdminPageHeaderProps {
 export default function AdminPageHeader({ description, count, countLabel, actions }: AdminPageHeaderProps) {
   return (
     <div className="mb-1 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <p className="dark:text-forest-300 min-w-0 text-[13px] text-[#64748b]">
+      <p className="dark:text-forest-300 text-body-md text-on-surface-variant min-w-0">
         {description}
         {count !== undefined && (
           <span className="text-navy dark:text-forest-100 ml-1.5 font-bold">

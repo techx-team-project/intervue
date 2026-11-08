@@ -8,11 +8,11 @@ interface TodayPrioritiesProps {
 
 export default function TodayPriorities({ items }: TodayPrioritiesProps) {
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-xs sm:p-7">
-      <h2 className="text-navy text-[15px] font-black">Today’s priorities</h2>
+    <div className="border-outline-variant flex h-full flex-col rounded-2xl border bg-white p-6 shadow-xs sm:p-7">
+      <h2 className="text-navy text-body-lg font-bold">Today’s priorities</h2>
 
       {items.length === 0 ? (
-        <p className="mt-4 text-[13px] text-[#64748b]">Nothing needs your attention today 🎉</p>
+        <p className="text-body-md text-on-surface-variant mt-4">Nothing needs your attention today 🎉</p>
       ) : (
         <div className="mt-4 flex-1 space-y-2">
           {items.map((item) => {
@@ -23,22 +23,22 @@ export default function TodayPriorities({ items }: TodayPrioritiesProps) {
               <Link
                 key={item.id}
                 href={item.href}
-                className="group flex items-center gap-3 rounded-xl p-2.5 transition hover:bg-[#f8fafc]"
+                className="group hover:bg-surface-container-low flex items-center gap-3 rounded-xl p-2.5 transition"
               >
                 <div
                   className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
-                    isWarning ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-[#00873c]'
+                    isWarning ? 'bg-amber-50 text-amber-600' : 'text-primary bg-emerald-50'
                   }`}
                 >
                   <Icon className="h-4.5 w-4.5" />
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-navy truncate text-[13px] font-bold">{item.label}</p>
-                  <p className="truncate text-[11.5px] text-[#94a3b8]">{item.description}</p>
+                  <p className="text-navy text-body-md truncate font-bold">{item.label}</p>
+                  <p className="text-label-sm text-outline truncate">{item.description}</p>
                 </div>
 
-                <ChevronRight className="h-4 w-4 shrink-0 text-[#cbd5e1] transition group-hover:text-[#94a3b8]" />
+                <ChevronRight className="text-outline group-hover:text-outline h-4 w-4 shrink-0 transition" />
               </Link>
             );
           })}

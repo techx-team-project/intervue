@@ -7,8 +7,8 @@ interface CandidateAvatarProps {
 }
 
 const SIZE_CLASS = {
-  sm: 'h-8 w-8 text-[11px]',
-  md: 'h-10 w-10 text-[13px]',
+  sm: 'h-8 w-8 text-label-sm',
+  md: 'h-10 w-10 text-body-md',
   lg: 'h-14 w-14 text-[17px]',
 };
 
@@ -41,7 +41,7 @@ export default function CandidateAvatar({ fullName, size = 'md', className }: Ca
     <span
       aria-hidden
       className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded-xl font-black text-white shadow-2xs',
+        'inline-flex shrink-0 items-center justify-center rounded-xl font-bold text-white shadow-2xs',
         SIZE_CLASS[size],
         PALETTE[getPaletteIndex(fullName)],
         className,

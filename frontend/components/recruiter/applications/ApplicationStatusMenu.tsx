@@ -102,7 +102,9 @@ export default function ApplicationStatusMenu({
           aria-expanded={isOpen}
           className={cn(
             'flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-40 sm:h-7 sm:w-7',
-            isOpen ? 'bg-slate-100 text-slate-700' : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700',
+            isOpen
+              ? 'bg-surface-container-high text-on-surface'
+              : 'text-outline hover:bg-surface-container-high hover:text-on-surface',
           )}
         >
           <MoveRight className="h-3.5 w-3.5" />
@@ -114,7 +116,7 @@ export default function ApplicationStatusMenu({
           disabled={disabled}
           onClick={toggleMenu}
           aria-expanded={isOpen}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12.5px] font-bold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+          className="border-outline-variant text-body-sm text-on-surface hover:border-outline hover:bg-surface-container-low inline-flex cursor-pointer items-center gap-1.5 rounded-xl border bg-white px-3 py-2 font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-40"
         >
           <span>{label}</span>
           <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', isOpen && 'rotate-180')} />
@@ -127,16 +129,16 @@ export default function ApplicationStatusMenu({
             ref={menuRef}
             role="menu"
             style={{ top: position.top, left: position.left, width: MENU_WIDTH }}
-            className="fixed z-[60] overflow-hidden rounded-xl border border-slate-200 bg-white py-1.5 shadow-2xl"
+            className="border-outline-variant shadow-elevation-2 fixed z-[60] overflow-hidden rounded-xl border bg-white py-1.5"
           >
-            <div className="border-b border-slate-100 px-3.5 pt-1 pb-2">
-              <p className="text-[11px] font-bold text-slate-400">Move application to</p>
+            <div className="border-outline-variant border-b px-3.5 pt-1 pb-2">
+              <p className="text-label-sm text-outline font-bold">Move application to</p>
               {currentStatus && (
-                <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500">
+                <p className="text-label-sm text-on-surface-variant mt-1.5 flex flex-wrap items-center gap-1.5">
                   <span>Currently:</span>
                   <span
                     className={cn(
-                      'rounded-full border px-1.5 py-0.5 text-[10.5px] font-bold',
+                      'text-label-sm rounded-full border px-1.5 py-0.5 font-bold',
                       APPLICATION_STATUS_META[currentStatus].chipClassName,
                     )}
                   >
@@ -155,7 +157,7 @@ export default function ApplicationStatusMenu({
                   setIsOpen(false);
                   onSelect(status);
                 }}
-                className="flex w-full cursor-pointer items-center gap-2.5 px-3.5 py-2 text-left text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                className="text-body-md text-on-surface hover:bg-surface-container-low flex w-full cursor-pointer items-center gap-2.5 px-3.5 py-2 text-left font-medium transition-colors"
               >
                 <span className={cn('h-2 w-2 shrink-0 rounded-full', APPLICATION_STATUS_META[status].chipClassName)} />
                 <span>{APPLICATION_STATUS_META[status].label}</span>

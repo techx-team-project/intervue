@@ -260,26 +260,26 @@ export function AdminBusinessVerificationListView({
                 <button
                   type="button"
                   onClick={onRefresh}
-                  className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:border-slate-300 hover:bg-slate-50 active:scale-95"
+                  className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 border-outline-variant/80 text-on-surface hover:border-outline hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-xl border bg-white px-3 py-1.5 text-xs font-semibold shadow-2xs transition active:scale-95"
                   title="Reload queue from server"
                 >
-                  <RotateCcw className="h-3.5 w-3.5 text-slate-500" />
+                  <RotateCcw className="text-on-surface-variant h-3.5 w-3.5" />
                   <span>Refresh</span>
                 </button>
               </>
             ) : (
               <>
-                <span className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-2xs">
+                <span className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 border-outline-variant/80 text-on-surface-variant inline-flex items-center gap-1.5 rounded-xl border bg-white px-3 py-1.5 text-xs font-medium shadow-2xs">
                   <Sparkles className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
                   <span>Interactive Mock Mode</span>
                 </span>
                 <button
                   type="button"
                   onClick={reset}
-                  className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:border-slate-300 hover:bg-slate-50 active:scale-95"
+                  className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 border-outline-variant/80 text-on-surface hover:border-outline hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-xl border bg-white px-3 py-1.5 text-xs font-semibold shadow-2xs transition active:scale-95"
                   title="Reset mock data to initial corporate dossiers"
                 >
-                  <RotateCcw className="h-3.5 w-3.5 text-slate-500" />
+                  <RotateCcw className="text-on-surface-variant h-3.5 w-3.5" />
                   <span>Reset Data</span>
                 </button>
               </>
@@ -289,20 +289,20 @@ export function AdminBusinessVerificationListView({
       />
 
       {/* Entity Mode Switcher (Business Dossiers vs Custom Agreements) */}
-      <div className="dark:border-forest-800 dark:bg-forest-900 flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-2.5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+      <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant/80 flex flex-col gap-3 rounded-2xl border bg-white p-2.5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
-          <span className="pl-2 text-xs font-semibold text-slate-500">View Domain:</span>
-          <div className="dark:bg-forest-800 inline-flex rounded-xl bg-slate-100 p-1">
+          <span className="text-on-surface-variant pl-2 text-xs font-semibold">View Domain:</span>
+          <div className="dark:bg-forest-800 bg-surface-container-high inline-flex rounded-xl p-1">
             <button
               type="button"
               onClick={() => setEntityMode('DOSSIERS')}
               className={`inline-flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-bold transition ${
                 entityMode === 'DOSSIERS'
-                  ? 'dark:bg-forest-700 dark:text-forest-100 bg-white text-slate-900 shadow-xs'
-                  : 'dark:text-forest-400 dark:hover:text-forest-200 text-slate-500 hover:text-slate-900'
+                  ? 'dark:bg-forest-700 dark:text-forest-100 text-on-surface bg-white shadow-xs'
+                  : 'dark:text-forest-400 dark:hover:text-forest-200 text-on-surface-variant hover:text-on-surface'
               }`}
             >
-              <Building2 className="h-4 w-4 text-[#00b14f]" />
+              <Building2 className="text-primary h-4 w-4" />
               <span>Business Dossiers (ERC &amp; LOA)</span>
             </button>
 
@@ -311,8 +311,8 @@ export function AdminBusinessVerificationListView({
               onClick={() => setEntityMode('AGREEMENTS')}
               className={`inline-flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-bold transition ${
                 entityMode === 'AGREEMENTS'
-                  ? 'dark:bg-forest-700 dark:text-forest-100 bg-white text-slate-900 shadow-xs'
-                  : 'dark:text-forest-400 dark:hover:text-forest-200 text-slate-500 hover:text-slate-900'
+                  ? 'dark:bg-forest-700 dark:text-forest-100 text-on-surface bg-white shadow-xs'
+                  : 'dark:text-forest-400 dark:hover:text-forest-200 text-on-surface-variant hover:text-on-surface'
               }`}
             >
               <FileCheck2 className="h-4 w-4 text-emerald-600" />
@@ -321,7 +321,7 @@ export function AdminBusinessVerificationListView({
           </div>
         </div>
 
-        <p className="pr-2 text-xs text-slate-500">
+        <p className="text-on-surface-variant pr-2 text-xs">
           {entityMode === 'DOSSIERS'
             ? 'Reviewing corporate licenses and recruiter authorization mandates.'
             : 'Reviewing customized enterprise personal data processing agreements.'}
@@ -375,7 +375,7 @@ export function AdminBusinessVerificationListView({
           {/* Main Workspace Section: Tabs + Filter + Table */}
           <div className="space-y-5">
             {/* Workflow Tabs Navigation */}
-            <div className="dark:border-forest-800 border-b border-slate-200">
+            <div className="dark:border-forest-800 border-outline-variant border-b">
               <div className="flex flex-wrap items-center gap-1 sm:gap-2">
                 <button
                   type="button"
@@ -386,16 +386,16 @@ export function AdminBusinessVerificationListView({
                   className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
                     activeTab === 'QUEUE'
                       ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 text-on-surface-variant hover:border-outline hover:text-on-surface border-transparent'
                   }`}
                 >
                   <Clock className="h-4 w-4" />
                   <span>Pending Queue</span>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                    className={`text-label-sm rounded-full px-2 py-0.5 font-medium ${
                       activeTab === 'QUEUE'
                         ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                        : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
+                        : 'dark:bg-forest-800 dark:text-forest-300 bg-surface-container-high text-on-surface-variant'
                     }`}
                   >
                     {effectiveSummary.pendingReview}
@@ -414,16 +414,16 @@ export function AdminBusinessVerificationListView({
                   className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
                     activeTab === 'NEED_INFO'
                       ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 text-on-surface-variant hover:border-outline hover:text-on-surface border-transparent'
                   }`}
                 >
                   <AlertTriangle className="h-4 w-4" />
                   <span>Needs Action</span>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                    className={`text-label-sm rounded-full px-2 py-0.5 font-medium ${
                       activeTab === 'NEED_INFO'
                         ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                        : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
+                        : 'dark:bg-forest-800 dark:text-forest-300 bg-surface-container-high text-on-surface-variant'
                     }`}
                   >
                     {effectiveSummary.moreInfoRequired}
@@ -439,16 +439,16 @@ export function AdminBusinessVerificationListView({
                   className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
                     activeTab === 'APPROVED'
                       ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 text-on-surface-variant hover:border-outline hover:text-on-surface border-transparent'
                   }`}
                 >
                   <ShieldCheck className="h-4 w-4" />
                   <span>Approved</span>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                    className={`text-label-sm rounded-full px-2 py-0.5 font-medium ${
                       activeTab === 'APPROVED'
                         ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                        : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
+                        : 'dark:bg-forest-800 dark:text-forest-300 bg-surface-container-high text-on-surface-variant'
                     }`}
                   >
                     {effectiveSummary.approved}
@@ -464,16 +464,16 @@ export function AdminBusinessVerificationListView({
                   className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
                     activeTab === 'EXPIRING'
                       ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 text-on-surface-variant hover:border-outline hover:text-on-surface border-transparent'
                   }`}
                 >
                   <Calendar className="h-4 w-4" />
                   <span>Expiring LOA</span>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                    className={`text-label-sm rounded-full px-2 py-0.5 font-medium ${
                       activeTab === 'EXPIRING'
                         ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                        : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
+                        : 'dark:bg-forest-800 dark:text-forest-300 bg-surface-container-high text-on-surface-variant'
                     }`}
                   >
                     {effectiveSummary.expiringSoonCount ?? 0}
@@ -489,16 +489,16 @@ export function AdminBusinessVerificationListView({
                   className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
                     activeTab === 'COMPANIES'
                       ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 text-on-surface-variant hover:border-outline hover:text-on-surface border-transparent'
                   }`}
                 >
                   <Building2 className="h-4 w-4" />
                   <span>Company Directory</span>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                    className={`text-label-sm rounded-full px-2 py-0.5 font-medium ${
                       activeTab === 'COMPANIES'
                         ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                        : 'dark:bg-forest-800 dark:text-forest-300 bg-slate-100 text-slate-600'
+                        : 'dark:bg-forest-800 dark:text-forest-300 bg-surface-container-high text-on-surface-variant'
                     }`}
                   >
                     {companies.length}
@@ -514,7 +514,7 @@ export function AdminBusinessVerificationListView({
                   className={`inline-flex items-center gap-2 border-b-2 px-3.5 py-3 text-xs font-semibold transition ${
                     activeTab === 'ALL'
                       ? 'border-emerald-600 text-emerald-700 dark:border-emerald-500 dark:text-emerald-400'
-                      : 'dark:text-forest-400 dark:hover:text-forest-200 border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                      : 'dark:text-forest-400 dark:hover:text-forest-200 text-on-surface-variant hover:border-outline hover:text-on-surface border-transparent'
                   }`}
                 >
                   <FileText className="h-4 w-4" />

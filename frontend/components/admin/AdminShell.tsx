@@ -150,7 +150,7 @@ export default function AdminShell({ children, queueCounts, account, permissions
   }, []);
 
   return (
-    <div className="text-navy dark:bg-forest-950 dark:text-forest-50 flex min-h-screen flex-col overscroll-y-none bg-[#f4f5f5] font-sans antialiased">
+    <div className="text-navy dark:bg-forest-950 dark:text-forest-50 bg-surface-container-low flex min-h-screen flex-col overscroll-y-none font-sans antialiased">
       <PanelBrandSplash variant="admin" theme={theme} />
 
       <AdminTopBar
@@ -168,7 +168,7 @@ export default function AdminShell({ children, queueCounts, account, permissions
           adminEmail={profile?.email || user?.email}
           permissions={permissions}
           onExpand={() => setSidebarCollapsed(false)}
-          className="dark:border-forest-800 hidden border-[#e2e8f0] transition-[width] duration-200 lg:sticky lg:top-18 lg:block lg:h-[calc(100vh-4.5rem)] lg:overflow-y-auto lg:overscroll-contain lg:border-r"
+          className="dark:border-forest-800 border-outline-variant hidden transition-[width] duration-200 lg:sticky lg:top-18 lg:block lg:h-[calc(100vh-4.5rem)] lg:overflow-y-auto lg:overscroll-contain lg:border-r"
         />
 
         <main className="min-w-0 flex-1">
@@ -181,12 +181,12 @@ export default function AdminShell({ children, queueCounts, account, permissions
       {/* Idle Lock Overlay */}
       {isLocked && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 antialiased backdrop-blur-md">
-          <div className="mx-4 w-full max-w-sm rounded-3xl border border-slate-700/80 bg-slate-900 p-8 text-white shadow-2xl">
+          <div className="shadow-elevation-2 mx-4 w-full max-w-sm rounded-3xl border border-slate-700/80 bg-slate-900 p-8 text-white">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-950/80 text-emerald-400">
               <Lock className="h-7 w-7" />
             </div>
             <h3 className="mt-4 text-center text-lg font-bold">Session Auto-Locked</h3>
-            <p className="mt-1.5 text-center text-xs leading-relaxed text-slate-400">
+            <p className="text-outline mt-1.5 text-center text-xs leading-relaxed">
               Console access was locked after 15 minutes of inactivity to protect sensitive platform data. Enter your
               password to resume.
             </p>
@@ -207,7 +207,7 @@ export default function AdminShell({ children, queueCounts, account, permissions
                 type="submit"
                 isLoading={isUnlocking}
                 disabled={isUnlocking || !unlockPassword}
-                className="w-full bg-emerald-600 font-bold shadow-lg shadow-emerald-600/20 hover:bg-emerald-500"
+                className="shadow-elevation-2 w-full bg-emerald-600 font-bold shadow-emerald-600/20 hover:bg-emerald-500"
                 leftIcon={<ShieldCheck className="h-4 w-4" />}
               >
                 Unlock Session
@@ -216,7 +216,7 @@ export default function AdminShell({ children, queueCounts, account, permissions
               <button
                 type="button"
                 onClick={() => logout.mutate()}
-                className="inline-flex w-full cursor-pointer items-center justify-center gap-1.5 text-xs font-semibold text-slate-400 transition hover:text-rose-400"
+                className="text-outline inline-flex w-full cursor-pointer items-center justify-center gap-1.5 text-xs font-semibold transition hover:text-rose-400"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 Sign out of console

@@ -16,22 +16,24 @@ interface AdminBlogTableProps {
 export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDelete }: AdminBlogTableProps) {
   if (posts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white py-16 text-center shadow-2xs">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+      <div className="border-outline-variant flex flex-col items-center justify-center rounded-2xl border border-dashed bg-white py-16 text-center shadow-2xs">
+        <div className="bg-surface-container-high text-outline flex h-12 w-12 items-center justify-center rounded-2xl">
           <Sparkles className="h-6 w-6" />
         </div>
-        <h4 className="mt-3 text-sm font-bold text-slate-900">No articles found</h4>
-        <p className="mt-1 text-xs text-slate-500">Try adjusting your search criteria or create a new article.</p>
+        <h4 className="text-on-surface mt-3 text-sm font-bold">No articles found</h4>
+        <p className="text-on-surface-variant mt-1 text-xs">
+          Try adjusting your search criteria or create a new article.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+    <div className="border-outline-variant/80 overflow-hidden rounded-2xl border bg-white shadow-2xs">
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left text-xs">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/70 font-semibold tracking-wider text-slate-500 uppercase">
+            <tr className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant border-b font-semibold tracking-wider uppercase">
               <th className="py-3.5 pr-4 pl-6">Article</th>
               <th className="px-4 py-3.5">Category</th>
               <th className="px-4 py-3.5 text-center">Status</th>
@@ -41,16 +43,16 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
               <th className="py-3.5 pr-6 pl-4 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-outline-variant divide-y">
             {posts.map((post) => {
               const isPublished = post.status === 'PUBLISHED';
               const candidateUrl = `/blog/${post.categorySlug}/${post.slug}`;
 
               return (
-                <tr key={post.id} className="transition-colors hover:bg-slate-50/50">
+                <tr key={post.id} className="hover:bg-surface-container-low/50 transition-colors">
                   <td className="py-4 pr-4 pl-6">
                     <div className="flex items-center gap-3.5">
-                      <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-xl bg-slate-100 ring-1 ring-slate-200/60">
+                      <div className="bg-surface-container-high relative h-12 w-16 shrink-0 overflow-hidden rounded-xl ring-1 ring-slate-200/60">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           loading="lazy"
@@ -66,18 +68,18 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
                       <div className="max-w-md min-w-0">
                         <Link
                           href={`/admin/content/blog/${post.id}/edit`}
-                          className="line-clamp-1 font-bold text-slate-900 transition hover:text-[#00b14f]"
+                          className="text-on-surface hover:text-primary line-clamp-1 font-bold transition"
                           title={post.title}
                         >
                           {post.title}
                         </Link>
-                        <p className="mt-0.5 line-clamp-1 text-[11px] text-slate-400">/{post.slug}</p>
+                        <p className="text-label-sm text-outline mt-0.5 line-clamp-1">/{post.slug}</p>
                       </div>
                     </div>
                   </td>
 
                   <td className="px-4 py-4 whitespace-nowrap">
-                    <span className="inline-flex items-center rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-700">
+                    <span className="bg-surface-container-high text-label-sm text-on-surface inline-flex items-center rounded-lg px-2.5 py-1 font-semibold">
                       {post.categoryName || post.categorySlug}
                     </span>
                   </td>
@@ -87,8 +89,8 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
                       type="button"
                       onClick={() => onToggleStatus(post)}
                       title="Click to toggle status"
-                      className={`inline-flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold transition hover:opacity-80 ${
-                        isPublished ? 'bg-emerald-50 text-[#00b14f]' : 'bg-amber-50 text-amber-700'
+                      className={`text-label-sm inline-flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-0.5 font-bold transition hover:opacity-80 ${
+                        isPublished ? 'text-primary bg-emerald-50' : 'bg-amber-50 text-amber-700'
                       }`}
                     >
                       {isPublished ? <CheckCircle2 className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
@@ -107,11 +109,11 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
                     </div>
                   </td>
 
-                  <td className="px-4 py-4 text-right font-medium whitespace-nowrap text-slate-700">
+                  <td className="text-on-surface px-4 py-4 text-right font-medium whitespace-nowrap">
                     {post.viewsCount.toLocaleString()}
                   </td>
 
-                  <td className="px-4 py-4 whitespace-nowrap text-slate-500">
+                  <td className="text-on-surface-variant px-4 py-4 whitespace-nowrap">
                     {post.publishedAt
                       ? new Date(post.publishedAt).toLocaleDateString('en-US', {
                           month: 'short',
@@ -128,7 +130,7 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
                         target="_blank"
                         rel="noreferrer"
                         title="View live candidate article"
-                        className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+                        className="text-outline hover:bg-surface-container-high hover:text-on-surface-variant rounded-lg p-1.5 transition"
                       >
                         <ExternalLink className="h-4 w-4" />
                       </Link>
@@ -136,7 +138,7 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
                       <Link
                         href={`/admin/content/blog/${post.id}/edit`}
                         title="Edit article"
-                        className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-[#00b14f]"
+                        className="text-outline hover:bg-surface-container-high hover:text-primary rounded-lg p-1.5 transition"
                       >
                         <Edit className="h-4 w-4" />
                       </Link>
@@ -145,7 +147,7 @@ export function AdminBlogTable({ posts, onToggleFeatured, onToggleStatus, onDele
                         type="button"
                         onClick={() => onDelete(post)}
                         title="Delete article"
-                        className="rounded-lg p-1.5 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"
+                        className="text-outline rounded-lg p-1.5 transition hover:bg-rose-50 hover:text-rose-600"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

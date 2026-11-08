@@ -44,9 +44,9 @@ export default function MobileApplicationLanes({ lanes, handlers, selectedIds }:
               className="flex w-full cursor-pointer items-center gap-2.5 px-3.5 py-3 text-left"
             >
               {isCollapsed ? (
-                <ChevronRight className="h-4 w-4 shrink-0 text-[#94a3b8]" />
+                <ChevronRight className="text-outline h-4 w-4 shrink-0" />
               ) : (
-                <ChevronDown className="h-4 w-4 shrink-0 text-[#94a3b8]" />
+                <ChevronDown className="text-outline h-4 w-4 shrink-0" />
               )}
 
               <span className="text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
@@ -54,8 +54,10 @@ export default function MobileApplicationLanes({ lanes, handlers, selectedIds }:
               </span>
 
               <span className="min-w-0 flex-1">
-                <span className="text-navy block truncate text-[13.5px] font-bold">{lane.jobTitle}</span>
-                <span className="block text-[11.5px] text-[#64748b]">{lane.applications.length} applications</span>
+                <span className="text-navy text-body-md block truncate font-bold">{lane.jobTitle}</span>
+                <span className="text-label-sm text-on-surface-variant block">
+                  {lane.applications.length} applications
+                </span>
               </span>
             </button>
 
@@ -76,17 +78,17 @@ export default function MobileApplicationLanes({ lanes, handlers, selectedIds }:
                           }
                           aria-pressed={isActive}
                           className={cn(
-                            'inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-bold transition-colors',
+                            'text-body-sm inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 font-bold transition-colors',
                             isActive
                               ? 'bg-navy text-white'
                               : isEmpty
                                 ? 'text-[#b6c0cb] hover:bg-white'
-                                : 'text-[#475569] hover:bg-white',
+                                : 'text-on-surface-variant hover:bg-white',
                           )}
                         >
                           <span className={cn('h-1.5 w-1.5 rounded-full', column.meta.accentDotClassName)} />
                           {column.meta.label}
-                          <span className={cn('font-black', isActive ? 'text-white/80' : 'text-[#94a3b8]')}>
+                          <span className={cn('font-bold', isActive ? 'text-white/80' : 'text-outline')}>
                             {column.applications.length}
                           </span>
                         </button>
@@ -97,10 +99,10 @@ export default function MobileApplicationLanes({ lanes, handlers, selectedIds }:
 
                 <div className="space-y-2.5 p-3">
                   {activeColumn.applications.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-[#e2e8f0] py-10 text-center">
-                      <Inbox className="h-5 w-5 text-[#cbd5e1]" />
-                      <p className="text-[12px] font-semibold text-[#94a3b8]">No applications in this stage</p>
-                      <p className="px-6 text-[11px] text-[#cbd5e1]">
+                    <div className="border-outline-variant flex flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed py-10 text-center">
+                      <Inbox className="text-outline h-5 w-5" />
+                      <p className="text-body-sm text-outline font-semibold">No applications in this stage</p>
+                      <p className="text-label-sm text-outline px-6">
                         Use the arrow button on a card to move someone here
                       </p>
                     </div>

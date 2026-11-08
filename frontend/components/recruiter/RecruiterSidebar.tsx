@@ -29,7 +29,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
       <div className={isCollapsed ? 'flex justify-center p-3' : 'p-5'}>
         <div className={isCollapsed ? '' : 'flex items-center gap-3.5'}>
           <div
-            className={`from-primary flex shrink-0 items-center justify-center rounded-2xl bg-linear-to-tr to-[#00d660] font-black text-white shadow-sm ${
+            className={`from-primary flex shrink-0 items-center justify-center rounded-2xl bg-linear-to-tr to-[#00d660] font-bold text-white shadow-sm ${
               isCollapsed ? 'h-10 w-10 text-base' : 'h-12 w-12 text-lg'
             }`}
           >
@@ -38,26 +38,26 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
 
           {!isCollapsed && (
             <div className="min-w-0 flex-1">
-              <p className="text-[11.5px] text-[#64748b]">Recruiter</p>
-              <h3 className="text-navy truncate text-[15px] font-bold">{user?.name}</h3>
-              <p className="truncate text-[12px] text-[#64748b]">{company?.name || 'No company linked'}</p>
+              <p className="text-label-sm text-on-surface-variant">Recruiter</p>
+              <h3 className="text-navy text-body-lg truncate font-bold">{user?.name}</h3>
+              <p className="text-body-sm text-on-surface-variant truncate">{company?.name || 'No company linked'}</p>
             </div>
           )}
         </div>
 
         {!isCollapsed && (
-          <div className="mt-3 flex items-center gap-1.5 text-[12.5px]">
-            <span className="text-[#64748b]">Account verification:</span>
+          <div className="text-body-sm mt-3 flex items-center gap-1.5">
+            <span className="text-on-surface-variant">Account verification:</span>
             <span
               className={cn(
                 'font-bold',
-                isVerified ? 'text-[#00873c]' : profile.level === 2 ? 'text-blue-600' : 'text-amber-600',
+                isVerified ? 'text-primary' : profile.level === 2 ? 'text-blue-600' : 'text-amber-600',
               )}
             >
               Level {profile.level}/3
             </span>
             <span title="Finish verification to publish job posts and reach candidates more effectively">
-              <HelpCircle className="h-3.5 w-3.5 text-[#94a3b8]" />
+              <HelpCircle className="text-outline h-3.5 w-3.5" />
             </span>
           </div>
         )}
@@ -66,7 +66,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
           <Link
             href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
             onClick={onNavigate}
-            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full bg-[#00b14f] px-3 py-2 text-[12.5px] font-bold text-white shadow-xs transition-colors hover:bg-[#009b45]"
+            className="bg-primary text-body-sm mt-3 flex w-full items-center justify-center gap-1.5 rounded-full px-3 py-2 font-bold text-white shadow-xs transition-colors hover:bg-[#009b45]"
           >
             <ShieldCheck className="h-4 w-4 text-white" />
             <span>Verified Enterprise</span>
@@ -77,7 +77,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
           <Link
             href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
             onClick={onNavigate}
-            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full bg-[#00b14f] px-3 py-2 text-[12.5px] font-bold text-white shadow-xs transition-colors hover:bg-[#009b45]"
+            className="bg-primary text-body-sm mt-3 flex w-full items-center justify-center gap-1.5 rounded-full px-3 py-2 font-bold text-white shadow-xs transition-colors hover:bg-[#009b45]"
           >
             <ShieldCheck className="h-4 w-4" />
             <span>
@@ -89,7 +89,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
 
       {RECRUITER_NAV_SECTIONS.map((section, sectionIndex) => (
         <nav key={section.title} aria-label={section.title} className="space-y-0.5 px-2 py-1">
-          {sectionIndex > 0 && <div className="mx-1 my-2 border-t border-[#f1f5f9]" />}
+          {sectionIndex > 0 && <div className="border-outline-variant mx-1 my-2 border-t" />}
 
           {section.items.map((item) => {
             const isActive = pathname === item.href;
@@ -101,15 +101,15 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
                 href={item.href}
                 onClick={onNavigate}
                 title={isCollapsed ? item.label : undefined}
-                className={`flex items-center rounded-xl py-2.5 text-[13px] transition ${
+                className={`text-body-md flex items-center rounded-xl py-2.5 transition ${
                   isCollapsed ? 'justify-center px-2' : 'justify-between px-2.5'
-                } ${isActive ? 'font-bold' : 'font-medium text-[#475569] hover:bg-[#f8fafc]'}`}
+                } ${isActive ? 'font-bold' : 'text-on-surface-variant hover:bg-surface-container-low font-medium'}`}
               >
                 <div className={`flex items-center ${isCollapsed ? '' : 'gap-3'}`}>
                   <span
                     className={`flex shrink-0 items-center justify-center rounded-full transition-colors ${
                       isCollapsed ? 'h-9 w-9' : 'h-8 w-8'
-                    } ${isActive ? 'bg-primary/10 text-primary' : 'text-[#64748b]'}`}
+                    } ${isActive ? 'bg-primary/10 text-primary' : 'text-on-surface-variant'}`}
                   >
                     <Icon className={isCollapsed ? 'h-5 w-5' : 'h-4.5 w-4.5'} />
                   </span>
@@ -117,13 +117,13 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
                 </div>
 
                 {!isCollapsed && item.href === ROUTES.RECRUITER_NOTIFICATIONS && unreadNotificationsCount > 0 && (
-                  <span className="rounded-full bg-[#00b14f] px-2 py-0.5 text-[11px] font-bold text-white shadow-2xs">
+                  <span className="bg-primary text-label-sm rounded-full px-2 py-0.5 font-bold text-white shadow-2xs">
                     {unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount}
                   </span>
                 )}
 
                 {!isCollapsed && item.comingSoon && (
-                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-500">
+                  <span className="bg-surface-container-high text-label-sm text-on-surface-variant rounded-full px-2 py-0.5 font-semibold">
                     Coming soon
                   </span>
                 )}
@@ -134,7 +134,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
       ))}
 
       {!isCollapsed && (
-        <div className="mt-4 space-y-1 border-t border-[#f1f5f9] px-4 pt-4 pb-5 text-[11.5px]">
+        <div className="border-outline-variant text-label-sm mt-4 space-y-1 border-t px-4 pt-4 pb-5">
           {/* TODO: wire to real legal routes once they exist */}
           <a href="#" className="text-primary block hover:underline">
             Privacy policy
@@ -145,8 +145,8 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
           <a href="#" className="text-primary block hover:underline">
             Terms of service
           </a>
-          <p className="pt-2 text-[#94a3b8]">Version 1.0.0</p>
-          <p className="text-[#94a3b8]">© 2024 - 2026 InterVue Vietnam JSC. All rights reserved.</p>
+          <p className="text-outline pt-2">Version 1.0.0</p>
+          <p className="text-outline">© 2024 - 2026 InterVue Vietnam JSC. All rights reserved.</p>
         </div>
       )}
     </aside>

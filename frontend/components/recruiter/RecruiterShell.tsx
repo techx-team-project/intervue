@@ -67,7 +67,7 @@ export default function RecruiterShell({ children }: { children: ReactNode }) {
   return (
     <div
       ref={shellRef}
-      className="text-navy flex min-h-screen flex-col bg-[#f4f5f5] antialiased [--recruiter-sticky-top:4rem]"
+      className="text-navy bg-surface-container-low flex min-h-screen flex-col antialiased [--recruiter-sticky-top:4rem]"
     >
       <PanelBrandSplash variant="recruiter" />
 
@@ -86,7 +86,7 @@ export default function RecruiterShell({ children }: { children: ReactNode }) {
       <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col lg:flex-row">
         <RecruiterSidebar
           isCollapsed={isCollapsed}
-          className="hidden border-[#e2e8f0] transition-[width] duration-200 lg:sticky lg:top-[var(--recruiter-sticky-top)] lg:block lg:h-[calc(100vh-var(--recruiter-sticky-top))] lg:overflow-y-auto lg:border-r"
+          className="border-outline-variant hidden transition-[width] duration-200 lg:sticky lg:top-[var(--recruiter-sticky-top)] lg:block lg:h-[calc(100vh-var(--recruiter-sticky-top))] lg:overflow-y-auto lg:border-r"
         />
 
         <main className="min-w-0 flex-1 px-2 py-6 sm:px-3 sm:py-5 lg:px-5">{children}</main>

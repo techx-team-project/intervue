@@ -54,8 +54,8 @@ export default function CartVoucherModal({
       maxWidth="md"
       title={
         <div className="flex items-center gap-2">
-          <Ticket className="h-5 w-5 text-[#00b14f]" />
-          <span className="font-bold text-slate-800">Select coupon</span>
+          <Ticket className="text-primary h-5 w-5" />
+          <span className="text-on-surface font-bold">Select coupon</span>
         </div>
       }
       description="Apply promotional discounts to save on your hiring services"
@@ -64,7 +64,7 @@ export default function CartVoucherModal({
         {/* Manual code input */}
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <Tag className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Tag className="text-outline absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <input
               type="text"
               value={inputCode}
@@ -73,13 +73,13 @@ export default function CartVoucherModal({
                 setErrorMessage('');
               }}
               placeholder="Enter coupon code (e.g. INTERVUE10)"
-              className="w-full rounded-lg border border-slate-300 py-2.5 pr-3 pl-9.5 text-sm font-semibold tracking-wider text-slate-800 uppercase placeholder:font-normal placeholder:tracking-normal placeholder:text-slate-400 placeholder:normal-case focus:border-[#00b14f] focus:ring-2 focus:ring-[#00b14f]/20 focus:outline-hidden"
+              className="border-outline text-on-surface placeholder:text-outline focus:border-primary w-full rounded-lg border py-2.5 pr-3 pl-9.5 text-sm font-semibold tracking-wider uppercase placeholder:font-normal placeholder:tracking-normal placeholder:normal-case focus:ring-2 focus:ring-[#00b14f]/20 focus:outline-hidden"
             />
           </div>
           <button
             type="button"
             onClick={() => handleApply()}
-            className="cursor-pointer rounded-lg bg-[#00b14f] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#00873c]"
+            className="bg-primary hover:bg-primary cursor-pointer rounded-lg px-5 py-2.5 text-sm font-bold text-white transition"
           >
             Apply
           </button>
@@ -110,8 +110,8 @@ export default function CartVoucherModal({
         )}
 
         {/* Available coupons list */}
-        <div className="border-t border-slate-100 pt-3">
-          <p className="mb-2.5 text-xs font-bold tracking-wider text-slate-400 uppercase">Available for you</p>
+        <div className="border-outline-variant border-t pt-3">
+          <p className="text-outline mb-2.5 text-xs font-bold tracking-wider uppercase">Available for you</p>
 
           <div className="space-y-2.5">
             {AVAILABLE_VOUCHERS.map((voucher) => {
@@ -123,22 +123,22 @@ export default function CartVoucherModal({
                   key={voucher.code}
                   className={`flex items-start justify-between rounded-xl border p-3.5 transition ${
                     isApplied
-                      ? 'border-[#00b14f] bg-emerald-50/40 ring-1 ring-[#00b14f]'
+                      ? 'border-primary bg-emerald-50/40 ring-1 ring-[#00b14f]'
                       : isEligible
-                        ? 'border-slate-200 bg-white hover:border-[#00b14f]/50'
-                        : 'border-slate-100 bg-slate-50/60 opacity-60'
+                        ? 'border-outline-variant hover:border-primary/50 bg-white'
+                        : 'border-outline-variant bg-surface-container-low/60 opacity-60'
                   }`}
                 >
                   <div className="flex-1 pr-3">
                     <div className="flex items-center gap-2">
-                      <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-black tracking-wider text-emerald-800">
+                      <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-bold tracking-wider text-emerald-800">
                         {voucher.code}
                       </span>
-                      <span className="text-xs font-bold text-slate-800">{voucher.label}</span>
+                      <span className="text-on-surface text-xs font-bold">{voucher.label}</span>
                     </div>
-                    <p className="mt-1 text-xs text-slate-500">{voucher.description}</p>
+                    <p className="text-on-surface-variant mt-1 text-xs">{voucher.description}</p>
                     {voucher.minOrderValue && (
-                      <p className="mt-1 text-[11px] text-slate-400">
+                      <p className="text-label-sm text-outline mt-1">
                         Min. order: {voucher.minOrderValue.toLocaleString('vi-VN')} VND
                       </p>
                     )}
@@ -152,8 +152,8 @@ export default function CartVoucherModal({
                       isApplied
                         ? 'bg-emerald-600 text-white'
                         : isEligible
-                          ? 'cursor-pointer border border-[#00b14f] text-[#00b14f] hover:bg-[#00b14f] hover:text-white'
-                          : 'cursor-not-allowed border border-slate-200 text-slate-400'
+                          ? 'border-primary text-primary hover:bg-primary cursor-pointer border hover:text-white'
+                          : 'border-outline-variant text-outline cursor-not-allowed border'
                     }`}
                   >
                     {isApplied ? 'Applied' : 'Apply'}

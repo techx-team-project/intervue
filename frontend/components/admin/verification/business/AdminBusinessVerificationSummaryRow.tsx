@@ -29,7 +29,7 @@ export function AdminBusinessVerificationSummaryRow({
       count: summary.total,
       subtext: 'Total submissions',
       icon: FileText,
-      accent: 'text-slate-600 dark:text-forest-200',
+      accent: 'text-on-surface-variant dark:text-forest-200',
       activeRing: 'border-emerald-600 ring-2 ring-emerald-500/15 bg-white shadow-xs dark:bg-forest-900',
     },
     {
@@ -97,11 +97,11 @@ export function AdminBusinessVerificationSummaryRow({
             className={`flex flex-col justify-between rounded-2xl border p-4 text-left transition ${
               isSelected
                 ? `${card.activeRing} shadow-sm`
-                : 'dark:border-forest-800 dark:bg-forest-900/60 dark:hover:border-forest-700 border-slate-200/90 bg-white hover:border-slate-300'
+                : 'dark:border-forest-800 dark:bg-forest-900/60 dark:hover:border-forest-700 border-outline-variant/90 hover:border-outline bg-white'
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="dark:text-forest-300 text-xs font-semibold text-slate-600">{card.title}</span>
+              <span className="dark:text-forest-300 text-on-surface-variant text-xs font-semibold">{card.title}</span>
               <div className="relative">
                 <Icon className={`h-4 w-4 ${card.accent}`} />
                 {card.pulse && (
@@ -114,12 +114,12 @@ export function AdminBusinessVerificationSummaryRow({
             </div>
 
             <div className="mt-3">
-              <div className="dark:text-forest-50 text-2xl font-bold tracking-tight text-slate-900">{card.count}</div>
+              <div className="dark:text-forest-50 text-on-surface text-2xl font-bold tracking-tight">{card.count}</div>
               <p
-                className={`mt-1 text-[11px] leading-tight ${
+                className={`text-label-sm mt-1 leading-tight ${
                   card.subtextAlert
                     ? 'font-medium text-amber-600 dark:text-amber-400'
-                    : 'dark:text-forest-400 text-slate-400'
+                    : 'dark:text-forest-400 text-outline'
                 }`}
               >
                 {card.subtext}

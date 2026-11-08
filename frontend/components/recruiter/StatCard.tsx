@@ -24,7 +24,7 @@ export default function StatCard({ label, value, kind, trendPercent, trendDirect
   const TrendIcon = trendDirection === 'down' ? TrendingDown : TrendingUp;
 
   return (
-    <div className="rounded-2xl border border-[#e2e8f0] bg-white p-5 shadow-xs">
+    <div className="border-outline-variant rounded-2xl border bg-white p-5 shadow-xs">
       <div className="flex items-start justify-between">
         <div className="text-primary flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50">
           <Icon className="h-5 w-5" />
@@ -32,8 +32,8 @@ export default function StatCard({ label, value, kind, trendPercent, trendDirect
 
         {trendPercent !== undefined && (
           <span
-            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${
-              trendDirection === 'down' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-[#00873c]'
+            className={`text-label-sm inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-bold ${
+              trendDirection === 'down' ? 'bg-rose-50 text-rose-600' : 'text-primary bg-emerald-50'
             }`}
           >
             <TrendIcon className="h-3 w-3" />
@@ -42,8 +42,8 @@ export default function StatCard({ label, value, kind, trendPercent, trendDirect
         )}
       </div>
 
-      <p className="text-navy mt-3 text-2xl font-black">{value}</p>
-      <p className="mt-0.5 text-[12.5px] text-[#64748b]">{label}</p>
+      <p className="text-navy mt-3 text-2xl font-bold">{value}</p>
+      <p className="text-body-sm text-on-surface-variant mt-0.5">{label}</p>
 
       {sparkline && sparkline.length > 0 && <Sparkline values={sparkline} className="mt-3" />}
     </div>

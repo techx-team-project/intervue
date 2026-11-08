@@ -12,7 +12,7 @@ export default function CartNoticeBanner() {
 
   return (
     <>
-      <div className="mb-5 flex items-center justify-between gap-3 rounded-lg border border-[#fef3c7] bg-[#fffbeb] px-4 py-3 text-[13.5px] text-[#92400e] shadow-xs">
+      <div className="text-body-md mb-5 flex items-center justify-between gap-3 rounded-lg border border-[#fef3c7] bg-[#fffbeb] px-4 py-3 text-[#92400e] shadow-xs">
         <div className="flex items-center gap-2.5">
           <AlertCircle className="h-4.5 w-4.5 shrink-0 text-amber-500" />
           <p className="leading-snug">
@@ -22,7 +22,7 @@ export default function CartNoticeBanner() {
             <button
               type="button"
               onClick={() => setShowDetailModal(true)}
-              className="cursor-pointer font-bold text-[#00b14f] underline decoration-[#00b14f]/40 underline-offset-2 transition hover:text-[#00873c] hover:decoration-[#00873c]"
+              className="text-primary hover:text-primary cursor-pointer font-bold underline decoration-[#00b14f]/40 underline-offset-2 transition hover:decoration-[#00873c]"
             >
               Learn more
             </button>
@@ -46,11 +46,11 @@ export default function CartNoticeBanner() {
         title={
           <div className="flex items-center gap-2.5 text-amber-600">
             <AlertCircle className="h-5 w-5" />
-            <span className="font-bold text-slate-900">Pending Order Reservation Policy</span>
+            <span className="text-on-surface font-bold">Pending Order Reservation Policy</span>
           </div>
         }
       >
-        <div className="space-y-3 py-1 text-[13px] leading-relaxed text-slate-600">
+        <div className="text-body-md text-on-surface-variant space-y-3 py-1 leading-relaxed">
           <p>
             To ensure optimal availability of featured job slots and timely tier discounts, each service order is held
             for a maximum of <strong>72 hours</strong> from the time it is placed.
@@ -64,7 +64,7 @@ export default function CartNoticeBanner() {
           <button
             type="button"
             onClick={() => setShowDetailModal(false)}
-            className="cursor-pointer rounded-lg bg-[#00b14f] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#00873c]"
+            className="bg-primary hover:bg-primary cursor-pointer rounded-lg px-5 py-2 text-sm font-semibold text-white transition"
           >
             Got it
           </button>
