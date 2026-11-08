@@ -95,7 +95,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
   const revokeDeviceMutation = useMutation({
     mutationFn: (id: number) => recruiterTwoFactorApi.revokeTrustedDevice(id),
     onSuccess: () => {
-      toast.success(isRecruiter ? 'Device trust revoked successfully.' : 'Đã thu hồi tin cậy thiết bị.');
+      toast.success(isRecruiter ? 'Device trust revoked successfully.' : 'Device trust revoked successfully.');
       queryClient.invalidateQueries({ queryKey: devicesQueryKey });
     },
     onError: (err) => {
@@ -106,7 +106,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
   const revokeAllDevicesMutation = useMutation({
     mutationFn: () => recruiterTwoFactorApi.revokeAllTrustedDevices(),
     onSuccess: () => {
-      toast.success(isRecruiter ? 'All trusted devices revoked.' : 'Đã thu hồi toàn bộ thiết bị tin cậy.');
+      toast.success(isRecruiter ? 'All trusted devices revoked.' : 'All trusted devices revoked.');
       queryClient.invalidateQueries({ queryKey: devicesQueryKey });
     },
     onError: (err) => {
@@ -147,7 +147,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
       setErrorMsg(
         isRecruiter
           ? 'Please enter the complete 6-digit code from your authenticator app.'
-          : 'Vui lòng nhập đủ 6 chữ số từ ứng dụng xác thực.',
+          : 'Please enter the complete 6-digit code from your authenticator app.',
       );
       return;
     }
@@ -163,7 +163,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
       toast.success(
         isRecruiter
           ? 'Two-factor authentication successfully enabled!'
-          : 'Xác thực 2 bước đã được kích hoạt thành công!',
+          : 'Two-factor authentication successfully enabled!',
       );
       queryClient.invalidateQueries({ queryKey: statusQueryKey });
       queryClient.removeQueries({ queryKey: setupQueryKey });
@@ -173,10 +173,14 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
       if (isApiError(err)) {
         setErrorMsg(
           err.message ||
-            (isRecruiter ? 'Incorrect verification code. Please try again.' : 'Mã xác thực không chính xác.'),
+            (isRecruiter
+              ? 'Incorrect verification code. Please try again.'
+              : 'Incorrect verification code. Please try again.'),
         );
       } else {
-        setErrorMsg(isRecruiter ? 'Failed to enable 2FA. Please try again.' : 'Lỗi kích hoạt xác thực 2 bước.');
+        setErrorMsg(
+          isRecruiter ? 'Failed to enable 2FA. Please try again.' : 'Failed to enable 2FA. Please try again.',
+        );
       }
     } finally {
       setIsSubmitting(false);
@@ -188,7 +192,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
     setIsSubmitting(true);
     try {
       await api.disable(disablePassword);
-      toast.success(isRecruiter ? 'Two-factor authentication disabled.' : 'Đã tắt xác thực 2 bước.');
+      toast.success(isRecruiter ? 'Two-factor authentication disabled.' : 'Two-factor authentication disabled.');
       setShowDisableModal(false);
       setDisablePassword('');
       queryClient.invalidateQueries({ queryKey: statusQueryKey });
@@ -197,10 +201,11 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
     } catch (err) {
       if (isApiError(err)) {
         setErrorMsg(
-          err.message || (isRecruiter ? 'Incorrect password. Please try again.' : 'Mật khẩu xác nhận không chính xác.'),
+          err.message ||
+            (isRecruiter ? 'Incorrect password. Please try again.' : 'Incorrect password. Please try again.'),
         );
       } else {
-        setErrorMsg(isRecruiter ? 'Failed to disable 2FA.' : 'Lỗi tắt 2FA.');
+        setErrorMsg(isRecruiter ? 'Failed to disable 2FA.' : 'Failed to disable 2FA.');
       }
     } finally {
       setIsSubmitting(false);
@@ -271,13 +276,13 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
             <div className="flex items-center gap-2">
               <Smartphone className="text-primary h-5 w-5" />
               <h1 className="text-on-surface text-xl font-bold sm:text-2xl">
-                {isRecruiter ? 'Two-Factor Authentication (2FA)' : 'Xác thực 2 bước (2FA)'}
+                {isRecruiter ? 'Two-Factor Authentication (2FA)' : 'Two-Factor Authentication (2FA)'}
               </h1>
             </div>
             <p className="text-on-surface-variant mt-1 text-sm">
               {isRecruiter
                 ? 'Protect your employer account with an additional layer of security via Google Authenticator, 1Password or Authy.'
-                : 'Bảo vệ tài khoản bằng lớp bảo mật bổ sung qua ứng dụng Google Authenticator hoặc Microsoft Authenticator.'}
+                : 'Protect your account with an extra layer of security using Google Authenticator or Microsoft Authenticator.'}
             </p>
           </div>
 
@@ -286,14 +291,14 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
               {isStatusLoading
                 ? isRecruiter
                   ? 'Checking...'
-                  : 'Đang kiểm tra...'
+                  : 'Checking...'
                 : isEnabled
                   ? isRecruiter
                     ? '● Active'
-                    : '● Đang kích hoạt'
+                    : '● Active'
                   : isRecruiter
                     ? '○ Not active'
-                    : '○ Chưa kích hoạt'}
+                    : '○ Not active'}
             </Badge>
           </div>
         </div>
@@ -310,7 +315,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
         <div className="border-outline-variant rounded-2xl border bg-white p-12 text-center shadow-xs">
           <div className="border-primary mx-auto h-8 w-8 animate-spin rounded-full border-2 border-t-transparent" />
           <p className="text-on-surface-variant mt-3 text-xs font-semibold">
-            {isRecruiter ? 'Checking security status...' : 'Đang kiểm tra trạng thái bảo mật...'}
+            {isRecruiter ? 'Checking security status...' : 'Checking security status...'}
           </p>
         </div>
       ) : isEnabled ? (
@@ -323,25 +328,23 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
               </div>
               <div className="flex-1">
                 <h3 className="text-on-surface text-lg font-bold">
-                  {isRecruiter
-                    ? 'Your employer account is protected with 2FA'
-                    : 'Tài khoản của bạn đang được bảo vệ an toàn với 2FA'}
+                  {isRecruiter ? 'Your employer account is protected with 2FA' : 'Your account is protected with 2FA'}
                 </h3>
                 <p className="text-on-surface-variant mt-1 text-sm leading-relaxed">
                   {isRecruiter
                     ? 'Primary method: Time-based One-Time Password (TOTP). Untrusted browsers and devices will be challenged for a 6-digit verification code.'
-                    : 'Phương thức chính: Ứng dụng xác thực mã một lần (TOTP). Mỗi khi đăng nhập trên thiết bị mới, hệ thống sẽ yêu cầu mã từ điện thoại của bạn.'}
+                    : 'Primary method: authenticator app one-time code (TOTP). Each time you sign in on a new device, we ask for the code from your phone.'}
                 </p>
 
                 {status?.remainingBackupCodes !== undefined && (
                   <div className="text-on-surface-variant mt-3 flex items-center gap-2 text-xs font-semibold">
                     <span>
-                      {isRecruiter ? 'Remaining emergency recovery codes:' : 'Số mã dự phòng còn lại:'}{' '}
+                      {isRecruiter ? 'Remaining emergency recovery codes:' : 'Remaining emergency recovery codes:'}{' '}
                       <strong className="text-on-surface">{status.remainingBackupCodes}</strong>
                     </span>
                     {status.remainingBackupCodes <= 2 && (
                       <span className="text-label-sm rounded-full bg-amber-100 px-2 py-0.5 font-bold text-amber-800">
-                        {isRecruiter ? 'Low backup codes' : 'Sắp hết mã'}
+                        {isRecruiter ? 'Low backup codes' : 'Low backup codes'}
                       </span>
                     )}
                   </div>
@@ -383,7 +386,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                     onClick={() => setShowDisableModal(true)}
                     className="text-error cursor-pointer text-xs font-bold transition hover:underline"
                   >
-                    {isRecruiter ? 'Disable Two-Factor Authentication' : 'Tắt xác thực 2 bước'}
+                    {isRecruiter ? 'Disable Two-Factor Authentication' : 'Disable Two-Factor Authentication'}
                   </button>
                 </div>
               </div>
@@ -495,12 +498,12 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
           <h2 className="text-on-surface text-base font-bold">
             {isRecruiter
               ? 'Pair an authenticator application with your account'
-              : 'Thiết lập ứng dụng xác thực trên điện thoại'}
+              : 'Pair an authenticator application with your account'}
           </h2>
           <p className="text-on-surface-variant mt-1 text-sm">
             {isRecruiter
               ? 'Supports Google Authenticator, 1Password, Microsoft Authenticator & Authy.'
-              : 'Hỗ trợ Google Authenticator, Microsoft Authenticator, 1Password hoặc Authy.'}
+              : 'Works with Google Authenticator, Microsoft Authenticator, 1Password or Authy.'}
           </p>
 
           <div className="mt-6 space-y-6">
@@ -511,7 +514,9 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
               </div>
               <div className="flex-1">
                 <div className="text-on-surface text-sm font-bold">
-                  {isRecruiter ? 'Scan the QR code with your authenticator app' : 'Mở ứng dụng xác thực và quét mã QR'}
+                  {isRecruiter
+                    ? 'Scan the QR code with your authenticator app'
+                    : 'Scan the QR code with your authenticator app'}
                 </div>
                 <div className="mt-4 flex flex-col gap-6 sm:flex-row sm:items-center">
                   <div className="border-outline-variant flex h-44 w-44 shrink-0 items-center justify-center rounded-2xl border bg-white p-3 shadow-xs">
@@ -527,7 +532,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                     ) : (
                       <div className="text-outline flex flex-col items-center justify-center text-xs">
                         <QrCode className="text-outline h-8 w-8 animate-pulse" />
-                        <span className="mt-2">{isRecruiter ? 'Generating QR code...' : 'Đang tạo mã QR...'}</span>
+                        <span className="mt-2">{isRecruiter ? 'Generating QR code...' : 'Generating QR code...'}</span>
                       </div>
                     )}
                   </div>
@@ -536,11 +541,11 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                     <div className="text-on-surface-variant text-xs">
                       {isRecruiter
                         ? 'If you cannot scan the QR code, copy and paste this manual secret key into your app:'
-                        : 'Nếu không thể quét mã QR, hãy sao chép mã khóa bí mật bên dưới và dán thủ công vào ứng dụng:'}
+                        : 'If you cannot scan the QR code, copy and paste this manual secret key into your app:'}
                     </div>
                     <div className="flex items-center gap-2">
                       <code className="border-outline-variant bg-surface-container-low text-on-surface rounded-lg border px-3 py-2 font-mono text-xs font-bold tracking-wider select-all">
-                        {setupData?.secret || (isRecruiter ? 'Generating key...' : 'Đang tạo khóa...')}
+                        {setupData?.secret || (isRecruiter ? 'Generating key...' : 'Generating key...')}
                       </code>
                       <Button
                         type="button"
@@ -555,7 +560,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                           )
                         }
                       >
-                        {isCopiedKey ? (isRecruiter ? 'Copied' : 'Đã sao chép') : isRecruiter ? 'Copy key' : 'Sao chép'}
+                        {isCopiedKey ? (isRecruiter ? 'Copied' : 'Copied') : isRecruiter ? 'Copy key' : 'Copy key'}
                       </Button>
                     </div>
                   </div>
@@ -573,12 +578,12 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <div className="text-on-surface text-sm font-bold">
-                        {isRecruiter ? 'Save your emergency recovery codes' : 'Lưu lại mã khôi phục dự phòng'}
+                        {isRecruiter ? 'Save your emergency recovery codes' : 'Save your emergency recovery codes'}
                       </div>
                       <div className="text-on-surface-variant text-xs">
                         {isRecruiter
                           ? 'Each code can be used once if you ever lose access to your phone or authenticator app.'
-                          : 'Sử dụng khi bạn mất điện thoại hoặc không truy cập được ứng dụng Authenticator.'}
+                          : 'Use these if you lose your phone or cannot access your authenticator app.'}
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -595,13 +600,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                           )
                         }
                       >
-                        {isCopiedBackup
-                          ? isRecruiter
-                            ? 'Copied'
-                            : 'Đã sao chép'
-                          : isRecruiter
-                            ? 'Copy all'
-                            : 'Sao chép mã'}
+                        {isCopiedBackup ? (isRecruiter ? 'Copied' : 'Copied') : isRecruiter ? 'Copy all' : 'Copy all'}
                       </Button>
                       <Button
                         type="button"
@@ -610,7 +609,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                         onClick={handleDownloadBackupCodes}
                         leftIcon={<Download className="h-3.5 w-3.5" />}
                       >
-                        {isRecruiter ? 'Download .txt' : 'Tải file .txt'}
+                        {isRecruiter ? 'Download .txt' : 'Download .txt'}
                       </Button>
                     </div>
                   </div>
@@ -650,7 +649,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                 <div className="text-on-surface text-sm font-bold">
                   {isRecruiter
                     ? 'Enter 6-digit verification code to activate'
-                    : 'Nhập mã 6 chữ số để xác thực kích hoạt'}
+                    : 'Enter 6-digit verification code to activate'}
                 </div>
                 <form onSubmit={handleVerifyAndEnable} className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
                   <Input
@@ -668,7 +667,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                     className="bg-primary hover:bg-primary font-bold"
                     leftIcon={<CheckCircle2 className="h-4 w-4" />}
                   >
-                    {isRecruiter ? 'Activate Two-Factor Authentication' : 'Kích hoạt xác thực 2 bước'}
+                    {isRecruiter ? 'Activate Two-Factor Authentication' : 'Activate Two-Factor Authentication'}
                   </Button>
                 </form>
               </div>
@@ -682,30 +681,30 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
         <Modal
           isOpen={showDisableModal}
           onClose={() => setShowDisableModal(false)}
-          title={isRecruiter ? 'Disable Two-Factor Authentication' : 'Tắt xác thực 2 bước'}
+          title={isRecruiter ? 'Disable Two-Factor Authentication' : 'Disable Two-Factor Authentication'}
           maxWidth="sm"
         >
           <div className="space-y-4">
             <p className="text-on-surface-variant text-xs leading-relaxed">
               {isRecruiter
                 ? 'Your account security will be lowered. Untrusted browsers will no longer be challenged. Please enter your password to confirm.'
-                : 'Tài khoản của bạn sẽ giảm mức độ an toàn. Vui lòng nhập mật khẩu hiện tại để xác nhận.'}
+                : 'Your account security will be lowered. Please enter your current password to confirm.'}
             </p>
 
             <form onSubmit={handleDisable2FA} className="space-y-4">
               <PasswordInput
                 value={disablePassword}
                 onChange={(e) => setDisablePassword(e.target.value)}
-                placeholder={isRecruiter ? 'Enter your password' : 'Nhập mật khẩu của bạn'}
+                placeholder={isRecruiter ? 'Enter your password' : 'Enter your password'}
                 required
               />
 
               <div className="flex items-center justify-end gap-3 pt-2">
                 <Button type="button" variant="outline" onClick={() => setShowDisableModal(false)}>
-                  {isRecruiter ? 'Cancel' : 'Hủy'}
+                  {isRecruiter ? 'Cancel' : 'Cancel'}
                 </Button>
                 <Button type="submit" variant="danger" isLoading={isSubmitting}>
-                  {isRecruiter ? 'Confirm and Disable' : 'Xác nhận tắt 2FA'}
+                  {isRecruiter ? 'Confirm and Disable' : 'Confirm and Disable'}
                 </Button>
               </div>
             </form>

@@ -4,8 +4,8 @@ import Header from '@/components/common/Header';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'CV của tôi | InterVue',
-  description: 'Tải lên và quản lý các CV dùng để ứng tuyển.',
+  title: 'My CVs | InterVue',
+  description: 'Upload and manage the CVs you use to apply.',
 };
 
 export default function CandidateCvsPage() {

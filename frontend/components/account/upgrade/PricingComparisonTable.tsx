@@ -54,7 +54,7 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
         <div className="flex min-w-6xl items-start justify-center gap-2">
           <div className="border-outline-variant w-80 shrink-0 overflow-hidden rounded-2xl border bg-white shadow-xs">
             <div className="border-outline-variant bg-surface-container-low text-on-surface flex h-20 items-center border-b px-5 text-base font-bold">
-              Loại tài khoản
+              Account type
             </div>
 
             <ul className="divide-outline-variant text-on-surface divide-y text-sm">
@@ -84,7 +84,7 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
             </ul>
 
             <div className="border-outline-variant bg-surface-container-low text-on-surface-variant flex h-28 items-center border-t px-5 text-xs">
-              Chọn gói phù hợp với mục tiêu ứng tuyển
+              Choose the plan that fits your job search goals
             </div>
           </div>
 
@@ -192,7 +192,7 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
                       )}
                     </div>
                   ) : (
-                    <span className="text-outline text-xs">{plan.footerNote || 'Gói mặc định'}</span>
+                    <span className="text-outline text-xs">{plan.footerNote || 'Default plan'}</span>
                   )}
                 </div>
               </div>

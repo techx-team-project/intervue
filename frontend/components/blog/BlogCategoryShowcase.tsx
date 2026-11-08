@@ -16,36 +16,36 @@ interface CategoryCardItem {
 const CATEGORY_CARDS: CategoryCardItem[] = [
   {
     id: 'orientation',
-    name: 'Định hướng nghề nghiệp',
+    name: 'Career orientation',
     slug: 'dinh-huong-nghe-nghiep',
-    shortDesc: 'Khám phá tiềm năng, xác định đam mê Ikigai và lộ trình thăng tiến sự nghiệp bền vững.',
+    shortDesc: 'Discover your potential, find your Ikigai and plan a sustainable career path.',
     icon: Compass,
     tags: ['Ikigai Model', 'Career Path', 'Growth Roadmaps', 'Graduate Playbook'],
     articleCount: 6,
   },
   {
     id: 'tips',
-    name: 'Bí quyết tìm việc',
+    name: 'Job search tips',
     slug: 'bi-kip-tim-viec',
-    shortDesc: 'Viết CV chuẩn ATS, kịch bản trả lời 50+ câu hỏi phỏng vấn hóc búa và đàm phán offer.',
+    shortDesc: 'Write ATS-ready CVs, answer 50+ tough interview questions and negotiate offers.',
     icon: Briefcase,
     tags: ['ATS Resume', 'STAR Interviews', 'Salary Negotiation', 'Probation Success'],
     articleCount: 6,
   },
   {
     id: 'salary',
-    name: 'Chế độ hưởng lương',
+    name: 'Salary and benefits',
     slug: 'che-do-luong-thuong',
-    shortDesc: 'Công cụ tính Lương Gross sang Net 2026, chế độ bảo hiểm xã hội (BHXH) và quyền lợi lao động.',
+    shortDesc: '2026 Gross to Net salary tools, social insurance and employee rights.',
     icon: Calculator,
     tags: ['Gross ➔ Net', 'Social Insurance', '13th Month Bonus', '7-Tier PIT Tax'],
     articleCount: 6,
   },
   {
     id: 'skills',
-    name: 'Kiến thức chuyên ngành',
+    name: 'Industry knowledge',
     slug: 'kien-thuc-chuyen-nganh',
-    shortDesc: 'Kho tri thức thực chiến sâu rộng: Công nghệ thông tin / AI, Marketing số, Sales và Logistics.',
+    shortDesc: 'In-depth practical knowledge: IT / AI, digital marketing, sales and logistics.',
     icon: GraduationCap,
     tags: ['Software Engineering', 'Generative AI', 'Product Management', 'DevOps & Cloud'],
     articleCount: 6,
@@ -57,9 +57,9 @@ export default function BlogCategoryShowcase() {
     <section className="py-8">
       <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-headline-lg text-primary font-bold">Chuyên mục cẩm nang</h2>
+          <h2 className="text-headline-lg text-primary font-bold">Guide categories</h2>
           <p className="text-body-md text-on-surface-variant mt-1">
-            Kiến thức ngành, chính sách lao động và xu hướng tuyển dụng 2026
+            Industry knowledge, labor policy and 2026 hiring trends
           </p>
         </div>
       </div>
@@ -77,7 +77,7 @@ export default function BlogCategoryShowcase() {
                   <Icon className="h-6 w-6" aria-hidden />
                 </span>
                 <span className="bg-surface-container-low text-label-md text-on-surface-variant rounded-full px-3 py-1">
-                  {articleCount} bài viết
+                  {articleCount} articles
                 </span>
               </div>
 
@@ -99,7 +99,7 @@ export default function BlogCategoryShowcase() {
             </div>
 
             <span className="text-label-lg text-primary mt-6 flex items-center gap-1 font-semibold">
-              Xem chuyên mục
+              View category
               <ArrowRight
                 className="ease-standard h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
                 aria-hidden

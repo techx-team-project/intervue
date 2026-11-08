@@ -154,7 +154,7 @@ export default function BlogDetailView({ article }: BlogDetailViewProps) {
             )}
 
             <div className="border-t border-gray-100 pt-6">
-              <span className="text-navy mb-3 block text-xs font-bold tracking-wider uppercase">Chủ đề liên quan:</span>
+              <span className="text-navy mb-3 block text-xs font-bold tracking-wider uppercase">Related topics:</span>
               <div className="flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
                   <Link

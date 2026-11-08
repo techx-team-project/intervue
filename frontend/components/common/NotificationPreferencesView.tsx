@@ -28,15 +28,15 @@ const COPY = {
     saveError: 'Could not update your preferences',
   },
   vi: {
-    heading: 'Tuỳ chọn thông báo',
-    intro: 'Chọn loại thông báo bạn muốn nhận trong trung tâm thông báo và qua email.',
-    inApp: 'Trong ứng dụng',
+    heading: 'Notification preferences',
+    intro: 'Choose which notifications you want to receive in the notification center and by email.',
+    inApp: 'In app',
     email: 'Email',
-    locked: 'Luôn bật',
-    lockedHint: 'Thông báo bảo mật và tài khoản không thể tắt.',
-    loadError: 'Không tải được tuỳ chọn của bạn',
-    saved: 'Đã cập nhật tuỳ chọn',
-    saveError: 'Không cập nhật được tuỳ chọn',
+    locked: 'Always on',
+    lockedHint: 'Security and account notifications cannot be turned off.',
+    loadError: 'Could not load your preferences',
+    saved: 'Preferences updated',
+    saveError: 'Could not update preferences',
   },
 };
 

@@ -32,12 +32,12 @@ export async function generateMetadata({ params }: BlogCategoryPageProps): Promi
 
   if (!categoryMeta) {
     return {
-      title: 'Chuyên mục không tồn tại | InterVue',
+      title: 'Category not found | InterVue',
     };
   }
 
   return {
-    title: `${categoryMeta.name} - Cẩm Nang Nghề Nghiệp | InterVue`,
+    title: `${categoryMeta.name} - Career Guides | InterVue`,
     description: categoryMeta.description,
     openGraph: {
       title: `${categoryMeta.name} - InterVue Blog`,

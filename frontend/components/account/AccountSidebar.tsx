@@ -51,7 +51,7 @@ const MENU_ITEMS = [
   },
   {
     href: '/account/notification-preferences',
-    label: 'Tuỳ chọn thông báo',
+    label: 'Notification preferences',
     icon: Bell,
   },
 ];

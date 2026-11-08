@@ -38,7 +38,7 @@ export default function AiPersonalDataConsentDialog({
                 {config.badgeText}
               </span>
               <span className="bg-surface-container-high text-label-sm text-on-surface-variant rounded-full px-2 py-0.5 font-medium">
-                Phiên bản v{config.version}
+                Version v{config.version}
               </span>
             </div>
             <h2 className="text-on-surface text-base font-bold sm:text-lg">{config.title}</h2>

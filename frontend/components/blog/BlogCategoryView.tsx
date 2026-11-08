@@ -21,58 +21,58 @@ const ITEMS_PER_PAGE = 6;
 
 const DOMAIN_HIGHLIGHTS = [
   {
-    name: 'Công nghệ thông tin / AI',
+    name: 'Information technology / AI',
     icon: <Cpu className="text-primary h-5 w-5" />,
-    salary: '18 - 55 triệu',
-    tag: 'Tăng trưởng +48%',
+    salary: '18 - 55M VND',
+    tag: 'Growth +48%',
     skills: ['Python / LLM', 'Cloud AWS/GCP', 'DevOps & Microservices'],
   },
   {
-    name: 'Marketing & Truyền thông',
+    name: 'Marketing & Communications',
     icon: <Megaphone className="text-primary h-5 w-5" />,
-    salary: '12 - 35 triệu',
-    tag: 'Tăng trưởng +34%',
+    salary: '12 - 35M VND',
+    tag: 'Growth +34%',
     skills: ['Performance Ads', 'SEO & Data Analytics', 'Brand Storytelling'],
   },
   {
-    name: 'Kinh doanh & Bán hàng (Sales)',
+    name: 'Business & Sales',
     icon: <Briefcase className="h-5 w-5 text-orange-600" />,
-    salary: '15 - 50+ triệu',
-    tag: 'Hoa hồng cao',
-    skills: ['B2B Solution Selling', 'Đàm phán thương mại', 'Quản trị Key Account'],
+    salary: '15 - 50+M VND',
+    tag: 'High commission',
+    skills: ['B2B Solution Selling', 'Commercial negotiation', 'Key account management'],
   },
   {
-    name: 'Tài chính - Kế toán & Fintech',
+    name: 'Finance, Accounting & Fintech',
     icon: <Coins className="h-5 w-5 text-amber-600" />,
-    salary: '14 - 38 triệu',
-    tag: 'Ổn định & Bền vững',
-    skills: ['Phân tích tài chính CFA', 'Kế toán quản trị', 'Fintech & Digital Banking'],
+    salary: '14 - 38M VND',
+    tag: 'Stable & sustainable',
+    skills: ['CFA financial analysis', 'Management accounting', 'Fintech & Digital Banking'],
   },
   {
-    name: 'Logistics & Chuỗi cung ứng',
+    name: 'Logistics & Supply chain',
     icon: <Truck className="text-primary h-5 w-5" />,
-    salary: '12 - 32 triệu',
-    tag: 'Xuất nhập khẩu',
-    skills: ['Incoterms 2020', 'Thủ tục hải quan', 'Quản trị vận tải & kho'],
+    salary: '12 - 32M VND',
+    tag: 'Import & export',
+    skills: ['Incoterms 2020', 'Customs procedures', 'Transport & warehouse management'],
   },
   {
-    name: 'Nhân sự (C&B & Tuyển dụng)',
+    name: 'Human resources (C&B & Recruitment)',
     icon: <Users className="text-primary h-5 w-5" />,
-    salary: '12 - 30 triệu',
-    tag: 'Giữ chân nhân tài',
-    skills: ['Lương 3P & KPI', 'Luật lao động', 'Employer Branding'],
+    salary: '12 - 30M VND',
+    tag: 'Talent retention',
+    skills: ['3P pay & KPI', 'Labor law', 'Employer Branding'],
   },
 ];
 
 export default function BlogCategoryView({ categoryMeta, articles, allArticles }: BlogCategoryViewProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSubFilter, setSelectedSubFilter] = useState<string>('Tất cả');
+  const [selectedSubFilter, setSelectedSubFilter] = useState<string>('All');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
-      if (selectedSubFilter !== 'Tất cả') {
+      if (selectedSubFilter !== 'All') {
         const matchesTag = article.tags.some((t) => t.toLowerCase() === selectedSubFilter.toLowerCase());
         const matchesTitle = article.title.toLowerCase().includes(selectedSubFilter.toLowerCase());
         const matchesExcerpt = article.excerpt.toLowerCase().includes(selectedSubFilter.toLowerCase());
@@ -194,7 +194,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
 
         {categoryMeta.subFilters && categoryMeta.subFilters.length > 0 && (
           <div className="mb-6 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-gray-500">Chủ đề con:</span>
+            <span className="text-xs font-semibold text-gray-500">Subtopics:</span>
             {categoryMeta.subFilters.map((sub) => {
               const isActive = selectedSubFilter === sub;
               return (
@@ -278,12 +278,12 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                   type="button"
                   onClick={() => {
                     setSearchQuery('');
-                    setSelectedSubFilter('Tất cả');
+                    setSelectedSubFilter('All');
                     setSelectedTag(null);
                   }}
                   className="bg-primary hover:bg-primary mt-4 rounded-xl px-4 py-2 text-xs font-bold text-white transition"
                 >
-                  Xóa tất cả bộ lọc
+                  Clear all filters
                 </button>
               </div>
             )}

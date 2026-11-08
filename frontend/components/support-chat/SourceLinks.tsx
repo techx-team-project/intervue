@@ -20,7 +20,7 @@ export function SourceLinks({ sources }: SourceLinksProps) {
     <div className="mt-2.5 border-t border-slate-200/80 pt-2">
       <div className="mb-1 flex items-center gap-1 text-[11px] font-semibold text-slate-500">
         <BookOpen className="h-3 w-3 text-emerald-600" />
-        <span>Tài liệu tham khảo:</span>
+        <span>References:</span>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {sources.map((source) => (

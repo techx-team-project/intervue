@@ -32,22 +32,22 @@ export default function BlogHeroSearch({
   categoryMeta,
 }: BlogHeroSearchProps) {
   const placeholder = categoryMeta
-    ? `Tìm bài viết trong "${categoryMeta.name}"`
-    : 'Tìm cẩm nang, mẫu CV, câu hỏi phỏng vấn, công cụ tính lương';
+    ? `Search articles in "${categoryMeta.name}"`
+    : 'Search guides, CV templates, interview questions and salary tools';
 
   return (
     <PageHero
       id="blog-hero-title"
-      eyebrow={categoryMeta ? categoryMeta.badge : 'Cẩm nang nghề nghiệp'}
-      title={categoryMeta ? categoryMeta.name : 'Kiến thức giúp bạn đi nhanh hơn trong ngành IT'}
+      eyebrow={categoryMeta ? categoryMeta.badge : 'Career guides'}
+      title={categoryMeta ? categoryMeta.name : 'Knowledge to help you move faster in IT'}
       description={
         categoryMeta
           ? categoryMeta.description
-          : 'Định hướng nghề nghiệp, bí quyết tìm việc, chế độ lương thưởng và kiến thức chuyên ngành được cập nhật mỗi tuần.'
+          : 'Career orientation, job search tips, salary and benefits and industry knowledge, updated every week.'
       }
       crumbs={
         categoryMeta
-          ? [{ label: 'Trang chủ', href: '/' }, { label: 'Cẩm nang', href: '/blog' }, { label: categoryMeta.name }]
+          ? [{ label: 'Home', href: '/' }, { label: 'Guides', href: '/blog' }, { label: categoryMeta.name }]
           : undefined
       }
     >
@@ -65,7 +65,7 @@ export default function BlogHeroSearch({
           {searchQuery && (
             <button
               type="button"
-              aria-label="Xóa từ khóa"
+              aria-label="Clear keyword"
               onClick={() => onSearchChange('')}
               className="state-layer text-on-surface-variant absolute right-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full"
             >
@@ -75,7 +75,7 @@ export default function BlogHeroSearch({
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="text-label-lg text-white/60">Chủ đề nổi bật:</span>
+          <span className="text-label-lg text-white/60">Trending topics:</span>
           {DEFAULT_POPULAR_TAGS.map((tag) => {
             const isSelected = selectedTag === tag;
             return (

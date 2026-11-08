@@ -27,10 +27,8 @@ export function AvailableVouchersSection({ vouchers, onUseVoucher }: AvailableVo
           <Gift className="h-3.5 w-3.5" />
           <span>VOUCHER KHẢ DỤNG</span>
         </div>
-        <h2 className="text-on-surface mt-2 text-2xl font-extrabold sm:text-3xl">Mã quà tặng của bạn</h2>
-        <p className="text-on-surface-variant mt-1 text-sm">
-          Các ưu đãi đặc biệt dành riêng cho tài khoản của bạn trên InterVue
-        </p>
+        <h2 className="text-on-surface mt-2 text-2xl font-extrabold sm:text-3xl">Your gift codes</h2>
+        <p className="text-on-surface-variant mt-1 text-sm">Special offers reserved for your InterVue account</p>
       </div>
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -62,7 +60,7 @@ export function AvailableVouchersSection({ vouchers, onUseVoucher }: AvailableVo
                     type="button"
                     onClick={() => handleCopyCode(voucher)}
                     className="text-outline hover:text-on-surface-variant cursor-pointer p-0.5"
-                    title="Sao chép mã"
+                    title="Copy code"
                   >
                     {isCopied ? <Check className="text-primary h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                   </button>
@@ -73,7 +71,7 @@ export function AvailableVouchersSection({ vouchers, onUseVoucher }: AvailableVo
                   onClick={() => onUseVoucher(voucher)}
                   rightIcon={<Sparkles className="h-3.5 w-3.5" />}
                 >
-                  Áp dụng
+                  Apply
                 </Button>
               </div>
             </div>

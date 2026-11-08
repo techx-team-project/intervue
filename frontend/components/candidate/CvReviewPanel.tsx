@@ -52,7 +52,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
           if (updatedQuota) setQuota(updatedQuota);
         } catch (err: unknown) {
           const apiErr = err as { message?: string };
-          setError(apiErr?.message || 'Không thể đánh giá CV lúc này. Vui lòng thử lại sau.');
+          setError(apiErr?.message || 'Could not review your CV right now. Please try again later.');
         }
       });
     });
@@ -69,10 +69,10 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
             <span className="bg-primary-container text-primary flex h-8 w-8 items-center justify-center rounded-lg">
               <Sparkles className="h-4 w-4" />
             </span>
-            <h3 className="text-on-surface text-base font-bold">Đánh giá & Gợi ý cải thiện CV bằng AI</h3>
+            <h3 className="text-on-surface text-base font-bold">AI CV review & improvement tips</h3>
           </div>
           <p className="text-on-surface-variant mt-1 text-xs">
-            Phân tích câu chữ, tối ưu hóa bộ lọc ATS và phát hiện các điểm chưa có số liệu định lượng.
+            Analyze wording, optimize for ATS filters and spot places that lack measurable results.
           </p>
         </div>
 
@@ -81,14 +81,14 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
             <div className="text-on-surface flex items-center gap-1.5 text-xs font-semibold">
               <Clock className="text-primary h-3.5 w-3.5" />
               <span>
-                Còn{' '}
+                {' '}
                 <strong className={quota.remaining > 0 ? 'text-primary' : 'text-error'}>
                   {quota.remaining}/{quota.maxDaily}
                 </strong>{' '}
-                lượt hôm nay
+                reviews left today
               </span>
             </div>
-            <span className="text-label-sm text-outline">(Làm mới lúc 00:00 giờ Việt Nam)</span>
+            <span className="text-label-sm text-outline">(Resets at 00:00 Vietnam time)</span>
           </div>
         )}
       </div>
@@ -97,8 +97,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
       <div className="border-outline-variant bg-surface-container-low text-on-surface-variant mt-3 flex items-center gap-2 rounded-lg border px-3 py-2 text-xs">
         <ShieldCheck className="text-primary h-4 w-4 shrink-0" />
         <span>
-          <strong>Bảo mật riêng tư:</strong> Chỉ bạn mới xem được các nhận xét chẩn đoán này. Nhà tuyển dụng không thể
-          xem.
+          <strong>Privacy:</strong> Only you can see this feedback. Recruiters cannot xem.
         </span>
       </div>
 
@@ -107,10 +106,10 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
         <div className="border-outline-variant bg-surface-container-low/50 mt-5 rounded-xl border-2 border-dashed py-6 text-center">
           <FileText className="text-outline mx-auto mb-2 h-10 w-10" />
           <p className="text-on-surface mb-1 text-sm font-medium">
-            Nhận góp ý chi tiết cho từng dòng kinh nghiệm trong CV
+            Get detailed feedback on every experience line in your CV
           </p>
           <p className="text-on-surface-variant mx-auto mb-4 max-w-md text-xs">
-            Mỗi nhận xét bám sát trích dẫn thực tế từ CV, chỉ ra lý do chưa tối ưu và cung cấp mẫu viết lại chuẩn STAR.
+            Each comment quotes your CV, explains what is weak and offers a STAR-style rewrite.
           </p>
           <Button
             onClick={handleReviewClick}
@@ -120,18 +119,18 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
             {isPending ? (
               <span className="flex items-center gap-2">
                 <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                Đang phân tích CV...
+                Analyzing CV...
               </span>
             ) : (
               <span className="flex items-center gap-1.5">
                 <Sparkles className="h-4 w-4" />
-                Đánh giá CV với AI
+                Review CV with AI
               </span>
             )}
           </Button>
           {quota && quota.remaining <= 0 && (
             <p className="text-error mt-2 text-xs">
-              Bạn đã sử dụng hết 3 lượt đánh giá miễn phí hôm nay. Vui lòng quay lại sau 00:00.
+              You have used all 3 free reviews today. Please come back after 00:00.
             </p>
           )}
         </div>
@@ -153,11 +152,11 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
             <div>
               <div className="mb-1 flex items-center gap-2">
                 <span className="text-on-primary-container text-xs font-bold tracking-wider uppercase">
-                  Tổng quan đánh giá
+                  Review overview
                 </span>
                 {reviewResult.fromCache && (
                   <span className="text-label-sm inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 font-bold text-amber-800">
-                    ⚡ CV không đổi: Đã tải kết quả đã lưu (Không tốn lượt)
+                    ⚡ CV unchanged: saved result loaded (no review used)
                   </span>
                 )}
               </div>
@@ -165,7 +164,9 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
             </div>
             {reviewResult.overallScore > 0 && (
               <div className="border-primary/30 flex shrink-0 flex-col items-center justify-center rounded-lg border bg-white px-3 py-2 shadow-xs">
-                <span className="text-label-sm text-on-surface-variant font-semibold uppercase">Điểm ATS ước tính</span>
+                <span className="text-label-sm text-on-surface-variant font-semibold uppercase">
+                  Estimated ATS score
+                </span>
                 <span className="text-primary text-xl font-bold">{reviewResult.overallScore}/100</span>
               </div>
             )}
@@ -174,7 +175,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
           {/* Comments List (Quote → Problem → Fix) */}
           <div className="space-y-3">
             <h4 className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">
-              Chi tiết các điểm cần hoàn thiện ({reviewResult.comments.length} nhận xét)
+              Details to improve ({reviewResult.comments.length} comments)
             </h4>
 
             {reviewResult.comments.map((comment, idx) => (
@@ -184,7 +185,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
               >
                 {comment.section && (
                   <span className="bg-surface-container-high text-label-sm text-on-surface-variant mb-2.5 inline-block rounded px-2 py-0.5 font-bold tracking-wider uppercase">
-                    Mục: {comment.section}
+                    Section: {comment.section}
                   </span>
                 )}
 
@@ -192,7 +193,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
                 <div className="mb-2.5">
                   <div className="mb-1 flex items-center gap-1.5 text-xs font-bold text-amber-800">
                     <Quote className="h-3.5 w-3.5" />
-                    <span>Trích dẫn từ CV của bạn:</span>
+                    <span>Quote from your CV:</span>
                   </div>
                   <blockquote className="text-on-surface rounded-md border-l-3 border-amber-400 bg-amber-50/70 p-2.5 font-mono text-xs italic">
                     &ldquo;{comment.quote}&rdquo;
@@ -203,7 +204,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
                 <div className="mb-2.5">
                   <div className="text-error mb-1 flex items-center gap-1.5 text-xs font-bold">
                     <AlertCircle className="h-3.5 w-3.5" />
-                    <span>Vấn đề phát hiện:</span>
+                    <span>Issue found:</span>
                   </div>
                   <p className="border-error/30 bg-error/10 text-on-surface rounded-md border p-2.5 text-xs leading-relaxed">
                     {comment.problem}
@@ -214,7 +215,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
                 <div>
                   <div className="text-on-primary-container mb-1 flex items-center gap-1.5 text-xs font-bold">
                     <Wrench className="h-3.5 w-3.5" />
-                    <span>Đề xuất sửa đổi & Câu viết mẫu:</span>
+                    <span>Suggested edit & sample wording:</span>
                   </div>
                   <div className="border-primary/30 text-on-primary-container rounded-md border bg-emerald-50/80 p-2.5 text-xs leading-relaxed font-medium">
                     {comment.fix}
@@ -233,7 +234,7 @@ export default function CvReviewPanel({ resumeId, cvText, targetPosition, classN
               className="border-outline hover:bg-surface-container-low px-4 py-2 text-xs"
             >
               <RefreshCw className={`mr-1.5 h-3 w-3 ${isPending ? 'animate-spin' : ''}`} />
-              Đánh giá lại CV
+              Review CV again
             </Button>
           </div>
         </div>

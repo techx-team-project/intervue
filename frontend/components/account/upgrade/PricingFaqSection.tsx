@@ -22,11 +22,11 @@ export function PricingFaqSection({ faqs }: PricingFaqSectionProps) {
         <div className="mb-10 text-center">
           <div className="border-primary/30 bg-primary-light text-primary inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold">
             <HelpCircle className="h-3.5 w-3.5" />
-            <span>GIẢI ĐÁP THẮC MẮC</span>
+            <span>FAQ</span>
           </div>
-          <h2 className="text-on-surface mt-2 text-2xl font-extrabold sm:text-3xl">Câu hỏi thường gặp</h2>
+          <h2 className="text-on-surface mt-2 text-2xl font-extrabold sm:text-3xl">Frequently asked questions</h2>
           <p className="text-on-surface-variant mt-1 text-sm">
-            Những thắc mắc phổ biến nhất của ứng viên khi nâng cấp tài khoản
+            The most common questions candidates ask when upgrading
           </p>
         </div>
 

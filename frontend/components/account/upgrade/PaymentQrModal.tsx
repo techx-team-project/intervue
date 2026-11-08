@@ -62,10 +62,10 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
       title={
         <div className="flex items-center gap-2">
           <Sparkles className="text-primary h-5 w-5" />
-          <span className="text-on-surface font-extrabold">Thanh toán {order.planName}</span>
+          <span className="text-on-surface font-extrabold">Pay for {order.planName}</span>
         </div>
       }
-      description="Quét mã VietQR chuyển khoản nhanh 24/7 để tự động kích hoạt tài khoản"
+      description="Scan the VietQR code for an instant 24/7 transfer and automatic activation"
     >
       {isSuccess ? (
         <div className="space-y-4 py-6 text-center">
@@ -74,16 +74,16 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
           </div>
 
           <div>
-            <h4 className="text-on-surface text-xl font-bold">Kích hoạt {order.planName} thành công!</h4>
+            <h4 className="text-on-surface text-xl font-bold">{order.planName} activated!</h4>
             <p className="text-on-surface-variant mx-auto mt-2 max-w-sm text-sm">
-              Chúc mừng bạn! Toàn bộ đặc quyền VIP đã sẵn sàng. Bạn có thể tạo CV không giới hạn và đẩy Top hồ sơ ngay
-              bây giờ.
+              Congratulations! All VIP benefits are ready. You can create unlimited CVs and boost your profile right
+              now.
             </p>
           </div>
 
           <div className="pt-4">
             <Button onClick={handleModalClose} className="w-full px-8 sm:w-auto">
-              Hoàn tất & Tiếp tục
+              Finish & Continue
             </Button>
           </div>
         </div>
@@ -91,15 +91,15 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
         <div className="space-y-5">
           <div className="flex items-center justify-between rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
             <div>
-              <p className="text-on-primary-container text-sm font-medium">Gói đăng ký</p>
+              <p className="text-on-primary-container text-sm font-medium">Plan</p>
               <p className="text-base font-bold text-emerald-950">{order.planName}</p>
-              <p className="text-primary text-xs">Thời hạn: {order.periodText}</p>
+              <p className="text-primary text-xs">Duration: {order.periodText}</p>
             </div>
             <div className="text-right">
-              <p className="text-on-primary-container text-sm font-medium">Số tiền cần thanh toán</p>
+              <p className="text-on-primary-container text-sm font-medium">Amount due</p>
               <p className="text-primary text-lg font-bold">{order.priceText}</p>
               <p className="text-primary text-xs font-semibold">
-                Mã QR hết hạn trong: <span className="text-error font-mono">{formatCountdown(countdown)}</span>
+                QR code expires in: <span className="text-error font-mono">{formatCountdown(countdown)}</span>
               </p>
             </div>
           </div>
@@ -116,28 +116,28 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
                 />
               </div>
               <p className="text-on-surface-variant mt-2 text-center text-xs font-medium">
-                Mở app Ngân hàng hoặc Ví để quét mã QR
+                Open your banking or wallet app to scan the QR code
               </p>
             </div>
 
             <div className="space-y-3 text-sm">
               <div>
-                <span className="text-on-surface-variant block text-xs">Ngân hàng thụ hưởng</span>
-                <span className="text-on-surface font-bold">MB Bank (Quân Đội)</span>
+                <span className="text-on-surface-variant block text-xs">Beneficiary bank</span>
+                <span className="text-on-surface font-bold">MB Bank (Military Bank)</span>
               </div>
 
               <div>
-                <span className="text-on-surface-variant block text-xs">Số tài khoản</span>
+                <span className="text-on-surface-variant block text-xs">Account number</span>
                 <span className="text-on-surface font-mono font-bold">0988 888 8888</span>
               </div>
 
               <div>
-                <span className="text-on-surface-variant block text-xs">Chủ tài khoản</span>
+                <span className="text-on-surface-variant block text-xs">Account holder</span>
                 <span className="text-on-surface font-bold">CTCP INTERVUE VIETNAM</span>
               </div>
 
               <div>
-                <span className="text-on-surface-variant block text-xs">Nội dung chuyển khoản (bắt buộc)</span>
+                <span className="text-on-surface-variant block text-xs">Transfer note (required)</span>
                 <div className="border-outline-variant bg-surface-container-high mt-1 flex items-center justify-between rounded-xl border px-3 py-2">
                   <span className="text-primary font-mono text-sm font-bold">{order.orderCode}</span>
                   <button
@@ -146,7 +146,7 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
                     className="text-on-surface-variant hover:text-primary flex cursor-pointer items-center gap-1 text-xs font-bold"
                   >
                     {copiedCode ? <Check className="text-primary h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                    <span>{copiedCode ? 'Đã chép' : 'Sao chép'}</span>
+                    <span>{copiedCode ? 'Copied' : 'Copy'}</span>
                   </button>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export function PaymentQrModal({ order, isOpen, onClose, onPaymentSuccess }: Pay
 
           <div className="pt-2">
             <Button onClick={handleConfirmPayment} isLoading={isProcessing} className="w-full py-3 text-base">
-              Tôi đã chuyển khoản thành công
+              I have completed the transfer
             </Button>
           </div>
         </div>

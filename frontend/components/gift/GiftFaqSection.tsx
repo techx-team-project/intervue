@@ -23,8 +23,8 @@ export function GiftFaqSection({ faqs }: GiftFaqSectionProps) {
           <HelpCircle className="h-3.5 w-3.5" />
           <span>HỖ TRỢ</span>
         </div>
-        <h2 className="text-on-surface mt-2 text-2xl font-extrabold sm:text-3xl">Câu hỏi về mã quà tặng</h2>
-        <p className="text-on-surface-variant mt-1 text-sm">Giải đáp các vấn đề thường gặp khi sử dụng mã ưu đãi</p>
+        <h2 className="text-on-surface mt-2 text-2xl font-extrabold sm:text-3xl">Gift code questions</h2>
+        <p className="text-on-surface-variant mt-1 text-sm">Answers to common questions about using promo codes</p>
       </div>
 
       <div className="space-y-3">

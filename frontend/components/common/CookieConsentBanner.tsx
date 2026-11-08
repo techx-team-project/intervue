@@ -47,11 +47,11 @@ export default function CookieConsentBanner() {
             <ShieldCheck className="h-4 w-4" />
           </div>
           <div className="space-y-0.5">
-            <h4 className="text-on-surface text-xs font-bold">Bảo vệ quyền riêng tư & Cookie</h4>
+            <h4 className="text-on-surface text-xs font-bold">Privacy & Cookies</h4>
             <p className="text-label-sm text-on-surface-variant leading-relaxed">
-              InterVue sử dụng cookie bảo mật duy trì phiên làm việc và tuân thủ Nghị định 13/2023/NĐ-CP. Xem{' '}
+              InterVue uses security cookies to keep your session and complies with Decree 13/2023/ND-CP. See the{' '}
               <Link href="/data-processing-agreement" className="text-primary font-semibold hover:underline">
-                Thỏa thuận xử lý dữ liệu
+                data processing agreement
               </Link>
               .
             </p>
@@ -66,7 +66,7 @@ export default function CookieConsentBanner() {
             onClick={handleEssentialOnly}
             className="text-label-sm text-on-surface-variant h-8 rounded-lg px-2.5 font-semibold"
           >
-            Chỉ cần thiết
+            Essential only
           </Button>
           <Button
             type="button"
@@ -74,12 +74,12 @@ export default function CookieConsentBanner() {
             onClick={handleAcceptAll}
             className="bg-primary text-label-sm hover:bg-primary h-8 rounded-lg px-3 font-bold text-white"
           >
-            Đồng ý
+            Accept
           </Button>
           <button
             type="button"
             onClick={handleEssentialOnly}
-            aria-label="Đóng"
+            aria-label="Close"
             className="text-outline hover:text-on-surface-variant cursor-pointer p-1"
           >
             <X className="h-3.5 w-3.5" />

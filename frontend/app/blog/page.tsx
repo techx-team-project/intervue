@@ -9,12 +9,12 @@ import { getAllBlogArticles, BLOG_CATEGORIES } from '@/mocks/blog.mock';
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'Cẩm Nang Nghề Nghiệp - Bí Quyết Tìm Việc & Lương Thưởng | InterVue',
+  title: 'Career Guides - Job Search Tips & Salary | InterVue',
   description:
-    'Khám phá cẩm nang nghề nghiệp toàn diện: Định hướng sự nghiệp, bí quyết viết CV chuẩn ATS, phỏng vấn, công cụ tính lương Gross sang Net 2026 và kiến thức chuyên ngành.',
+    'Explore complete career guides: career orientation, ATS-ready CV tips, interviews, 2026 Gross to Net salary tools and industry knowledge.',
   openGraph: {
-    title: 'Cẩm Nang Nghề Nghiệp & Tuyển Dụng - InterVue',
-    description: 'Định hướng sự nghiệp, bí quyết tìm việc, công cụ tính lương Gross sang Net chuẩn quy định mới.',
+    title: 'Career Guides & Hiring - InterVue',
+    description: 'Career orientation, job search tips and Gross to Net salary tools based on the latest rules.',
   },
 };
 

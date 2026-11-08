@@ -91,7 +91,7 @@ export default function ProtectionSettingsCard({
             href={portal === 'recruiter' ? ROUTES.RECRUITER_ACCOUNT_TWO_FACTOR : '/account/two-factor'}
             className="bg-primary hover:bg-primary-hover rounded-full px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition"
           >
-            {is2FaEnabled ? (isRecruiter ? 'Manage' : 'Quản lý') : isRecruiter ? 'Enable now' : 'Kích hoạt ngay'}
+            {is2FaEnabled ? (isRecruiter ? 'Manage' : 'Manage') : isRecruiter ? 'Enable now' : 'Enable now'}
           </Link>
         </div>
       </div>

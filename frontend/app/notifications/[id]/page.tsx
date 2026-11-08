@@ -2,8 +2,8 @@ import NotificationDetailView from '@/components/common/NotificationDetailView';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Chi tiết thông báo | InterVue',
-  description: 'Nội dung chi tiết của thông báo',
+  title: 'Notification details | InterVue',
+  description: 'Notification details',
 };
 
 export default function CandidateNotificationDetailPage() {

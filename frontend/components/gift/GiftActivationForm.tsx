@@ -31,13 +31,13 @@ export function GiftActivationForm({
   const getPackageNameById = (id: string) => {
     switch (id) {
       case '300':
-        return 'Tài khoản Education VIP (1 năm)';
+        return 'Education VIP account (1 year)';
       case '400':
-        return 'Tài khoản Pro VIP (1 tháng)';
+        return 'Pro VIP account (1 month)';
       case '402':
-        return 'Tài khoản Premium VIP (1 năm)';
+        return 'Premium VIP account (1 year)';
       default:
-        return 'Tài khoản VIP';
+        return 'VIP account';
     }
   };
 
@@ -47,7 +47,7 @@ export function GiftActivationForm({
 
     const trimmed = couponCode.trim().toUpperCase();
     if (!trimmed) {
-      setErrorMsg('Vui lòng nhập mã quà tặng (coupon code) của bạn.');
+      setErrorMsg('Please enter your gift (coupon) code.');
       return;
     }
 
@@ -62,12 +62,12 @@ export function GiftActivationForm({
         const result: GiftActivationResult = {
           packageName: getPackageNameById(packageType),
           code: trimmed,
-          expiryText: packageType === '400' ? '1 tháng kể từ hôm nay' : '1 năm (12 tháng) kể từ hôm nay',
+          expiryText: packageType === '400' ? '1 month from today' : '1 year (12 months) from today',
         };
         setSuccessInfo(result);
         onApplySuccess(result);
       } else {
-        setErrorMsg('Mã code không hợp lệ hoặc đã được sử dụng. Vui lòng kiểm tra lại!');
+        setErrorMsg('The code is invalid or has already been used. Please check it again!');
       }
     }, 800);
   };
@@ -78,10 +78,10 @@ export function GiftActivationForm({
       className="border-outline-variant mx-auto w-full max-w-2xl rounded-2xl border bg-white p-6 shadow-sm sm:p-9 md:p-10"
     >
       <div className="mb-6 text-left">
-        <h1 className="text-primary text-2xl font-bold tracking-tight sm:text-3xl">Kích hoạt mã quà tặng</h1>
+        <h1 className="text-primary text-2xl font-bold tracking-tight sm:text-3xl">Redeem a gift code</h1>
         <p className="text-on-surface-variant mt-2 text-sm leading-relaxed">
-          Chúc mừng bạn đã nhận được mã quà tặng InterVue. Kích hoạt ngay bằng cách chọn gói tài khoản và nhập mã code
-          để nhận được những đặc quyền hấp dẫn!
+          Congratulations on receiving an InterVue gift code. Redeem it by choosing an account plan and entering the
+          code to unlock great benefits!
         </p>
       </div>
 
@@ -99,10 +99,10 @@ export function GiftActivationForm({
         <div className="border-primary/30 text-on-primary-container mb-6 rounded-2xl border bg-emerald-50/70 p-5">
           <div className="text-primary flex items-center gap-2 font-bold">
             <CheckCircle2 className="h-5 w-5" />
-            <span>Kích hoạt mã thành công!</span>
+            <span>Code redeemed!</span>
           </div>
           <p className="text-on-primary-container mt-1 text-sm">
-            Bạn đã mở khóa thành công <strong>{successInfo.packageName}</strong>. Thời hạn sử dụng:{' '}
+            You have successfully unlocked <strong>{successInfo.packageName}</strong>. Valid for:{' '}
             {successInfo.expiryText}.
           </p>
         </div>
@@ -110,7 +110,9 @@ export function GiftActivationForm({
 
       <form onSubmit={handleApplyCoupon} className="space-y-4">
         <div>
-          <label className="text-on-surface mb-1.5 block text-sm font-semibold">Chọn gói tài khoản kích hoạt</label>
+          <label className="text-on-surface mb-1.5 block text-sm font-semibold">
+            Choose the account plan to activate
+          </label>
           <div className="relative">
             <span className="text-primary pointer-events-none absolute top-3 left-3.5 z-10 flex items-center">
               <CircleUser className="h-5 w-5" />
@@ -122,21 +124,21 @@ export function GiftActivationForm({
               onChange={(e) => setPackageType(e.target.value)}
               className="border-outline text-on-surface focus:border-primary h-11 w-full appearance-none rounded-xl border bg-white pr-10 pl-11 text-sm font-medium transition hover:border-slate-400 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
             >
-              <option value="300">Tài khoản Education VIP (1 năm)</option>
-              <option value="400">Tài khoản Pro VIP (1 tháng)</option>
-              <option value="402">Tài khoản Premium VIP (1 năm)</option>
+              <option value="300">Education VIP account (1 year)</option>
+              <option value="400">Pro VIP account (1 month)</option>
+              <option value="402">Premium VIP account (1 year)</option>
             </select>
           </div>
         </div>
 
         <Input
-          label="Mã quà tặng (Coupon Code)"
+          label="Gift code (coupon)"
           value={couponCode}
           onChange={(e) => {
             setCouponCode(e.target.value);
             if (errorMsg) setErrorMsg('');
           }}
-          placeholder="Nhập mã code quà tặng của bạn"
+          placeholder="Enter your gift code"
         />
 
         <div className="pt-1">
@@ -148,7 +150,7 @@ export function GiftActivationForm({
               className="border-outline text-primary focus:ring-primary mt-0.5 h-4 w-4 rounded"
             />
             <span>
-              Tôi đồng ý chia sẻ thông tin đăng ký để nhận quà tặng khoá học và ưu đãi độc quyền từ đối tác liên kết
+              I agree to share my registration details to receive course gifts and exclusive offers from partners
               (Gitiho).
             </span>
           </label>
@@ -156,7 +158,7 @@ export function GiftActivationForm({
 
         <div className="pt-2">
           <Button type="submit" isLoading={loading} className="w-full py-3 text-sm font-bold">
-            Áp dụng mã ngay
+            Apply code now
           </Button>
         </div>
       </form>
