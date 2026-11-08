@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.job.services.impl;
 
+import com.techx.intervue.common.geolocation.GeoDistance;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
@@ -8,11 +9,15 @@ import com.techx.intervue.modules.job.enums.JobStatus;
 import com.techx.intervue.modules.job.mappers.JobMapper;
 import com.techx.intervue.modules.job.repositories.JobRepository;
 import com.techx.intervue.modules.job.repositories.JobSpecifications;
+import com.techx.intervue.modules.job.requests.NearbyJobsRequest;
 import com.techx.intervue.modules.job.requests.SearchJobsRequest;
+import com.techx.intervue.modules.job.resources.NearbyJobResource;
 import com.techx.intervue.modules.job.resources.PublicJobResource;
 import com.techx.intervue.modules.job.resources.PublicJobSummaryResource;
 import com.techx.intervue.modules.job.services.interfaces.PublicJobServiceInterface;
+import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +37,9 @@ public class PublicJobService implements PublicJobServiceInterface {
     private static final Sort NEWEST_FIRST =
             Sort.by(Sort.Direction.DESC, "publishedAt").and(Sort.by(Sort.Direction.DESC, "id"));
 
+    private static final int NEARBY_CANDIDATE_LIMIT = 500;
+    private static final int NEARBY_RESULT_LIMIT = 100;
+
     private final JobRepository jobRepository;
     private final JobMapper jobMapper;
     private final CompanyServiceInterface companyService;
@@ -47,6 +55,43 @@ public class PublicJobService implements PublicJobServiceInterface {
                         newestFirst);
         Map<Long, String> logos = logosOf(page.getContent());
         return page.map(job -> jobMapper.toPublicSummary(job, logos.get(job.getRecruiterId())));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<NearbyJobResource> findNearby(NearbyJobsRequest request) {
+        double radiusKm = request.effectiveRadiusKm();
+        double latDelta = GeoDistance.latitudeDelta(radiusKm);
+        double lngDelta = GeoDistance.longitudeDelta(radiusKm, request.lat());
+        List<Job> candidates =
+                jobRepository.findPublishedInBounds(
+                        JobStatus.PUBLISHED,
+                        JobDeadlines.today(),
+                        BigDecimal.valueOf(request.lat() - latDelta),
+                        BigDecimal.valueOf(request.lat() + latDelta),
+                        BigDecimal.valueOf(request.lng() - lngDelta),
+                        BigDecimal.valueOf(request.lng() + lngDelta),
+                        PageRequest.of(0, NEARBY_CANDIDATE_LIMIT, NEWEST_FIRST));
+        Map<Long, String> logos = logosOf(candidates);
+        return candidates.stream()
+                .map(job -> toNearby(job, request, logos.get(job.getRecruiterId())))
+                .filter(nearby -> nearby.distanceKm() <= radiusKm)
+                .sorted(Comparator.comparingDouble(NearbyJobResource::distanceKm))
+                .limit(NEARBY_RESULT_LIMIT)
+                .toList();
+    }
+
+    private NearbyJobResource toNearby(Job job, NearbyJobsRequest request, String logoUrl) {
+        double latitude = job.getLatitude().doubleValue();
+        double longitude = job.getLongitude().doubleValue();
+        double distanceKm =
+                GeoDistance.haversineKm(request.lat(), request.lng(), latitude, longitude);
+        return new NearbyJobResource(
+                jobMapper.toPublicSummary(job, logoUrl),
+                job.getAddress(),
+                latitude,
+                longitude,
+                Math.round(distanceKm * 10) / 10.0);
     }
 
     @Override

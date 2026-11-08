@@ -7,6 +7,7 @@ import com.techx.intervue.modules.job.enums.JobLevel;
 import com.techx.intervue.modules.job.enums.JobStatus;
 import com.techx.intervue.modules.job.enums.SalaryCurrency;
 import com.techx.intervue.modules.job.enums.WorkingArrangement;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
@@ -38,7 +39,8 @@ public record JobResource(
         Instant createdAt,
         Instant updatedAt) {
 
-    public record Location(String city, String address) {}
+    public record Location(
+            String city, String address, BigDecimal latitude, BigDecimal longitude) {}
 
     public record Salary(boolean negotiable, Long min, Long max, SalaryCurrency currency) {}
 }

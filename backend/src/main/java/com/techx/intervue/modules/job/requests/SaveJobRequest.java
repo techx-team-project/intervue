@@ -6,6 +6,9 @@ import com.techx.intervue.modules.job.enums.SalaryCurrency;
 import com.techx.intervue.modules.job.enums.ScreeningQuestionType;
 import com.techx.intervue.modules.job.enums.WorkingArrangement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -13,6 +16,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -31,7 +35,17 @@ public record SaveJobRequest(
         @Min(1) @Max(1000) Integer openings,
         @Valid @Size(max = 5) List<@NotNull ScreeningQuestion> screeningQuestions) {
 
-    public record Location(@Size(max = 100) String city, @Size(max = 500) String address) {}
+    public record Location(
+            @Size(max = 100) String city,
+            @Size(max = 500) String address,
+            @DecimalMin("-90") @DecimalMax("90") BigDecimal latitude,
+            @DecimalMin("-180") @DecimalMax("180") BigDecimal longitude) {
+
+        @AssertTrue
+        public boolean isCoordinatePairComplete() {
+            return (latitude == null) == (longitude == null);
+        }
+    }
 
     public record ScreeningQuestion(
             @NotNull ScreeningQuestionType type,

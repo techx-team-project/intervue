@@ -1,6 +1,8 @@
 package com.techx.intervue.modules.job.services.interfaces;
 
+import com.techx.intervue.modules.job.requests.NearbyJobsRequest;
 import com.techx.intervue.modules.job.requests.SearchJobsRequest;
+import com.techx.intervue.modules.job.resources.NearbyJobResource;
 import com.techx.intervue.modules.job.resources.PublicJobResource;
 import com.techx.intervue.modules.job.resources.PublicJobSummaryResource;
 import java.util.Collection;
@@ -13,6 +15,8 @@ public interface PublicJobServiceInterface {
     Page<PublicJobSummaryResource> search(SearchJobsRequest request, Pageable pageable);
 
     PublicJobResource findOne(Long jobId);
+
+    List<NearbyJobResource> findNearby(NearbyJobsRequest request);
 
     boolean isAvailable(Long jobId);
 
