@@ -68,7 +68,7 @@ export default function CandidateCvManager() {
         <div>
           <h1 className="text-navy text-2xl font-black">CV của tôi</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Tối đa {MAX_RESUMES} CV dạng PDF (5 MB, 5 trang). CV mặc định được chọn sẵn khi ứng tuyển.
+            Tối đa {MAX_RESUMES} CV dạng PDF (5 MB). CV mặc định được chọn sẵn khi ứng tuyển.
           </p>
         </div>
         <Button
