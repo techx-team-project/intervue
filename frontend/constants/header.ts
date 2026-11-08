@@ -11,6 +11,7 @@ export const CANDIDATE_JOBS_MENU = [
 ];
 
 export const CANDIDATE_CV_MENU = [
+  { href: '/cv-review', label: 'AI CV review' },
   { href: '/cv-templates', label: 'CV templates' },
   { href: ROUTES.CANDIDATE_CVS, label: 'Manage CVs' },
   { href: ROUTES.CANDIDATE_PROFILE, label: 'My profile' },

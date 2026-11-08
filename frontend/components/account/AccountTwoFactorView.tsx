@@ -177,10 +177,14 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
       if (isApiError(err)) {
         setErrorMsg(
           err.message ||
-            (isRecruiter ? 'Incorrect verification code. Please try again.' : 'Incorrect verification code. Please try again.'),
+            (isRecruiter
+              ? 'Incorrect verification code. Please try again.'
+              : 'Incorrect verification code. Please try again.'),
         );
       } else {
-        setErrorMsg(isRecruiter ? 'Failed to enable 2FA. Please try again.' : 'Failed to enable 2FA. Please try again.');
+        setErrorMsg(
+          isRecruiter ? 'Failed to enable 2FA. Please try again.' : 'Failed to enable 2FA. Please try again.',
+        );
       }
     } finally {
       setIsSubmitting(false);
@@ -201,7 +205,8 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
     } catch (err) {
       if (isApiError(err)) {
         setErrorMsg(
-          err.message || (isRecruiter ? 'Incorrect password. Please try again.' : 'Incorrect password. Please try again.'),
+          err.message ||
+            (isRecruiter ? 'Incorrect password. Please try again.' : 'Incorrect password. Please try again.'),
         );
       } else {
         setErrorMsg(isRecruiter ? 'Failed to disable 2FA.' : 'Failed to disable 2FA.');
@@ -327,9 +332,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-slate-900">
-                  {isRecruiter
-                    ? 'Your employer account is protected with 2FA'
-                    : 'Your account is protected with 2FA'}
+                  {isRecruiter ? 'Your employer account is protected with 2FA' : 'Your account is protected with 2FA'}
                 </h3>
                 <p className="mt-1 text-sm leading-relaxed text-slate-600">
                   {isRecruiter
@@ -513,7 +516,9 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
               </div>
               <div className="flex-1">
                 <div className="text-sm font-bold text-slate-800">
-                  {isRecruiter ? 'Scan the QR code with your authenticator app' : 'Scan the QR code with your authenticator app'}
+                  {isRecruiter
+                    ? 'Scan the QR code with your authenticator app'
+                    : 'Scan the QR code with your authenticator app'}
                 </div>
                 <div className="mt-4 flex flex-col gap-6 sm:flex-row sm:items-center">
                   <div className="flex h-44 w-44 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white p-3 shadow-xs">
@@ -597,13 +602,7 @@ export default function AccountTwoFactorView({ portal = 'candidate' }: AccountTw
                           )
                         }
                       >
-                        {isCopiedBackup
-                          ? isRecruiter
-                            ? 'Copied'
-                            : 'Copied'
-                          : isRecruiter
-                            ? 'Copy all'
-                            : 'Copy all'}
+                        {isCopiedBackup ? (isRecruiter ? 'Copied' : 'Copied') : isRecruiter ? 'Copy all' : 'Copy all'}
                       </Button>
                       <Button
                         type="button"

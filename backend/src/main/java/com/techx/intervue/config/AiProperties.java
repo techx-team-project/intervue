@@ -4,7 +4,7 @@ import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "ai")
-public record AiProperties(Gemini gemini, Voyage voyage, Quota quota) {
+public record AiProperties(Gemini gemini, Embedding embedding, Quota quota) {
 
     public record Gemini(
             String apiKey,
@@ -14,8 +14,7 @@ public record AiProperties(Gemini gemini, Voyage voyage, Quota quota) {
             Duration timeout,
             int maxRetries) {}
 
-    public record Voyage(
-            String apiKey, String baseUrl, String model, Duration timeout, int maxRetries) {}
+    public record Embedding(String model, int dimensions) {}
 
     public record Quota(int userPerDay, int ipPerHour) {}
 }
