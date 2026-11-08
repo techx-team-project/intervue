@@ -72,16 +72,16 @@ export default function AdminBannerCarousel({ slides }: AdminBannerCarouselProps
             key={slide.id}
             href={slide.href}
             className={cn(
-              'group/card relative flex min-w-full shrink-0 snap-start overflow-hidden rounded-2xl shadow-sm transition-all hover:shadow-md lg:min-w-[calc(50%-0.5rem)]',
+              'group/card hover:shadow-elevation-1 relative flex min-w-full shrink-0 snap-start overflow-hidden rounded-2xl shadow-sm transition-all lg:min-w-[calc(50%-0.5rem)]',
               slide.gradientClassName,
             )}
           >
             <div className="relative z-10 flex min-w-0 flex-1 flex-col justify-center gap-2 p-5 pr-1 sm:p-6 sm:pr-2">
-              <span className="text-[11.5px] font-bold tracking-wider text-white/70 uppercase">{slide.eyebrow}</span>
-              <h3 className="max-w-[18rem] text-[17px] leading-snug font-black text-white sm:text-lg">{slide.title}</h3>
-              <p className="max-w-[20rem] text-[12.5px] leading-relaxed text-white/80">{slide.description}</p>
+              <span className="text-label-sm font-bold tracking-wider text-white/70 uppercase">{slide.eyebrow}</span>
+              <h3 className="max-w-[18rem] text-[17px] leading-snug font-bold text-white sm:text-lg">{slide.title}</h3>
+              <p className="text-body-sm max-w-[20rem] leading-relaxed text-white/80">{slide.description}</p>
 
-              <span className="mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-[12.5px] font-bold text-[#0c2e24] shadow-xs transition-transform group-hover/card:scale-105">
+              <span className="text-body-sm mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 font-bold text-[#0c2e24] shadow-xs transition-transform group-hover/card:scale-105">
                 <span>{slide.ctaLabel}</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </span>
@@ -107,7 +107,7 @@ export default function AdminBannerCarousel({ slides }: AdminBannerCarouselProps
             onClick={() => move(-1)}
             title="Previous banner"
             aria-label="Previous banner"
-            className="text-navy absolute top-1/2 left-2 z-20 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white/90 opacity-0 shadow-md transition group-hover:opacity-100 hover:bg-white"
+            className="text-navy border-outline-variant shadow-elevation-1 absolute top-1/2 left-2 z-20 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border bg-white/90 opacity-0 transition group-hover:opacity-100 hover:bg-white"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -117,7 +117,7 @@ export default function AdminBannerCarousel({ slides }: AdminBannerCarouselProps
             onClick={() => move(1)}
             title="Next banner"
             aria-label="Next banner"
-            className="text-navy absolute top-1/2 right-2 z-20 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white/90 opacity-0 shadow-md transition group-hover:opacity-100 hover:bg-white"
+            className="text-navy border-outline-variant shadow-elevation-1 absolute top-1/2 right-2 z-20 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border bg-white/90 opacity-0 transition group-hover:opacity-100 hover:bg-white"
           >
             <ChevronRight className="h-4 w-4" />
           </button>

@@ -63,7 +63,7 @@ export default function AdminUsersFilterBar({
                 type="button"
                 onClick={() => setDraft('')}
                 aria-label="Clear search"
-                className="cursor-pointer rounded-md p-0.5 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                className="hover:bg-surface-container-high hover:text-on-surface cursor-pointer rounded-md p-0.5 transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>

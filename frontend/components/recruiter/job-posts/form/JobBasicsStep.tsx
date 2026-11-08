@@ -81,12 +81,12 @@ export default function JobBasicsStep() {
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between gap-3">
-          <span className="block text-sm font-semibold text-slate-800">Mức lương (mỗi tháng)</span>
+          <span className="text-on-surface block text-sm font-semibold">Mức lương (mỗi tháng)</span>
           <Controller
             control={control}
             name="salaryNegotiable"
             render={({ field }) => (
-              <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-slate-600">
+              <label className="text-on-surface-variant flex cursor-pointer items-center gap-2 text-xs font-medium">
                 Thỏa thuận
                 <Switch size="sm" ariaLabel="Lương thỏa thuận" checked={field.value} onChange={field.onChange} />
               </label>

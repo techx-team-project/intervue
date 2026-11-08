@@ -13,7 +13,7 @@ export default function ApplicationStatusBadge({ status, className }: Applicatio
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-bold',
+        'text-label-sm inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-bold',
         meta.chipClassName,
         className,
       )}

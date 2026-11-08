@@ -14,7 +14,7 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
   const articleUrl = `/blog/${article.categorySlug}/${article.slug}`;
 
   return (
-    <article className="group hover:border-primary/50 flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition duration-300 hover:shadow-xl">
+    <article className="group hover:border-primary/50 border-outline-variant hover:shadow-elevation-2 flex flex-col overflow-hidden rounded-2xl border bg-white shadow-xs transition duration-300">
       <Link href={articleUrl} className="relative block aspect-video w-full overflow-hidden bg-gray-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -33,7 +33,7 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
 
       <div className="flex flex-1 flex-col justify-between p-5">
         <div>
-          <div className="mb-2.5 flex items-center gap-2 text-xs text-[#7f878f]">
+          <div className="text-on-surface-variant mb-2.5 flex items-center gap-2 text-xs">
             <span className="text-navy font-medium">{article.publishedAt}</span>
             <span>•</span>
             <span className="flex items-center gap-1">
@@ -47,11 +47,11 @@ export default function BlogArticleCard({ article }: BlogArticleCardProps) {
             </span>
           </div>
 
-          <h3 className="group-hover:text-primary line-clamp-2 text-base font-bold text-[#171717] transition-colors">
+          <h3 className="group-hover:text-primary text-on-surface line-clamp-2 text-base font-bold transition-colors">
             <Link href={articleUrl}>{article.title}</Link>
           </h3>
 
-          <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-[#526475]">{article.excerpt}</p>
+          <p className="text-on-surface-variant mt-2 line-clamp-2 text-xs leading-relaxed">{article.excerpt}</p>
         </div>
 
         <div className="mt-4 border-t border-gray-100 pt-3">

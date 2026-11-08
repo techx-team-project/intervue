@@ -23,7 +23,7 @@ export default function DashboardBannerCarousel() {
   const onNext = () => setCurrent((prev) => (prev + 1) % slides.length);
 
   return (
-    <div className="group relative h-72 overflow-hidden rounded-2xl border border-[#e9eaec] shadow-md">
+    <div className="group border-outline-variant shadow-elevation-1 relative h-72 overflow-hidden rounded-2xl border">
       {slides.map((slide, index) => {
         const Icon = slide.icon;
 
@@ -43,13 +43,13 @@ export default function DashboardBannerCarousel() {
               </div>
 
               {slide.eyebrow && (
-                <span className="text-[12.5px] font-bold tracking-wide text-white/80 uppercase">{slide.eyebrow}</span>
+                <span className="text-body-sm font-bold tracking-wide text-white/80 uppercase">{slide.eyebrow}</span>
               )}
 
-              <h2 className="max-w-lg text-xl font-black text-white sm:text-2xl">{slide.title}</h2>
-              <p className="max-w-md text-[13.5px] leading-relaxed text-white/85">{slide.description}</p>
+              <h2 className="max-w-lg text-xl font-bold text-white sm:text-2xl">{slide.title}</h2>
+              <p className="text-body-md max-w-md leading-relaxed text-white/85">{slide.description}</p>
 
-              <span className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-bold text-slate-900">
+              <span className="text-body-md text-on-surface mt-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-4 py-2 font-bold">
                 <span>{slide.ctaLabel}</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </span>
@@ -63,7 +63,7 @@ export default function DashboardBannerCarousel() {
           <button
             type="button"
             onClick={onPrev}
-            className="text-navy absolute top-1/2 left-2.5 z-20 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white/90 shadow-md transition hover:bg-white"
+            className="text-navy border-outline-variant shadow-elevation-1 absolute top-1/2 left-2.5 z-20 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border bg-white/90 transition hover:bg-white"
             title="Previous banner"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -71,7 +71,7 @@ export default function DashboardBannerCarousel() {
           <button
             type="button"
             onClick={onNext}
-            className="text-navy absolute top-1/2 right-2.5 z-20 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#e9eaec] bg-white/90 shadow-md transition hover:bg-white"
+            className="text-navy border-outline-variant shadow-elevation-1 absolute top-1/2 right-2.5 z-20 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border bg-white/90 transition hover:bg-white"
             title="Next banner"
           >
             <ChevronRight className="h-4 w-4" />

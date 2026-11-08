@@ -59,7 +59,7 @@ export default function AdminAccountsListView({ data }: AdminAccountsListViewPro
           <>
             <Link
               href={ROUTES.ADMIN_USERS}
-              className="dark:border-forest-800 dark:text-forest-100 dark:hover:bg-forest-850 inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3.5 py-2 text-[12.5px] font-bold text-slate-700 transition-colors hover:bg-slate-50"
+              className="dark:border-forest-800 dark:text-forest-100 dark:hover:bg-forest-850 border-outline-variant text-body-sm text-on-surface hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 font-bold transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               All users
@@ -67,7 +67,7 @@ export default function AdminAccountsListView({ data }: AdminAccountsListViewPro
 
             <Link
               href={ROUTES.ADMIN_ADMINS_CREATE}
-              className="bg-primary hover:bg-primary-hover inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[12.5px] font-bold text-white transition-colors"
+              className="bg-primary hover:bg-primary-hover text-body-sm inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 font-bold text-white transition-colors"
             >
               <Plus className="h-4 w-4" />
               Create admin
@@ -82,12 +82,12 @@ export default function AdminAccountsListView({ data }: AdminAccountsListViewPro
         <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3.5">
           <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
           <div className="min-w-0">
-            <p className="text-[13px] font-bold text-amber-900">
+            <p className="text-body-md font-bold text-amber-900">
               {withoutTwoFactor.length === 1
                 ? '1 admin account has no two-factor authentication'
                 : `${withoutTwoFactor.length} admin accounts have no two-factor authentication`}
             </p>
-            <p className="mt-0.5 text-[12.5px] text-amber-800">
+            <p className="text-body-sm mt-0.5 text-amber-800">
               {withoutTwoFactor.map((account) => account.name).join(', ')}. An admin account without a second factor is
               the weakest point of the whole panel.
             </p>

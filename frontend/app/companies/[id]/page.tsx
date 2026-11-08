@@ -26,11 +26,11 @@ export async function generateMetadata({ params }: CompanyDetailPageProps): Prom
   const company = await loadCompany(id);
 
   return {
-    title: `${company.name} Tuyển Dụng, Việc Làm Mới Nhất - InterVue`,
-    description: `Khám phá ${company.openJobsCount} vị trí việc làm đang tuyển dụng tại ${company.name} trên InterVue.`,
+    title: `${company.name} Careers and Latest Jobs - InterVue`,
+    description: `Explore ${company.openJobsCount} open positions at ${company.name} on InterVue.`,
     openGraph: {
-      title: `${company.name} - Thông Tin Doanh Nghiệp & Tuyển Dụng`,
-      description: `Địa chỉ: ${company.address} • Đang tuyển ${company.openJobsCount} vị trí`,
+      title: `${company.name} - Company Profile & Careers`,
+      description: `Address: ${company.address} • ${company.openJobsCount} open positions`,
     },
   };
 }
@@ -40,7 +40,7 @@ export default async function CompanyDetailPage({ params }: CompanyDetailPagePro
   const company = await loadCompany(id);
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f4f5f5]">
+    <div className="bg-surface-container-low flex min-h-screen flex-col">
       <Header />
 
       <main className="flex-1">

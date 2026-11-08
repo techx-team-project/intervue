@@ -4,9 +4,8 @@ import Footer from '@/components/common/Footer';
 import MascotPlaygroundView from '@/components/mascot/MascotPlaygroundView';
 
 export const metadata: Metadata = {
-  title: 'Góc Giải Trí InterVue AI Bot - InterVue',
-  description:
-    'Góc giải trí và chơi đùa cùng InterVue Bot AI: Khám phá 9 sắc thái biểu cảm nhộn nhịp, tương tác mượt mà 60-120 FPS cùng bạn nhỏ AI thông minh của InterVue.',
+  title: 'InterVue AI Bot Playground - InterVue',
+  description: 'Play with the InterVue AI Bot: explore 9 lively expressions with smooth 60-120 FPS interaction.',
 };
 
 export default function MascotPage() {

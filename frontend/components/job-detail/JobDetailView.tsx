@@ -47,10 +47,10 @@ export default function JobDetailView({ job, relatedJobs, isPreviewMode = false 
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f5f5] pb-16">
+    <div className="bg-surface-container-low min-h-screen pb-16">
       <JobStickyNav job={job} onApply={() => setIsApplyOpen(true)} />
 
-      <div className="container-topcv pt-4">
+      <div className="container-page pt-4">
         <JobBreadcrumb title={job.title} category={job.categories?.[0]?.name} onReport={handleReport} />
 
         <JobHeaderCard job={job} onApply={() => setIsApplyOpen(true)} isSaved={isSaved} onToggleSave={toggleSave} />

@@ -25,19 +25,19 @@ export default function AdminDataGate({ status, error, onRetry, children }: Admi
 
   if (status === 'error') {
     return (
-      <div className="dark:border-forest-800 dark:bg-forest-900 flex min-h-[60vh] flex-col items-center justify-center gap-3 rounded-2xl border border-[#e2e8f0] bg-white px-6 text-center">
+      <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex min-h-[60vh] flex-col items-center justify-center gap-3 rounded-2xl border bg-white px-6 text-center">
         <TriangleAlert className="h-10 w-10 text-rose-500" />
-        <p className="text-navy dark:text-forest-50 text-[14px] font-bold">Could not load this page</p>
-        <p className="dark:text-forest-300 max-w-sm text-[12.5px] text-[#64748b]">
+        <p className="text-navy dark:text-forest-50 text-body-md font-bold">Could not load this page</p>
+        <p className="dark:text-forest-300 text-body-sm text-on-surface-variant max-w-sm">
           {(error && ERROR_MESSAGES[error.code]) ?? FALLBACK_ERROR_MESSAGE}
         </p>
         {error?.traceId && (
-          <p className="dark:text-forest-400 font-mono text-[11px] text-[#94a3b8]">Trace {error.traceId}</p>
+          <p className="dark:text-forest-400 text-label-sm text-outline font-mono">Trace {error.traceId}</p>
         )}
         <button
           type="button"
           onClick={onRetry}
-          className="text-primary mt-1 cursor-pointer text-[12.5px] font-bold hover:underline"
+          className="text-primary text-body-sm mt-1 cursor-pointer font-bold hover:underline"
         >
           Try again
         </button>

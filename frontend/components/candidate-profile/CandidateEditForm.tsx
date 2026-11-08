@@ -41,7 +41,7 @@ export default function CandidateEditForm({ profile, update, onClose }: Candidat
     <FormProvider {...methods}>
       <form onSubmit={onSubmit} noValidate className="space-y-6 text-sm">
         {formState.errors.root?.message && (
-          <p role="alert" className="rounded-xl bg-rose-50 px-3.5 py-2.5 text-xs font-medium text-rose-600">
+          <p role="alert" className="bg-error/10 text-error rounded-xl px-3.5 py-2.5 text-xs font-medium">
             {formState.errors.root.message}
           </p>
         )}
@@ -51,7 +51,7 @@ export default function CandidateEditForm({ profile, update, onClose }: Candidat
         <CandidateJobPreferenceFields />
         <CandidateVisibilityFields />
 
-        <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-4">
+        <div className="border-outline-variant flex items-center justify-end gap-3 border-t pt-4">
           <Button type="button" variant="secondary" onClick={onClose} disabled={update.isPending}>
             Cancel
           </Button>

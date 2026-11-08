@@ -183,7 +183,7 @@ export function toBlogArticle(
         month: '2-digit',
         year: 'numeric',
       })
-    : 'Mới cập nhật';
+    : 'Recently updated';
 
   const viewsFormatted = res.viewsCount >= 1000 ? `${(res.viewsCount / 1000).toFixed(1)}K` : `${res.viewsCount || 0}`;
 
@@ -203,20 +203,20 @@ export function toBlogArticle(
     id: String(res.id),
     slug: res.slug,
     title: res.title,
-    category: categoryMeta?.name || catName || 'Cẩm nang',
+    category: categoryMeta?.name || catName || 'Career guide',
     categorySlug: catSlug || categoryMeta?.slug || 'dinh-huong-nghe-nghiep',
     excerpt: res.excerpt,
     coverImage:
       res.coverImageUrl ||
       'https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=800&q=80',
     publishedAt: publishedDate,
-    readTime: `${res.readTimeMinutes || 5} phút đọc`,
+    readTime: `${res.readTimeMinutes || 5} min read`,
     viewsCount: viewsFormatted,
     author: {
-      name: authorName || 'Ban Biên Tập InterVue',
+      name: authorName || 'InterVue Editorial Team',
       avatar:
         authorAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80',
-      role: authorRole || 'Biên tập viên',
+      role: authorRole || 'Editor',
     },
     isFeatured: res.isFeatured,
     tags: res.tags || [],

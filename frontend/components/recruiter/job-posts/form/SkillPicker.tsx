@@ -58,10 +58,10 @@ export default function SkillPicker({ value, onChange, error }: SkillPickerProps
   return (
     <div ref={containerRef} className="w-full space-y-1.5">
       <div className="flex items-baseline justify-between">
-        <label htmlFor={`${listId}-input`} className="block text-sm font-semibold text-slate-800">
+        <label htmlFor={`${listId}-input`} className="text-on-surface block text-sm font-semibold">
           Kỹ năng yêu cầu
         </label>
-        <span className="text-xs text-slate-400">
+        <span className="text-outline text-xs">
           {value.length}/{JOB_MAX_SKILLS}
         </span>
       </div>
@@ -88,7 +88,7 @@ export default function SkillPicker({ value, onChange, error }: SkillPickerProps
       )}
 
       <div className="relative">
-        <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <Search className="text-outline pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
         <input
           id={`${listId}-input`}
           role="combobox"
@@ -106,9 +106,9 @@ export default function SkillPicker({ value, onChange, error }: SkillPickerProps
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
           className={cn(
-            'w-full rounded-xl border bg-white py-2.5 pr-3.5 pl-10 text-sm text-slate-800 placeholder-slate-400 transition-colors',
-            'focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none disabled:bg-slate-50',
-            error ? 'border-rose-400' : 'border-slate-300',
+            'text-on-surface w-full rounded-xl border bg-white py-2.5 pr-3.5 pl-10 text-sm placeholder-slate-400 transition-colors',
+            'disabled:bg-surface-container-low focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none',
+            error ? 'border-rose-400' : 'border-outline',
           )}
         />
 
@@ -116,10 +116,10 @@ export default function SkillPicker({ value, onChange, error }: SkillPickerProps
           <ul
             id={listId}
             role="listbox"
-            className="absolute z-20 mt-1.5 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white py-1 shadow-lg"
+            className="border-outline-variant shadow-elevation-2 absolute z-20 mt-1.5 max-h-60 w-full overflow-y-auto rounded-xl border bg-white py-1"
           >
             {options.length === 0 ? (
-              <li className="px-3.5 py-3 text-sm text-slate-500">
+              <li className="text-on-surface-variant px-3.5 py-3 text-sm">
                 {isFetching ? 'Đang tìm…' : 'Không có kỹ năng phù hợp.'}
               </li>
             ) : (
@@ -130,8 +130,8 @@ export default function SkillPicker({ value, onChange, error }: SkillPickerProps
                     onClick={() => addSkill(skill)}
                     className="flex w-full items-center justify-between gap-3 px-3.5 py-2 text-left text-sm hover:bg-emerald-50"
                   >
-                    <span className="font-medium text-slate-800">{skill.name}</span>
-                    <span className="text-[11px] text-slate-400">{SKILL_GROUP_LABELS[skill.group]}</span>
+                    <span className="text-on-surface font-medium">{skill.name}</span>
+                    <span className="text-label-sm text-outline">{SKILL_GROUP_LABELS[skill.group]}</span>
                   </button>
                 </li>
               ))

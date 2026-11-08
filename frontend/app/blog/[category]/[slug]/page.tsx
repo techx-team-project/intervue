@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: BlogArticleDetailPageProps): 
 
   if (!article) {
     return {
-      title: 'Bài viết không tồn tại | InterVue',
+      title: 'Article not found | InterVue',
     };
   }
 
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: BlogArticleDetailPageProps): 
     title: `${article.title} | InterVue`,
     description: article.excerpt,
     openGraph: {
-      title: `${article.title} - Cẩm Nang Nghề Nghiệp InterVue`,
+      title: `${article.title} - InterVue Career Guides`,
       description: article.excerpt,
       images: [{ url: article.coverImage }],
     },
@@ -85,7 +85,7 @@ export default async function BlogArticleDetailPage({ params }: BlogArticleDetai
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f8faf9]">
+    <div className="bg-surface-container-low flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
         <BlogDetailView article={article} />

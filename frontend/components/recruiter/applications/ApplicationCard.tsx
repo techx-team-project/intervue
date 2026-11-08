@@ -64,11 +64,11 @@ export default function ApplicationCard({
       }}
       className={cn(
         'group relative rounded-2xl border bg-white text-left transition',
-        onOpen && 'cursor-pointer hover:-translate-y-0.5 hover:shadow-md',
+        onOpen && 'hover:shadow-elevation-1 cursor-pointer hover:-translate-y-0.5',
         'border-[#e5e9ef] shadow-2xs',
         isSelected && 'border-emerald-300 ring-1 ring-emerald-200',
         isDragging && 'opacity-40',
-        isOverlay && 'rotate-2 shadow-2xl',
+        isOverlay && 'shadow-elevation-2 rotate-2',
         variant === 'rich' ? 'p-3.5' : 'p-3',
         className,
       )}
@@ -88,7 +88,7 @@ export default function ApplicationCard({
               event.stopPropagation();
               onToggleSelected();
             }}
-            className="mt-1 h-4.5 w-4.5 shrink-0 cursor-pointer rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 sm:h-4 sm:w-4"
+            className="border-outline mt-1 h-4.5 w-4.5 shrink-0 cursor-pointer rounded text-emerald-600 focus:ring-emerald-500 sm:h-4 sm:w-4"
           />
         )}
 
@@ -97,18 +97,18 @@ export default function ApplicationCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <p className="text-navy truncate text-[13.5px] font-bold">{candidate.fullName}</p>
-              <p className="truncate text-[11.5px] text-[#64748b]">{candidate.title}</p>
+              <p className="text-navy text-body-md truncate font-bold">{candidate.fullName}</p>
+              <p className="text-label-sm text-on-surface-variant truncate">{candidate.title}</p>
             </div>
 
             <AiMatchRing score={aiMatch.score} size={variant === 'rich' ? 'md' : 'sm'} />
           </div>
 
           {variant === 'rich' && (
-            <p className="mt-1.5 flex items-center gap-1 truncate text-[11.5px] text-[#94a3b8]">
+            <p className="text-label-sm text-outline mt-1.5 flex items-center gap-1 truncate">
               <MapPin className="h-3 w-3 shrink-0" />
               <span className="truncate">{candidate.location}</span>
-              <span className="text-[#cbd5e1]">•</span>
+              <span className="text-outline">•</span>
               <span className="shrink-0">{candidate.experienceYears} yrs exp</span>
             </p>
           )}
@@ -120,13 +120,13 @@ export default function ApplicationCard({
           {visibleSkills.map((skill) => (
             <span
               key={skill}
-              className="rounded-md border border-[#eef2f7] bg-[#f8fafc] px-1.5 py-0.5 text-[11px] font-semibold text-[#475569]"
+              className="bg-surface-container-low text-label-sm text-on-surface-variant rounded-md border border-[#eef2f7] px-1.5 py-0.5 font-semibold"
             >
               {skill}
             </span>
           ))}
           {hiddenSkillCount > 0 && (
-            <span className="rounded-md bg-[#f1f5f9] px-1.5 py-0.5 text-[11px] font-bold text-[#64748b]">
+            <span className="bg-surface-container-low text-label-sm text-on-surface-variant rounded-md px-1.5 py-0.5 font-bold">
               +{hiddenSkillCount}
             </span>
           )}
@@ -134,7 +134,7 @@ export default function ApplicationCard({
       )}
 
       {variant !== 'minimal' && (
-        <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] font-semibold">
+        <div className="text-label-sm mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-semibold">
           {application.interview && (
             <span className="inline-flex items-center gap-1 text-violet-600">
               <CalendarClock className="h-3 w-3" />
@@ -142,7 +142,7 @@ export default function ApplicationCard({
             </span>
           )}
           {application.screeningAnswers.length > 0 && (
-            <span className="inline-flex items-center gap-1 text-[#64748b]">
+            <span className="text-on-surface-variant inline-flex items-center gap-1">
               <ListChecks className="h-3 w-3" />
               {application.screeningAnswers.length} screening answers
             </span>
@@ -164,13 +164,15 @@ export default function ApplicationCard({
 
       <div
         className={cn(
-          'mt-2.5 flex items-center justify-between gap-2 border-t border-[#f1f5f9] pt-2.5',
+          'border-outline-variant mt-2.5 flex items-center justify-between gap-2 border-t pt-2.5',
           variant === 'minimal' && 'mt-2 pt-2',
         )}
       >
         <div className="min-w-0">
-          <p className="truncate text-[11px] text-[#94a3b8]">{formatRelativeDay(application.appliedAt)}</p>
-          {showJobTitle && <p className="truncate text-[11px] font-semibold text-[#64748b]">{application.jobTitle}</p>}
+          <p className="text-label-sm text-outline truncate">{formatRelativeDay(application.appliedAt)}</p>
+          {showJobTitle && (
+            <p className="text-label-sm text-on-surface-variant truncate font-semibold">{application.jobTitle}</p>
+          )}
         </div>
 
         <div className="flex shrink-0 items-center gap-0.5">
@@ -184,8 +186,8 @@ export default function ApplicationCard({
                 onToggleSaved();
               }}
               className={cn(
-                'flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-slate-100 sm:h-7 sm:w-7',
-                application.isSaved ? 'text-amber-500' : 'text-slate-400 hover:text-slate-700',
+                'hover:bg-surface-container-high flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-colors sm:h-7 sm:w-7',
+                application.isSaved ? 'text-amber-500' : 'text-outline hover:text-on-surface',
               )}
             >
               <Bookmark className={cn('h-3.5 w-3.5', application.isSaved && 'fill-current')} />

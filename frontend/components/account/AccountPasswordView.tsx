@@ -57,17 +57,17 @@ function ChangePasswordView({ portal }: { portal: AuthPortal }) {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
+      <div className="border-outline-variant rounded-2xl border bg-white p-6 shadow-xs">
         <div className="flex items-center gap-2">
           <KeyRound className="text-primary h-5 w-5" />
-          <h1 className="text-xl font-black text-slate-800 sm:text-2xl">Change password</h1>
+          <h1 className="text-on-surface text-xl font-bold sm:text-2xl">Change password</h1>
         </div>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="text-on-surface-variant mt-1 text-sm">
           To keep your profile and privacy safe, choose a strong password that you have never used anywhere else.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
+      <div className="border-outline-variant rounded-2xl border bg-white p-6 shadow-xs sm:p-8">
         <FormErrorAlert message={errors.root?.message} />
 
         <form onSubmit={onSubmit} noValidate className="space-y-5">
@@ -110,8 +110,8 @@ function ChangePasswordView({ portal }: { portal: AuthPortal }) {
 
           <PasswordRequirements password={password} />
 
-          <p className="flex items-center gap-2 text-xs text-slate-600">
-            <Info className="h-4 w-4 shrink-0 text-slate-400" />
+          <p className="text-on-surface-variant flex items-center gap-2 text-xs">
+            <Info className="text-outline h-4 w-4 shrink-0" />
             <span>Changing your password signs you out of every other device.</span>
           </p>
 

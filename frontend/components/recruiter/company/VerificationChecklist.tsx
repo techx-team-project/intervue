@@ -64,13 +64,15 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
               <ShieldCheck className="h-4 w-4 text-emerald-600" />
               {profile.levelLabel}
             </span>
-            <span className="text-xs font-semibold text-slate-500">
+            <span className="text-on-surface-variant text-xs font-semibold">
               {profile.stepsCompleted} of {profile.stepsTotal} steps completed
             </span>
           </div>
 
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Account Verification & Trust</h1>
-          <p className="text-xs leading-relaxed text-slate-600 sm:text-sm">
+          <h1 className="text-on-surface text-2xl font-bold tracking-tight sm:text-3xl">
+            Account Verification & Trust
+          </h1>
+          <p className="text-on-surface-variant text-xs leading-relaxed sm:text-sm">
             Complete the verification checklist below to build candidate trust, protect corporate identity, and unlock
             public job publishing.
           </p>
@@ -78,11 +80,11 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
 
         {/* Progress Bar */}
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs font-medium text-slate-600">
+          <div className="text-on-surface-variant flex items-center justify-between text-xs font-medium">
             <span>Progress to Level 3 Enterprise</span>
-            <span className="font-bold text-slate-900">{profile.completionPercent}%</span>
+            <span className="text-on-surface font-bold">{profile.completionPercent}%</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+          <div className="bg-surface-container-high h-2 w-full overflow-hidden rounded-full">
             <div
               className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500"
               style={{ width: `${profile.completionPercent}%` }}
@@ -94,7 +96,7 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
         {profile.canPublish && (
           <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 text-emerald-950 shadow-2xs">
             <div className="flex items-start gap-3">
-              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#00b14f]" />
+              <ShieldCheck className="text-primary mt-0.5 h-5 w-5 shrink-0" />
               <div className="space-y-0.5">
                 <p className="text-sm font-bold text-emerald-950">
                   Verification Complete — Level 3 Verified Enterprise
@@ -151,17 +153,17 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
       </div>
 
       {/* Footer next actionable step */}
-      <div className="mt-8 border-t border-slate-100 pt-5">
+      <div className="border-outline-variant mt-8 border-t pt-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="text-xs text-slate-500">
+          <div className="text-on-surface-variant text-xs">
             {profile.canPublish ? (
               <span className="flex items-center gap-1.5 font-semibold text-emerald-700">
                 <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                 Publishing rights active: You can post public jobs and review applicant CVs.
               </span>
             ) : (
-              <span className="flex items-center gap-1.5 text-slate-600">
-                <Lock className="h-4 w-4 text-slate-400" />
+              <span className="text-on-surface-variant flex items-center gap-1.5">
+                <Lock className="text-outline h-4 w-4" />
                 Publishing locked until Level 3 verification is approved.
               </span>
             )}
@@ -197,7 +199,7 @@ function ChecklistRow({ item }: { item: VerificationChecklistItem }) {
             ? 'border-amber-200/80 bg-amber-50/20'
             : isRejected || isRevoked
               ? 'border-rose-200/80 bg-rose-50/20'
-              : 'border-slate-200 bg-white hover:border-slate-300'
+              : 'border-outline-variant hover:border-outline bg-white'
       }`}
     >
       <div className="flex items-start gap-3">
@@ -220,7 +222,7 @@ function ChecklistRow({ item }: { item: VerificationChecklistItem }) {
               <AlertTriangle className="h-3.5 w-3.5" />
             </div>
           ) : (
-            <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-slate-300 text-xs font-bold text-slate-500">
+            <div className="border-outline text-on-surface-variant flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-bold">
               {item.order}
             </div>
           )}
@@ -229,29 +231,31 @@ function ChecklistRow({ item }: { item: VerificationChecklistItem }) {
         {/* Content */}
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className={`text-sm font-bold ${isApproved ? 'text-slate-800' : 'text-slate-900'}`}>
+            <span className={`text-sm font-bold ${isApproved ? 'text-on-surface' : 'text-on-surface'}`}>
               {item.title}
             </span>
-            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
+            <span className="bg-surface-container-high text-label-sm text-on-surface-variant rounded px-1.5 py-0.5 font-semibold">
               {item.badgeLabel}
             </span>
             {isInReview && (
-              <span className="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+              <span className="text-label-sm rounded bg-amber-100 px-2 py-0.5 font-bold text-amber-800">
                 Awaiting review
               </span>
             )}
             {isRejected && (
-              <span className="rounded bg-rose-100 px-2 py-0.5 text-[10px] font-bold text-rose-800">Rejected</span>
+              <span className="text-label-sm rounded bg-rose-100 px-2 py-0.5 font-bold text-rose-800">Rejected</span>
             )}
             {isExpired && (
-              <span className="rounded bg-slate-200 px-2 py-0.5 text-[10px] font-bold text-slate-800">Expired</span>
+              <span className="bg-surface-container-high text-label-sm text-on-surface rounded px-2 py-0.5 font-bold">
+                Expired
+              </span>
             )}
             {isRevoked && (
-              <span className="rounded bg-rose-200 px-2 py-0.5 text-[10px] font-bold text-rose-900">Revoked</span>
+              <span className="text-label-sm rounded bg-rose-200 px-2 py-0.5 font-bold text-rose-900">Revoked</span>
             )}
           </div>
 
-          <p className="text-xs text-slate-500">{item.description}</p>
+          <p className="text-on-surface-variant text-xs">{item.description}</p>
 
           {/* Rejection / Note */}
           {item.reviewReason && (
@@ -274,7 +278,7 @@ function ChecklistRow({ item }: { item: VerificationChecklistItem }) {
         ) : (
           <Link
             href={item.actionUrl}
-            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-bold text-slate-700 shadow-2xs transition hover:bg-slate-50 hover:text-slate-900"
+            className="border-outline-variant text-on-surface hover:bg-surface-container-low hover:text-on-surface inline-flex items-center gap-1 rounded-lg border bg-white px-2.5 py-1 text-xs font-bold shadow-2xs transition"
           >
             <span>{isRejected || isExpired ? 'Resubmit' : item.actionLabel}</span>
             <ArrowRight className="h-3 w-3" />

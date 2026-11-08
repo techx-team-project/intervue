@@ -18,10 +18,10 @@ export default function UpgradeLandingView() {
 
     const order: UpgradeOrder = {
       planId,
-      planName: isPro ? 'Gói tài khoản Pro VIP' : 'Gói tài khoản Premium VIP',
-      priceText: isPro ? '50,000 VNĐ' : '500,000 VNĐ',
+      planName: isPro ? 'Pro VIP plan' : 'Premium VIP plan',
+      priceText: isPro ? '50,000 VND' : '500,000 VND',
       priceValue: isPro ? 50000 : 500000,
-      periodText: isPro ? '1 tháng' : '1 năm (12 tháng)',
+      periodText: isPro ? '1 month' : '1 year (12 months)',
       orderCode: isPro
         ? `IVVIP_PRO_${Math.floor(100000 + Math.random() * 900000)}`
         : `IVVIP_PRE_${Math.floor(100000 + Math.random() * 900000)}`,
@@ -36,7 +36,7 @@ export default function UpgradeLandingView() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-800 antialiased">
+    <div className="text-on-surface min-h-screen bg-white antialiased">
       <UpgradeHero />
 
       <PricingComparisonTable features={UPGRADE_FEATURES} plans={PRICING_PLANS} onSelectPlan={handleSelectPlan} />

@@ -21,7 +21,7 @@ export default function AdminUserRoleChips({ roles, className }: AdminUserRoleCh
   const active = roles.filter(isGrantActive);
 
   if (active.length === 0) {
-    return <span className="dark:text-forest-400 text-[12px] text-[#94a3b8]">No active role</span>;
+    return <span className="dark:text-forest-400 text-body-sm text-outline">No active role</span>;
   }
 
   return (
@@ -31,7 +31,7 @@ export default function AdminUserRoleChips({ roles, className }: AdminUserRoleCh
           key={grant.role}
           title={expiryTitle(grant)}
           className={cn(
-            'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10.5px] font-bold tracking-wide uppercase ring-1 ring-inset',
+            'text-label-sm inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 font-bold tracking-wide uppercase ring-1 ring-inset',
             USER_ROLE_META[grant.role].chipClassName,
           )}
         >

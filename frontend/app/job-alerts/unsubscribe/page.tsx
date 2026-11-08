@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 
 export default function UnsubscribePage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#f4f5f5]">
+    <div className="bg-surface-container-low flex min-h-screen flex-col">
       <Header />
       <main className="flex flex-1 items-center justify-center">
         <Suspense
           fallback={
             <div className="flex items-center justify-center p-12">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent" />
+              <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent" />
             </div>
           }
         >

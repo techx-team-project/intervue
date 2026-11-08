@@ -211,7 +211,7 @@ export default function PanelBrandSplash({
 
           {/* Shimmer light sweep */}
           <div
-            className="pointer-events-none absolute inset-0 bg-linear-to-r from-transparent via-white/25 to-transparent"
+            className="bg-primary pointer-events-none absolute inset-0"
             style={{
               animation: 'splashShimmerSweep 1.3s ease-in-out infinite',
             }}
@@ -221,7 +221,7 @@ export default function PanelBrandSplash({
         {/* Tagline badge */}
         <div className="flex items-center gap-2">
           <span
-            className={`text-[10px] font-bold tracking-[0.26em] uppercase sm:text-[10.5px] ${
+            className={`text-label-sm sm:text-label-sm font-bold tracking-[0.26em] uppercase ${
               isDark ? 'text-emerald-400/90' : 'text-emerald-700/80'
             }`}
           >
@@ -232,14 +232,12 @@ export default function PanelBrandSplash({
         {/* Micro progress line */}
         <div
           className={`h-[2px] w-32 overflow-hidden rounded-full sm:w-36 ${
-            isDark ? 'border border-emerald-800/40 bg-emerald-950/80' : 'bg-slate-200/80'
+            isDark ? 'border border-emerald-800/40 bg-emerald-950/80' : 'bg-surface-container-high/80'
           }`}
         >
           <div
             className={`h-full rounded-full ${
-              isDark
-                ? 'bg-linear-to-r from-emerald-500 via-[#00d660] to-emerald-300 shadow-[0_0_8px_rgba(0,214,96,0.6)]'
-                : 'from-primary bg-linear-to-r via-[#00b14f] to-[#00d660]'
+              isDark ? 'bg-primary shadow-[0_0_8px_rgba(0,214,96,0.6)]' : 'bg-primary'
             }`}
             style={{
               animation: `splashProgress ${holdDurationMs}ms cubic-bezier(0.25, 0.8, 0.25, 1) forwards`,

@@ -1,11 +1,11 @@
-const DATE_FORMATTER = new Intl.DateTimeFormat('vi-VN', {
+const DATE_FORMATTER = new Intl.DateTimeFormat('en-GB', {
   day: '2-digit',
   month: '2-digit',
   year: 'numeric',
   timeZone: 'Asia/Ho_Chi_Minh',
 });
 
-const DATE_TIME_FORMATTER = new Intl.DateTimeFormat('vi-VN', {
+const DATE_TIME_FORMATTER = new Intl.DateTimeFormat('en-GB', {
   day: '2-digit',
   month: '2-digit',
   year: 'numeric',

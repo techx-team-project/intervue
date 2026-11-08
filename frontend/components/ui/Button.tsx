@@ -3,31 +3,40 @@ import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'neutral' | 'outline' | 'ghost' | 'danger';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
 
 const variantStyles: Record<NonNullable<ButtonProps['variant']>, string> = {
-  primary:
-    'bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 shadow-sm shadow-emerald-600/20 disabled:bg-emerald-300 disabled:cursor-not-allowed',
-  secondary:
-    'bg-slate-100 text-slate-800 hover:bg-slate-200 active:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed',
-  outline:
-    'border border-emerald-600 text-emerald-600 bg-transparent hover:bg-emerald-50 active:bg-emerald-100 disabled:border-slate-300 disabled:text-slate-400 disabled:cursor-not-allowed',
-  ghost:
-    'text-slate-600 bg-transparent hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed',
-  danger:
-    'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed',
+  primary: 'bg-primary text-on-primary disabled:bg-on-surface/12 disabled:text-on-surface/38',
+  secondary: 'bg-primary-container text-on-primary-container disabled:bg-on-surface/12 disabled:text-on-surface/38',
+  neutral: 'bg-surface-container-high text-on-surface disabled:bg-on-surface/12 disabled:text-on-surface/38',
+  outline: 'border border-primary text-primary disabled:border-on-surface/12 disabled:text-on-surface/38',
+  ghost: 'text-primary disabled:text-on-surface/38',
+  danger: 'bg-error text-on-error disabled:bg-on-surface/12 disabled:text-on-surface/38',
 };
 
 const sizeStyles: Record<NonNullable<ButtonProps['size']>, string> = {
-  sm: 'h-8 px-3 text-xs rounded-lg gap-1.5',
-  md: 'h-10 px-4 text-sm rounded-xl gap-2',
-  lg: 'h-12 px-6 text-base font-bold rounded-xl gap-2.5',
+  sm: 'h-8 px-3 text-label-md gap-1.5',
+  md: 'h-10 px-6 text-label-lg gap-2',
+  lg: 'h-12 px-8 text-title-sm gap-2.5',
+  xl: 'h-12 px-6 text-base font-semibold gap-2',
+  '2xl': 'h-14 px-8 text-base font-semibold gap-2',
 };
+
+type ButtonStyleOptions = Pick<ButtonProps, 'variant' | 'size' | 'className'>;
+
+export function buttonClassName({ variant = 'primary', size = 'md', className }: ButtonStyleOptions = {}): string {
+  return cn(
+    'state-layer touch-target ease-standard inline-flex cursor-pointer whitespace-nowrap items-center justify-center rounded-full transition-[color,background-color,transform] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed',
+    variantStyles[variant],
+    sizeStyles[size],
+    className,
+  );
+}
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -51,7 +60,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={disabled || isLoading}
         className={cn(
-          'inline-flex cursor-pointer items-center justify-center font-semibold transition duration-150 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50',
+          'state-layer touch-target ease-standard inline-flex cursor-pointer items-center justify-center rounded-full whitespace-nowrap transition-colors duration-150 select-none disabled:cursor-not-allowed',
           variantStyles[variant],
           sizeStyles[size],
           className,

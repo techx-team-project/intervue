@@ -26,22 +26,22 @@ export function AdminBusinessVerificationFilterBar({
     filters.keyword.trim().length > 0 || filters.reviewStatus !== 'ALL' || filters.documentType !== 'ALL';
 
   return (
-    <div className="dark:border-forest-800 dark:bg-forest-900 flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+    <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant/80 flex flex-col gap-3 rounded-2xl border bg-white p-3.5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
       {/* Search Input */}
       <div className="relative flex-1">
-        <Search className="dark:text-forest-400 pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <Search className="dark:text-forest-400 text-outline pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
         <input
           type="text"
           value={filters.keyword}
           onChange={(e) => onChange({ keyword: e.target.value })}
           placeholder="Search by company name, Tax ID, or submitter email..."
-          className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 dark:placeholder-forest-500 w-full rounded-xl border border-slate-200 bg-slate-50/70 py-2 pr-9 pl-9 text-xs font-medium text-slate-900 placeholder-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none"
+          className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-100 dark:placeholder-forest-500 border-outline-variant bg-surface-container-low/70 text-on-surface w-full rounded-xl border py-2 pr-9 pl-9 text-xs font-medium placeholder-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none"
         />
         {filters.keyword && (
           <button
             type="button"
             onClick={() => onChange({ keyword: '' })}
-            className="dark:text-forest-400 dark:hover:text-forest-200 absolute top-1/2 right-2.5 -translate-y-1/2 rounded p-1 text-slate-400 hover:text-slate-600"
+            className="dark:text-forest-400 dark:hover:text-forest-200 text-outline hover:text-on-surface-variant absolute top-1/2 right-2.5 -translate-y-1/2 rounded p-1"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -53,7 +53,7 @@ export function AdminBusinessVerificationFilterBar({
         <select
           value={filters.documentType}
           onChange={(e) => onChange({ documentType: e.target.value as BusinessDocumentType | 'ALL' })}
-          className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-200 rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2 text-xs font-semibold text-slate-700 focus:border-emerald-500 focus:bg-white focus:outline-none"
+          className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-200 border-outline-variant bg-surface-container-low/70 text-on-surface rounded-xl border px-3 py-2 text-xs font-semibold focus:border-emerald-500 focus:bg-white focus:outline-none"
         >
           <option value="ALL">All Document Types</option>
           <option value="BUSINESS_LICENSE">License (ERC)</option>
@@ -63,7 +63,7 @@ export function AdminBusinessVerificationFilterBar({
         <select
           value={filters.reviewStatus}
           onChange={(e) => onChange({ reviewStatus: e.target.value as ExtendedFilterStatus })}
-          className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-200 rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2 text-xs font-semibold text-slate-700 focus:border-emerald-500 focus:bg-white focus:outline-none"
+          className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-200 border-outline-variant bg-surface-container-low/70 text-on-surface rounded-xl border px-3 py-2 text-xs font-semibold focus:border-emerald-500 focus:bg-white focus:outline-none"
         >
           <option value="ALL">All Review Statuses</option>
           <option value="PENDING_REVIEW">Pending Review</option>
@@ -79,7 +79,7 @@ export function AdminBusinessVerificationFilterBar({
           <button
             type="button"
             onClick={onReset}
-            className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            className="dark:border-forest-700 dark:bg-forest-800 dark:text-forest-200 dark:hover:bg-forest-700 border-outline-variant text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface inline-flex items-center gap-1 rounded-xl border bg-white px-3 py-2 text-xs font-bold"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span>Reset</span>

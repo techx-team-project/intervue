@@ -80,12 +80,12 @@ export const FormattedTextarea = React.forwardRef<HTMLTextAreaElement, Formatted
       <div className="w-full space-y-1.5">
         <div className="flex items-center justify-between">
           {label && (
-            <label htmlFor={textareaId} className="block text-sm font-semibold text-slate-800">
+            <label htmlFor={textareaId} className="text-on-surface block text-sm font-semibold">
               {label}
             </label>
           )}
 
-          <span className="text-[11px] font-medium text-slate-400">
+          <span className="text-label-sm text-outline font-medium">
             {wordCount} words · {charCount} chars
           </span>
         </div>
@@ -93,15 +93,15 @@ export const FormattedTextarea = React.forwardRef<HTMLTextAreaElement, Formatted
         <div
           className={cn(
             'overflow-hidden rounded-xl border bg-white transition-colors focus-within:border-emerald-600 focus-within:ring-2 focus-within:ring-emerald-600/15',
-            error ? 'border-rose-400' : 'border-slate-300',
+            error ? 'border-rose-400' : 'border-outline',
           )}
         >
           {/* Formatting Toolbar */}
-          <div className="flex items-center gap-1 border-b border-slate-100 bg-slate-50/70 px-2.5 py-1.5 text-slate-600">
+          <div className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant flex items-center gap-1 border-b px-2.5 py-1.5">
             <button
               type="button"
               onClick={() => applyFormatting('**', '**', 'bold text')}
-              className="flex h-7 w-7 items-center justify-center rounded-md transition-colors hover:bg-slate-200/70 hover:text-slate-900"
+              className="hover:bg-surface-container-high/70 hover:text-on-surface flex h-7 w-7 items-center justify-center rounded-md transition-colors"
               title="Bold (**text**)"
             >
               <Bold className="h-3.5 w-3.5" />
@@ -110,18 +110,18 @@ export const FormattedTextarea = React.forwardRef<HTMLTextAreaElement, Formatted
             <button
               type="button"
               onClick={() => applyFormatting('*', '*', 'italic text')}
-              className="flex h-7 w-7 items-center justify-center rounded-md transition-colors hover:bg-slate-200/70 hover:text-slate-900"
+              className="hover:bg-surface-container-high/70 hover:text-on-surface flex h-7 w-7 items-center justify-center rounded-md transition-colors"
               title="Italic (*text*)"
             >
               <Italic className="h-3.5 w-3.5" />
             </button>
 
-            <div className="mx-0.5 h-4 w-px bg-slate-200" />
+            <div className="bg-surface-container-high mx-0.5 h-4 w-px" />
 
             <button
               type="button"
               onClick={handleInsertBullet}
-              className="flex h-7 w-7 items-center justify-center rounded-md transition-colors hover:bg-slate-200/70 hover:text-slate-900"
+              className="hover:bg-surface-container-high/70 hover:text-on-surface flex h-7 w-7 items-center justify-center rounded-md transition-colors"
               title="Bullet list (• item)"
             >
               <List className="h-3.5 w-3.5" />
@@ -130,26 +130,24 @@ export const FormattedTextarea = React.forwardRef<HTMLTextAreaElement, Formatted
             <button
               type="button"
               onClick={handleInsertNumbered}
-              className="flex h-7 w-7 items-center justify-center rounded-md transition-colors hover:bg-slate-200/70 hover:text-slate-900"
+              className="hover:bg-surface-container-high/70 hover:text-on-surface flex h-7 w-7 items-center justify-center rounded-md transition-colors"
               title="Numbered list (1. item)"
             >
               <ListOrdered className="h-3.5 w-3.5" />
             </button>
 
-            <div className="mx-0.5 h-4 w-px bg-slate-200" />
+            <div className="bg-surface-container-high mx-0.5 h-4 w-px" />
 
             <button
               type="button"
               onClick={() => applyFormatting('`', '`', 'code')}
-              className="flex h-7 w-7 items-center justify-center rounded-md transition-colors hover:bg-slate-200/70 hover:text-slate-900"
+              className="hover:bg-surface-container-high/70 hover:text-on-surface flex h-7 w-7 items-center justify-center rounded-md transition-colors"
               title="Code / Tech tag (`name`)"
             >
               <Code className="h-3.5 w-3.5" />
             </button>
 
-            <span className="ml-auto hidden text-[10.5px] font-medium text-slate-400 sm:inline">
-              Markdown supported
-            </span>
+            <span className="text-label-sm text-outline ml-auto hidden font-medium sm:inline">Markdown supported</span>
           </div>
 
           {/* Native Textarea */}
@@ -163,7 +161,7 @@ export const FormattedTextarea = React.forwardRef<HTMLTextAreaElement, Formatted
             value={value}
             onChange={onChange}
             className={cn(
-              'min-h-[120px] w-full resize-y border-none bg-transparent px-3.5 py-2.5 text-sm leading-relaxed text-slate-800 placeholder:text-slate-400 focus:outline-none',
+              'text-on-surface placeholder:text-outline min-h-[120px] w-full resize-y border-none bg-transparent px-3.5 py-2.5 text-sm leading-relaxed focus:outline-none',
               className,
             )}
             {...props}
@@ -171,7 +169,7 @@ export const FormattedTextarea = React.forwardRef<HTMLTextAreaElement, Formatted
         </div>
 
         {error && <p className="text-xs font-medium text-rose-500">{error}</p>}
-        {!error && helperText && <p className="text-xs text-slate-500">{helperText}</p>}
+        {!error && helperText && <p className="text-on-surface-variant text-xs">{helperText}</p>}
       </div>
     );
   },

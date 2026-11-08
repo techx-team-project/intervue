@@ -13,7 +13,7 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
   return (
     <aside className="sticky top-24 space-y-6">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-        <h4 className="text-xs font-bold tracking-wider text-[#7f878f] uppercase">Article Author</h4>
+        <h4 className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">Article Author</h4>
         <div className="mt-3 flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -24,19 +24,21 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
             className="h-12 w-12 rounded-full object-cover ring-2 ring-emerald-100"
           />
           <div>
-            <h5 className="text-sm font-bold text-[#171717]">{article.author.name}</h5>
+            <h5 className="text-on-surface text-sm font-bold">{article.author.name}</h5>
             <p className="text-primary mt-0.5 text-xs">{article.author.role}</p>
           </div>
         </div>
-        {article.author.bio && <p className="mt-3 text-xs leading-relaxed text-[#526475]">{article.author.bio}</p>}
+        {article.author.bio && (
+          <p className="text-on-surface-variant mt-3 text-xs leading-relaxed">{article.author.bio}</p>
+        )}
       </div>
 
-      <div className="rounded-2xl border border-emerald-100 bg-linear-to-b from-emerald-50/50 to-white p-5 shadow-xs">
+      <div className="bg-primary-light rounded-2xl border border-emerald-100 p-5 shadow-xs">
         <div className="mb-3 flex items-center gap-2">
           <div className="bg-primary flex h-6 w-6 items-center justify-center rounded-lg text-white">
             <Sparkles className="h-3.5 w-3.5" />
           </div>
-          <h4 className="text-sm font-bold text-[#171717]">Interactive Tools</h4>
+          <h4 className="text-on-surface text-sm font-bold">Interactive Tools</h4>
         </div>
 
         <div className="space-y-2">
@@ -44,7 +46,7 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
             href="/cv-templates"
             className="group text-navy hover:border-primary hover:text-primary flex items-center gap-2.5 rounded-xl border border-gray-100 bg-white p-2.5 text-xs transition"
           >
-            <div className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
+            <div className="text-primary bg-primary-container flex h-7 w-7 items-center justify-center rounded-lg">
               <FileText className="h-3.5 w-3.5" />
             </div>
             <span className="font-semibold">Build ATS-Proof Resume</span>
@@ -52,9 +54,9 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
 
           <Link
             href="/blog/che-do-luong-thuong"
-            className="group text-navy flex items-center gap-2.5 rounded-xl border border-gray-100 bg-white p-2.5 text-xs transition hover:border-purple-400 hover:text-purple-600"
+            className="group text-navy hover:border-outline-variant hover:text-primary flex items-center gap-2.5 rounded-xl border border-gray-100 bg-white p-2.5 text-xs transition"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
+            <div className="bg-primary-light text-primary flex h-7 w-7 items-center justify-center rounded-lg">
               <Calculator className="h-3.5 w-3.5" />
             </div>
             <span className="font-semibold">Gross ➔ Net Calculator</span>
@@ -62,9 +64,9 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
 
           <Link
             href="/blog/dinh-huong-nghe-nghiep"
-            className="group text-navy flex items-center gap-2.5 rounded-xl border border-gray-100 bg-white p-2.5 text-xs transition hover:border-blue-400 hover:text-blue-600"
+            className="group text-navy hover:border-outline-variant hover:text-primary flex items-center gap-2.5 rounded-xl border border-gray-100 bg-white p-2.5 text-xs transition"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+            <div className="bg-primary-light text-primary flex h-7 w-7 items-center justify-center rounded-lg">
               <Compass className="h-3.5 w-3.5" />
             </div>
             <span className="font-semibold">Career Orientation Quiz</span>
@@ -84,7 +86,7 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
 
       {article.relatedArticles && article.relatedArticles.length > 0 && (
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
-          <h4 className="mb-3 text-sm font-bold text-[#171717]">Related Articles</h4>
+          <h4 className="text-on-surface mb-3 text-sm font-bold">Related Articles</h4>
 
           <div className="space-y-4">
             {article.relatedArticles.map((rel) => (
@@ -102,10 +104,10 @@ export default function BlogDetailSidebar({ article }: BlogDetailSidebarProps) {
                   className="h-14 w-20 shrink-0 rounded-xl object-cover ring-1 ring-black/5"
                 />
                 <div className="min-w-0 flex-1">
-                  <h5 className="group-hover:text-primary line-clamp-2 text-xs font-bold text-[#171717] transition-colors">
+                  <h5 className="group-hover:text-primary text-on-surface line-clamp-2 text-xs font-bold transition-colors">
                     {rel.title}
                   </h5>
-                  <div className="mt-1 flex items-center gap-2 text-[11px] text-[#7f878f]">
+                  <div className="text-label-sm text-on-surface-variant mt-1 flex items-center gap-2">
                     <Clock className="h-3 w-3" />
                     <span>{rel.readTime}</span>
                   </div>

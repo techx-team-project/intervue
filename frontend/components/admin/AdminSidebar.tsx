@@ -67,12 +67,12 @@ export default function AdminSidebar({
     count > 0 ? (
       <span
         className={cn(
-          'shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold tabular-nums',
+          'text-label-sm shrink-0 rounded-full px-2 py-0.5 font-bold tabular-nums',
           isNotification
-            ? 'bg-[#00b14f] text-white shadow-2xs'
+            ? 'bg-primary text-white shadow-2xs'
             : isAction
               ? 'bg-amber-100 text-amber-700'
-              : 'dark:bg-forest-850 dark:text-forest-300 bg-slate-100 text-slate-500',
+              : 'dark:bg-forest-850 dark:text-forest-300 bg-surface-container-high text-on-surface-variant',
         )}
       >
         {count > 99 ? '99+' : count}
@@ -96,7 +96,7 @@ export default function AdminSidebar({
             type="button"
             onClick={onExpand}
             title={item.label}
-            className="dark:text-forest-300 dark:hover:bg-forest-850 flex w-full cursor-pointer items-center justify-center rounded-xl px-2 py-2.5 text-[#64748b] transition hover:bg-[#f8fafc]"
+            className="dark:text-forest-300 dark:hover:bg-forest-850 text-on-surface-variant hover:bg-surface-container-low flex w-full cursor-pointer items-center justify-center rounded-xl px-2 py-2.5 transition"
           >
             <span className="relative flex h-9 w-9 items-center justify-center rounded-full">
               {Icon && <Icon className="h-5 w-5" />}
@@ -112,10 +112,10 @@ export default function AdminSidebar({
             type="button"
             onClick={() => setToggled((prev) => ({ ...prev, [item.label]: !isExpanded }))}
             aria-expanded={isExpanded}
-            className="dark:text-forest-200 dark:hover:bg-forest-850 flex w-full cursor-pointer items-center justify-between rounded-xl px-2.5 py-2.5 text-[13px] font-medium text-[#475569] transition hover:bg-[#f8fafc]"
+            className="dark:text-forest-200 dark:hover:bg-forest-850 text-body-md text-on-surface-variant hover:bg-surface-container-low flex w-full cursor-pointer items-center justify-between rounded-xl px-2.5 py-2.5 font-medium transition"
           >
             <span className="flex min-w-0 items-center gap-3">
-              <span className="dark:text-forest-300 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#64748b]">
+              <span className="dark:text-forest-300 text-on-surface-variant flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
                 {Icon && <Icon className="h-4.5 w-4.5" />}
               </span>
               <span className="truncate">{item.label}</span>
@@ -125,7 +125,7 @@ export default function AdminSidebar({
               {renderBadge(pending, isAction, isNotification)}
               <ChevronDown
                 className={cn(
-                  'dark:text-forest-400 h-3.5 w-3.5 text-[#94a3b8] transition-transform',
+                  'dark:text-forest-400 text-outline h-3.5 w-3.5 transition-transform',
                   isExpanded && 'rotate-180',
                 )}
               />
@@ -133,7 +133,7 @@ export default function AdminSidebar({
           </button>
 
           {isExpanded && (
-            <div className="dark:border-forest-800 mt-1.5 mb-1 ml-[26px] space-y-1.5 border-l border-[#f1f5f9] pl-3">
+            <div className="dark:border-forest-800 border-outline-variant mt-1.5 mb-1 ml-[26px] space-y-1.5 border-l pl-3">
               {item.children?.map((child) => renderItem(child, isAction, true))}
             </div>
           )}
@@ -147,7 +147,7 @@ export default function AdminSidebar({
           <div
             key={item.label}
             title={`${item.label} — coming soon`}
-            className="dark:text-forest-400 flex items-center justify-center rounded-xl px-2 py-2.5 text-[#cbd5e1]"
+            className="dark:text-forest-400 text-outline flex items-center justify-center rounded-xl px-2 py-2.5"
           >
             <span className="relative flex h-9 w-9 items-center justify-center rounded-full">
               {Icon && <Icon className="h-5 w-5" />}
@@ -167,7 +167,7 @@ export default function AdminSidebar({
             'flex items-center justify-center rounded-xl px-2 py-2.5 transition',
             isActive
               ? 'text-primary'
-              : 'dark:text-forest-300 dark:hover:bg-forest-850 text-[#64748b] hover:bg-[#f8fafc]',
+              : 'dark:text-forest-300 dark:hover:bg-forest-850 text-on-surface-variant hover:bg-surface-container-low',
           )}
         >
           <span
@@ -181,7 +181,7 @@ export default function AdminSidebar({
               <span
                 className={cn(
                   'dark:ring-forest-900 absolute top-0.5 right-0.5 h-2 w-2 rounded-full ring-2 ring-white',
-                  isNotification ? 'bg-[#00b14f]' : 'bg-amber-500',
+                  isNotification ? 'bg-primary' : 'bg-amber-500',
                 )}
               />
             )}
@@ -191,7 +191,7 @@ export default function AdminSidebar({
     }
 
     const rowClass = cn(
-      'flex items-center justify-between rounded-xl text-[13px] transition',
+      'flex items-center justify-between rounded-xl text-body-md transition',
       isChild ? 'px-3 py-2.5' : 'px-2.5 py-2.5',
     );
 
@@ -200,11 +200,11 @@ export default function AdminSidebar({
         <div
           key={item.label}
           title="Not built yet"
-          className={cn(rowClass, 'dark:text-forest-400 cursor-not-allowed font-medium text-[#94a3b8]')}
+          className={cn(rowClass, 'dark:text-forest-400 text-outline cursor-not-allowed font-medium')}
         >
           <span className="flex min-w-0 items-center gap-3">
             {!isChild && (
-              <span className="dark:text-forest-400 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#cbd5e1]">
+              <span className="dark:text-forest-400 text-outline flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
                 {Icon && <Icon className="h-4.5 w-4.5" />}
               </span>
             )}
@@ -214,7 +214,7 @@ export default function AdminSidebar({
           <span className="flex shrink-0 items-center gap-1.5">
             {renderBadge(pending, isAction, isNotification)}
             {!isChild && (
-              <span className="dark:bg-forest-850 dark:text-forest-300 rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-500">
+              <span className="dark:bg-forest-850 dark:text-forest-300 bg-surface-container-high text-label-sm text-on-surface-variant rounded-full px-2 py-0.5 font-semibold">
                 Coming soon
               </span>
             )}
@@ -232,7 +232,7 @@ export default function AdminSidebar({
           rowClass,
           isActive
             ? 'text-primary font-bold'
-            : 'dark:text-forest-200 dark:hover:bg-forest-850 font-medium text-[#475569] hover:bg-[#f8fafc]',
+            : 'dark:text-forest-200 dark:hover:bg-forest-850 text-on-surface-variant hover:bg-surface-container-low font-medium',
         )}
       >
         <span className="flex min-w-0 items-center gap-3">
@@ -240,7 +240,7 @@ export default function AdminSidebar({
             <span
               className={cn(
                 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors',
-                isActive ? 'bg-primary/10 text-primary' : 'dark:text-forest-300 text-[#64748b]',
+                isActive ? 'bg-primary/10 text-primary' : 'dark:text-forest-300 text-on-surface-variant',
               )}
             >
               {Icon && <Icon className="h-4.5 w-4.5" />}
@@ -266,7 +266,7 @@ export default function AdminSidebar({
         <div className={isCollapsed ? '' : 'flex items-center gap-3.5'}>
           <div
             className={cn(
-              'from-primary flex shrink-0 items-center justify-center rounded-2xl bg-linear-to-tr to-[#00d660] font-black text-white shadow-sm',
+              'from-primary flex shrink-0 items-center justify-center rounded-2xl bg-linear-to-tr to-[#00d660] font-bold text-white shadow-sm',
               isCollapsed ? 'h-10 w-10 text-base' : 'h-12 w-12 text-lg',
             )}
           >
@@ -275,22 +275,22 @@ export default function AdminSidebar({
 
           {!isCollapsed && (
             <div className="min-w-0 flex-1">
-              <p className="dark:text-forest-300 text-[11.5px] text-[#64748b]">Administrator</p>
-              <h3 className="text-navy dark:text-forest-50 truncate text-[15px] font-bold">{adminName}</h3>
-              <p className="dark:text-forest-300 truncate text-[12px] text-[#64748b]">{adminEmail}</p>
+              <p className="dark:text-forest-300 text-label-sm text-on-surface-variant">Administrator</p>
+              <h3 className="text-navy dark:text-forest-50 text-body-lg truncate font-bold">{adminName}</h3>
+              <p className="dark:text-forest-300 text-body-sm text-on-surface-variant truncate">{adminEmail}</p>
             </div>
           )}
         </div>
 
         {!isCollapsed && (
           <>
-            <div className="mt-3 flex items-center gap-1.5 text-[12.5px]">
-              <span className="dark:text-forest-300 text-[#64748b]">Security:</span>
-              <span className={cn('font-bold', twoFactorEnabled ? 'text-[#00873c]' : 'text-rose-600')}>
+            <div className="text-body-sm mt-3 flex items-center gap-1.5">
+              <span className="dark:text-forest-300 text-on-surface-variant">Security:</span>
+              <span className={cn('font-bold', twoFactorEnabled ? 'text-primary' : 'text-rose-600')}>
                 {twoFactorEnabled ? '2FA on' : '2FA off'}
               </span>
               <span title="Admin accounts hold the most destructive permissions on the platform">
-                <HelpCircle className="h-3.5 w-3.5 text-[#94a3b8]" />
+                <HelpCircle className="text-outline h-3.5 w-3.5" />
               </span>
             </div>
 
@@ -298,7 +298,7 @@ export default function AdminSidebar({
               <Link
                 href={ROUTES.ACCOUNT_TWO_FACTOR}
                 onClick={onNavigate}
-                className="mt-3 flex w-full items-center justify-center rounded-full bg-amber-600 px-3 py-2 text-[12.5px] font-bold text-white transition-colors hover:bg-amber-700"
+                className="text-body-sm mt-3 flex w-full items-center justify-center rounded-full bg-amber-600 px-3 py-2 font-bold text-white transition-colors hover:bg-amber-700"
               >
                 Turn on two-factor auth
               </Link>
@@ -309,21 +309,21 @@ export default function AdminSidebar({
 
       {!isCollapsed && (
         <div className="px-4 pb-1">
-          <label className="dark:border-forest-800 dark:bg-forest-850/60 dark:focus-within:bg-forest-850 flex items-center gap-2 rounded-xl border border-[#e9eaec] bg-[#f8fafc] px-3 py-2 focus-within:border-[#cbd5e1] focus-within:bg-white">
-            <Search className="h-3.5 w-3.5 shrink-0 text-[#94a3b8]" />
+          <label className="dark:border-forest-800 dark:bg-forest-850/60 dark:focus-within:bg-forest-850 border-outline-variant bg-surface-container-low focus-within:border-outline-variant flex items-center gap-2 rounded-xl border px-3 py-2 focus-within:bg-white">
+            <Search className="text-outline h-3.5 w-3.5 shrink-0" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Filter sections"
               aria-label="Filter sections"
-              className="text-navy dark:text-forest-50 min-w-0 flex-1 bg-transparent text-[12.5px] outline-none placeholder:text-[#94a3b8]"
+              className="text-navy dark:text-forest-50 text-body-sm placeholder:text-outline min-w-0 flex-1 bg-transparent outline-none"
             />
           </label>
         </div>
       )}
 
       {sections.length === 0 && !isCollapsed && (
-        <p className="px-5 py-4 text-[12.5px] text-[#94a3b8]">No section matches.</p>
+        <p className="text-body-sm text-outline px-5 py-4">No section matches.</p>
       )}
 
       {sections.map((section, sectionIndex) => {
@@ -340,22 +340,22 @@ export default function AdminSidebar({
             )}
           >
             {sectionIndex > 0 && !isAction && (
-              <div className="dark:border-forest-800 mx-1 my-2 border-t border-[#f1f5f9]" />
+              <div className="dark:border-forest-800 border-outline-variant mx-1 my-2 border-t" />
             )}
 
             {!isCollapsed && (
               <div className="flex items-center justify-between gap-2 px-2.5 pt-1 pb-1.5">
                 <span
                   className={cn(
-                    'truncate text-[10.5px] font-bold tracking-wider uppercase',
-                    isAction ? 'text-amber-700 dark:text-amber-400' : 'text-[#94a3b8]',
+                    'text-label-sm truncate font-bold tracking-wider uppercase',
+                    isAction ? 'text-amber-700 dark:text-amber-400' : 'text-outline',
                   )}
                 >
                   {section.title}
                 </span>
 
                 {isAction && sectionTotal > 0 && (
-                  <span className="shrink-0 rounded-full bg-amber-600 px-1.5 py-0.5 text-[10px] font-black text-white tabular-nums">
+                  <span className="text-label-sm shrink-0 rounded-full bg-amber-600 px-1.5 py-0.5 font-bold text-white tabular-nums">
                     {sectionTotal}
                   </span>
                 )}
@@ -368,7 +368,7 @@ export default function AdminSidebar({
       })}
 
       {!isCollapsed && (
-        <div className="dark:border-forest-800 mt-4 space-y-1 border-t border-[#f1f5f9] px-4 pt-4 pb-5 text-[11.5px]">
+        <div className="dark:border-forest-800 border-outline-variant text-label-sm mt-4 space-y-1 border-t px-4 pt-4 pb-5">
           {/* TODO: wire to real legal routes once they exist */}
           <a href="#" className="text-primary block hover:underline">
             Privacy policy
@@ -379,8 +379,8 @@ export default function AdminSidebar({
           <a href="#" className="text-primary block hover:underline">
             Terms of service
           </a>
-          <p className="pt-2 text-[#94a3b8]">Version 1.0.0</p>
-          <p className="text-[#94a3b8]">© 2024 - 2026 InterVue Vietnam JSC. All rights reserved.</p>
+          <p className="text-outline pt-2">Version 1.0.0</p>
+          <p className="text-outline">© 2024 - 2026 InterVue Vietnam JSC. All rights reserved.</p>
         </div>
       )}
     </aside>

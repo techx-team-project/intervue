@@ -21,58 +21,58 @@ const ITEMS_PER_PAGE = 6;
 
 const DOMAIN_HIGHLIGHTS = [
   {
-    name: 'Công nghệ thông tin / AI',
-    icon: <Cpu className="h-5 w-5 text-blue-600" />,
-    salary: '18 - 55 triệu',
-    tag: 'Tăng trưởng +48%',
+    name: 'Information technology / AI',
+    icon: <Cpu className="text-primary h-5 w-5" />,
+    salary: '18 - 55M VND',
+    tag: 'Growth +48%',
     skills: ['Python / LLM', 'Cloud AWS/GCP', 'DevOps & Microservices'],
   },
   {
-    name: 'Marketing & Truyền thông',
-    icon: <Megaphone className="h-5 w-5 text-emerald-600" />,
-    salary: '12 - 35 triệu',
-    tag: 'Tăng trưởng +34%',
+    name: 'Marketing & Communications',
+    icon: <Megaphone className="text-primary h-5 w-5" />,
+    salary: '12 - 35M VND',
+    tag: 'Growth +34%',
     skills: ['Performance Ads', 'SEO & Data Analytics', 'Brand Storytelling'],
   },
   {
-    name: 'Kinh doanh & Bán hàng (Sales)',
+    name: 'Business & Sales',
     icon: <Briefcase className="h-5 w-5 text-orange-600" />,
-    salary: '15 - 50+ triệu',
-    tag: 'Hoa hồng cao',
-    skills: ['B2B Solution Selling', 'Đàm phán thương mại', 'Quản trị Key Account'],
+    salary: '15 - 50+M VND',
+    tag: 'High commission',
+    skills: ['B2B Solution Selling', 'Commercial negotiation', 'Key account management'],
   },
   {
-    name: 'Tài chính - Kế toán & Fintech',
+    name: 'Finance, Accounting & Fintech',
     icon: <Coins className="h-5 w-5 text-amber-600" />,
-    salary: '14 - 38 triệu',
-    tag: 'Ổn định & Bền vững',
-    skills: ['Phân tích tài chính CFA', 'Kế toán quản trị', 'Fintech & Digital Banking'],
+    salary: '14 - 38M VND',
+    tag: 'Stable & sustainable',
+    skills: ['CFA financial analysis', 'Management accounting', 'Fintech & Digital Banking'],
   },
   {
-    name: 'Logistics & Chuỗi cung ứng',
-    icon: <Truck className="h-5 w-5 text-teal-600" />,
-    salary: '12 - 32 triệu',
-    tag: 'Xuất nhập khẩu',
-    skills: ['Incoterms 2020', 'Thủ tục hải quan', 'Quản trị vận tải & kho'],
+    name: 'Logistics & Supply chain',
+    icon: <Truck className="text-primary h-5 w-5" />,
+    salary: '12 - 32M VND',
+    tag: 'Import & export',
+    skills: ['Incoterms 2020', 'Customs procedures', 'Transport & warehouse management'],
   },
   {
-    name: 'Nhân sự (C&B & Tuyển dụng)',
-    icon: <Users className="h-5 w-5 text-purple-600" />,
-    salary: '12 - 30 triệu',
-    tag: 'Giữ chân nhân tài',
-    skills: ['Lương 3P & KPI', 'Luật lao động', 'Employer Branding'],
+    name: 'Human resources (C&B & Recruitment)',
+    icon: <Users className="text-primary h-5 w-5" />,
+    salary: '12 - 30M VND',
+    tag: 'Talent retention',
+    skills: ['3P pay & KPI', 'Labor law', 'Employer Branding'],
   },
 ];
 
 export default function BlogCategoryView({ categoryMeta, articles, allArticles }: BlogCategoryViewProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSubFilter, setSelectedSubFilter] = useState<string>('Tất cả');
+  const [selectedSubFilter, setSelectedSubFilter] = useState<string>('All');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
-      if (selectedSubFilter !== 'Tất cả') {
+      if (selectedSubFilter !== 'All') {
         const matchesTag = article.tags.some((t) => t.toLowerCase() === selectedSubFilter.toLowerCase());
         const matchesTitle = article.title.toLowerCase().includes(selectedSubFilter.toLowerCase());
         const matchesExcerpt = article.excerpt.toLowerCase().includes(selectedSubFilter.toLowerCase());
@@ -109,7 +109,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
   };
 
   return (
-    <div className="min-h-screen bg-[#f8faf9]">
+    <div className="bg-surface-container-low min-h-screen">
       <BlogHeroSearch
         searchQuery={searchQuery}
         onSearchChange={(q) => {
@@ -149,10 +149,10 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
           <div className="mb-12">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 text-purple-700">
+                <span className="bg-primary-light text-on-primary-container flex h-8 w-8 items-center justify-center rounded-lg">
                   <Sparkles className="h-5 w-5" />
                 </span>
-                <h3 className="text-xl font-bold text-[#171717]">
+                <h3 className="text-on-surface text-xl font-bold">
                   Key Skills & Salary Ranges Across High-Demand Sectors
                 </h3>
               </div>
@@ -162,14 +162,14 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
               {DOMAIN_HIGHLIGHTS.map((domain, i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs transition hover:border-purple-300 hover:shadow-md"
+                  className="hover:border-outline-variant hover:shadow-elevation-1 rounded-2xl border border-gray-200 bg-white p-5 shadow-xs transition"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-50">
                         {domain.icon}
                       </div>
-                      <h4 className="font-bold text-[#0f172a]">{domain.name}</h4>
+                      <h4 className="text-on-surface font-bold">{domain.name}</h4>
                     </div>
                   </div>
                   <div className="mt-3 flex items-center justify-between text-xs">
@@ -180,7 +180,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                     {domain.skills.map((skill, sIdx) => (
                       <span
                         key={sIdx}
-                        className="rounded-md bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600"
+                        className="text-label-sm rounded-md bg-gray-100 px-2 py-0.5 font-medium text-gray-600"
                       >
                         {skill}
                       </span>
@@ -194,7 +194,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
 
         {categoryMeta.subFilters && categoryMeta.subFilters.length > 0 && (
           <div className="mb-6 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-gray-500">Chủ đề con:</span>
+            <span className="text-xs font-semibold text-gray-500">Subtopics:</span>
             {categoryMeta.subFilters.map((sub) => {
               const isActive = selectedSubFilter === sub;
               return (
@@ -205,7 +205,7 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                   className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
                     isActive
                       ? 'bg-primary text-white shadow-xs'
-                      : 'hover:border-primary hover:text-primary border border-gray-200 bg-white text-[#475569]'
+                      : 'hover:border-primary hover:text-primary text-on-surface-variant border border-gray-200 bg-white'
                   }`}
                 >
                   {sub}
@@ -219,10 +219,10 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
           <div className="lg:col-span-8">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
+                <div className="text-primary bg-primary-container flex h-8 w-8 items-center justify-center rounded-lg">
                   <BookOpen className="h-5 w-5" />
                 </div>
-                <h2 className="text-xl font-bold text-[#171717]">Articles ({filteredArticles.length})</h2>
+                <h2 className="text-on-surface text-xl font-bold">Articles ({filteredArticles.length})</h2>
               </div>
             </div>
 
@@ -278,12 +278,12 @@ export default function BlogCategoryView({ categoryMeta, articles, allArticles }
                   type="button"
                   onClick={() => {
                     setSearchQuery('');
-                    setSelectedSubFilter('Tất cả');
+                    setSelectedSubFilter('All');
                     setSelectedTag(null);
                   }}
-                  className="bg-primary mt-4 rounded-xl px-4 py-2 text-xs font-bold text-white transition hover:bg-emerald-600"
+                  className="bg-primary hover:bg-primary mt-4 rounded-xl px-4 py-2 text-xs font-bold text-white transition"
                 >
-                  Xóa tất cả bộ lọc
+                  Clear all filters
                 </button>
               </div>
             )}

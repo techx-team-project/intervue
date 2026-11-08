@@ -17,8 +17,8 @@ export default function AdminUserActivityTab({ activity }: AdminUserActivityTabP
     >
       {activity.length === 0 ? (
         <div className="flex flex-col items-center gap-2 py-10 text-center">
-          <History className="h-7 w-7 text-[#cbd5e1]" />
-          <p className="text-navy dark:text-forest-50 text-[13px] font-bold">Nothing recorded yet</p>
+          <History className="text-outline h-7 w-7" />
+          <p className="text-navy dark:text-forest-50 text-body-md font-bold">Nothing recorded yet</p>
         </div>
       ) : (
         <ol className="space-y-3">
@@ -37,13 +37,15 @@ export default function AdminUserActivityTab({ activity }: AdminUserActivityTabP
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-navy dark:text-forest-50 text-[13px] font-semibold">{entry.summary}</p>
+                  <p className="text-navy dark:text-forest-50 text-body-md font-semibold">{entry.summary}</p>
 
                   {entry.reason && (
-                    <p className="dark:text-forest-300 mt-0.5 text-[12px] text-[#64748b]">Reason: {entry.reason}</p>
+                    <p className="dark:text-forest-300 text-body-sm text-on-surface-variant mt-0.5">
+                      Reason: {entry.reason}
+                    </p>
                   )}
 
-                  <p className="mt-0.5 text-[11.5px] text-[#94a3b8]">
+                  <p className="text-label-sm text-outline mt-0.5">
                     {entry.actorName ? `${entry.actorName} · ` : ''}
                     {formatDateTime(entry.at)}
                   </p>

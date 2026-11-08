@@ -48,7 +48,7 @@ export default function ResetPasswordForm({ token, portal = 'candidate' }: Reset
 
   return (
     <div className="w-full">
-      <p className="mb-5 text-center text-sm leading-relaxed text-slate-500">
+      <p className="text-on-surface-variant mb-5 text-center text-sm leading-relaxed">
         Create a new password for your account. All signed-in devices will be signed out after the change.
       </p>
 

@@ -47,13 +47,11 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
         </div>
 
         {/* Ambient radial lighting */}
-        <div className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl" />
-        <div className="pointer-events-none absolute top-1/2 -left-16 h-64 w-64 rounded-full bg-teal-400/10 blur-3xl" />
 
         <div className="relative z-10 space-y-5">
           {/* Top category highlight box */}
           <div className="flex items-center gap-3.5 rounded-2xl border border-white/15 bg-white/10 p-3.5 shadow-sm backdrop-blur-md">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#00b14f] text-white shadow-md shadow-emerald-950/30">
+            <div className="bg-primary shadow-elevation-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white shadow-emerald-950/30">
               <Tag className="h-6 w-6 stroke-[2.2]" />
             </div>
             <div>
@@ -71,7 +69,7 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
           </div>
 
           {/* Feature Card 1: 3D Stacked Application documents */}
-          <div className="group flex items-center gap-4 rounded-2xl bg-white p-4 text-slate-800 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
+          <div className="group text-on-surface shadow-elevation-1 hover:shadow-elevation-2 flex items-center gap-4 rounded-2xl bg-white p-4 transition-all duration-200 hover:-translate-y-0.5">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center">
               <svg className="h-12 w-12" viewBox="0 0 48 48" fill="none">
                 <path d="M12 14L34 8L40 32L18 38L12 14Z" fill="#A7F3D0" />
@@ -92,14 +90,14 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
                 />
               </svg>
             </div>
-            <div className="text-xs leading-relaxed text-slate-700 sm:text-sm">
-              <span className="font-extrabold text-[#00b14f]">140,000+</span> verified engineer & developer application
+            <div className="text-on-surface text-xs leading-relaxed sm:text-sm">
+              <span className="text-primary font-extrabold">140,000+</span> verified engineer & developer application
               views per month
             </div>
           </div>
 
           {/* Feature Card 2: 3D Magnifying Glass */}
-          <div className="group flex items-center gap-4 rounded-2xl bg-white p-4 text-slate-800 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
+          <div className="group text-on-surface shadow-elevation-1 hover:shadow-elevation-2 flex items-center gap-4 rounded-2xl bg-white p-4 transition-all duration-200 hover:-translate-y-0.5">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center">
               <svg className="h-12 w-12" viewBox="0 0 48 48" fill="none">
                 <ellipse cx="32" cy="16" rx="6" ry="3.5" fill="#FBBF24" />
@@ -120,14 +118,14 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
                 <path d="M31 33L38 40" stroke="#34D399" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </div>
-            <div className="text-xs leading-relaxed text-slate-700 sm:text-sm">
-              Direct access to over <span className="font-extrabold text-[#00b14f]">350,000+</span> curated tech
-              candidate profiles
+            <div className="text-on-surface text-xs leading-relaxed sm:text-sm">
+              Direct access to over <span className="text-primary font-extrabold">350,000+</span> curated tech candidate
+              profiles
             </div>
           </div>
 
           {/* Feature Card 3: Enterprise Trust Badges */}
-          <div className="group rounded-2xl bg-white p-4 text-slate-800 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
+          <div className="group text-on-surface shadow-elevation-1 hover:shadow-elevation-2 rounded-2xl bg-white p-4 transition-all duration-200 hover:-translate-y-0.5">
             <div className="mb-3 flex items-start gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center">
                 <svg className="h-12 w-12" viewBox="0 0 48 48" fill="none">
@@ -144,20 +142,20 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
                   </defs>
                 </svg>
               </div>
-              <div className="text-xs leading-relaxed text-slate-700 sm:text-sm">
+              <div className="text-on-surface text-xs leading-relaxed sm:text-sm">
                 Trusted by leading tech employers across Vietnam: FPT, Viettel, MISA, VNG and high-growth engineering
                 startups.
               </div>
             </div>
 
             <div className="grid grid-cols-4 gap-2 pt-1">
-              <div className="flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-2 text-xs font-black tracking-wider text-orange-600 shadow-xs">
+              <div className="border-outline-variant flex h-9 items-center justify-center rounded-lg border bg-white px-2 text-xs font-bold tracking-wider text-orange-600 shadow-xs">
                 FPT
               </div>
               <div className="flex h-9 items-center justify-center rounded-lg border border-red-600 bg-red-600 px-2 text-xs font-bold tracking-wider text-white shadow-xs">
                 viettel
               </div>
-              <div className="flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-2 text-xs font-bold tracking-wider text-sky-600 shadow-xs">
+              <div className="border-outline-variant flex h-9 items-center justify-center rounded-lg border bg-white px-2 text-xs font-bold tracking-wider text-sky-600 shadow-xs">
                 MISA
               </div>
               <div className="flex h-9 items-center justify-center rounded-lg border border-emerald-600 bg-emerald-600 px-2 text-xs font-bold tracking-wider text-white shadow-xs">
@@ -174,7 +172,7 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
             <span>Verification Status: {profile.levelLabel}</span>
           </span>
           {profile.company && (
-            <span className="flex items-center gap-1 text-[11px] text-emerald-100">
+            <span className="text-label-sm flex items-center gap-1 text-emerald-100">
               <Building2 className="h-3.5 w-3.5" />
               <span>{profile.company.name}</span>
             </span>

@@ -18,7 +18,9 @@ export default function AdminWorkItemRow({ item, isExpanded, onToggle, onApprove
     <li
       className={cn(
         'transition-colors',
-        isExpanded ? 'dark:bg-forest-850/40 bg-[#f8fafc]' : 'dark:hover:bg-forest-850/40 hover:bg-[#f8fafc]',
+        isExpanded
+          ? 'dark:bg-forest-850/40 bg-surface-container-low'
+          : 'dark:hover:bg-forest-850/40 hover:bg-surface-container-low',
       )}
     >
       <div className="flex items-center gap-3 px-4 py-3">
@@ -30,7 +32,7 @@ export default function AdminWorkItemRow({ item, isExpanded, onToggle, onApprove
         >
           <span
             className={cn(
-              'shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold tracking-wide uppercase ring-1 ring-inset',
+              'text-label-sm shrink-0 rounded-md px-1.5 py-0.5 font-bold tracking-wide uppercase ring-1 ring-inset',
               WORK_ITEM_KIND_CHIP[item.kind],
             )}
           >
@@ -38,17 +40,19 @@ export default function AdminWorkItemRow({ item, isExpanded, onToggle, onApprove
           </span>
 
           <span className="min-w-0 flex-1">
-            <span className="text-navy dark:text-forest-50 block truncate text-[13.5px] font-bold">{item.subject}</span>
-            <span className="dark:text-forest-300 block truncate text-[12px] text-[#64748b]">{item.context}</span>
+            <span className="text-navy dark:text-forest-50 text-body-md block truncate font-bold">{item.subject}</span>
+            <span className="dark:text-forest-300 text-body-sm text-on-surface-variant block truncate">
+              {item.context}
+            </span>
           </span>
 
-          <span className="hidden shrink-0 items-center gap-1 text-[11.5px] text-[#94a3b8] sm:flex">
+          <span className="text-label-sm text-outline hidden shrink-0 items-center gap-1 sm:flex">
             <Clock className="h-3 w-3" />
             {item.waitingLabel}
           </span>
 
           <ChevronDown
-            className={cn('h-4 w-4 shrink-0 text-[#cbd5e1] transition-transform', isExpanded && 'rotate-180')}
+            className={cn('text-outline h-4 w-4 shrink-0 transition-transform', isExpanded && 'rotate-180')}
           />
         </button>
 
@@ -76,16 +80,16 @@ export default function AdminWorkItemRow({ item, isExpanded, onToggle, onApprove
       </div>
 
       {isExpanded && (
-        <dl className="dark:border-forest-800 grid grid-cols-1 gap-x-6 gap-y-2 border-t border-[#f1f5f9] px-4 py-3 sm:grid-cols-2">
+        <dl className="dark:border-forest-800 border-outline-variant grid grid-cols-1 gap-x-6 gap-y-2 border-t px-4 py-3 sm:grid-cols-2">
           {item.facts.map((fact) => (
-            <div key={fact.label} className="flex items-baseline justify-between gap-3 text-[12.5px]">
-              <dt className="dark:text-forest-300 shrink-0 text-[#64748b]">{fact.label}</dt>
+            <div key={fact.label} className="text-body-sm flex items-baseline justify-between gap-3">
+              <dt className="dark:text-forest-300 text-on-surface-variant shrink-0">{fact.label}</dt>
               <dd className="text-navy dark:text-forest-100 min-w-0 truncate text-right font-semibold">{fact.value}</dd>
             </div>
           ))}
 
-          <div className="flex items-baseline justify-between gap-3 text-[12.5px]">
-            <dt className="dark:text-forest-300 shrink-0 text-[#64748b]">Submitted</dt>
+          <div className="text-body-sm flex items-baseline justify-between gap-3">
+            <dt className="dark:text-forest-300 text-on-surface-variant shrink-0">Submitted</dt>
             <dd className="text-navy dark:text-forest-100 min-w-0 truncate text-right font-semibold">
               {item.submittedAt}
             </dd>

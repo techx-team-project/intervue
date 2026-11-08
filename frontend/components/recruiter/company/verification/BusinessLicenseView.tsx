@@ -53,35 +53,35 @@ function LocalFilePreviewModal({ isOpen, onClose, fileUrl, fileName, isImage, is
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-xs">
-      <div className="relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="border-outline-variant shadow-elevation-2 relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border bg-white">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+        <div className="border-outline-variant flex items-center justify-between border-b px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+            <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50">
               {isPdf ? <FileText className="h-5 w-5 text-rose-500" /> : <Eye className="h-5 w-5" />}
             </div>
             <div>
-              <h3 className="max-w-[420px] truncate text-sm font-bold text-slate-900">{fileName}</h3>
-              <p className="text-xs text-slate-500">Local Document Preview (Before Submission)</p>
+              <h3 className="text-on-surface max-w-[420px] truncate text-sm font-bold">{fileName}</h3>
+              <p className="text-on-surface-variant text-xs">Local Document Preview (Before Submission)</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             {isImage && (
-              <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 p-1">
+              <div className="border-outline-variant bg-surface-container-low flex items-center gap-1 rounded-lg border p-1">
                 <button
                   type="button"
                   onClick={() => setZoom((z) => Math.max(0.5, z - 0.25))}
-                  className="rounded p-1 text-slate-600 hover:bg-slate-200"
+                  className="text-on-surface-variant hover:bg-surface-container-high rounded p-1"
                   title="Zoom Out"
                 >
                   <ZoomOut className="h-3.5 w-3.5" />
                 </button>
-                <span className="px-1.5 text-[11px] font-semibold text-slate-700">{Math.round(zoom * 100)}%</span>
+                <span className="text-label-sm text-on-surface px-1.5 font-semibold">{Math.round(zoom * 100)}%</span>
                 <button
                   type="button"
                   onClick={() => setZoom((z) => Math.min(2.5, z + 0.25))}
-                  className="rounded p-1 text-slate-600 hover:bg-slate-200"
+                  className="text-on-surface-variant hover:bg-surface-container-high rounded p-1"
                   title="Zoom In"
                 >
                   <ZoomIn className="h-3.5 w-3.5" />
@@ -89,7 +89,7 @@ function LocalFilePreviewModal({ isOpen, onClose, fileUrl, fileName, isImage, is
                 <button
                   type="button"
                   onClick={() => setRotation((r) => (r + 90) % 360)}
-                  className="rounded p-1 text-slate-600 hover:bg-slate-200"
+                  className="text-on-surface-variant hover:bg-surface-container-high rounded p-1"
                   title="Rotate 90°"
                 >
                   <RotateCw className="h-3.5 w-3.5" />
@@ -99,7 +99,7 @@ function LocalFilePreviewModal({ isOpen, onClose, fileUrl, fileName, isImage, is
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              className="text-outline hover:bg-surface-container-high hover:text-on-surface rounded-xl p-2"
             >
               <X className="h-5 w-5" />
             </button>
@@ -107,7 +107,7 @@ function LocalFilePreviewModal({ isOpen, onClose, fileUrl, fileName, isImage, is
         </div>
 
         {/* Viewer Body */}
-        <div className="relative flex min-h-[460px] flex-1 items-center justify-center overflow-auto bg-slate-100/90 p-4">
+        <div className="bg-surface-container-high/90 relative flex min-h-[460px] flex-1 items-center justify-center overflow-auto p-4">
           {isPdf ? (
             <iframe
               src={fileUrl}
@@ -124,11 +124,11 @@ function LocalFilePreviewModal({ isOpen, onClose, fileUrl, fileName, isImage, is
                   transform: `scale(${zoom}) rotate(${rotation}deg)`,
                   transition: 'transform 0.2s ease',
                 }}
-                className="max-h-[65vh] w-auto max-w-full rounded-lg object-contain shadow-md"
+                className="shadow-elevation-1 max-h-[65vh] w-auto max-w-full rounded-lg object-contain"
               />
             </div>
           ) : (
-            <div className="text-center text-xs text-slate-500">
+            <div className="text-on-surface-variant text-center text-xs">
               <p>Cannot render preview for this file format directly.</p>
             </div>
           )}
@@ -203,35 +203,35 @@ function DocumentPreviewModal({ isOpen, onClose, documentId, fileName, target = 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-xs">
-      <div className="relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="border-outline-variant shadow-elevation-2 relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border bg-white">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+        <div className="border-outline-variant flex items-center justify-between border-b px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-[#00b14f]">
+            <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50">
               <FileText className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900">{fileName}</h3>
-              <p className="text-xs text-slate-500">{targetLabel}</p>
+              <h3 className="text-on-surface text-sm font-bold">{fileName}</h3>
+              <p className="text-on-surface-variant text-xs">{targetLabel}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             {blobType === 'image' && (
-              <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 p-1">
+              <div className="border-outline-variant bg-surface-container-low flex items-center gap-1 rounded-lg border p-1">
                 <button
                   type="button"
                   onClick={() => setZoom((z) => Math.max(0.5, z - 0.25))}
-                  className="rounded p-1 text-slate-600 hover:bg-slate-200"
+                  className="text-on-surface-variant hover:bg-surface-container-high rounded p-1"
                   title="Zoom Out"
                 >
                   <ZoomOut className="h-3.5 w-3.5" />
                 </button>
-                <span className="px-1.5 text-[11px] font-semibold text-slate-700">{Math.round(zoom * 100)}%</span>
+                <span className="text-label-sm text-on-surface px-1.5 font-semibold">{Math.round(zoom * 100)}%</span>
                 <button
                   type="button"
                   onClick={() => setZoom((z) => Math.min(2.5, z + 0.25))}
-                  className="rounded p-1 text-slate-600 hover:bg-slate-200"
+                  className="text-on-surface-variant hover:bg-surface-container-high rounded p-1"
                   title="Zoom In"
                 >
                   <ZoomIn className="h-3.5 w-3.5" />
@@ -239,7 +239,7 @@ function DocumentPreviewModal({ isOpen, onClose, documentId, fileName, target = 
                 <button
                   type="button"
                   onClick={() => setRotation((r) => (r + 90) % 360)}
-                  className="rounded p-1 text-slate-600 hover:bg-slate-200"
+                  className="text-on-surface-variant hover:bg-surface-container-high rounded p-1"
                   title="Rotate 90°"
                 >
                   <RotateCw className="h-3.5 w-3.5" />
@@ -249,7 +249,7 @@ function DocumentPreviewModal({ isOpen, onClose, documentId, fileName, target = 
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              className="text-outline hover:bg-surface-container-high hover:text-on-surface rounded-xl p-2"
             >
               <X className="h-5 w-5" />
             </button>
@@ -257,9 +257,9 @@ function DocumentPreviewModal({ isOpen, onClose, documentId, fileName, target = 
         </div>
 
         {/* Viewer Body */}
-        <div className="relative flex min-h-[460px] flex-1 items-center justify-center overflow-auto bg-slate-100/80 p-4">
+        <div className="bg-surface-container-high/80 relative flex min-h-[460px] flex-1 items-center justify-center overflow-auto p-4">
           {isLoading ? (
-            <div className="flex flex-col items-center gap-2 text-xs font-semibold text-slate-500">
+            <div className="text-on-surface-variant flex flex-col items-center gap-2 text-xs font-semibold">
               <div className="h-7 w-7 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent" />
               <span>Loading document stream...</span>
             </div>
@@ -280,23 +280,23 @@ function DocumentPreviewModal({ isOpen, onClose, documentId, fileName, target = 
                     transform: `scale(${zoom}) rotate(${rotation}deg)`,
                     transition: 'transform 0.2s ease',
                   }}
-                  className="max-h-[65vh] w-auto max-w-full rounded-lg object-contain shadow-md"
+                  className="shadow-elevation-1 max-h-[65vh] w-auto max-w-full rounded-lg object-contain"
                 />
               </div>
             ) : (
-              <div className="text-center text-xs text-slate-500">
+              <div className="text-on-surface-variant text-center text-xs">
                 <p>This document cannot be previewed directly.</p>
                 <a
                   href={blobUrl}
                   download={fileName}
-                  className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-[#00b14f] px-3.5 py-1.5 text-xs font-bold text-white shadow-xs"
+                  className="bg-primary mt-2 inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-bold text-white shadow-xs"
                 >
                   <Download className="h-3.5 w-3.5" /> Download file
                 </a>
               </div>
             )
           ) : (
-            <p className="text-xs text-slate-500">Failed to load preview for this file.</p>
+            <p className="text-on-surface-variant text-xs">Failed to load preview for this file.</p>
           )}
         </div>
       </div>
@@ -318,37 +318,37 @@ function LoaPreparationGuideModal({ isOpen, onClose }: LoaPreparationGuideModalP
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-xs">
-      <div className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="border-outline-variant shadow-elevation-2 relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border bg-white">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+        <div className="border-outline-variant flex items-center justify-between border-b px-6 py-4">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 text-[#00b14f]">
+            <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100">
               <HelpCircle className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900">How to Prepare Letter of Authorization (LOA)</h3>
-              <p className="text-xs text-slate-500">Standard 3-step legal onboarding procedure for InterVue</p>
+              <h3 className="text-on-surface text-base font-bold">How to Prepare Letter of Authorization (LOA)</h3>
+              <p className="text-on-surface-variant text-xs">Standard 3-step legal onboarding procedure for InterVue</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            className="text-outline hover:bg-surface-container-high hover:text-on-surface rounded-lg p-1.5"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="space-y-4 overflow-y-auto p-6 text-xs leading-relaxed text-slate-600 sm:text-sm">
+        <div className="text-on-surface-variant space-y-4 overflow-y-auto p-6 text-xs leading-relaxed sm:text-sm">
           {/* Step 1 */}
-          <div className="flex items-start gap-3.5 rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+          <div className="border-outline-variant bg-surface-container-low/60 flex items-start gap-3.5 rounded-xl border p-4">
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white shadow-2xs">
               1
             </div>
             <div className="space-y-1">
-              <h4 className="font-bold text-slate-900">Download Template &amp; Fill Information</h4>
-              <p className="text-xs text-slate-600">
+              <h4 className="text-on-surface font-bold">Download Template &amp; Fill Information</h4>
+              <p className="text-on-surface-variant text-xs">
                 Download the official InterVue Letter of Authorization template (`.docx`). Fill in full enterprise
                 details (Company Name, Tax Code, Headquarter Address) and the authorized recruiter&apos;s personal
                 information in Microsoft Word.
@@ -357,7 +357,7 @@ function LoaPreparationGuideModal({ isOpen, onClose }: LoaPreparationGuideModalP
                 <a
                   href="/templates/intervue-authorization-letter-template.docx"
                   download="intervue-authorization-letter-template.docx"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#00b14f] bg-white px-3 py-1.5 text-xs font-bold text-[#00b14f] shadow-2xs hover:bg-emerald-50"
+                  className="border-primary text-primary inline-flex items-center gap-1.5 rounded-lg border bg-white px-3 py-1.5 text-xs font-bold shadow-2xs hover:bg-emerald-50"
                 >
                   <Download className="h-3.5 w-3.5" />
                   <span>Download Template (.docx)</span>
@@ -367,13 +367,13 @@ function LoaPreparationGuideModal({ isOpen, onClose }: LoaPreparationGuideModalP
           </div>
 
           {/* Step 2 */}
-          <div className="flex items-start gap-3.5 rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+          <div className="border-outline-variant bg-surface-container-low/60 flex items-start gap-3.5 rounded-xl border p-4">
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white shadow-2xs">
               2
             </div>
             <div className="space-y-1">
-              <h4 className="font-bold text-slate-900">Sign &amp; Apply Official Enterprise Red Seal</h4>
-              <p className="text-xs text-slate-600">
+              <h4 className="text-on-surface font-bold">Sign &amp; Apply Official Enterprise Red Seal</h4>
+              <p className="text-on-surface-variant text-xs">
                 <strong>Print out the document on paper.</strong> The company Legal Representative (Director / CEO) must
                 sign with full name, and the enterprise must stamp its official legal round red seal (dấu tròn pháp nhân
                 mộc đỏ) across the signature.
@@ -382,13 +382,13 @@ function LoaPreparationGuideModal({ isOpen, onClose }: LoaPreparationGuideModalP
           </div>
 
           {/* Step 3 */}
-          <div className="flex items-start gap-3.5 rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+          <div className="border-outline-variant bg-surface-container-low/60 flex items-start gap-3.5 rounded-xl border p-4">
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white shadow-2xs">
               3
             </div>
             <div className="space-y-1">
-              <h4 className="font-bold text-slate-900">Scan &amp; Upload with Citizen ID (CCCD) Both Sides</h4>
-              <p className="text-xs text-slate-600">
+              <h4 className="text-on-surface font-bold">Scan &amp; Upload with Citizen ID (CCCD) Both Sides</h4>
+              <p className="text-on-surface-variant text-xs">
                 Scan or photograph the stamped Letter of Authorization clearly as a PDF or high-resolution image (JPG,
                 PNG). Also attach clear photos of <strong>both Front and Back sides</strong> of the authorized
                 recruiter&apos;s Citizen Identity Card (CCCD) or Passport.
@@ -399,7 +399,7 @@ function LoaPreparationGuideModal({ isOpen, onClose }: LoaPreparationGuideModalP
           {/* Warning / Tips */}
           <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4 text-xs text-amber-900">
             <h4 className="font-bold text-amber-950">Important Legal Compliance Rules:</h4>
-            <ul className="mt-2 list-disc space-y-1 pl-4 text-[11px] text-amber-800">
+            <ul className="text-label-sm mt-2 list-disc space-y-1 pl-4 text-amber-800">
               <li>
                 Do not upload unsigned or unsealed draft files (`.docx` files are not accepted for legal validation).
               </li>
@@ -413,11 +413,11 @@ function LoaPreparationGuideModal({ isOpen, onClose }: LoaPreparationGuideModalP
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end border-t border-slate-100 px-6 py-3">
+        <div className="border-outline-variant flex items-center justify-end border-t px-6 py-3">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl bg-[#00b14f] px-5 py-2 text-xs font-bold text-white shadow-2xs transition hover:bg-[#009b45]"
+            className="bg-primary rounded-xl px-5 py-2 text-xs font-bold text-white shadow-2xs transition hover:bg-[#009b45]"
           >
             I Understand
           </button>
@@ -530,7 +530,7 @@ function DocumentDropzone({
 
   return (
     <div className="space-y-2">
-      <label className="block text-xs font-bold text-slate-800">
+      <label className="text-on-surface block text-xs font-bold">
         {label} {required && <span className="text-rose-500">*</span>}
       </label>
 
@@ -568,7 +568,7 @@ function DocumentDropzone({
                     </div>
                   </div>
                 ) : (
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-[#00b14f]">
+                  <div className="text-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-emerald-100">
                     {isPdf ? <FileText className="h-6 w-6 text-rose-500" /> : <FileCheck2 className="h-6 w-6" />}
                   </div>
                 )}
@@ -576,12 +576,14 @@ function DocumentDropzone({
                 {/* File Details */}
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="truncate text-xs font-bold text-slate-900">{file.name}</p>
+                    <p className="text-on-surface truncate text-xs font-bold">{file.name}</p>
                     {isPdf && (
-                      <span className="py-0.2 rounded bg-rose-100 px-1.5 text-[9px] font-bold text-rose-700">PDF</span>
+                      <span className="py-0.2 text-label-sm rounded bg-rose-100 px-1.5 font-bold text-rose-700">
+                        PDF
+                      </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-label-sm text-on-surface-variant">
                     {(file.size / (1024 * 1024)).toFixed(2)} MB • Ready to submit
                   </p>
                 </div>
@@ -593,7 +595,7 @@ function DocumentDropzone({
                   <button
                     type="button"
                     onClick={() => setIsLocalPreviewOpen(true)}
-                    className="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-white px-2.5 py-1 text-xs font-bold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50 active:scale-95"
+                    className="text-primary inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-white px-2.5 py-1 text-xs font-bold shadow-2xs transition hover:bg-emerald-50 active:scale-95"
                     title="Preview uploaded document"
                   >
                     <Eye className="h-3.5 w-3.5" />
@@ -603,14 +605,14 @@ function DocumentDropzone({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 active:scale-95"
+                  className="border-outline text-on-surface hover:bg-surface-container-low rounded-lg border bg-white px-2.5 py-1 text-xs font-semibold transition active:scale-95"
                 >
                   Change
                 </button>
                 <button
                   type="button"
                   onClick={onFileRemove}
-                  className="rounded-lg p-1 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"
+                  className="text-outline rounded-lg p-1 transition hover:bg-rose-50 hover:text-rose-600"
                   aria-label="Remove file"
                 >
                   <X className="h-4 w-4" />
@@ -628,20 +630,20 @@ function DocumentDropzone({
                 compact ? 'px-4 py-5' : 'px-5 py-7'
               } ${
                 disabled
-                  ? 'cursor-not-allowed border-slate-200 bg-slate-50/70 opacity-60'
+                  ? 'border-outline-variant bg-surface-container-low/70 cursor-not-allowed opacity-60'
                   : isDragOver
-                    ? 'cursor-pointer border-[#00b14f] bg-emerald-50/40'
-                    : 'cursor-pointer border-slate-300 bg-slate-50/30 hover:border-[#00b14f] hover:bg-emerald-50/20'
+                    ? 'border-primary cursor-pointer bg-emerald-50/40'
+                    : 'border-outline bg-surface-container-low/30 hover:border-primary cursor-pointer hover:bg-emerald-50/20'
               }`}
             >
-              <p className="text-xs font-bold text-slate-800">Choose or drag file here</p>
-              <p className="text-[11px] text-slate-500">{acceptedFormatsText}</p>
+              <p className="text-on-surface text-xs font-bold">Choose or drag file here</p>
+              <p className="text-label-sm text-on-surface-variant">{acceptedFormatsText}</p>
 
               <button
                 type="button"
                 tabIndex={-1}
                 disabled={disabled}
-                className="mt-1 inline-flex items-center gap-1.5 rounded-lg border border-[#00b14f] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50"
+                className="border-primary text-primary mt-1 inline-flex items-center gap-1.5 rounded-lg border bg-white px-3.5 py-1.5 text-xs font-semibold shadow-2xs transition hover:bg-emerald-50"
               >
                 <UploadCloud className="h-3.5 w-3.5" />
                 <span>Choose file</span>
@@ -654,7 +656,7 @@ function DocumentDropzone({
             <div className="rounded-xl border border-amber-200/90 bg-amber-50/60 p-3 text-xs text-amber-900">
               <div className="flex items-start gap-2">
                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-                <div className="space-y-0.5 text-[11px] leading-relaxed">
+                <div className="text-label-sm space-y-0.5 leading-relaxed">
                   {warningBullets.map((bullet, idx) => (
                     <p key={idx} className="flex items-start gap-1">
                       <span className="font-bold">•</span>
@@ -670,9 +672,11 @@ function DocumentDropzone({
         {/* Right Column: Illustration Thumbnail */}
         {!compact && illustrationSrc && (
           <div className="flex flex-col items-center justify-start space-y-2 lg:col-span-4">
-            <p className="text-xs font-bold tracking-wider text-slate-600 uppercase">Illustration (Minh họa)</p>
+            <p className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">
+              Illustration (Minh họa)
+            </p>
 
-            <div className="overflow-hidden rounded-xl border border-slate-200/90 bg-white p-2 shadow-2xs">
+            <div className="border-outline-variant/90 overflow-hidden rounded-xl border bg-white p-2 shadow-2xs">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={illustrationSrc}
@@ -681,7 +685,9 @@ function DocumentDropzone({
               />
             </div>
 
-            {illustrationCaption && <p className="text-center text-[10px] text-slate-500">{illustrationCaption}</p>}
+            {illustrationCaption && (
+              <p className="text-label-sm text-on-surface-variant text-center">{illustrationCaption}</p>
+            )}
 
             {actionButton && <div className="pt-1">{actionButton}</div>}
           </div>
@@ -770,9 +776,9 @@ function UnifiedVerificationStatusTracker({
     hasIdentityBack;
 
   return (
-    <div className="rounded-md border border-slate-200/90 bg-white p-7 shadow-xs sm:p-9">
+    <div className="border-outline-variant/90 rounded-md border bg-white p-7 shadow-xs sm:p-9">
       {/* 1. Header Row */}
-      <div className="flex flex-col gap-4 border-b border-slate-100 pb-7 sm:flex-row sm:items-start sm:justify-between">
+      <div className="border-outline-variant flex flex-col gap-4 border-b pb-7 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-4">
           <div
             className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-xs ${
@@ -798,7 +804,7 @@ function UnifiedVerificationStatusTracker({
 
           <div>
             <div className="flex flex-wrap items-center gap-2.5">
-              <h3 className="text-lg font-bold tracking-tight text-slate-900 sm:text-xl">
+              <h3 className="text-on-surface text-lg font-bold tracking-tight sm:text-xl">
                 {isApproved
                   ? 'Verification Approved & Active'
                   : isPending
@@ -811,7 +817,7 @@ function UnifiedVerificationStatusTracker({
               </h3>
             </div>
 
-            <p className="mt-1.5 max-w-2xl text-xs leading-relaxed text-slate-500 sm:text-[13px]">
+            <p className="text-on-surface-variant sm:text-body-md mt-1.5 max-w-2xl text-xs leading-relaxed">
               {isApproved &&
                 'Your company legal documents have been verified and approved by the InterVue Compliance Team.'}
               {isPending &&
@@ -832,9 +838,9 @@ function UnifiedVerificationStatusTracker({
             <button
               type="button"
               onClick={() => onPreview(effectiveDocId, effectiveFileName, 'main')}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition hover:border-[#00b14f] hover:text-[#00b14f] active:scale-95"
+              className="border-outline-variant text-on-surface hover:border-primary hover:text-primary inline-flex items-center gap-1.5 rounded-xl border bg-white px-3.5 py-2 text-xs font-semibold shadow-2xs transition active:scale-95"
             >
-              <Eye className="h-3.5 w-3.5 text-[#00b14f]" />
+              <Eye className="text-primary h-3.5 w-3.5" />
               <span>View Submitted Dossier</span>
             </button>
           )}
@@ -843,7 +849,7 @@ function UnifiedVerificationStatusTracker({
             <button
               type="button"
               onClick={onToggleOverride}
-              className="rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50 active:scale-95"
+              className="border-outline-variant text-on-surface hover:bg-surface-container-low rounded-xl border bg-white px-3.5 py-2 text-xs font-semibold shadow-2xs transition active:scale-95"
             >
               {showOverrideForm ? 'Close Form' : 'Request Renewal'}
             </button>
@@ -853,9 +859,9 @@ function UnifiedVerificationStatusTracker({
             <button
               type="button"
               onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50 active:scale-95"
+              className="border-outline-variant text-on-surface hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-xl border bg-white px-3.5 py-2 text-xs font-semibold shadow-2xs transition active:scale-95"
             >
-              <History className="h-3.5 w-3.5 text-slate-400" />
+              <History className="text-outline h-3.5 w-3.5" />
               <span>History ({documents.length})</span>
               {isHistoryExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
             </button>
@@ -867,7 +873,7 @@ function UnifiedVerificationStatusTracker({
       <div className="mt-8 pt-2">
         <div className="relative pl-8 sm:pl-10">
           {/* Vertical Connecting Line */}
-          <div className="absolute top-4 bottom-8 left-[15px] w-0.5 bg-slate-200 sm:left-[19px]" />
+          <div className="bg-surface-container-high absolute top-4 bottom-8 left-[15px] w-0.5 sm:left-[19px]" />
 
           {/* STEP 1: Dossier Submitted */}
           <div className="relative pb-10">
@@ -879,22 +885,22 @@ function UnifiedVerificationStatusTracker({
             {/* Step Content */}
             <div className="space-y-2.5">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h4 className="text-sm font-bold text-slate-900 sm:text-base">1. Dossier Submitted</h4>
-                <span className="text-xs font-medium text-slate-500">
+                <h4 className="text-on-surface text-sm font-bold sm:text-base">1. Dossier Submitted</h4>
+                <span className="text-on-surface-variant text-xs font-medium">
                   {effectiveSubmittedAt ? `Recorded on ${formatDate(effectiveSubmittedAt)}` : 'Recorded'}
                 </span>
               </div>
 
               {/* Submitted File Detail Box */}
-              <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-4 text-xs text-slate-600 sm:p-5">
+              <div className="border-outline-variant/80 bg-surface-container-low/70 text-on-surface-variant rounded-xl border p-4 text-xs sm:p-5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-200/80 bg-emerald-50 text-[#00b14f]">
+                    <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-200/80 bg-emerald-50">
                       <FileText className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-bold text-slate-900">{effectiveFileName}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-on-surface truncate text-sm font-bold">{effectiveFileName}</p>
+                      <p className="text-on-surface-variant text-xs">
                         {isLoa ? 'Official Letter of Authorization (LOA)' : 'Enterprise Registration Certificate (ERC)'}
                       </p>
                     </div>
@@ -904,7 +910,7 @@ function UnifiedVerificationStatusTracker({
                     <button
                       type="button"
                       onClick={() => onPreview(effectiveDocId, effectiveFileName, 'main')}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#00b14f] hover:underline"
+                      className="text-primary inline-flex items-center gap-1.5 text-xs font-semibold hover:underline"
                     >
                       <Eye className="h-3.5 w-3.5" /> View file
                     </button>
@@ -913,15 +919,15 @@ function UnifiedVerificationStatusTracker({
 
                 {/* Attached CCCD if present */}
                 {(hasIdentity || hasIdentityBack) && effectiveDocId && (
-                  <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-200/70 pt-3">
-                    <span className="text-xs font-semibold text-slate-700">Attached Identity Cards:</span>
+                  <div className="border-outline-variant/70 mt-4 flex flex-wrap items-center gap-2 border-t pt-3">
+                    <span className="text-on-surface text-xs font-semibold">Attached Identity Cards:</span>
                     {hasIdentity && (
                       <button
                         type="button"
                         onClick={() => onPreview(effectiveDocId, identityFileName || 'CCCD_Front.png', 'identity')}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-2xs transition hover:border-[#00b14f] hover:text-[#00b14f]"
+                        className="border-outline-variant text-on-surface hover:border-primary hover:text-primary inline-flex items-center gap-1.5 rounded-lg border bg-white px-3 py-1.5 text-xs font-medium shadow-2xs transition"
                       >
-                        <Eye className="h-3.5 w-3.5 text-[#00b14f]" /> Front Side ({identityFileName || 'Attached'})
+                        <Eye className="text-primary h-3.5 w-3.5" /> Front Side ({identityFileName || 'Attached'})
                       </button>
                     )}
                     {hasIdentityBack && (
@@ -930,9 +936,9 @@ function UnifiedVerificationStatusTracker({
                         onClick={() =>
                           onPreview(effectiveDocId, identityBackFileName || 'CCCD_Back.png', 'identity-back')
                         }
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-2xs transition hover:border-[#00b14f] hover:text-[#00b14f]"
+                        className="border-outline-variant text-on-surface hover:border-primary hover:text-primary inline-flex items-center gap-1.5 rounded-lg border bg-white px-3 py-1.5 text-xs font-medium shadow-2xs transition"
                       >
-                        <Eye className="h-3.5 w-3.5 text-[#00b14f]" /> Back Side ({identityBackFileName || 'Attached'})
+                        <Eye className="text-primary h-3.5 w-3.5" /> Back Side ({identityBackFileName || 'Attached'})
                       </button>
                     )}
                   </div>
@@ -956,7 +962,7 @@ function UnifiedVerificationStatusTracker({
             <div className="space-y-2.5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex flex-wrap items-center gap-2.5">
-                  <h4 className="text-sm font-bold text-slate-900 sm:text-base">2. Compliance Legal Review</h4>
+                  <h4 className="text-on-surface text-sm font-bold sm:text-base">2. Compliance Legal Review</h4>
                   {isPending ? (
                     <span className="inline-flex items-center gap-1.5 rounded-md border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-800">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-500" />
@@ -973,30 +979,30 @@ function UnifiedVerificationStatusTracker({
 
               {/* Review Process Box */}
               <div
-                className={`rounded-xl border p-4 text-xs leading-relaxed shadow-2xs sm:p-5 sm:text-[13px] ${
+                className={`sm:text-body-md rounded-xl border p-4 text-xs leading-relaxed shadow-2xs sm:p-5 ${
                   isPending
                     ? 'border-amber-200/90 bg-amber-50/30 text-amber-950'
-                    : 'border-slate-200/80 bg-white text-slate-600'
+                    : 'border-outline-variant/80 text-on-surface-variant bg-white'
                 }`}
               >
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <span className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
+                    <span className="text-label-sm text-on-surface-variant font-semibold tracking-wider uppercase">
                       Reviewing Entity
                     </span>
-                    <p className="mt-1 text-sm font-semibold text-slate-900">
+                    <p className="text-on-surface mt-1 text-sm font-semibold">
                       InterVue Trust &amp; Safety Compliance Team
                     </p>
                   </div>
                   <div>
-                    <span className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
+                    <span className="text-label-sm text-on-surface-variant font-semibold tracking-wider uppercase">
                       Estimated Turnaround (SLA)
                     </span>
-                    <p className="mt-1 text-sm font-semibold text-slate-900">Within 24 business hours</p>
+                    <p className="text-on-surface mt-1 text-sm font-semibold">Within 24 business hours</p>
                   </div>
                 </div>
 
-                <p className="mt-3.5 border-t border-slate-200/70 pt-3 text-xs leading-relaxed text-slate-600 sm:text-[13px]">
+                <p className="border-outline-variant/70 text-on-surface-variant sm:text-body-md mt-3.5 border-t pt-3 text-xs leading-relaxed">
                   {isPending
                     ? 'Compliance officers are cross-referencing tax registration, legal representative authorization, and official company seals against the National Business Registration Portal.'
                     : 'Corporate background checks and legal dossier validations have concluded successfully.'}
@@ -1013,7 +1019,7 @@ function UnifiedVerificationStatusTracker({
                 isApproved
                   ? 'bg-emerald-500'
                   : isPending
-                    ? 'border-2 border-slate-300 bg-white text-slate-400'
+                    ? 'border-outline text-outline border-2 bg-white'
                     : isMoreInfo
                       ? 'bg-sky-500'
                       : 'bg-rose-500'
@@ -1022,7 +1028,7 @@ function UnifiedVerificationStatusTracker({
               {isApproved ? (
                 <Check className="h-4.5 w-4.5" />
               ) : isPending ? (
-                <span className="text-xs font-bold text-slate-400">3</span>
+                <span className="text-outline text-xs font-bold">3</span>
               ) : (
                 <AlertCircle className="h-4.5 w-4.5" />
               )}
@@ -1032,7 +1038,7 @@ function UnifiedVerificationStatusTracker({
             <div className="space-y-2.5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex flex-wrap items-center gap-2.5">
-                  <h4 className="text-sm font-bold text-slate-900 sm:text-base">
+                  <h4 className="text-on-surface text-sm font-bold sm:text-base">
                     3. Verification Result &amp; Privileges Activation
                   </h4>
                   {isApproved ? (
@@ -1041,7 +1047,7 @@ function UnifiedVerificationStatusTracker({
                       Approved
                     </span>
                   ) : isPending ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+                    <span className="border-outline-variant bg-surface-container-high text-on-surface-variant inline-flex items-center gap-1.5 rounded-md border px-2.5 py-0.5 text-xs font-medium">
                       Pending
                     </span>
                   ) : isRevoked ? (
@@ -1062,9 +1068,9 @@ function UnifiedVerificationStatusTracker({
 
               {/* Result Outcome Box */}
               {isPending && (
-                <div className="rounded-xl border border-slate-200/80 bg-slate-50/60 p-4 text-xs leading-relaxed text-slate-600 shadow-2xs sm:p-5 sm:text-[13px]">
-                  <p className="font-semibold text-slate-900">Platform privileges activated upon approval:</p>
-                  <ul className="mt-2.5 list-disc space-y-1.5 pl-4 text-xs text-slate-600 sm:text-[13px]">
+                <div className="border-outline-variant/80 bg-surface-container-low/60 text-on-surface-variant sm:text-body-md rounded-xl border p-4 text-xs leading-relaxed shadow-2xs sm:p-5">
+                  <p className="text-on-surface font-semibold">Platform privileges activated upon approval:</p>
+                  <ul className="text-on-surface-variant sm:text-body-md mt-2.5 list-disc space-y-1.5 pl-4 text-xs">
                     <li>
                       High-trust <strong>Verified Employer Badge (Level 2/3)</strong> awarded to your company profile.
                     </li>
@@ -1081,7 +1087,7 @@ function UnifiedVerificationStatusTracker({
               {isApproved && (
                 <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-4 text-emerald-950 shadow-2xs sm:p-5">
                   <p className="text-sm font-bold text-emerald-900">Company legal credentials verified successfully!</p>
-                  <p className="mt-1 text-xs text-emerald-800 sm:text-[13px]">
+                  <p className="sm:text-body-md mt-1 text-xs text-emerald-800">
                     Your account is granted full recruitment and job publishing privileges across the platform.
                   </p>
                   {expiresAt && (
@@ -1093,17 +1099,19 @@ function UnifiedVerificationStatusTracker({
               )}
 
               {(isRevoked || isRejected || isMoreInfo) && (
-                <div className="space-y-3 rounded-xl border border-rose-200 bg-rose-50/60 p-4 text-xs text-rose-950 shadow-2xs sm:p-5 sm:text-[13px]">
+                <div className="sm:text-body-md space-y-3 rounded-xl border border-rose-200 bg-rose-50/60 p-4 text-xs text-rose-950 shadow-2xs sm:p-5">
                   <div className="flex items-center justify-between font-bold">
                     <span className="flex items-center gap-1.5 text-rose-900">
                       <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
                       Compliance Officer Remarks
                     </span>
                     {effectiveReviewedAt && (
-                      <span className="text-xs font-normal text-slate-500">{formatDate(effectiveReviewedAt)}</span>
+                      <span className="text-on-surface-variant text-xs font-normal">
+                        {formatDate(effectiveReviewedAt)}
+                      </span>
                     )}
                   </div>
-                  <div className="rounded-lg border border-rose-200/80 bg-white p-3.5 text-xs leading-relaxed text-rose-900 italic sm:text-[13px]">
+                  <div className="sm:text-body-md rounded-lg border border-rose-200/80 bg-white p-3.5 text-xs leading-relaxed text-rose-900 italic">
                     &ldquo;
                     {effectiveReason ||
                       'Documentation does not meet compliance standards. Please review guidance and resubmit.'}
@@ -1121,15 +1129,15 @@ function UnifiedVerificationStatusTracker({
 
       {/* 4. Expandable Past Submission History Section */}
       {isHistoryExpanded && documents.length > 1 && (
-        <div className="mt-8 space-y-4 border-t border-slate-200/80 pt-6">
+        <div className="border-outline-variant/80 mt-8 space-y-4 border-t pt-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
+              <div className="bg-surface-container-high text-on-surface flex h-8 w-8 items-center justify-center rounded-xl">
                 <History className="h-4 w-4" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-slate-900">Past Submission History &amp; Audit Trail</h4>
-                <p className="text-xs text-slate-500">
+                <h4 className="text-on-surface text-sm font-bold">Past Submission History &amp; Audit Trail</h4>
+                <p className="text-on-surface-variant text-xs">
                   Record of {documents.length - 1} previous verification{' '}
                   {documents.length - 1 === 1 ? 'dossier' : 'dossiers'} evaluated by compliance officers
                 </p>
@@ -1170,17 +1178,17 @@ function UnifiedVerificationStatusTracker({
               return (
                 <div
                   key={doc.id}
-                  className="space-y-3 rounded-xl border border-slate-200/90 bg-white p-4 shadow-2xs transition-all hover:border-slate-300 sm:p-5"
+                  className="border-outline-variant/90 hover:border-outline space-y-3 rounded-xl border bg-white p-4 shadow-2xs transition-all sm:p-5"
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex min-w-0 items-start gap-3">
                       <div
                         className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${
                           doc.reviewStatus === 'APPROVED'
-                            ? 'border-emerald-200 bg-emerald-50 text-[#00b14f]'
+                            ? 'text-primary border-emerald-200 bg-emerald-50'
                             : doc.reviewStatus === 'REVOKED' || doc.reviewStatus === 'REJECTED'
                               ? 'border-rose-200 bg-rose-50 text-rose-600'
-                              : 'border-slate-200 bg-slate-50 text-slate-600'
+                              : 'border-outline-variant bg-surface-container-low text-on-surface-variant'
                         }`}
                       >
                         <FileText className="h-5 w-5" />
@@ -1188,20 +1196,20 @@ function UnifiedVerificationStatusTracker({
 
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-sm font-bold text-slate-900">
+                          <span className="text-on-surface text-sm font-bold">
                             {isDocLoa
                               ? 'Letter of Authorization & Identity Dossier'
                               : 'Enterprise Registration Certificate (ERC)'}
                           </span>
                           <span
-                            className={`inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-semibold ${badgeClass}`}
+                            className={`text-label-sm inline-flex items-center rounded-md border px-2 py-0.5 font-semibold ${badgeClass}`}
                           >
                             {statusLabel}
                           </span>
                         </div>
 
-                        <p className="mt-0.5 text-xs text-slate-500">
-                          <span className="font-medium text-slate-700">{doc.originalFileName}</span>
+                        <p className="text-on-surface-variant mt-0.5 text-xs">
+                          <span className="text-on-surface font-medium">{doc.originalFileName}</span>
                           {doc.fileSizeBytes ? ` • ${formatDocSize(doc.fileSizeBytes)}` : ''}
                           {doc.submittedAt ? ` • Submitted on ${formatDate(doc.submittedAt)}` : ''}
                         </p>
@@ -1212,9 +1220,9 @@ function UnifiedVerificationStatusTracker({
                       <button
                         type="button"
                         onClick={() => onPreview(doc.id, doc.originalFileName, 'main')}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition hover:border-[#00b14f] hover:text-[#00b14f] active:scale-95"
+                        className="border-outline-variant text-on-surface hover:border-primary hover:text-primary inline-flex items-center gap-1.5 rounded-lg border bg-white px-3 py-1.5 text-xs font-semibold shadow-2xs transition active:scale-95"
                       >
-                        <Eye className="h-3.5 w-3.5 text-[#00b14f]" />
+                        <Eye className="text-primary h-3.5 w-3.5" />
                         <span>View Dossier</span>
                       </button>
                     </div>
@@ -1222,15 +1230,15 @@ function UnifiedVerificationStatusTracker({
 
                   {/* Attached CCCD chips for past doc */}
                   {(doc.identityFileName || doc.identityBackFileName) && (
-                    <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-2.5 text-xs">
-                      <span className="text-[11px] font-semibold text-slate-600">Attached ID Cards:</span>
+                    <div className="border-outline-variant flex flex-wrap items-center gap-2 border-t pt-2.5 text-xs">
+                      <span className="text-label-sm text-on-surface-variant font-semibold">Attached ID Cards:</span>
                       {doc.identityFileName && (
                         <button
                           type="button"
                           onClick={() => onPreview(doc.id, doc.identityFileName || 'CCCD_Front.png', 'identity')}
-                          className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] font-medium text-slate-700 hover:border-[#00b14f] hover:text-[#00b14f]"
+                          className="border-outline-variant bg-surface-container-low text-label-sm text-on-surface hover:border-primary hover:text-primary inline-flex items-center gap-1 rounded-md border px-2 py-1 font-medium"
                         >
-                          <Eye className="h-3 w-3 text-[#00b14f]" /> Front Side
+                          <Eye className="text-primary h-3 w-3" /> Front Side
                         </button>
                       )}
                       {doc.identityBackFileName && (
@@ -1239,9 +1247,9 @@ function UnifiedVerificationStatusTracker({
                           onClick={() =>
                             onPreview(doc.id, doc.identityBackFileName || 'CCCD_Back.png', 'identity-back')
                           }
-                          className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] font-medium text-slate-700 hover:border-[#00b14f] hover:text-[#00b14f]"
+                          className="border-outline-variant bg-surface-container-low text-label-sm text-on-surface hover:border-primary hover:text-primary inline-flex items-center gap-1 rounded-md border px-2 py-1 font-medium"
                         >
-                          <Eye className="h-3 w-3 text-[#00b14f]" /> Back Side
+                          <Eye className="text-primary h-3 w-3" /> Back Side
                         </button>
                       )}
                     </div>
@@ -1249,18 +1257,18 @@ function UnifiedVerificationStatusTracker({
 
                   {/* Compliance feedback callout note */}
                   {doc.reviewReason && (
-                    <div className="rounded-lg border border-slate-200/80 bg-slate-50/80 p-3 text-xs leading-relaxed">
-                      <div className="mb-1 flex items-center justify-between font-semibold text-slate-700">
-                        <span className="flex items-center gap-1 text-[11px] tracking-wider text-slate-600 uppercase">
+                    <div className="border-outline-variant/80 bg-surface-container-low/80 rounded-lg border p-3 text-xs leading-relaxed">
+                      <div className="text-on-surface mb-1 flex items-center justify-between font-semibold">
+                        <span className="text-label-sm text-on-surface-variant flex items-center gap-1 tracking-wider uppercase">
                           <AlertCircle className="h-3 w-3 text-rose-500" /> Compliance Officer Feedback
                         </span>
                         {doc.reviewedAt && (
-                          <span className="text-[11px] font-normal text-slate-400">
+                          <span className="text-label-sm text-outline font-normal">
                             Evaluated on {formatDate(doc.reviewedAt)}
                           </span>
                         )}
                       </div>
-                      <p className="text-slate-800 italic">&ldquo;{doc.reviewReason}&rdquo;</p>
+                      <p className="text-on-surface italic">&ldquo;{doc.reviewReason}&rdquo;</p>
                     </div>
                   )}
                 </div>
@@ -1425,11 +1433,11 @@ export function BusinessLicenseView() {
 
         {/* ---------------- 2. MAIN UPLOAD FORM PANEL ---------------- */}
         {shouldShowUploadForm && (
-          <div className="rounded-md border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
+          <div className="border-outline-variant rounded-md border bg-white p-6 shadow-xs sm:p-8">
             {/* Section Header */}
-            <div className="space-y-1.5 border-b border-slate-100 pb-4">
+            <div className="border-outline-variant space-y-1.5 border-b pb-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-base font-bold text-slate-800">
+                <h2 className="text-on-surface text-base font-bold">
                   {showOverrideForm
                     ? 'Submit Replacement Legal Document'
                     : 'Business Registration & Authorization Details'}
@@ -1438,22 +1446,22 @@ export function BusinessLicenseView() {
                   {/* <button
                     type="button"
                     onClick={() => setIsLoaGuideOpen(true)}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#00b14f] hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
                   >
                     <HelpCircle className="h-3.5 w-3.5" /> LOA Preparation Guideee
                   </button>
-                  <span className="text-slate-300">•</span> */}
+                  <span className="text-outline">•</span> */}
                   <button
                     type="button"
                     onClick={() => setIsGuidelinesOpen(true)}
-                    className="inline-flex cursor-pointer items-center gap-1 text-xs font-semibold text-[#00b14f] hover:underline"
+                    className="text-primary inline-flex cursor-pointer items-center gap-1 text-xs font-semibold hover:underline"
                   >
                     <HelpCircle className="h-3.5 w-3.5" />
                     General Guidelines
                   </button>
                 </div>
               </div>
-              <p className="text-xs text-slate-600">
+              <p className="text-on-surface-variant text-xs">
                 Please select your verification method and attach official scanned documents with authentic seal.
               </p>
             </div>
@@ -1469,15 +1477,15 @@ export function BusinessLicenseView() {
                     value="BUSINESS_LICENSE"
                     checked={documentType === 'BUSINESS_LICENSE'}
                     onChange={() => setDocumentType('BUSINESS_LICENSE')}
-                    className="h-4 w-4 text-[#00b14f] focus:ring-[#00b14f]"
+                    className="text-primary h-4 w-4 focus:ring-[#00b14f]"
                   />
-                  <span className="text-sm font-bold text-slate-900">
+                  <span className="text-on-surface text-sm font-bold">
                     Enterprise Registration Certificate or equivalent (ERC)
                   </span>
                 </label>
 
                 {documentType === 'BUSINESS_LICENSE' && (
-                  <div className="ml-6 space-y-4 rounded-xl border border-slate-200/90 bg-slate-50/30 p-5">
+                  <div className="border-outline-variant/90 bg-surface-container-low/30 ml-6 space-y-4 rounded-xl border p-5">
                     <DocumentDropzone
                       label="Certificate Document"
                       required
@@ -1507,26 +1515,26 @@ export function BusinessLicenseView() {
                     value="LETTER_OF_AUTHORIZATION"
                     checked={documentType === 'LETTER_OF_AUTHORIZATION'}
                     onChange={() => setDocumentType('LETTER_OF_AUTHORIZATION')}
-                    className="h-4 w-4 text-[#00b14f] focus:ring-[#00b14f]"
+                    className="text-primary h-4 w-4 focus:ring-[#00b14f]"
                   />
-                  <span className="text-sm font-bold text-slate-900">
+                  <span className="text-on-surface text-sm font-bold">
                     Letter of Authorization &amp; Identity Documents
                   </span>
                 </label>
 
                 {documentType === 'LETTER_OF_AUTHORIZATION' && (
-                  <div className="ml-6 space-y-6 rounded-xl border border-slate-200/90 bg-slate-50/30 p-5">
+                  <div className="border-outline-variant/90 bg-surface-container-low/30 ml-6 space-y-6 rounded-xl border p-5">
                     {/* Sub-box 1: Letter of Authorization (LOA) */}
                     <div>
                       <div className="mb-2 flex items-center justify-between">
-                        <label className="block text-xs font-bold text-slate-800">
+                        <label className="text-on-surface block text-xs font-bold">
                           1. Official Letter of Authorization (Bản scan Giấy ủy quyền có mộc đỏ){' '}
                           <span className="text-rose-500">*</span>
                         </label>
                         <button
                           type="button"
                           onClick={() => setIsLoaGuideOpen(true)}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-[#00b14f] hover:underline"
+                          className="text-primary inline-flex items-center gap-1 text-xs font-semibold hover:underline"
                         >
                           <HelpCircle className="h-3.5 w-3.5" /> How to prepare Letter of Authorization?
                         </button>
@@ -1550,7 +1558,7 @@ export function BusinessLicenseView() {
                           <a
                             href="/templates/intervue-authorization-letter-template.docx"
                             download="intervue-authorization-letter-template.docx"
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-[#00b14f] bg-white px-3 py-1.5 text-xs font-semibold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50 active:scale-95"
+                            className="border-primary text-primary inline-flex items-center gap-1.5 rounded-lg border bg-white px-3 py-1.5 text-xs font-semibold shadow-2xs transition hover:bg-emerald-50 active:scale-95"
                           >
                             <Download className="h-3.5 w-3.5" />
                             <span>Download Template (.docx)</span>
@@ -1560,23 +1568,23 @@ export function BusinessLicenseView() {
                     </div>
 
                     {/* Sub-box 2: Identity Documents (Citizen ID / CCCD 2 mặt) with CCCD Illustration */}
-                    <div className="border-t border-slate-200/80 pt-5">
+                    <div className="border-outline-variant/80 border-t pt-5">
                       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                         {/* Left Column (8 cols): Vertically stacked Front side & Back side slots */}
                         <div className="space-y-4 lg:col-span-8">
                           <div>
-                            <label className="block text-xs font-bold text-slate-800">
+                            <label className="text-on-surface block text-xs font-bold">
                               2. Identity Documents (Citizen ID / CCCD / Passport){' '}
                               <span className="text-rose-500">*</span>
                             </label>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-on-surface-variant text-xs">
                               Please attach clear, uncropped photos of both the front and back of your Citizen Identity
                               Card (CCCD) or Passport.
                             </p>
                           </div>
 
                           {/* Front Side Slot */}
-                          <div className="rounded-xl border border-slate-200 bg-white p-4">
+                          <div className="border-outline-variant rounded-xl border bg-white p-4">
                             <DocumentDropzone
                               label="CCCD Mặt trước (Front Side) / Passport Photo Page"
                               required
@@ -1593,7 +1601,7 @@ export function BusinessLicenseView() {
                           </div>
 
                           {/* Back Side Slot */}
-                          <div className="rounded-xl border border-slate-200 bg-white p-4">
+                          <div className="border-outline-variant rounded-xl border bg-white p-4">
                             <DocumentDropzone
                               label="CCCD Mặt sau (Back Side)"
                               required={false}
@@ -1612,10 +1620,10 @@ export function BusinessLicenseView() {
 
                         {/* Right Column (4 cols): Illustration of CCCD */}
                         <div className="flex flex-col items-center justify-start space-y-2 pt-6 lg:col-span-4">
-                          <p className="text-xs font-bold tracking-wider text-slate-600 uppercase">
+                          <p className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">
                             Illustration (Minh họa)
                           </p>
-                          <div className="overflow-hidden rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs">
+                          <div className="border-outline-variant/90 overflow-hidden rounded-xl border bg-white p-3 shadow-2xs">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src="/images/recruiter/illustration-id-card.png"
@@ -1623,7 +1631,7 @@ export function BusinessLicenseView() {
                               className="h-44 w-auto max-w-[210px] object-contain"
                             />
                           </div>
-                          <p className="text-center text-[10px] text-slate-500">
+                          <p className="text-label-sm text-on-surface-variant text-center">
                             Sample Front &amp; Back Vietnamese Citizen ID (CCCD) with chip
                           </p>
                         </div>
@@ -1635,12 +1643,12 @@ export function BusinessLicenseView() {
             </div>
 
             {/* Form Footer Action */}
-            <div className="mt-8 flex items-center justify-end border-t border-slate-100 pt-5">
+            <div className="border-outline-variant mt-8 flex items-center justify-end border-t pt-5">
               <button
                 type="button"
                 onClick={handleSave}
                 disabled={isSubmitting}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#00b14f] px-6 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-[#009b45] active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+                className="bg-primary shadow-elevation-1 inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-xs font-bold text-white transition hover:bg-[#009b45] active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting ? (
                   <>
@@ -1659,10 +1667,10 @@ export function BusinessLicenseView() {
         <div className="fixed right-6 bottom-4 z-40">
           <Link
             href={ROUTES.RECRUITER_COMPANY_PHONE_VERIFY}
-            className="flex items-center gap-2 rounded-full bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-white shadow-lg backdrop-blur-xs transition hover:scale-102 hover:bg-slate-900"
+            className="shadow-elevation-2 flex items-center gap-2 rounded-full bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-white backdrop-blur-xs transition hover:scale-102 hover:bg-slate-900"
           >
             <span>Next: Phone Verification</span>
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00b14f] text-white">
+            <div className="bg-primary flex h-5 w-5 items-center justify-center rounded-full text-white">
               <ArrowRight className="h-3 w-3" />
             </div>
           </Link>
@@ -1672,25 +1680,25 @@ export function BusinessLicenseView() {
       {/* Guidelines Modal */}
       {isGuidelinesOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
-          <div className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-xl sm:p-7">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="border-outline-variant shadow-elevation-2 relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border bg-white p-6 sm:p-7">
+            <div className="border-outline-variant flex items-center justify-between border-b pb-3">
               <div className="flex items-center gap-2">
-                <HelpCircle className="h-5 w-5 text-[#00b14f]" />
-                <h3 className="text-base font-bold text-slate-900">Legal Document Upload Guidelines</h3>
+                <HelpCircle className="text-primary h-5 w-5" />
+                <h3 className="text-on-surface text-base font-bold">Legal Document Upload Guidelines</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsGuidelinesOpen(false)}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                className="text-outline hover:bg-surface-container-high hover:text-on-surface rounded-lg p-1.5"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="mt-4 space-y-4 text-xs leading-relaxed text-slate-600 sm:text-sm">
-              <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4">
-                <h4 className="font-bold text-slate-800">1. Enterprise Registration Certificate (ERC / Giấy ĐKKD)</h4>
-                <ul className="mt-2 list-disc space-y-1 pl-4 text-xs text-slate-600">
+            <div className="text-on-surface-variant mt-4 space-y-4 text-xs leading-relaxed sm:text-sm">
+              <div className="border-outline-variant bg-surface-container-low/50 rounded-xl border p-4">
+                <h4 className="text-on-surface font-bold">1. Enterprise Registration Certificate (ERC / Giấy ĐKKD)</h4>
+                <ul className="text-on-surface-variant mt-2 list-disc space-y-1 pl-4 text-xs">
                   <li>Applicable to enterprise founders and legal representatives.</li>
                   <li>
                     Document must display all pages, all 4 corners visible, and clear red seal of the Department of
@@ -1704,9 +1712,9 @@ export function BusinessLicenseView() {
                 </ul>
               </div>
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4">
-                <h4 className="font-bold text-slate-800">2. Letter of Authorization (LOA) &amp; Identity Document</h4>
-                <ul className="mt-2 list-disc space-y-1 pl-4 text-xs text-slate-600">
+              <div className="border-outline-variant bg-surface-container-low/50 rounded-xl border p-4">
+                <h4 className="text-on-surface font-bold">2. Letter of Authorization (LOA) &amp; Identity Document</h4>
+                <ul className="text-on-surface-variant mt-2 list-disc space-y-1 pl-4 text-xs">
                   <li>Applicable to authorized HR specialists, team leads, or recruiters.</li>
                   <li>Download and complete the official InterVue Letter of Authorization template (`.docx`).</li>
                   <li>
@@ -1731,11 +1739,11 @@ export function BusinessLicenseView() {
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end border-t border-slate-100 pt-3">
+            <div className="border-outline-variant mt-6 flex justify-end border-t pt-3">
               <button
                 type="button"
                 onClick={() => setIsGuidelinesOpen(false)}
-                className="rounded-lg bg-[#00b14f] px-5 py-2 text-xs font-bold text-white transition hover:bg-[#009b45]"
+                className="bg-primary rounded-lg px-5 py-2 text-xs font-bold text-white transition hover:bg-[#009b45]"
               >
                 I Understand
               </button>

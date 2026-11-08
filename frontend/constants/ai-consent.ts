@@ -8,36 +8,35 @@ export const AI_PERSONAL_DATA_CONSENT_STORAGE_KEY = 'intervue_ai_personal_data_c
 export const AI_PERSONAL_DATA_CONSENT_CONFIG = {
   version: '1.0.0',
   lastUpdated: '2026-11-05',
-  badgeText: 'Tuân thủ Nghị định 13/2023/NĐ-CP',
-  title: 'Chấp thuận xử lý dữ liệu cá nhân cho tính năng AI',
+  badgeText: 'Compliant with Decree 13/2023/ND-CP',
+  title: 'Consent to personal data processing for AI features',
   summary:
-    'Để sử dụng các tính năng Trí tuệ nhân tạo (AI) hỗ trợ bóc tách hồ sơ CV, đánh giá độ phù hợp và đề xuất việc làm, InterVue cần sự đồng ý rõ ràng của bạn về việc xử lý dữ liệu cá nhân theo quy định pháp luật.',
+    'To use Artificial Intelligence (AI) features that parse CVs, assess fit and suggest jobs, InterVue needs your explicit consent to process personal data as required by law.',
   sections: [
     {
-      heading: '1. Phạm vi dữ liệu cá nhân thu thập',
+      heading: '1. Scope of personal data collected',
       details:
-        'Bao gồm các thông tin trên tệp CV bạn tải lên (họ tên, email, số điện thoại, lịch sử công tác, học vấn, kỹ năng, dự án) và các kỳ vọng nghề nghiệp bạn thiết lập.',
+        'Includes the information in the CV you upload (name, email, phone number, work history, education, skills, projects) and the career preferences you set.',
     },
     {
-      heading: '2. Mục đích xử lý bằng Trí tuệ nhân tạo (AI)',
+      heading: '2. Purpose of AI processing',
       details:
-        'Trích xuất văn bản từ CV, tự động gợi ý điền thông tin vào hồ sơ ứng viên, kiểm tra độ tương thích với tin tuyển dụng và cung cấp nhận xét cải thiện CV khách quan.',
+        'Extracting text from your CV, suggesting profile fields, checking fit with job posts and giving objective CV improvement feedback.',
     },
     {
-      heading: '3. Cam kết bảo mật & nguyên tắc đạo đức AI',
+      heading: '3. Security commitment & AI ethics',
       details:
-        'InterVue cam kết không chia sẻ hoặc thương mại hóa dữ liệu cá nhân cho bên thứ ba trái phép. AI tuyệt đối không sử dụng các yếu tố nhạy cảm (tuổi tác, giới tính, ảnh chân dung, quê quán) để đưa ra bất kỳ đánh giá nào.',
+        'InterVue will not share or sell personal data to unauthorized third parties. AI never uses sensitive attributes (age, gender, photo, place of origin) in any assessment.',
     },
     {
-      heading: '4. Quyền của chủ thể dữ liệu & thời hạn',
+      heading: '4. Data subject rights & duration',
       details:
-        'Sự đồng ý áp dụng cho phiên bản chính sách hiện tại. Bạn có quyền xem lại, yêu cầu chỉnh sửa, xóa dữ liệu hoặc thu hồi sự chấp thuận này bất kỳ lúc nào trong Cài đặt tài khoản.',
+        'Your consent applies to the current policy version. You may review, correct or delete your data, or withdraw this consent at any time in Account settings.',
     },
   ],
-  notice:
-    'Nếu không đồng ý, bạn hoàn toàn có thể tiếp tục sử dụng các tính năng tiêu chuẩn của InterVue và tự cập nhật hồ sơ bằng phương pháp thủ công.',
-  confirmButtonText: 'Đồng ý và tiếp tục',
-  cancelButtonText: 'Để sau (Nhập thủ công)',
+  notice: 'If you do not agree, you can keep using InterVue standard features and update your profile manually.',
+  confirmButtonText: 'Agree and continue',
+  cancelButtonText: 'Later (enter manually)',
 } as const;
 
 export type AiPersonalDataConsentConfig = typeof AI_PERSONAL_DATA_CONSENT_CONFIG;

@@ -33,43 +33,43 @@ export interface RecruitmentMascotProps {
 const STAGE_CONFIG: Record<RecruitmentStage, { state: RobotHeadState; defaultMsg: string }> = {
   idle: {
     state: 'idle',
-    defaultMsg: 'Chào bạn! Mình là trợ lý tuyển dụng InterVue AI, sẵn sàng đồng hành cùng bạn.',
+    defaultMsg: 'Hi! I am the InterVue AI recruitment assistant, ready to help you.',
   },
   uploading: {
     state: 'working',
-    defaultMsg: 'Đang bóc tách thông tin học vấn và kỹ năng từ file CV của bạn...',
+    defaultMsg: 'Extracting education and skills information from your CV file...',
   },
   analyzing: {
     state: 'thinking',
-    defaultMsg: 'Đang đối soát kỹ năng và phân tích độ tương thích tiêu chuẩn ATS...',
+    defaultMsg: 'Matching skills and analyzing ATS standard compatibility...',
   },
   searching: {
     state: 'searching',
-    defaultMsg: 'Đang tìm kiếm các cơ hội việc làm và mức đãi ngộ phù hợp nhất...',
+    defaultMsg: 'Looking for the best job opportunities and compensation...',
   },
   interview_listen: {
     state: 'listening',
-    defaultMsg: 'Mình đang lắng nghe câu trả lời của bạn, hãy tự tin trình bày nhé...',
+    defaultMsg: 'I am listening to your answer. Please present it with confidence...',
   },
   interview_speak: {
     state: 'speaking',
-    defaultMsg: 'Hãy giới thiệu ngắn gọn về một dự án thực tế tiêu biểu mà bạn tâm đắc nhất.',
+    defaultMsg: 'Briefly introduce one standout real project you are proudest of.',
   },
   success: {
     state: 'happy',
-    defaultMsg: 'Tuyệt vời! Thao tác đã hoàn tất thành công. Chúc bạn nhiều may mắn!',
+    defaultMsg: 'Wonderful! The action completed successfully. Good luck!',
   },
   happy: {
     state: 'happy',
-    defaultMsg: 'Tuyệt vời! Thao tác đã hoàn tất thành công. Chúc bạn nhiều may mắn!',
+    defaultMsg: 'Wonderful! The action completed successfully. Good luck!',
   },
   error: {
     state: 'error',
-    defaultMsg: 'Đã xảy ra lỗi hoặc định dạng tệp chưa phù hợp. Bạn vui lòng kiểm tra lại!',
+    defaultMsg: 'An error occurred or the file format is not suitable. Please check again!',
   },
   sleeping: {
     state: 'sleeping',
-    defaultMsg: 'Trợ lý AI đang tạm nghỉ ngơi. Hẹn gặp lại bạn trong buổi làm việc tới!',
+    defaultMsg: 'The AI assistant is resting. See you in your next session!',
   },
 };
 

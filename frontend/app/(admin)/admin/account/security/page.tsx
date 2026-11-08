@@ -154,24 +154,23 @@ export default function AdminSecurityPage() {
     <div className="mx-auto max-w-5xl space-y-8 antialiased">
       {/* Header */}
       <div>
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+        <div className="text-on-surface-variant flex items-center gap-2 text-xs font-semibold">
           <span>Admin Console</span>
           <span>/</span>
           <span>Account Settings</span>
           <span>/</span>
-          <span className="font-bold text-slate-900">Security & 2FA</span>
+          <span className="text-on-surface font-bold">Security & 2FA</span>
         </div>
-        <h1 className="mt-2 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+        <h1 className="text-on-surface mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">
           Security & Access Governance
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="text-on-surface-variant mt-1 text-sm">
           Manage hardware/software two-factor authentication, emergency recovery codes, and privileged session security.
         </p>
       </div>
 
       {/* Main Security Posture Banner */}
-      <div className="relative overflow-hidden rounded-3xl border border-emerald-900/10 bg-gradient-to-br from-[#022c22] via-[#043d2e] to-[#011a14] p-6 text-white shadow-xl sm:p-8">
-        <div className="pointer-events-none absolute -right-20 -bottom-20 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl" />
+      <div className="shadow-elevation-2 relative overflow-hidden rounded-3xl border border-emerald-900/10 bg-gradient-to-br from-[#022c22] via-[#043d2e] to-[#011a14] p-6 text-white sm:p-8">
         <div className="relative z-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-300 backdrop-blur-md">
@@ -213,7 +212,7 @@ export default function AdminSecurityPage() {
       {/* Security Cards Grid */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {/* Card 1: Authenticator Device */}
-        <div className="flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-6 shadow-sm">
+        <div className="border-outline-variant/90 flex flex-col justify-between rounded-3xl border bg-white p-6 shadow-sm">
           <div>
             <div className="flex items-center justify-between">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
@@ -223,25 +222,25 @@ export default function AdminSecurityPage() {
                 Active
               </span>
             </div>
-            <h3 className="mt-4 text-base font-bold text-slate-900">Authenticator Application</h3>
-            <p className="mt-1 text-xs leading-relaxed text-slate-600">
+            <h3 className="text-on-surface mt-4 text-base font-bold">Authenticator Application</h3>
+            <p className="text-on-surface-variant mt-1 text-xs leading-relaxed">
               Generates temporary 6-digit codes on your smartphone or password manager. Works with Google Authenticator,
               1Password, Microsoft Authenticator, and Authy.
             </p>
 
-            <div className="mt-4 space-y-1 rounded-2xl border border-slate-100 bg-slate-50 p-3.5 text-xs text-slate-600">
+            <div className="border-outline-variant bg-surface-container-low text-on-surface-variant mt-4 space-y-1 rounded-2xl border p-3.5 text-xs">
               <div className="flex items-center justify-between">
                 <span>Method:</span>
-                <span className="font-semibold text-slate-900">RFC 6238 TOTP (SHA-1)</span>
+                <span className="text-on-surface font-semibold">RFC 6238 TOTP (SHA-1)</span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Verification Window:</span>
-                <span className="font-semibold text-slate-900">30 seconds</span>
+                <span className="text-on-surface font-semibold">30 seconds</span>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 border-t border-slate-100 pt-4">
+          <div className="border-outline-variant mt-6 border-t pt-4">
             <Button
               type="button"
               variant="outline"
@@ -258,26 +257,26 @@ export default function AdminSecurityPage() {
         </div>
 
         {/* Card 2: Emergency Recovery Codes */}
-        <div className="flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-6 shadow-sm">
+        <div className="border-outline-variant/90 flex flex-col justify-between rounded-3xl border bg-white p-6 shadow-sm">
           <div>
             <div className="flex items-center justify-between">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-teal-50 text-teal-600">
                 <KeyRound className="h-5 w-5" />
               </div>
-              <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-bold text-slate-700">
+              <span className="bg-surface-container-high text-on-surface rounded-full px-2.5 py-0.5 text-xs font-bold">
                 {status ? `${status.remainingBackupCodes} of 8 remaining` : '8 of 8 remaining'}
               </span>
             </div>
-            <h3 className="mt-4 text-base font-bold text-slate-900">Emergency Recovery Vault</h3>
-            <p className="mt-1 text-xs leading-relaxed text-slate-600">
+            <h3 className="text-on-surface mt-4 text-base font-bold">Emergency Recovery Vault</h3>
+            <p className="text-on-surface-variant mt-1 text-xs leading-relaxed">
               Single-use backup codes protect you from being locked out if your mobile device is broken, stolen, or
               unavailable. Each code expires immediately upon use.
             </p>
 
-            <div className="mt-4 space-y-1 rounded-2xl border border-slate-100 bg-slate-50 p-3.5 text-xs text-slate-600">
+            <div className="border-outline-variant bg-surface-container-low text-on-surface-variant mt-4 space-y-1 rounded-2xl border p-3.5 text-xs">
               <div className="flex items-center justify-between">
                 <span>Encryption:</span>
-                <span className="font-semibold text-slate-900">Hashed via SHA-256</span>
+                <span className="text-on-surface font-semibold">Hashed via SHA-256</span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Status:</span>
@@ -286,7 +285,7 @@ export default function AdminSecurityPage() {
             </div>
           </div>
 
-          <div className="mt-6 border-t border-slate-100 pt-4">
+          <div className="border-outline-variant mt-6 border-t pt-4">
             <Button
               type="button"
               variant="outline"
@@ -304,19 +303,19 @@ export default function AdminSecurityPage() {
       </div>
 
       {/* Card 3: Session Security & Auto-Lock */}
-      <div className="rounded-3xl border border-slate-200/90 bg-white p-6 shadow-sm">
+      <div className="border-outline-variant/90 rounded-3xl border bg-white p-6 shadow-sm">
         <div className="flex items-start gap-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
+          <div className="bg-surface-container-high text-on-surface flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl">
             <Lock className="h-5 w-5" />
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-bold text-slate-900">Session Security & 15-Minute Auto-Lock</h3>
-              <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700">
+              <h3 className="text-on-surface text-base font-bold">Session Security & 15-Minute Auto-Lock</h3>
+              <span className="text-label-sm rounded-full bg-emerald-50 px-2.5 py-0.5 font-bold text-emerald-700">
                 Enabled
               </span>
             </div>
-            <p className="mt-1 max-w-2xl text-xs leading-relaxed text-slate-600">
+            <p className="text-on-surface-variant mt-1 max-w-2xl text-xs leading-relaxed">
               To defend against physical shoulder-surfing and unauthorized workstation access, your console
               automatically blurs and locks after 15 minutes of inactivity. Entering your administrator password unlocks
               the session immediately without restarting your workflow.
@@ -328,18 +327,18 @@ export default function AdminSecurityPage() {
       {/* MODAL 1: Reconfigure Authenticator */}
       {isReconfigOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-8">
+          <div className="border-outline-variant shadow-elevation-2 w-full max-w-lg rounded-3xl border bg-white p-6 sm:p-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                   <Smartphone className="h-5 w-5" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">Change Authenticator Device</h3>
+                <h3 className="text-on-surface text-base font-bold">Change Authenticator Device</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsReconfigOpen(false)}
-                className="cursor-pointer rounded-lg p-1 text-slate-400 hover:text-slate-600"
+                className="text-outline hover:text-on-surface-variant cursor-pointer rounded-lg p-1"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -347,13 +346,13 @@ export default function AdminSecurityPage() {
 
             {reconfigStep === 'password' ? (
               <form onSubmit={handleStartReconfigure} className="mt-6 space-y-4">
-                <p className="text-xs text-slate-600">
+                <p className="text-on-surface-variant text-xs">
                   For your security, please verify your administrator password before generating a new authenticator QR
                   code.
                 </p>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase">Administrator Password</label>
+                  <label className="text-on-surface block text-xs font-bold uppercase">Administrator Password</label>
                   <PasswordInput
                     placeholder="Enter current password"
                     value={reconfigPassword}
@@ -384,14 +383,14 @@ export default function AdminSecurityPage() {
               </form>
             ) : (
               <form onSubmit={handleConfirmReconfigure} className="mt-6 space-y-5">
-                <p className="text-xs text-slate-600">
+                <p className="text-on-surface-variant text-xs">
                   Scan this new QR code in your authenticator app. Once confirmed, your previous device will be
                   permanently disconnected.
                 </p>
 
                 {/* QR Container */}
-                <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="h-40 w-40 rounded-xl border border-slate-200 bg-white p-2 shadow-xs">
+                <div className="border-outline-variant bg-surface-container-low flex flex-col items-center justify-center gap-3 rounded-2xl border p-4">
+                  <div className="border-outline-variant h-40 w-40 rounded-xl border bg-white p-2 shadow-xs">
                     {reconfigSetupData?.qrCodeDataUrl && (
                       <Image
                         src={reconfigSetupData.qrCodeDataUrl}
@@ -405,7 +404,7 @@ export default function AdminSecurityPage() {
                   </div>
 
                   <div className="flex w-full items-center gap-2">
-                    <code className="flex-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-center font-mono text-xs font-bold text-slate-800 select-all">
+                    <code className="border-outline-variant text-on-surface flex-1 rounded-lg border bg-white px-2.5 py-1.5 text-center font-mono text-xs font-bold select-all">
                       {reconfigSetupData?.secret}
                     </code>
                     <Button
@@ -428,7 +427,7 @@ export default function AdminSecurityPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase">
+                  <label className="text-on-surface block text-xs font-bold uppercase">
                     Enter 6-Digit Code from New App
                   </label>
                   <Input
@@ -438,7 +437,7 @@ export default function AdminSecurityPage() {
                     placeholder="000000"
                     value={reconfigCode}
                     onChange={(e) => setReconfigCode(e.target.value.replace(/\D/g, ''))}
-                    className="mt-1.5 text-center font-mono text-base font-bold tracking-widest text-slate-900"
+                    className="text-on-surface mt-1.5 text-center font-mono text-base font-bold tracking-widest"
                     autoFocus
                   />
                   {reconfigError && <p className="mt-1.5 text-xs text-rose-600">{reconfigError}</p>}
@@ -471,18 +470,18 @@ export default function AdminSecurityPage() {
       {/* MODAL 2: Regenerate Recovery Codes */}
       {isRegenOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-8">
+          <div className="border-outline-variant shadow-elevation-2 w-full max-w-lg rounded-3xl border bg-white p-6 sm:p-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
                   <KeyRound className="h-5 w-5" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">Emergency Recovery Codes</h3>
+                <h3 className="text-on-surface text-base font-bold">Emergency Recovery Codes</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsRegenOpen(false)}
-                className="cursor-pointer rounded-lg p-1 text-slate-400 hover:text-slate-600"
+                className="text-outline hover:text-on-surface-variant cursor-pointer rounded-lg p-1"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -499,7 +498,7 @@ export default function AdminSecurityPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase">Administrator Password</label>
+                  <label className="text-on-surface block text-xs font-bold uppercase">Administrator Password</label>
                   <PasswordInput
                     placeholder="Enter current password"
                     value={regenPassword}
@@ -531,7 +530,9 @@ export default function AdminSecurityPage() {
             ) : (
               <div className="mt-6 space-y-5">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-slate-600">Save these 8 new emergency codes in your password manager:</p>
+                  <p className="text-on-surface-variant text-xs">
+                    Save these 8 new emergency codes in your password manager:
+                  </p>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -541,16 +542,16 @@ export default function AdminSecurityPage() {
                         toast.success('Codes copied to clipboard.');
                         setTimeout(() => setHasCopiedCodes(false), 2000);
                       }}
-                      className="inline-flex cursor-pointer items-center gap-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-800"
+                      className="text-label-sm inline-flex cursor-pointer items-center gap-1 font-bold text-emerald-700 hover:text-emerald-800"
                     >
                       {hasCopiedCodes ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
                       {hasCopiedCodes ? 'Copied' : 'Copy All'}
                     </button>
-                    <span className="text-slate-300">|</span>
+                    <span className="text-outline">|</span>
                     <button
                       type="button"
                       onClick={handleDownloadNewCodes}
-                      className="inline-flex cursor-pointer items-center gap-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-800"
+                      className="text-label-sm inline-flex cursor-pointer items-center gap-1 font-bold text-emerald-700 hover:text-emerald-800"
                     >
                       <Download className="h-3 w-3" />
                       Download (.txt)
@@ -558,11 +559,11 @@ export default function AdminSecurityPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div className="border-outline-variant bg-surface-container-low grid grid-cols-2 gap-2 rounded-2xl border p-4">
                   {newCodes.map((c, i) => (
                     <div
                       key={i}
-                      className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-center font-mono text-xs font-bold text-slate-800 shadow-xs"
+                      className="border-outline-variant text-on-surface rounded-lg border bg-white px-2.5 py-1.5 text-center font-mono text-xs font-bold shadow-xs"
                     >
                       {c}
                     </div>

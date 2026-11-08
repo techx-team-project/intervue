@@ -35,16 +35,16 @@ export default function ScreeningQuestionsEditor() {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-slate-500">
+        <p className="text-on-surface-variant text-xs">
           Ứng viên trả lời khi nộp hồ sơ. Tối đa {SCREENING_MAX_QUESTIONS} câu — càng ít càng nhiều người ứng tuyển.
         </p>
-        <span className="shrink-0 text-xs font-semibold text-slate-500">
+        <span className="text-on-surface-variant shrink-0 text-xs font-semibold">
           {fields.length}/{SCREENING_MAX_QUESTIONS}
         </span>
       </div>
 
       {fields.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-slate-300 px-4 py-6 text-center text-xs text-slate-500">
+        <p className="border-outline text-on-surface-variant rounded-xl border border-dashed px-4 py-6 text-center text-xs">
           Chưa có câu hỏi nào. Ứng viên chỉ cần nộp CV.
         </p>
       ) : (
@@ -53,9 +53,9 @@ export default function ScreeningQuestionsEditor() {
             const question = questions[index];
             const itemErrors = errors.screeningQuestions?.[index];
             return (
-              <li key={field.id} className="space-y-3 rounded-xl border border-slate-200 bg-white p-3.5">
+              <li key={field.id} className="border-outline-variant space-y-3 rounded-xl border bg-white p-3.5">
                 <div className="flex items-start gap-2">
-                  <span className="mt-2.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-[11px] font-bold text-emerald-700">
+                  <span className="text-label-sm mt-2.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 font-bold text-emerald-700">
                     {index + 1}
                   </span>
                   <div className="flex-1">
@@ -85,7 +85,7 @@ export default function ScreeningQuestionsEditor() {
                       <div
                         role="radiogroup"
                         aria-label="Loại câu hỏi"
-                        className="flex gap-1 rounded-lg bg-slate-100 p-0.5"
+                        className="bg-surface-container-high flex gap-1 rounded-lg p-0.5"
                       >
                         {TYPE_OPTIONS.map((option) => (
                           <button
@@ -98,7 +98,7 @@ export default function ScreeningQuestionsEditor() {
                               'rounded-md px-2.5 py-1 text-xs font-semibold transition-colors',
                               typeField.value === option.value
                                 ? 'bg-white text-emerald-700 shadow-xs'
-                                : 'text-slate-500 hover:text-slate-700',
+                                : 'text-on-surface-variant hover:text-on-surface',
                             )}
                           >
                             {option.label}
@@ -111,7 +111,7 @@ export default function ScreeningQuestionsEditor() {
                     control={control}
                     name={`screeningQuestions.${index}.required`}
                     render={({ field: requiredField }) => (
-                      <label className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                      <label className="text-on-surface-variant flex items-center gap-2 text-xs font-semibold">
                         Bắt buộc
                         <Switch
                           size="sm"

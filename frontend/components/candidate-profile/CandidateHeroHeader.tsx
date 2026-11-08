@@ -10,9 +10,9 @@ import CandidateContactBar from './CandidateContactBar';
 import CandidateImageControls from './CandidateImageControls';
 
 const STATUS_STYLES: Record<JobSearchStatus, string> = {
-  ACTIVELY_LOOKING: 'bg-emerald-50 text-emerald-700',
-  OPEN_TO_OFFERS: 'bg-blue-50 text-blue-700',
-  NOT_LOOKING: 'bg-slate-100 text-slate-600',
+  ACTIVELY_LOOKING: 'bg-primary-light text-primary',
+  OPEN_TO_OFFERS: 'bg-primary-light text-on-primary-container',
+  NOT_LOOKING: 'bg-surface-container-high text-on-surface-variant',
 };
 
 type CandidateHeroHeaderProps = {
@@ -24,11 +24,11 @@ export default function CandidateHeroHeader({ profile, onEdit }: CandidateHeroHe
   const statusLabel = optionLabel(JOB_SEARCH_STATUS_OPTIONS, profile.jobSearchStatus);
 
   return (
-    <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xs">
+    <section className="border-outline-variant overflow-hidden rounded-3xl border bg-white shadow-xs">
       <div
         role={profile.coverUrl ? 'img' : undefined}
         aria-label={profile.coverUrl ? 'Cover image' : undefined}
-        className="relative h-32 bg-linear-to-r from-emerald-100 via-emerald-50 to-sky-100 bg-cover bg-center sm:h-44"
+        className="bg-primary-light relative h-32 bg-cover bg-center sm:h-44"
         style={profile.coverUrl ? { backgroundImage: `url("${profile.coverUrl}")` } : undefined}
       >
         <CandidateImageControls
@@ -70,15 +70,15 @@ export default function CandidateHeroHeader({ profile, onEdit }: CandidateHeroHe
         </div>
 
         <div className="mt-4 min-w-0 space-y-1">
-          <h1 className="text-2xl font-black tracking-tight wrap-break-word text-slate-800 sm:text-3xl">
+          <h1 className="text-on-surface text-2xl font-bold tracking-tight wrap-break-word sm:text-3xl">
             {profile.name}
           </h1>
           {profile.headline ? (
             <p className="text-primary text-base font-semibold">{profile.headline}</p>
           ) : (
-            <p className="text-sm text-slate-500">Add a headline to introduce yourself.</p>
+            <p className="text-on-surface-variant text-sm">Add a headline to introduce yourself.</p>
           )}
-          <div className="flex flex-wrap items-center gap-2 pt-0.5 text-xs text-slate-500">
+          <div className="text-on-surface-variant flex flex-wrap items-center gap-2 pt-0.5 text-xs">
             {profile.address && (
               <span className="flex items-center gap-1">
                 <MapPin className="text-primary h-3.5 w-3.5" />

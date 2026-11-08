@@ -18,7 +18,7 @@ const HIDEABLE = new Set(['PUBLISHED', 'PAUSED']);
 
 export default function AdminJobsList({ jobs, onView, onHide, onRestore }: AdminJobsListProps) {
   return (
-    <ul className="divide-y divide-slate-100 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+    <ul className="divide-outline-variant border-outline-variant divide-y overflow-hidden rounded-2xl border bg-white shadow-xs">
       {jobs.map((job) => (
         <li key={job.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0 space-y-1">
@@ -32,7 +32,7 @@ export default function AdminJobsList({ jobs, onView, onHide, onRestore }: Admin
               </button>
               <JobPostStatusBadge status={job.status} />
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-on-surface-variant text-xs">
               {job.companyName}
               {job.city && ` · ${job.city}`} · {formatSalary(job.salary)}
               {job.deadline && ` · Deadline ${formatDate(job.deadline)}`}

@@ -26,14 +26,14 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
             <Flame className="h-5 w-5" />
           </div>
-          <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">{title}</h2>
+          <h2 className="text-on-surface text-xl font-bold sm:text-2xl">{title}</h2>
         </div>
-        <span className="hidden text-xs text-[#7f878f] sm:inline-block">{subtitle}</span>
+        <span className="text-on-surface-variant hidden text-xs sm:inline-block">{subtitle}</span>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {mainArticle && (
-          <div className="group hover:border-primary/50 flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition duration-300 hover:shadow-xl lg:col-span-7">
+          <div className="group hover:border-primary/50 border-outline-variant hover:shadow-elevation-2 flex flex-col justify-between overflow-hidden rounded-2xl border bg-white shadow-xs transition duration-300 lg:col-span-7">
             <Link
               href={`/career-orientation/${mainArticle.slug}`}
               className="relative block aspect-video w-full overflow-hidden bg-gray-100"
@@ -47,10 +47,10 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                 className="h-full w-full object-cover transition-transform duration-500"
               />
               <div className="absolute top-3 left-3 flex items-center gap-2">
-                <span className="bg-primary rounded-full px-3 py-1 text-xs font-semibold text-white shadow-md">
+                <span className="bg-primary shadow-elevation-1 rounded-full px-3 py-1 text-xs font-semibold text-white">
                   {mainArticle.category}
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/90 px-2.5 py-1 text-xs font-semibold text-white shadow-md">
+                <span className="shadow-elevation-1 inline-flex items-center gap-1 rounded-full bg-orange-500/90 px-2.5 py-1 text-xs font-semibold text-white">
                   <Sparkles className="h-3 w-3" />
                   {badgeHighlight}
                 </span>
@@ -59,7 +59,7 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
 
             <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
               <div>
-                <div className="mb-2.5 flex items-center gap-3 text-xs text-[#7f878f]">
+                <div className="text-on-surface-variant mb-2.5 flex items-center gap-3 text-xs">
                   <span className="text-navy font-medium">{mainArticle.publishedAt}</span>
                   <span>•</span>
                   <span className="flex items-center gap-1">
@@ -74,12 +74,14 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                 </div>
 
                 <Link href={`/career-orientation/${mainArticle.slug}`}>
-                  <h3 className="group-hover:text-primary line-clamp-2 text-lg leading-snug font-bold text-[#171717] transition-colors sm:text-xl">
+                  <h3 className="group-hover:text-primary text-on-surface line-clamp-2 text-lg leading-snug font-bold transition-colors sm:text-xl">
                     {mainArticle.title}
                   </h3>
                 </Link>
 
-                <p className="mt-2.5 line-clamp-3 text-sm leading-relaxed text-[#526475]">{mainArticle.excerpt}</p>
+                <p className="text-on-surface-variant mt-2.5 line-clamp-3 text-sm leading-relaxed">
+                  {mainArticle.excerpt}
+                </p>
               </div>
 
               <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
@@ -93,8 +95,8 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                     className="h-8 w-8 rounded-full object-cover ring-2 ring-emerald-50"
                   />
                   <div>
-                    <p className="text-xs font-semibold text-[#171717]">{mainArticle.author.name}</p>
-                    <p className="text-[11px] text-[#7f878f]">{mainArticle.author.role}</p>
+                    <p className="text-on-surface text-xs font-semibold">{mainArticle.author.name}</p>
+                    <p className="text-label-sm text-on-surface-variant">{mainArticle.author.role}</p>
                   </div>
                 </div>
 
@@ -114,7 +116,7 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
           {sideArticles.map((article) => (
             <div
               key={article.id}
-              className="group hover:border-primary/50 flex flex-1 flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition duration-300 hover:shadow-lg sm:flex-row lg:flex-row"
+              className="group hover:border-primary/50 border-outline-variant hover:shadow-elevation-2 flex flex-1 flex-col overflow-hidden rounded-2xl border bg-white shadow-xs transition duration-300 sm:flex-row lg:flex-row"
             >
               <Link
                 href={`/career-orientation/${article.slug}`}
@@ -128,14 +130,14 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                   alt={article.title}
                   className="h-full w-full object-cover transition-transform duration-500"
                 />
-                <span className="bg-primary absolute top-2 left-2 rounded-md px-2 py-0.5 text-[10px] font-semibold text-white">
+                <span className="bg-primary text-label-sm absolute top-2 left-2 rounded-md px-2 py-0.5 font-semibold text-white">
                   {article.category}
                 </span>
               </Link>
 
               <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
                 <div>
-                  <div className="mb-1.5 flex items-center gap-2 text-[11px] text-[#7f878f]">
+                  <div className="text-label-sm text-on-surface-variant mb-1.5 flex items-center gap-2">
                     <span>{article.publishedAt}</span>
                     <span>•</span>
                     <span className="flex items-center gap-1">
@@ -145,12 +147,14 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                   </div>
 
                   <Link href={`/career-orientation/${article.slug}`}>
-                    <h4 className="group-hover:text-primary line-clamp-2 text-sm leading-snug font-bold text-[#171717] transition-colors sm:text-base">
+                    <h4 className="group-hover:text-primary text-on-surface line-clamp-2 text-sm leading-snug font-bold transition-colors sm:text-base">
                       {article.title}
                     </h4>
                   </Link>
 
-                  <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-[#526475]">{article.excerpt}</p>
+                  <p className="text-on-surface-variant mt-1.5 line-clamp-2 text-xs leading-relaxed">
+                    {article.excerpt}
+                  </p>
                 </div>
 
                 <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
@@ -163,7 +167,7 @@ export default function CareerFeaturedGrid({ articles }: CareerFeaturedGridProps
                       alt={article.author.name}
                       className="h-6 w-6 rounded-full object-cover"
                     />
-                    <span className="text-navy line-clamp-1 text-[11px] font-medium">{article.author.name}</span>
+                    <span className="text-navy text-label-sm line-clamp-1 font-medium">{article.author.name}</span>
                   </div>
 
                   <Link

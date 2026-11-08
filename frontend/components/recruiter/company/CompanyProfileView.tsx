@@ -381,36 +381,36 @@ export function CompanyProfileView() {
         {!hasLinkedCompany ? (
           <div className="space-y-5">
             {/* Top 2 Tabs (TopCV Standard Order & Sharp Styling) */}
-            <div className="grid grid-cols-1 border-b border-slate-200 sm:grid-cols-2">
+            <div className="border-outline-variant grid grid-cols-1 border-b sm:grid-cols-2">
               {/* TAB 1: Search Company Information (Prioritized First) */}
               <button
                 type="button"
                 onClick={() => setActiveTab('search')}
                 className={`flex cursor-pointer items-center justify-between border-b-2 px-5 py-4 text-left transition-colors ${
                   activeTab === 'search'
-                    ? 'border-[#00b14f] bg-white'
-                    : 'border-transparent bg-slate-50/50 hover:bg-slate-100/70'
+                    ? 'border-primary bg-white'
+                    : 'bg-surface-container-low/50 hover:bg-surface-container-high/70 border-transparent'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
-                      activeTab === 'search' ? 'bg-emerald-50 text-[#00b14f]' : 'bg-slate-200/80 text-slate-500'
+                      activeTab === 'search'
+                        ? 'text-primary bg-emerald-50'
+                        : 'bg-surface-container-high/80 text-on-surface-variant'
                     }`}
                   >
                     <Search className="h-4 w-4" />
                   </div>
                   <div>
-                    <div
-                      className={`text-sm font-bold ${activeTab === 'search' ? 'text-[#00b14f]' : 'text-slate-800'}`}
-                    >
+                    <div className={`text-sm font-bold ${activeTab === 'search' ? 'text-primary' : 'text-on-surface'}`}>
                       Search Company Information
                     </div>
-                    <div className="text-xs text-slate-500">For businesses already on InterVue</div>
+                    <div className="text-on-surface-variant text-xs">For businesses already on InterVue</div>
                   </div>
                 </div>
                 {activeTab === 'search' && (
-                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#00b14f] text-white">
+                  <div className="bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-white">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                   </div>
                 )}
@@ -422,29 +422,31 @@ export function CompanyProfileView() {
                 onClick={() => setActiveTab('create')}
                 className={`flex cursor-pointer items-center justify-between border-b-2 px-5 py-4 text-left transition-colors ${
                   activeTab === 'create'
-                    ? 'border-[#00b14f] bg-white'
-                    : 'border-transparent bg-slate-50/50 hover:bg-slate-100/70'
+                    ? 'border-primary bg-white'
+                    : 'bg-surface-container-low/50 hover:bg-surface-container-high/70 border-transparent'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
-                      activeTab === 'create' ? 'bg-emerald-50 text-[#00b14f]' : 'bg-slate-200/80 text-slate-500'
+                      activeTab === 'create'
+                        ? 'text-primary bg-emerald-50'
+                        : 'bg-surface-container-high/80 text-on-surface-variant'
                     }`}
                   >
                     <Plus className="h-4 w-4" />
                   </div>
                   <div>
-                    <div
-                      className={`text-sm font-bold ${activeTab === 'create' ? 'text-[#00b14f]' : 'text-slate-800'}`}
-                    >
+                    <div className={`text-sm font-bold ${activeTab === 'create' ? 'text-primary' : 'text-on-surface'}`}>
                       Create New Company
                     </div>
-                    <div className="text-xs text-slate-500">For businesses using InterVue for the first time</div>
+                    <div className="text-on-surface-variant text-xs">
+                      For businesses using InterVue for the first time
+                    </div>
                   </div>
                 </div>
                 {activeTab === 'create' && (
-                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#00b14f] text-white">
+                  <div className="bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-white">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                   </div>
                 )}
@@ -457,7 +459,7 @@ export function CompanyProfileView() {
                 {/* Search Bar Form */}
                 <form onSubmit={handleSearchSubmit} className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
                   <div className="relative flex-1">
-                    <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    <Search className="text-outline pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
                     <input
                       type="text"
                       value={searchQuery}
@@ -466,13 +468,13 @@ export function CompanyProfileView() {
                         setCurrentPage(1);
                       }}
                       placeholder="Company name, commercial name, or tax ID..."
-                      className="h-11 w-full rounded-md border border-slate-300 bg-white pr-4 pl-10 text-xs text-slate-900 placeholder-slate-400 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                      className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white pr-4 pl-10 text-xs placeholder-slate-400 transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={isSearching}
-                    className="flex h-11 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-[#00b14f] px-6 text-xs font-semibold text-white shadow-2xs transition hover:bg-emerald-600 active:scale-98 disabled:opacity-50 sm:text-sm"
+                    className="bg-primary flex h-11 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md px-6 text-xs font-semibold text-white shadow-2xs transition hover:bg-emerald-600 active:scale-98 disabled:opacity-50 sm:text-sm"
                   >
                     {isSearching ? 'Searching...' : 'Search'}
                   </button>
@@ -490,7 +492,7 @@ export function CompanyProfileView() {
                 {/* Heading: Recently Created Companies */}
                 <div className="space-y-3 pt-2">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-slate-800">
+                    <h3 className="text-on-surface text-sm font-bold">
                       {searchQuery ? `Search Results (${totalResultsCount})` : 'Recently Created Companies'}
                     </h3>
                     {searchQuery && (
@@ -500,7 +502,7 @@ export function CompanyProfileView() {
                           setSearchQuery('');
                           setCurrentPage(1);
                         }}
-                        className="cursor-pointer text-xs text-[#00b14f] hover:underline"
+                        className="text-primary cursor-pointer text-xs hover:underline"
                       >
                         View all available companies
                       </button>
@@ -510,15 +512,15 @@ export function CompanyProfileView() {
                   {/* 2-column Grid of Company Cards (TopCV EXACT Horizontal Layout) */}
                   <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
                     {isLoadingCompanies ? (
-                      <div className="col-span-1 flex items-center justify-center gap-2.5 rounded-md border border-slate-200 bg-slate-50/70 p-12 text-xs font-medium text-slate-500 md:col-span-2">
-                        <Loader2 className="h-4 w-4 animate-spin text-[#00b14f]" />
+                      <div className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant col-span-1 flex items-center justify-center gap-2.5 rounded-md border p-12 text-xs font-medium md:col-span-2">
+                        <Loader2 className="text-primary h-4 w-4 animate-spin" />
                         <span>Đang tải danh sách doanh nghiệp...</span>
                       </div>
                     ) : displayedCompanies.length > 0 ? (
                       displayedCompanies.map((item) => (
                         <div
                           key={item.id}
-                          className="flex items-center justify-between rounded-md border border-slate-200 bg-white p-4 shadow-2xs transition-all hover:border-[#00b14f] hover:shadow-xs"
+                          className="border-outline-variant hover:border-primary flex items-center justify-between rounded-md border bg-white p-4 shadow-2xs transition-all hover:shadow-xs"
                         >
                           {/* Left: Avatar / Logo + Details */}
                           <div className="flex min-w-0 flex-1 items-start gap-3.5 pr-3">
@@ -533,18 +535,18 @@ export function CompanyProfileView() {
                             <div className="min-w-0 flex-1 space-y-1">
                               <div className="flex items-center gap-1.5">
                                 <h4
-                                  className="truncate text-xs font-bold text-slate-900 uppercase sm:text-[13px]"
+                                  className="text-on-surface sm:text-body-md truncate text-xs font-bold uppercase"
                                   title={item.name}
                                 >
                                   {item.name}
                                 </h4>
                               </div>
 
-                              <p className="text-[11px] text-slate-600">
-                                Tax ID: <strong className="font-mono text-slate-800">{item.taxCode}</strong>
+                              <p className="text-label-sm text-on-surface-variant">
+                                Tax ID: <strong className="text-on-surface font-mono">{item.taxCode}</strong>
                               </p>
 
-                              <p className="truncate text-[11px] text-slate-500" title={item.address}>
+                              <p className="text-label-sm text-on-surface-variant truncate" title={item.address}>
                                 {item.address}
                               </p>
                             </div>
@@ -554,14 +556,14 @@ export function CompanyProfileView() {
                           <button
                             type="button"
                             onClick={() => handleSelectCompanyCard(item)}
-                            className="shrink-0 cursor-pointer rounded-md border border-[#00b14f] bg-white px-4 py-1.5 text-xs font-semibold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50 active:scale-98"
+                            className="border-primary text-primary shrink-0 cursor-pointer rounded-md border bg-white px-4 py-1.5 text-xs font-semibold shadow-2xs transition hover:bg-emerald-50 active:scale-98"
                           >
                             Select
                           </button>
                         </div>
                       ))
                     ) : (
-                      <div className="col-span-1 rounded-md border border-slate-200 bg-slate-50/70 p-8 text-center text-xs text-slate-500 md:col-span-2">
+                      <div className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant col-span-1 rounded-md border p-8 text-center text-xs md:col-span-2">
                         Không tìm thấy công ty nào phù hợp với từ khóa &ldquo;{searchQuery}&rdquo;. Bạn có thể chuyển
                         sang tab &ldquo;Create New Company&rdquo; để đăng ký thông tin doanh nghiệp.
                       </div>
@@ -570,14 +572,14 @@ export function CompanyProfileView() {
 
                   {/* UI Pagination Bar (TopCV Clean Style) */}
                   {totalResultsCount > ITEMS_PER_PAGE && (
-                    <div className="flex flex-col items-center justify-between gap-3 border-t border-slate-100 pt-4 text-xs text-slate-500 sm:flex-row">
+                    <div className="border-outline-variant text-on-surface-variant flex flex-col items-center justify-between gap-3 border-t pt-4 text-xs sm:flex-row">
                       <div>
                         Showing{' '}
-                        <strong className="text-slate-800">
+                        <strong className="text-on-surface">
                           {(currentPage - 1) * ITEMS_PER_PAGE + 1}–
                           {Math.min(currentPage * ITEMS_PER_PAGE, totalResultsCount)}
                         </strong>{' '}
-                        of <strong className="text-slate-800">{totalResultsCount}</strong> companies
+                        of <strong className="text-on-surface">{totalResultsCount}</strong> companies
                       </div>
 
                       <div className="flex items-center gap-1.5">
@@ -585,7 +587,7 @@ export function CompanyProfileView() {
                           type="button"
                           onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                           disabled={currentPage === 1}
-                          className="cursor-pointer rounded border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
+                          className="border-outline-variant text-on-surface hover:bg-surface-container-low cursor-pointer rounded border bg-white px-2.5 py-1 text-xs font-medium transition disabled:opacity-40"
                         >
                           Previous
                         </button>
@@ -596,8 +598,8 @@ export function CompanyProfileView() {
                             onClick={() => setCurrentPage(idx + 1)}
                             className={`h-7 w-7 cursor-pointer rounded border text-xs font-semibold transition ${
                               currentPage === idx + 1
-                                ? 'border-[#00b14f] bg-[#00b14f] text-white shadow-xs'
-                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                                ? 'border-primary bg-primary text-white shadow-xs'
+                                : 'border-outline-variant text-on-surface hover:bg-surface-container-low bg-white'
                             }`}
                           >
                             {idx + 1}
@@ -607,7 +609,7 @@ export function CompanyProfileView() {
                           type="button"
                           onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                           disabled={currentPage === totalPages}
-                          className="cursor-pointer rounded border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
+                          className="border-outline-variant text-on-surface hover:bg-surface-container-low cursor-pointer rounded border bg-white px-2.5 py-1 text-xs font-medium transition disabled:opacity-40"
                         >
                           Next
                         </button>
@@ -625,11 +627,11 @@ export function CompanyProfileView() {
           /* ================= SHOWCASE VIEW MODE (TopCV Standard) ================= */
           <div className="space-y-5">
             {/* Action Bar (TopCV: Yêu cầu cập nhật thông tin công ty) */}
-            <div className="flex flex-col gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+            <div className="border-outline-variant flex flex-col gap-3 rounded-lg border bg-white p-5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
-                <h3 className="text-sm font-bold text-slate-900 sm:text-base">Yêu cầu cập nhật thông tin công ty</h3>
-                <p className="text-xs text-slate-500">
-                  Ngày yêu cầu gần nhất: <span className="font-semibold text-slate-700">{formattedUpdatedAt}</span>
+                <h3 className="text-on-surface text-sm font-bold sm:text-base">Yêu cầu cập nhật thông tin công ty</h3>
+                <p className="text-on-surface-variant text-xs">
+                  Ngày yêu cầu gần nhất: <span className="text-on-surface font-semibold">{formattedUpdatedAt}</span>
                 </p>
               </div>
 
@@ -637,7 +639,7 @@ export function CompanyProfileView() {
                 <button
                   type="button"
                   onClick={() => setIsEditingProfile(true)}
-                  className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-[#00b14f] bg-white px-4 py-2 text-xs font-semibold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50 active:scale-98"
+                  className="border-primary text-primary inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-4 py-2 text-xs font-semibold shadow-2xs transition hover:bg-emerald-50 active:scale-98"
                 >
                   <Pencil className="h-3.5 w-3.5" />
                   <span>Tạo yêu cầu</span>
@@ -646,7 +648,7 @@ export function CompanyProfileView() {
                 <button
                   type="button"
                   onClick={() => setIsLeaveModalOpen(true)}
-                  className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-600 shadow-2xs transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
+                  className="border-outline-variant text-on-surface-variant inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-3.5 py-2 text-xs font-medium shadow-2xs transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
                 >
                   <LogOut className="h-3.5 w-3.5" />
                   <span>Rời công ty</span>
@@ -655,11 +657,11 @@ export function CompanyProfileView() {
             </div>
 
             {/* Showcase Card (TopCV 2-Column Key-Value Display) */}
-            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-2xs">
+            <div className="border-outline-variant rounded-lg border bg-white p-6 shadow-2xs">
               {/* Header: Logo, Company Name, Badges, Short Address/Size */}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                 {displayedLogoUrl ? (
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-white p-2 shadow-2xs">
+                  <div className="border-outline-variant flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-white p-2 shadow-2xs">
                     <img
                       src={displayedLogoUrl}
                       alt={currentDisplayedCompanyName}
@@ -673,57 +675,59 @@ export function CompanyProfileView() {
                 )}
 
                 <div className="min-w-0 flex-1 space-y-1">
-                  <h2 className="text-base font-bold tracking-tight text-slate-900 sm:text-lg">
+                  <h2 className="text-on-surface text-base font-bold tracking-tight sm:text-lg">
                     {currentDisplayedCompanyName}
                   </h2>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-on-surface-variant text-xs">
                     {company?.address || 'Vietnam'} | {company?.size || 'Technology & Enterprise'}
                   </p>
                 </div>
               </div>
 
-              <hr className="my-5 border-slate-100" />
+              <hr className="border-outline-variant my-5" />
 
               {/* Detail 2-Column Key-Value List */}
-              <div className="divide-y divide-slate-100">
+              <div className="divide-outline-variant divide-y">
                 {/* Row: Mã số thuế */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Mã số thuế:</div>
-                  <div className="font-mono font-semibold text-slate-900 sm:col-span-9">{company?.taxCode || '--'}</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Mã số thuế:</div>
+                  <div className="text-on-surface font-mono font-semibold sm:col-span-9">
+                    {company?.taxCode || '--'}
+                  </div>
                 </div>
 
                 {/* Row: Tên thương mại */}
                 {company?.tradingName && (
                   <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                    <div className="font-medium text-slate-500 sm:col-span-3">Tên thương mại:</div>
-                    <div className="font-medium text-slate-900 sm:col-span-9">{company.tradingName}</div>
+                    <div className="text-on-surface-variant font-medium sm:col-span-3">Tên thương mại:</div>
+                    <div className="text-on-surface font-medium sm:col-span-9">{company.tradingName}</div>
                   </div>
                 )}
 
                 {/* Row: Website */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Website:</div>
-                  <div className="text-slate-800 sm:col-span-9">
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Website:</div>
+                  <div className="text-on-surface sm:col-span-9">
                     {company?.website ? (
                       <a
                         href={company.website.startsWith('http') ? company.website : `https://${company.website}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 font-medium text-[#00b14f] hover:underline"
+                        className="text-primary inline-flex items-center gap-1.5 font-medium hover:underline"
                       >
                         <span>{company.website}</span>
                         <ExternalLink className="h-3.5 w-3.5" />
                       </a>
                     ) : (
-                      <span className="text-slate-400">Tôi không có website</span>
+                      <span className="text-outline">Tôi không có website</span>
                     )}
                   </div>
                 </div>
 
                 {/* Row: Loại hình doanh nghiệp */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Loại hình doanh nghiệp:</div>
-                  <div className="text-slate-800 sm:col-span-9">
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Loại hình doanh nghiệp:</div>
+                  <div className="text-on-surface sm:col-span-9">
                     {company?.businessType === 'ENTERPRISE'
                       ? 'Doanh nghiệp (Công ty Cổ phần / TNHH)'
                       : 'Hộ kinh doanh cá thể'}
@@ -732,12 +736,12 @@ export function CompanyProfileView() {
 
                 {/* Row: Ngành nghề kinh doanh */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Ngành nghề kinh doanh:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Ngành nghề kinh doanh:</div>
                   <div className="space-y-1 sm:col-span-9">
-                    <div className="text-slate-800">
+                    <div className="text-on-surface">
                       {company?.industry || 'Công nghệ thông tin & Dịch vụ phần mềm'}
                     </div>
-                    <p className="flex items-center gap-1 text-xs text-slate-400">
+                    <p className="text-outline flex items-center gap-1 text-xs">
                       <Info className="h-3 w-3 shrink-0" />
                       <span>
                         InterVue sẽ cập nhật danh mục ngành nghề theo Giấy phép ĐKKD của MST bạn đã nhập ở trên trong
@@ -749,66 +753,66 @@ export function CompanyProfileView() {
 
                 {/* Row: Thị trường hoạt động */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Thị trường hoạt động:</div>
-                  <div className="text-slate-800 sm:col-span-9">{company?.market || '--'}</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Thị trường hoạt động:</div>
+                  <div className="text-on-surface sm:col-span-9">{company?.market || '--'}</div>
                 </div>
 
                 {/* Row: Khách hàng mục tiêu */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Khách hàng mục tiêu:</div>
-                  <div className="text-slate-800 sm:col-span-9">{company?.targetCustomers || '--'}</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Khách hàng mục tiêu:</div>
+                  <div className="text-on-surface sm:col-span-9">{company?.targetCustomers || '--'}</div>
                 </div>
 
                 {/* Row: Quy mô */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Quy mô:</div>
-                  <div className="text-slate-800 sm:col-span-9">{company?.size || '--'}</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Quy mô:</div>
+                  <div className="text-on-surface sm:col-span-9">{company?.size || '--'}</div>
                 </div>
 
                 {/* Row: Email */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Email:</div>
-                  <div className="text-slate-800 sm:col-span-9">{company?.email || '--'}</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Email:</div>
+                  <div className="text-on-surface sm:col-span-9">{company?.email || '--'}</div>
                 </div>
 
                 {/* Row: Số điện thoại */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Số điện thoại:</div>
-                  <div className="text-slate-800 sm:col-span-9">{company?.phone || '--'}</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Số điện thoại:</div>
+                  <div className="text-on-surface sm:col-span-9">{company?.phone || '--'}</div>
                 </div>
 
                 {/* Row: Địa chỉ */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Địa chỉ:</div>
-                  <div className="leading-relaxed text-slate-800 sm:col-span-9">{company?.address || '--'}</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Địa chỉ:</div>
+                  <div className="text-on-surface leading-relaxed sm:col-span-9">{company?.address || '--'}</div>
                 </div>
 
                 {/* Row: Mô tả công ty */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Mô tả công ty:</div>
-                  <div className="leading-relaxed whitespace-pre-line text-slate-800 sm:col-span-9">
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Mô tả công ty:</div>
+                  <div className="text-on-surface leading-relaxed whitespace-pre-line sm:col-span-9">
                     {company?.description || '--'}
                   </div>
                 </div>
 
                 {/* Row: Phúc lợi nhân viên */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Phúc lợi nhân viên:</div>
-                  <div className="leading-relaxed whitespace-pre-line text-slate-800 sm:col-span-9">
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Phúc lợi nhân viên:</div>
+                  <div className="text-on-surface leading-relaxed whitespace-pre-line sm:col-span-9">
                     {company?.benefits || '--'}
                   </div>
                 </div>
 
                 {/* Row: Hình ảnh công ty */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="font-medium text-slate-500 sm:col-span-3">Hình ảnh công ty:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Hình ảnh công ty:</div>
                   <div className="sm:col-span-9">
                     {company?.photos && company.photos.length > 0 ? (
                       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                         {company.photos.map((photo) => (
                           <div
                             key={photo.id}
-                            className="group relative aspect-video overflow-hidden rounded-md border border-slate-200 bg-slate-50 shadow-2xs"
+                            className="group border-outline-variant bg-surface-container-low relative aspect-video overflow-hidden rounded-md border shadow-2xs"
                           >
                             <img
                               src={photo.url || photo.photoUrl}
@@ -819,7 +823,7 @@ export function CompanyProfileView() {
                         ))}
                       </div>
                     ) : (
-                      <span className="text-slate-400">--</span>
+                      <span className="text-outline">--</span>
                     )}
                   </div>
                 </div>
@@ -834,30 +838,32 @@ export function CompanyProfileView() {
         {hasLinkedCompany && isEditingProfile ? (
           <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6 pt-1">
             {/* Header when editing linked company */}
-            <div className="flex flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+            <div className="border-outline-variant flex flex-col gap-2 rounded-lg border bg-white p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h3 className="text-base font-bold text-slate-900">Yêu cầu cập nhật thông tin công ty</h3>
-                <p className="text-xs text-slate-500">Chỉnh sửa thông tin hồ sơ doanh nghiệp hiển thị tới ứng viên</p>
+                <h3 className="text-on-surface text-base font-bold">Yêu cầu cập nhật thông tin công ty</h3>
+                <p className="text-on-surface-variant text-xs">
+                  Chỉnh sửa thông tin hồ sơ doanh nghiệp hiển thị tới ứng viên
+                </p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsEditingProfile(false)}
-                className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50"
+                className="border-outline text-on-surface hover:bg-surface-container-low inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-3.5 py-2 text-xs font-semibold shadow-2xs transition"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
                 <span>Quay lại xem thông tin</span>
               </button>
             </div>
             {/* 1. Logo Upload Section (TopCV Style) */}
-            <div className="flex flex-col items-center justify-center gap-3 rounded-md border border-slate-200 bg-slate-50/50 p-6 text-center">
+            <div className="border-outline-variant bg-surface-container-low/50 flex flex-col items-center justify-center gap-3 rounded-md border p-6 text-center">
               <div className="group relative">
-                <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-dashed border-slate-300 bg-white text-slate-400 shadow-2xs">
+                <div className="border-outline text-outline flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-dashed bg-white shadow-2xs">
                   {displayedLogoUrl ? (
                     <img src={displayedLogoUrl} alt="Logo" className="h-full w-full object-contain p-1" />
                   ) : (
                     <div className="flex flex-col items-center gap-1">
-                      <Camera className="h-6 w-6 text-slate-400" />
-                      <span className="text-[10px] font-medium text-slate-500">Company Logo *</span>
+                      <Camera className="text-outline h-6 w-6" />
+                      <span className="text-label-sm text-on-surface-variant font-medium">Company Logo *</span>
                     </div>
                   )}
                 </div>
@@ -867,7 +873,7 @@ export function CompanyProfileView() {
                     type="button"
                     onClick={() => logoInputRef.current?.click()}
                     disabled={isUploadingLogo}
-                    className="mt-2 cursor-pointer text-xs font-semibold text-[#00b14f] hover:underline"
+                    className="text-primary mt-2 cursor-pointer text-xs font-semibold hover:underline"
                   >
                     {isUploadingLogo ? 'Uploading...' : displayedLogoUrl ? 'Change Logo' : '+ Upload Logo'}
                   </button>
@@ -876,12 +882,12 @@ export function CompanyProfileView() {
               </div>
 
               {/* Checkbox: I don't have a logo */}
-              <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-slate-700 select-none">
+              <label className="text-on-surface flex cursor-pointer items-center gap-2 text-xs font-medium select-none">
                 <input
                   type="checkbox"
                   checked={noLogo}
                   onChange={(e) => setNoLogo(e.target.checked)}
-                  className="h-4 w-4 rounded border-slate-300 text-[#00b14f] focus:ring-emerald-400"
+                  className="border-outline text-primary h-4 w-4 rounded focus:ring-emerald-400"
                 />
                 <span>I don&apos;t have a logo</span>
               </label>
@@ -889,22 +895,22 @@ export function CompanyProfileView() {
 
             {/* 2. Business Structure (Radio selector: Enterprise / Household Business) */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700">Business Structure *</label>
+              <label className="text-on-surface text-xs font-bold">Business Structure *</label>
               <div className="flex items-center gap-3">
                 <label
                   className={`flex cursor-pointer items-center gap-2 rounded-md border px-4 py-2 text-xs font-semibold transition select-none ${
                     watchedBusinessType === 'ENTERPRISE'
-                      ? 'border-[#00b14f] bg-emerald-50/60 text-[#00b14f]'
-                      : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+                      ? 'border-primary text-primary bg-emerald-50/60'
+                      : 'border-outline text-on-surface hover:bg-surface-container-low bg-white'
                   }`}
                 >
                   <input type="radio" value="ENTERPRISE" {...register('businessType')} className="sr-only" />
                   <span
                     className={`flex h-3.5 w-3.5 items-center justify-center rounded-full border ${
-                      watchedBusinessType === 'ENTERPRISE' ? 'border-[#00b14f]' : 'border-slate-400'
+                      watchedBusinessType === 'ENTERPRISE' ? 'border-primary' : 'border-slate-400'
                     }`}
                   >
-                    {watchedBusinessType === 'ENTERPRISE' && <span className="h-2 w-2 rounded-full bg-[#00b14f]" />}
+                    {watchedBusinessType === 'ENTERPRISE' && <span className="bg-primary h-2 w-2 rounded-full" />}
                   </span>
                   <span>Enterprise (Công ty TNHH / Cổ phần)</span>
                 </label>
@@ -912,17 +918,17 @@ export function CompanyProfileView() {
                 <label
                   className={`flex cursor-pointer items-center gap-2 rounded-md border px-4 py-2 text-xs font-semibold transition select-none ${
                     watchedBusinessType === 'HOUSEHOLD'
-                      ? 'border-[#00b14f] bg-emerald-50/60 text-[#00b14f]'
-                      : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+                      ? 'border-primary text-primary bg-emerald-50/60'
+                      : 'border-outline text-on-surface hover:bg-surface-container-low bg-white'
                   }`}
                 >
                   <input type="radio" value="HOUSEHOLD" {...register('businessType')} className="sr-only" />
                   <span
                     className={`flex h-3.5 w-3.5 items-center justify-center rounded-full border ${
-                      watchedBusinessType === 'HOUSEHOLD' ? 'border-[#00b14f]' : 'border-slate-400'
+                      watchedBusinessType === 'HOUSEHOLD' ? 'border-primary' : 'border-slate-400'
                     }`}
                   >
-                    {watchedBusinessType === 'HOUSEHOLD' && <span className="h-2 w-2 rounded-full bg-[#00b14f]" />}
+                    {watchedBusinessType === 'HOUSEHOLD' && <span className="bg-primary h-2 w-2 rounded-full" />}
                   </span>
                   <span>Household Business (Hộ kinh doanh)</span>
                 </label>
@@ -951,15 +957,15 @@ export function CompanyProfileView() {
             {/* 4. Form Fields Grid (TopCV 2-Column Standard) */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700">Mã số thuế</label>
-                <div className="flex h-11 items-center rounded-md border border-slate-200 bg-slate-50 px-3.5 font-mono text-xs text-slate-700 sm:text-sm">
+                <label className="text-on-surface text-xs font-bold">Mã số thuế</label>
+                <div className="border-outline-variant bg-surface-container-low text-on-surface flex h-11 items-center rounded-md border px-3.5 font-mono text-xs sm:text-sm">
                   {company?.taxCode}
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700">Tên pháp lý</label>
-                <div className="flex h-11 items-center rounded-md border border-slate-200 bg-slate-50 px-3.5 text-xs text-slate-700 sm:text-sm">
+                <label className="text-on-surface text-xs font-bold">Tên pháp lý</label>
+                <div className="border-outline-variant bg-surface-container-low text-on-surface flex h-11 items-center rounded-md border px-3.5 text-xs sm:text-sm">
                   <span className="truncate">{company?.name}</span>
                 </div>
               </div>
@@ -967,15 +973,15 @@ export function CompanyProfileView() {
               {/* Field 3: Primary Industry */}
               <div className="space-y-1.5">
                 <div className="flex items-center gap-1.5">
-                  <label className="text-xs font-bold text-slate-700">Primary Industry</label>
+                  <label className="text-on-surface text-xs font-bold">Primary Industry</label>
                   <span title="Main operating sector of the business">
-                    <HelpCircle className="h-3.5 w-3.5 text-slate-400" />
+                    <HelpCircle className="text-outline h-3.5 w-3.5" />
                   </span>
                 </div>
                 <select
                   {...register('industry')}
                   defaultValue="Software & Information Technology"
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 >
                   <option value="Software & Information Technology">Software & Information Technology</option>
                   <option value="E-Commerce & Online Services">E-Commerce & Online Services</option>
@@ -988,7 +994,7 @@ export function CompanyProfileView() {
                   <option value="Logistics & Transportation">Logistics & Transportation</option>
                   <option value="Other Services">Other Services</option>
                 </select>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-label-sm text-on-surface-variant">
                   InterVue will sync the business category with your Enterprise Registration Certificate within 24
                   hours.
                 </p>
@@ -997,22 +1003,22 @@ export function CompanyProfileView() {
               {/* Field 4: Commercial / Trading Name */}
               <div className="space-y-1.5">
                 <div className="flex items-center gap-1.5">
-                  <label className="text-xs font-bold text-slate-700">Commercial / Trading Name</label>
+                  <label className="text-on-surface text-xs font-bold">Commercial / Trading Name</label>
                   <span title="Recognized brand name or trading name (e.g. TechX, Shopee, MoMo)">
-                    <HelpCircle className="h-3.5 w-3.5 text-slate-400" />
+                    <HelpCircle className="text-outline h-3.5 w-3.5" />
                   </span>
                 </div>
                 <input
                   type="text"
                   {...register('tradingName')}
                   placeholder="e.g. TechX, Shopee, MoMo"
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 />
               </div>
 
               {/* Field 5: Website */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700">
+                <label className="text-on-surface text-xs font-bold">
                   Website <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -1020,9 +1026,9 @@ export function CompanyProfileView() {
                   disabled={noWebsite}
                   {...register('website')}
                   placeholder="https://company.com"
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none disabled:bg-slate-100 disabled:text-slate-400 sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary disabled:bg-surface-container-high disabled:text-outline h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 />
-                <label className="flex cursor-pointer items-center gap-1.5 pt-0.5 text-xs text-slate-600 select-none">
+                <label className="text-on-surface-variant flex cursor-pointer items-center gap-1.5 pt-0.5 text-xs select-none">
                   <input
                     type="checkbox"
                     checked={noWebsite}
@@ -1030,7 +1036,7 @@ export function CompanyProfileView() {
                       setNoWebsite(e.target.checked);
                       if (e.target.checked) setValue('website', '');
                     }}
-                    className="h-3.5 w-3.5 rounded border-slate-300 text-[#00b14f] focus:ring-emerald-400"
+                    className="border-outline text-primary h-3.5 w-3.5 rounded focus:ring-emerald-400"
                   />
                   <span>I don&apos;t have a website</span>
                 </label>
@@ -1039,12 +1045,12 @@ export function CompanyProfileView() {
 
               {/* Field 6: Operating Market */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700">
+                <label className="text-on-surface text-xs font-bold">
                   Operating Market <span className="text-rose-500">*</span>
                 </label>
                 <select
                   {...register('market')}
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 >
                   <option value="Domestic">Domestic (Vietnam)</option>
                   <option value="International">International (Global / APAC)</option>
@@ -1054,10 +1060,10 @@ export function CompanyProfileView() {
 
               {/* Field 7: Target Customers */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700">Target Customers</label>
+                <label className="text-on-surface text-xs font-bold">Target Customers</label>
                 <select
                   {...register('targetCustomers')}
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 >
                   <option value="B2B (Enterprise clients)">B2B (Enterprise clients)</option>
                   <option value="B2C (Individual consumers)">B2C (Individual consumers)</option>
@@ -1068,12 +1074,12 @@ export function CompanyProfileView() {
 
               {/* Field 8: Company Size */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700">
+                <label className="text-on-surface text-xs font-bold">
                   Company Size <span className="text-rose-500">*</span>
                 </label>
                 <select
                   {...register('size')}
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 >
                   <option value="1-9 employees">1-9 employees</option>
                   <option value="10-24 employees">10-24 employees</option>
@@ -1086,42 +1092,42 @@ export function CompanyProfileView() {
 
               {/* Field 9: Public Contact Email */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700">
+                <label className="text-on-surface text-xs font-bold">
                   Contact Email <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="email"
                   {...register('email')}
                   placeholder="careers@company.com"
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 />
                 {errors.email && <p className="text-xs text-rose-600">{errors.email.message}</p>}
               </div>
 
               {/* Field 10: Contact Phone */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700">
+                <label className="text-on-surface text-xs font-bold">
                   Contact Phone <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="tel"
                   {...register('phone')}
                   placeholder="024 1234 5678 or 0912345678"
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 />
               </div>
 
               {/* Field 11: Registered Address (Span 2 cols) */}
               <div className="space-y-1.5 md:col-span-2">
-                <label className="text-xs font-bold text-slate-700">Địa chỉ văn phòng</label>
+                <label className="text-on-surface text-xs font-bold">Địa chỉ văn phòng</label>
                 <input
                   type="text"
                   {...register('address')}
                   placeholder={company?.registeredAddress || 'Địa chỉ văn phòng hiển thị cho ứng viên'}
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 text-xs text-slate-900 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
                 />
                 {company?.registeredAddress && (
-                  <p className="text-[11px] text-slate-500">Địa chỉ đăng ký: {company.registeredAddress}</p>
+                  <p className="text-label-sm text-on-surface-variant">Địa chỉ đăng ký: {company.registeredAddress}</p>
                 )}
                 {errors.address && <p className="text-xs text-rose-600">{errors.address.message}</p>}
               </div>
@@ -1131,33 +1137,49 @@ export function CompanyProfileView() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
-                  <label className="text-xs font-bold text-slate-700">
+                  <label className="text-on-surface text-xs font-bold">
                     About Company &amp; Mission <span className="text-rose-500">*</span>
                   </label>
                   <span title="A detailed company description increases candidate application rates by 40%">
-                    <HelpCircle className="h-3.5 w-3.5 text-slate-400" />
+                    <HelpCircle className="text-outline h-3.5 w-3.5" />
                   </span>
                 </div>
-                <span className="text-[11px] text-slate-400">{watchedDesc.length} / 10000</span>
+                <span className="text-label-sm text-outline">{watchedDesc.length} / 10000</span>
               </div>
 
               {/* Rich text editor wrapper */}
-              <div className="overflow-hidden rounded-md border border-slate-300 bg-white focus-within:border-[#00b14f] focus-within:ring-1 focus-within:ring-emerald-200">
-                <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-2 text-slate-600">
-                  <button type="button" className="rounded p-1 transition hover:bg-slate-200" title="Bold">
+              <div className="border-outline focus-within:border-primary overflow-hidden rounded-md border bg-white focus-within:ring-1 focus-within:ring-emerald-200">
+                <div className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant flex items-center gap-1 border-b p-2">
+                  <button type="button" className="hover:bg-surface-container-high rounded p-1 transition" title="Bold">
                     <Bold className="h-3.5 w-3.5" />
                   </button>
-                  <button type="button" className="rounded p-1 transition hover:bg-slate-200" title="Italic">
+                  <button
+                    type="button"
+                    className="hover:bg-surface-container-high rounded p-1 transition"
+                    title="Italic"
+                  >
                     <Italic className="h-3.5 w-3.5" />
                   </button>
-                  <button type="button" className="rounded p-1 transition hover:bg-slate-200" title="Underline">
+                  <button
+                    type="button"
+                    className="hover:bg-surface-container-high rounded p-1 transition"
+                    title="Underline"
+                  >
                     <Underline className="h-3.5 w-3.5" />
                   </button>
-                  <span className="mx-1 h-4 w-px bg-slate-200" />
-                  <button type="button" className="rounded p-1 transition hover:bg-slate-200" title="Bullet list">
+                  <span className="bg-surface-container-high mx-1 h-4 w-px" />
+                  <button
+                    type="button"
+                    className="hover:bg-surface-container-high rounded p-1 transition"
+                    title="Bullet list"
+                  >
                     <List className="h-3.5 w-3.5" />
                   </button>
-                  <button type="button" className="rounded p-1 transition hover:bg-slate-200" title="Numbered list">
+                  <button
+                    type="button"
+                    className="hover:bg-surface-container-high rounded p-1 transition"
+                    title="Numbered list"
+                  >
                     <ListOrdered className="h-3.5 w-3.5" />
                   </button>
                 </div>
@@ -1165,7 +1187,7 @@ export function CompanyProfileView() {
                   rows={5}
                   {...register('description')}
                   placeholder="InterVue recommends a minimum of 500 characters to highlight company culture, tech stack, and corporate vision..."
-                  className="w-full resize-y p-3.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none sm:text-sm"
+                  className="text-on-surface w-full resize-y p-3.5 text-xs placeholder-slate-400 focus:outline-none sm:text-sm"
                 />
               </div>
             </div>
@@ -1174,31 +1196,47 @@ export function CompanyProfileView() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
-                  <label className="text-xs font-bold text-slate-700">Employee Benefits &amp; Perks</label>
+                  <label className="text-on-surface text-xs font-bold">Employee Benefits &amp; Perks</label>
                   <span title="Clear employee perks elevate employer branding and recruitment credibility">
-                    <HelpCircle className="h-3.5 w-3.5 text-slate-400" />
+                    <HelpCircle className="text-outline h-3.5 w-3.5" />
                   </span>
                 </div>
-                <span className="text-[11px] text-slate-400">{watchedBenefits.length} / 10000</span>
+                <span className="text-label-sm text-outline">{watchedBenefits.length} / 10000</span>
               </div>
 
               {/* Rich text editor wrapper */}
-              <div className="overflow-hidden rounded-md border border-slate-300 bg-white focus-within:border-[#00b14f] focus-within:ring-1 focus-within:ring-emerald-200">
-                <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-2 text-slate-600">
-                  <button type="button" className="rounded p-1 transition hover:bg-slate-200" title="Bold">
+              <div className="border-outline focus-within:border-primary overflow-hidden rounded-md border bg-white focus-within:ring-1 focus-within:ring-emerald-200">
+                <div className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant flex items-center gap-1 border-b p-2">
+                  <button type="button" className="hover:bg-surface-container-high rounded p-1 transition" title="Bold">
                     <Bold className="h-3.5 w-3.5" />
                   </button>
-                  <button type="button" className="rounded p-1 transition hover:bg-slate-200" title="Italic">
+                  <button
+                    type="button"
+                    className="hover:bg-surface-container-high rounded p-1 transition"
+                    title="Italic"
+                  >
                     <Italic className="h-3.5 w-3.5" />
                   </button>
-                  <button type="button" className="rounded p-1 transition hover:bg-slate-200" title="Underline">
+                  <button
+                    type="button"
+                    className="hover:bg-surface-container-high rounded p-1 transition"
+                    title="Underline"
+                  >
                     <Underline className="h-3.5 w-3.5" />
                   </button>
-                  <span className="mx-1 h-4 w-px bg-slate-200" />
-                  <button type="button" className="rounded p-1 transition hover:bg-slate-200" title="Bullet list">
+                  <span className="bg-surface-container-high mx-1 h-4 w-px" />
+                  <button
+                    type="button"
+                    className="hover:bg-surface-container-high rounded p-1 transition"
+                    title="Bullet list"
+                  >
                     <List className="h-3.5 w-3.5" />
                   </button>
-                  <button type="button" className="rounded p-1 transition hover:bg-slate-200" title="Numbered list">
+                  <button
+                    type="button"
+                    className="hover:bg-surface-container-high rounded p-1 transition"
+                    title="Numbered list"
+                  >
                     <ListOrdered className="h-3.5 w-3.5" />
                   </button>
                 </div>
@@ -1206,7 +1244,7 @@ export function CompanyProfileView() {
                   rows={4}
                   {...register('benefits')}
                   placeholder="Describe standard employee benefits (13th-month salary, premium healthcare, MacBook allowance, annual team retreats, performance bonuses...)"
-                  className="w-full resize-y p-3.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none sm:text-sm"
+                  className="text-on-surface w-full resize-y p-3.5 text-xs placeholder-slate-400 focus:outline-none sm:text-sm"
                 />
               </div>
             </div>
@@ -1214,8 +1252,8 @@ export function CompanyProfileView() {
             {/* 7. Workplace Photos (TopCV Style) */}
             <div className="space-y-3 pt-2">
               <div>
-                <label className="text-xs font-bold text-slate-700">Workplace &amp; Culture Photos</label>
-                <p className="pt-0.5 text-xs leading-relaxed text-slate-500">
+                <label className="text-on-surface text-xs font-bold">Workplace &amp; Culture Photos</label>
+                <p className="text-on-surface-variant pt-0.5 text-xs leading-relaxed">
                   Showcase office spaces, team culture, and corporate events to boost candidate confidence. For optimal
                   display, choose photos with a 3:2 ratio (recommended: 1200 × 800 px).
                 </p>
@@ -1226,7 +1264,7 @@ export function CompanyProfileView() {
                   type="button"
                   onClick={() => photoInputRef.current?.click()}
                   disabled={isUploadingPhotos}
-                  className="flex cursor-pointer items-center gap-1.5 rounded-md border border-[#00b14f] bg-white px-4 py-2 text-xs font-semibold text-[#00b14f] shadow-2xs transition hover:bg-emerald-50"
+                  className="border-primary text-primary flex cursor-pointer items-center gap-1.5 rounded-md border bg-white px-4 py-2 text-xs font-semibold shadow-2xs transition hover:bg-emerald-50"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   <span>{isUploadingPhotos ? 'Uploading Photos...' : '+ Add Photos'}</span>
@@ -1247,7 +1285,7 @@ export function CompanyProfileView() {
                   allPhotos.map((p) => (
                     <div
                       key={p.id}
-                      className="group relative h-28 overflow-hidden rounded-md border border-slate-200 bg-slate-100"
+                      className="group border-outline-variant bg-surface-container-high relative h-28 overflow-hidden rounded-md border"
                     >
                       <img src={p.url || p.photoUrl} alt="Workplace" className="h-full w-full object-cover" />
                       <button
@@ -1260,7 +1298,7 @@ export function CompanyProfileView() {
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-2 rounded-md border border-dashed border-slate-200 bg-slate-50/50 p-6 text-center text-xs text-slate-400 sm:col-span-4">
+                  <div className="border-outline-variant bg-surface-container-low/50 text-outline col-span-2 rounded-md border border-dashed p-6 text-center text-xs sm:col-span-4">
                     No workplace photos uploaded yet. Click &ldquo;+ Add Photos&rdquo; to showcase your office
                     environment.
                   </div>
@@ -1269,8 +1307,8 @@ export function CompanyProfileView() {
             </div>
 
             {/* Bottom Form Action Buttons */}
-            <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-100 pt-4 sm:flex-row">
-              <div className="text-xs text-slate-500">
+            <div className="border-outline-variant flex flex-col items-center justify-between gap-4 border-t pt-4 sm:flex-row">
+              <div className="text-on-surface-variant text-xs">
                 Company profile information will be publicly displayed on active job postings.
               </div>
 
@@ -1279,7 +1317,7 @@ export function CompanyProfileView() {
                   <button
                     type="button"
                     onClick={() => setIsEditingProfile(false)}
-                    className="flex h-11 cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-6 text-sm font-semibold text-slate-700 shadow-2xs transition hover:bg-slate-50"
+                    className="border-outline text-on-surface hover:bg-surface-container-low flex h-11 cursor-pointer items-center justify-center rounded-md border bg-white px-6 text-sm font-semibold shadow-2xs transition"
                   >
                     Hủy bỏ
                   </button>
@@ -1287,7 +1325,7 @@ export function CompanyProfileView() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-[#00b14f] px-8 text-sm font-semibold text-white shadow-2xs transition hover:bg-emerald-600 active:scale-98 disabled:opacity-50"
+                  className="bg-primary flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-md px-8 text-sm font-semibold text-white shadow-2xs transition hover:bg-emerald-600 active:scale-98 disabled:opacity-50"
                 >
                   {isSubmitting ? 'Saving...' : 'Save Profile'}
                 </button>
@@ -1300,10 +1338,10 @@ export function CompanyProfileView() {
         <div className="fixed right-6 bottom-4 z-40">
           <Link
             href={nextCta.url}
-            className="flex items-center gap-2 rounded-full bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-white shadow-lg backdrop-blur-xs transition hover:scale-102 hover:bg-slate-900"
+            className="shadow-elevation-2 flex items-center gap-2 rounded-full bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-white backdrop-blur-xs transition hover:scale-102 hover:bg-slate-900"
           >
             <span>{nextCta.label}</span>
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00b14f] text-white">
+            <div className="bg-primary flex h-5 w-5 items-center justify-center rounded-full text-white">
               <ArrowRight className="h-3 w-3" />
             </div>
           </Link>
@@ -1321,7 +1359,7 @@ export function CompanyProfileView() {
             <button
               type="button"
               onClick={() => setIsSelectModalOpen(false)}
-              className="cursor-pointer rounded-md border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+              className="border-outline text-on-surface hover:bg-surface-container-low cursor-pointer rounded-md border px-4 py-2 text-xs font-semibold transition"
             >
               Cancel
             </button>
@@ -1329,17 +1367,17 @@ export function CompanyProfileView() {
               type="button"
               onClick={onConfirmSelectCompany}
               disabled={isSelecting}
-              className="cursor-pointer rounded-md bg-[#00b14f] px-5 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-emerald-600 disabled:opacity-50"
+              className="bg-primary cursor-pointer rounded-md px-5 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-emerald-600 disabled:opacity-50"
             >
               {isSelecting ? 'Selecting...' : 'Confirm Selection'}
             </button>
           </div>
         }
       >
-        <div className="space-y-3 py-2 text-xs text-slate-600">
+        <div className="text-on-surface-variant space-y-3 py-2 text-xs">
           <p>
             You are selecting <strong>{pendingCompanyToSelect?.name}</strong> (Tax ID:{' '}
-            <code className="font-mono font-bold text-slate-900">{pendingCompanyToSelect?.taxCode}</code>).
+            <code className="text-on-surface font-mono font-bold">{pendingCompanyToSelect?.taxCode}</code>).
           </p>
           <div className="rounded-md border border-emerald-200 bg-emerald-50/70 p-3 text-emerald-950">
             <p className="font-bold">Auto-populate Data:</p>
@@ -1362,7 +1400,7 @@ export function CompanyProfileView() {
             <button
               type="button"
               onClick={() => setIsLeaveModalOpen(false)}
-              className="cursor-pointer rounded-md border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+              className="border-outline text-on-surface hover:bg-surface-container-low cursor-pointer rounded-md border px-4 py-2 text-xs font-semibold transition"
             >
               Cancel
             </button>
@@ -1377,8 +1415,8 @@ export function CompanyProfileView() {
           </div>
         }
       >
-        <div className="space-y-3 py-2 text-xs text-slate-600">
-          <p className="font-medium text-slate-900">
+        <div className="text-on-surface-variant space-y-3 py-2 text-xs">
+          <p className="text-on-surface font-medium">
             You will disconnect your recruiter account from <strong>{currentDisplayedCompanyName}</strong>.
           </p>
           <div className="rounded-md border border-rose-200 bg-rose-50 p-3 text-rose-900">

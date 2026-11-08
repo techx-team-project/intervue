@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 
 export default function NotificationsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="text-navy flex min-h-screen flex-col bg-[#f4f5f5] antialiased">
+    <div className="text-navy bg-surface-container-low flex min-h-screen flex-col antialiased">
       <Header />
 
       <main className="flex-1 py-8 sm:py-10">

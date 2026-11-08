@@ -34,9 +34,9 @@ function ReviewSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-slate-200 p-4">
+    <section className="border-outline-variant rounded-xl border p-4">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-bold text-slate-900">{title}</h3>
+        <h3 className="text-on-surface text-sm font-bold">{title}</h3>
         <Button
           type="button"
           variant="ghost"
@@ -55,8 +55,8 @@ function ReviewSection({
 function TextPreview({ label, text }: { label: string; text: string }) {
   return (
     <div>
-      <p className="text-xs font-semibold text-slate-500">{label}</p>
-      <p className="mt-1 line-clamp-3 text-sm whitespace-pre-line text-slate-700">{text.trim() || 'Chưa nhập'}</p>
+      <p className="text-on-surface-variant text-xs font-semibold">{label}</p>
+      <p className="text-on-surface mt-1 line-clamp-3 text-sm whitespace-pre-line">{text.trim() || 'Chưa nhập'}</p>
     </div>
   );
 }
@@ -68,7 +68,7 @@ export default function JobReviewStep({ onEdit }: JobReviewStepProps) {
   return (
     <div className="space-y-4">
       <ReviewSection title="Thông tin chính" step={0} onEdit={onEdit}>
-        <p className="text-base font-bold text-slate-900">{values.title}</p>
+        <p className="text-on-surface text-base font-bold">{values.title}</p>
         <div className="mt-2 flex flex-wrap gap-1.5">
           <Badge variant="info">{optionLabel(JOB_FORM_LEVEL_OPTIONS, values.level)}</Badge>
           <Badge>{optionLabel(JOB_FORM_CONTRACT_OPTIONS, values.contractType)}</Badge>
@@ -76,20 +76,20 @@ export default function JobReviewStep({ onEdit }: JobReviewStepProps) {
         </div>
         <dl className="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
           <div>
-            <dt className="text-xs font-semibold text-slate-500">Nơi làm việc</dt>
-            <dd className="text-slate-800">{[values.address, values.city].filter(Boolean).join(', ')}</dd>
+            <dt className="text-on-surface-variant text-xs font-semibold">Nơi làm việc</dt>
+            <dd className="text-on-surface">{[values.address, values.city].filter(Boolean).join(', ')}</dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold text-slate-500">Mức lương</dt>
-            <dd className="text-slate-800">{salaryText(values)}</dd>
+            <dt className="text-on-surface-variant text-xs font-semibold">Mức lương</dt>
+            <dd className="text-on-surface">{salaryText(values)}</dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold text-slate-500">Hạn nộp hồ sơ</dt>
-            <dd className="text-slate-800">{values.deadline}</dd>
+            <dt className="text-on-surface-variant text-xs font-semibold">Hạn nộp hồ sơ</dt>
+            <dd className="text-on-surface">{values.deadline}</dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold text-slate-500">Số lượng cần tuyển</dt>
-            <dd className="text-slate-800">{values.openings}</dd>
+            <dt className="text-on-surface-variant text-xs font-semibold">Số lượng cần tuyển</dt>
+            <dd className="text-on-surface">{values.openings}</dd>
           </div>
         </dl>
         <div className="mt-3 flex flex-wrap gap-1.5">

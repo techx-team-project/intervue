@@ -107,15 +107,15 @@ export default function AdminBroadcastListView() {
     <div className="space-y-5 pb-16">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="dark:text-forest-50 text-xl font-black text-slate-900 sm:text-2xl">Announcements</h1>
-          <p className="dark:text-forest-400 mt-1 text-xs text-slate-500">
+          <h1 className="dark:text-forest-50 text-on-surface text-xl font-bold sm:text-2xl">Announcements</h1>
+          <p className="dark:text-forest-400 text-on-surface-variant mt-1 text-xs">
             Broadcast a notice to every candidate, recruiter or administrator.
           </p>
         </div>
 
         <Link
           href={`${ROUTES.ADMIN_CONTENT_ANNOUNCEMENTS}/create`}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-[#00b14f] px-4 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#00873c]"
+          className="bg-primary hover:bg-primary inline-flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 text-xs font-bold text-white shadow-xs transition"
         >
           <Plus className="h-4 w-4" />
           <span>New announcement</span>
@@ -144,15 +144,17 @@ export default function AdminBroadcastListView() {
       </div>
 
       {isLoading ? (
-        <div className="dark:border-forest-800 dark:bg-forest-900 space-y-3 rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant space-y-3 rounded-2xl border bg-white p-6">
           {Array.from({ length: 4 }, (_, index) => (
-            <div key={index} className="dark:bg-forest-800 h-10 animate-pulse rounded-lg bg-slate-100" />
+            <div key={index} className="dark:bg-forest-800 bg-surface-container-high h-10 animate-pulse rounded-lg" />
           ))}
         </div>
       ) : isError ? (
-        <div className="dark:border-forest-800 dark:bg-forest-900 rounded-2xl border border-slate-200 bg-white py-16 text-center">
+        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-2xl border bg-white py-16 text-center">
           <AlertTriangle className="mx-auto h-10 w-10 stroke-[1.5] text-amber-500" />
-          <p className="dark:text-forest-300 mt-3 text-sm font-semibold text-slate-600">Could not load announcements</p>
+          <p className="dark:text-forest-300 text-on-surface-variant mt-3 text-sm font-semibold">
+            Could not load announcements
+          </p>
           <div className="mt-4 flex justify-center">
             <Button variant="outline" size="sm" onClick={() => refetch()}>
               Try again

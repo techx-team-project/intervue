@@ -15,7 +15,7 @@ export default function RecruiterVerifyEmailNotice({ email }: RecruiterVerifyEma
 
       <div className="space-y-2">
         <h2 className="text-navy text-2xl font-bold">Verify your email</h2>
-        <p className="text-sm leading-relaxed text-[#4d5965]">
+        <p className="text-on-surface-variant text-sm leading-relaxed">
           We sent a verification link to <strong className="text-navy font-semibold">{email}</strong>. Check your inbox
           (or spam folder) and open the link to activate your employer account. You can verify later; you are already
           signed in.
@@ -27,7 +27,7 @@ export default function RecruiterVerifyEmailNotice({ email }: RecruiterVerifyEma
           <CheckCircle2 className="h-4 w-4 shrink-0" />
           <span>After verifying, you can:</span>
         </div>
-        <ul className="mt-2.5 list-inside list-disc space-y-1.5 font-medium text-[#4d5965]">
+        <ul className="text-on-surface-variant mt-2.5 list-inside list-disc space-y-1.5 font-medium">
           <li>Verify your company and post IT jobs</li>
           <li>Screen applications with AI resume matching</li>
           <li>Track candidates through your hiring pipeline</li>
@@ -36,7 +36,7 @@ export default function RecruiterVerifyEmailNotice({ email }: RecruiterVerifyEma
 
       <Link
         href={ROUTES.RECRUITER_DASHBOARD}
-        className="bg-primary hover:bg-primary-hover shadow-primary/20 inline-flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold text-white shadow-md transition"
+        className="bg-primary hover:bg-primary-hover shadow-primary/20 shadow-elevation-1 inline-flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold text-white transition"
       >
         <span>Go to dashboard</span>
         <ArrowRight className="h-4 w-4" />

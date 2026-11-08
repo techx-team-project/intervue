@@ -1,32 +1,34 @@
 import Footer from '@/components/common/Footer';
 import Header from '@/components/common/Header';
-import AwardsEcosystemSection from '@/components/home/awards-ecosystem';
-import CareerGrowthSection from '@/components/home/career-growth/CareerGrowthSection';
+import AiShowcaseSection from '@/components/home/ai-showcase/AiShowcaseSection';
+import TopCategoriesSection from '@/components/home/categories/TopCategoriesSection';
+import HiringCompaniesSection from '@/components/home/companies/HiringCompaniesSection';
+import CallToActionSection from '@/components/home/cta/CallToActionSection';
 import FeaturedJobsSection from '@/components/home/featured-jobs/FeaturedJobsSection';
-import HeroSection from '@/components/home/hero-section/HeroSection';
-import MarketDashboardSection from '@/components/home/market-dashboard/MarketDashboardSection';
-import TopCategoriesSection from '@/components/home/top-categories/TopCategoriesSection';
-import TopCompaniesSection from '@/components/home/top-companies/TopCompaniesSection';
+import HomeHero from '@/components/home/hero/HomeHero';
+import HowItWorksSection from '@/components/home/how-it-works/HowItWorksSection';
+import MarketPulse from '@/components/home/pulse/MarketPulse';
 
 export default function Home() {
   return (
-    <div className="selection:bg-primary flex min-h-screen flex-col bg-[#f4f5f5] selection:text-white">
+    <div className="bg-surface text-on-surface flex min-h-screen flex-col">
+      <a
+        href="#main-content"
+        className="bg-primary text-on-primary text-label-lg sr-only z-50 rounded-full px-4 py-2 focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
+      >
+        Skip to main content
+      </a>
       <Header />
 
-      <main className="flex-1 pb-12">
-        <HeroSection />
-
+      <main id="main-content" className="flex-1">
+        <HomeHero />
+        <MarketPulse />
         <FeaturedJobsSection />
-
-        <MarketDashboardSection />
-
-        <TopCompaniesSection />
-
         <TopCategoriesSection />
-
-        <CareerGrowthSection />
-
-        <AwardsEcosystemSection />
+        <HowItWorksSection />
+        <AiShowcaseSection />
+        <HiringCompaniesSection />
+        <CallToActionSection />
       </main>
 
       <Footer />

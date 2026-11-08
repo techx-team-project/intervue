@@ -40,7 +40,7 @@ const CARDS: Array<{
     hint: 'Chưa đăng',
     icon: FileText,
     value: (counts) => counts.byStatus.DRAFT,
-    tone: 'bg-slate-100 text-slate-600',
+    tone: 'bg-surface-container-high text-on-surface-variant',
   },
   {
     segment: 'expired',
@@ -60,21 +60,21 @@ export default function JobPostsStatsRow({ counts, currentSegment, onSelectSegme
           key={segment}
           type="button"
           onClick={() => onSelectSegment(segment)}
-          className={`group flex flex-col justify-between rounded-2xl border bg-white p-4 text-left transition-all hover:shadow-md ${
+          className={`group hover:shadow-elevation-1 flex flex-col justify-between rounded-2xl border bg-white p-4 text-left transition-all ${
             currentSegment === segment
               ? 'border-emerald-500 ring-2 ring-emerald-500/20'
-              : 'border-slate-200 hover:border-emerald-300'
+              : 'border-outline-variant hover:border-emerald-300'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-[12px] font-semibold tracking-wide text-slate-500 uppercase">{label}</span>
+            <span className="text-body-sm text-on-surface-variant font-semibold tracking-wide uppercase">{label}</span>
             <div className={`flex h-8 w-8 items-center justify-center rounded-xl ${tone}`}>
               <Icon className="h-4 w-4" />
             </div>
           </div>
           <div className="mt-3">
-            <p className="text-navy text-2xl font-black">{counts ? value(counts) : '–'}</p>
-            <p className="mt-0.5 text-[11.5px] font-medium text-slate-500">{hint}</p>
+            <p className="text-navy text-2xl font-bold">{counts ? value(counts) : '–'}</p>
+            <p className="text-label-sm text-on-surface-variant mt-0.5 font-medium">{hint}</p>
           </div>
         </button>
       ))}

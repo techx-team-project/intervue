@@ -35,22 +35,22 @@ export default function ProtectionSettingsCard({
   const is2FaEnabled = twoFactorStatus?.enabled ?? false;
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-      <h2 className="text-base font-bold text-slate-800">Core protection settings</h2>
+    <div className="border-outline-variant rounded-2xl border bg-white p-6 shadow-xs">
+      <h2 className="text-on-surface text-base font-bold">Core protection settings</h2>
 
-      <div className="mt-4 divide-y divide-slate-100">
+      <div className="divide-outline-variant mt-4 divide-y">
         <AccountEmailRow portal={portal} email={email} verified={emailVerified} />
 
         <AccountPhoneRow portal={portal} phone={phone} verified={phoneVerified} />
 
         <div className="flex items-center justify-between py-4">
           <div className="flex items-start gap-3.5">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+            <div className="bg-primary-light text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
               <KeyRound className="h-5 w-5" />
             </div>
             <div>
-              <div className="text-sm font-bold text-slate-800">Sign-in password</div>
-              <div className="text-xs text-slate-500">Last changed 45 days ago (high security)</div>
+              <div className="text-on-surface text-sm font-bold">Sign-in password</div>
+              <div className="text-on-surface-variant text-xs">Last changed 45 days ago (high security)</div>
             </div>
           </div>
           <Link
@@ -66,32 +66,32 @@ export default function ProtectionSettingsCard({
           <div className="flex items-start gap-3.5">
             <div
               className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                is2FaEnabled ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
+                is2FaEnabled ? 'bg-primary-light text-primary' : 'bg-amber-50 text-amber-600'
               }`}
             >
               <Smartphone className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-slate-800">Two-factor authentication</span>
+                <span className="text-on-surface text-sm font-bold">Two-factor authentication</span>
                 <span
                   className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-                    is2FaEnabled ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                    is2FaEnabled ? 'bg-primary-container text-on-primary-container' : 'bg-amber-100 text-amber-800'
                   }`}
                 >
                   {is2FaEnabled ? 'Active' : 'Not active'}
                 </span>
               </div>
-              <div className="text-xs text-slate-500">
+              <div className="text-on-surface-variant text-xs">
                 Requires a 6-digit code from Google/Microsoft Authenticator at sign-in
               </div>
             </div>
           </div>
           <Link
             href={portal === 'recruiter' ? ROUTES.RECRUITER_ACCOUNT_TWO_FACTOR : '/account/two-factor'}
-            className="bg-primary rounded-full px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition hover:bg-emerald-700"
+            className="bg-primary hover:bg-primary-hover rounded-full px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition"
           >
-            {is2FaEnabled ? (isRecruiter ? 'Manage' : 'Quản lý') : isRecruiter ? 'Enable now' : 'Kích hoạt ngay'}
+            {is2FaEnabled ? (isRecruiter ? 'Manage' : 'Manage') : isRecruiter ? 'Enable now' : 'Enable now'}
           </Link>
         </div>
       </div>

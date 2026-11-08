@@ -32,7 +32,7 @@ export default function CareerDetailBreadcrumb({ article }: CareerDetailBreadcru
   ];
 
   return (
-    <div className="border-b border-slate-200 bg-white py-4">
+    <div className="border-outline-variant border-b bg-white py-4">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <Breadcrumb items={items} showHome className="text-xs" />
@@ -41,7 +41,7 @@ export default function CareerDetailBreadcrumb({ article }: CareerDetailBreadcru
             <button
               type="button"
               onClick={handleCopyLink}
-              className="hover:text-primary inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-emerald-500"
+              className="hover:text-primary border-outline-variant text-on-surface-variant hover:border-primary inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition"
             >
               {copied ? (
                 <>
@@ -61,8 +61,8 @@ export default function CareerDetailBreadcrumb({ article }: CareerDetailBreadcru
               onClick={() => setBookmarked(!bookmarked)}
               className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
                 bookmarked
-                  ? 'text-primary border-emerald-300 bg-emerald-50'
-                  : 'hover:text-primary border-slate-200 text-slate-600 hover:border-emerald-500'
+                  ? 'text-primary border-primary/40 bg-primary-light'
+                  : 'hover:text-primary border-outline-variant text-on-surface-variant hover:border-primary'
               }`}
             >
               <Bookmark className={`h-3.5 w-3.5 ${bookmarked ? 'fill-current' : ''}`} />
@@ -75,7 +75,7 @@ export default function CareerDetailBreadcrumb({ article }: CareerDetailBreadcru
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:border-blue-600 hover:text-blue-600"
+              className="border-outline-variant text-on-surface-variant hover:border-outline-variant hover:text-primary flex h-8 w-8 items-center justify-center rounded-lg border transition"
               title={shareFacebook}
             >
               <Share2 className="h-3.5 w-3.5" />

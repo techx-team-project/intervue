@@ -88,21 +88,21 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
       {consentDialog}
       {isSubmitted ? (
         <div className="space-y-4 py-6 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+          <div className="bg-primary-container text-primary mx-auto flex h-16 w-16 items-center justify-center rounded-full">
             <CheckCircle2 className="h-10 w-10" />
           </div>
 
-          <h4 className="text-xl font-bold text-slate-900">Nộp hồ sơ ứng tuyển thành công!</h4>
+          <h4 className="text-on-surface text-xl font-bold">Nộp hồ sơ ứng tuyển thành công!</h4>
 
-          <p className="mx-auto max-w-md text-sm leading-relaxed text-slate-600">
+          <p className="text-on-surface-variant mx-auto max-w-md text-sm leading-relaxed">
             Hồ sơ của bạn đã được chuyển thẳng tới phòng nhân sự của{' '}
-            <strong className="text-slate-800">{job.company.name}</strong>. Nhà tuyển dụng sẽ xem xét và phản hồi trong
+            <strong className="text-on-surface">{job.company.name}</strong>. Nhà tuyển dụng sẽ xem xét và phản hồi trong
             24-48 giờ làm việc.
           </p>
 
-          <div className="mx-auto max-w-md rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 text-left text-xs text-slate-700">
-            <div className="mb-1 flex items-center gap-1.5 font-bold text-emerald-900">
-              <Sparkles className="h-4 w-4 text-emerald-600" />
+          <div className="border-primary/30 text-on-surface mx-auto max-w-md rounded-xl border bg-emerald-50/70 p-4 text-left text-xs">
+            <div className="text-on-primary-container mb-1 flex items-center gap-1.5 font-bold">
+              <Sparkles className="text-primary h-4 w-4" />
               <span>Gợi ý cho bạn:</span>
             </div>
             <div>
@@ -145,19 +145,19 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
             </div>
           )}
 
-          <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-linear-to-r from-emerald-50 to-teal-50 px-4 py-2.5 text-xs">
+          <div className="border-primary/30 bg-primary-light flex items-center justify-between rounded-xl border px-4 py-2.5 text-xs">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-emerald-600" />
-              <span className="font-medium text-slate-700">Độ tương thích hồ sơ với vị trí:</span>
+              <Sparkles className="text-primary h-4 w-4" />
+              <span className="text-on-surface font-medium">Độ tương thích hồ sơ với vị trí:</span>
             </div>
-            <span className="rounded-full border border-emerald-200 bg-white px-2 py-0.5 font-extrabold text-emerald-700">
+            <span className="border-primary/30 text-primary rounded-full border bg-white px-2 py-0.5 font-extrabold">
               {job.atsMatchScore}% Rất phù hợp
             </span>
           </div>
 
           <div>
-            <label className="mb-2 block text-xs font-bold tracking-wider text-slate-700 uppercase">
-              Chọn CV ứng tuyển <span className="text-rose-500">*</span>
+            <label className="text-on-surface mb-2 block text-xs font-bold tracking-wider uppercase">
+              Chọn CV ứng tuyển <span className="text-error">*</span>
             </label>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -165,92 +165,92 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
                 onClick={() => setSelectedCv('profile')}
                 className={`cursor-pointer rounded-xl border p-3.5 transition ${
                   selectedCv === 'profile'
-                    ? 'border-emerald-600 bg-emerald-50/50 shadow-xs'
-                    : 'border-slate-200 hover:border-slate-300'
+                    ? 'border-primary bg-emerald-50/50 shadow-xs'
+                    : 'border-outline-variant hover:border-outline'
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-emerald-600" />
-                    <span className="text-xs font-bold text-slate-800">CV Kế toán trưởng ATS</span>
+                    <FileText className="text-primary h-5 w-5" />
+                    <span className="text-on-surface text-xs font-bold">CV Kế toán trưởng ATS</span>
                   </div>
-                  {selectedCv === 'profile' && <Check className="h-4 w-4 text-emerald-600" />}
+                  {selectedCv === 'profile' && <Check className="text-primary h-4 w-4" />}
                 </div>
-                <p className="mt-1.5 text-xs text-slate-500">Cập nhật 2 ngày trước • Chuẩn ATS 92 điểm</p>
+                <p className="text-on-surface-variant mt-1.5 text-xs">Cập nhật 2 ngày trước • Chuẩn ATS 92 điểm</p>
               </div>
 
               <div
                 onClick={() => setSelectedCv('upload')}
                 className={`cursor-pointer rounded-xl border p-3.5 transition ${
                   selectedCv === 'upload'
-                    ? 'border-emerald-600 bg-emerald-50/50 shadow-xs'
-                    : 'border-dashed border-slate-300 hover:border-slate-400'
+                    ? 'border-primary bg-emerald-50/50 shadow-xs'
+                    : 'border-outline border-dashed hover:border-slate-400'
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
-                    <Upload className="h-5 w-5 text-slate-500" />
-                    <span className="text-xs font-bold text-slate-800">Tải lên CV mới</span>
+                    <Upload className="text-on-surface-variant h-5 w-5" />
+                    <span className="text-on-surface text-xs font-bold">Tải lên CV mới</span>
                   </div>
-                  {selectedCv === 'upload' && <Check className="h-4 w-4 text-emerald-600" />}
+                  {selectedCv === 'upload' && <Check className="text-primary h-4 w-4" />}
                 </div>
-                <p className="mt-1.5 text-xs text-slate-500">Hỗ trợ file PDF, DOCX (tối đa 5MB)</p>
+                <p className="text-on-surface-variant mt-1.5 text-xs">Hỗ trợ file PDF, DOCX (tối đa 5MB)</p>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div>
-              <label className="mb-1 block text-xs font-bold text-slate-700">
-                Họ và tên <span className="text-rose-500">*</span>
+              <label className="text-on-surface mb-1 block text-xs font-bold">
+                Họ và tên <span className="text-error">*</span>
               </label>
               <input
                 type="text"
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs text-slate-800 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
+                className="border-outline text-on-surface focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-bold text-slate-700">
-                Email liên hệ <span className="text-rose-500">*</span>
+              <label className="text-on-surface mb-1 block text-xs font-bold">
+                Email liên hệ <span className="text-error">*</span>
               </label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs text-slate-800 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
+                className="border-outline text-on-surface focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-bold text-slate-700">
-                Số điện thoại <span className="text-rose-500">*</span>
+              <label className="text-on-surface mb-1 block text-xs font-bold">
+                Số điện thoại <span className="text-error">*</span>
               </label>
               <input
                 type="tel"
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs text-slate-800 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
+                className="border-outline text-on-surface focus:border-primary w-full rounded-xl border px-3 py-2 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none"
               />
             </div>
           </div>
 
           <div>
             <div className="mb-1.5 flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-700">Thư giới thiệu (Cover Letter)</label>
+              <label className="text-on-surface text-xs font-bold">Thư giới thiệu (Cover Letter)</label>
 
               <button
                 type="button"
                 onClick={handleGenerateAiCoverLetter}
                 disabled={isGeneratingAi}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 transition-colors hover:bg-emerald-100 disabled:opacity-50"
+                className="border-primary/30 bg-primary-light text-primary hover:bg-primary-container inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-bold transition-colors disabled:opacity-50"
               >
-                <Bot className="h-3.5 w-3.5 text-emerald-600" />
+                <Bot className="text-primary h-3.5 w-3.5" />
                 <span>{isGeneratingAi ? 'Đang tạo thư...' : 'Generate with AI'}</span>
               </button>
             </div>
@@ -260,10 +260,10 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
               placeholder="Giới thiệu ngắn gọn kinh nghiệm, kỹ năng nổi bật và lý do bạn phù hợp với vị trí này..."
-              className="w-full rounded-xl border border-slate-300 p-3 text-xs text-slate-800 placeholder-slate-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
+              className="border-outline text-on-surface focus:border-primary w-full rounded-xl border p-3 text-xs placeholder-slate-400 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
             />
-            <p className="mt-1 flex items-center gap-1 text-[11px] text-slate-500">
-              <Sparkles className="h-3 w-3 shrink-0 text-emerald-600" />
+            <p className="text-label-sm text-on-surface-variant mt-1 flex items-center gap-1">
+              <Sparkles className="text-primary h-3 w-3 shrink-0" />
               <span>
                 Chỉ sử dụng dữ kiện từ CV và tin tuyển dụng. Bạn có thể chỉnh sửa tự do trước khi nộp; thư không bao giờ
                 được gửi tự động.
@@ -273,30 +273,30 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
 
           {/* Screening Questions from Recruiter */}
           {job.screeningQuestions && job.screeningQuestions.length > 0 && (
-            <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50/70 p-4">
-              <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-slate-800 uppercase">
-                <HelpCircle className="h-4 w-4 text-emerald-600" />
+            <div className="border-outline-variant bg-surface-container-low/70 space-y-3 rounded-xl border p-4">
+              <div className="text-on-surface flex items-center gap-2 text-xs font-bold tracking-wide uppercase">
+                <HelpCircle className="text-primary h-4 w-4" />
                 <span>Câu hỏi sàng lọc ứng viên ({job.screeningQuestions.length})</span>
               </div>
 
               <div className="space-y-3.5">
                 {job.screeningQuestions.map((q, idx) => (
                   <div key={q.id || idx} className="space-y-1.5">
-                    <label className="block text-xs font-semibold text-slate-700">
-                      <span className="mr-1 font-bold text-emerald-700">Q{idx + 1}.</span>
-                      {q.question} {q.required && <span className="text-rose-500">*</span>}
+                    <label className="text-on-surface block text-xs font-semibold">
+                      <span className="text-primary mr-1 font-bold">Q{idx + 1}.</span>
+                      {q.question} {q.required && <span className="text-error">*</span>}
                     </label>
 
                     {q.type === 'YES_NO' ? (
                       <div className="flex items-center gap-4">
                         {['Có', 'Không'].map((opt) => (
-                          <label key={opt} className="flex cursor-pointer items-center gap-1.5 text-xs text-slate-700">
+                          <label key={opt} className="text-on-surface flex cursor-pointer items-center gap-1.5 text-xs">
                             <input
                               type="radio"
                               name={`sq-${q.id}`}
                               checked={answers[q.id] === opt}
                               onChange={() => setAnswers((prev) => ({ ...prev, [q.id]: opt }))}
-                              className="text-emerald-600 focus:ring-emerald-500"
+                              className="text-primary focus:ring-primary"
                             />
                             <span>{opt}</span>
                           </label>
@@ -305,13 +305,13 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
                     ) : q.type === 'MULTIPLE_CHOICE' && q.options && q.options.length > 0 ? (
                       <div className="space-y-1.5">
                         {q.options.map((opt) => (
-                          <label key={opt} className="flex cursor-pointer items-center gap-2 text-xs text-slate-700">
+                          <label key={opt} className="text-on-surface flex cursor-pointer items-center gap-2 text-xs">
                             <input
                               type="radio"
                               name={`sq-${q.id}`}
                               checked={answers[q.id] === opt}
                               onChange={() => setAnswers((prev) => ({ ...prev, [q.id]: opt }))}
-                              className="text-emerald-600 focus:ring-emerald-500"
+                              className="text-primary focus:ring-primary"
                             />
                             <span>{opt}</span>
                           </label>
@@ -323,7 +323,7 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
                         placeholder="Nhập câu trả lời của bạn..."
                         value={answers[q.id] || ''}
                         onChange={(e) => setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))}
-                        className="w-full rounded-xl border border-slate-300 px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
+                        className="border-outline text-on-surface focus:border-primary w-full rounded-xl border px-3 py-1.5 text-xs placeholder-slate-400 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
                       />
                     )}
                   </div>
@@ -332,12 +332,12 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
             </div>
           )}
 
-          <div className="text-xs leading-relaxed text-slate-500">
+          <div className="text-on-surface-variant text-xs leading-relaxed">
             Bằng việc nhấn &quot;Nộp hồ sơ ứng tuyển&quot;, bạn đồng ý với Điều khoản dịch vụ và Chính sách quyền riêng
             tư của InterVue.
           </div>
 
-          <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-3">
+          <div className="border-outline-variant flex items-center justify-end gap-3 border-t pt-3">
             <Button variant="secondary" size="sm" onClick={handleResetAndClose}>
               Hủy bỏ
             </Button>

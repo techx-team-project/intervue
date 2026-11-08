@@ -64,7 +64,7 @@ export default function RecruiterCartView() {
     <div className="space-y-5 pb-16">
       {/* Page Title */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-black text-slate-900 sm:text-2xl">
+        <h1 className="text-on-surface text-xl font-bold sm:text-2xl">
           My Cart {isHydrated ? `(${items.length})` : '(2)'}
         </h1>
 
@@ -72,7 +72,7 @@ export default function RecruiterCartView() {
           <button
             type="button"
             onClick={restoreDefaultItems}
-            className="flex items-center gap-1.5 text-xs font-semibold text-[#00b14f] hover:underline"
+            className="text-primary flex items-center gap-1.5 text-xs font-semibold hover:underline"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span>Restore sample cart</span>
@@ -143,12 +143,12 @@ export default function RecruiterCartView() {
 
       {/* Floating Undo Notification Toast */}
       {undoDeletedItem && (
-        <div className="animate-in slide-in-from-bottom-4 fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-2xl border border-slate-200 bg-white/95 px-4.5 py-3 text-xs text-slate-800 shadow-2xl ring-1 ring-black/5 backdrop-blur-md transition-all duration-200 sm:bottom-8">
+        <div className="animate-in slide-in-from-bottom-4 border-outline-variant text-on-surface shadow-elevation-2 fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-2xl border bg-white/95 px-4.5 py-3 text-xs ring-1 ring-black/5 backdrop-blur-md transition-all duration-200 sm:bottom-8">
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
             <Check className="h-4 w-4 stroke-[2.5]" />
           </div>
-          <span className="font-medium text-slate-700">
-            Removed <strong className="font-bold text-slate-900">&quot;{undoDeletedItem.item.name}&quot;</strong> from
+          <span className="text-on-surface font-medium">
+            Removed <strong className="text-on-surface font-bold">&quot;{undoDeletedItem.item.name}&quot;</strong> from
             cart.
           </span>
           <div className="flex items-center gap-2 pl-2">
@@ -163,7 +163,7 @@ export default function RecruiterCartView() {
             <button
               type="button"
               onClick={clearUndo}
-              className="cursor-pointer rounded-full p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+              className="text-outline hover:bg-surface-container-high hover:text-on-surface-variant cursor-pointer rounded-full p-1 transition"
               aria-label="Dismiss"
             >
               <X className="h-4 w-4" />

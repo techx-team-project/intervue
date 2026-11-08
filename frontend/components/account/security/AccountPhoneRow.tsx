@@ -13,23 +13,23 @@ export default function AccountPhoneRow({ portal, phone, verified }: AccountPhon
   return (
     <div className="flex items-center justify-between gap-3 py-4">
       <div className="flex min-w-0 items-start gap-3.5">
-        <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
+        <div className="text-primary bg-primary-light flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
           <Phone className="h-5 w-5" />
         </div>
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-slate-800">Recovery phone number</span>
+            <span className="text-on-surface text-sm font-bold">Recovery phone number</span>
             {phone && (
               <span
                 className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-                  verified ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                  verified ? 'bg-primary-container text-on-primary-container' : 'bg-amber-100 text-amber-800'
                 }`}
               >
                 {verified ? 'Verified' : 'Not verified'}
               </span>
             )}
           </div>
-          <div className="truncate text-xs text-slate-500">{phone || 'No phone number added'}</div>
+          <div className="text-on-surface-variant truncate text-xs">{phone || 'No phone number added'}</div>
         </div>
       </div>
       <button

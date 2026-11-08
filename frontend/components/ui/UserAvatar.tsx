@@ -9,22 +9,14 @@ export interface UserAvatarProps {
 }
 
 const SIZE_CLASS = {
-  sm: 'h-8 w-8 text-[11px]',
-  md: 'h-10 w-10 text-[13px]',
+  sm: 'h-8 w-8 text-label-sm',
+  md: 'h-10 w-10 text-body-md',
   lg: 'h-14 w-14 text-[17px]',
 };
 
 const SIZE_PX = { sm: 32, md: 40, lg: 56 };
 
-const PALETTE = [
-  'bg-linear-to-br from-sky-500 to-sky-600',
-  'bg-linear-to-br from-violet-500 to-violet-600',
-  'bg-linear-to-br from-emerald-500 to-emerald-600',
-  'bg-linear-to-br from-amber-500 to-amber-600',
-  'bg-linear-to-br from-rose-500 to-rose-600',
-  'bg-linear-to-br from-indigo-500 to-indigo-600',
-  'bg-linear-to-br from-teal-500 to-teal-600',
-];
+const PALETTE = ['bg-primary', 'bg-primary', 'bg-primary', 'bg-primary', 'bg-primary', 'bg-primary', 'bg-primary'];
 
 function getInitials(fullName: string): string {
   const parts = fullName.trim().split(/\s+/);
@@ -57,7 +49,7 @@ export default function UserAvatar({ fullName, image, size = 'md', className }: 
     <span
       aria-hidden
       className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded-xl font-black text-white shadow-2xs',
+        'inline-flex shrink-0 items-center justify-center rounded-xl font-bold text-white shadow-2xs',
         SIZE_CLASS[size],
         PALETTE[getPaletteIndex(fullName)],
         className,

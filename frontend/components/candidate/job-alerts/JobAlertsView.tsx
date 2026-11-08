@@ -190,23 +190,23 @@ export default function JobAlertsView() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Breadcrumb */}
-      <nav className="mb-4 flex items-center gap-2 text-xs font-medium text-slate-500">
-        <Link href="/" className="transition hover:text-emerald-600">
+      <nav className="text-on-surface-variant mb-4 flex items-center gap-2 text-xs font-medium">
+        <Link href="/" className="hover:text-primary transition">
           Home
         </Link>
         <span>/</span>
-        <Link href="/candidate/profile" className="transition hover:text-emerald-600">
+        <Link href="/candidate/profile" className="hover:text-primary transition">
           Candidate
         </Link>
         <span>/</span>
-        <span className="font-semibold text-slate-800">Job Alerts</span>
+        <span className="text-on-surface font-semibold">Job Alerts</span>
       </nav>
 
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 sm:text-3xl">Job Alerts</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <h1 className="text-on-surface text-2xl font-bold sm:text-3xl">Job Alerts</h1>
+          <p className="text-on-surface-variant mt-1 text-sm">
             Never miss an opportunity. Get automated email digests matching your preferred roles and locations.
           </p>
         </div>
@@ -216,7 +216,7 @@ export default function JobAlertsView() {
             setEditingAlert(null);
             setIsModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-emerald-700"
+          className="bg-primary shadow-elevation-1 hover:bg-primary-hover inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition"
         >
           <Plus className="h-4 w-4" />
           <span>Create Job Alert</span>
@@ -228,15 +228,15 @@ export default function JobAlertsView() {
         <div
           className={`mt-4 flex items-center justify-between rounded-xl p-3.5 text-sm transition-all ${
             actionNotice.type === 'success'
-              ? 'border border-emerald-200 bg-emerald-50 text-emerald-800'
-              : 'border border-red-200 bg-red-50 text-red-800'
+              ? 'border-primary/30 bg-primary-light text-on-primary-container border'
+              : 'border-error/30 bg-error/10 text-error border'
           }`}
         >
           <div className="flex items-center gap-2.5">
             {actionNotice.type === 'success' ? (
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              <CheckCircle2 className="text-primary h-4 w-4" />
             ) : (
-              <AlertCircle className="h-4 w-4 text-red-600" />
+              <AlertCircle className="text-error h-4 w-4" />
             )}
             <span>{actionNotice.message}</span>
           </div>
@@ -252,52 +252,50 @@ export default function JobAlertsView() {
 
       {/* Summary Stats Cards */}
       <div className="mt-6 grid grid-cols-2 gap-3.5 sm:grid-cols-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+        <div className="border-outline-variant rounded-2xl border bg-white p-4 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold tracking-wider text-slate-500 uppercase">Active Alerts</span>
+            <span className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">Active Alerts</span>
             <span className="relative flex h-2.5 w-2.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
+              <span className="bg-primary relative inline-flex h-2.5 w-2.5 rounded-full" />
             </span>
           </div>
-          <div className="mt-2 text-2xl font-black text-slate-900">
+          <div className="text-on-surface mt-2 text-2xl font-bold">
             {summary ? summary.activeAlerts : 0}
-            <span className="ml-1.5 text-xs font-normal text-slate-400">
-              / {summary ? summary.totalAlerts : 0} total
-            </span>
+            <span className="text-outline ml-1.5 text-xs font-normal">/ {summary ? summary.totalAlerts : 0} total</span>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
-          <span className="text-xs font-bold tracking-wider text-slate-500 uppercase">Paused Alerts</span>
-          <div className="mt-2 text-2xl font-black text-slate-700">{summary ? summary.pausedAlerts : 0}</div>
+        <div className="border-outline-variant rounded-2xl border bg-white p-4 shadow-xs">
+          <span className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">Paused Alerts</span>
+          <div className="text-on-surface mt-2 text-2xl font-bold">{summary ? summary.pausedAlerts : 0}</div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
-          <span className="text-xs font-bold tracking-wider text-slate-500 uppercase">Total Matches Sent</span>
-          <div className="mt-2 text-2xl font-black text-emerald-600">{summary ? summary.totalDeliveries : 0}</div>
+        <div className="border-outline-variant rounded-2xl border bg-white p-4 shadow-xs">
+          <span className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">Total Matches Sent</span>
+          <div className="text-primary mt-2 text-2xl font-bold">{summary ? summary.totalDeliveries : 0}</div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
-          <span className="text-xs font-bold tracking-wider text-slate-500 uppercase">Delivery Channel</span>
-          <div className="mt-2 flex items-center gap-1.5 text-sm font-bold text-slate-800">
-            <Mail className="h-4 w-4 text-emerald-600" />
+        <div className="border-outline-variant rounded-2xl border bg-white p-4 shadow-xs">
+          <span className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">Delivery Channel</span>
+          <div className="text-on-surface mt-2 flex items-center gap-1.5 text-sm font-bold">
+            <Mail className="text-primary h-4 w-4" />
             <span>Email Digest</span>
           </div>
         </div>
       </div>
 
       {/* Search & Filter Toolbar */}
-      <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-xs sm:flex-row sm:items-center sm:justify-between">
+      <div className="border-outline-variant mt-6 flex flex-col gap-3 rounded-2xl border bg-white p-3.5 shadow-xs sm:flex-row sm:items-center sm:justify-between">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="text-outline absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search alerts by title, keywords or city..."
-            className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2 pr-3.5 pl-9 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+            className="border-outline-variant bg-surface-container-low/50 text-on-surface focus:border-primary w-full rounded-xl border py-2 pr-3.5 pl-9 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
           />
         </div>
 
@@ -307,7 +305,7 @@ export default function JobAlertsView() {
           <select
             value={filterFrequency}
             onChange={(e) => setFilterFrequency(e.target.value)}
-            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 focus:border-emerald-500 focus:outline-hidden"
+            className="border-outline-variant text-on-surface focus:border-primary rounded-xl border bg-white px-3 py-2 text-xs font-bold focus:outline-hidden"
           >
             <option value="ALL">All Frequencies</option>
             <option value="DAILY">Daily (8:00 AM)</option>
@@ -318,7 +316,7 @@ export default function JobAlertsView() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 focus:border-emerald-500 focus:outline-hidden"
+            className="border-outline-variant text-on-surface focus:border-primary rounded-xl border bg-white px-3 py-2 text-xs font-bold focus:outline-hidden"
           >
             <option value="ALL">All Statuses</option>
             <option value="ACTIVE">Active Only</option>
@@ -330,32 +328,32 @@ export default function JobAlertsView() {
       {/* Alerts Grid / List */}
       <div className="mt-6">
         {loading ? (
-          <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-8">
-            <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-            <p className="mt-3 text-sm text-slate-500">Loading your job alerts...</p>
+          <div className="border-outline-variant flex min-h-[300px] flex-col items-center justify-center rounded-2xl border bg-white p-8">
+            <Loader2 className="text-primary h-8 w-8 animate-spin" />
+            <p className="text-on-surface-variant mt-3 text-sm">Loading your job alerts...</p>
           </div>
         ) : error ? (
-          <div className="flex min-h-[200px] flex-col items-center justify-center rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <p className="mt-2 text-sm font-bold text-red-800">{error}</p>
+          <div className="border-error/30 bg-error/10 flex min-h-[200px] flex-col items-center justify-center rounded-2xl border p-6 text-center">
+            <AlertCircle className="text-error h-8 w-8" />
+            <p className="text-error mt-2 text-sm font-bold">{error}</p>
             <button
               type="button"
               onClick={fetchAlerts}
-              className="mt-4 rounded-xl bg-red-600 px-4 py-2 text-xs font-bold text-white hover:bg-red-700"
+              className="bg-error hover:bg-error mt-4 rounded-xl px-4 py-2 text-xs font-bold text-white"
             >
               Retry
             </button>
           </div>
         ) : filteredAlerts.length === 0 ? (
           /* Empty State */
-          <div className="flex min-h-[360px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+          <div className="border-outline flex min-h-[360px] flex-col items-center justify-center rounded-2xl border border-dashed bg-white p-8 text-center">
+            <div className="bg-primary-light text-primary flex h-16 w-16 items-center justify-center rounded-2xl">
               <Bell className="h-8 w-8" />
             </div>
-            <h3 className="mt-4 text-lg font-bold text-slate-900">
+            <h3 className="text-on-surface mt-4 text-lg font-bold">
               {alerts.length === 0 ? 'No Job Alerts configured yet' : 'No alerts match your filter'}
             </h3>
-            <p className="mt-1.5 max-w-md text-sm text-slate-500">
+            <p className="text-on-surface-variant mt-1.5 max-w-md text-sm">
               {alerts.length === 0
                 ? 'Create a custom alert to receive fresh IT opportunities matching your target tech stack, salary and location every morning.'
                 : 'Try adjusting your search query or reset your filters.'}
@@ -367,7 +365,7 @@ export default function JobAlertsView() {
                   setEditingAlert(null);
                   setIsModalOpen(true);
                 }}
-                className="mt-5 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700"
+                className="bg-primary hover:bg-primary-hover mt-5 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-sm transition"
               >
                 <Plus className="h-4 w-4" />
                 <span>Create Your First Alert</span>
@@ -380,7 +378,7 @@ export default function JobAlertsView() {
                   setFilterFrequency('ALL');
                   setFilterStatus('ALL');
                 }}
-                className="mt-4 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-50"
+                className="border-outline text-on-surface hover:bg-surface-container-low mt-4 rounded-xl border bg-white px-4 py-2 text-xs font-bold transition"
               >
                 Reset Filters
               </button>
@@ -392,59 +390,63 @@ export default function JobAlertsView() {
             {filteredAlerts.map((alert) => (
               <div
                 key={alert.id}
-                className={`rounded-2xl border bg-white p-5 shadow-xs transition hover:shadow-md ${
-                  alert.isActive ? 'border-slate-200' : 'border-slate-200/60 bg-slate-50/40 opacity-80'
+                className={`hover:shadow-elevation-1 rounded-2xl border bg-white p-5 shadow-xs transition ${
+                  alert.isActive
+                    ? 'border-outline-variant'
+                    : 'border-outline-variant/60 bg-surface-container-low/40 opacity-80'
                 }`}
               >
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   {/* Left Info */}
                   <div className="flex-1 space-y-3">
                     <div className="flex flex-wrap items-center gap-2.5">
-                      <h3 className="text-base font-bold text-slate-900 sm:text-lg">{alert.title}</h3>
+                      <h3 className="text-on-surface text-base font-bold sm:text-lg">{alert.title}</h3>
                       {/* Status Badge */}
                       <span
                         className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold ${
-                          alert.isActive ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'
+                          alert.isActive
+                            ? 'bg-primary-container text-on-primary-container'
+                            : 'bg-surface-container-high text-on-surface'
                         }`}
                       >
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${alert.isActive ? 'bg-emerald-600' : 'bg-slate-500'}`}
+                          className={`h-1.5 w-1.5 rounded-full ${alert.isActive ? 'bg-primary' : 'bg-slate-500'}`}
                         />
                         {alert.isActive ? 'Active' : 'Paused'}
                       </span>
 
                       {/* Frequency Badge */}
-                      <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-600">
+                      <span className="bg-surface-container-high text-on-surface-variant rounded-full px-2.5 py-0.5 text-xs font-semibold">
                         {alert.frequency === 'DAILY' ? 'Daily (8:00 AM)' : 'Weekly (Monday)'}
                       </span>
                     </div>
 
                     {/* Criteria Chips */}
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600">
+                    <div className="text-on-surface-variant flex flex-wrap items-center gap-2 text-xs">
                       {alert.keyword && (
-                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2.5 py-1 font-medium text-emerald-700">
+                        <span className="bg-primary-light text-primary inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-medium">
                           <Search className="h-3 w-3" />
                           <span>{alert.keyword}</span>
                         </span>
                       )}
 
                       {alert.city && (
-                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-medium text-slate-700">
-                          <MapPin className="h-3 w-3 text-slate-500" />
+                        <span className="bg-surface-container-high text-on-surface inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-medium">
+                          <MapPin className="text-on-surface-variant h-3 w-3" />
                           <span>{alert.city}</span>
                         </span>
                       )}
 
                       {alert.careerLevel && (
-                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-medium text-slate-700">
-                          <Award className="h-3 w-3 text-slate-500" />
+                        <span className="bg-surface-container-high text-on-surface inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-medium">
+                          <Award className="text-on-surface-variant h-3 w-3" />
                           <span>{alert.careerLevel}</span>
                         </span>
                       )}
 
                       {alert.workMode && (
-                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-medium text-slate-700">
-                          <Laptop className="h-3 w-3 text-slate-500" />
+                        <span className="bg-surface-container-high text-on-surface inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-medium">
+                          <Laptop className="text-on-surface-variant h-3 w-3" />
                           <span>{alert.workMode}</span>
                         </span>
                       )}
@@ -452,15 +454,15 @@ export default function JobAlertsView() {
                       {alert.salaryMin && (
                         <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1 font-medium text-amber-800">
                           <Banknote className="h-3 w-3 text-amber-600" />
-                          <span>&ge; {alert.salaryMin.toLocaleString('vi-VN')} VND</span>
+                          <span>&ge; {alert.salaryMin.toLocaleString('en-US')} VND</span>
                         </span>
                       )}
                     </div>
 
                     {/* Metadata stats row */}
-                    <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-slate-500">
+                    <div className="text-on-surface-variant flex flex-wrap items-center gap-4 pt-1 text-xs">
                       <div className="flex items-center gap-1.5">
-                        <Clock className="h-3.5 w-3.5 text-slate-400" />
+                        <Clock className="text-outline h-3.5 w-3.5" />
                         <span>
                           {alert.lastSentAt
                             ? `Last digest: ${new Date(alert.lastSentAt).toLocaleDateString('en-US', {
@@ -474,7 +476,7 @@ export default function JobAlertsView() {
                       </div>
 
                       <div className="flex items-center gap-1.5">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                        <CheckCircle2 className="text-primary h-3.5 w-3.5" />
                         <span>
                           <strong>{alert.deliveredCount}</strong> matching job(s) sent
                         </span>
@@ -489,7 +491,7 @@ export default function JobAlertsView() {
                       type="button"
                       onClick={() => handleToggle(alert)}
                       className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
-                        alert.isActive ? 'bg-emerald-600' : 'bg-slate-300'
+                        alert.isActive ? 'bg-primary' : 'bg-slate-300'
                       }`}
                       title={alert.isActive ? 'Click to Pause' : 'Click to Activate'}
                     >
@@ -505,13 +507,13 @@ export default function JobAlertsView() {
                       type="button"
                       disabled={sendingTestAlertId === alert.id}
                       onClick={() => handleSendTestEmail(alert)}
-                      className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50"
+                      className="border-outline-variant text-on-surface hover:border-primary/40 hover:bg-primary-light hover:text-primary inline-flex items-center gap-1 rounded-xl border bg-white px-3 py-1.5 text-xs font-bold transition disabled:opacity-50"
                       title="Send a sample email digest right now"
                     >
                       {sendingTestAlertId === alert.id ? (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin text-emerald-600" />
+                        <Loader2 className="text-primary h-3.5 w-3.5 animate-spin" />
                       ) : (
-                        <Send className="h-3.5 w-3.5 text-emerald-600" />
+                        <Send className="text-primary h-3.5 w-3.5" />
                       )}
                       <span className="hidden sm:inline">Test Email</span>
                     </button>
@@ -523,7 +525,7 @@ export default function JobAlertsView() {
                         setEditingAlert(alert);
                         setIsModalOpen(true);
                       }}
-                      className="rounded-xl border border-slate-200 p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+                      className="border-outline-variant text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-xl border p-2 transition"
                       title="Edit Alert"
                     >
                       <Pencil className="h-4 w-4" />
@@ -533,7 +535,7 @@ export default function JobAlertsView() {
                     <button
                       type="button"
                       onClick={() => setAlertToDelete(alert)}
-                      className="rounded-xl border border-slate-200 p-2 text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                      className="border-outline-variant text-on-surface-variant hover:border-error/30 hover:bg-error/10 hover:text-error rounded-xl border p-2 transition"
                       title="Delete Alert"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -572,12 +574,12 @@ export default function JobAlertsView() {
             className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity"
             onClick={() => setAlertToDelete(null)}
           />
-          <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-600">
+          <div className="shadow-elevation-2 relative w-full max-w-md rounded-2xl bg-white p-6">
+            <div className="bg-error/10 text-error flex h-12 w-12 items-center justify-center rounded-2xl">
               <Trash2 className="h-6 w-6" />
             </div>
-            <h3 className="mt-4 text-lg font-bold text-slate-900">Delete Job Alert?</h3>
-            <p className="mt-1.5 text-sm text-slate-500">
+            <h3 className="text-on-surface mt-4 text-lg font-bold">Delete Job Alert?</h3>
+            <p className="text-on-surface-variant mt-1.5 text-sm">
               Are you sure you want to delete <strong>&quot;{alertToDelete.title}&quot;</strong>? You will no longer
               receive email digests for this search.
             </p>
@@ -586,7 +588,7 @@ export default function JobAlertsView() {
                 type="button"
                 disabled={isDeleting}
                 onClick={() => setAlertToDelete(null)}
-                className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
+                className="text-on-surface-variant hover:bg-surface-container-high rounded-xl px-4 py-2 text-sm font-semibold transition"
               >
                 Cancel
               </button>
@@ -594,7 +596,7 @@ export default function JobAlertsView() {
                 type="button"
                 disabled={isDeleting}
                 onClick={handleDelete}
-                className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-red-700 disabled:opacity-60"
+                className="bg-error hover:bg-error inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold text-white transition disabled:opacity-60"
               >
                 {isDeleting && <Loader2 className="h-4 w-4 animate-spin" />}
                 <span>Delete</span>
