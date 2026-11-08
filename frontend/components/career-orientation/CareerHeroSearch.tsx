@@ -52,7 +52,7 @@ export default function CareerHeroSearch({
           {searchQuery && (
             <button
               type="button"
-              aria-label="Xóa từ khóa"
+              aria-label="Clear keyword"
               onClick={() => onSearchChange('')}
               className="state-layer text-on-surface-variant absolute right-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full"
             >

@@ -454,7 +454,7 @@ export default function JobAlertsView() {
                       {alert.salaryMin && (
                         <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1 font-medium text-amber-800">
                           <Banknote className="h-3 w-3 text-amber-600" />
-                          <span>&ge; {alert.salaryMin.toLocaleString('vi-VN')} VND</span>
+                          <span>&ge; {alert.salaryMin.toLocaleString('en-US')} VND</span>
                         </span>
                       )}
                     </div>

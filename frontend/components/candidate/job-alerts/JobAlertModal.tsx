@@ -53,7 +53,7 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
   const [careerLevel, setCareerLevel] = useState<string>(initialData?.careerLevel || '');
   const [workMode, setWorkMode] = useState<string>(initialData?.workMode || '');
   const [salaryMin, setSalaryMin] = useState<string>(
-    initialData?.salaryMin ? Number(initialData.salaryMin).toLocaleString('vi-VN') : '',
+    initialData?.salaryMin ? Number(initialData.salaryMin).toLocaleString('en-US') : '',
   );
   const [frequency, setFrequency] = useState<AlertFrequency>(initialData?.frequency || 'DAILY');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -244,7 +244,7 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
             value={salaryMin}
             onChange={(e) => {
               const numericOnly = e.target.value.replace(/\D/g, '');
-              setSalaryMin(numericOnly ? Number(numericOnly).toLocaleString('vi-VN') : '');
+              setSalaryMin(numericOnly ? Number(numericOnly).toLocaleString('en-US') : '');
             }}
             placeholder="e.g. 25,000,000"
             className="border-outline-variant text-on-surface focus:border-primary mt-1.5 w-full rounded-xl border px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"

@@ -122,7 +122,7 @@ export default function GrossNetCalculatorWidget() {
             <div className="relative">
               <input
                 type="text"
-                value={numericSalary ? new Intl.NumberFormat('vi-VN').format(numericSalary) : ''}
+                value={numericSalary ? new Intl.NumberFormat('en-US').format(numericSalary) : ''}
                 onChange={handleSalaryChange}
                 placeholder="e.g., 25,000,000"
                 className="focus:border-primary text-on-surface w-full rounded-2xl border-2 border-gray-200 bg-white px-4 py-3.5 pr-14 text-lg font-bold transition focus:ring-4 focus:ring-emerald-500/10 focus:outline-none"
