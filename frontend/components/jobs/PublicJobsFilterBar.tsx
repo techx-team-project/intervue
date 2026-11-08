@@ -25,14 +25,14 @@ const SELECTS: Array<{
   label: string;
   options: Array<{ value: string; label: string }>;
 }> = [
-  { key: 'city', label: 'Địa điểm', options: CITIES.map((city) => ({ value: city, label: city })) },
-  { key: 'level', label: 'Cấp bậc', options: toOptions(JOB_LEVEL_LABELS) },
-  { key: 'contractType', label: 'Loại hợp đồng', options: toOptions(JOB_CONTRACT_LABELS) },
-  { key: 'workingArrangement', label: 'Hình thức', options: toOptions(JOB_ARRANGEMENT_LABELS) },
+  { key: 'city', label: 'Location', options: CITIES.map((city) => ({ value: city, label: city })) },
+  { key: 'level', label: 'Level', options: toOptions(JOB_LEVEL_LABELS) },
+  { key: 'contractType', label: 'Contract type', options: toOptions(JOB_CONTRACT_LABELS) },
+  { key: 'workingArrangement', label: 'Work mode', options: toOptions(JOB_ARRANGEMENT_LABELS) },
   {
     key: 'salaryFrom',
-    label: 'Mức lương',
-    options: SALARY_STEPS.map((step) => ({ value: String(step * MILLION), label: `Từ ${step} triệu` })),
+    label: 'Salary',
+    options: SALARY_STEPS.map((step) => ({ value: String(step * MILLION), label: `From ${step}M VND` })),
   },
 ];
 
@@ -59,8 +59,8 @@ export default function PublicJobsFilterBar({ filters, onChange }: PublicJobsFil
           <input
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
-            placeholder="Vị trí tuyển dụng, tên công ty"
-            aria-label="Từ khóa tìm kiếm"
+            placeholder="Job title or company name"
+            aria-label="Search keyword"
             className="border-outline focus:border-primary h-11 w-full rounded-xl border bg-white pr-3 pl-10 text-sm focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
           />
         </label>
@@ -68,7 +68,7 @@ export default function PublicJobsFilterBar({ filters, onChange }: PublicJobsFil
           type="submit"
           className="bg-primary hover:bg-primary-hover h-11 cursor-pointer rounded-xl px-5 text-sm font-bold text-white transition"
         >
-          Tìm kiếm
+          Search
         </button>
       </form>
 
@@ -100,7 +100,7 @@ export default function PublicJobsFilterBar({ filters, onChange }: PublicJobsFil
           }}
           className="text-primary cursor-pointer text-xs font-semibold hover:underline"
         >
-          Xóa bộ lọc
+          Clear filters
         </button>
       )}
     </div>

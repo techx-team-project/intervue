@@ -51,7 +51,7 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
         id="job-title"
         eyebrow={job.company.name}
         title={job.title}
-        crumbs={[{ label: 'Trang chủ', href: '/' }, { label: 'Việc làm', href: '/jobs' }, { label: job.title }]}
+        crumbs={[{ label: 'Home', href: '/' }, { label: 'Jobs', href: '/jobs' }, { label: job.title }]}
         overlap
       >
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-white">
@@ -71,15 +71,15 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
             </span>
           )}
           <Button size="2xl" leftIcon={<Send className="h-4 w-4" />} onClick={() => setIsApplyOpen(true)}>
-            Ứng tuyển ngay
+            Apply now
           </Button>
         </div>
         {hasQuestions && (
           <p className="text-body-md mt-5 flex items-center gap-2 text-white/70">
             <FileQuestion className="h-4 w-4" aria-hidden />
-            Nhà tuyển dụng có {job.screening.questionCount} câu hỏi sàng lọc
-            {job.screening.requiredCount > 0 && ` (${job.screening.requiredCount} bắt buộc)`}, mất khoảng{' '}
-            {job.screening.estimatedMinutes} phút.
+            The recruiter has {job.screening.questionCount} screening questions
+            {job.screening.requiredCount > 0 && ` (${job.screening.requiredCount} required)`}, about{' '}
+            {job.screening.estimatedMinutes} minutes.
           </p>
         )}
       </PageHero>
@@ -87,13 +87,13 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
       <div className="container-page relative -mt-16 space-y-5 pb-16">
         <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-12">
           <div className="space-y-5 lg:col-span-8">
-            <Section title="Mô tả công việc" text={job.description} />
-            <Section title="Yêu cầu ứng viên" text={job.requirements} />
-            <Section title="Quyền lợi" text={job.benefits} />
+            <Section title="Job description" text={job.description} />
+            <Section title="Requirements" text={job.requirements} />
+            <Section title="Benefits" text={job.benefits} />
 
             {job.skills.length > 0 && (
               <section className="bg-surface shadow-card rounded-3xl p-6 sm:p-8">
-                <h2 className="text-on-surface text-headline-sm mb-4 font-bold">Kỹ năng</h2>
+                <h2 className="text-on-surface text-headline-sm mb-4 font-bold">Skills</h2>
                 <div className="flex flex-wrap gap-2">
                   {job.skills.map((skill) => (
                     <span
@@ -109,7 +109,7 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
 
             <div className="border-primary/30 rounded-2xl border bg-emerald-50/60 p-5 text-center">
               <Button leftIcon={<Send className="h-4 w-4" />} onClick={() => setIsApplyOpen(true)}>
-                Ứng tuyển vị trí này
+                Apply for this position
               </Button>
             </div>
           </div>
@@ -127,12 +127,12 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
                 href={`/companies/${job.company.id}`}
                 className="text-primary mt-3 inline-block text-xs font-bold hover:underline"
               >
-                Xem trang công ty
+                View company page
               </Link>
             </div>
 
             <div className="border-outline-variant space-y-3 rounded-2xl border bg-white p-5 shadow-2xs">
-              <h3 className="text-on-surface text-sm font-bold">Thông tin chung</h3>
+              <h3 className="text-on-surface text-sm font-bold">General information</h3>
               <dl className="text-body-md space-y-2.5">
                 {facts.map((fact) => (
                   <dd key={fact} className="text-on-surface font-medium">
@@ -141,7 +141,7 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
                 ))}
                 <div className="text-on-surface-variant flex items-center gap-1.5">
                   <Users className="text-outline h-4 w-4" aria-hidden />
-                  Số lượng tuyển: {job.openings}
+                  Openings: {job.openings}
                 </div>
                 {address && (
                   <div className="text-on-surface-variant flex items-start gap-1.5">

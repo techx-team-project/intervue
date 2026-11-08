@@ -26,7 +26,7 @@ export default function CvPicker({ resumes, value, onChange }: CvPickerProps) {
     upload.mutate(file, {
       onSuccess: (created) => {
         onChange(created.id);
-        toast.success('Đã tải CV lên.');
+        toast.success('CV uploaded.');
       },
       onError: (error) => toast.error(getErrorMessage(error)),
     });
@@ -35,7 +35,7 @@ export default function CvPicker({ resumes, value, onChange }: CvPickerProps) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold text-slate-800">CV ứng tuyển</span>
+        <span className="text-sm font-semibold text-slate-800">CV for this application</span>
         {canUpload && (
           <Button
             type="button"
@@ -45,7 +45,7 @@ export default function CvPicker({ resumes, value, onChange }: CvPickerProps) {
             leftIcon={<Upload className="h-3.5 w-3.5" />}
             onClick={() => inputRef.current?.click()}
           >
-            Tải CV mới
+            Upload a new CV
           </Button>
         )}
         <input
@@ -53,7 +53,7 @@ export default function CvPicker({ resumes, value, onChange }: CvPickerProps) {
           type="file"
           accept="application/pdf"
           className="sr-only"
-          aria-label="Chọn tệp CV PDF"
+          aria-label="Choose a PDF CV file"
           onChange={(event) => {
             handleFile(event.target.files?.[0]);
             event.target.value = '';
@@ -63,10 +63,10 @@ export default function CvPicker({ resumes, value, onChange }: CvPickerProps) {
 
       {resumes.length === 0 ? (
         <p className="rounded-xl border border-dashed border-slate-300 px-4 py-5 text-center text-xs text-slate-500">
-          Bạn chưa có CV nào. Tải lên tệp PDF (tối đa 5 MB) để ứng tuyển.
+          You do not have a CV yet. Upload a PDF file (max 5 MB) to apply.
         </p>
       ) : (
-        <ul role="radiogroup" aria-label="Chọn CV" className="space-y-2">
+        <ul role="radiogroup" aria-label="Choose a CV" className="space-y-2">
           {resumes.map((resume) => (
             <li key={resume.id}>
               <button
@@ -85,7 +85,7 @@ export default function CvPicker({ resumes, value, onChange }: CvPickerProps) {
                 <span className="min-w-0 flex-1 truncate text-sm font-medium text-slate-800">{resume.fileName}</span>
                 {resume.isDefault && (
                   <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                    Mặc định
+                    Default
                   </span>
                 )}
               </button>

@@ -53,7 +53,7 @@ function ApplyContent({ job }: { job: ApplyJob }) {
             resumes.refetch();
           }}
         >
-          Thử lại
+          Try again
         </Button>
       </div>
     );
@@ -71,9 +71,7 @@ function ApplyContent({ job }: { job: ApplyJob }) {
     return <ApplyReapplyView application={application} resumes={resumes.data} open={form.data.open} />;
   }
   if (!form.data.open) {
-    return (
-      <p className="text-on-surface-variant py-8 text-center text-sm font-semibold">Tin tuyển dụng này đã đóng.</p>
-    );
+    return <p className="text-on-surface-variant py-8 text-center text-sm font-semibold">This job post is closed.</p>;
   }
 
   return (
@@ -98,7 +96,7 @@ export default function CandidateApplyModal({ job, isOpen, onClose }: CandidateA
       isOpen={isOpen}
       onClose={onClose}
       maxWidth="xl"
-      title="Ứng tuyển việc làm"
+      title="Apply for this job"
       description={`${job.title} - ${job.companyName}`}
     >
       {isLoading ? (
@@ -109,16 +107,16 @@ export default function CandidateApplyModal({ job, isOpen, onClose }: CandidateA
         <ApplyContent job={job} />
       ) : isAuthenticated ? (
         <p className="text-on-surface-variant py-8 text-center text-sm">
-          Tài khoản hiện tại không phải tài khoản ứng viên nên không thể ứng tuyển.
+          Your current account is not a candidate account, so you cannot apply.
         </p>
       ) : (
         <div className="space-y-4 py-6 text-center">
           <CheckCircle2 className="text-primary mx-auto h-10 w-10" aria-hidden />
           <p className="text-on-surface-variant text-sm">
-            Đăng nhập bằng tài khoản ứng viên để nộp hồ sơ cho vị trí này.
+            Sign in with a candidate account to apply for this position.
           </p>
           <Link href={`${ROUTES.LOGIN}?redirect=${encodeURIComponent(`/jobs/${job.id}`)}`}>
-            <Button>Đăng nhập để ứng tuyển</Button>
+            <Button>Sign in to apply</Button>
           </Link>
         </div>
       )}

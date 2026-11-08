@@ -81,13 +81,13 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
               type="button"
               onClick={handleShare}
               className="border-outline-variant text-on-surface hover:bg-surface-container-low relative flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border bg-white px-3.5 py-2.5 text-xs font-semibold transition-colors"
-              title="Sao chép liên kết trang công ty"
+              title="Copy company page link"
             >
               <Share2 className="text-on-surface-variant h-4 w-4" />
-              <span>Chia sẻ</span>
+              <span>Share</span>
               {copied && (
                 <div className="text-label-sm shadow-elevation-2 absolute -top-9 left-1/2 -translate-x-1/2 rounded-md bg-slate-900 px-2.5 py-1 font-medium whitespace-nowrap text-white">
-                  Đã copy link!
+                  Link copied!
                 </div>
               )}
             </button>
@@ -106,7 +106,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
                 : 'text-on-surface-variant hover:text-on-surface border-transparent'
             }`}
           >
-            Tổng quan
+            Overview
           </button>
 
           <button
@@ -119,7 +119,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
             }`}
           >
             <Briefcase className="h-4 w-4" />
-            <span>Tin tuyển dụng</span>
+            <span>Job posts</span>
             <span
               className={`rounded-full px-2 py-0.5 text-xs ${
                 activeTab === 'jobs'

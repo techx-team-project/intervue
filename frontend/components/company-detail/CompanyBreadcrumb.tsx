@@ -11,7 +11,7 @@ interface CompanyBreadcrumbProps {
 export default function CompanyBreadcrumb({ companyName }: CompanyBreadcrumbProps) {
   const items = [
     {
-      label: 'Danh sách công ty',
+      label: 'Companies',
       href: '/#top-companies',
       icon: <Building2 className="text-outline h-3.5 w-3.5" />,
     },

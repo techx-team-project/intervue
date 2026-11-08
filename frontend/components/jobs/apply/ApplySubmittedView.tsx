@@ -19,7 +19,7 @@ export default function ApplySubmittedView({ application }: ApplySubmittedViewPr
 
   const handleWithdraw = () => {
     withdraw.mutate(application.id, {
-      onSuccess: () => toast.success('Đã rút hồ sơ ứng tuyển.'),
+      onSuccess: () => toast.success('Application withdrawn.'),
       onError: (error) => toast.error(getErrorMessage(error)),
     });
   };
@@ -32,7 +32,7 @@ export default function ApplySubmittedView({ application }: ApplySubmittedViewPr
       <div className="space-y-1">
         <h4 className="text-on-surface text-lg font-bold">{CANDIDATE_APPLICATION_STATUS_LABELS[application.status]}</h4>
         {application.submittedAt && (
-          <p className="text-on-surface-variant text-xs">Nộp ngày {formatDate(application.submittedAt)}</p>
+          <p className="text-on-surface-variant text-xs">Submitted on {formatDate(application.submittedAt)}</p>
         )}
       </div>
 
@@ -45,7 +45,7 @@ export default function ApplySubmittedView({ application }: ApplySubmittedViewPr
 
       {canWithdraw && (
         <Button variant="outline" size="sm" isLoading={withdraw.isPending} onClick={handleWithdraw}>
-          Rút hồ sơ
+          Withdraw application
         </Button>
       )}
     </div>

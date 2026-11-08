@@ -6,11 +6,11 @@ import { formatDate } from '@/utils/datetime';
 const VND_UNIT = 1_000_000;
 
 export function formatSalary(salary: JobSalary): string {
-  if (salary.negotiable) return 'Thỏa thuận';
-  if (salary.min == null || salary.max == null) return 'Thỏa thuận';
+  if (salary.negotiable) return 'Negotiable';
+  if (salary.min == null || salary.max == null) return 'Negotiable';
   const isUsd = salary.currency === 'USD';
   const divisor = isUsd ? 1 : VND_UNIT;
-  return `${salary.min / divisor} - ${salary.max / divisor} ${isUsd ? 'USD' : 'triệu'}`;
+  return `${salary.min / divisor} - ${salary.max / divisor} ${isUsd ? 'USD' : 'M VND'}`;
 }
 
 function splitLines(text?: string): string[] {
@@ -26,7 +26,7 @@ function toJobItem(job: PublicJobSummaryResource): CompanyJobItem {
     title: job.title,
     salary: formatSalary(job.salary),
     location: job.city ?? '',
-    deadline: job.deadline ? `Hạn nộp ${formatDate(job.deadline)}` : '',
+    deadline: job.deadline ? `Deadline ${formatDate(job.deadline)}` : '',
     tags: job.skills.map((skill) => skill.name),
   };
 }

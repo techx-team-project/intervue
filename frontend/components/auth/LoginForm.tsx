@@ -110,7 +110,7 @@ export default function LoginForm() {
           portal="candidate"
           onSuccess={(session) => {
             useAuthStore.getState().setSession(session, 'candidate');
-            toast.success('Đăng nhập thành công!');
+            toast.success('Signed in successfully!');
             setChallengeToken(null);
           }}
           onCancel={() => setChallengeToken(null)}

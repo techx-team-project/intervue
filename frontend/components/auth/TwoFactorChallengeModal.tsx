@@ -40,10 +40,10 @@ export default function TwoFactorChallengeModal({
         useBackupCode
           ? portal === 'recruiter'
             ? 'Please enter your emergency recovery code.'
-            : 'Vui lòng nhập mã khôi phục.'
+            : 'Please enter your emergency recovery code.'
           : portal === 'recruiter'
             ? 'Please enter the 6-digit verification code from your app.'
-            : 'Vui lòng nhập mã 6 số từ ứng dụng.',
+            : 'Please enter the 6-digit verification code from your app.',
       );
       return;
     }
@@ -61,11 +61,15 @@ export default function TwoFactorChallengeModal({
       if (isApiError(err)) {
         setErrorMsg(
           err.message ||
-            (portal === 'recruiter' ? 'Invalid verification code or recovery code.' : 'Mã xác thực không hợp lệ.'),
+            (portal === 'recruiter'
+              ? 'Invalid verification code or recovery code.'
+              : 'Invalid verification code or recovery code.'),
         );
       } else {
         setErrorMsg(
-          portal === 'recruiter' ? 'Authentication error. Please try again.' : 'Lỗi xác thực, vui lòng thử lại.',
+          portal === 'recruiter'
+            ? 'Authentication error. Please try again.'
+            : 'Authentication error. Please try again.',
         );
       }
     } finally {
@@ -79,7 +83,7 @@ export default function TwoFactorChallengeModal({
     <Modal
       isOpen={isOpen}
       onClose={onCancel}
-      title={isRecruiter ? 'Two-Factor Authentication (2FA)' : 'Xác thực 2 bước (2FA)'}
+      title={isRecruiter ? 'Two-Factor Authentication (2FA)' : 'Two-Factor Authentication (2FA)'}
       maxWidth="sm"
     >
       <div className="space-y-4">
@@ -91,10 +95,10 @@ export default function TwoFactorChallengeModal({
             {useBackupCode
               ? isRecruiter
                 ? 'Enter one of your 8-character single-use emergency recovery codes saved during setup.'
-                : 'Nhập mã khôi phục 8 ký tự bạn đã lưu khi kích hoạt 2FA.'
+                : 'Enter one of your 8-character single-use emergency recovery codes saved during setup.'
               : isRecruiter
                 ? 'Your account is protected with two-factor authentication. Enter the 6-digit code from Google/Microsoft Authenticator or 1Password.'
-                : 'Tài khoản của bạn đã kích hoạt bảo vệ 2 lớp. Vui lòng nhập mã 6 chữ số từ ứng dụng xác thực trên điện thoại.'}
+                : 'Your account is protected with two-factor authentication. Enter the 6-digit code from Google/Microsoft Authenticator or 1Password.'}
           </p>
         </div>
 
@@ -110,10 +114,10 @@ export default function TwoFactorChallengeModal({
               {useBackupCode
                 ? isRecruiter
                   ? 'Emergency Recovery Code'
-                  : 'Mã dự phòng (Backup Code)'
+                  : 'Emergency Recovery Code'
                 : isRecruiter
                   ? '6-Digit Verification Code'
-                  : 'Mã 6 chữ số'}
+                  : '6-Digit Verification Code'}
             </label>
             <div className="mt-1.5">
               <Input
@@ -159,16 +163,16 @@ export default function TwoFactorChallengeModal({
               {useBackupCode
                 ? isRecruiter
                   ? 'Use authenticator app code'
-                  : 'Dùng ứng dụng xác thực'
+                  : 'Use authenticator app code'
                 : isRecruiter
                   ? 'Use emergency recovery code'
-                  : 'Dùng mã khôi phục dự phòng'}
+                  : 'Use emergency recovery code'}
             </button>
           </div>
 
           <div className="flex items-center justify-end gap-2.5 pt-2">
             <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
-              {isRecruiter ? 'Cancel' : 'Hủy'}
+              {isRecruiter ? 'Cancel' : 'Cancel'}
             </Button>
             <Button
               type="submit"
@@ -176,7 +180,7 @@ export default function TwoFactorChallengeModal({
               className="bg-primary hover:bg-primary font-bold"
               leftIcon={<CheckCircle2 className="h-4 w-4" />}
             >
-              {isRecruiter ? 'Verify and Sign in' : 'Xác nhận'}
+              {isRecruiter ? 'Verify and Sign in' : 'Verify and Sign in'}
             </Button>
           </div>
         </form>

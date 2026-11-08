@@ -58,14 +58,14 @@ export default function PublicJobsListView() {
     <>
       <PageHero
         id="jobs-title"
-        eyebrow="Tìm việc làm"
-        title="Việc làm IT mới nhất"
+        eyebrow="Find jobs"
+        title="Latest IT jobs"
         description={
           query.data
-            ? `${query.data.totalItems.toLocaleString('vi-VN')} vị trí đang chờ ứng viên trên InterVue.`
-            : 'Lọc theo công nghệ, cấp bậc, địa điểm và mức lương.'
+            ? `${query.data.totalItems.toLocaleString('en-US')} positions waiting for candidates on InterVue.`
+            : 'Filter by technology, level, location and salary.'
         }
-        crumbs={[{ label: 'Trang chủ', href: '/' }, { label: 'Việc làm' }]}
+        crumbs={[{ label: 'Home', href: '/' }, { label: 'Jobs' }]}
         overlap
       />
 
@@ -80,14 +80,14 @@ export default function PublicJobsListView() {
           <div className="border-error/30 bg-error/10 flex flex-col items-center gap-3 rounded-2xl border px-6 py-12 text-center">
             <p className="text-error text-sm font-semibold">{getErrorMessage(query.error)}</p>
             <Button variant="outline" size="sm" onClick={() => query.refetch()}>
-              Thử lại
+              Try again
             </Button>
           </div>
         ) : jobs.length === 0 ? (
           <div className="border-outline-variant flex flex-col items-center gap-2 rounded-2xl border bg-white px-6 py-16 text-center">
             <SearchX className="text-outline h-9 w-9" />
-            <p className="text-on-surface text-sm font-semibold">Chưa có việc làm phù hợp</p>
-            <p className="text-on-surface-variant text-xs">Thử đổi từ khóa hoặc bỏ bớt bộ lọc.</p>
+            <p className="text-on-surface text-sm font-semibold">No matching jobs yet</p>
+            <p className="text-on-surface-variant text-xs">Try a different keyword or remove some filters.</p>
           </div>
         ) : (
           <>

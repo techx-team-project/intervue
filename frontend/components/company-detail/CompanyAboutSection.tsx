@@ -15,14 +15,14 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
           <div className="text-primary bg-primary-light flex h-8 w-8 items-center justify-center rounded-lg">
             <Building className="h-4.5 w-4.5" />
           </div>
-          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Giới thiệu công ty</h2>
+          <h2 className="text-on-surface text-lg font-bold sm:text-xl">About the company</h2>
         </div>
 
         <div className="text-body-md text-on-surface mt-5 space-y-3.5 leading-relaxed">
           {company.description.length > 0 ? (
             company.description.map((paragraph, idx) => <p key={idx}>{paragraph}</p>)
           ) : (
-            <p className="text-on-surface-variant">Doanh nghiệp chưa cập nhật phần giới thiệu.</p>
+            <p className="text-on-surface-variant">This company has not added an introduction yet.</p>
           )}
         </div>
       </section>
@@ -33,7 +33,7 @@ export default function CompanyAboutSection({ company }: CompanyAboutSectionProp
             <div className="text-primary bg-primary-light flex h-8 w-8 items-center justify-center rounded-lg">
               <Sparkles className="h-4.5 w-4.5" />
             </div>
-            <h2 className="text-on-surface text-lg font-bold sm:text-xl">Quyền lợi & Đãi ngộ nhân sự</h2>
+            <h2 className="text-on-surface text-lg font-bold sm:text-xl">Benefits & perks</h2>
           </div>
 
           <div className="mt-5 space-y-3">

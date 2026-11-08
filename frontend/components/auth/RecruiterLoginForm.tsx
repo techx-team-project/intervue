@@ -48,7 +48,7 @@ export default function RecruiterLoginForm() {
       }
       const session = toRecruiterSession(res);
       useAuthStore.getState().setSession(session, 'recruiter');
-      toast.success('Đã đăng nhập vào cổng nhà tuyển dụng.');
+      toast.success('Signed in to the recruiter portal.');
       router.replace(sanitizeRedirect(searchParams?.get(REDIRECT_PARAM), ROUTES.RECRUITER_DASHBOARD));
     } catch (error: unknown) {
       applyFormError(error, setError, ['email', 'password']);
@@ -134,7 +134,7 @@ export default function RecruiterLoginForm() {
           portal="recruiter"
           onSuccess={(session) => {
             useAuthStore.getState().setSession(session, 'recruiter');
-            toast.success('Đã đăng nhập vào cổng nhà tuyển dụng.');
+            toast.success('Signed in to the recruiter portal.');
             router.replace(sanitizeRedirect(searchParams?.get(REDIRECT_PARAM), ROUTES.RECRUITER_DASHBOARD));
           }}
           onCancel={() => setChallengeToken(null)}

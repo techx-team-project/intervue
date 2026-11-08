@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
 
   return {
     title: `${job.title} | ${job.company.name} - InterVue`,
-    description: `Tuyển dụng ${job.title} tại ${job.company.name}${city}. Mức lương ${formatSalary(job.salary)}. Ứng tuyển ngay trên InterVue.`,
+    description: `${job.title} at ${job.company.name}${city}. Salary ${formatSalary(job.salary)}. Apply now on InterVue.`,
   };
 }
 

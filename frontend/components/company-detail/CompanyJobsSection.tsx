@@ -29,13 +29,13 @@ export default function CompanyJobsSection({ jobs, companyName }: CompanyJobsSec
             <Briefcase className="h-4.5 w-4.5" />
           </div>
           <div>
-            <h2 className="text-on-surface text-lg font-bold sm:text-xl">Tin tuyển dụng đang mở</h2>
-            <p className="text-on-surface-variant mt-0.5 text-xs">Cơ hội việc làm mới nhất từ {companyName}</p>
+            <h2 className="text-on-surface text-lg font-bold sm:text-xl">Open positions</h2>
+            <p className="text-on-surface-variant mt-0.5 text-xs">Latest job opportunities from {companyName}</p>
           </div>
         </div>
 
         <span className="bg-primary-container text-primary rounded-full px-3 py-1 text-xs font-bold">
-          {jobs.length} vị trí đang tuyển
+          {jobs.length} open positions
         </span>
       </div>
 
@@ -44,7 +44,7 @@ export default function CompanyJobsSection({ jobs, companyName }: CompanyJobsSec
           <Search className="text-outline absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Tìm theo chức danh, từ khóa kỹ năng..."
+            placeholder="Search by job title or skill keyword..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="focus:border-primary focus:ring-primary border-outline-variant bg-surface-container-low/60 text-on-surface w-full rounded-xl border py-2.5 pr-4 pl-10 text-xs placeholder-slate-400 transition focus:bg-white focus:ring-1 focus:outline-none"
@@ -56,8 +56,8 @@ export default function CompanyJobsSection({ jobs, companyName }: CompanyJobsSec
         {filteredJobs.length === 0 ? (
           <div className="text-on-surface-variant py-12 text-center">
             <Briefcase className="text-outline mx-auto mb-2 h-10 w-10" />
-            <p className="text-sm font-semibold">Không tìm thấy vị trí tuyển dụng phù hợp với từ khóa này.</p>
-            <p className="text-outline mt-1 text-xs">Vui lòng thử tìm kiếm bằng từ khóa khác.</p>
+            <p className="text-sm font-semibold">No open positions match this keyword.</p>
+            <p className="text-outline mt-1 text-xs">Please try a different keyword.</p>
           </div>
         ) : (
           filteredJobs.map((job) => (
@@ -106,7 +106,7 @@ export default function CompanyJobsSection({ jobs, companyName }: CompanyJobsSec
                     href={`/jobs/${job.id}`}
                     className="hover:bg-primary-hover bg-primary inline-flex cursor-pointer items-center gap-1 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-xs transition group-hover:shadow-sm"
                   >
-                    <span>Ứng tuyển</span>
+                    <span>Apply</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>

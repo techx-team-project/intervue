@@ -85,7 +85,7 @@ export default function ApplyDraftForm({
           jobDescription: description,
         });
         setCoverLetter(response.coverLetter.slice(0, MAX_COVER_LETTER));
-        toast.success('Đã tạo bản nháp thư giới thiệu. Hãy kiểm tra và chỉnh sửa trước khi gửi.');
+        toast.success('Cover letter draft created. Review and edit it before sending.');
       } catch (error) {
         toast.error(getErrorMessage(error));
       } finally {
@@ -98,12 +98,12 @@ export default function ApplyDraftForm({
     const next: Record<number, string> = {};
     form.questions.forEach((question) => {
       if (question.required && !(answers[question.id] ?? '').trim()) {
-        next[question.id] = 'Vui lòng trả lời câu hỏi này.';
+        next[question.id] = 'Please answer this question.';
       }
     });
     setErrors(next);
     if (!resumeId) {
-      toast.error('Vui lòng chọn hoặc tải lên một CV.');
+      toast.error('Please select or upload a CV.');
       return false;
     }
     return Object.keys(next).length === 0;
@@ -113,7 +113,7 @@ export default function ApplyDraftForm({
     if (!validate()) return;
     submit.mutate(payload, {
       onSuccess: () => {
-        toast.success('Đã nộp hồ sơ ứng tuyển!');
+        toast.success('Application submitted!');
         onSubmitted();
       },
       onError: (error) => {
@@ -142,7 +142,7 @@ export default function ApplyDraftForm({
 
       {form.questions.length > 0 && (
         <div className="space-y-4">
-          <h4 className="text-on-surface text-sm font-bold">Câu hỏi từ nhà tuyển dụng</h4>
+          <h4 className="text-on-surface text-sm font-bold">Questions from the recruiter</h4>
           {form.questions.map((question, index) => (
             <ApplyQuestionField
               key={question.id}
@@ -158,7 +158,7 @@ export default function ApplyDraftForm({
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-on-surface text-sm font-semibold">Thư giới thiệu (không bắt buộc)</span>
+          <span className="text-on-surface text-sm font-semibold">Cover letter (optional)</span>
           <Button
             type="button"
             variant="ghost"
@@ -167,15 +167,15 @@ export default function ApplyDraftForm({
             leftIcon={<Sparkles className="h-3.5 w-3.5" />}
             onClick={handleGenerate}
           >
-            Gợi ý bằng AI
+            Suggest with AI
           </Button>
         </div>
         <Textarea
           value={coverLetter}
           rows={5}
           maxLength={MAX_COVER_LETTER}
-          aria-label="Thư giới thiệu"
-          placeholder="Vì sao bạn phù hợp với vị trí này?"
+          aria-label="Cover letter"
+          placeholder="Why are you a good fit for this role?"
           onChange={(event) => setCoverLetter(event.target.value)}
         />
       </div>
@@ -183,17 +183,17 @@ export default function ApplyDraftForm({
       <div className="border-outline-variant flex items-center justify-between gap-3 border-t pt-4">
         <span className="text-outline flex items-center gap-1.5 text-xs" aria-live="polite">
           {saveDraft.isPending ? (
-            'Đang lưu nháp…'
+            'Saving draft…'
           ) : saveDraft.isSuccess ? (
             <>
-              <Check className="text-primary h-3.5 w-3.5" aria-hidden /> Đã lưu nháp
+              <Check className="text-primary h-3.5 w-3.5" aria-hidden /> Draft saved
             </>
           ) : (
-            'Tự động lưu nháp'
+            'Draft saves automatically'
           )}
         </span>
         <Button isLoading={submit.isPending} leftIcon={<Send className="h-4 w-4" />} onClick={handleSubmit}>
-          Nộp hồ sơ
+          Submit application
         </Button>
       </div>
     </div>

@@ -5,8 +5,8 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Việc làm IT mới nhất | InterVue',
-  description: 'Tìm việc làm IT phù hợp theo vị trí, địa điểm, mức lương và kỹ năng trên InterVue.',
+  title: 'Latest IT Jobs | InterVue',
+  description: 'Find IT jobs by role, location, salary and skills on InterVue.',
 };
 
 export default function JobsPage() {

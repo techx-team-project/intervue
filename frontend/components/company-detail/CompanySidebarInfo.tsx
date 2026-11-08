@@ -11,35 +11,35 @@ export default function CompanySidebarInfo({ company }: CompanySidebarInfoProps)
   const infoItems = [
     {
       icon: Users,
-      label: 'Quy mô công ty',
-      value: company.size || 'Đang cập nhật',
+      label: 'Company size',
+      value: company.size || 'Updating',
     },
     {
       icon: Briefcase,
-      label: 'Lĩnh vực hoạt động',
-      value: company.industry || 'Đang cập nhật',
+      label: 'Industry',
+      value: company.industry || 'Updating',
     },
     {
       icon: Phone,
-      label: 'Hotline tuyển dụng',
-      value: company.phone || 'Đang cập nhật',
+      label: 'Recruitment hotline',
+      value: company.phone || 'Updating',
     },
     {
       icon: Mail,
-      label: 'Email nhận hồ sơ',
-      value: company.email || 'Đang cập nhật',
+      label: 'Application email',
+      value: company.email || 'Updating',
     },
     {
       icon: Globe,
-      label: 'Website chính thức',
-      value: company.website ? company.website.replace(/^https?:\/\//, '') : 'Đang cập nhật',
+      label: 'Official website',
+      value: company.website ? company.website.replace(/^https?:\/\//, '') : 'Updating',
       link: company.website,
     },
   ];
 
   return (
     <div className="border-outline-variant/90 rounded-2xl border bg-white p-5 shadow-2xs">
-      <h3 className="border-outline-variant text-on-surface border-b pb-3 text-sm font-bold">Thông tin chung</h3>
+      <h3 className="border-outline-variant text-on-surface border-b pb-3 text-sm font-bold">General information</h3>
 
       <div className="mt-4 space-y-3.5">
         {infoItems.map((item, idx) => {

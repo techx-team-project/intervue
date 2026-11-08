@@ -22,13 +22,13 @@ export default function ApplyReapplyView({ application, resumes, open }: ApplyRe
 
   const handleReapply = () => {
     if (!resumeId) {
-      toast.error('Vui lòng chọn hoặc tải lên một CV.');
+      toast.error('Please select or upload a CV.');
       return;
     }
     reapply.mutate(
       { id: application.id, resumeId },
       {
-        onSuccess: () => toast.success('Đã nộp lại hồ sơ.'),
+        onSuccess: () => toast.success('Application resubmitted.'),
         onError: (error) => toast.error(getErrorMessage(error)),
       },
     );
@@ -37,19 +37,19 @@ export default function ApplyReapplyView({ application, resumes, open }: ApplyRe
   return (
     <div className="space-y-4">
       <p className="rounded-xl bg-amber-50 px-3.5 py-2.5 text-xs text-amber-800">
-        Bạn đã rút hồ sơ này. Câu trả lời trước đây được giữ nguyên, bạn chỉ có thể chọn lại CV.
+        You withdrew this application. Your earlier answers are kept; you only need to pick a CV again.
       </p>
       {open ? (
         <>
           <CvPicker resumes={resumes} value={resumeId} onChange={setResumeId} />
           <div className="border-outline-variant flex justify-end border-t pt-4">
             <Button isLoading={reapply.isPending} onClick={handleReapply}>
-              Nộp lại hồ sơ
+              Resubmit application
             </Button>
           </div>
         </>
       ) : (
-        <p className="text-on-surface-variant text-center text-sm font-semibold">Tin tuyển dụng này đã đóng.</p>
+        <p className="text-on-surface-variant text-center text-sm font-semibold">This job post is closed.</p>
       )}
     </div>
   );
