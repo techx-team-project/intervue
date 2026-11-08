@@ -2,14 +2,16 @@
 
 import EmptyState from '@/components/common/EmptyState';
 import CompanyLogo from '@/components/jobs/CompanyLogo';
+import Reveal from '@/components/ui/Reveal';
 import Skeleton from '@/components/ui/Skeleton';
 import { usePublicJobs } from '@/hooks/usePublicJobs';
 import type { PublicJobCompany } from '@/types/public-job';
-import { Briefcase, WifiOff } from 'lucide-react';
+import { ArrowUpRight, WifiOff } from 'lucide-react';
 import Link from 'next/link';
+import SectionHeader from '../SectionHeader';
 
 const SAMPLE_SIZE = 30;
-const COMPANY_COUNT = 9;
+const COMPANY_COUNT = 8;
 
 type CompanyEntry = { company: PublicJobCompany; jobCount: number };
 
@@ -30,56 +32,56 @@ export default function HiringCompaniesSection() {
   if (!query.isLoading && !query.isError && entries.length === 0) return null;
 
   return (
-    <section id="top-companies" aria-labelledby="companies-title" className="container-page py-8">
-      <div className="overflow-hidden rounded-2xl">
-        <div className="from-primary-deep to-primary-deeper bg-linear-to-r px-8 py-10">
-          <h2 id="companies-title" className="text-headline-lg text-on-primary font-bold">
-            Công ty đang tuyển
-          </h2>
-          <p className="text-title-md text-on-primary mt-2 font-normal">
-            Doanh nghiệp có tin tuyển dụng mới nhất trên InterVue
-          </p>
-        </div>
+    <section id="top-companies" aria-labelledby="companies-title" className="bg-surface-container-low py-24">
+      <div className="container-page">
+        <Reveal>
+          <SectionHeader
+            id="companies-title"
+            eyebrow="Doanh nghiệp tuyển dụng"
+            title="Những công ty đang tìm bạn"
+            description="Doanh nghiệp có tin tuyển dụng mới nhất trên InterVue."
+          />
+        </Reveal>
 
-        <div className="bg-surface p-6">
-          {query.isLoading ? (
-            <div className="expanded:grid-cols-3 medium:grid-cols-2 grid grid-cols-1 gap-4">
-              {Array.from({ length: COMPANY_COUNT }, (_, index) => (
-                <Skeleton key={index} className="h-36 w-full rounded-xl" />
-              ))}
-            </div>
-          ) : query.isError ? (
-            <EmptyState
-              tone="error"
-              icon={WifiOff}
-              title="Không tải được danh sách công ty"
-              actionLabel="Thử lại"
-              onAction={() => query.refetch()}
-            />
-          ) : (
-            <ul className="expanded:grid-cols-3 medium:grid-cols-2 grid grid-cols-1 gap-4">
+        {query.isLoading ? (
+          <div className="expanded:grid-cols-4 medium:grid-cols-2 grid grid-cols-1 gap-4">
+            {Array.from({ length: COMPANY_COUNT }, (_, index) => (
+              <Skeleton key={index} className="h-44 w-full rounded-3xl" />
+            ))}
+          </div>
+        ) : query.isError ? (
+          <EmptyState
+            tone="error"
+            icon={WifiOff}
+            title="Không tải được danh sách công ty"
+            actionLabel="Thử lại"
+            onAction={() => query.refetch()}
+            className="bg-surface"
+          />
+        ) : (
+          <Reveal delay={1}>
+            <ul className="expanded:grid-cols-4 medium:grid-cols-2 grid grid-cols-1 gap-4">
               {entries.map(({ company, jobCount }) => (
                 <li key={company.id}>
                   <Link
                     href={`/companies/${company.id}`}
-                    className="border-outline-variant hover:border-primary hover:bg-primary-light ease-standard hover:shadow-elevation-1 flex h-full flex-col gap-3 rounded-xl border p-5 transition-all duration-200 hover:-translate-y-0.5"
+                    className="group bg-surface ease-standard hover:shadow-card flex h-full flex-col gap-5 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1"
                   >
-                    <div className="flex items-center gap-4">
-                      <CompanyLogo name={company.name} src={company.logoUrl} className="h-20 w-20 rounded-lg" />
-                      <span className="text-title-md text-on-surface line-clamp-3 font-semibold uppercase">
-                        {company.name}
-                      </span>
+                    <div className="flex items-start justify-between">
+                      <CompanyLogo name={company.name} src={company.logoUrl} className="h-16 w-16 rounded-2xl" />
+                      <ArrowUpRight
+                        className="text-outline ease-standard group-hover:text-primary h-5 w-5 transition-all duration-300"
+                        aria-hidden
+                      />
                     </div>
-                    <span className="text-body-lg text-on-surface mt-auto flex items-center gap-2">
-                      <Briefcase className="h-4 w-4" aria-hidden />
-                      {jobCount} việc làm mới
-                    </span>
+                    <p className="text-title-md text-on-surface line-clamp-2 font-bold uppercase">{company.name}</p>
+                    <p className="text-body-md text-primary mt-auto font-semibold">{jobCount} việc làm mới</p>
                   </Link>
                 </li>
               ))}
             </ul>
-          )}
-        </div>
+          </Reveal>
+        )}
       </div>
     </section>
   );

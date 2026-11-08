@@ -30,5 +30,3 @@ export const HOME_CATEGORIES: HomeCategory[] = [
   { id: 'security', label: 'An toàn thông tin', keyword: 'Security', icon: Lock },
   { id: 'fresher', label: 'Intern / Fresher', keyword: 'Fresher', icon: GraduationCap },
 ];
-
-export const HERO_CATEGORY_PAGE_SIZE = 6;

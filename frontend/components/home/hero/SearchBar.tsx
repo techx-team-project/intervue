@@ -71,7 +71,7 @@ export default function SearchBar() {
         event.preventDefault();
         search(keyword);
       }}
-      className="bg-surface medium:h-19 medium:flex-row medium:items-center medium:rounded-full flex flex-col gap-2 rounded-2xl p-2"
+      className="bg-surface shadow-float medium:h-19 medium:flex-row medium:items-center medium:rounded-full flex flex-col gap-2 rounded-2xl p-2"
     >
       <div ref={containerRef} className="relative min-w-0 flex-1">
         <div className="flex h-14 items-center gap-2 pr-2 pl-6">
@@ -134,7 +134,7 @@ export default function SearchBar() {
         )}
       </div>
 
-      <div className="medium:w-80 medium:border-outline-variant medium:border-l relative flex h-14 items-center gap-3 px-5">
+      <div className="medium:w-64 medium:border-outline-variant medium:border-l relative flex h-14 items-center gap-3 px-5">
         <MapPin className="text-on-surface h-5 w-5 shrink-0" aria-hidden />
         <select
           aria-label="Địa điểm"

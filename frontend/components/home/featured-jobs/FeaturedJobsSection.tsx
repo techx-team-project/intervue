@@ -40,20 +40,21 @@ export default function FeaturedJobsSection() {
   const viewAllHref = city ? `/jobs?city=${encodeURIComponent(city)}` : '/jobs';
 
   return (
-    <section id="feature-jobs" aria-labelledby="featured-jobs-title" className="container-page py-8">
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-baseline gap-3">
-          <h2 id="featured-jobs-title" className="text-headline-lg text-primary font-bold">
+    <section id="feature-jobs" aria-labelledby="featured-jobs-title" className="container-page py-24">
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+        <div className="space-y-3">
+          <p className="text-label-lg text-primary font-bold tracking-widest uppercase">Cơ hội mới nhất</p>
+          <h2 id="featured-jobs-title" className="font-display text-display-md text-on-surface">
             Việc làm IT nổi bật
           </h2>
           {total !== undefined && (
-            <span className="text-body-lg text-on-surface-variant">
-              {total.toLocaleString('vi-VN')} vị trí đang tuyển
-            </span>
+            <p className="text-title-md text-on-surface-variant font-normal">
+              {total.toLocaleString('vi-VN')} vị trí đang chờ ứng viên
+            </p>
           )}
         </div>
         <div className="flex items-center gap-4">
-          <Link href={viewAllHref} className="text-title-md text-on-surface underline">
+          <Link href={viewAllHref} className="text-title-md text-primary font-semibold hover:underline">
             Xem tất cả
           </Link>
           <div className="flex gap-2">

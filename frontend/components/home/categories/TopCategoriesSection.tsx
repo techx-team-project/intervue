@@ -1,35 +1,49 @@
+import Reveal from '@/components/ui/Reveal';
 import { HOME_CATEGORIES } from '@/constants/home/categories';
-import { ChevronRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
-import HomeSection from '../HomeSection';
 import SectionHeader from '../SectionHeader';
 
 export default function TopCategoriesSection() {
   return (
-    <HomeSection titleId="categories-title">
-      <SectionHeader
-        id="categories-title"
-        title="Việc làm theo nhóm ngành IT"
-        description="Bạn muốn tìm việc ở lĩnh vực nào? Chọn nhóm công nghệ bạn quan tâm."
-      />
-      <ul className="expanded:grid-cols-4 medium:grid-cols-3 grid grid-cols-2 gap-4">
-        {HOME_CATEGORIES.map(({ id, label, keyword, icon: Icon }) => (
-          <li key={id}>
-            <Link
-              href={`/jobs?q=${encodeURIComponent(keyword)}`}
-              className="group border-outline-variant hover:border-primary rounded-shape-lg ease-standard flex h-20 items-center gap-3 border px-4 transition-colors duration-150"
-            >
-              <span className="bg-primary-container text-primary rounded-shape-md flex h-12 w-12 shrink-0 items-center justify-center">
-                <Icon className="h-6 w-6" aria-hidden />
-              </span>
-              <span className="text-title-sm text-on-surface group-hover:text-primary flex-1 transition-colors">
-                {label}
-              </span>
-              <ChevronRight className="text-on-surface-variant group-hover:text-primary h-4 w-4" aria-hidden />
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </HomeSection>
+    <section aria-labelledby="categories-title" className="bg-surface py-24">
+      <div className="container-page">
+        <Reveal>
+          <SectionHeader
+            id="categories-title"
+            eyebrow="Khám phá theo lĩnh vực"
+            title="Bạn muốn theo đuổi hướng công nghệ nào?"
+            description="Chọn nhóm ngành để xem ngay những vị trí đang tuyển phù hợp."
+            align="center"
+          />
+        </Reveal>
+
+        <Reveal delay={1}>
+          <ul className="expanded:grid-cols-4 medium:grid-cols-3 grid grid-cols-2 gap-4">
+            {HOME_CATEGORIES.map(({ id, label, keyword, icon: Icon }) => (
+              <li key={id}>
+                <Link
+                  href={`/jobs?q=${encodeURIComponent(keyword)}`}
+                  className="group bg-surface-container-low ease-standard hover:bg-primary-deeper flex h-full flex-col justify-between gap-8 rounded-3xl p-6 transition-colors duration-300"
+                >
+                  <div className="flex items-start justify-between">
+                    <span className="bg-surface text-primary ease-standard group-hover:bg-primary flex h-14 w-14 items-center justify-center rounded-2xl transition-colors duration-300 group-hover:text-white">
+                      <Icon className="h-7 w-7" aria-hidden />
+                    </span>
+                    <ArrowUpRight
+                      className="text-outline ease-standard group-hover:text-primary-bright h-5 w-5 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      aria-hidden
+                    />
+                  </div>
+                  <span className="font-display text-title-lg text-on-surface font-bold transition-colors duration-300 group-hover:text-white">
+                    {label}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+    </section>
   );
 }

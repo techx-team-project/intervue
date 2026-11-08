@@ -1,42 +1,51 @@
-import HeroPanels from './HeroPanels';
+import { POPULAR_KEYWORDS } from '@/constants/home/search';
+import { Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import HeroVisual from './HeroVisual';
 import SearchBar from './SearchBar';
+
+const HERO_KEYWORD_COUNT = 6;
 
 export default function HomeHero() {
   return (
-    <section
-      aria-labelledby="home-hero-title"
-      className="from-primary-deep to-primary-deeper relative overflow-hidden bg-linear-to-b"
-    >
-      <svg
-        aria-hidden
-        viewBox="0 0 200 400"
-        className="pointer-events-none absolute top-0 bottom-0 left-0 hidden h-full w-44 fill-none stroke-white/10 lg:block"
-        strokeWidth="18"
-      >
-        <path d="M-50,50 L80,200 L-50,350" />
-        <path d="M-10,50 L120,200 L-10,350" />
-      </svg>
-      <svg
-        aria-hidden
-        viewBox="0 0 200 400"
-        className="pointer-events-none absolute top-0 right-0 bottom-0 hidden h-full w-44 fill-none stroke-white/10 lg:block"
-        strokeWidth="18"
-      >
-        <path d="M250,50 L120,200 L250,350" />
-        <path d="M210,50 L80,200 L210,350" />
-      </svg>
+    <section aria-labelledby="home-hero-title" className="bg-primary-deeper relative overflow-hidden pb-28">
+      <div aria-hidden className="bg-grid mask-fade-b absolute inset-0" />
 
-      <div className="container-page relative pt-7 pb-10">
-        <h1
-          id="home-hero-title"
-          className="text-headline-md medium:text-hero text-primary-bright mb-5 text-center font-bold"
-        >
-          InterVue - Tạo CV, Tìm việc làm, Tuyển dụng hiệu quả
-        </h1>
-        <SearchBar />
-        <div className="mt-8">
-          <HeroPanels />
+      <div className="container-page relative grid items-center gap-12 pt-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:pt-20">
+        <div>
+          <span className="text-label-lg text-primary-bright inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2">
+            <Sparkles className="h-4 w-4" aria-hidden />
+            Nền tảng tuyển dụng IT có AI hỗ trợ
+          </span>
+
+          <h1 id="home-hero-title" className="font-display text-display-lg expanded:text-display-xl mt-6 text-white">
+            Tìm việc IT phù hợp, <span className="text-primary-bright">nhanh hơn</span> mỗi ngày
+          </h1>
+
+          <p className="text-title-lg mt-6 max-w-xl font-normal text-white/75">
+            Hàng trăm vị trí từ doanh nghiệp công nghệ đã xác thực. AI giúp bạn hoàn thiện CV và luyện phỏng vấn, còn
+            quyết định tuyển dụng luôn thuộc về con người.
+          </p>
+
+          <div className="mt-10 max-w-3xl">
+            <SearchBar />
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            <span className="text-label-lg text-white/60">Tìm nhiều:</span>
+            {POPULAR_KEYWORDS.slice(0, HERO_KEYWORD_COUNT).map((keyword) => (
+              <Link
+                key={keyword}
+                href={`/jobs?q=${encodeURIComponent(keyword)}`}
+                className="text-label-lg ease-standard hover:text-primary-deeper rounded-full border border-white/20 px-3.5 py-1.5 text-white/90 transition-colors duration-150 hover:border-white hover:bg-white"
+              >
+                {keyword}
+              </Link>
+            ))}
+          </div>
         </div>
+
+        <HeroVisual />
       </div>
     </section>
   );

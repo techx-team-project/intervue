@@ -1,15 +1,17 @@
 import Footer from '@/components/common/Footer';
 import Header from '@/components/common/Header';
-import AiFeaturesSection from '@/components/home/ai-features/AiFeaturesSection';
-import HiringCompaniesSection from '@/components/home/companies/HiringCompaniesSection';
+import AiShowcaseSection from '@/components/home/ai-showcase/AiShowcaseSection';
 import TopCategoriesSection from '@/components/home/categories/TopCategoriesSection';
+import HiringCompaniesSection from '@/components/home/companies/HiringCompaniesSection';
+import CallToActionSection from '@/components/home/cta/CallToActionSection';
 import FeaturedJobsSection from '@/components/home/featured-jobs/FeaturedJobsSection';
 import HomeHero from '@/components/home/hero/HomeHero';
-import PersonalBrandSection from '@/components/home/personal-brand/PersonalBrandSection';
+import HowItWorksSection from '@/components/home/how-it-works/HowItWorksSection';
+import MarketPulse from '@/components/home/pulse/MarketPulse';
 
 export default function Home() {
   return (
-    <div className="bg-surface-container-low text-on-surface flex min-h-screen flex-col">
+    <div className="bg-surface text-on-surface flex min-h-screen flex-col">
       <a
         href="#main-content"
         className="bg-primary text-on-primary text-label-lg sr-only z-50 rounded-full px-4 py-2 focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
@@ -18,13 +20,15 @@ export default function Home() {
       </a>
       <Header />
 
-      <main id="main-content" className="flex-1 pb-6">
+      <main id="main-content" className="flex-1">
         <HomeHero />
+        <MarketPulse />
         <FeaturedJobsSection />
-        <HiringCompaniesSection />
         <TopCategoriesSection />
-        <PersonalBrandSection />
-        <AiFeaturesSection />
+        <HowItWorksSection />
+        <AiShowcaseSection />
+        <HiringCompaniesSection />
+        <CallToActionSection />
       </main>
 
       <Footer />
