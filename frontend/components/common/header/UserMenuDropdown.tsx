@@ -63,7 +63,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
         <div className="min-w-0 flex-1">
           <h4 className="text-on-surface truncate text-sm font-bold">{user?.name}</h4>
           <p className="text-on-surface-variant mt-0.5 text-xs font-medium">
-            {user?.emailVerified ? 'Tài khoản đã xác thực' : 'Chưa xác thực email'}
+            {user?.emailVerified ? 'Verified account' : 'Email not verified'}
           </p>
           <p className="text-outline mt-0.5 truncate text-xs">
             ID {user?.id} <span className="text-outline mx-1">|</span> {user?.email}
@@ -75,7 +75,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
         <div className="mt-2.5 rounded-xl border border-emerald-200/80 bg-emerald-50/50 p-2.5">
           <div className="flex items-center justify-between pb-1.5">
             <span className="text-label-sm text-on-primary-container font-bold tracking-wider uppercase">
-              Dành cho Nhà tuyển dụng
+              For Recruiters
             </span>
           </div>
           <Link
@@ -84,7 +84,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
             className="bg-primary hover:bg-primary-hover flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-center text-xs font-bold text-white shadow-sm transition"
           >
             <LayoutDashboard className="h-4 w-4" />
-            <span>Vào trang quản trị tuyển dụng</span>
+            <span>Recruiter dashboard</span>
           </Link>
           <div className="mt-2 grid grid-cols-2 gap-1 text-xs">
             <Link
@@ -93,7 +93,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
               className="text-on-surface hover:text-primary flex items-center gap-1.5 rounded-md px-2 py-1.5 font-medium transition hover:bg-white"
             >
               <PlusCircle className="text-primary h-3.5 w-3.5" />
-              <span className="truncate">Đăng tin tuyển dụng</span>
+              <span className="truncate">Post a job</span>
             </Link>
             <Link
               href={ROUTES.RECRUITER_JOBS}
@@ -101,7 +101,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
               className="text-on-surface hover:text-primary flex items-center gap-1.5 rounded-md px-2 py-1.5 font-medium transition hover:bg-white"
             >
               <Briefcase className="text-primary h-3.5 w-3.5" />
-              <span className="truncate">Quản lý tin đăng</span>
+              <span className="truncate">Manage job posts</span>
             </Link>
             <Link
               href={ROUTES.RECRUITER_APPLICATIONS}
@@ -109,7 +109,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
               className="text-on-surface hover:text-primary flex items-center gap-1.5 rounded-md px-2 py-1.5 font-medium transition hover:bg-white"
             >
               <Users className="text-primary h-3.5 w-3.5" />
-              <span className="truncate">Hồ sơ ứng tuyển</span>
+              <span className="truncate">Applications</span>
             </Link>
             <Link
               href={ROUTES.RECRUITER_COMPANY}
@@ -117,7 +117,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
               className="text-on-surface hover:text-primary flex items-center gap-1.5 rounded-md px-2 py-1.5 font-medium transition hover:bg-white"
             >
               <Building2 className="text-primary h-3.5 w-3.5" />
-              <span className="truncate">Hồ sơ công ty</span>
+              <span className="truncate">Company profile</span>
             </Link>
           </div>
         </div>
@@ -134,7 +134,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
               <div className="bg-primary-light text-primary flex h-6 w-6 items-center justify-center rounded-md">
                 <Briefcase className="h-3.5 w-3.5" />
               </div>
-              <span className="text-sm">Quản lý tìm việc</span>
+              <span className="text-sm">Job search</span>
             </div>
             {userAccordions.jobs ? (
               <ChevronUp className="text-outline h-4 w-4" />
@@ -150,28 +150,28 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
-                Việc làm đã lưu
+                Saved jobs
               </Link>
               <Link
                 href="/account"
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
-                Việc làm đã ứng tuyển
+                Applied jobs
               </Link>
               <Link
                 href="/candidate/job-alerts"
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
-                Cài đặt thông báo việc làm (Job Alerts)
+                Job alert settings
               </Link>
               <Link
                 href="/account"
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
-                Việc làm phù hợp với bạn
+                Jobs for you
               </Link>
             </div>
           )}
@@ -187,7 +187,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
               <div className="bg-primary-light text-primary flex h-6 w-6 items-center justify-center rounded-md">
                 <FileText className="h-3.5 w-3.5" />
               </div>
-              <span className="text-sm">Quản lý CV & Hồ sơ</span>
+              <span className="text-sm">CV & Profile</span>
             </div>
             {userAccordions.cv ? (
               <ChevronUp className="text-outline h-4 w-4" />
@@ -203,14 +203,14 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
-                CV của tôi
+                My CVs
               </Link>
               <Link
                 href={ROUTES.CANDIDATE_PROFILE}
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
-                Hồ sơ ứng viên Pro
+                Pro candidate profile
               </Link>
             </div>
           )}
@@ -226,7 +226,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
               <div className="bg-primary-light text-primary flex h-6 w-6 items-center justify-center rounded-md">
                 <ShieldCheck className="h-3.5 w-3.5" />
               </div>
-              <span className="text-sm">Bảo mật tài khoản</span>
+              <span className="text-sm">Account security</span>
             </div>
             {userAccordions.security ? (
               <ChevronUp className="text-outline h-4 w-4" />
@@ -242,21 +242,21 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
-                Cài đặt bảo mật & Phiên đăng nhập
+                Security settings & sessions
               </Link>
               <Link
                 href="/account/password"
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
-                Đổi mật khẩu
+                Change password
               </Link>
               <Link
                 href="/account/two-factor"
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
-                Xác thực 2 bước (2FA)
+                Two-factor authentication
               </Link>
             </div>
           )}
@@ -272,7 +272,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
               <div className="bg-primary-light text-primary flex h-6 w-6 items-center justify-center rounded-md">
                 <Award className="h-3.5 w-3.5" />
               </div>
-              <span className="text-sm">Nâng cấp tài khoản</span>
+              <span className="text-sm">Upgrade account</span>
             </div>
             {userAccordions.upgrade ? (
               <ChevronUp className="text-outline h-4 w-4" />
@@ -288,14 +288,14 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
-                Tài khoản VIP InterVue Pro
+                InterVue Pro VIP account
               </Link>
               <Link
                 href="/gifts"
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
-                Kích hoạt mã quà tặng
+                Redeem a gift code
               </Link>
             </div>
           )}
@@ -313,7 +313,7 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
           className="bg-surface-container-high text-on-surface hover:bg-surface-container-high flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60"
         >
           <LogOut className="text-on-surface-variant h-4 w-4" />
-          <span>Đăng xuất</span>
+          <span>Sign out</span>
         </button>
       </div>
     </div>

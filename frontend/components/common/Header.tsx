@@ -70,12 +70,12 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
             />
             {isRecruiterPortal && (
               <span className="bg-primary-container text-on-primary-container text-label-md rounded-shape-sm px-2 py-1">
-                Nhà tuyển dụng
+                Recruiter
               </span>
             )}
           </Link>
 
-          <nav aria-label="Điều hướng chính" className="hidden items-center gap-1 lg:flex">
+          <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:flex">
             {isRecruiterPortal ? (
               RECRUITER_NAV_LINKS.map((item) => (
                 <Link key={item.href} href={item.href} className={NAV_LINK_CLASS}>
@@ -84,11 +84,11 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
               ))
             ) : (
               <>
-                <NavMenu label="Việc làm" items={CANDIDATE_JOBS_MENU} />
-                <NavMenu label="Tạo CV" items={CANDIDATE_CV_MENU} />
-                <NavMenu label="Cẩm nang nghề nghiệp" items={CANDIDATE_GUIDE_MENU} />
+                <NavMenu label="Jobs" items={CANDIDATE_JOBS_MENU} />
+                <NavMenu label="Create CV" items={CANDIDATE_CV_MENU} />
+                <NavMenu label="Career guides" items={CANDIDATE_GUIDE_MENU} />
                 <a href={`mailto:${SUPPORT_EMAIL}`} className={NAV_LINK_CLASS}>
-                  Trợ giúp
+                  Help
                 </a>
               </>
             )}
@@ -100,7 +100,7 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
             <>
               <Link href={ROUTES.HOME} className={`${NAV_LINK_CLASS} hidden xl:flex`}>
                 <ArrowLeft className="mr-2 h-4 w-4" aria-hidden />
-                Dành cho người tìm việc
+                For job seekers
               </Link>
             </>
           )}
@@ -115,14 +115,14 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
               className={buttonClassName({ size: 'md', className: 'hidden gap-2 sm:inline-flex' })}
             >
               <PlusCircle className="h-4 w-4" aria-hidden />
-              Đăng tin ngay
+              Post a job
             </Link>
           )}
 
           <button
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            aria-label={mobileMenuOpen ? 'Đóng menu' : 'Mở menu'}
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
             className="state-layer text-on-surface flex h-12 w-12 cursor-pointer items-center justify-center rounded-full lg:hidden"
           >

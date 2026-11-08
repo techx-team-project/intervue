@@ -37,9 +37,9 @@ export default function HiringCompaniesSection() {
         <Reveal>
           <SectionHeader
             id="companies-title"
-            eyebrow="Doanh nghiệp tuyển dụng"
-            title="Những công ty đang tìm bạn"
-            description="Doanh nghiệp có tin tuyển dụng mới nhất trên InterVue."
+            eyebrow="Hiring companies"
+            title="Companies looking for you"
+            description="Companies with the latest job posts on InterVue."
           />
         </Reveal>
 
@@ -53,8 +53,8 @@ export default function HiringCompaniesSection() {
           <EmptyState
             tone="error"
             icon={WifiOff}
-            title="Không tải được danh sách công ty"
-            actionLabel="Thử lại"
+            title="Could not load the company list"
+            actionLabel="Try again"
             onAction={() => query.refetch()}
             className="bg-surface"
           />
@@ -75,7 +75,7 @@ export default function HiringCompaniesSection() {
                       />
                     </div>
                     <p className="text-title-md text-on-surface line-clamp-2 font-bold uppercase">{company.name}</p>
-                    <p className="text-body-md text-primary mt-auto font-semibold">{jobCount} việc làm mới</p>
+                    <p className="text-body-md text-primary mt-auto font-semibold">{jobCount} new jobs</p>
                   </Link>
                 </li>
               ))}

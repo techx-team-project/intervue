@@ -37,7 +37,7 @@ export default function JobDeck() {
   if (query.isError || jobs.length === 0) {
     return (
       <p className="text-body-lg rounded-3xl border border-white/15 p-10 text-center text-white/70">
-        {query.isError ? 'Chưa tải được danh sách việc làm.' : 'Chưa có tin tuyển dụng mới.'}
+        {query.isError ? 'Could not load jobs.' : 'No new job posts yet.'}
       </p>
     );
   }
@@ -46,7 +46,7 @@ export default function JobDeck() {
     <div
       role="group"
       aria-roledescription="carousel"
-      aria-label="Việc làm mới đăng"
+      aria-label="Newly posted jobs"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocusCapture={() => setIsPaused(true)}
@@ -72,7 +72,7 @@ export default function JobDeck() {
                 <CompanyLogo name={job.company.name} src={job.company.logoUrl} className="h-12 w-12 rounded-xl" />
                 <p className="text-body-sm text-on-surface-variant line-clamp-1 flex-1 uppercase">{job.company.name}</p>
                 <span className="bg-primary-container text-on-primary-container text-label-md shrink-0 rounded-full px-3 py-1 font-semibold">
-                  Mới đăng
+                  New
                 </span>
               </div>
 
@@ -91,11 +91,11 @@ export default function JobDeck() {
 
               <div className="border-outline-variant mt-auto flex items-end justify-between border-t pt-5">
                 <div>
-                  <p className="text-label-md text-on-surface-variant">Mức lương</p>
+                  <p className="text-label-md text-on-surface-variant">Salary</p>
                   <p className="font-display text-headline-sm text-primary font-bold">{formatSalary(job.salary)}</p>
                 </div>
                 <Link href={`/jobs/${job.id}`} tabIndex={isTop ? 0 : -1} className={buttonClassName({ size: 'xl' })}>
-                  Xem chi tiết
+                  View details
                 </Link>
               </div>
             </article>
@@ -108,7 +108,7 @@ export default function JobDeck() {
           <button
             key={job.id}
             type="button"
-            aria-label={`Xem việc làm ${jobIndex + 1}`}
+            aria-label={`View job ${jobIndex + 1}`}
             aria-current={jobIndex === index}
             onClick={() => setIndex(jobIndex)}
             className={cn(

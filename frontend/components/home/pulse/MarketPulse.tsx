@@ -10,20 +10,20 @@ const STATIC_ITEMS: PulseItem[] = [
   {
     id: 'verified',
     icon: ShieldCheck,
-    title: 'Nhà tuyển dụng xác thực',
-    description: 'Danh tính doanh nghiệp được kiểm tra trước khi đăng tin.',
+    title: 'Verified recruiters',
+    description: 'Company identity is checked before posting.',
   },
   {
     id: 'ai',
     icon: Sparkles,
-    title: 'AI hỗ trợ ứng viên',
-    description: 'Nhận xét CV, gợi ý việc làm và luyện phỏng vấn.',
+    title: 'AI for candidates',
+    description: 'CV feedback, job suggestions and interview practice.',
   },
   {
     id: 'human',
     icon: UserCheck,
-    title: 'Con người quyết định',
-    description: 'AI không tự động nhận hay từ chối hồ sơ của bạn.',
+    title: 'Humans decide',
+    description: 'AI never automatically accepts or rejects your application.',
   },
 ];
 
@@ -35,7 +35,7 @@ export default function MarketPulse() {
   const total = query.data?.totalItems;
 
   return (
-    <section aria-label="Điểm nổi bật của InterVue" className="container-page relative z-10 -mt-14">
+    <section aria-label="InterVue highlights" className="container-page relative z-10 -mt-14">
       <ul className="bg-surface shadow-card expanded:grid-cols-4 medium:grid-cols-2 divide-outline-variant medium:divide-y-0 grid grid-cols-1 divide-y rounded-3xl p-3">
         <li className="flex items-center gap-4 p-5">
           <span className={ICON_TILE_CLASS}>
@@ -46,10 +46,10 @@ export default function MarketPulse() {
               <Skeleton className="h-8 w-20" />
             ) : (
               <p className="font-display text-headline-sm text-on-surface font-bold">
-                {total === undefined ? '—' : total.toLocaleString('vi-VN')}
+                {total === undefined ? '—' : total.toLocaleString('en-US')}
               </p>
             )}
-            <p className="text-body-md text-on-surface-variant">việc làm IT đang tuyển</p>
+            <p className="text-body-md text-on-surface-variant">IT jobs open now</p>
           </div>
         </li>
 

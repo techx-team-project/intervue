@@ -12,7 +12,7 @@ export default function RecruiterEntryButton() {
       rel="noopener noreferrer"
       className={buttonClassName({ variant: 'neutral', size: 'xl', className: 'hidden md:inline-flex' })}
     >
-      Dành cho nhà tuyển dụng
+      For recruiters
     </Link>
   );
 }

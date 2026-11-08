@@ -14,10 +14,10 @@ export const POPULAR_KEYWORDS = [
 ];
 
 export const FEATURED_CITY_FILTERS = [
-  { id: '', label: 'Mới nhất' },
-  { id: 'Hà Nội', label: 'Hà Nội' },
-  { id: 'Hồ Chí Minh', label: 'TP. Hồ Chí Minh' },
-  { id: 'Đà Nẵng', label: 'Đà Nẵng' },
+  { id: '', label: 'Latest' },
+  { id: 'Hà Nội', label: 'Hanoi' },
+  { id: 'Hồ Chí Minh', label: 'Ho Chi Minh City' },
+  { id: 'Đà Nẵng', label: 'Da Nang' },
 ];
 
 export const TECH_STACK = [

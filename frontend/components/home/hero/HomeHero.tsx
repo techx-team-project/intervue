@@ -21,18 +21,18 @@ export default function HomeHero() {
         <div>
           <p className="text-label-lg text-primary-bright flex items-center gap-3 font-bold tracking-widest uppercase">
             <span aria-hidden className="bg-primary-bright h-px w-10" />
-            Việc làm IT từ công ty đã xác thực
+            IT jobs from verified companies
           </p>
 
           <h1 id="home-hero-title" className="font-display text-display-lg expanded:text-display-xl mt-6 text-white">
-            Tìm việc <RotatingWord />
+            Find <RotatingWord /> jobs
             <br />
-            bạn thực sự muốn làm
+            you actually want to do
           </h1>
 
           <p className="text-title-lg mt-6 max-w-xl font-normal text-white/75">
-            Bạn có thể nhờ AI xem lại CV và luyện phỏng vấn trước khi ứng tuyển. Còn người quyết định tuyển hay không
-            vẫn là nhà tuyển dụng.
+            You can ask AI to review your CV and practice interviews before applying. The decision to hire always stays
+            with the recruiter.
           </p>
 
           <div className="mt-10 max-w-3xl">
@@ -40,7 +40,7 @@ export default function HomeHero() {
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-2">
-            <span className="text-label-lg text-white/60">Tìm nhiều:</span>
+            <span className="text-label-lg text-white/60">Popular:</span>
             {POPULAR_KEYWORDS.slice(0, HERO_KEYWORD_COUNT).map((keyword) => (
               <Link
                 key={keyword}

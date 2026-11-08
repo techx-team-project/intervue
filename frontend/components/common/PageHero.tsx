@@ -39,7 +39,7 @@ export default function PageHero({
       <div className={cn('container-page relative', isCentered && 'text-center')}>
         {crumbs && crumbs.length > 0 && (
           <nav
-            aria-label="Đường dẫn"
+            aria-label="Breadcrumb"
             className={cn('text-body-sm mb-6 flex items-center gap-1.5 text-white/60', isCentered && 'justify-center')}
           >
             {crumbs.map((crumb, index) => (

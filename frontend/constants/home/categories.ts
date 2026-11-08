@@ -27,6 +27,6 @@ export const HOME_CATEGORIES: HomeCategory[] = [
   { id: 'ui-ux', label: 'UI / UX', keyword: 'UI/UX', icon: Palette },
   { id: 'ba', label: 'Business Analyst', keyword: 'Business Analyst', icon: ClipboardList },
   { id: 'pm', label: 'Project Manager', keyword: 'Project Manager', icon: Users },
-  { id: 'security', label: 'An toàn thông tin', keyword: 'Security', icon: Lock },
+  { id: 'security', label: 'Information security', keyword: 'Security', icon: Lock },
   { id: 'fresher', label: 'Intern / Fresher', keyword: 'Fresher', icon: GraduationCap },
 ];

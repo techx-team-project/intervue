@@ -11,9 +11,9 @@ export default function TopCategoriesSection() {
         <Reveal>
           <SectionHeader
             id="categories-title"
-            eyebrow="Khám phá theo lĩnh vực"
-            title="Bạn muốn theo đuổi hướng công nghệ nào?"
-            description="Chọn nhóm ngành để xem ngay những vị trí đang tuyển phù hợp."
+            eyebrow="Explore by field"
+            title="Which technology path do you want to follow?"
+            description="Pick a category to see matching open positions right away."
             align="center"
           />
         </Reveal>

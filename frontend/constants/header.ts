@@ -5,25 +5,25 @@ export const SUPPORT_PHONE = '0812.665.001';
 export const SUPPORT_PHONE_HREF = 'tel:0812665001';
 
 export const CANDIDATE_JOBS_MENU = [
-  { href: ROUTES.JOBS, label: 'Tìm việc làm' },
-  { href: ROUTES.CANDIDATE_JOB_ALERTS, label: 'Thông báo việc làm' },
+  { href: ROUTES.JOBS, label: 'Find jobs' },
+  { href: ROUTES.CANDIDATE_JOB_ALERTS, label: 'Job alerts' },
 ];
 
 export const CANDIDATE_CV_MENU = [
-  { href: '/cv-templates', label: 'Mẫu CV' },
-  { href: ROUTES.CANDIDATE_CVS, label: 'Quản lý CV' },
-  { href: ROUTES.CANDIDATE_PROFILE, label: 'Hồ sơ của tôi' },
+  { href: '/cv-templates', label: 'CV templates' },
+  { href: ROUTES.CANDIDATE_CVS, label: 'Manage CVs' },
+  { href: ROUTES.CANDIDATE_PROFILE, label: 'My profile' },
 ];
 
 export const CANDIDATE_GUIDE_MENU = [
-  { href: '/blog', label: 'Cẩm nang nghề nghiệp' },
-  { href: '/career-orientation', label: 'Định hướng nghề nghiệp' },
+  { href: '/blog', label: 'Career guides' },
+  { href: '/career-orientation', label: 'Career orientation' },
 ];
 
 export const RECRUITER_NAV_LINKS = [
-  { href: '/recruiter#features', label: 'Giải pháp AI' },
-  { href: '/recruiter#job-posting', label: 'Đăng tin tuyển dụng' },
-  { href: '/recruiter#candidate-sourcing', label: 'Tìm kiếm hồ sơ' },
-  { href: '/recruiter#pricing', label: 'Bảng giá dịch vụ' },
-  { href: '/recruiter#testimonials', label: 'Khách hàng' },
+  { href: '/recruiter#features', label: 'AI solutions' },
+  { href: '/recruiter#job-posting', label: 'Post a job' },
+  { href: '/recruiter#candidate-sourcing', label: 'Find candidates' },
+  { href: '/recruiter#pricing', label: 'Pricing' },
+  { href: '/recruiter#testimonials', label: 'Customers' },
 ];

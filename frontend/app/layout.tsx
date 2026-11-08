@@ -18,9 +18,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'InterVue - CV xịn việc làm chất - Tạo CV & Luyện phỏng vấn AI',
+  title: 'InterVue - IT Jobs, CV Builder & AI Interview Practice',
   description:
-    'InterVue - Hệ sinh thái công nghệ tuyển dụng & phỏng vấn AI thông minh tại Việt Nam. Tạo CV chuẩn ATS, luyện phỏng vấn 1:1 cùng AI và kết nối cơ hội việc làm mơ ước.',
+    'InterVue - An AI-assisted IT recruitment platform. Build ATS-ready CVs, practice interviews with AI and find your next job.',
   icons: {
     icon: '/intervue-logo.png',
   },
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="vi" className={`${inter.variable} ${beVietnamPro.variable}`}>
+    <html lang="en" className={`${inter.variable} ${beVietnamPro.variable}`}>
       <body className="text-navy bg-surface-container-low min-h-screen antialiased">
         <AppProviders>
           {children}

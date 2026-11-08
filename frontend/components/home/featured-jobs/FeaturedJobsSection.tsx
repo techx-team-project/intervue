@@ -43,24 +43,24 @@ export default function FeaturedJobsSection() {
     <section id="feature-jobs" aria-labelledby="featured-jobs-title" className="container-page py-24">
       <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div className="space-y-3">
-          <p className="text-label-lg text-primary font-bold tracking-widest uppercase">Cơ hội mới nhất</p>
+          <p className="text-label-lg text-primary font-bold tracking-widest uppercase">Latest opportunities</p>
           <h2 id="featured-jobs-title" className="font-display text-display-md text-on-surface">
-            Việc làm IT nổi bật
+            Featured IT jobs
           </h2>
           {total !== undefined && (
             <p className="text-title-md text-on-surface-variant font-normal">
-              {total.toLocaleString('vi-VN')} vị trí đang chờ ứng viên
+              {total.toLocaleString('en-US')} positions waiting for candidates
             </p>
           )}
         </div>
         <div className="flex items-center gap-4">
           <Link href={viewAllHref} className="text-title-md text-primary font-semibold hover:underline">
-            Xem tất cả
+            View all
           </Link>
           <div className="flex gap-2">
             <button
               type="button"
-              aria-label="Trang trước"
+              aria-label="Previous page"
               disabled={page === 0}
               onClick={() => setPage((prev) => prev - 1)}
               className={PAGER_BUTTON_CLASS}
@@ -69,7 +69,7 @@ export default function FeaturedJobsSection() {
             </button>
             <button
               type="button"
-              aria-label="Trang sau"
+              aria-label="Next page"
               disabled={page + 1 >= totalPages}
               onClick={() => setPage((prev) => prev + 1)}
               className={PAGER_BUTTON_CLASS}
@@ -83,14 +83,14 @@ export default function FeaturedJobsSection() {
       <div className="mb-5 flex flex-wrap items-center gap-3">
         <div className="bg-surface border-outline-variant relative flex h-12 w-full items-center gap-2 rounded-lg border px-4 sm:w-86">
           <ListFilter className="text-on-surface-variant h-4 w-4 shrink-0" aria-hidden />
-          <span className="text-body-lg text-on-surface-variant shrink-0">Lọc theo:</span>
+          <span className="text-body-lg text-on-surface-variant shrink-0">Filter by:</span>
           <select
-            aria-label="Lọc theo địa điểm"
+            aria-label="Filter by location"
             value={city}
             onChange={(event) => changeCity(event.target.value)}
             className="text-body-lg text-on-surface h-full min-w-0 flex-1 cursor-pointer appearance-none bg-transparent pr-6 outline-none"
           >
-            <option value="">Địa điểm</option>
+            <option value="">Location</option>
             {SEARCH_CITIES.map((item) => (
               <option key={item} value={item}>
                 {item}
@@ -100,7 +100,7 @@ export default function FeaturedJobsSection() {
           <ChevronDown className="text-on-surface pointer-events-none absolute right-4 h-4 w-4" aria-hidden />
         </div>
 
-        <div role="group" aria-label="Lọc nhanh theo địa điểm" className="flex flex-wrap gap-2">
+        <div role="group" aria-label="Quick filter by location" className="flex flex-wrap gap-2">
           {FEATURED_CITY_FILTERS.map((item) => (
             <button
               key={item.label}
@@ -131,18 +131,18 @@ export default function FeaturedJobsSection() {
           <EmptyState
             tone="error"
             icon={WifiOff}
-            title="Không tải được việc làm"
-            description="Vui lòng kiểm tra kết nối và thử lại."
-            actionLabel="Thử lại"
+            title="Could not load jobs"
+            description="Please check your connection and try again."
+            actionLabel="Try again"
             onAction={() => query.refetch()}
             className="bg-surface"
           />
         ) : jobs.length === 0 ? (
           <EmptyState
             icon={SearchX}
-            title="Chưa có việc làm phù hợp"
-            description="Hãy thử chọn địa điểm khác hoặc xem tất cả việc làm."
-            actionLabel="Xem tất cả địa điểm"
+            title="No matching jobs yet"
+            description="Try another location or view all jobs."
+            actionLabel="All locations"
             onAction={() => changeCity('')}
             className="bg-surface"
           />

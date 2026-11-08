@@ -51,13 +51,13 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
     <>
       <div className="fixed inset-0 top-22.5 z-40 bg-black/40 lg:hidden" onClick={onClose} aria-hidden="true" />
       <nav
-        aria-label="Điều hướng di động"
+        aria-label="Mobile navigation"
         className="bg-surface border-outline-variant relative z-50 space-y-1 border-t px-4 py-4 lg:hidden"
       >
         {isRecruiter && (
           <Link href={ROUTES.HOME} onClick={onClose} className={ITEM_CLASS}>
             <ArrowLeft className="mr-2 h-4 w-4" aria-hidden />
-            Dành cho người tìm việc
+            For job seekers
           </Link>
         )}
 
@@ -75,7 +75,7 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
         ) : (
           <>
             <a href={`mailto:${SUPPORT_EMAIL}`} className={ITEM_CLASS}>
-              Trợ giúp
+              Help
             </a>
             <Link
               href={ROUTES.RECRUITER_LANDING}
@@ -84,7 +84,7 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
               onClick={onClose}
               className={ITEM_CLASS}
             >
-              Dành cho nhà tuyển dụng
+              For recruiters
             </Link>
           </>
         )}
@@ -98,7 +98,7 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
                   onClick={onClose}
                   className={buttonClassName({ variant: 'outline' })}
                 >
-                  {isRecruiter ? `Vào trang quản trị (${user.name})` : user.name}
+                  {isRecruiter ? `Open dashboard (${user.name})` : user.name}
                 </Link>
                 <button
                   type="button"
@@ -109,7 +109,7 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
                   }}
                   className={buttonClassName({ variant: 'secondary' })}
                 >
-                  Đăng xuất
+                  Sign out
                 </button>
               </>
             ) : (
@@ -119,14 +119,14 @@ export function MobileNavDrawer({ isOpen, onClose, portal = 'candidate' }: Mobil
                   onClick={onClose}
                   className={buttonClassName({ variant: 'outline' })}
                 >
-                  Đăng ký
+                  Sign up
                 </Link>
                 <Link
                   href={isRecruiter ? ROUTES.RECRUITER_LOGIN : ROUTES.LOGIN}
                   onClick={onClose}
                   className={buttonClassName()}
                 >
-                  Đăng nhập
+                  Sign in
                 </Link>
               </>
             )}

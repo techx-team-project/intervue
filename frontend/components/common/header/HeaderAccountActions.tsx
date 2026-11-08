@@ -72,10 +72,10 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
           href={isRecruiter ? ROUTES.RECRUITER_REGISTER : ROUTES.REGISTER}
           className={buttonClassName({ variant: 'outline', size: 'xl' })}
         >
-          Đăng ký
+          Sign up
         </Link>
         <Link href={isRecruiter ? ROUTES.RECRUITER_LOGIN : ROUTES.LOGIN} className={buttonClassName({ size: 'xl' })}>
-          Đăng nhập
+          Sign in
         </Link>
       </div>
     );
@@ -86,7 +86,7 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
       <div className="relative">
         <button
           type="button"
-          aria-label="Thông báo"
+          aria-label="Notifications"
           aria-expanded={isNotificationOpen}
           onClick={() => setIsNotificationOpen((prev) => !prev)}
           className="state-layer text-on-surface-variant relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
@@ -116,7 +116,7 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
         <button
           type="button"
           onClick={() => setIsUserMenuOpen((prev) => !prev)}
-          aria-label="Tài khoản"
+          aria-label="Account"
           aria-haspopup="menu"
           aria-expanded={isUserMenuOpen}
           className="state-layer flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"

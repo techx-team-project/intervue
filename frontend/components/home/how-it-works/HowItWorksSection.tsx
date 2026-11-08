@@ -8,20 +8,20 @@ const STEPS: Step[] = [
   {
     id: '01',
     icon: FileText,
-    title: 'Tạo hồ sơ nổi bật',
-    description: 'Tải CV lên hoặc chọn mẫu chuẩn ATS. Hồ sơ luôn nằm trong tầm kiểm soát của bạn.',
+    title: 'Build a standout profile',
+    description: 'Upload your CV or pick an ATS-ready template. Your profile stays under your control.',
   },
   {
     id: '02',
     icon: Sparkles,
-    title: 'Nhận gợi ý từ AI',
-    description: 'AI nhận xét CV, gợi ý việc làm phù hợp và giúp bạn luyện phỏng vấn trước khi ứng tuyển.',
+    title: 'Get suggestions from AI',
+    description: 'AI reviews your CV, suggests matching jobs and helps you practice interviews before you apply.',
   },
   {
     id: '03',
     icon: Send,
-    title: 'Ứng tuyển và trao đổi',
-    description: 'Gửi hồ sơ tới nhà tuyển dụng đã xác thực và theo dõi trạng thái từng bước.',
+    title: 'Apply and follow up',
+    description: 'Send your application to a verified recruiter and track its status at every step.',
   },
 ];
 
@@ -32,9 +32,9 @@ export default function HowItWorksSection() {
         <Reveal>
           <SectionHeader
             id="how-title"
-            eyebrow="Cách InterVue hoạt động"
-            title="Ba bước để có công việc phù hợp"
-            description="Quy trình rõ ràng, minh bạch và luôn có con người đứng sau mọi quyết định."
+            eyebrow="How InterVue works"
+            title="Three steps to the right job"
+            description="A clear, transparent process with a human behind every decision."
             align="center"
           />
         </Reveal>

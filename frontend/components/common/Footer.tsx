@@ -6,26 +6,26 @@ import Link from 'next/link';
 
 const FOOTER_COLUMNS = [
   {
-    title: 'Ứng viên',
+    title: 'Candidates',
     links: [
-      { href: ROUTES.JOBS, label: 'Việc làm IT' },
-      { href: '/cv-templates', label: 'Mẫu CV' },
-      { href: ROUTES.CANDIDATE_JOB_ALERTS, label: 'Thông báo việc làm' },
-      { href: '/career-orientation', label: 'Định hướng nghề nghiệp' },
-      { href: '/blog', label: 'Cẩm nang nghề nghiệp' },
+      { href: ROUTES.JOBS, label: 'IT jobs' },
+      { href: '/cv-templates', label: 'CV templates' },
+      { href: ROUTES.CANDIDATE_JOB_ALERTS, label: 'Job alerts' },
+      { href: '/career-orientation', label: 'Career orientation' },
+      { href: '/blog', label: 'Career guides' },
     ],
   },
   {
-    title: 'Nhà tuyển dụng',
+    title: 'Recruiters',
     links: [
-      { href: ROUTES.RECRUITER_LANDING, label: 'Đăng tuyển và tìm hồ sơ' },
-      { href: ROUTES.RECRUITER_LOGIN, label: 'Đăng nhập nhà tuyển dụng' },
-      { href: ROUTES.RECRUITER_REGISTER, label: 'Đăng ký nhà tuyển dụng' },
+      { href: ROUTES.RECRUITER_LANDING, label: 'Post jobs and find CVs' },
+      { href: ROUTES.RECRUITER_LOGIN, label: 'Recruiter sign in' },
+      { href: ROUTES.RECRUITER_REGISTER, label: 'Recruiter sign up' },
     ],
   },
   {
-    title: 'Hỗ trợ và pháp lý',
-    links: [{ href: '/data-processing-agreement', label: 'Thỏa thuận xử lý dữ liệu' }],
+    title: 'Support and legal',
+    links: [{ href: '/data-processing-agreement', label: 'Data processing agreement' }],
   },
 ];
 
@@ -45,7 +45,7 @@ export default function Footer() {
             />
           </Link>
           <p className="text-body-md text-on-surface-variant max-w-sm">
-            Nền tảng tuyển dụng IT có AI hỗ trợ. AI chỉ gợi ý, nhà tuyển dụng là người quyết định.
+            An AI-assisted IT recruitment platform. AI only suggests, recruiters decide.
           </p>
           <ul className="text-body-md text-on-surface space-y-2">
             <li>
@@ -84,7 +84,7 @@ export default function Footer() {
 
       <div className="border-outline-variant border-t">
         <p className="container-page text-body-sm text-on-surface-variant py-4">
-          © {new Date().getFullYear()} InterVue. Bảo lưu mọi quyền.
+          © {new Date().getFullYear()} InterVue. All rights reserved.
         </p>
       </div>
     </footer>

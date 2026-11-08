@@ -78,7 +78,7 @@ export default function SearchBar() {
           <input
             type="text"
             role="combobox"
-            aria-label="Vị trí tuyển dụng, tên công ty"
+            aria-label="Job title or company name"
             aria-expanded={showList}
             aria-controls={listboxId}
             aria-activedescendant={showList && activeIndex >= 0 ? `${listboxId}-${activeIndex}` : undefined}
@@ -93,13 +93,13 @@ export default function SearchBar() {
             }}
             onFocus={() => setIsOpen(true)}
             onKeyDown={handleKeyDown}
-            placeholder="Vị trí tuyển dụng, tên công ty"
+            placeholder="Job title or company name"
             className="text-body-lg text-on-surface placeholder:text-on-surface-variant min-w-0 flex-1 bg-transparent outline-none"
           />
           {keyword && (
             <button
               type="button"
-              aria-label="Xóa từ khóa"
+              aria-label="Clear keyword"
               onClick={() => setKeyword('')}
               className="state-layer text-on-surface-variant flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full"
             >
@@ -112,7 +112,7 @@ export default function SearchBar() {
           <ul
             id={listboxId}
             role="listbox"
-            aria-label={needle ? 'Gợi ý từ khóa' : 'Tìm kiếm gần đây'}
+            aria-label={needle ? 'Keyword suggestions' : 'Recent searches'}
             className="animate-fade-in-up bg-surface border-outline-variant shadow-elevation-2 absolute top-full right-0 left-0 z-20 mt-3 overflow-hidden rounded-2xl border py-2"
           >
             {suggestions.map((item, index) => (
@@ -137,12 +137,12 @@ export default function SearchBar() {
       <div className="medium:w-64 medium:border-outline-variant medium:border-l relative flex h-14 items-center gap-3 px-5">
         <MapPin className="text-on-surface h-5 w-5 shrink-0" aria-hidden />
         <select
-          aria-label="Địa điểm"
+          aria-label="Location"
           value={city}
           onChange={(event) => setCity(event.target.value)}
           className="text-body-lg text-on-surface h-full w-full cursor-pointer appearance-none bg-transparent pr-8 outline-none"
         >
-          <option value="">Địa điểm</option>
+          <option value="">Location</option>
           {SEARCH_CITIES.map((item) => (
             <option key={item} value={item}>
               {item}
@@ -153,7 +153,7 @@ export default function SearchBar() {
       </div>
 
       <Button type="submit" size="2xl" isLoading={isPending} leftIcon={<Search className="h-5 w-5" aria-hidden />}>
-        Tìm kiếm
+        Search
       </Button>
     </form>
   );
