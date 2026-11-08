@@ -48,7 +48,7 @@ export function ChatPanel({
   return (
     <div
       role="dialog"
-      aria-label="Khung chat hỗ trợ InterVue"
+      aria-label="InterVue support chat"
       aria-hidden={!isOpen}
       className={`fixed right-3 bottom-[125px] left-3 z-50 flex h-[540px] max-h-[calc(100dvh-145px)] w-auto origin-bottom-right flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white/95 shadow-2xl shadow-emerald-950/20 backdrop-blur-md transition-all duration-300 ease-out sm:right-6 sm:bottom-[135px] sm:left-auto sm:w-[410px] ${
         isOpen
@@ -63,7 +63,7 @@ export function ChatPanel({
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-sm font-bold tracking-wide">Trợ lý InterVue AI</span>
+              <span className="text-sm font-bold tracking-wide">InterVue AI Assistant</span>
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@ export function ChatPanel({
           <button
             type="button"
             onClick={onResetSession}
-            title="Bắt đầu phiên hội thoại mới"
+            title="Start a new conversation"
             className="cursor-pointer rounded-xl p-2 text-emerald-100/80 transition-colors hover:bg-white/10 hover:text-white"
           >
             <RotateCcw className="h-4 w-4" />
@@ -80,7 +80,7 @@ export function ChatPanel({
           <button
             type="button"
             onClick={onClose}
-            title="Đóng khung chat"
+            title="Close chat"
             className="cursor-pointer rounded-xl p-2 text-emerald-100/80 transition-colors hover:bg-white/10 hover:text-white"
           >
             <X className="h-4 w-4" />
@@ -104,7 +104,7 @@ export function ChatPanel({
               <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
                 <Bot className="h-3.5 w-3.5 animate-pulse" />
               </div>
-              <span className="text-xs text-slate-500">InterVue Bot đang soạn câu trả lời</span>
+              <span className="text-xs text-slate-500">InterVue Bot is writing a reply</span>
               <div className="flex items-center gap-1">
                 <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-emerald-500 [animation-delay:-0.3s]" />
                 <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-emerald-500 [animation-delay:-0.15s]" />
@@ -121,7 +121,7 @@ export function ChatPanel({
               <div className="flex-1 text-xs">
                 <p className="font-semibold">{error.message}</p>
                 {typeof error.retryAfter === 'number' && error.retryAfter > 0 && (
-                  <p className="mt-1 text-[11px] text-rose-600">Thời gian làm mới sau: {error.retryAfter} giây</p>
+                  <p className="mt-1 text-[11px] text-rose-600">Try again in {error.retryAfter} seconds</p>
                 )}
               </div>
             </div>

@@ -53,7 +53,7 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
   const [careerLevel, setCareerLevel] = useState<string>(initialData?.careerLevel || '');
   const [workMode, setWorkMode] = useState<string>(initialData?.workMode || '');
   const [salaryMin, setSalaryMin] = useState<string>(
-    initialData?.salaryMin ? Number(initialData.salaryMin).toLocaleString('vi-VN') : '',
+    initialData?.salaryMin ? Number(initialData.salaryMin).toLocaleString('en-US') : '',
   );
   const [frequency, setFrequency] = useState<AlertFrequency>(initialData?.frequency || 'DAILY');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -130,29 +130,29 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
   };
 
   return (
-    <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl transition-all sm:p-7">
+    <div className="shadow-elevation-2 relative w-full max-w-lg rounded-2xl bg-white p-6 transition-all sm:p-7">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+      <div className="border-outline-variant flex items-center justify-between border-b pb-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+          <div className="bg-primary-light text-primary flex h-10 w-10 items-center justify-center rounded-xl">
             <Bell className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-900">{isEditing ? 'Edit Job Alert' : 'Create Job Alert'}</h3>
-            <p className="text-xs text-slate-500">Receive fresh matching jobs directly to your inbox.</p>
+            <h3 className="text-on-surface text-lg font-bold">{isEditing ? 'Edit Job Alert' : 'Create Job Alert'}</h3>
+            <p className="text-on-surface-variant text-xs">Receive fresh matching jobs directly to your inbox.</p>
           </div>
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+          className="text-outline hover:bg-surface-container-high hover:text-on-surface-variant rounded-lg p-1.5 transition"
         >
           <X className="h-5 w-5" />
         </button>
       </div>
 
       {error && (
-        <div className="mt-4 flex items-center gap-2 rounded-xl bg-red-50 p-3 text-xs text-red-700">
+        <div className="bg-error/10 text-error mt-4 flex items-center gap-2 rounded-xl p-3 text-xs">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -161,8 +161,8 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
       <form onSubmit={handleSubmit} className="mt-5 space-y-4">
         {/* Alert Name */}
         <div>
-          <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
-            Alert Name <span className="text-red-500">*</span>
+          <label className="text-on-surface block text-xs font-bold tracking-wider uppercase">
+            Alert Name <span className="text-error">*</span>
           </label>
           <input
             type="text"
@@ -170,28 +170,28 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Senior Frontend React in HCMC"
-            className="mt-1.5 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+            className="border-outline-variant text-on-surface focus:border-primary mt-1.5 w-full rounded-xl border px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
           />
         </div>
 
         {/* Keyword & Location row */}
         <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
           <div>
-            <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">Keywords / Skill</label>
+            <label className="text-on-surface block text-xs font-bold tracking-wider uppercase">Keywords / Skill</label>
             <input
               type="text"
               value={keyword}
               onChange={(e) => handleKeywordChange(e.target.value)}
               placeholder="e.g. React, Java, Golang"
-              className="mt-1.5 w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+              className="border-outline-variant text-on-surface focus:border-primary mt-1.5 w-full rounded-xl border px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
             />
           </div>
           <div>
-            <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">Location</label>
+            <label className="text-on-surface block text-xs font-bold tracking-wider uppercase">Location</label>
             <select
               value={city}
               onChange={(e) => handleCityChange(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+              className="border-outline-variant text-on-surface focus:border-primary mt-1.5 w-full rounded-xl border bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
             >
               {VIETNAM_CITIES.map((c) => (
                 <option key={c} value={c}>
@@ -205,11 +205,11 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
         {/* Level & Work Mode row */}
         <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
           <div>
-            <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">Experience Level</label>
+            <label className="text-on-surface block text-xs font-bold tracking-wider uppercase">Experience Level</label>
             <select
               value={careerLevel}
               onChange={(e) => setCareerLevel(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+              className="border-outline-variant text-on-surface focus:border-primary mt-1.5 w-full rounded-xl border bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
             >
               {CAREER_LEVELS.map((lvl) => (
                 <option key={lvl.value} value={lvl.value}>
@@ -219,11 +219,11 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
             </select>
           </div>
           <div>
-            <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">Work Mode</label>
+            <label className="text-on-surface block text-xs font-bold tracking-wider uppercase">Work Mode</label>
             <select
               value={workMode}
               onChange={(e) => setWorkMode(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+              className="border-outline-variant text-on-surface focus:border-primary mt-1.5 w-full rounded-xl border bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
             >
               {WORK_MODES.map((mode) => (
                 <option key={mode.value} value={mode.value}>
@@ -236,7 +236,7 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
 
         {/* Expected Min Salary */}
         <div>
-          <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
+          <label className="text-on-surface block text-xs font-bold tracking-wider uppercase">
             Minimum Salary (VND / month)
           </label>
           <input
@@ -244,24 +244,24 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
             value={salaryMin}
             onChange={(e) => {
               const numericOnly = e.target.value.replace(/\D/g, '');
-              setSalaryMin(numericOnly ? Number(numericOnly).toLocaleString('vi-VN') : '');
+              setSalaryMin(numericOnly ? Number(numericOnly).toLocaleString('en-US') : '');
             }}
             placeholder="e.g. 25,000,000"
-            className="mt-1.5 w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+            className="border-outline-variant text-on-surface focus:border-primary mt-1.5 w-full rounded-xl border px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
           />
         </div>
 
         {/* Frequency selector */}
         <div>
-          <label className="mb-2 block text-xs font-bold tracking-wider text-slate-700 uppercase">
+          <label className="text-on-surface mb-2 block text-xs font-bold tracking-wider uppercase">
             Delivery Frequency
           </label>
           <div className="grid grid-cols-2 gap-3">
             <label
               className={`relative flex cursor-pointer flex-col rounded-xl border p-3 text-left transition ${
                 frequency === 'DAILY'
-                  ? 'border-emerald-500 bg-emerald-50/40 text-emerald-950'
-                  : 'border-slate-200 hover:border-slate-300'
+                  ? 'border-primary bg-emerald-50/40 text-emerald-950'
+                  : 'border-outline-variant hover:border-outline'
               }`}
             >
               <input
@@ -274,10 +274,10 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
               />
               <div className="flex items-center justify-between">
                 <span className="text-sm font-bold">Daily Digest</span>
-                {frequency === 'DAILY' && <Check className="h-4 w-4 text-emerald-600" />}
+                {frequency === 'DAILY' && <Check className="text-primary h-4 w-4" />}
               </div>
-              <span className="mt-1 text-xs text-slate-500">Every morning at 08:00 AM</span>
-              <span className="mt-1.5 inline-block self-start rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+              <span className="text-on-surface-variant mt-1 text-xs">Every morning at 08:00 AM</span>
+              <span className="bg-primary-container text-label-sm text-primary mt-1.5 inline-block self-start rounded-full px-2 py-0.5 font-bold">
                 Recommended
               </span>
             </label>
@@ -285,8 +285,8 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
             <label
               className={`relative flex cursor-pointer flex-col rounded-xl border p-3 text-left transition ${
                 frequency === 'WEEKLY'
-                  ? 'border-emerald-500 bg-emerald-50/40 text-emerald-950'
-                  : 'border-slate-200 hover:border-slate-300'
+                  ? 'border-primary bg-emerald-50/40 text-emerald-950'
+                  : 'border-outline-variant hover:border-outline'
               }`}
             >
               <input
@@ -299,27 +299,27 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
               />
               <div className="flex items-center justify-between">
                 <span className="text-sm font-bold">Weekly Digest</span>
-                {frequency === 'WEEKLY' && <Check className="h-4 w-4 text-emerald-600" />}
+                {frequency === 'WEEKLY' && <Check className="text-primary h-4 w-4" />}
               </div>
-              <span className="mt-1 text-xs text-slate-500">Every Monday at 08:00 AM</span>
+              <span className="text-on-surface-variant mt-1 text-xs">Every Monday at 08:00 AM</span>
             </label>
           </div>
         </div>
 
         {/* Footer buttons */}
-        <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-3">
+        <div className="border-outline-variant flex items-center justify-end gap-3 border-t pt-3">
           <button
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
+            className="text-on-surface-variant hover:bg-surface-container-high rounded-xl px-4 py-2 text-sm font-semibold transition"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700 disabled:opacity-60"
+            className="bg-primary hover:bg-primary-hover inline-flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-bold text-white shadow-sm transition disabled:opacity-60"
           >
             {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
             {isEditing ? 'Save Changes' : 'Create Job Alert'}

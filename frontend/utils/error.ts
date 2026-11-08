@@ -4,6 +4,10 @@ import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 
 export function getErrorMessage(error: unknown): string {
   if (!isApiError(error)) return FALLBACK_ERROR_MESSAGE;
+  if (error.code === 'VALIDATION_FAILED') {
+    const detail = error.details.find((item) => item.message);
+    if (detail) return detail.message;
+  }
   const message = ERROR_MESSAGES[error.code] ?? FALLBACK_ERROR_MESSAGE;
   if (error.code === 'RATE_LIMITED' && error.retryAfter) {
     return `${message} (retry in ${error.retryAfter}s)`;

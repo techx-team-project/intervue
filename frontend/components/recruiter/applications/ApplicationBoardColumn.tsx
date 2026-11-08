@@ -50,11 +50,11 @@ export default function ApplicationBoardColumn({
       <button
         type="button"
         onClick={onToggleCollapse}
-        className="flex w-12 shrink-0 cursor-pointer flex-col items-center gap-3 rounded-2xl border border-[#e5e9ef] bg-white py-4 transition-colors hover:border-slate-300"
+        className="hover:border-outline flex w-12 shrink-0 cursor-pointer flex-col items-center gap-3 rounded-2xl border border-[#e5e9ef] bg-white py-4 transition-colors"
       >
         <span className={cn('h-2 w-2 rounded-full', meta.accentDotClassName)} />
-        <span className="text-navy text-[12px] font-black">{applications.length}</span>
-        <span className="text-[12px] font-bold text-[#64748b] [writing-mode:vertical-rl]">{meta.label}</span>
+        <span className="text-navy text-body-sm font-bold">{applications.length}</span>
+        <span className="text-body-sm text-on-surface-variant font-bold [writing-mode:vertical-rl]">{meta.label}</span>
       </button>
     );
   }
@@ -78,15 +78,15 @@ export default function ApplicationBoardColumn({
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className={cn('h-2 w-2 shrink-0 rounded-full', meta.accentDotClassName)} />
-            <h3 className={cn('truncate text-[13px] font-black', meta.accentTextClassName)}>{meta.label}</h3>
-            <span className="text-navy shrink-0 rounded-full bg-white px-1.5 py-0.5 text-[11.5px] font-black shadow-2xs">
+            <h3 className={cn('text-body-md truncate font-bold', meta.accentTextClassName)}>{meta.label}</h3>
+            <span className="text-navy text-label-sm shrink-0 rounded-full bg-white px-1.5 py-0.5 font-bold shadow-2xs">
               {applications.length}
             </span>
           </div>
 
           <div className="flex shrink-0 items-center gap-1">
             {newCount > 0 && (
-              <span className="bg-primary rounded-full px-1.5 py-0.5 text-[10.5px] font-black text-white">
+              <span className="bg-primary text-label-sm rounded-full px-1.5 py-0.5 font-bold text-white">
                 {newCount} new
               </span>
             )}
@@ -95,7 +95,7 @@ export default function ApplicationBoardColumn({
                 type="button"
                 onClick={onToggleCollapse}
                 aria-label={`Collapse the ${meta.label} column`}
-                className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white hover:text-slate-700"
+                className="text-outline hover:text-on-surface flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-white"
               >
                 <ChevronDown className="h-3.5 w-3.5" />
               </button>
@@ -105,12 +105,12 @@ export default function ApplicationBoardColumn({
 
         {headerStyle === 'metrics' && (
           <>
-            <p className="mt-1.5 text-[11px] leading-snug text-[#94a3b8]">{meta.description}</p>
+            <p className="text-label-sm text-outline mt-1.5 leading-snug">{meta.description}</p>
             <div className="mt-2.5 flex items-center gap-2">
               <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white">
                 <div className={cn('h-full rounded-full', meta.accentBarClassName)} style={{ width: `${share}%` }} />
               </div>
-              <span className="text-[10.5px] font-bold text-[#94a3b8]">{share}%</span>
+              <span className="text-label-sm text-outline font-bold">{share}%</span>
             </div>
           </>
         )}
@@ -118,10 +118,10 @@ export default function ApplicationBoardColumn({
 
       <div className={cn('flex-1 space-y-2.5 overflow-y-auto p-3', bodyClassName)}>
         {applications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-[#e2e8f0] py-8 text-center">
-            <Inbox className="h-5 w-5 text-[#cbd5e1]" />
-            <p className="text-[11.5px] font-semibold text-[#94a3b8]">No applications yet</p>
-            <p className="px-3 text-[10.5px] text-[#cbd5e1]">Drop an application here to change its status</p>
+          <div className="border-outline-variant flex flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed py-8 text-center">
+            <Inbox className="text-outline h-5 w-5" />
+            <p className="text-label-sm text-outline font-semibold">No applications yet</p>
+            <p className="text-label-sm text-outline px-3">Drop an application here to change its status</p>
           </div>
         ) : (
           applications.map((application) => (

@@ -14,7 +14,7 @@ export function SuggestedQuestions({ onSelect, disabled = false }: SuggestedQues
     <div className="space-y-2 py-1">
       <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
         <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
-        <span>Câu hỏi thường gặp:</span>
+        <span>Frequently asked:</span>
       </div>
       <div className="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap">
         {SUGGESTED_QUESTIONS.map((item) => (

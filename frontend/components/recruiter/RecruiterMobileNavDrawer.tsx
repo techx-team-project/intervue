@@ -32,14 +32,14 @@ export default function RecruiterMobileNavDrawer({ isOpen, onClose }: RecruiterM
     <div role="dialog" aria-modal="true" aria-label="Recruiter menu" className="fixed inset-0 z-50 lg:hidden">
       <div onClick={onClose} className="absolute inset-0 bg-slate-950/50" />
 
-      <div className="absolute inset-y-0 left-0 flex w-[88%] max-w-xs flex-col bg-white shadow-2xl">
+      <div className="shadow-elevation-2 absolute inset-y-0 left-0 flex w-[88%] max-w-xs flex-col bg-white">
         <div className="flex h-14 shrink-0 items-center justify-between border-b border-[#eef1f5] px-4">
-          <span className="text-navy text-[13px] font-bold">Menu</span>
+          <span className="text-navy text-body-md font-bold">Menu</span>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close the menu"
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800"
+            className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl transition-colors"
           >
             <X className="h-5 w-5" />
           </button>

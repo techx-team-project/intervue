@@ -122,22 +122,22 @@ export default function InterviewPrepChecklist() {
   const progressPercent = Math.round((completedCount / totalCount) * 100);
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-[#e5e7eb] bg-white shadow-xl">
-      <div className="bg-linear-to-r from-blue-700 via-indigo-700 to-blue-900 p-6 text-white sm:p-8">
+    <div className="border-outline-variant shadow-elevation-2 overflow-hidden rounded-3xl border bg-white">
+      <div className="bg-primary-deeper p-6 text-white sm:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-blue-500/20 px-2.5 py-0.5 text-xs font-semibold text-blue-200 ring-1 ring-blue-400/30">
+              <span className="bg-primary/20 text-primary rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-blue-400/30">
                 Interactive Checklist
               </span>
-              <span className="text-xs text-blue-200">
+              <span className="text-primary text-xs">
                 {completedCount}/{totalCount} completed
               </span>
             </div>
             <h3 className="mt-1 text-xl font-bold tracking-tight text-white sm:text-2xl">
               Interview Success Preparation Checklist
             </h3>
-            <p className="mt-1 text-xs text-blue-100/80">
+            <p className="text-primary/80 mt-1 text-xs">
               Check off milestones to ensure you are 100% prepared and confident before meeting employers.
             </p>
           </div>
@@ -153,15 +153,12 @@ export default function InterviewPrepChecklist() {
         </div>
 
         <div className="mt-6">
-          <div className="flex justify-between text-xs font-medium text-blue-100">
+          <div className="text-primary flex justify-between text-xs font-medium">
             <span>Readiness Score</span>
             <span className="font-bold text-white">{progressPercent}%</span>
           </div>
-          <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-blue-950/40">
-            <div
-              className="to-primary h-full bg-linear-to-r from-emerald-400 transition-all duration-500"
-              style={{ width: `${progressPercent}%` }}
-            />
+          <div className="bg-primary/40 mt-2 h-2.5 w-full overflow-hidden rounded-full">
+            <div className="bg-primary h-full transition-all duration-500" style={{ width: `${progressPercent}%` }} />
           </div>
         </div>
       </div>
@@ -176,21 +173,21 @@ export default function InterviewPrepChecklist() {
                 onClick={() => toggleItem(item.id)}
                 className={`group flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition duration-200 ${
                   isChecked
-                    ? 'border-emerald-200 bg-emerald-50/50 shadow-xs'
-                    : 'border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50/20'
+                    ? 'border-primary/30 bg-emerald-50/50 shadow-xs'
+                    : 'hover:border-outline-variant hover:bg-primary-light/20 border-gray-200 bg-white'
                 }`}
               >
                 <div className="mt-0.5 shrink-0">
                   {isChecked ? (
                     <CheckCircle className="text-primary h-5 w-5" />
                   ) : (
-                    <Square className="h-5 w-5 text-gray-300 group-hover:text-blue-500" />
+                    <Square className="group-hover:text-primary h-5 w-5 text-gray-300" />
                   )}
                 </div>
                 <div>
                   <h4
                     className={`text-sm font-bold transition ${
-                      isChecked ? 'text-emerald-950 line-through opacity-85' : 'text-[#0f172a]'
+                      isChecked ? 'text-emerald-950 line-through opacity-85' : 'text-on-surface'
                     }`}
                   >
                     {item.label}
@@ -202,14 +199,14 @@ export default function InterviewPrepChecklist() {
           })}
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border border-blue-100 bg-blue-50/40 p-4 sm:flex-row sm:p-5">
+        <div className="border-outline-variant bg-primary-light/40 mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border p-4 sm:flex-row sm:p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white">
+            <div className="bg-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white">
               <FileText className="h-5 w-5" />
             </div>
             <div>
-              <h5 className="text-sm font-bold text-blue-950">Need an ATS-standard resume?</h5>
-              <p className="text-xs text-blue-800">
+              <h5 className="text-on-primary-container text-sm font-bold">Need an ATS-standard resume?</h5>
+              <p className="text-on-primary-container text-xs">
                 Explore our curated collection of professional tech templates favored by top recruiters.
               </p>
             </div>
@@ -217,7 +214,7 @@ export default function InterviewPrepChecklist() {
 
           <Link
             href="/cv-templates"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-blue-700"
+            className="bg-primary shadow-elevation-1 hover:bg-primary inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold text-white transition"
           >
             Create Resume Now
             <ArrowRight className="h-4 w-4" />

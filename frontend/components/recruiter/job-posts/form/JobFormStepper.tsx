@@ -29,7 +29,7 @@ export default function JobFormStepper({ current, reached, onSelect }: JobFormSt
                   'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors',
                   index === current && 'bg-emerald-600 text-white',
                   done && 'bg-emerald-100 text-emerald-700',
-                  index > current && 'bg-slate-100 text-slate-400',
+                  index > current && 'bg-surface-container-high text-outline',
                 )}
               >
                 {done ? <Check className="h-3.5 w-3.5" /> : index + 1}
@@ -37,13 +37,15 @@ export default function JobFormStepper({ current, reached, onSelect }: JobFormSt
               <span
                 className={cn(
                   'hidden text-sm font-semibold sm:inline',
-                  index === current ? 'text-slate-900' : 'text-slate-400',
+                  index === current ? 'text-on-surface' : 'text-outline',
                 )}
               >
                 {label}
               </span>
             </button>
-            {index < JOB_FORM_STEPS.length - 1 && <span className="h-px flex-1 bg-slate-200" aria-hidden />}
+            {index < JOB_FORM_STEPS.length - 1 && (
+              <span className="bg-surface-container-high h-px flex-1" aria-hidden />
+            )}
           </li>
         );
       })}

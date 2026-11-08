@@ -2,8 +2,8 @@ import NotificationPreferencesView from '@/components/common/NotificationPrefere
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Tuỳ chọn thông báo | InterVue',
-  description: 'Chọn loại thông báo bạn muốn nhận từ InterVue',
+  title: 'Notification preferences | InterVue',
+  description: 'Choose which notifications you want to receive from InterVue',
 };
 
 export default function CandidateNotificationPreferencesPage() {

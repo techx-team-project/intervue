@@ -23,18 +23,18 @@ export default function AdminWorklist({ items, initialKind, onApprove, onReject 
 
   const chipClass = (isActive: boolean) =>
     cn(
-      'cursor-pointer rounded-full px-2.5 py-1 text-[12px] font-bold transition-colors',
+      'cursor-pointer rounded-full px-2.5 py-1 text-body-sm font-bold transition-colors',
       isActive
         ? 'bg-primary text-white'
-        : 'text-[#64748b] hover:bg-[#f1f5f9] dark:text-forest-300 dark:hover:bg-forest-850',
+        : 'text-on-surface-variant hover:bg-surface-container-low dark:text-forest-300 dark:hover:bg-forest-850',
     );
 
   return (
-    <section className="dark:border-forest-800 dark:bg-forest-900 overflow-hidden rounded-2xl border border-[#e9eaec] bg-white shadow-xs">
-      <header className="dark:border-forest-800 flex flex-wrap items-center justify-between gap-3 border-b border-[#f1f5f9] px-4 py-3.5">
+    <section className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant overflow-hidden rounded-2xl border bg-white shadow-xs">
+      <header className="dark:border-forest-800 border-outline-variant flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3.5">
         <div className="flex items-baseline gap-2">
-          <h2 className="text-navy dark:text-forest-50 text-[14px] font-bold">Next up</h2>
-          <span className="text-[11.5px] text-[#94a3b8]">{visible.length} shown</span>
+          <h2 className="text-navy dark:text-forest-50 text-body-md font-bold">Next up</h2>
+          <span className="text-label-sm text-outline">{visible.length} shown</span>
         </div>
 
         <div className="flex flex-wrap items-center gap-1">
@@ -57,11 +57,11 @@ export default function AdminWorklist({ items, initialKind, onApprove, onReject 
 
       {visible.length === 0 ? (
         <div className="flex flex-col items-center gap-2 px-4 py-12 text-center">
-          <Inbox className="h-7 w-7 text-[#cbd5e1]" />
-          <p className="text-navy dark:text-forest-50 text-[13px] font-bold">
+          <Inbox className="text-outline h-7 w-7" />
+          <p className="text-navy dark:text-forest-50 text-body-md font-bold">
             {items.length === 0 ? 'Everything here is handled' : 'Nothing left in this filter'}
           </p>
-          <p className="text-[12px] text-[#94a3b8]">
+          <p className="text-body-sm text-outline">
             {items.length === 0
               ? 'New submissions will appear here as they arrive.'
               : 'Switch back to All to see the rest of the queue.'}

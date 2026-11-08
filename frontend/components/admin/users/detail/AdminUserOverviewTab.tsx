@@ -22,7 +22,7 @@ const IDENTITY_TONE = {
   approved: 'text-emerald-600',
   pending: 'text-amber-600',
   rejected: 'text-rose-600',
-  not_submitted: 'text-slate-400',
+  not_submitted: 'text-outline',
 };
 
 export default function AdminUserOverviewTab({ detail, user }: AdminUserOverviewTabProps) {
@@ -75,7 +75,7 @@ export default function AdminUserOverviewTab({ detail, user }: AdminUserOverview
           <div className="min-w-0">
             <p
               className={cn(
-                'text-[13.5px] font-bold',
+                'text-body-md font-bold',
                 user.restriction.kind === 'ban' ? 'text-rose-900' : 'text-amber-900',
               )}
             >
@@ -84,7 +84,7 @@ export default function AdminUserOverviewTab({ detail, user }: AdminUserOverview
             {user.restriction.detail && (
               <p
                 className={cn(
-                  'mt-1 text-[12.5px]',
+                  'text-body-sm mt-1',
                   user.restriction.kind === 'ban' ? 'text-rose-700' : 'text-amber-800',
                 )}
               >
@@ -93,14 +93,16 @@ export default function AdminUserOverviewTab({ detail, user }: AdminUserOverview
             )}
             <p
               className={cn(
-                'mt-1.5 text-[11.5px]',
+                'text-label-sm mt-1.5',
                 user.restriction.kind === 'ban' ? 'text-rose-600' : 'text-amber-700',
               )}
             >
               {user.restriction.byName} · {formatDateTime(user.restriction.at)}
               {user.restriction.expiresAt ? ` · lifts automatically ${formatDate(user.restriction.expiresAt)}` : ''}
             </p>
-            <p className="mt-1.5 text-[11.5px] text-slate-500">{RESTRICTION_META[user.restriction.kind].blurb}</p>
+            <p className="text-label-sm text-on-surface-variant mt-1.5">
+              {RESTRICTION_META[user.restriction.kind].blurb}
+            </p>
           </div>
         </div>
       )}
@@ -113,27 +115,29 @@ export default function AdminUserOverviewTab({ detail, user }: AdminUserOverview
         <div className="space-y-4">
           <AdminUserPanel title="Profile" description="What the account looks like to the other side of the platform.">
             {profile.headline === null && profile.companyName === null ? (
-              <p className="dark:text-forest-300 py-2 text-[12.5px] text-[#64748b]">
+              <p className="dark:text-forest-300 text-body-sm text-on-surface-variant py-2">
                 This account has no candidate or recruiter profile yet.
               </p>
             ) : (
               <div className="space-y-3">
                 {profile.headline && (
                   <div className="flex items-start gap-2.5">
-                    <Target className="mt-0.5 h-4 w-4 shrink-0 text-[#94a3b8]" />
+                    <Target className="text-outline mt-0.5 h-4 w-4 shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-navy dark:text-forest-50 text-[13px] font-bold">{profile.headline}</p>
-                      <p className="dark:text-forest-300 text-[11.5px] text-[#64748b]">{profile.jobSearchStatus}</p>
+                      <p className="text-navy dark:text-forest-50 text-body-md font-bold">{profile.headline}</p>
+                      <p className="dark:text-forest-300 text-label-sm text-on-surface-variant">
+                        {profile.jobSearchStatus}
+                      </p>
                     </div>
                   </div>
                 )}
 
                 {profile.companyName && (
                   <div className="flex items-start gap-2.5">
-                    <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-[#94a3b8]" />
+                    <Building2 className="text-outline mt-0.5 h-4 w-4 shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-navy dark:text-forest-50 text-[13px] font-bold">{profile.companyName}</p>
-                      <p className="dark:text-forest-300 text-[11.5px] text-[#64748b]">
+                      <p className="text-navy dark:text-forest-50 text-body-md font-bold">{profile.companyName}</p>
+                      <p className="dark:text-forest-300 text-label-sm text-on-surface-variant">
                         Company verification level {profile.companyVerificationLevel} of 3
                       </p>
                     </div>
@@ -141,23 +145,25 @@ export default function AdminUserOverviewTab({ detail, user }: AdminUserOverview
                 )}
 
                 <div className="flex items-start gap-2.5">
-                  <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#94a3b8]" />
+                  <BadgeCheck className="text-outline mt-0.5 h-4 w-4 shrink-0" />
                   <div className="min-w-0">
-                    <p className={cn('text-[13px] font-bold', IDENTITY_TONE[profile.identityVerification])}>
+                    <p className={cn('text-body-md font-bold', IDENTITY_TONE[profile.identityVerification])}>
                       {IDENTITY_LABEL[profile.identityVerification]}
                     </p>
-                    <p className="dark:text-forest-300 text-[11.5px] text-[#64748b]">Identity verification (eKYC)</p>
+                    <p className="dark:text-forest-300 text-label-sm text-on-surface-variant">
+                      Identity verification (eKYC)
+                    </p>
                   </div>
                 </div>
 
                 {profile.cvCount > 0 && (
                   <div className="flex items-start gap-2.5">
-                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-[#94a3b8]" />
+                    <FileText className="text-outline mt-0.5 h-4 w-4 shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-navy dark:text-forest-50 text-[13px] font-bold">
+                      <p className="text-navy dark:text-forest-50 text-body-md font-bold">
                         {profile.cvCount} CV{profile.cvCount === 1 ? '' : 's'} uploaded
                       </p>
-                      <p className="dark:text-forest-300 text-[11.5px] text-[#64748b]">
+                      <p className="dark:text-forest-300 text-label-sm text-on-surface-variant">
                         Profile {profile.completeness}% complete
                       </p>
                     </div>
@@ -165,13 +171,13 @@ export default function AdminUserOverviewTab({ detail, user }: AdminUserOverview
                 )}
 
                 <div>
-                  <div className="dark:bg-forest-850 h-1.5 overflow-hidden rounded-full bg-slate-100">
+                  <div className="dark:bg-forest-850 bg-surface-container-high h-1.5 overflow-hidden rounded-full">
                     <div
                       className="bg-primary h-full rounded-full transition-[width]"
                       style={{ width: `${Math.min(100, profile.completeness)}%` }}
                     />
                   </div>
-                  <p className="mt-1.5 text-[11px] text-[#94a3b8]">Profile completeness {profile.completeness}%</p>
+                  <p className="text-label-sm text-outline mt-1.5">Profile completeness {profile.completeness}%</p>
                 </div>
               </div>
             )}
@@ -182,7 +188,7 @@ export default function AdminUserOverviewTab({ detail, user }: AdminUserOverview
             description="Handled on their own queue pages — this is a read-only summary."
           >
             {detail.linkedRecords.length === 0 ? (
-              <p className="dark:text-forest-300 py-2 text-[12.5px] text-[#64748b]">
+              <p className="dark:text-forest-300 text-body-sm text-on-surface-variant py-2">
                 This account holds no candidate or recruiter records yet.
               </p>
             ) : (
@@ -193,15 +199,17 @@ export default function AdminUserOverviewTab({ detail, user }: AdminUserOverview
                   return (
                     <li key={record.key} className="flex items-center justify-between gap-3 py-2.5">
                       <span className="flex min-w-0 items-center gap-2.5">
-                        <Icon className="h-4 w-4 shrink-0 text-[#94a3b8]" />
-                        <span className="dark:text-forest-100 truncate text-[12.5px] font-semibold text-[#334155]">
+                        <Icon className="text-outline h-4 w-4 shrink-0" />
+                        <span className="dark:text-forest-100 text-body-sm text-on-surface-variant truncate font-semibold">
                           {record.label}
                         </span>
                       </span>
 
                       <span className="flex shrink-0 items-center gap-2">
-                        <span className="dark:text-forest-300 text-[12px] text-[#64748b]">{record.value}</span>
-                        <span className="dark:bg-forest-850 dark:text-forest-400 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">
+                        <span className="dark:text-forest-300 text-body-sm text-on-surface-variant">
+                          {record.value}
+                        </span>
+                        <span className="dark:bg-forest-850 dark:text-forest-400 bg-surface-container-high text-label-sm text-on-surface-variant rounded-full px-2 py-0.5 font-bold">
                           Queue page coming soon
                         </span>
                       </span>

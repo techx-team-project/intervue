@@ -118,7 +118,7 @@ export default function JobPostRowActionsMenu(props: JobPostRowActionsMenuProps)
         onClick={toggleMenu}
         aria-label="Thao tác"
         aria-expanded={isOpen}
-        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
+        className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-40"
       >
         <MoreVertical className="h-4 w-4" />
       </button>
@@ -129,12 +129,12 @@ export default function JobPostRowActionsMenu(props: JobPostRowActionsMenuProps)
             ref={menuRef}
             role="menu"
             style={{ top: position.top, left: position.left, width: MENU_WIDTH }}
-            className="fixed z-[60] overflow-hidden rounded-xl border border-slate-200 bg-white py-1.5 shadow-2xl"
+            className="border-outline-variant shadow-elevation-2 fixed z-[60] overflow-hidden rounded-xl border bg-white py-1.5"
           >
             {actions.map((action) => {
               const Icon = action.icon;
-              const className = `flex w-full cursor-pointer items-center gap-2.5 px-3.5 py-2 text-left text-[13px] font-medium transition-colors hover:bg-slate-50 ${
-                action.tone === 'danger' ? 'text-rose-600 hover:bg-rose-50' : 'text-slate-700'
+              const className = `flex w-full cursor-pointer items-center gap-2.5 px-3.5 py-2 text-left text-body-md font-medium transition-colors hover:bg-surface-container-low ${
+                action.tone === 'danger' ? 'text-rose-600 hover:bg-rose-50' : 'text-on-surface'
               }`;
 
               if (action.href) {

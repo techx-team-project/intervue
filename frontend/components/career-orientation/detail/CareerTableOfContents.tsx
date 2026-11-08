@@ -53,19 +53,19 @@ export default function CareerTableOfContents({ items }: CareerTableOfContentsPr
   if (!items || items.length === 0) return null;
 
   return (
-    <div className="sticky top-24 rounded-2xl border border-[#e5e7eb] bg-white p-5 shadow-xs">
+    <div className="border-outline-variant sticky top-24 rounded-2xl border bg-white p-5 shadow-xs">
       <div
         className="flex cursor-pointer items-center justify-between select-none"
         onClick={() => setIsOpenMobile(!isOpenMobile)}
       >
         <div className="flex items-center gap-2">
-          <div className="text-primary flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100">
+          <div className="text-primary bg-primary-container flex h-7 w-7 items-center justify-center rounded-lg">
             <ListFilter className="h-4 w-4" />
           </div>
-          <h3 className="text-sm font-bold text-[#171717] sm:text-base">
+          <h3 className="text-on-surface text-sm font-bold sm:text-base">
             {CAREER_ORIENTATION_MESSAGES.tableOfContents.title}
           </h3>
-          <h3 className="text-sm font-bold text-[#171717] sm:text-base">Table of Contents</h3>
+          <h3 className="text-on-surface text-sm font-bold sm:text-base">Table of Contents</h3>
         </div>
 
         <button
@@ -91,7 +91,7 @@ export default function CareerTableOfContents({ items }: CareerTableOfContentsPr
                 } ${
                   isActive
                     ? 'border-primary bg-primary-light text-primary border-l-3 font-semibold'
-                    : 'text-[#526475] hover:bg-gray-50 hover:text-[#171717]'
+                    : 'text-on-surface-variant hover:text-on-surface hover:bg-gray-50'
                 }`}
               >
                 {item.title}

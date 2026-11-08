@@ -13,7 +13,7 @@ export default function RecruiterLoginPage() {
   return (
     <RecruiterAuthLayout title="Sign in to the employer portal" subtitle="Hire IT talent with AI-assisted screening">
       <RecruiterGuestRedirect />
-      <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-slate-100" />}>
+      <Suspense fallback={<div className="bg-surface-container-high h-40 animate-pulse rounded-xl" />}>
         <RecruiterLoginForm />
       </Suspense>
     </RecruiterAuthLayout>

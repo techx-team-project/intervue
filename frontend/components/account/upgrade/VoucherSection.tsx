@@ -16,7 +16,7 @@ export function VoucherSection() {
     const trimmed = voucherCode.trim().toUpperCase();
 
     if (!trimmed) {
-      setVoucherError('Vui lòng nhập mã quà tặng hoặc voucher.');
+      setVoucherError('Please enter a gift code or voucher.');
       setVoucherSuccess(false);
       return;
     }
@@ -25,21 +25,21 @@ export function VoucherSection() {
       setVoucherError('');
       setVoucherSuccess(true);
     } else {
-      setVoucherError('Mã kích hoạt không hợp lệ hoặc đã hết hạn.');
+      setVoucherError('The activation code is invalid or has expired.');
       setVoucherSuccess(false);
     }
   };
 
   return (
-    <section className="border-y border-slate-200 bg-slate-50 px-4 py-12 sm:px-6">
+    <section className="border-outline-variant bg-surface-container-low border-y px-4 py-12 sm:px-6">
       <div className="mx-auto max-w-2xl text-center">
-        <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600">
+        <div className="bg-primary-container text-primary mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl">
           <Gift className="h-6 w-6" />
         </div>
 
-        <h2 className="text-xl font-black text-slate-800 sm:text-2xl">Bạn có mã ưu đãi hoặc quà tặng đối tác?</h2>
-        <p className="mt-1 text-sm text-slate-500">
-          Nhập mã voucher để kích hoạt miễn phí quyền lợi VIP Education hoặc Pro
+        <h2 className="text-on-surface text-xl font-bold sm:text-2xl">Do you have a promo code or partner gift?</h2>
+        <p className="text-on-surface-variant mt-1 text-sm">
+          Enter a voucher code to activate Education VIP or Pro benefits for free
         </p>
 
         <form onSubmit={handleApplyVoucher} className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -50,20 +50,20 @@ export function VoucherSection() {
                 setVoucherCode(e.target.value);
                 if (voucherError) setVoucherError('');
               }}
-              placeholder="Nhập mã ưu đãi (VD: TOPCV2026, INTERVUEVIP)"
+              placeholder="Enter a promo code (e.g. INTERVUEVIP)"
               error={voucherError}
             />
           </div>
 
           <Button type="submit" className="h-10 px-6 sm:w-auto">
-            Kích hoạt mã
+            Activate code
           </Button>
         </form>
 
         {voucherSuccess && (
-          <div className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-700">
+          <div className="border-primary/30 bg-primary-light text-primary mt-4 flex items-center justify-center gap-2 rounded-xl border p-3 text-sm font-bold">
             <CheckCircle2 className="h-4 w-4" />
-            <span>Mã quà tặng hợp lệ! Gói tài khoản đã được nâng cấp thành công.</span>
+            <span>Valid code! Your account plan has been upgraded.</span>
           </div>
         )}
       </div>

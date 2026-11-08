@@ -16,7 +16,7 @@ type CandidateImageControlsProps = {
 };
 
 const BUTTON_CLASS =
-  'flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-xs transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50';
+  'flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-outline-variant bg-white text-on-surface shadow-xs transition hover:bg-surface-container-low disabled:cursor-not-allowed disabled:opacity-50';
 
 export default function CandidateImageControls({
   kind,
@@ -62,7 +62,7 @@ export default function CandidateImageControls({
           title={removeLabel}
           aria-label={removeLabel}
         >
-          <Trash2 className="h-4 w-4 text-rose-500" />
+          <Trash2 className="text-error h-4 w-4" />
         </button>
       )}
     </div>

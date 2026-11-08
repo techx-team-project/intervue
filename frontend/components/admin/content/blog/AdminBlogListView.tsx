@@ -100,10 +100,10 @@ export function AdminBlogListView({ initialSummary, initialPage, categories, onR
     <div className="space-y-6">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+          <h1 className="text-on-surface text-xl font-bold tracking-tight sm:text-2xl">
             Career Guides & Blog Management
           </h1>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="text-on-surface-variant mt-1 text-xs">
             Publish career advice, salary insights, and industry recruitment playbooks.
           </p>
         </div>
@@ -143,11 +143,11 @@ export function AdminBlogListView({ initialSummary, initialPage, categories, onR
       />
 
       {postsPage && postsPage.totalPages > 1 && (
-        <div className="flex items-center justify-between rounded-2xl border border-slate-200/80 bg-white px-5 py-3 text-xs text-slate-500 shadow-2xs">
+        <div className="border-outline-variant/80 text-on-surface-variant flex items-center justify-between rounded-2xl border bg-white px-5 py-3 text-xs shadow-2xs">
           <div>
-            Page <span className="font-bold text-slate-900">{postsPage.page + 1}</span> of{' '}
-            <span className="font-bold text-slate-900">{postsPage.totalPages}</span> (
-            <span className="font-bold text-slate-900">{postsPage.totalItems}</span> total articles)
+            Page <span className="text-on-surface font-bold">{postsPage.page + 1}</span> of{' '}
+            <span className="text-on-surface font-bold">{postsPage.totalPages}</span> (
+            <span className="text-on-surface font-bold">{postsPage.totalItems}</span> total articles)
           </div>
 
           <div className="flex items-center gap-2">
@@ -155,7 +155,7 @@ export function AdminBlogListView({ initialSummary, initialPage, categories, onR
               type="button"
               disabled={postsPage.page === 0}
               onClick={() => loadData(postsPage.page - 1)}
-              className="inline-flex cursor-pointer items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+              className="border-outline-variant text-on-surface hover:bg-surface-container-low inline-flex cursor-pointer items-center gap-1 rounded-xl border bg-white px-3 py-1.5 font-semibold transition disabled:cursor-not-allowed disabled:opacity-40"
             >
               <ChevronLeft className="h-4 w-4" />
               <span>Previous</span>
@@ -165,7 +165,7 @@ export function AdminBlogListView({ initialSummary, initialPage, categories, onR
               type="button"
               disabled={postsPage.page + 1 >= postsPage.totalPages}
               onClick={() => loadData(postsPage.page + 1)}
-              className="inline-flex cursor-pointer items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+              className="border-outline-variant text-on-surface hover:bg-surface-container-low inline-flex cursor-pointer items-center gap-1 rounded-xl border bg-white px-3 py-1.5 font-semibold transition disabled:cursor-not-allowed disabled:opacity-40"
             >
               <span>Next</span>
               <ChevronRight className="h-4 w-4" />

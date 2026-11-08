@@ -94,11 +94,11 @@ export default function AdminTopBar({ queueCounts, onToggleSidebar, onOpenMobile
                 <Link
                   key={link.queue}
                   href={`${ROUTES.ADMIN_DASHBOARD}?queue=${link.kind}`}
-                  className="dark:border-forest-700/20 dark:text-forest-800 dark:hover:border-primary/40 dark:hover:bg-primary/10 dark:hover:text-forest-950 inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 text-[13px] font-semibold text-white/85 transition-colors hover:border-white/30 hover:bg-white/10 hover:text-white"
+                  className="dark:border-forest-700/20 dark:text-forest-800 dark:hover:border-primary/40 dark:hover:bg-primary/10 dark:hover:text-forest-950 text-body-md inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 font-semibold text-white/85 transition-colors hover:border-white/30 hover:bg-white/10 hover:text-white"
                 >
                   <Icon className="h-4 w-4" />
                   <span>{link.label}</span>
-                  {count > 0 && <span className="font-black tabular-nums">{count}</span>}
+                  {count > 0 && <span className="font-bold tabular-nums">{count}</span>}
                 </Link>
               );
             })}
@@ -127,7 +127,7 @@ export default function AdminTopBar({ queueCounts, onToggleSidebar, onOpenMobile
             >
               <Bell className="h-5 w-5" />
               {unreadNotifications > 0 && (
-                <span className="ring-dark dark:ring-forest-50 absolute top-0.5 right-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-black text-white ring-2">
+                <span className="ring-dark dark:ring-forest-50 text-label-sm absolute top-0.5 right-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-rose-500 px-1 font-bold text-white ring-2">
                   {unreadNotifications > 99 ? '99+' : unreadNotifications}
                 </span>
               )}
@@ -148,7 +148,7 @@ export default function AdminTopBar({ queueCounts, onToggleSidebar, onOpenMobile
               aria-label="Account menu"
               className="flex cursor-pointer items-center rounded-full p-0.5 transition hover:scale-105 active:scale-95"
             >
-              <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-tr from-emerald-500 via-emerald-600 to-teal-600 text-sm font-black text-white shadow-sm ring-2 ring-emerald-400/30">
+              <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-tr from-emerald-500 via-emerald-600 to-teal-600 text-sm font-bold text-white shadow-sm ring-2 ring-emerald-400/30">
                 {user?.name.charAt(0).toUpperCase()}
                 <span className="absolute -right-0.5 -bottom-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white ring-1 ring-emerald-200">
                   <ChevronDown className="h-2 w-2 stroke-[2.5] text-emerald-700" />

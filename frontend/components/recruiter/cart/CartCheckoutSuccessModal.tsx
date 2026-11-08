@@ -67,9 +67,9 @@ export default function CartCheckoutSuccessModal({
           {isPaid ? (
             <CheckCircle2 className="h-5 w-5 text-emerald-600" />
           ) : (
-            <Receipt className="h-5 w-5 text-[#00b14f]" />
+            <Receipt className="text-primary h-5 w-5" />
           )}
-          <span className="font-bold text-slate-800">
+          <span className="text-on-surface font-bold">
             {isPaid ? 'Order Activated Successfully' : 'Service Order Payment'}
           </span>
         </div>
@@ -87,33 +87,33 @@ export default function CartCheckoutSuccessModal({
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-slate-900">Payment Successful!</h3>
-            <p className="mt-1 text-sm text-slate-500">
-              Order code: <strong className="font-bold text-slate-800">{order.orderCode}</strong>
+            <h3 className="text-on-surface text-xl font-bold">Payment Successful!</h3>
+            <p className="text-on-surface-variant mt-1 text-sm">
+              Order code: <strong className="text-on-surface font-bold">{order.orderCode}</strong>
             </p>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-left text-xs leading-relaxed text-slate-600">
-            <div className="flex justify-between border-b border-slate-200/60 py-1">
-              <span className="text-slate-500">Total amount paid:</span>
+          <div className="border-outline-variant bg-surface-container-low text-on-surface-variant rounded-xl border p-4 text-left text-xs leading-relaxed">
+            <div className="border-outline-variant/60 flex justify-between border-b py-1">
+              <span className="text-on-surface-variant">Total amount paid:</span>
               <span className="font-bold text-emerald-600">{order.totalAmount.toLocaleString('vi-VN')} VND</span>
             </div>
-            <div className="flex justify-between border-b border-slate-200/60 py-1">
-              <span className="text-slate-500">Invoice type:</span>
-              <span className="font-semibold text-slate-800">
+            <div className="border-outline-variant/60 flex justify-between border-b py-1">
+              <span className="text-on-surface-variant">Invoice type:</span>
+              <span className="text-on-surface font-semibold">
                 {order.invoiceType === 'business' ? 'Corporate Electronic VAT Invoice' : 'Individual Invoice'}
               </span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-500">Invoice recipient email:</span>
-              <span className="font-semibold text-slate-800">{order.invoiceData.recipientEmail}</span>
+              <span className="text-on-surface-variant">Invoice recipient email:</span>
+              <span className="text-on-surface font-semibold">{order.invoiceData.recipientEmail}</span>
             </div>
           </div>
 
           <button
             type="button"
             onClick={handleComplete}
-            className="w-full cursor-pointer rounded-xl bg-[#00b14f] py-3 text-sm font-bold text-white transition hover:bg-[#00873c]"
+            className="bg-primary hover:bg-primary w-full cursor-pointer rounded-xl py-3 text-sm font-bold text-white transition"
           >
             Return to Cart
           </button>
@@ -134,7 +134,7 @@ export default function CartCheckoutSuccessModal({
           {/* QR code and Transfer details side by side */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-12 sm:items-center">
             {/* VietQR */}
-            <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-slate-50/50 p-3 sm:col-span-5">
+            <div className="border-outline-variant bg-surface-container-low/50 flex flex-col items-center justify-center rounded-xl border p-3 sm:col-span-5">
               <div className="relative h-44 w-44 overflow-hidden rounded-lg bg-white p-1 shadow-xs ring-1 ring-slate-200">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -143,40 +143,40 @@ export default function CartCheckoutSuccessModal({
                   className="h-full w-full object-contain"
                 />
               </div>
-              <span className="mt-2 text-[11px] font-medium text-slate-500">Open Banking App to scan</span>
+              <span className="text-label-sm text-on-surface-variant mt-2 font-medium">Open Banking App to scan</span>
             </div>
 
             {/* Bank Transfer info */}
             <div className="space-y-2 text-xs sm:col-span-7">
-              <div className="rounded-lg border border-slate-200 bg-white p-2.5">
-                <p className="text-[11px] text-slate-400">Beneficiary bank</p>
-                <p className="font-bold text-slate-800">{order.bankAccount.bankName}</p>
+              <div className="border-outline-variant rounded-lg border bg-white p-2.5">
+                <p className="text-label-sm text-outline">Beneficiary bank</p>
+                <p className="text-on-surface font-bold">{order.bankAccount.bankName}</p>
               </div>
 
-              <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-2.5">
+              <div className="border-outline-variant flex items-center justify-between rounded-lg border bg-white p-2.5">
                 <div>
-                  <p className="text-[11px] text-slate-400">Account number</p>
+                  <p className="text-label-sm text-outline">Account number</p>
                   <p className="font-mono text-sm font-bold text-emerald-700">{order.bankAccount.accountNumber}</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleCopy('acc', order.bankAccount.accountNumber)}
-                  className="flex cursor-pointer items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-200"
+                  className="bg-surface-container-high text-label-sm text-on-surface-variant hover:bg-surface-container-high flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold"
                 >
                   {copiedKey === 'acc' ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
                   <span>{copiedKey === 'acc' ? 'Copied' : 'Copy'}</span>
                 </button>
               </div>
 
-              <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-2.5">
+              <div className="border-outline-variant flex items-center justify-between rounded-lg border bg-white p-2.5">
                 <div>
-                  <p className="text-[11px] text-slate-400">Payment amount</p>
+                  <p className="text-label-sm text-outline">Payment amount</p>
                   <p className="text-sm font-bold text-emerald-600">{order.totalAmount.toLocaleString('vi-VN')} VND</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleCopy('amount', String(order.totalAmount))}
-                  className="flex cursor-pointer items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-200"
+                  className="bg-surface-container-high text-label-sm text-on-surface-variant hover:bg-surface-container-high flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold"
                 >
                   {copiedKey === 'amount' ? (
                     <Check className="h-3 w-3 text-emerald-600" />
@@ -189,13 +189,13 @@ export default function CartCheckoutSuccessModal({
 
               <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50/50 p-2.5">
                 <div>
-                  <p className="text-[11px] text-amber-700">Transfer memo (Required)</p>
+                  <p className="text-label-sm text-amber-700">Transfer memo (Required)</p>
                   <p className="font-mono text-xs font-bold text-amber-950">{order.bankAccount.transferSyntax}</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleCopy('syntax', order.bankAccount.transferSyntax)}
-                  className="flex cursor-pointer items-center gap-1 rounded-md bg-amber-200/80 px-2 py-1 text-[11px] font-bold text-amber-900 hover:bg-amber-300"
+                  className="text-label-sm flex cursor-pointer items-center gap-1 rounded-md bg-amber-200/80 px-2 py-1 font-bold text-amber-900 hover:bg-amber-300"
                 >
                   {copiedKey === 'syntax' ? (
                     <Check className="h-3 w-3 text-emerald-700" />
@@ -213,7 +213,7 @@ export default function CartCheckoutSuccessModal({
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer rounded-lg border border-slate-300 px-4 py-2.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+              className="border-outline text-on-surface-variant hover:bg-surface-container-high cursor-pointer rounded-lg border px-4 py-2.5 text-xs font-semibold transition"
             >
               Pay later
             </button>
@@ -221,7 +221,7 @@ export default function CartCheckoutSuccessModal({
               type="button"
               disabled={isVerifying}
               onClick={handleConfirmPaid}
-              className="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#00b14f] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#00873c] disabled:opacity-60"
+              className="bg-primary hover:bg-primary flex cursor-pointer items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-xs font-bold text-white shadow-sm transition disabled:opacity-60"
             >
               {isVerifying ? (
                 <span>Verifying payment...</span>

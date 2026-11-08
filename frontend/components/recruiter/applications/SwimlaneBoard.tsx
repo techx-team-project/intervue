@@ -61,9 +61,11 @@ export default function SwimlaneBoard({ visibleApplications, handlers, selectedI
   if (lanes.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-[#e5e9ef] bg-white py-20 text-center shadow-xs">
-        <Briefcase className="h-9 w-9 text-[#cbd5e1]" />
-        <p className="text-navy text-[14px] font-bold">No applications match these filters</p>
-        <p className="max-w-sm text-[12px] text-[#64748b]">Try clearing the filters or picking another job post.</p>
+        <Briefcase className="text-outline h-9 w-9" />
+        <p className="text-navy text-body-md font-bold">No applications match these filters</p>
+        <p className="text-body-sm text-on-surface-variant max-w-sm">
+          Try clearing the filters or picking another job post.
+        </p>
       </div>
     );
   }
@@ -88,16 +90,18 @@ export default function SwimlaneBoard({ visibleApplications, handlers, selectedI
                   className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 text-left"
                 >
                   {isCollapsed ? (
-                    <ChevronRight className="h-4 w-4 shrink-0 text-[#94a3b8]" />
+                    <ChevronRight className="text-outline h-4 w-4 shrink-0" />
                   ) : (
-                    <ChevronDown className="h-4 w-4 shrink-0 text-[#94a3b8]" />
+                    <ChevronDown className="text-outline h-4 w-4 shrink-0" />
                   )}
                   <span className="text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
                     <Briefcase className="h-4 w-4" />
                   </span>
                   <span className="min-w-0">
-                    <span className="text-navy block truncate text-[14px] font-bold">{lane.jobTitle}</span>
-                    <span className="block text-[11.5px] text-[#64748b]">{lane.applications.length} applications</span>
+                    <span className="text-navy text-body-md block truncate font-bold">{lane.jobTitle}</span>
+                    <span className="text-label-sm text-on-surface-variant block">
+                      {lane.applications.length} applications
+                    </span>
                   </span>
                 </button>
 
@@ -108,7 +112,7 @@ export default function SwimlaneBoard({ visibleApplications, handlers, selectedI
                       <span
                         key={column.meta.id}
                         title={column.meta.label}
-                        className="inline-flex items-center gap-1 rounded-full border border-[#eef2f7] bg-[#f8fafc] px-2 py-0.5 text-[11px] font-bold text-[#475569]"
+                        className="bg-surface-container-low text-label-sm text-on-surface-variant inline-flex items-center gap-1 rounded-full border border-[#eef2f7] px-2 py-0.5 font-bold"
                       >
                         <span className={`h-1.5 w-1.5 rounded-full ${column.meta.accentDotClassName}`} />
                         {column.applications.length}
@@ -117,7 +121,7 @@ export default function SwimlaneBoard({ visibleApplications, handlers, selectedI
 
                   <Link
                     href={`${ROUTES.RECRUITER_JOBS}/${lane.jobId}/edit`}
-                    className="ml-1 inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11.5px] font-bold text-[#64748b] transition-colors hover:bg-slate-100 hover:text-slate-800"
+                    className="text-label-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface ml-1 inline-flex items-center gap-1 rounded-lg px-2 py-1 font-bold transition-colors"
                   >
                     <ExternalLink className="h-3 w-3" />
                     View job post

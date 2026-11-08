@@ -71,7 +71,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
       }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm sm:p-6"
     >
-      <div className="relative flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl lg:flex-row">
+      <div className="shadow-elevation-2 relative flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white lg:flex-row">
         <button
           type="button"
           onClick={onClose}
@@ -82,9 +82,9 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
         </button>
 
         <div className="flex flex-1 flex-col overflow-hidden border-b border-gray-200 bg-[#f0f2f5] lg:border-r lg:border-b-0">
-          <div className="flex items-center justify-between border-b border-gray-200 bg-white/80 px-6 py-3 text-xs text-[#526475]">
+          <div className="text-on-surface-variant flex items-center justify-between border-b border-gray-200 bg-white/80 px-6 py-3 text-xs">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-[#171717]">{template.title}</span>
+              <span className="text-on-surface font-semibold">{template.title}</span>
               <Badge variant="success" size="sm">
                 {template.style}
               </Badge>
@@ -121,7 +121,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
 
           <div className="flex flex-1 items-start justify-center overflow-y-auto p-6 sm:p-8">
             <div
-              className="origin-top shadow-2xl transition-transform duration-200"
+              className="shadow-elevation-2 origin-top transition-transform duration-200"
               style={{ transform: `scale(${zoomLevel / 100})` }}
             >
               <CvPaperPreview sampleData={template.sampleData} primaryColor={template.defaultColorHex} isMini={false} />
@@ -132,7 +132,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
         <div className="flex w-full flex-col justify-between overflow-y-auto bg-white p-6 sm:p-8 lg:w-96">
           <div className="space-y-6">
             <div>
-              <div className="mb-1 flex items-center gap-2 text-xs text-[#7f878f]">
+              <div className="text-on-surface-variant mb-1 flex items-center gap-2 text-xs">
                 <span className="flex items-center gap-1 font-bold text-amber-500">
                   <Star className="h-3.5 w-3.5 fill-current" />
                   {template.rating}
@@ -142,19 +142,19 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
                   {template.usesCount} {usesCountSuffix}
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-[#171717]">{template.title}</h3>
-              <p className="mt-2 text-xs leading-relaxed text-[#526475]">{template.description}</p>
+              <h3 className="text-on-surface text-xl font-bold">{template.title}</h3>
+              <p className="text-on-surface-variant mt-2 text-xs leading-relaxed">{template.description}</p>
             </div>
 
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4">
+            <div className="border-primary/30 rounded-2xl border bg-emerald-50/70 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="text-primary h-5 w-5" />
-                  <span className="text-xs font-bold text-[#171717]">{atsScoreLabel}</span>
+                  <span className="text-on-surface text-xs font-bold">{atsScoreLabel}</span>
                 </div>
-                <span className="text-primary text-sm font-black">98 / 100</span>
+                <span className="text-primary text-sm font-bold">98 / 100</span>
               </div>
-              <p className="mt-2 text-[11px] leading-relaxed text-[#065f46]">{atsScoreText}</p>
+              <p className="text-label-sm mt-2 leading-relaxed text-[#065f46]">{atsScoreText}</p>
             </div>
 
             <div>
@@ -172,7 +172,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
           <div className="mt-6 space-y-3 border-t border-gray-100 pt-6">
             <Link
               href="/candidate/profile"
-              className="bg-primary shadow-primary/25 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-[#009b44]"
+              className="bg-primary shadow-primary/25 shadow-elevation-2 hover:bg-primary flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold text-white transition"
             >
               <span>{useThisCta}</span>
               <ArrowRight className="h-4 w-4" />
@@ -190,7 +190,7 @@ export default function CvPreviewModal({ template, isOpen, onClose }: CvPreviewM
                 </>
               ) : (
                 <>
-                  <Download className="h-4 w-4 text-[#7f878f]" />
+                  <Download className="text-on-surface-variant h-4 w-4" />
                   <span>{downloadPdfBtn}</span>
                 </>
               )}

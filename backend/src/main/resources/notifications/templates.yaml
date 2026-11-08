@@ -119,6 +119,72 @@ templates:
       Hãy xem hồ sơ và cập nhật trạng thái để ứng viên biết tiến độ.
     actionLabel: "Xem hồ sơ ứng tuyển"
 
+  APPLICATION_STATUS_CHANGED:
+    title: "Hồ sơ {jobTitle} {status}"
+    summary: "Hồ sơ ứng tuyển của bạn tại {companyName} {status}."
+    body: |
+      Hồ sơ ứng tuyển vị trí **{jobTitle}** tại **{companyName}** {status}.
+    actionLabel: "Xem tin tuyển dụng"
+
+  INTERVIEW_INVITED:
+    title: "Lời mời phỏng vấn từ {companyName}"
+    summary: "{companyName} mời bạn phỏng vấn vị trí {jobTitle} vào {when}."
+    body: |
+      **{companyName}** mời bạn phỏng vấn vị trí **{jobTitle}**.
+
+      **Thời gian:** {when}
+
+      Hãy xác nhận tham gia hoặc đề xuất một thời gian khác nếu bạn bận.
+    actionLabel: "Xem lịch phỏng vấn"
+
+  INTERVIEW_UPDATED:
+    title: "Lịch phỏng vấn tại {companyName} đã thay đổi"
+    summary: "Lịch phỏng vấn vị trí {jobTitle} đã được cập nhật: {when}."
+    body: |
+      Lịch phỏng vấn vị trí **{jobTitle}** tại **{companyName}** đã được cập nhật.
+
+      **Thời gian:** {when}
+    actionLabel: "Xem lịch phỏng vấn"
+
+  INTERVIEW_CANCELLED:
+    title: "Lịch phỏng vấn tại {companyName} đã bị huỷ"
+    summary: "{companyName} đã huỷ buổi phỏng vấn vị trí {jobTitle}."
+    body: |
+      **{companyName}** đã huỷ buổi phỏng vấn vị trí **{jobTitle}**.
+    actionLabel: "Xem lịch phỏng vấn"
+
+  INTERVIEW_CONFIRMED:
+    title: "{candidateName} đã xác nhận phỏng vấn"
+    summary: "{candidateName} sẽ tham gia phỏng vấn vị trí {jobTitle} vào {when}."
+    body: |
+      **{candidateName}** đã xác nhận tham gia phỏng vấn vị trí **{jobTitle}**.
+
+      **Thời gian:** {when}
+    actionLabel: "Xem hồ sơ ứng tuyển"
+
+  INTERVIEW_DECLINED:
+    title: "{candidateName} đã từ chối phỏng vấn"
+    summary: "{candidateName} không thể tham gia phỏng vấn vị trí {jobTitle}."
+    body: |
+      **{candidateName}** đã từ chối lời mời phỏng vấn vị trí **{jobTitle}**.
+    actionLabel: "Xem hồ sơ ứng tuyển"
+
+  INTERVIEW_RESCHEDULE_REQUESTED:
+    title: "{candidateName} xin đổi lịch phỏng vấn"
+    summary: "{candidateName} đề xuất một thời gian khác cho buổi phỏng vấn vị trí {jobTitle}."
+    body: |
+      **{candidateName}** bận vào thời gian đã hẹn và đề xuất một thời gian khác cho vị trí **{jobTitle}**.
+
+      Hãy mở hồ sơ để đồng ý hoặc chọn lại thời gian.
+    actionLabel: "Xem hồ sơ ứng tuyển"
+
+  INTERVIEW_REMINDER:
+    title: "Buổi phỏng vấn bắt đầu sau {lead}"
+    summary: "Phỏng vấn vị trí {jobTitle} tại {companyName} bắt đầu sau {lead}."
+    body: |
+      Buổi phỏng vấn vị trí **{jobTitle}** tại **{companyName}** sẽ bắt đầu vào **{when}**.
+    actionLabel: "Xem lịch phỏng vấn"
+
   APPLICATION_WITHDRAWN:
     title: "Ứng viên đã rút hồ sơ khỏi {jobTitle}"
     summary: "Một ứng viên đã rút hồ sơ khỏi vị trí {jobTitle}."

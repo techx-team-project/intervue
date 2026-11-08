@@ -30,6 +30,8 @@ export const recruiterCompanyApi = {
       body: data,
     }),
 
+  prepareDemo: () => request<null>('/recruiter/company/demo-setup', { method: 'POST' }),
+
   searchCompanies: (keyword?: string, page = 0, size = 10) => {
     const params = new URLSearchParams();
     if (keyword?.trim()) params.set('q', keyword.trim());

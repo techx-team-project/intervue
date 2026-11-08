@@ -34,7 +34,7 @@ export default function CandidateProfileView() {
   if (isError) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
-        <p className="text-sm text-slate-600">{getErrorMessage(error)}</p>
+        <p className="text-on-surface-variant text-sm">{getErrorMessage(error)}</p>
         <Button type="button" variant="outline" isLoading={isRefetching} onClick={() => refetch()}>
           Try again
         </Button>
@@ -45,14 +45,14 @@ export default function CandidateProfileView() {
   const openEdit = () => setIsEditOpen(true);
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-20">
-      <div className="border-b border-slate-200 bg-white">
-        <div className="container-topcv py-3">
+    <div className="bg-surface-container-low min-h-screen pb-20">
+      <div className="border-outline-variant border-b bg-white">
+        <div className="container-page py-3">
           <Breadcrumb items={[{ label: 'Candidate' }, { label: 'My profile' }]} showHome className="text-xs" />
         </div>
       </div>
 
-      <div className="container-topcv space-y-6 pt-5">
+      <div className="container-page space-y-6 pt-5">
         <CandidateHeroHeader profile={profile} onEdit={openEdit} />
 
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">

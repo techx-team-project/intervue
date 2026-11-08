@@ -14,42 +14,42 @@ const FIXED_SCREEN_COLOR = '#a7f3d0';
 const CUTE_REACTIONS: Array<{ state: RobotHeadState; msg: string }> = [
   {
     state: 'happy',
-    msg: 'Hehe bạn vừa chọc mình nè! Chúc bạn một ngày săn việc tràn đầy năng lượng nha!',
+    msg: 'Hehe, you just poked me! Wishing you a day full of energy for your job hunt!',
   },
   {
     state: 'thinking',
-    msg: 'Đang suy nghĩ xem có công việc xịn hay mẹo CV ATS nào hữu ích cho bạn không đây...',
+    msg: 'Thinking about whether I have a great job or a useful ATS CV tip for you...',
   },
   {
     state: 'speaking',
-    msg: 'Chào bạn! Mình là InterVue AI, tải CV lên hoặc thử phỏng vấn giả lập cùng mình nhé!',
+    msg: 'Hi! I am InterVue AI. Upload your CV or try a mock interview with me!',
   },
   {
     state: 'searching',
-    msg: 'Radar của mình đang rà soát hàng ngàn cơ hội việc làm lương cao đãi ngộ tốt nè!',
+    msg: 'My radar is scanning thousands of well-paid job opportunities with great benefits!',
   },
 ];
 
 const PERIODIC_GREETINGS: Array<{ state: RobotHeadState; msg: string }> = [
   {
     state: 'happy',
-    msg: '👋 Xin chào! Bạn đã chuẩn bị CV chuẩn ATS chưa? Cần mình hỗ trợ chấm điểm miễn phí không nè?',
+    msg: '👋 Hello! Is your CV ATS-ready yet? Want me to score it for free?',
   },
   {
     state: 'speaking',
-    msg: '🚀 Hôm nay có hơn 1,200+ việc làm IT & Kinh doanh mới đãi ngộ tốt, nhấp vào mình để khám phá nhé!',
+    msg: '🚀 Today there are 1,200+ new IT & Business jobs with great benefits. Click me to explore!',
   },
   {
     state: 'thinking',
-    msg: '💡 Bật mí: Luyện phỏng vấn giả lập 1:1 với AI sẽ giúp bạn tăng 80% tự tin trước nhà tuyển dụng đấy!',
+    msg: '💡 Fun fact: practicing a 1-on-1 mock interview with AI can boost your confidence in front of recruiters a lot!',
   },
   {
     state: 'searching',
-    msg: '🔍 Radar AI của mình đang quét việc làm xịn gần bạn nè, bạn muốn tìm vị trí nào thế?',
+    msg: '🔍 My AI radar is scanning great jobs near you. Which position are you looking for?',
   },
   {
     state: 'happy',
-    msg: '✨ InterVue Bot AI luôn ở đây đồng hành cùng bạn! Bấm vào mình bất cứ lúc nào để mở công cụ nhé!',
+    msg: '✨ InterVue Bot AI is always here with you! Click me any time to open the tools!',
   },
 ];
 
@@ -61,7 +61,7 @@ export function FloatingAssistant() {
   const [isHovered, setIsHovered] = useState(false);
   const [robotState, setRobotState] = useState<RobotHeadState>('idle');
   const [currentMessage, setCurrentMessage] = useState<string>(
-    'Chào bạn! Mình là bạn nhỏ InterVue Bot AI. Nhấp vào mình hoặc chọn tác vụ nhanh bên dưới nhé!',
+    'Hi! I am your little friend InterVue Bot AI. Click me or pick a quick action below!',
   );
 
   const assistantRef = React.useRef<HTMLElement>(null);
@@ -214,7 +214,7 @@ export function FloatingAssistant() {
                   setRobotState('idle');
                 }}
                 className="cursor-pointer rounded-full p-0.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
-                title="Thu gọn lời thoại"
+                title="Collapse message"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -227,36 +227,33 @@ export function FloatingAssistant() {
             <div className="flex flex-wrap gap-1.5">
               <Link
                 href="/cv-templates"
-                onClick={() => handleAction('thinking', 'Đang mở kho mẫu CV chuẩn ATS để chấm điểm cho bạn nhé!')}
+                onClick={() => handleAction('thinking', 'Opening the ATS-ready CV template library to score your CV!')}
                 className="inline-flex items-center gap-1 rounded-xl border border-emerald-200/80 bg-emerald-50 px-2.5 py-1 text-[10.5px] font-bold text-emerald-800 transition hover:bg-emerald-100"
               >
                 <FileText className="h-3 w-3 text-emerald-600" />
-                <span>Tạo CV ATS</span>
+                <span>ATS CV</span>
               </Link>
 
               <button
                 type="button"
                 onClick={() =>
-                  handleAction(
-                    'speaking',
-                    'Sẵn sàng chưa? Hãy nêu một thử thách lớn nhất trong dự án gần đây của bạn nhé!',
-                  )
+                  handleAction('speaking', 'Ready? Tell me about the biggest challenge in your recent project!')
                 }
                 className="inline-flex cursor-pointer items-center gap-1 rounded-xl border border-slate-200/80 bg-slate-100 px-2.5 py-1 text-[10.5px] font-bold text-slate-800 transition hover:bg-slate-200"
               >
                 <MessageSquareCode className="h-3 w-3 text-emerald-600" />
-                <span>Phỏng vấn AI</span>
+                <span>AI interview</span>
               </button>
 
               <Link
                 href="/jobs"
                 onClick={() =>
-                  handleAction('searching', 'Đang quét radar toàn bộ việc làm lương cao đãi ngộ tốt cho bạn!')
+                  handleAction('searching', 'Scanning the radar for all well-paid jobs with great benefits for you!')
                 }
                 className="inline-flex items-center gap-1 rounded-xl border border-slate-200/80 bg-slate-100 px-2.5 py-1 text-[10.5px] font-bold text-slate-800 transition hover:bg-slate-200"
               >
                 <Briefcase className="h-3 w-3 text-emerald-600" />
-                <span>Tìm việc làm</span>
+                <span>Find jobs</span>
               </Link>
 
               <Link
@@ -281,7 +278,7 @@ export function FloatingAssistant() {
             transform: 'translate3d(0, 0, 0)',
             contain: 'layout paint',
           }}
-          title={showBubble ? 'Nhấp để đóng khung chat' : 'Nhấp để mở khung chat cùng Bot'}
+          title={showBubble ? 'Click to close the chat' : 'Click to chat with the Bot'}
         >
           <DynamicRobotHead
             shape={FIXED_SHAPE}

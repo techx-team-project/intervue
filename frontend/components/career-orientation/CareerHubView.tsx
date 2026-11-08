@@ -81,7 +81,7 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
   };
 
   return (
-    <div className="min-h-screen bg-[#f8faf9]">
+    <div className="bg-surface-container-low min-h-screen">
       <CareerHeroSearch
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
@@ -106,12 +106,12 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
         <div className="pt-6">
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
+              <div className="text-primary bg-primary-container flex h-8 w-8 items-center justify-center rounded-lg">
                 <BookOpen className="h-5 w-5" />
               </div>
-              <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">{title}</h2>
+              <h2 className="text-on-surface text-xl font-bold sm:text-2xl">{title}</h2>
             </div>
-            <span className="text-xs text-[#7f878f]">
+            <span className="text-on-surface-variant text-xs">
               {filteredArticles.length} {articleCountSuffix}
             </span>
           </div>
@@ -132,7 +132,7 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
                         type="button"
                         disabled={currentPage === 1}
                         onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                        className="rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-[#526475] transition hover:bg-gray-50 disabled:opacity-40"
+                        className="text-on-surface-variant rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold transition hover:bg-gray-50 disabled:opacity-40"
                       >
                         {prevBtn}
                       </button>
@@ -147,7 +147,7 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
                             className={`h-9 w-9 rounded-xl text-xs font-bold transition ${
                               currentPage === pageNum
                                 ? 'bg-primary text-white shadow-xs'
-                                : 'border border-gray-200 bg-white text-[#526475] hover:bg-gray-50'
+                                : 'text-on-surface-variant border border-gray-200 bg-white hover:bg-gray-50'
                             }`}
                           >
                             {pageNum}
@@ -159,7 +159,7 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
                         type="button"
                         disabled={currentPage === totalPages}
                         onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                        className="rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-[#526475] transition hover:bg-gray-50 disabled:opacity-40"
+                        className="text-on-surface-variant rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold transition hover:bg-gray-50 disabled:opacity-40"
                       >
                         {nextBtn}
                       </button>
@@ -168,9 +168,9 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
                 </>
               ) : (
                 <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-12 text-center">
-                  <SearchX className="mx-auto mb-3 h-12 w-12 text-[#9ca3af]" />
-                  <h3 className="text-base font-bold text-[#171717]">{notFoundTitle}</h3>
-                  <p className="mt-1 text-xs text-[#7f878f]">{notFoundDesc}</p>
+                  <SearchX className="text-outline mx-auto mb-3 h-12 w-12" />
+                  <h3 className="text-on-surface text-base font-bold">{notFoundTitle}</h3>
+                  <p className="text-on-surface-variant mt-1 text-xs">{notFoundDesc}</p>
                   <button
                     type="button"
                     onClick={() => {
@@ -178,7 +178,7 @@ export default function CareerHubView({ initialArticles, categories, trendingInd
                       setSelectedTag(null);
                       setActiveCategoryId('all');
                     }}
-                    className="bg-primary mt-4 rounded-xl px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#009b44]"
+                    className="bg-primary hover:bg-primary mt-4 rounded-xl px-4 py-2 text-xs font-semibold text-white transition"
                   >
                     {clearFilterBtn}
                   </button>

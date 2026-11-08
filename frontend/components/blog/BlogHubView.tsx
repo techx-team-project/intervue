@@ -85,7 +85,7 @@ export default function BlogHubView({ initialArticles }: BlogHubViewProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8faf9]">
+    <div className="bg-surface-container-low min-h-screen">
       <BlogHeroSearch
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
@@ -102,16 +102,16 @@ export default function BlogHubView({ initialArticles }: BlogHubViewProps) {
             <BlogFeaturedGrid articles={featuredArticles} />
 
             <div className="my-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="relative overflow-hidden rounded-3xl border border-amber-200 bg-linear-to-r from-amber-500/10 via-orange-500/10 to-transparent p-6 shadow-xs">
+              <div className="bg-surface-container-low relative overflow-hidden rounded-3xl border border-amber-200 p-6 shadow-xs">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-md">
+                  <div className="shadow-elevation-1 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 text-white">
                     <Calculator className="h-6 w-6" />
                   </div>
                   <div>
                     <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-800">
                       Interactive Tool
                     </span>
-                    <h3 className="mt-1 text-lg font-bold text-[#0f172a]">Gross ➔ Net Salary Calculator</h3>
+                    <h3 className="text-on-surface mt-1 text-lg font-bold">Gross ➔ Net Salary Calculator</h3>
                   </div>
                 </div>
                 <p className="mt-3 text-xs leading-relaxed text-gray-600">
@@ -129,16 +129,16 @@ export default function BlogHubView({ initialArticles }: BlogHubViewProps) {
                 </div>
               </div>
 
-              <div className="relative overflow-hidden rounded-3xl border border-emerald-200 bg-linear-to-r from-emerald-500/10 via-teal-500/10 to-transparent p-6 shadow-xs">
+              <div className="border-primary/30 bg-primary-light relative overflow-hidden rounded-3xl border p-6 shadow-xs">
                 <div className="flex items-center gap-3">
-                  <div className="bg-primary flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-md">
+                  <div className="bg-primary shadow-elevation-1 flex h-12 w-12 items-center justify-center rounded-2xl text-white">
                     <Compass className="h-6 w-6" />
                   </div>
                   <div>
-                    <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
+                    <span className="bg-primary-container text-on-primary-container rounded-full px-2.5 py-0.5 text-xs font-bold">
                       3-Minute Quiz
                     </span>
-                    <h3 className="mt-1 text-lg font-bold text-[#0f172a]">Discover Your Ikigai Career Alignment</h3>
+                    <h3 className="text-on-surface mt-1 text-lg font-bold">Discover Your Ikigai Career Alignment</h3>
                   </div>
                 </div>
                 <p className="mt-3 text-xs leading-relaxed text-gray-600">
@@ -147,7 +147,7 @@ export default function BlogHubView({ initialArticles }: BlogHubViewProps) {
                 <div className="mt-4">
                   <Link
                     href="/blog/dinh-huong-nghe-nghiep"
-                    className="bg-primary inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-600"
+                    className="bg-primary hover:bg-primary inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-sm transition"
                   >
                     <span>Take Assessment</span>
                     <ArrowRight className="h-3.5 w-3.5" />
@@ -161,10 +161,12 @@ export default function BlogHubView({ initialArticles }: BlogHubViewProps) {
         <div className="pt-6">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
-              <div className="text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
+              <div className="text-primary bg-primary-container flex h-8 w-8 items-center justify-center rounded-lg">
                 <BookOpen className="h-5 w-5" />
               </div>
-              <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">All Articles ({filteredArticles.length})</h2>
+              <h2 className="text-on-surface text-xl font-bold sm:text-2xl">
+                All Articles ({filteredArticles.length})
+              </h2>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">

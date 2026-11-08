@@ -19,14 +19,14 @@ export const NOTIFICATION_CATEGORY_LABELS: Record<NotificationCategory, string> 
 };
 
 export const NOTIFICATION_CATEGORY_LABELS_VI: Record<NotificationCategory, string> = {
-  JOBS: 'Việc làm',
-  APPLICATIONS: 'Ứng tuyển',
-  CONNECTIONS: 'Kết nối',
-  COMPANY: 'Doanh nghiệp',
-  ACCOUNT: 'Tài khoản',
-  SECURITY: 'Bảo mật',
-  MODERATION: 'Kiểm duyệt',
-  SYSTEM: 'Hệ thống',
+  JOBS: 'Jobs',
+  APPLICATIONS: 'Applications',
+  CONNECTIONS: 'Connections',
+  COMPANY: 'Company',
+  ACCOUNT: 'Account',
+  SECURITY: 'Security',
+  MODERATION: 'Moderation',
+  SYSTEM: 'System',
 };
 
 const TABS_BY_REALM: Record<NotificationRealm, NotificationCategoryFilter[]> = {
@@ -40,7 +40,7 @@ export function notificationTabsFor(realm: NotificationRealm): NotificationCateg
 }
 
 export function notificationTabLabel(filter: NotificationCategoryFilter, vietnamese = false): string {
-  if (filter === 'ALL') return vietnamese ? 'Tất cả' : 'All';
+  if (filter === 'ALL') return 'All';
   return vietnamese ? NOTIFICATION_CATEGORY_LABELS_VI[filter] : NOTIFICATION_CATEGORY_LABELS[filter];
 }
 
@@ -90,20 +90,20 @@ const COPY_EN: NotificationCopy = {
 };
 
 const COPY_VI: NotificationCopy = {
-  detailsHeading: 'Chi tiết thông báo',
-  back: 'Quay lại',
-  backToList: 'Về danh sách thông báo',
-  notFoundTitle: 'Không tìm thấy thông báo',
-  notFoundBody: 'Thông báo bạn đang tìm có thể đã bị gỡ hoặc không tồn tại.',
-  loadError: 'Không tải được thông báo',
-  retry: 'Thử lại',
-  empty: 'Chưa có thông báo nào trong mục này',
-  emptyFiltered: 'Không có thông báo nào khớp bộ lọc',
-  newBadge: 'Mới',
-  tagFallback: 'Thông báo',
-  supportIntro: 'Nếu cần hỗ trợ, vui lòng liên hệ bộ phận chăm sóc khách hàng của InterVue:',
-  hotlineLabel: 'Tổng đài',
-  clearTimeFilter: 'Xoá bộ lọc thời gian',
+  detailsHeading: 'Notification details',
+  back: 'Back',
+  backToList: 'Back to notifications',
+  notFoundTitle: 'Notification not found',
+  notFoundBody: 'The notification you are looking for may have been removed or does not exist.',
+  loadError: 'Could not load notifications',
+  retry: 'Try again',
+  empty: 'No notifications in this section yet',
+  emptyFiltered: 'No notifications match the filter',
+  newBadge: 'New',
+  tagFallback: 'Notification',
+  supportIntro: 'If you need help, please contact InterVue customer support:',
+  hotlineLabel: 'Hotline',
+  clearTimeFilter: 'Clear time filter',
 };
 
 export function isVietnameseRealm(realm: NotificationRealm): boolean {

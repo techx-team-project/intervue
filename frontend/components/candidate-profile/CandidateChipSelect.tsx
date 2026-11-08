@@ -25,10 +25,10 @@ export default function CandidateChipSelect({ label, options, value, onChange, m
   return (
     <div className="w-full space-y-1.5">
       <div className="flex items-baseline justify-between">
-        <span id={labelId} className="block text-sm font-semibold text-slate-800">
+        <span id={labelId} className="text-on-surface block text-sm font-semibold">
           {label}
         </span>
-        <span className="text-xs text-slate-500">
+        <span className="text-on-surface-variant text-xs">
           {value.length}/{max} selected
         </span>
       </div>
@@ -51,8 +51,8 @@ export default function CandidateChipSelect({ label, options, value, onChange, m
               className={cn(
                 'cursor-pointer rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40',
                 selected
-                  ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
-                  : 'border-slate-300 bg-white text-slate-600 hover:border-emerald-400',
+                  ? 'border-primary bg-primary-light text-primary'
+                  : 'border-outline text-on-surface-variant bg-white hover:border-emerald-400',
               )}
             >
               {item}
@@ -62,7 +62,7 @@ export default function CandidateChipSelect({ label, options, value, onChange, m
       </div>
 
       {error && (
-        <p id={errorId} role="alert" className="text-xs font-medium text-rose-500">
+        <p id={errorId} role="alert" className="text-error text-xs font-medium">
           {error}
         </p>
       )}

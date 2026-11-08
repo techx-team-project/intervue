@@ -41,14 +41,16 @@ export default function Pagination({
   const last = Math.min(page * pageSize, totalItems);
 
   const stepClass =
-    'dark:border-forest-800 dark:text-forest-200 dark:hover:bg-forest-850 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40';
+    'dark:border-forest-800 dark:text-forest-200 dark:hover:bg-forest-850 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant transition-colors hover:bg-surface-container-low disabled:cursor-not-allowed disabled:opacity-40';
 
   return (
     <div className={cn('flex flex-wrap items-center justify-between gap-3', className)}>
-      <p className="dark:text-forest-300 text-[12px] text-[#64748b]">
-        Showing <span className="dark:text-forest-100 font-bold text-[#334155]">{first}</span>–
-        <span className="dark:text-forest-100 font-bold text-[#334155]">{last}</span> of{' '}
-        <span className="dark:text-forest-100 font-bold text-[#334155]">{totalItems.toLocaleString('en-GB')}</span>
+      <p className="dark:text-forest-300 text-body-sm text-on-surface-variant">
+        Showing <span className="dark:text-forest-100 text-on-surface-variant font-bold">{first}</span>–
+        <span className="dark:text-forest-100 text-on-surface-variant font-bold">{last}</span> of{' '}
+        <span className="dark:text-forest-100 text-on-surface-variant font-bold">
+          {totalItems.toLocaleString('en-GB')}
+        </span>
       </p>
 
       {pageCount > 1 && (
@@ -65,7 +67,7 @@ export default function Pagination({
 
           {pageWindow(page, pageCount).map((entry, index) =>
             entry === 'gap' ? (
-              <span key={`gap-${index}`} className="px-1 text-[12px] text-[#cbd5e1]">
+              <span key={`gap-${index}`} className="text-body-sm text-outline px-1">
                 …
               </span>
             ) : (
@@ -75,10 +77,10 @@ export default function Pagination({
                 onClick={() => onPageChange(entry)}
                 aria-current={entry === page ? 'page' : undefined}
                 className={cn(
-                  'h-8 min-w-8 cursor-pointer rounded-lg px-2 text-[12.5px] font-bold transition-colors',
+                  'text-body-sm h-8 min-w-8 cursor-pointer rounded-lg px-2 font-bold transition-colors',
                   entry === page
                     ? 'bg-primary text-white'
-                    : 'dark:text-forest-200 dark:hover:bg-forest-850 text-slate-600 hover:bg-slate-100',
+                    : 'dark:text-forest-200 dark:hover:bg-forest-850 text-on-surface-variant hover:bg-surface-container-high',
                 )}
               >
                 {entry}

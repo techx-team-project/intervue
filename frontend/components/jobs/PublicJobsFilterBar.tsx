@@ -25,14 +25,14 @@ const SELECTS: Array<{
   label: string;
   options: Array<{ value: string; label: string }>;
 }> = [
-  { key: 'city', label: 'Địa điểm', options: CITIES.map((city) => ({ value: city, label: city })) },
-  { key: 'level', label: 'Cấp bậc', options: toOptions(JOB_LEVEL_LABELS) },
-  { key: 'contractType', label: 'Loại hợp đồng', options: toOptions(JOB_CONTRACT_LABELS) },
-  { key: 'workingArrangement', label: 'Hình thức', options: toOptions(JOB_ARRANGEMENT_LABELS) },
+  { key: 'city', label: 'Location', options: CITIES.map((city) => ({ value: city, label: city })) },
+  { key: 'level', label: 'Level', options: toOptions(JOB_LEVEL_LABELS) },
+  { key: 'contractType', label: 'Contract type', options: toOptions(JOB_CONTRACT_LABELS) },
+  { key: 'workingArrangement', label: 'Work mode', options: toOptions(JOB_ARRANGEMENT_LABELS) },
   {
     key: 'salaryFrom',
-    label: 'Mức lương',
-    options: SALARY_STEPS.map((step) => ({ value: String(step * MILLION), label: `Từ ${step} triệu` })),
+    label: 'Salary',
+    options: SALARY_STEPS.map((step) => ({ value: String(step * MILLION), label: `From ${step}M VND` })),
   },
 ];
 
@@ -46,7 +46,7 @@ export default function PublicJobsFilterBar({ filters, onChange }: PublicJobsFil
   const hasFilters = Object.values(filters).some(Boolean);
 
   return (
-    <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-2xs">
+    <div className="bg-surface shadow-card space-y-3 rounded-3xl p-5">
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -55,20 +55,20 @@ export default function PublicJobsFilterBar({ filters, onChange }: PublicJobsFil
         className="flex gap-2"
       >
         <label className="relative flex-1">
-          <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="text-outline pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
           <input
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
-            placeholder="Vị trí tuyển dụng, tên công ty"
-            aria-label="Từ khóa tìm kiếm"
-            className="h-11 w-full rounded-xl border border-slate-300 bg-white pr-3 pl-10 text-sm focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
+            placeholder="Job title or company name"
+            aria-label="Search keyword"
+            className="border-outline focus:border-primary h-11 w-full rounded-xl border bg-white pr-3 pl-10 text-sm focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
           />
         </label>
         <button
           type="submit"
           className="bg-primary hover:bg-primary-hover h-11 cursor-pointer rounded-xl px-5 text-sm font-bold text-white transition"
         >
-          Tìm kiếm
+          Search
         </button>
       </form>
 
@@ -79,7 +79,7 @@ export default function PublicJobsFilterBar({ filters, onChange }: PublicJobsFil
             value={filters[select.key]}
             onChange={(event) => onChange({ [select.key]: event.target.value })}
             aria-label={select.label}
-            className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 focus:border-emerald-600 focus:outline-none"
+            className="border-outline text-on-surface focus:border-primary h-10 rounded-xl border bg-white px-3 text-xs font-medium focus:outline-none"
           >
             <option value="">{select.label}</option>
             {select.options.map((option) => (
@@ -98,9 +98,9 @@ export default function PublicJobsFilterBar({ filters, onChange }: PublicJobsFil
             setKeyword('');
             onChange({ q: '', city: '', level: '', contractType: '', workingArrangement: '', salaryFrom: '' });
           }}
-          className="cursor-pointer text-xs font-semibold text-emerald-700 hover:underline"
+          className="text-primary cursor-pointer text-xs font-semibold hover:underline"
         >
-          Xóa bộ lọc
+          Clear filters
         </button>
       )}
     </div>

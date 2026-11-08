@@ -18,9 +18,9 @@ interface JobPostFormViewProps {
 
 function Notice({ title, description }: { title: string; description: string }) {
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white px-6 py-14 text-center shadow-xs">
-      <h2 className="text-base font-bold text-slate-900">{title}</h2>
-      <p className="text-sm text-slate-500">{description}</p>
+    <div className="border-outline-variant mx-auto flex max-w-md flex-col items-center gap-3 rounded-2xl border bg-white px-6 py-14 text-center shadow-xs">
+      <h2 className="text-on-surface text-base font-bold">{title}</h2>
+      <p className="text-on-surface-variant text-sm">{description}</p>
       <Link href={ROUTES.RECRUITER_JOBS}>
         <Button variant="outline" leftIcon={<ArrowLeft className="h-4 w-4" />}>
           Về danh sách tin

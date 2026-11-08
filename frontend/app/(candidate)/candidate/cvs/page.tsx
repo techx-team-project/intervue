@@ -4,13 +4,13 @@ import Header from '@/components/common/Header';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'CV của tôi | InterVue',
-  description: 'Tải lên và quản lý các CV dùng để ứng tuyển.',
+  title: 'My CVs | InterVue',
+  description: 'Upload and manage the CVs you use to apply.',
 };
 
 export default function CandidateCvsPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#f4f5f5]">
+    <div className="bg-surface-container-low flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
         <CandidateCvManager />

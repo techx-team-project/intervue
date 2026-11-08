@@ -46,8 +46,8 @@ export default function CandidateDeleteModal({
         </>
       }
     >
-      <p className="text-sm wrap-break-word text-slate-600">
-        <span className="font-semibold text-slate-800">{name}</span> will be removed from your profile. This cannot be
+      <p className="text-on-surface-variant text-sm wrap-break-word">
+        <span className="text-on-surface font-semibold">{name}</span> will be removed from your profile. This cannot be
         undone.
       </p>
     </Modal>

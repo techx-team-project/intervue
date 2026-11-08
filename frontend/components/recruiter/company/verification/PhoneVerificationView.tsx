@@ -60,7 +60,7 @@ export function PhoneVerificationView() {
       />
 
       {/* Top Banner */}
-      <div className="relative overflow-hidden rounded-lg border border-slate-200/90 bg-white shadow-2xs">
+      <div className="border-outline-variant/90 relative overflow-hidden rounded-lg border bg-white shadow-2xs">
         <Image
           src="/images/recruiter/banner-phone-verify-final.jpg"
           alt="InterVue Employer Phone Verification"
@@ -73,9 +73,9 @@ export function PhoneVerificationView() {
       </div>
 
       {/* Main Verification Card */}
-      <div className="space-y-6 rounded-lg border border-slate-200 bg-white p-6 shadow-2xs">
+      <div className="border-outline-variant space-y-6 rounded-lg border bg-white p-6 shadow-2xs">
         <div className="space-y-1">
-          <h2 className="text-base font-semibold text-slate-800">Update and verify phone number</h2>
+          <h2 className="text-on-surface text-base font-semibold">Update and verify phone number</h2>
         </div>
 
         {/* Verification Status or Form */}
@@ -85,18 +85,18 @@ export function PhoneVerificationView() {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               {/* Phone display field with subtle verified badge */}
               <div className="relative w-full sm:max-w-md">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                <div className="text-outline pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
                   <Phone className="h-4 w-4" />
                 </div>
                 <input
                   type="text"
                   readOnly
                   value={formatPhoneNumber(phoneNumber)}
-                  className="h-11 w-full cursor-default rounded-md border border-slate-200 bg-slate-50/70 pr-28 pl-10 text-sm font-medium text-slate-800 select-all focus:outline-none"
+                  className="border-outline-variant bg-surface-container-low/70 text-on-surface h-11 w-full cursor-default rounded-md border pr-28 pl-10 text-sm font-medium select-all focus:outline-none"
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                   <span className="inline-flex items-center gap-1 rounded border border-emerald-200/80 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-[#00b14f]" />
+                    <CheckCircle2 className="text-primary h-3.5 w-3.5" />
                     <span>Verified</span>
                   </span>
                 </div>
@@ -106,13 +106,13 @@ export function PhoneVerificationView() {
               <button
                 type="button"
                 onClick={() => setIsChangeModalOpen(true)}
-                className="flex h-11 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-5 text-sm font-medium text-slate-700 shadow-2xs transition hover:bg-slate-50 hover:text-slate-900 active:scale-98"
+                className="border-outline text-on-surface hover:bg-surface-container-low hover:text-on-surface flex h-11 shrink-0 cursor-pointer items-center justify-center rounded-md border bg-white px-5 text-sm font-medium shadow-2xs transition active:scale-98"
               >
                 Change phone number
               </button>
             </div>
 
-            <p className="text-xs text-slate-500">
+            <p className="text-on-surface-variant text-xs">
               This verified phone number is used for candidate contact and dedicated support from InterVue.
             </p>
           </div>
@@ -121,7 +121,7 @@ export function PhoneVerificationView() {
             {/* Input + Send OTP Button */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
               <div className="relative w-full sm:max-w-md">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                <div className="text-outline pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
                   <Phone className="h-4 w-4" />
                 </div>
                 <input
@@ -135,14 +135,14 @@ export function PhoneVerificationView() {
                     }
                   }}
                   placeholder="e.g. 0912345678"
-                  className="h-11 w-full rounded-md border border-slate-300 bg-white pr-4 pl-10 text-sm text-slate-900 placeholder-slate-400 transition focus:border-[#00b14f] focus:ring-1 focus:ring-emerald-200 focus:outline-none"
+                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white pr-4 pl-10 text-sm placeholder-slate-400 transition focus:ring-1 focus:ring-emerald-200 focus:outline-none"
                 />
               </div>
 
               <button
                 type="button"
                 onClick={handleInitiateVerification}
-                className="flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md bg-[#00b14f] px-6 text-sm font-medium text-white shadow-2xs transition hover:bg-emerald-600 active:scale-98"
+                className="bg-primary flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md px-6 text-sm font-medium text-white shadow-2xs transition hover:bg-emerald-600 active:scale-98"
               >
                 Send verification code
               </button>
@@ -151,26 +151,26 @@ export function PhoneVerificationView() {
         )}
 
         {/* Benefits Section */}
-        <div className="space-y-3.5 border-t border-slate-100 pt-5">
-          <h3 className="text-xs font-medium text-slate-700">Benefits of phone verification:</h3>
+        <div className="border-outline-variant space-y-3.5 border-t pt-5">
+          <h3 className="text-on-surface text-xs font-medium">Benefits of phone verification:</h3>
 
           <div className="grid grid-cols-1 gap-x-10 gap-y-3.5 md:grid-cols-2">
             {/* Benefit 1: Identity Security */}
             <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-emerald-100 bg-emerald-50 text-[#00b14f]">
+              <div className="text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-emerald-100 bg-emerald-50">
                 <ShieldCheck className="h-5 w-5" />
               </div>
-              <p className="pt-0.5 text-xs leading-relaxed text-slate-600">
+              <p className="text-on-surface-variant pt-0.5 text-xs leading-relaxed">
                 Enhance recruiter account security, shield against fraudulent impersonation and unauthorized takeovers.
               </p>
             </div>
 
             {/* Benefit 2: Fast Support */}
             <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-emerald-100 bg-emerald-50 text-[#00b14f]">
+              <div className="text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-emerald-100 bg-emerald-50">
                 <Headphones className="h-5 w-5" />
               </div>
-              <p className="pt-0.5 text-xs leading-relaxed text-slate-600">
+              <p className="text-on-surface-variant pt-0.5 text-xs leading-relaxed">
                 Receive rapid dedicated support from the InterVue team via verified phone line for urgent hiring
                 queries.
               </p>
@@ -178,10 +178,10 @@ export function PhoneVerificationView() {
 
             {/* Benefit 3: Recruitment Credibility */}
             <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-emerald-100 bg-emerald-50 text-[#00b14f]">
+              <div className="text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-emerald-100 bg-emerald-50">
                 <TrendingUp className="h-5 w-5" />
               </div>
-              <p className="pt-0.5 text-xs leading-relaxed text-slate-600">
+              <p className="text-on-surface-variant pt-0.5 text-xs leading-relaxed">
                 Elevate employer branding trust, increase job listing visibility with relevant tech candidates, and
                 boost application rates.
               </p>

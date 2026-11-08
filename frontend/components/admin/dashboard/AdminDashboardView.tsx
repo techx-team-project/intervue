@@ -24,11 +24,11 @@ export default function AdminDashboardView({ data, initialKind }: AdminDashboard
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="dark:text-forest-300 text-[13.5px] text-[#64748b]">
+        <p className="dark:text-forest-300 text-body-md text-on-surface-variant">
           Hi <span className="text-navy dark:text-forest-50 font-bold">{user?.name}</span>, here is what needs you
           today.
         </p>
-        <p className="text-[12px] text-[#94a3b8]">
+        <p className="text-body-sm text-outline">
           {new Intl.DateTimeFormat('en-GB', {
             weekday: 'long',
             day: 'numeric',

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <AuthLayout title="Welcome to InterVue">
+    <AuthLayout title="Create your InterVue account">
       <GuestRedirect />
       <RegisterForm />
     </AuthLayout>

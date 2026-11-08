@@ -11,37 +11,34 @@ export default function JobAiInterviewBanner({ jobTitle }: JobAiInterviewBannerP
   const [started, setStarted] = useState(false);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-linear-to-br from-slate-900 via-[#132d22] to-slate-900 p-6 text-white shadow-lg sm:p-7">
-      <div className="bg-primary/25 pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-teal-500/20 blur-3xl" />
-
+    <div className="border-primary/30 bg-primary-deeper shadow-elevation-2 relative overflow-hidden rounded-2xl border p-6 text-white sm:p-7">
       <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="max-w-xl">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-300">
-            <Sparkles className="h-3.5 w-3.5 text-emerald-300" />
+          <div className="text-primary-bright inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/20 px-3 py-1 text-xs font-bold">
+            <Sparkles className="text-primary-bright h-3.5 w-3.5" />
             <span>Tính năng độc quyền InterVue AI</span>
           </div>
 
-          <h3 className="mt-3 text-lg font-black tracking-tight text-white sm:text-xl">
-            Luyện phỏng vấn AI cho vị trí <span className="text-emerald-400">{jobTitle}</span>
+          <h3 className="mt-3 text-lg font-bold tracking-tight text-white sm:text-xl">
+            Luyện phỏng vấn AI cho vị trí <span className="text-primary-bright">{jobTitle}</span>
           </h3>
 
-          <p className="mt-2 text-[13.5px] leading-relaxed text-slate-300">
+          <p className="text-body-md text-outline mt-2 leading-relaxed">
             AI trích xuất yêu cầu công việc từ bản JD này để tạo phòng phỏng vấn giả lập 1:1. Giúp bạn tự tin trả lời
             lưu loát mọi câu hỏi hóc búa của nhà tuyển dụng và nhận đánh giá tức thì.
           </p>
 
-          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-300">
+          <div className="text-outline mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs">
             <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+              <CheckCircle2 className="text-primary-bright h-4 w-4" />
               <span>Chấm điểm tư duy nghiệp vụ</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+              <CheckCircle2 className="text-primary-bright h-4 w-4" />
               <span>Gợi ý cách trả lời ghi điểm</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+              <CheckCircle2 className="text-primary-bright h-4 w-4" />
               <span>100% bảo mật thông tin</span>
             </div>
           </div>
@@ -51,16 +48,16 @@ export default function JobAiInterviewBanner({ jobTitle }: JobAiInterviewBannerP
           <button
             type="button"
             onClick={() => setStarted(true)}
-            className="bg-primary shadow-primary/40 flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-[14.5px] font-extrabold text-white shadow-md transition hover:bg-[#00c957] hover:shadow-lg active:scale-95"
+            className="bg-primary shadow-primary/40 text-body-md shadow-elevation-1 hover:shadow-elevation-2 flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-extrabold text-white transition hover:bg-[#00c957] active:scale-95"
           >
             <Bot className="h-5 w-5" />
             <span>{started ? 'Đang mở phòng AI...' : 'Luyện phỏng vấn ngay'}</span>
             <ArrowRight className="ml-1 h-4 w-4" />
           </button>
 
-          <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-[11.5px] text-slate-300">
-            <span className="font-semibold text-emerald-300">💡 Câu hỏi mẫu:</span> &ldquo;Khi kiểm tra hóa đơn thuế bị
-            sai lệch số liệu so với sổ sách, bạn sẽ xử lý thế nào?&rdquo;
+          <div className="text-label-sm text-outline rounded-xl border border-white/10 bg-white/5 p-3">
+            <span className="text-primary-bright font-semibold">💡 Câu hỏi mẫu:</span> &ldquo;Khi kiểm tra hóa đơn thuế
+            bị sai lệch số liệu so với sổ sách, bạn sẽ xử lý thế nào?&rdquo;
           </div>
         </div>
       </div>

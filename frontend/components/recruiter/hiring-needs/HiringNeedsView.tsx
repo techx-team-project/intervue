@@ -100,8 +100,8 @@ export default function HiringNeedsView({ initialNeeds }: HiringNeedsViewProps) 
         }
       >
         {deleteTarget && (
-          <p className="text-sm leading-relaxed text-slate-600">
-            <strong className="text-slate-900">{describeHiringNeed(deleteTarget).role}</strong> (
+          <p className="text-on-surface-variant text-sm leading-relaxed">
+            <strong className="text-on-surface">{describeHiringNeed(deleteTarget).role}</strong> (
             {describeHiringNeed(deleteTarget).level}) will be removed from your hiring needs. You can add it again
             later.
           </p>

@@ -26,14 +26,14 @@ export default function CandidateItemFormShell<T extends FieldValues>({
     <FormProvider {...methods}>
       <form onSubmit={onSubmit} noValidate className="space-y-4 text-sm">
         {rootMessage && (
-          <p role="alert" className="rounded-xl bg-rose-50 px-3.5 py-2.5 text-xs font-medium text-rose-600">
+          <p role="alert" className="bg-error/10 text-error rounded-xl px-3.5 py-2.5 text-xs font-medium">
             {rootMessage}
           </p>
         )}
 
         {children}
 
-        <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-4">
+        <div className="border-outline-variant flex items-center justify-end gap-3 border-t pt-4">
           <Button type="button" variant="secondary" onClick={onClose} disabled={isPending}>
             Cancel
           </Button>

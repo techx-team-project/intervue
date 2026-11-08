@@ -9,10 +9,10 @@ type CandidateAboutSectionProps = {
 
 export default function CandidateAboutSection({ bio, onEdit }: CandidateAboutSectionProps) {
   return (
-    <section className="rounded-3xl border border-[#e9eaec] bg-white p-6 shadow-xs sm:p-8">
+    <section className="border-outline-variant rounded-3xl border bg-white p-6 shadow-xs sm:p-8">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="text-primary flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50">
+          <div className="text-primary bg-primary-light flex h-9 w-9 items-center justify-center rounded-xl">
             <User className="h-5 w-5" />
           </div>
           <h2 className="text-navy text-lg font-bold sm:text-xl">About me</h2>
@@ -21,7 +21,7 @@ export default function CandidateAboutSection({ bio, onEdit }: CandidateAboutSec
         <button
           type="button"
           onClick={onEdit}
-          className="hover:text-primary flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-[#6f7882] transition-colors hover:bg-[#f4f5f5]"
+          className="hover:text-primary text-on-surface-variant hover:bg-surface-container-low flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors"
           title="Edit about"
           aria-label="Edit about"
         >
@@ -29,11 +29,11 @@ export default function CandidateAboutSection({ bio, onEdit }: CandidateAboutSec
         </button>
       </div>
 
-      <div className="rounded-2xl bg-[#f8fafc] p-5">
+      <div className="bg-surface-container-low rounded-2xl p-5">
         {bio ? (
-          <p className="text-[14.5px] leading-relaxed whitespace-pre-line text-[#334155]">{bio}</p>
+          <p className="text-body-md text-on-surface-variant leading-relaxed whitespace-pre-line">{bio}</p>
         ) : (
-          <p className="text-sm text-slate-500">
+          <p className="text-on-surface-variant text-sm">
             Tell recruiters about your background and what you are looking for.{' '}
             <button
               type="button"

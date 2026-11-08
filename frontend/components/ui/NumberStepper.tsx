@@ -20,7 +20,7 @@ type NumberStepperProps = {
 };
 
 const STEP_BUTTON_CLASS =
-  'flex w-11 shrink-0 cursor-pointer items-center justify-center text-slate-600 transition hover:bg-slate-50 focus-visible:bg-slate-100 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40';
+  'flex w-11 shrink-0 cursor-pointer items-center justify-center text-on-surface-variant transition hover:bg-surface-container-low focus-visible:bg-surface-container-high focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40';
 
 export function NumberStepper({
   id,
@@ -47,7 +47,7 @@ export function NumberStepper({
   return (
     <div className={cn('space-y-1.5', className)}>
       {label && (
-        <label htmlFor={inputId} className="block text-sm font-semibold text-slate-800">
+        <label htmlFor={inputId} className="text-on-surface block text-sm font-semibold">
           {label}
         </label>
       )}
@@ -55,8 +55,8 @@ export function NumberStepper({
         className={cn(
           'flex h-11 items-stretch overflow-hidden rounded-xl border bg-white transition-colors focus-within:ring-2',
           error
-            ? 'border-rose-400 focus-within:border-rose-500 focus-within:ring-rose-500/15'
-            : 'border-slate-300 focus-within:border-emerald-600 focus-within:ring-emerald-600/15',
+            ? 'border-error focus-within:border-error focus-within:ring-rose-500/15'
+            : 'border-outline focus-within:border-primary focus-within:ring-emerald-600/15',
         )}
       >
         <button
@@ -89,7 +89,7 @@ export function NumberStepper({
             if (hasValue && clamp(value) !== value) onChange(clamp(value));
             onBlur?.();
           }}
-          className="w-full min-w-0 [appearance:textfield] border-x border-slate-300 text-center text-sm font-semibold text-slate-800 outline-none disabled:bg-slate-50 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="border-outline text-on-surface disabled:bg-surface-container-low w-full min-w-0 [appearance:textfield] border-x text-center text-sm font-semibold outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
         <button
           type="button"
@@ -103,7 +103,7 @@ export function NumberStepper({
         </button>
       </div>
       {error && (
-        <p id={errorId} className="text-xs font-medium text-rose-500">
+        <p id={errorId} className="text-error text-xs font-medium">
           {error}
         </p>
       )}

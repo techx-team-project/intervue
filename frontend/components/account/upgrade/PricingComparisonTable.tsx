@@ -23,11 +23,11 @@ function FeatureValueCell({
   isHighlight?: boolean;
 }) {
   if (value === true) {
-    return <Check className="h-5 w-5 stroke-[2.5] text-emerald-600" />;
+    return <Check className="text-primary h-5 w-5 stroke-[2.5]" />;
   }
 
   if (value === false || value === undefined) {
-    return <span className="h-0.5 w-4 rounded-full bg-slate-200" />;
+    return <span className="bg-surface-container-high h-0.5 w-4 rounded-full" />;
   }
 
   if (typeof value === 'string') {
@@ -36,7 +36,7 @@ function FeatureValueCell({
         className={cn(
           'text-sm',
           isSpecialRow && 'text-sm',
-          isHighlight ? 'font-bold text-emerald-600' : 'font-medium text-slate-800',
+          isHighlight ? 'text-primary font-bold' : 'text-on-surface font-medium',
         )}
       >
         {value}
@@ -52,12 +52,12 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
     <div className="w-full bg-white px-2 py-10 sm:px-4">
       <div className="mx-auto max-w-7xl overflow-x-auto pb-4">
         <div className="flex min-w-6xl items-start justify-center gap-2">
-          <div className="w-80 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
-            <div className="flex h-20 items-center border-b border-slate-200 bg-slate-50 px-5 text-base font-bold text-slate-800">
-              Loại tài khoản
+          <div className="border-outline-variant w-80 shrink-0 overflow-hidden rounded-2xl border bg-white shadow-xs">
+            <div className="border-outline-variant bg-surface-container-low text-on-surface flex h-20 items-center border-b px-5 text-base font-bold">
+              Account type
             </div>
 
-            <ul className="divide-y divide-slate-200 text-sm text-slate-700">
+            <ul className="divide-outline-variant text-on-surface divide-y text-sm">
               {features.map((feature) => (
                 <li
                   key={feature.id}
@@ -67,14 +67,14 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
                   )}
                 >
                   <div>
-                    <span className="text-slate-800">{feature.name}</span>
+                    <span className="text-on-surface">{feature.name}</span>
                     {feature.subText && (
-                      <span className="ml-1 block text-xs text-slate-500 sm:inline">{feature.subText}</span>
+                      <span className="text-on-surface-variant ml-1 block text-xs sm:inline">{feature.subText}</span>
                     )}
                   </div>
 
                   {feature.badge && (
-                    <div className="flex items-center gap-1 rounded bg-emerald-600 px-2 py-0.5 text-xs font-bold text-white shadow-xs">
+                    <div className="bg-primary flex items-center gap-1 rounded px-2 py-0.5 text-xs font-bold text-white shadow-xs">
                       <Sparkles className="h-3 w-3" />
                       <span>{feature.badge}</span>
                     </div>
@@ -83,8 +83,8 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
               ))}
             </ul>
 
-            <div className="flex h-28 items-center border-t border-slate-200 bg-slate-50 px-5 text-xs text-slate-500">
-              Chọn gói phù hợp với mục tiêu ứng tuyển
+            <div className="border-outline-variant bg-surface-container-low text-on-surface-variant flex h-28 items-center border-t px-5 text-xs">
+              Choose the plan that fits your job search goals
             </div>
           </div>
 
@@ -98,14 +98,14 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
                 className={cn(
                   'shrink-0 overflow-hidden rounded-2xl bg-white text-center transition',
                   isHighlight
-                    ? 'relative w-48 border-2 border-amber-400 shadow-lg shadow-amber-500/10'
-                    : 'w-44 border border-slate-200 shadow-xs hover:border-slate-300',
-                  isPro && 'border-emerald-200 shadow-md shadow-emerald-500/5',
+                    ? 'shadow-elevation-2 relative w-48 border-2 border-amber-400 shadow-amber-500/10'
+                    : 'border-outline-variant hover:border-outline w-44 border shadow-xs',
+                  isPro && 'border-primary/30 shadow-elevation-1 shadow-emerald-500/5',
                 )}
               >
                 <div
                   className={cn(
-                    'flex h-20 flex-col items-center justify-center border-b border-slate-200 px-2',
+                    'border-outline-variant flex h-20 flex-col items-center justify-center border-b px-2',
                     isHighlight ? 'bg-amber-50/40' : isPro ? 'bg-emerald-50/40' : 'bg-white',
                   )}
                 >
@@ -113,7 +113,7 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
                     <span
                       className={cn(
                         'text-sm font-bold',
-                        isHighlight ? 'text-amber-800' : isPro ? 'text-emerald-700' : 'text-slate-500',
+                        isHighlight ? 'text-amber-800' : isPro ? 'text-primary' : 'text-on-surface-variant',
                       )}
                     >
                       {plan.name}
@@ -122,7 +122,7 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
                       <span
                         className={cn(
                           'rounded px-2 py-0.5 text-xs font-bold text-white',
-                          isHighlight ? 'bg-amber-500' : 'bg-emerald-600',
+                          isHighlight ? 'bg-amber-500' : 'bg-primary',
                         )}
                       >
                         {plan.badge}
@@ -135,15 +135,15 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
                       isHighlight
                         ? 'text-base text-amber-700 sm:text-lg'
                         : isPro
-                          ? 'text-base text-emerald-600 sm:text-lg'
-                          : 'text-base text-slate-800',
+                          ? 'text-primary text-base sm:text-lg'
+                          : 'text-on-surface text-base',
                     )}
                   >
                     {plan.priceText}
                   </span>
                 </div>
 
-                <ul className="divide-y divide-slate-200 text-sm">
+                <ul className="divide-outline-variant divide-y text-sm">
                   {features.map((feature) => (
                     <li
                       key={feature.id}
@@ -164,8 +164,8 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
 
                 <div
                   className={cn(
-                    'flex h-28 items-center justify-center border-t border-slate-200 p-3 text-center',
-                    isHighlight ? 'bg-amber-50/20' : 'bg-slate-50',
+                    'border-outline-variant flex h-28 items-center justify-center border-t p-3 text-center',
+                    isHighlight ? 'bg-amber-50/20' : 'bg-surface-container-low',
                   )}
                 >
                   {plan.buttonActionType === 'upgrade' ? (
@@ -173,27 +173,26 @@ export function PricingComparisonTable({ features, plans, onSelectPlan }: Pricin
                       variant={isHighlight ? 'primary' : 'primary'}
                       onClick={() => onSelectPlan(plan.id as 'pro' | 'premium')}
                       className={cn(
-                        'w-full py-2.5 text-sm font-bold shadow-md',
-                        isHighlight &&
-                          'bg-linear-to-r from-amber-500 to-amber-600 shadow-amber-500/25 hover:from-amber-600 hover:to-amber-700',
+                        'shadow-elevation-1 w-full py-2.5 text-sm font-bold',
+                        isHighlight && 'bg-primary shadow-amber-500/25',
                       )}
                     >
                       {plan.buttonText}
                     </Button>
                   ) : plan.buttonActionType === 'link' ? (
-                    <div className="text-xs leading-tight text-slate-500">
+                    <div className="text-on-surface-variant text-xs leading-tight">
                       <p>{plan.footerNote}</p>
                       {plan.buttonLink && (
                         <Link
                           href={plan.buttonLink}
-                          className="mt-1 inline-block font-bold text-emerald-600 hover:underline"
+                          className="text-primary mt-1 inline-block font-bold hover:underline"
                         >
                           {plan.buttonText}
                         </Link>
                       )}
                     </div>
                   ) : (
-                    <span className="text-xs text-slate-400">{plan.footerNote || 'Gói mặc định'}</span>
+                    <span className="text-outline text-xs">{plan.footerNote || 'Default plan'}</span>
                   )}
                 </div>
               </div>

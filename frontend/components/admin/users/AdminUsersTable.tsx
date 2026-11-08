@@ -43,13 +43,13 @@ export default function AdminUsersTable({
   const allSelected = selectableIds.length > 0 && selectableIds.every((id) => selectedIds.includes(id));
 
   return (
-    <div className="dark:border-forest-800 dark:bg-forest-900 hidden rounded-2xl border border-[#e2e8f0] bg-white p-5 shadow-xs sm:p-6 lg:block">
+    <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant hidden rounded-2xl border bg-white p-5 shadow-xs sm:p-6 lg:block">
       <div className="overflow-x-auto">
         <div className="min-w-260">
           <div
             className={cn(
               GRID,
-              'dark:border-forest-800 items-center gap-4 border-b border-[#f1f5f9] px-2.5 pb-2.5 text-[11px] font-bold tracking-wide text-[#94a3b8] uppercase',
+              'dark:border-forest-800 border-outline-variant text-label-sm text-outline items-center gap-4 border-b px-2.5 pb-2.5 font-bold tracking-wide uppercase',
             )}
           >
             <span className="flex items-center">
@@ -58,7 +58,7 @@ export default function AdminUsersTable({
                 checked={allSelected}
                 onChange={onToggleSelectAll}
                 aria-label="Select every account on this page"
-                className="accent-primary h-4 w-4 cursor-pointer rounded border-slate-300"
+                className="accent-primary border-outline h-4 w-4 cursor-pointer rounded"
               />
             </span>
             <span>User</span>
@@ -80,8 +80,8 @@ export default function AdminUsersTable({
                   key={user.id}
                   className={cn(
                     GRID,
-                    'dark:hover:bg-forest-850/40 items-center gap-4 rounded-lg px-2.5 py-3 transition hover:bg-[#f8fafc]',
-                    isSelected && 'dark:bg-forest-850/60 bg-[#f1f5f9]',
+                    'dark:hover:bg-forest-850/40 hover:bg-surface-container-low items-center gap-4 rounded-lg px-2.5 py-3 transition',
+                    isSelected && 'dark:bg-forest-850/60 bg-surface-container-low',
                   )}
                 >
                   <span className="flex items-center">
@@ -92,7 +92,7 @@ export default function AdminUsersTable({
                       onChange={() => onToggleSelect(user.id)}
                       title={isSelf ? 'This is your own account' : undefined}
                       aria-label={`Select ${user.name}`}
-                      className="accent-primary h-4 w-4 cursor-pointer rounded border-slate-300 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="accent-primary border-outline h-4 w-4 cursor-pointer rounded disabled:cursor-not-allowed disabled:opacity-40"
                     />
                   </span>
 
@@ -101,12 +101,12 @@ export default function AdminUsersTable({
                     <div className="min-w-0">
                       <Link
                         href={`${ROUTES.ADMIN_USERS}/${user.id}`}
-                        className="text-navy dark:text-forest-50 hover:text-primary block truncate text-[13.5px] font-bold transition-colors"
+                        className="text-navy dark:text-forest-50 hover:text-primary text-body-md block truncate font-bold transition-colors"
                       >
                         {user.name}
-                        {isSelf && <span className="ml-1.5 text-[11px] font-semibold text-[#94a3b8]">(you)</span>}
+                        {isSelf && <span className="text-label-sm text-outline ml-1.5 font-semibold">(you)</span>}
                       </Link>
-                      <p className="dark:text-forest-300 truncate text-[12px] text-[#64748b]">{user.email}</p>
+                      <p className="dark:text-forest-300 text-body-sm text-on-surface-variant truncate">{user.email}</p>
                     </div>
                   </div>
 
@@ -118,11 +118,11 @@ export default function AdminUsersTable({
 
                   <AdminUserSignals user={user} />
 
-                  <span className="text-[11.5px] text-[#94a3b8]">
+                  <span className="text-label-sm text-outline">
                     {user.lastSignInAt ? formatRelativeDay(user.lastSignInAt) : 'Never signed in'}
                   </span>
 
-                  <span className="text-[11.5px] text-[#94a3b8]">{formatDate(user.createdAt)}</span>
+                  <span className="text-label-sm text-outline">{formatDate(user.createdAt)}</span>
 
                   <AdminUserRowActionsMenu
                     user={user}

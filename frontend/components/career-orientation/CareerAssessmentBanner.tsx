@@ -46,14 +46,11 @@ export default function CareerAssessmentBanner() {
   const finalRecommendation = quizSteps[0].options[selectedAnswers[0] || 0];
 
   return (
-    <div className="border-primary/30 relative my-8 overflow-hidden rounded-3xl border bg-linear-to-br from-[#023319] via-[#0b4d29] to-[#042413] text-white shadow-xl">
-      <div className="bg-primary/30 pointer-events-none absolute -top-16 -right-16 h-64 w-64 rounded-full blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl" />
-
+    <div className="border-primary/30 bg-primary-deeper shadow-elevation-2 relative my-8 overflow-hidden rounded-3xl border text-white">
       <div className="relative p-6 sm:p-8 lg:p-10">
         <div className="mb-6 flex flex-col justify-between gap-4 border-b border-white/10 pb-6 md:flex-row md:items-center">
           <div>
-            <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-semibold text-emerald-300">
+            <div className="text-primary-bright mb-2 inline-flex items-center gap-2 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-semibold">
               <Sparkles className="h-3.5 w-3.5" />
               <span>{badge}</span>
             </div>
@@ -89,7 +86,7 @@ export default function CareerAssessmentBanner() {
                   className="group hover:border-primary flex flex-col rounded-2xl border border-white/15 bg-white/10 p-4 text-left transition duration-200 hover:bg-white/20"
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <span className="text-sm font-bold text-white transition-colors group-hover:text-emerald-300">
+                    <span className="group-hover:text-primary-bright text-sm font-bold text-white transition-colors">
                       {opt.label}
                     </span>
                     <span className="group-hover:border-primary group-hover:bg-primary flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/30 text-white">
@@ -115,7 +112,7 @@ export default function CareerAssessmentBanner() {
           </div>
         ) : (
           <div className="rounded-2xl border border-emerald-400/30 bg-white/10 p-6">
-            <div className="mb-3 flex items-center gap-3 text-emerald-300">
+            <div className="text-primary-bright mb-3 flex items-center gap-3">
               <CheckCircle2 className="text-primary h-6 w-6" />
               <span className="text-sm font-semibold tracking-wider uppercase">{completedBadge}</span>
             </div>
@@ -128,7 +125,7 @@ export default function CareerAssessmentBanner() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href={`/blog/dinh-huong-nghe-nghiep/${finalRecommendation.slug}`}
-                className="bg-primary inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-lg transition hover:bg-[#009b44] hover:shadow-emerald-500/20"
+                className="bg-primary shadow-elevation-2 hover:bg-primary inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition hover:shadow-emerald-500/20"
               >
                 <span>{seeGuideCta}</span>
                 <ArrowRight className="h-4 w-4" />

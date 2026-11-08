@@ -14,10 +14,10 @@ type HiringNeedsListProps = {
 export default function HiringNeedsList({ needs, onAdd, onEdit, onDelete }: HiringNeedsListProps) {
   if (needs.length === 0) {
     return (
-      <div className="flex flex-col items-center rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
-        <ClipboardList className="h-10 w-10 text-slate-300" />
-        <h2 className="mt-3 text-base font-bold text-slate-800">No hiring needs yet</h2>
-        <p className="mt-1 max-w-md text-sm text-slate-500">
+      <div className="border-outline flex flex-col items-center rounded-2xl border border-dashed bg-white px-6 py-12 text-center">
+        <ClipboardList className="text-outline h-10 w-10" />
+        <h2 className="text-on-surface mt-3 text-base font-bold">No hiring needs yet</h2>
+        <p className="text-on-surface-variant mt-1 max-w-md text-sm">
           Add the roles you plan to hire for so InterVue can match candidates to each one.
         </p>
         <Button className="mt-5" leftIcon={<Plus className="h-4 w-4" />} onClick={onAdd}>
@@ -29,11 +29,11 @@ export default function HiringNeedsList({ needs, onAdd, onEdit, onDelete }: Hiri
 
   return (
     <>
-      <div className="hidden rounded-2xl border border-slate-200 bg-white shadow-xs lg:block">
+      <div className="border-outline-variant hidden rounded-2xl border bg-white shadow-xs lg:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <caption className="sr-only">Hiring needs</caption>
-            <thead className="border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase">
+            <thead className="border-outline-variant text-on-surface-variant border-b text-xs font-semibold uppercase">
               <tr>
                 <th scope="col" className="px-5 py-3">
                   Role
@@ -58,13 +58,13 @@ export default function HiringNeedsList({ needs, onAdd, onEdit, onDelete }: Hiri
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-outline-variant divide-y">
               {needs.map((need) => {
                 const details = describeHiringNeed(need);
                 const label = `${details.role} (${details.level})`;
                 return (
-                  <tr key={need.id} className="text-slate-700">
-                    <th scope="row" className="px-5 py-4 font-semibold text-slate-900">
+                  <tr key={need.id} className="text-on-surface">
+                    <th scope="row" className="text-on-surface px-5 py-4 font-semibold">
                       {details.role}
                     </th>
                     <td className="px-5 py-4">{details.level}</td>
@@ -88,11 +88,11 @@ export default function HiringNeedsList({ needs, onAdd, onEdit, onDelete }: Hiri
           const details = describeHiringNeed(need);
           const label = `${details.role} (${details.level})`;
           return (
-            <li key={need.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+            <li key={need.id} className="border-outline-variant rounded-2xl border bg-white p-4 shadow-xs">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h2 className="text-sm font-bold text-slate-900">{details.role}</h2>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <h2 className="text-on-surface text-sm font-bold">{details.role}</h2>
+                  <p className="text-on-surface-variant mt-0.5 text-xs">
                     {details.level} · {need.headcount} {need.headcount === 1 ? 'hire' : 'hires'}
                   </p>
                 </div>
@@ -100,16 +100,16 @@ export default function HiringNeedsList({ needs, onAdd, onEdit, onDelete }: Hiri
               </div>
               <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
                 <div>
-                  <dt className="text-slate-500">Hire by</dt>
-                  <dd className="font-medium text-slate-800">{details.hireBy}</dd>
+                  <dt className="text-on-surface-variant">Hire by</dt>
+                  <dd className="text-on-surface font-medium">{details.hireBy}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Budget source</dt>
-                  <dd className="font-medium text-slate-800">{details.budgetSource}</dd>
+                  <dt className="text-on-surface-variant">Budget source</dt>
+                  <dd className="text-on-surface font-medium">{details.budgetSource}</dd>
                 </div>
                 <div className="col-span-2">
-                  <dt className="text-slate-500">Budget</dt>
-                  <dd className="font-medium text-slate-800">{details.budget}</dd>
+                  <dt className="text-on-surface-variant">Budget</dt>
+                  <dd className="text-on-surface font-medium">{details.budget}</dd>
                 </div>
               </dl>
             </li>

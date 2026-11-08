@@ -41,14 +41,14 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
   if (applications.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-2.5 rounded-2xl border border-[#e5e9ef] bg-white py-20 text-center shadow-xs">
-        <Bookmark className="h-10 w-10 text-[#cbd5e1]" />
-        <p className="text-navy text-[14px] font-bold">You have not saved any candidates yet</p>
-        <p className="max-w-sm text-[12.5px] text-[#64748b]">
+        <Bookmark className="text-outline h-10 w-10" />
+        <p className="text-navy text-body-md font-bold">You have not saved any candidates yet</p>
+        <p className="text-body-sm text-on-surface-variant max-w-sm">
           While reviewing applications, use the bookmark icon on a candidate card to keep track of people you like.
         </p>
         <Link
           href={ROUTES.RECRUITER_APPLICATIONS}
-          className="bg-primary hover:bg-primary-hover mt-1 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-bold text-white transition-colors"
+          className="bg-primary hover:bg-primary-hover text-body-md mt-1 inline-flex items-center gap-1.5 rounded-full px-4 py-2 font-bold text-white transition-colors"
         >
           View applications
         </Link>
@@ -67,15 +67,15 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
             leftIcon={<Search className="h-4 w-4" />}
           />
         </div>
-        <p className="text-[12px] font-semibold text-[#64748b]">
-          <span className="text-navy font-black">{visibleApplications.length}</span> saved candidates
+        <p className="text-body-sm text-on-surface-variant font-semibold">
+          <span className="text-navy font-bold">{visibleApplications.length}</span> saved candidates
         </p>
       </div>
 
       {visibleApplications.length === 0 ? (
         <div className="rounded-2xl border border-[#e5e9ef] bg-white py-16 text-center shadow-xs">
-          <p className="text-navy text-[13.5px] font-bold">No matching candidates found</p>
-          <p className="mt-1 text-[12px] text-[#64748b]">Try another keyword or clear the search box.</p>
+          <p className="text-navy text-body-md font-bold">No matching candidates found</p>
+          <p className="text-body-sm text-on-surface-variant mt-1">Try another keyword or clear the search box.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3.5 lg:grid-cols-2 2xl:grid-cols-3">
@@ -88,12 +88,12 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
                 <CandidateAvatar fullName={application.candidate.fullName} size="md" />
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-navy truncate text-[14px] font-bold">{application.candidate.fullName}</p>
-                  <p className="truncate text-[12px] text-[#64748b]">{application.candidate.title}</p>
-                  <p className="mt-0.5 flex items-center gap-1 truncate text-[11.5px] text-[#94a3b8]">
+                  <p className="text-navy text-body-md truncate font-bold">{application.candidate.fullName}</p>
+                  <p className="text-body-sm text-on-surface-variant truncate">{application.candidate.title}</p>
+                  <p className="text-label-sm text-outline mt-0.5 flex items-center gap-1 truncate">
                     <MapPin className="h-3 w-3 shrink-0" />
                     <span className="truncate">{application.candidate.location}</span>
-                    <span className="text-[#cbd5e1]">•</span>
+                    <span className="text-outline">•</span>
                     <span className="shrink-0">{application.candidate.experienceYears} yrs exp</span>
                   </p>
                 </div>
@@ -105,19 +105,19 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
                 {application.candidate.topSkills.slice(0, 4).map((skill) => (
                   <span
                     key={skill}
-                    className="rounded-md border border-[#eef2f7] bg-[#f8fafc] px-1.5 py-0.5 text-[11px] font-semibold text-[#475569]"
+                    className="bg-surface-container-low text-label-sm text-on-surface-variant rounded-md border border-[#eef2f7] px-1.5 py-0.5 font-semibold"
                   >
                     {skill}
                   </span>
                 ))}
               </div>
 
-              <div className="mt-3 space-y-1.5 border-t border-[#f1f5f9] pt-3">
-                <p className="truncate text-[12px] font-semibold text-[#475569]">{application.jobTitle}</p>
+              <div className="border-outline-variant mt-3 space-y-1.5 border-t pt-3">
+                <p className="text-body-sm text-on-surface-variant truncate font-semibold">{application.jobTitle}</p>
                 <div className="flex items-center gap-2">
                   <ApplicationStatusBadge status={application.status} />
                   {application.savedAt && (
-                    <span className="text-[11px] text-[#94a3b8]">Saved on {formatDate(application.savedAt)}</span>
+                    <span className="text-label-sm text-outline">Saved on {formatDate(application.savedAt)}</span>
                   )}
                 </div>
               </div>
@@ -126,7 +126,7 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
                 <Link
                   href={`${ROUTES.RECRUITER_APPLICATIONS}/${application.id}`}
                   className={cn(
-                    'inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-[12.5px] font-bold text-white transition-colors',
+                    'text-body-sm inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2 font-bold text-white transition-colors',
                     'bg-primary hover:bg-primary-hover',
                   )}
                 >
@@ -136,7 +136,7 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
 
                 <Link
                   href={`${ROUTES.CANDIDATE_PROFILE}?view=guest`}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2 text-[12.5px] font-bold text-slate-700 transition-colors hover:bg-slate-50"
+                  className="border-outline-variant text-body-sm text-on-surface hover:bg-surface-container-low inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 font-bold transition-colors"
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
                   Profile

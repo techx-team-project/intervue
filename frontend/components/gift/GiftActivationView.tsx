@@ -21,7 +21,7 @@ export default function GiftActivationView() {
   };
 
   return (
-    <div id="main" className="min-h-screen bg-slate-100 pt-6 pb-16 antialiased sm:pt-8 md:pt-10">
+    <div id="main" className="bg-surface-container-high min-h-screen pt-6 pb-16 antialiased sm:pt-8 md:pt-10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <GiftActivationForm
           formRef={formRef}

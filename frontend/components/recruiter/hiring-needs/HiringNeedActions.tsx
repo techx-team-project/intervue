@@ -2,7 +2,7 @@ import type { HiringNeed } from '@/types/recruiter-hiring-need';
 import { Pencil, Trash2 } from 'lucide-react';
 
 const ACTION_BUTTON_CLASS =
-  'inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-800';
+  'inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg text-on-surface-variant transition hover:bg-surface-container-high hover:text-on-surface';
 
 type HiringNeedActionsProps = {
   need: HiringNeed;

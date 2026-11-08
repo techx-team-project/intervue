@@ -17,7 +17,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
   const { hotBadge, atsBadge, previewBtn, useTemplateBtn, usesCountSuffix } = CV_TEMPLATE_MESSAGES.card;
 
   return (
-    <div className="group hover:border-primary/60 flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-xs transition duration-300 hover:shadow-xl">
+    <div className="group hover:border-primary/60 hover:shadow-elevation-2 flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-xs transition duration-300">
       <div>
         <div className="relative overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-2">
           <div className="transition-transform duration-500">
@@ -43,7 +43,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
             <button
               type="button"
               onClick={() => onPreview(template)}
-              className="flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-2 text-xs font-bold text-[#171717] shadow-lg transition hover:bg-gray-100"
+              className="text-on-surface shadow-elevation-2 flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-2 text-xs font-bold transition hover:bg-gray-100"
             >
               <Eye className="text-primary h-3.5 w-3.5" />
               <span>{previewBtn}</span>
@@ -52,7 +52,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
             <button
               type="button"
               onClick={() => onUseTemplate(template)}
-              className="bg-primary flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-lg transition hover:bg-[#009b44]"
+              className="bg-primary shadow-elevation-2 hover:bg-primary flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold text-white transition"
             >
               <span>{useTemplateBtn}</span>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -61,14 +61,14 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
         </div>
 
         <div className="mt-4">
-          <h3 className="group-hover:text-primary line-clamp-1 text-sm font-bold text-[#171717] transition-colors">
+          <h3 className="group-hover:text-primary text-on-surface line-clamp-1 text-sm font-bold transition-colors">
             {template.title}
           </h3>
 
-          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[#526475]">{template.description}</p>
+          <p className="text-on-surface-variant mt-1 line-clamp-2 text-xs leading-relaxed">{template.description}</p>
 
-          <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-[11px]">
-            <span className="text-primary rounded bg-emerald-50 px-2 py-0.5 font-semibold">{template.style}</span>
+          <div className="text-label-sm mt-2.5 flex flex-wrap items-center gap-1.5">
+            <span className="text-primary bg-primary-light rounded px-2 py-0.5 font-semibold">{template.style}</span>
             {template.languages.map((lang, lIdx) => (
               <span key={lIdx} className="rounded bg-gray-100 px-2 py-0.5 text-gray-600">
                 {lang}
@@ -79,7 +79,7 @@ export default function CvTemplateCard({ template, onPreview, onUseTemplate }: C
       </div>
 
       <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
-        <div className="flex items-center gap-2 text-[11px] text-[#7f878f]">
+        <div className="text-label-sm text-on-surface-variant flex items-center gap-2">
           <span className="flex items-center gap-0.5 font-bold text-amber-500">
             <Star className="h-3 w-3 fill-current" />
             {template.rating}

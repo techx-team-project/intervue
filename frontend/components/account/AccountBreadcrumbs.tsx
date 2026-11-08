@@ -22,7 +22,7 @@ export default function AccountBreadcrumbs() {
   }
 
   return (
-    <div className="border-b border-slate-200 bg-white py-2.5">
+    <div className="border-outline-variant border-b bg-white py-2.5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Breadcrumb items={items} />
       </div>

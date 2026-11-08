@@ -19,13 +19,13 @@ export default function CandidateSwitchRow({ title, description, checked, onChan
       role="group"
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
-      className="flex items-start justify-between gap-4 rounded-xl border border-slate-200 p-3.5"
+      className="border-outline-variant flex items-start justify-between gap-4 rounded-xl border p-3.5"
     >
       <div>
-        <p id={titleId} className="text-sm font-semibold text-slate-800">
+        <p id={titleId} className="text-on-surface text-sm font-semibold">
           {title}
         </p>
-        <p id={descriptionId} className="text-xs text-slate-500">
+        <p id={descriptionId} className="text-on-surface-variant text-xs">
           {description}
         </p>
       </div>

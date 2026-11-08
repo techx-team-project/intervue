@@ -24,16 +24,16 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
             <Flame className="h-5 w-5" />
           </div>
-          <h2 className="text-xl font-bold text-[#171717] sm:text-2xl">Featured Articles</h2>
+          <h2 className="text-on-surface text-xl font-bold sm:text-2xl">Featured Articles</h2>
         </div>
-        <span className="hidden text-xs text-[#7f878f] sm:inline-block">
+        <span className="text-on-surface-variant hidden text-xs sm:inline-block">
           Latest recruitment trends & career insights
         </span>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {mainArticle && (
-          <div className="group hover:border-primary/50 flex flex-col justify-between overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-xs transition duration-300 hover:shadow-xl lg:col-span-7">
+          <div className="group hover:border-primary/50 border-outline-variant hover:shadow-elevation-2 flex flex-col justify-between overflow-hidden rounded-2xl border bg-white shadow-xs transition duration-300 lg:col-span-7">
             <Link
               href={getArticleUrl(mainArticle)}
               className="relative block aspect-video w-full overflow-hidden bg-gray-100"
@@ -47,10 +47,10 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
                 className="h-full w-full object-cover transition-transform duration-500"
               />
               <div className="absolute top-3 left-3 flex items-center gap-2">
-                <span className="bg-primary rounded-full px-3 py-1 text-xs font-semibold text-white shadow-md">
+                <span className="bg-primary shadow-elevation-1 rounded-full px-3 py-1 text-xs font-semibold text-white">
                   {mainArticle.category}
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/90 px-2.5 py-1 text-xs font-semibold text-white shadow-md">
+                <span className="shadow-elevation-1 inline-flex items-center gap-1 rounded-full bg-orange-500/90 px-2.5 py-1 text-xs font-semibold text-white">
                   <Sparkles className="h-3 w-3" />
                   Spotlight
                 </span>
@@ -59,7 +59,7 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
 
             <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
               <div>
-                <div className="mb-2.5 flex items-center gap-3 text-xs text-[#7f878f]">
+                <div className="text-on-surface-variant mb-2.5 flex items-center gap-3 text-xs">
                   <span className="text-navy font-medium">{mainArticle.publishedAt}</span>
                   <span>•</span>
                   <span className="flex items-center gap-1">
@@ -73,16 +73,21 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
                   </span>
                 </div>
 
-                <h3 className="group-hover:text-primary text-lg font-bold text-[#171717] transition-colors sm:text-xl">
+                <h3 className="group-hover:text-primary text-on-surface text-lg font-bold transition-colors sm:text-xl">
                   <Link href={getArticleUrl(mainArticle)}>{mainArticle.title}</Link>
                 </h3>
 
-                <p className="mt-2.5 line-clamp-3 text-sm leading-relaxed text-[#526475]">{mainArticle.excerpt}</p>
+                <p className="text-on-surface-variant mt-2.5 line-clamp-3 text-sm leading-relaxed">
+                  {mainArticle.excerpt}
+                </p>
 
                 {mainArticle.tags && mainArticle.tags.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {mainArticle.tags.slice(0, 4).map((tag, i) => (
-                      <span key={i} className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-[#526475]">
+                      <span
+                        key={i}
+                        className="text-on-surface-variant rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium"
+                      >
                         #{tag}
                       </span>
                     ))}
@@ -101,8 +106,8 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
                     className="h-8 w-8 rounded-full object-cover"
                   />
                   <div>
-                    <div className="text-xs font-semibold text-[#171717]">{mainArticle.author.name}</div>
-                    <div className="text-[11px] text-[#7f878f]">{mainArticle.author.role}</div>
+                    <div className="text-on-surface text-xs font-semibold">{mainArticle.author.name}</div>
+                    <div className="text-label-sm text-on-surface-variant">{mainArticle.author.role}</div>
                   </div>
                 </div>
 
@@ -122,24 +127,26 @@ export default function BlogFeaturedGrid({ articles }: BlogFeaturedGridProps) {
           {sideArticles.map((article) => (
             <div
               key={article.id}
-              className="group hover:border-primary/50 flex flex-1 flex-col justify-between overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white p-5 shadow-xs transition duration-300 hover:shadow-xl sm:flex-row sm:gap-5"
+              className="group hover:border-primary/50 border-outline-variant hover:shadow-elevation-2 flex flex-1 flex-col justify-between overflow-hidden rounded-2xl border bg-white p-5 shadow-xs transition duration-300 sm:flex-row sm:gap-5"
             >
               <div className="flex flex-1 flex-col justify-between">
                 <div>
-                  <div className="mb-2 flex items-center gap-2 text-xs text-[#7f878f]">
+                  <div className="text-on-surface-variant mb-2 flex items-center gap-2 text-xs">
                     <span className="text-primary font-semibold">{article.category}</span>
                     <span>•</span>
                     <span>{article.readTime}</span>
                   </div>
 
-                  <h4 className="group-hover:text-primary line-clamp-2 text-sm font-bold text-[#171717] transition-colors sm:text-base">
+                  <h4 className="group-hover:text-primary text-on-surface line-clamp-2 text-sm font-bold transition-colors sm:text-base">
                     <Link href={getArticleUrl(article)}>{article.title}</Link>
                   </h4>
 
-                  <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-[#526475]">{article.excerpt}</p>
+                  <p className="text-on-surface-variant mt-1.5 line-clamp-2 text-xs leading-relaxed">
+                    {article.excerpt}
+                  </p>
                 </div>
 
-                <div className="mt-3 flex items-center justify-between text-xs text-[#7f878f]">
+                <div className="text-on-surface-variant mt-3 flex items-center justify-between text-xs">
                   <span className="text-navy font-medium">{article.author.name}</span>
                   <Link
                     href={getArticleUrl(article)}

@@ -31,10 +31,10 @@ export default function JobCompanySidebar({ company, isPreviewMode = false }: Jo
   return (
     <div
       id="job-company"
-      className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs transition"
+      className="border-outline-variant/90 overflow-hidden rounded-2xl border bg-white p-5 shadow-2xs transition"
     >
       <div className="flex items-start gap-3.5">
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-2xs">
+        <div className="border-outline-variant flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-white p-1.5 shadow-2xs">
           {company.logo ? (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
@@ -45,17 +45,17 @@ export default function JobCompanySidebar({ company, isPreviewMode = false }: Jo
               className="h-full w-full object-contain"
             />
           ) : (
-            <Building2 className="h-8 w-8 text-slate-400" />
+            <Building2 className="text-outline h-8 w-8" />
           )}
         </div>
 
         <div className="min-w-0 flex-1">
           <Link href={`/companies/${company.id || 224996}`}>
-            <h3 className="hover:text-primary line-clamp-2 text-sm font-bold text-slate-900 transition-colors">
+            <h3 className="hover:text-primary text-on-surface line-clamp-2 text-sm font-bold transition-colors">
               {company.name}
             </h3>
           </Link>
-          <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
+          <div className="text-on-surface-variant mt-1 flex items-center gap-1.5 text-xs">
             <CheckCircle2 className="text-primary h-3.5 w-3.5" />
             <span>Doanh nghiệp xác thực</span>
           </div>
@@ -68,8 +68,8 @@ export default function JobCompanySidebar({ company, isPreviewMode = false }: Jo
           onClick={handleToggleFollow}
           className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border py-2 text-xs font-bold transition ${
             isFollowing
-              ? 'text-primary border-emerald-200 bg-emerald-50'
-              : 'hover:text-primary border-slate-200 bg-slate-50/70 text-slate-700 hover:border-emerald-300 hover:bg-emerald-50/40'
+              ? 'text-primary border-primary/30 bg-primary-light'
+              : 'hover:text-primary border-outline-variant bg-surface-container-low/70 text-on-surface hover:border-primary/40 hover:bg-emerald-50/40'
           }`}
         >
           {isFollowing ? (
@@ -86,35 +86,35 @@ export default function JobCompanySidebar({ company, isPreviewMode = false }: Jo
         </button>
       </div>
 
-      <div className="my-4 border-t border-slate-100" />
+      <div className="border-outline-variant my-4 border-t" />
 
-      <div className="space-y-3 text-xs text-slate-600">
+      <div className="text-on-surface-variant space-y-3 text-xs">
         <div className="flex items-start gap-2.5">
-          <Users className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+          <Users className="text-outline mt-0.5 h-4 w-4 shrink-0" />
           <div>
-            <div className="font-medium text-slate-400">Quy mô công ty:</div>
-            <div className="mt-0.5 font-semibold text-slate-800">{company.size}</div>
+            <div className="text-outline font-medium">Quy mô công ty:</div>
+            <div className="text-on-surface mt-0.5 font-semibold">{company.size}</div>
           </div>
         </div>
 
         <div className="flex items-start gap-2.5">
-          <Briefcase className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+          <Briefcase className="text-outline mt-0.5 h-4 w-4 shrink-0" />
           <div>
-            <div className="font-medium text-slate-400">Lĩnh vực hoạt động:</div>
-            <div className="mt-0.5 font-semibold text-slate-800">{company.industry}</div>
+            <div className="text-outline font-medium">Lĩnh vực hoạt động:</div>
+            <div className="text-on-surface mt-0.5 font-semibold">{company.industry}</div>
           </div>
         </div>
 
         <div className="flex items-start gap-2.5">
-          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+          <MapPin className="text-outline mt-0.5 h-4 w-4 shrink-0" />
           <div>
-            <div className="font-medium text-slate-400">Địa chỉ:</div>
-            <div className="mt-0.5 leading-relaxed font-medium text-slate-700">{company.address}</div>
+            <div className="text-outline font-medium">Địa chỉ:</div>
+            <div className="text-on-surface mt-0.5 leading-relaxed font-medium">{company.address}</div>
           </div>
         </div>
       </div>
 
-      <div className="mt-4 border-t border-slate-100 pt-3">
+      <div className="border-outline-variant mt-4 border-t pt-3">
         <Link
           href={`/companies/${company.id || 224996}`}
           className="text-primary flex items-center justify-center gap-1.5 text-xs font-bold hover:underline"

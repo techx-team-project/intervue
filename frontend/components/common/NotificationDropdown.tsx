@@ -120,12 +120,12 @@ export default function NotificationDropdown({
   return (
     <div
       ref={dropdownRef}
-      className={`dark:border-forest-800 dark:bg-forest-900 animate-in fade-in-0 zoom-in-95 absolute top-full right-0 z-50 mt-2.5 w-96 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl ring-1 ring-black/5 duration-150 sm:w-[420px] dark:ring-white/5 ${
+      className={`dark:border-forest-800 dark:bg-forest-900 animate-in fade-in-0 zoom-in-95 border-outline-variant shadow-elevation-2 absolute top-full right-0 z-50 mt-2.5 w-96 overflow-hidden rounded-2xl border bg-white ring-1 ring-black/5 duration-150 sm:w-[420px] dark:ring-white/5 ${
         className || ''
       }`}
     >
-      <div className="dark:border-forest-800 dark:bg-forest-900 flex items-center justify-between border-b border-slate-100 bg-white px-4 py-3.5">
-        <h3 className="dark:text-forest-50 text-base font-bold text-slate-900">Notifications</h3>
+      <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex items-center justify-between border-b bg-white px-4 py-3.5">
+        <h3 className="dark:text-forest-50 text-on-surface text-base font-bold">Notifications</h3>
 
         <div className="flex items-center gap-1.5">
           <button
@@ -135,8 +135,8 @@ export default function NotificationDropdown({
             aria-label="Filter by time"
             className={`rounded-full p-1.5 transition ${
               isTimeFilterOpen || isFilterActive
-                ? 'border border-emerald-200 bg-emerald-50 text-[#00b14f] dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400'
-                : 'dark:text-forest-400 dark:hover:bg-forest-850 dark:hover:text-forest-200 text-slate-400 hover:bg-slate-100 hover:text-slate-700'
+                ? 'border-primary/30 bg-primary-light text-primary border dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400'
+                : 'dark:text-forest-400 dark:hover:bg-forest-850 dark:hover:text-forest-200 text-outline hover:bg-surface-container-high hover:text-on-surface'
             }`}
           >
             <Filter className="h-4 w-4" />
@@ -147,7 +147,7 @@ export default function NotificationDropdown({
             onClick={() => markAllAsRead()}
             title="Mark all as read"
             aria-label="Mark all as read"
-            className="dark:text-forest-400 dark:hover:bg-forest-850 flex items-center gap-1 rounded-full p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-[#00b14f] dark:hover:text-emerald-400"
+            className="dark:text-forest-400 dark:hover:bg-forest-850 text-on-surface-variant hover:bg-surface-container-high hover:text-primary flex items-center gap-1 rounded-full p-1.5 transition dark:hover:text-emerald-400"
           >
             <CheckCheck className="h-4 w-4" />
           </button>
@@ -155,8 +155,8 @@ export default function NotificationDropdown({
       </div>
 
       {isTimeFilterOpen && (
-        <div className="dark:border-forest-800 dark:bg-forest-900 animate-in fade-in-0 slide-in-from-top-2 border-b border-slate-100 bg-white p-4 duration-150">
-          <p className="dark:text-forest-100 text-xs font-bold text-slate-900 sm:text-sm">Filter by time</p>
+        <div className="dark:border-forest-800 dark:bg-forest-900 animate-in fade-in-0 slide-in-from-top-2 border-outline-variant border-b bg-white p-4 duration-150">
+          <p className="dark:text-forest-100 text-on-surface text-xs font-bold sm:text-sm">Filter by time</p>
 
           <div className="mt-3 flex flex-wrap gap-2">
             {[
@@ -173,8 +173,8 @@ export default function NotificationDropdown({
                   onClick={() => setSelectedTimeOption(isSelected ? null : (chip.key as TimeRangeOption))}
                   className={`cursor-pointer rounded-full px-3.5 py-1.5 text-xs font-medium transition ${
                     isSelected
-                      ? 'border border-[#00b14f] bg-[#e6f7ee] font-semibold text-[#00b14f] dark:border-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
-                      : 'dark:border-forest-800 dark:bg-forest-850 dark:text-forest-300 dark:hover:bg-forest-800 border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                      ? 'border-primary text-primary border bg-[#e6f7ee] font-semibold dark:border-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                      : 'dark:border-forest-800 dark:bg-forest-850 dark:text-forest-300 dark:hover:bg-forest-800 border-outline-variant text-on-surface-variant hover:bg-surface-container-low border bg-white'
                   }`}
                 >
                   {chip.label}
@@ -186,23 +186,25 @@ export default function NotificationDropdown({
           {selectedTimeOption === 'custom' && (
             <div className="mt-3 flex items-center gap-2 pt-1 text-xs">
               <div className="flex-1">
-                <label className="dark:text-forest-400 mb-1 block text-[11px] font-semibold text-slate-500">
+                <label className="dark:text-forest-400 text-label-sm text-on-surface-variant mb-1 block font-semibold">
                   From:
                 </label>
                 <input
                   type="date"
                   value={customFrom}
                   onChange={(event) => setCustomFrom(event.target.value)}
-                  className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-100 w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:border-[#00b14f] focus:outline-none"
+                  className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-100 border-outline-variant text-on-surface focus:border-primary w-full rounded-lg border bg-white px-2.5 py-1.5 text-xs focus:outline-none"
                 />
               </div>
               <div className="flex-1">
-                <label className="dark:text-forest-400 mb-1 block text-[11px] font-semibold text-slate-500">To:</label>
+                <label className="dark:text-forest-400 text-label-sm text-on-surface-variant mb-1 block font-semibold">
+                  To:
+                </label>
                 <input
                   type="date"
                   value={customTo}
                   onChange={(event) => setCustomTo(event.target.value)}
-                  className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-100 w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:border-[#00b14f] focus:outline-none"
+                  className="dark:border-forest-800 dark:bg-forest-850 dark:text-forest-100 border-outline-variant text-on-surface focus:border-primary w-full rounded-lg border bg-white px-2.5 py-1.5 text-xs focus:outline-none"
                 />
               </div>
             </div>
@@ -212,7 +214,7 @@ export default function NotificationDropdown({
             <button
               type="button"
               onClick={handleResetTimeFilter}
-              className="dark:border-forest-800 dark:text-forest-300 dark:hover:bg-forest-800 cursor-pointer rounded-full border border-slate-200 px-4 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-50"
+              className="dark:border-forest-800 dark:text-forest-300 dark:hover:bg-forest-800 border-outline-variant text-on-surface-variant hover:bg-surface-container-low cursor-pointer rounded-full border px-4 py-1.5 text-xs font-semibold transition"
             >
               Reset
             </button>
@@ -220,7 +222,7 @@ export default function NotificationDropdown({
               type="button"
               disabled={!selectedTimeOption}
               onClick={handleApplyTimeFilter}
-              className="cursor-pointer rounded-full bg-[#00b14f] px-5 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#00873c] disabled:cursor-not-allowed disabled:opacity-40"
+              className="bg-primary hover:bg-primary cursor-pointer rounded-full px-5 py-1.5 text-xs font-bold text-white shadow-xs transition disabled:cursor-not-allowed disabled:opacity-40"
             >
               Apply
             </button>
@@ -228,7 +230,7 @@ export default function NotificationDropdown({
         </div>
       )}
 
-      <div className="dark:border-forest-800 dark:bg-forest-950/60 flex scrollbar-none items-center gap-1.5 overflow-x-auto border-b border-slate-100 bg-slate-50/60 px-4 py-2.5">
+      <div className="dark:border-forest-800 dark:bg-forest-950/60 border-outline-variant bg-surface-container-low/60 flex scrollbar-none items-center gap-1.5 overflow-x-auto border-b px-4 py-2.5">
         {tabs.map((tab) => {
           const isActive = activeCategory === tab;
           return (
@@ -238,8 +240,8 @@ export default function NotificationDropdown({
               onClick={() => setActiveCategory(tab)}
               className={`shrink-0 cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition ${
                 isActive
-                  ? 'bg-[#00b14f] text-white shadow-2xs'
-                  : 'dark:bg-forest-850 dark:text-forest-300 dark:hover:bg-forest-800 dark:border-forest-800 border border-slate-200 bg-white text-slate-600 hover:bg-slate-200/70'
+                  ? 'bg-primary text-white shadow-2xs'
+                  : 'dark:bg-forest-850 dark:text-forest-300 dark:hover:bg-forest-800 dark:border-forest-800 border-outline-variant text-on-surface-variant hover:bg-surface-container-high/70 border bg-white'
               }`}
             >
               {notificationTabLabel(tab, vi)}
@@ -248,15 +250,15 @@ export default function NotificationDropdown({
         })}
       </div>
 
-      <div className="dark:divide-forest-800 max-h-[380px] divide-y divide-slate-100 overflow-y-auto">
+      <div className="dark:divide-forest-800 divide-outline-variant max-h-[380px] divide-y overflow-y-auto">
         {isLoading ? (
           <div className="space-y-3 p-4">
             {Array.from({ length: 3 }, (_, index) => (
               <div key={index} className="flex items-start gap-3">
-                <div className="dark:bg-forest-800 h-9 w-9 shrink-0 animate-pulse rounded-full bg-slate-100" />
+                <div className="dark:bg-forest-800 bg-surface-container-high h-9 w-9 shrink-0 animate-pulse rounded-full" />
                 <div className="flex-1 space-y-2">
-                  <div className="dark:bg-forest-800 h-3.5 w-3/4 animate-pulse rounded bg-slate-100" />
-                  <div className="dark:bg-forest-800 h-3 w-full animate-pulse rounded bg-slate-100" />
+                  <div className="dark:bg-forest-800 bg-surface-container-high h-3.5 w-3/4 animate-pulse rounded" />
+                  <div className="dark:bg-forest-800 bg-surface-container-high h-3 w-full animate-pulse rounded" />
                 </div>
               </div>
             ))}
@@ -264,11 +266,11 @@ export default function NotificationDropdown({
         ) : isError ? (
           <div className="py-12 text-center">
             <AlertTriangle className="mx-auto h-8 w-8 stroke-[1.5] text-amber-500" />
-            <p className="dark:text-forest-300 mt-2 text-xs font-semibold text-slate-600">{copy.loadError}</p>
+            <p className="dark:text-forest-300 text-on-surface-variant mt-2 text-xs font-semibold">{copy.loadError}</p>
             <button
               type="button"
               onClick={() => refetch()}
-              className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#00b14f] hover:underline"
+              className="text-primary mt-3 inline-flex items-center gap-1 text-xs font-bold hover:underline"
             >
               <RotateCcw className="h-3 w-3" />
               <span>{copy.retry}</span>
@@ -276,13 +278,15 @@ export default function NotificationDropdown({
           </div>
         ) : notifications.length === 0 ? (
           <div className="py-12 text-center">
-            <Sparkles className="dark:text-forest-600 mx-auto h-8 w-8 stroke-[1.5] text-slate-300" />
-            <p className="dark:text-forest-400 mt-2 text-xs font-semibold text-slate-500">{copy.emptyFiltered}</p>
+            <Sparkles className="dark:text-forest-600 text-outline mx-auto h-8 w-8 stroke-[1.5]" />
+            <p className="dark:text-forest-400 text-on-surface-variant mt-2 text-xs font-semibold">
+              {copy.emptyFiltered}
+            </p>
             {isFilterActive && (
               <button
                 type="button"
                 onClick={handleResetTimeFilter}
-                className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#00b14f] hover:underline"
+                className="text-primary mt-3 inline-flex items-center gap-1 text-xs font-bold hover:underline"
               >
                 <RotateCcw className="h-3 w-3" />
                 <span>{copy.clearTimeFilter}</span>
@@ -292,11 +296,11 @@ export default function NotificationDropdown({
         ) : (
           grouped.map(([dateGroup, itemsInDate]) => (
             <div key={dateGroup}>
-              <div className="dark:bg-forest-950/90 dark:text-forest-400 sticky top-0 z-10 bg-slate-50/90 px-4 py-1 text-[11px] font-semibold text-slate-400 backdrop-blur-xs">
+              <div className="dark:bg-forest-950/90 dark:text-forest-400 bg-surface-container-low/90 text-label-sm text-outline sticky top-0 z-10 px-4 py-1 font-semibold backdrop-blur-xs">
                 {dateGroup}
               </div>
 
-              <div className="dark:divide-forest-800 divide-y divide-slate-100">
+              <div className="dark:divide-forest-800 divide-outline-variant divide-y">
                 {itemsInDate.map((item) => {
                   const isUnread = item.readAt === null;
                   return (
@@ -305,11 +309,11 @@ export default function NotificationDropdown({
                       onClick={() => handleItemClick(item.id)}
                       className={`flex cursor-pointer items-start gap-3 px-4 py-3 transition ${
                         isUnread
-                          ? 'dark:bg-forest-850/60 dark:hover:bg-forest-800/60 bg-emerald-50/25 hover:bg-slate-50/90'
-                          : 'dark:bg-forest-900 dark:hover:bg-forest-850/50 bg-white hover:bg-slate-50/90'
+                          ? 'dark:bg-forest-850/60 dark:hover:bg-forest-800/60 hover:bg-surface-container-low/90 bg-emerald-50/25'
+                          : 'dark:bg-forest-900 dark:hover:bg-forest-850/50 hover:bg-surface-container-low/90 bg-white'
                       }`}
                     >
-                      <div className="dark:bg-forest-800 relative mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 ring-2 ring-[#00b14f]/20">
+                      <div className="dark:bg-forest-800 bg-surface-container-high relative mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ring-2 ring-[#00b14f]/20">
                         <Image
                           src="/intervue-logo-transparent.png"
                           alt="InterVue"
@@ -321,24 +325,24 @@ export default function NotificationDropdown({
 
                       <div className="min-w-0 flex-1">
                         <h4
-                          className={`line-clamp-1 text-[13px] leading-snug ${
+                          className={`text-body-md line-clamp-1 leading-snug ${
                             isUnread
-                              ? 'dark:text-forest-50 font-bold text-slate-900'
-                              : 'dark:text-forest-200 font-medium text-slate-700'
+                              ? 'dark:text-forest-50 text-on-surface font-bold'
+                              : 'dark:text-forest-200 text-on-surface font-medium'
                           }`}
                         >
                           {item.title}
                         </h4>
-                        <p className="dark:text-forest-300 mt-1 line-clamp-2 text-xs leading-relaxed text-slate-500">
+                        <p className="dark:text-forest-300 text-on-surface-variant mt-1 line-clamp-2 text-xs leading-relaxed">
                           {item.summary}
                         </p>
-                        <span className="dark:text-forest-400 mt-1 block text-[10.5px] text-slate-400">
+                        <span className="dark:text-forest-400 text-label-sm text-outline mt-1 block">
                           {formatNotificationDate(item.createdAt)}
                         </span>
                       </div>
 
                       {isUnread && (
-                        <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#00b14f] ring-2 ring-emerald-200 dark:ring-emerald-900" />
+                        <span className="bg-primary mt-2 h-2 w-2 shrink-0 rounded-full ring-2 ring-emerald-200 dark:ring-emerald-900" />
                       )}
                     </div>
                   );
@@ -349,11 +353,11 @@ export default function NotificationDropdown({
         )}
       </div>
 
-      <div className="dark:border-forest-800 dark:bg-forest-950/80 border-t border-slate-100 bg-slate-50/80 px-4 py-2.5 text-center">
+      <div className="dark:border-forest-800 dark:bg-forest-950/80 border-outline-variant bg-surface-container-low/80 border-t px-4 py-2.5 text-center">
         <Link
           href={baseRoute}
           onClick={onClose}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#00b14f] transition hover:text-[#00873c] dark:text-emerald-400 dark:hover:text-emerald-300"
+          className="text-primary hover:text-primary inline-flex items-center gap-1.5 text-xs font-bold transition dark:text-emerald-400 dark:hover:text-emerald-300"
         >
           <span>View all notifications</span>
           <ArrowRight className="h-3.5 w-3.5" />

@@ -108,20 +108,20 @@ export function AdminBusinessDocumentViewer({
 
   return (
     <div
-      className={`dark:border-forest-800 dark:bg-forest-900 flex flex-col rounded-2xl border border-slate-200/80 bg-white shadow-xs transition-all ${
-        isFullscreen ? 'fixed inset-4 z-50 rounded-2xl shadow-2xl' : 'min-h-[640px]'
+      className={`dark:border-forest-800 dark:bg-forest-900 border-outline-variant/80 flex flex-col rounded-2xl border bg-white shadow-xs transition-all ${
+        isFullscreen ? 'shadow-elevation-2 fixed inset-4 z-50 rounded-2xl' : 'min-h-[640px]'
       }`}
     >
       {/* Document Studio Header */}
-      <div className="dark:border-forest-800 flex flex-wrap items-center justify-between border-b border-slate-100 px-4 py-3">
+      <div className="dark:border-forest-800 border-outline-variant flex flex-wrap items-center justify-between border-b px-4 py-3">
         {/* Document Title & Metadata */}
         <div className="flex items-center gap-2.5">
-          <div className="dark:bg-forest-800 flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 dark:text-emerald-300">
+          <div className="dark:bg-forest-800 bg-surface-container-high text-on-surface-variant flex h-8 w-8 items-center justify-center rounded-lg dark:text-emerald-300">
             <FileText className="h-4 w-4" />
           </div>
           <div className="space-y-0.5">
             <p
-              className="dark:text-forest-100 max-w-[240px] truncate text-xs font-semibold text-slate-800 sm:max-w-[320px]"
+              className="dark:text-forest-100 text-on-surface max-w-[240px] truncate text-xs font-semibold sm:max-w-[320px]"
               title={
                 currentPage === 3
                   ? document.identityBackFileName || 'Citizen_ID_Back.png'
@@ -136,7 +136,7 @@ export function AdminBusinessDocumentViewer({
                   ? document.identityFileName || 'Citizen ID Front / CCCD Mặt trước'
                   : document.originalFileName}
             </p>
-            <p className="dark:text-forest-400 text-[11px] text-slate-400">
+            <p className="dark:text-forest-400 text-label-sm text-outline">
               {(document.fileSizeBytes / (1024 * 1024)).toFixed(2)} MB ·{' '}
               {currentPage === 3
                 ? 'Citizen ID Back (CCCD Mặt sau)'
@@ -153,14 +153,14 @@ export function AdminBusinessDocumentViewer({
         {/* Studio Controls */}
         <div className="flex items-center gap-1">
           {/* Mode Switcher: Stream vs Structured View */}
-          <div className="dark:bg-forest-950 flex items-center rounded-lg bg-slate-100 p-0.5 text-xs">
+          <div className="dark:bg-forest-950 bg-surface-container-high flex items-center rounded-lg p-0.5 text-xs">
             <button
               type="button"
               onClick={() => setViewMode('stream')}
               className={`flex items-center gap-1 rounded-md px-2.5 py-1 font-medium transition ${
                 viewMode === 'stream'
-                  ? 'dark:bg-forest-800 dark:text-forest-100 bg-white text-slate-900 shadow-xs'
-                  : 'dark:text-forest-400 text-slate-500 hover:text-slate-800'
+                  ? 'dark:bg-forest-800 dark:text-forest-100 text-on-surface bg-white shadow-xs'
+                  : 'dark:text-forest-400 text-on-surface-variant hover:text-on-surface'
               }`}
               title="Stream authentic PDF or image from server"
             >
@@ -172,8 +172,8 @@ export function AdminBusinessDocumentViewer({
               onClick={() => setViewMode('structured')}
               className={`flex items-center gap-1 rounded-md px-2.5 py-1 font-medium transition ${
                 viewMode === 'structured'
-                  ? 'dark:bg-forest-800 dark:text-forest-100 bg-white text-slate-900 shadow-xs'
-                  : 'dark:text-forest-400 text-slate-500 hover:text-slate-800'
+                  ? 'dark:bg-forest-800 dark:text-forest-100 text-on-surface bg-white shadow-xs'
+                  : 'dark:text-forest-400 text-on-surface-variant hover:text-on-surface'
               }`}
               title="Structured certificate preview"
             >
@@ -189,7 +189,7 @@ export function AdminBusinessDocumentViewer({
             className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${
               showOcrOverlay
                 ? 'border border-emerald-200 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                : 'dark:text-forest-300 dark:hover:bg-forest-800 text-slate-600 hover:bg-slate-100'
+                : 'dark:text-forest-300 dark:hover:bg-forest-800 text-on-surface-variant hover:bg-surface-container-high'
             }`}
             title="Toggle OCR extracted information overlay"
           >
@@ -197,13 +197,13 @@ export function AdminBusinessDocumentViewer({
             <span className="hidden sm:inline">OCR</span>
           </button>
 
-          <div className="dark:bg-forest-800 mx-1 h-4 w-px bg-slate-200" />
+          <div className="dark:bg-forest-800 bg-surface-container-high mx-1 h-4 w-px" />
 
           {/* Zoom Controls */}
           <button
             type="button"
             onClick={handleZoomOut}
-            className="dark:text-forest-300 dark:hover:bg-forest-800 rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"
+            className="dark:text-forest-300 dark:hover:bg-forest-800 text-on-surface-variant hover:bg-surface-container-high rounded-lg p-1.5"
             title="Zoom out"
           >
             <ZoomOut className="h-4 w-4" />
@@ -212,7 +212,7 @@ export function AdminBusinessDocumentViewer({
           <button
             type="button"
             onClick={handleResetZoom}
-            className="dark:text-forest-300 dark:hover:bg-forest-800 rounded px-1.5 py-1 font-mono text-[11px] font-medium text-slate-600 hover:bg-slate-100"
+            className="dark:text-forest-300 dark:hover:bg-forest-800 text-label-sm text-on-surface-variant hover:bg-surface-container-high rounded px-1.5 py-1 font-mono font-medium"
             title="Reset to 100%"
           >
             {Math.round(zoom * 100)}%
@@ -221,7 +221,7 @@ export function AdminBusinessDocumentViewer({
           <button
             type="button"
             onClick={handleZoomIn}
-            className="dark:text-forest-300 dark:hover:bg-forest-800 rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"
+            className="dark:text-forest-300 dark:hover:bg-forest-800 text-on-surface-variant hover:bg-surface-container-high rounded-lg p-1.5"
             title="Zoom in"
           >
             <ZoomIn className="h-4 w-4" />
@@ -231,7 +231,7 @@ export function AdminBusinessDocumentViewer({
           <button
             type="button"
             onClick={handleRotate}
-            className="dark:text-forest-300 dark:hover:bg-forest-800 rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"
+            className="dark:text-forest-300 dark:hover:bg-forest-800 text-on-surface-variant hover:bg-surface-container-high rounded-lg p-1.5"
             title="Rotate 90 degrees"
           >
             <RotateCw className="h-4 w-4" />
@@ -241,7 +241,7 @@ export function AdminBusinessDocumentViewer({
           <button
             type="button"
             onClick={() => setIsFullscreen((prev) => !prev)}
-            className="dark:text-forest-300 dark:hover:bg-forest-800 rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"
+            className="dark:text-forest-300 dark:hover:bg-forest-800 text-on-surface-variant hover:bg-surface-container-high rounded-lg p-1.5"
             title={isFullscreen ? 'Exit full screen' : 'View full screen'}
           >
             {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
@@ -250,11 +250,11 @@ export function AdminBusinessDocumentViewer({
       </div>
 
       {/* Document View Canvas */}
-      <div className="dark:bg-forest-950/80 relative flex flex-1 items-center justify-center overflow-auto bg-slate-100/70 p-6">
+      <div className="dark:bg-forest-950/80 bg-surface-container-high/70 relative flex flex-1 items-center justify-center overflow-auto p-6">
         {isLoadingBlob ? (
           <div className="flex flex-col items-center justify-center gap-3">
             <Spinner />
-            <p className="dark:text-forest-400 text-xs text-slate-500">Streaming authenticated document...</p>
+            <p className="dark:text-forest-400 text-on-surface-variant text-xs">Streaming authenticated document...</p>
           </div>
         ) : viewMode === 'stream' && blobUrl ? (
           <div
@@ -269,11 +269,11 @@ export function AdminBusinessDocumentViewer({
               <object
                 data={blobUrl}
                 type="application/pdf"
-                className="h-[560px] w-full rounded-xl border border-slate-200/80 bg-white shadow-sm dark:bg-slate-900"
+                className="border-outline-variant/80 h-[560px] w-full rounded-xl border bg-white shadow-sm dark:bg-slate-900"
               >
                 <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center">
-                  <FileText className="h-10 w-10 text-slate-400" />
-                  <p className="text-xs text-slate-600">PDF preview is ready.</p>
+                  <FileText className="text-outline h-10 w-10" />
+                  <p className="text-on-surface-variant text-xs">PDF preview is ready.</p>
                   <a
                     href={blobUrl}
                     target="_blank"
@@ -285,7 +285,7 @@ export function AdminBusinessDocumentViewer({
                 </div>
               </object>
             ) : (
-              <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-white p-2 shadow-sm dark:bg-slate-900">
+              <div className="border-outline-variant/80 overflow-hidden rounded-xl border bg-white p-2 shadow-sm dark:bg-slate-900">
                 <img
                   src={blobUrl}
                   alt={document.originalFileName}
@@ -301,25 +301,25 @@ export function AdminBusinessDocumentViewer({
               transform: `scale(${zoom}) rotate(${rotation}deg)`,
               transition: 'transform 0.15s ease-out',
             }}
-            className="dark:border-forest-700 relative max-h-[560px] max-w-[480px] overflow-hidden rounded-xl border border-slate-200/90 bg-white p-6 shadow-sm dark:bg-slate-900"
+            className="dark:border-forest-700 border-outline-variant/90 relative max-h-[560px] max-w-[480px] overflow-hidden rounded-xl border bg-white p-6 shadow-sm dark:bg-slate-900"
           >
             {/* Document Header Text */}
-            <div className="dark:border-forest-800 space-y-2 border-b border-slate-100 pb-3 text-center">
-              <p className="dark:text-forest-400 text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
+            <div className="dark:border-forest-800 border-outline-variant space-y-2 border-b pb-3 text-center">
+              <p className="dark:text-forest-400 text-label-sm text-on-surface-variant font-semibold tracking-wider uppercase">
                 SOCIALIST REPUBLIC OF VIETNAM
               </p>
-              <p className="dark:text-forest-500 text-[9px] text-slate-400">Independence - Freedom - Happiness</p>
+              <p className="dark:text-forest-500 text-label-sm text-outline">Independence - Freedom - Happiness</p>
               <div className="dark:bg-forest-700 mx-auto h-0.5 w-12 bg-slate-300" />
 
               <div className="pt-1">
-                <h4 className="dark:text-forest-100 text-xs font-bold text-slate-900 uppercase">
+                <h4 className="dark:text-forest-100 text-on-surface text-xs font-bold uppercase">
                   {currentPage === 2
                     ? 'CHIP-BASED CITIZEN IDENTITY CARD (CCCD)'
                     : isErc
                       ? 'ENTERPRISE REGISTRATION CERTIFICATE'
                       : 'LETTER OF AUTHORIZATION FOR RECRUITMENT'}
                 </h4>
-                <p className="dark:text-forest-400 font-mono text-[10px] text-slate-500">
+                <p className="dark:text-forest-400 text-label-sm text-on-surface-variant font-mono">
                   {currentPage === 2 ? `AUTHORIZED REPRESENTATIVE: ${submitterName}` : `TAX ID: ${taxCode}`}
                 </p>
               </div>
@@ -332,7 +332,7 @@ export function AdminBusinessDocumentViewer({
                   <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
                   <span>Extracted OCR Data:</span>
                 </p>
-                <div className="mt-1 space-y-1 text-[11px]">
+                <div className="text-label-sm mt-1 space-y-1">
                   <p>
                     <strong>Company:</strong> {companyName}
                   </p>
@@ -347,7 +347,7 @@ export function AdminBusinessDocumentViewer({
             )}
 
             {/* Visual Scanned Document Graphic */}
-            <div className="dark:border-forest-800 dark:bg-forest-950/40 mt-4 flex items-center justify-center overflow-hidden rounded-lg border border-slate-100 bg-slate-50/50 p-2">
+            <div className="dark:border-forest-800 dark:bg-forest-950/40 border-outline-variant bg-surface-container-low/50 mt-4 flex items-center justify-center overflow-hidden rounded-lg border p-2">
               <Image
                 src={scanImageSrc}
                 alt="Scanned credential document"
@@ -359,7 +359,7 @@ export function AdminBusinessDocumentViewer({
             </div>
 
             {/* Subtle Document Footer */}
-            <div className="dark:border-forest-800 dark:text-forest-500 mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-[10px] text-slate-400">
+            <div className="dark:border-forest-800 dark:text-forest-500 border-outline-variant text-label-sm text-outline mt-4 flex items-center justify-between border-t pt-3">
               <span>Submitted: {new Date(document.submittedAt).toLocaleDateString('en-US')}</span>
               <span className="font-mono">
                 ID: {document.storagePublicId ? document.storagePublicId : `DOC-${document.id}`}
@@ -370,17 +370,17 @@ export function AdminBusinessDocumentViewer({
 
         {/* Floating Page Switcher */}
         {effectiveTotalPages > 1 && (
-          <div className="dark:border-forest-800 dark:bg-forest-900/90 absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-3 py-1 shadow-sm backdrop-blur-md">
+          <div className="dark:border-forest-800 dark:bg-forest-900/90 border-outline-variant absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border bg-white/95 px-3 py-1 shadow-sm backdrop-blur-md">
             <button
               type="button"
               disabled={currentPage <= 1}
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              className="dark:text-forest-300 dark:hover:bg-forest-800 rounded-full p-1 text-slate-600 hover:bg-slate-100 disabled:opacity-30"
+              className="dark:text-forest-300 dark:hover:bg-forest-800 text-on-surface-variant hover:bg-surface-container-high rounded-full p-1 disabled:opacity-30"
               title="Previous page"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
             </button>
-            <span className="dark:text-forest-200 text-xs font-medium text-slate-700">
+            <span className="dark:text-forest-200 text-on-surface text-xs font-medium">
               Page {currentPage} of {effectiveTotalPages}
               {currentPage === 1 ? ' (LOA)' : ' (CCCD)'}
             </span>
@@ -388,7 +388,7 @@ export function AdminBusinessDocumentViewer({
               type="button"
               disabled={currentPage >= effectiveTotalPages}
               onClick={() => setCurrentPage((p) => Math.min(p + 1, effectiveTotalPages))}
-              className="dark:text-forest-300 dark:hover:bg-forest-800 rounded-full p-1 text-slate-600 hover:bg-slate-100 disabled:opacity-30"
+              className="dark:text-forest-300 dark:hover:bg-forest-800 text-on-surface-variant hover:bg-surface-container-high rounded-full p-1 disabled:opacity-30"
               title="Next page"
             >
               <ChevronRight className="h-3.5 w-3.5" />
@@ -398,9 +398,9 @@ export function AdminBusinessDocumentViewer({
       </div>
 
       {/* Footer Status Bar */}
-      <div className="dark:border-forest-800 dark:bg-forest-900 dark:text-forest-400 flex items-center justify-between border-t border-slate-100 bg-slate-50/50 px-4 py-2.5 text-[11px] text-slate-500">
+      <div className="dark:border-forest-800 dark:bg-forest-900 dark:text-forest-400 border-outline-variant bg-surface-container-low/50 text-label-sm text-on-surface-variant flex items-center justify-between border-t px-4 py-2.5">
         <span>Sandboxed Internal Document Studio · InterVue Compliance</span>
-        <span className="dark:text-forest-500 font-mono text-slate-400">Verified Secure Stream</span>
+        <span className="dark:text-forest-500 text-outline font-mono">Verified Secure Stream</span>
       </div>
     </div>
   );

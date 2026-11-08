@@ -144,7 +144,7 @@ export default function AdminUserRowActionsMenu({
         onClick={toggleMenu}
         aria-label={`Actions for ${user.name}`}
         aria-expanded={isOpen}
-        className="dark:text-forest-300 dark:hover:bg-forest-850 flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 sm:h-8 sm:w-8"
+        className="dark:text-forest-300 dark:hover:bg-forest-850 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-colors sm:h-8 sm:w-8"
       >
         <MoreVertical className="h-4 w-4" />
       </button>
@@ -155,16 +155,16 @@ export default function AdminUserRowActionsMenu({
             ref={menuRef}
             role="menu"
             style={{ top: position.top, left: position.left, width: MENU_WIDTH }}
-            className="dark:border-forest-800 dark:bg-forest-900 fixed z-[60] overflow-hidden rounded-xl border border-slate-200 bg-white py-1.5 shadow-2xl"
+            className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant shadow-elevation-2 fixed z-[60] overflow-hidden rounded-xl border bg-white py-1.5"
           >
             {actions.map((action) => {
               const Icon = action.icon;
               const base =
-                'flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-[13px] font-medium transition-colors';
+                'flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-body-md font-medium transition-colors';
               const tone =
                 action.tone === 'danger'
                   ? 'text-rose-600'
-                  : 'dark:text-forest-100 dark:hover:bg-forest-850 text-slate-700';
+                  : 'dark:text-forest-100 dark:hover:bg-forest-850 text-on-surface';
 
               if (action.disabledReason) {
                 return (
@@ -172,7 +172,7 @@ export default function AdminUserRowActionsMenu({
                     key={action.key}
                     title={action.disabledReason}
                     aria-disabled
-                    className={`${base} dark:text-forest-400 cursor-not-allowed text-slate-400`}
+                    className={`${base} dark:text-forest-400 text-outline cursor-not-allowed`}
                   >
                     <Icon className="h-4 w-4" />
                     <span>{action.label}</span>
@@ -186,7 +186,7 @@ export default function AdminUserRowActionsMenu({
                     key={action.key}
                     href={action.href}
                     onClick={() => setIsOpen(false)}
-                    className={`${base} ${tone} cursor-pointer hover:bg-slate-50`}
+                    className={`${base} ${tone} hover:bg-surface-container-low cursor-pointer`}
                   >
                     <Icon className="h-4 w-4" />
                     <span>{action.label}</span>
@@ -203,7 +203,7 @@ export default function AdminUserRowActionsMenu({
                     action.onClick?.();
                     setIsOpen(false);
                   }}
-                  className={`${base} ${tone} cursor-pointer hover:bg-slate-50`}
+                  className={`${base} ${tone} hover:bg-surface-container-low cursor-pointer`}
                 >
                   <Icon className="h-4 w-4" />
                   <span>{action.label}</span>

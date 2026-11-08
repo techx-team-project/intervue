@@ -21,18 +21,18 @@ export default function NotFoundView() {
         </div>
 
         {/* Vertical divider */}
-        <div className="hidden h-36 w-[1.5px] bg-slate-200/90 sm:block sm:h-44 md:h-48" />
+        <div className="bg-surface-container-high/90 hidden h-36 w-[1.5px] sm:block sm:h-44 md:h-48" />
 
         {/* Right: 404 Message */}
         <div className="text-center sm:text-left">
-          <h1 className="text-4xl font-light tracking-tight text-slate-800 sm:text-5xl md:text-6xl">404 ! Oops...</h1>
-          <p className="mt-3 text-base font-medium text-slate-700 sm:text-lg md:text-xl">
+          <h1 className="text-on-surface text-4xl font-light tracking-tight sm:text-5xl md:text-6xl">404 ! Oops...</h1>
+          <p className="text-on-surface mt-3 text-base font-medium sm:text-lg md:text-xl">
             Sorry, this page does not exist.
           </p>
           <div className="mt-5">
             <Link
               href={ROUTES.HOME}
-              className="text-sm font-semibold text-emerald-600 transition-colors hover:text-emerald-700 hover:underline sm:text-base"
+              className="text-primary hover:text-primary text-sm font-semibold transition-colors hover:underline sm:text-base"
             >
               Back to home
             </Link>

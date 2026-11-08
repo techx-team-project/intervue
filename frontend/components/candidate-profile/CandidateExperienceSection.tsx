@@ -27,11 +27,11 @@ export default function CandidateExperienceSection({ items }: CandidateExperienc
       renderItem={(item) => (
         <>
           <h3 className="text-navy text-base font-bold wrap-break-word">{item.title}</h3>
-          <p className="text-sm font-semibold wrap-break-word text-slate-700">
+          <p className="text-on-surface text-sm font-semibold wrap-break-word">
             {item.companyName}
             {item.location ? ` - ${item.location}` : ''}
           </p>
-          <p className="text-xs text-slate-500">
+          <p className="text-on-surface-variant text-xs">
             {formatDateRange(item.startDate, item.endDate, item.current, 'Present')}
           </p>
           <CandidateItemText label="Description" text={item.description} />

@@ -15,8 +15,8 @@ import JobPostStatusBadge from './JobPostStatusBadge';
 const TONE_CLASS = {
   danger: 'text-rose-600',
   warning: 'text-amber-600',
-  normal: 'text-slate-700',
-  muted: 'text-slate-400',
+  normal: 'text-on-surface',
+  muted: 'text-outline',
 } as const;
 
 const ROW_GRID = 'lg:grid lg:grid-cols-[32px_minmax(0,3fr)_1.2fr_1.2fr_1.2fr_44px] lg:items-center lg:gap-4';
@@ -49,16 +49,16 @@ export default function JobPostsList({
   onConfirm,
 }: JobPostsListProps) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white shadow-xs">
+    <div className="border-outline-variant rounded-2xl border bg-white shadow-xs">
       <div
-        className={`hidden border-b border-slate-100 bg-slate-50/70 px-4 py-3 text-[11px] font-bold tracking-wide text-slate-500 uppercase lg:grid lg:grid-cols-[32px_minmax(0,3fr)_1.2fr_1.2fr_1.2fr_44px] lg:gap-4`}
+        className={`border-outline-variant bg-surface-container-low/70 text-label-sm text-on-surface-variant hidden border-b px-4 py-3 font-bold tracking-wide uppercase lg:grid lg:grid-cols-[32px_minmax(0,3fr)_1.2fr_1.2fr_1.2fr_44px] lg:gap-4`}
       >
         <input
           type="checkbox"
           checked={isAllSelected && jobs.length > 0}
           onChange={onSelectAll}
           aria-label="Chọn tất cả tin trong trang"
-          className="h-4 w-4 cursor-pointer rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+          className="border-outline h-4 w-4 cursor-pointer rounded text-emerald-600 focus:ring-emerald-500"
         />
         <span>Tin tuyển dụng</span>
         <span>Trạng thái</span>
@@ -67,7 +67,7 @@ export default function JobPostsList({
         <span />
       </div>
 
-      <ul className="divide-y divide-slate-100">
+      <ul className="divide-outline-variant divide-y">
         {jobs.map((job) => {
           const isPending = actions.pendingId === job.id || actions.pendingId === 'bulk';
           const isSelected = selectedIds.has(job.id);
@@ -102,7 +102,7 @@ export default function JobPostsList({
             <li
               key={job.id}
               className={`flex flex-col gap-3 px-4 py-4 transition-colors ${ROW_GRID} ${
-                isSelected ? 'bg-emerald-50/30' : isPending ? 'opacity-50' : 'hover:bg-slate-50/80'
+                isSelected ? 'bg-emerald-50/30' : isPending ? 'opacity-50' : 'hover:bg-surface-container-low/80'
               }`}
             >
               <input
@@ -110,7 +110,7 @@ export default function JobPostsList({
                 checked={isSelected}
                 onChange={() => onToggleSelect(job.id)}
                 aria-label={`Chọn tin ${job.title}`}
-                className="hidden h-4 w-4 cursor-pointer rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 lg:block"
+                className="border-outline hidden h-4 w-4 cursor-pointer rounded text-emerald-600 focus:ring-emerald-500 lg:block"
               />
 
               <div className="min-w-0">
@@ -123,16 +123,16 @@ export default function JobPostsList({
                   </Link>
                   <div className="lg:hidden">{rowMenu}</div>
                 </div>
-                <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                  <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-700">
+                <div className="text-on-surface-variant mt-1.5 flex flex-wrap items-center gap-2 text-xs">
+                  <span className="bg-surface-container-high text-label-sm text-on-surface rounded-md px-1.5 py-0.5 font-semibold">
                     {optionLabel(JOB_FORM_LEVEL_OPTIONS, job.level)}
                   </span>
-                  <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-700">
+                  <span className="bg-surface-container-high text-label-sm text-on-surface rounded-md px-1.5 py-0.5 font-semibold">
                     {optionLabel(JOB_FORM_ARRANGEMENT_OPTIONS, job.workingArrangement)}
                   </span>
                   {job.location.city && (
-                    <span className="flex items-center gap-1 text-[11.5px]">
-                      <MapPin className="h-3 w-3 shrink-0 text-slate-400" />
+                    <span className="text-label-sm flex items-center gap-1">
+                      <MapPin className="text-outline h-3 w-3 shrink-0" />
                       {job.location.city}
                     </span>
                   )}
@@ -152,11 +152,11 @@ export default function JobPostsList({
                 )}
               </div>
 
-              <p className="text-sm font-semibold text-slate-700">{salaryText(job.salary)}</p>
+              <p className="text-on-surface text-sm font-semibold">{salaryText(job.salary)}</p>
 
               <div className="text-xs">
                 <span className={`font-bold ${TONE_CLASS[expiry.tone]}`}>{expiry.label}</span>
-                {job.expiresAt && <p className="mt-0.5 text-[11px] text-slate-400">{formatDate(job.expiresAt)}</p>}
+                {job.expiresAt && <p className="text-label-sm text-outline mt-0.5">{formatDate(job.expiresAt)}</p>}
               </div>
 
               <div className="hidden justify-end lg:flex">{rowMenu}</div>
