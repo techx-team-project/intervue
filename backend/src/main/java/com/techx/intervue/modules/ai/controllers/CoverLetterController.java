@@ -10,12 +10,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@PreAuthorize("hasRole('CANDIDATE')")
 @RestController
 @RequestMapping("/api/v1/ai/cover-letter")
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class CoverLetterController extends BaseController {
             @AuthenticationPrincipal CustomUserDetails principal,
             @Valid @RequestBody CoverLetterGenerateRequest request,
             HttpServletRequest servletRequest) {
-        Long userId = principal != null ? principal.getId() : null;
+        Long userId = principal.getId();
         String ip = servletRequest.getRemoteAddr();
         CoverLetterGenerateResult result =
                 coverLetterService.generateCoverLetter(userId, ip, request);
