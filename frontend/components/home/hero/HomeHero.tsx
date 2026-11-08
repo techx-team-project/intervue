@@ -1,30 +1,22 @@
 import { POPULAR_KEYWORDS } from '@/constants/home/search';
-import { Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import HeroVisual from './HeroVisual';
+import LatestJobsCard from './LatestJobsCard';
 import SearchBar from './SearchBar';
 
 const HERO_KEYWORD_COUNT = 6;
 
 export default function HomeHero() {
   return (
-    <section aria-labelledby="home-hero-title" className="bg-primary-deeper relative overflow-hidden pb-28">
-      <div aria-hidden className="bg-grid mask-fade-b absolute inset-0" />
-
-      <div className="container-page relative grid items-center gap-12 pt-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:pt-20">
+    <section aria-labelledby="home-hero-title" className="bg-primary-deeper pb-28">
+      <div className="container-page grid items-center gap-14 pt-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:pt-20">
         <div>
-          <span className="text-label-lg text-primary-bright inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2">
-            <Sparkles className="h-4 w-4" aria-hidden />
-            Nền tảng tuyển dụng IT có AI hỗ trợ
-          </span>
-
-          <h1 id="home-hero-title" className="font-display text-display-lg expanded:text-display-xl mt-6 text-white">
-            Tìm việc IT phù hợp, <span className="text-primary-bright">nhanh hơn</span> mỗi ngày
+          <h1 id="home-hero-title" className="font-display text-display-lg expanded:text-display-xl text-white">
+            Tìm công việc IT <span className="text-primary-bright">bạn thực sự muốn làm</span>
           </h1>
 
           <p className="text-title-lg mt-6 max-w-xl font-normal text-white/75">
-            Hàng trăm vị trí từ doanh nghiệp công nghệ đã xác thực. AI giúp bạn hoàn thiện CV và luyện phỏng vấn, còn
-            quyết định tuyển dụng luôn thuộc về con người.
+            Việc làm từ những công ty đã được xác thực. Bạn có thể nhờ AI xem lại CV, còn người quyết định tuyển hay
+            không vẫn là nhà tuyển dụng.
           </p>
 
           <div className="mt-10 max-w-3xl">
@@ -45,7 +37,7 @@ export default function HomeHero() {
           </div>
         </div>
 
-        <HeroVisual />
+        <LatestJobsCard />
       </div>
     </section>
   );
