@@ -281,6 +281,23 @@ Resource: `{ id, applicationId, jobId, jobTitle, companyName, candidateName, sta
 - Every event notifies the other side in-app and by email (`INTERVIEW_INVITED`, `_UPDATED`, `_CANCELLED` to the candidate; `_CONFIRMED`, `_DECLINED`, `_RESCHEDULE_REQUESTED` to the recruiter who scheduled it).
 - Confirmed interviews send `INTERVIEW_REMINDER` to both sides 24 hours and 1 hour before the start, each once (checked every 5 minutes).
 
+## Saved jobs and followed companies
+
+All endpoints are `candidate` only. Saving and following are idempotent (`PUT` twice is fine, `DELETE` of something not saved is fine). Each list is capped at 200 items (`409 SAVED_LIMIT_REACHED`).
+
+| Method | Path | Notes |
+|---|---|---|
+| `GET` | `/candidate/saved-jobs` | Paged, newest first. Item `{ jobId, savedAt, job? }`; `job` is the public job summary and is absent when the job is closed, expired, hidden or deleted. |
+| `GET` | `/candidate/saved-jobs/ids` | All saved job ids, used to show the heart state on lists. |
+| `PUT` | `/candidate/saved-jobs/{jobId}` | Only a currently public job (`404 NOT_FOUND` otherwise). |
+| `DELETE` | `/candidate/saved-jobs/{jobId}` | |
+| `GET` | `/candidate/followed-companies` | Paged, newest first. Item `{ companyId, followedAt, company }` with the public company resource. |
+| `GET` | `/candidate/followed-companies/ids` | All followed company ids. |
+| `PUT` | `/candidate/followed-companies/{companyId}` | `404 NOT_FOUND` for an unknown company. |
+| `DELETE` | `/candidate/followed-companies/{companyId}` | |
+
+- Publishing a job (`DRAFT` to `PUBLISHED`, not a resume from `PAUSED`) notifies every follower of the company with `FOLLOWED_COMPANY_NEW_JOB` (category `JOBS`, not mandatory, so followers can switch it off in notification preferences).
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -296,6 +313,7 @@ Resource: `{ id, applicationId, jobId, jobTitle, companyName, candidateName, sta
 | `METHOD_NOT_ALLOWED` | 405 | The HTTP method is not supported by this endpoint |
 | `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
 | `INTERVIEW_ALREADY_SCHEDULED` | 409 | The application already has an active interview |
+| `SAVED_LIMIT_REACHED` | 409 | The candidate already saved or follows the maximum number of items |
 | `INTERNAL_ERROR` | 500 | Unexpected server error; the cause is logged server-side and never returned |
 | `EMAIL_ALREADY_USED` | 409 | |
 | `ACCOUNT_BANNED` | 403 | The account is banned, so signing in and refreshing are both refused. Only raised after the password matches, so it never reveals the state of an account to someone who does not hold its credentials |

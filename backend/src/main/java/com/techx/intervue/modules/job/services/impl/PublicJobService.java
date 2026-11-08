@@ -12,6 +12,7 @@ import com.techx.intervue.modules.job.requests.SearchJobsRequest;
 import com.techx.intervue.modules.job.resources.PublicJobResource;
 import com.techx.intervue.modules.job.resources.PublicJobSummaryResource;
 import com.techx.intervue.modules.job.services.interfaces.PublicJobServiceInterface;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -59,6 +60,29 @@ public class PublicJobService implements PublicJobServiceInterface {
         String logo = logosOf(List.of(job)).get(job.getRecruiterId());
         String address = companyService.findSummary(job.getCompanyId()).address();
         return jobMapper.toPublicResource(job, logo, address);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isAvailable(Long jobId) {
+        return jobRepository.existsByIdAndStatusAndDeadlineGreaterThanEqual(
+                jobId, JobStatus.PUBLISHED, JobDeadlines.today());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PublicJobSummaryResource> findSummaries(Collection<Long> jobIds) {
+        if (jobIds.isEmpty()) {
+            return List.of();
+        }
+        List<Job> jobs =
+                jobRepository.findByIdInAndStatus(jobIds, JobStatus.PUBLISHED).stream()
+                        .filter(job -> !job.getDeadline().isBefore(JobDeadlines.today()))
+                        .toList();
+        Map<Long, String> logos = logosOf(jobs);
+        return jobs.stream()
+                .map(job -> jobMapper.toPublicSummary(job, logos.get(job.getRecruiterId())))
+                .toList();
     }
 
     private Map<Long, String> logosOf(List<Job> jobs) {

@@ -15,6 +15,7 @@ public enum NotificationType {
     COMPANY_VERIFIED(NotificationCategory.COMPANY, NotificationSeverity.SUCCESS, false),
     COMPANY_MEMBERSHIP_CHANGED(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
     AGREEMENT_REVIEWED(NotificationCategory.COMPANY, NotificationSeverity.INFO, true),
+    FOLLOWED_COMPANY_NEW_JOB(NotificationCategory.JOBS, NotificationSeverity.INFO, false),
     JOB_HIDDEN_BY_ADMIN(NotificationCategory.JOBS, NotificationSeverity.DANGER, true),
     JOB_RESTORED_BY_ADMIN(NotificationCategory.JOBS, NotificationSeverity.SUCCESS, false),
     APPLICATION_RECEIVED(NotificationCategory.APPLICATIONS, NotificationSeverity.INFO, false),
