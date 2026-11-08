@@ -1,5 +1,7 @@
 package com.techx.intervue.modules.recruiter.services.impl;
 
+import com.techx.intervue.exceptions.AppException;
+import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.helpers.EmailHelper;
 import com.techx.intervue.modules.recruiter.entities.Recruiter;
 import com.techx.intervue.modules.recruiter.repositories.RecruiterRepository;
@@ -16,8 +18,30 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LocalRecruiterSeedService implements LocalRecruiterSeedServiceInterface {
 
+    private static final String DEMO_PHONE_FORMAT = "09%08d";
+
     private final RecruiterRepository recruiterRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    @Transactional
+    public void markContactVerified(Long recruiterId) {
+        Recruiter recruiter =
+                recruiterRepository
+                        .findById(recruiterId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        Instant now = Instant.now();
+        if (recruiter.getEmailVerifiedAt() == null) {
+            recruiter.setEmailVerifiedAt(now);
+        }
+        if (recruiter.getPhoneVerifiedAt() == null) {
+            if (recruiter.getPhone() == null) {
+                recruiter.setPhone(String.format(DEMO_PHONE_FORMAT, recruiterId));
+            }
+            recruiter.setPhoneVerifiedAt(now);
+        }
+        recruiterRepository.save(recruiter);
+    }
 
     @Override
     @Transactional

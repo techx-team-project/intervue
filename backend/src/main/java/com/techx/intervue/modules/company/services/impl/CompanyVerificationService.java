@@ -66,7 +66,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class CompanyVerificationService implements CompanyVerificationServiceInterface {
 
-    private static final String CURRENT_AGREEMENT_VERSION = "v2.1";
+    static final String CURRENT_AGREEMENT_VERSION = "v2.1";
     private static final String DOCUMENT_FOLDER = "companies/documents";
     private static final String AGREEMENT_FOLDER = "companies/agreements";
     private static final String TEMPLATE_PATH = "agreements/%s-%s.txt";

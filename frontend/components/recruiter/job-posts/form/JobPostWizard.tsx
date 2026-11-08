@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { FieldErrors, FormProvider, Path, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import JobBasicsStep from './JobBasicsStep';
+import JobDemoTools from './JobDemoTools';
 import JobContentStep from './JobContentStep';
 import JobFormStepper, { JOB_FORM_STEPS } from './JobFormStepper';
 import JobReviewStep from './JobReviewStep';
@@ -155,6 +156,8 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(handleValid, handleInvalid)} className="mx-auto max-w-3xl space-y-5" noValidate>
+        {process.env.NODE_ENV !== 'production' && <JobDemoTools />}
+
         <JobFormStepper current={step} reached={reached} onSelect={setStep} />
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:p-6">
