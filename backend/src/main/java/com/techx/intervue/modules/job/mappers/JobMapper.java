@@ -190,7 +190,7 @@ public class JobMapper {
                     .add(
                             JobScreeningQuestion.builder()
                                     .job(job)
-                                    .position(index)
+                                    .position((byte) index)
                                     .type(question.type())
                                     .prompt(question.prompt())
                                     .required(question.required())

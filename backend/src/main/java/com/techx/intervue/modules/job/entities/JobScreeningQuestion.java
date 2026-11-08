@@ -40,7 +40,7 @@ public class JobScreeningQuestion extends BaseEntity {
     private Job job;
 
     @Column(nullable = false)
-    private int position;
+    private Byte position;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "question_type", nullable = false, length = 20)
