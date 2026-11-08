@@ -92,6 +92,15 @@ templates:
       **Ghi chú của quản trị viên:** {reason}
     actionLabel: "Xem thoả thuận"
 
+  FOLLOWED_COMPANY_NEW_JOB:
+    title: "{companyName} vừa đăng tin tuyển dụng mới"
+    summary: "{companyName} đang tuyển vị trí {jobTitle}."
+    body: |
+      Công ty **{companyName}** mà bạn đang theo dõi vừa đăng tin tuyển dụng vị trí **{jobTitle}**.
+
+      Bạn có thể tắt thông báo này trong phần cài đặt thông báo.
+    actionLabel: "Xem tin tuyển dụng"
+
   JOB_HIDDEN_BY_ADMIN:
     title: "Tin tuyển dụng {jobTitle} đã bị ẩn"
     summary: "Quản trị viên đã ẩn tin {jobTitle} khỏi kết quả tìm kiếm."

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Briefcase, Building2, Globe, MapPin, Share2, Users } from 'lucide-react';
+import FollowCompanyButton from '@/components/candidate/saved/FollowCompanyButton';
 import type { CompanyDetail } from '@/types/company';
 
 interface CompanyHeaderCoverProps {
@@ -77,6 +78,7 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
           </div>
 
           <div className="flex items-center gap-2.5 pt-2 sm:pt-0">
+            <FollowCompanyButton companyId={Number(company.id)} />
             <button
               type="button"
               onClick={handleShare}

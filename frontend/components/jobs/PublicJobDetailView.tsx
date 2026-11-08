@@ -1,6 +1,8 @@
 'use client';
 
 import PageHero from '@/components/common/PageHero';
+import FollowCompanyButton from '@/components/candidate/saved/FollowCompanyButton';
+import SaveJobButton from '@/components/candidate/saved/SaveJobButton';
 import { Button } from '@/components/ui/Button';
 import type { PublicJobResource } from '@/types/public-job';
 import { formatDate } from '@/utils/datetime';
@@ -73,6 +75,11 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
           <Button size="2xl" leftIcon={<Send className="h-4 w-4" />} onClick={() => setIsApplyOpen(true)}>
             Apply now
           </Button>
+          <SaveJobButton
+            jobId={job.id}
+            variant="labeled"
+            className="border-white/40 bg-transparent text-white hover:bg-white/10"
+          />
         </div>
         {hasQuestions && (
           <p className="text-body-md mt-5 flex items-center gap-2 text-white/70">
@@ -129,6 +136,7 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
               >
                 View company page
               </Link>
+              <FollowCompanyButton companyId={job.company.id} className="mt-3 w-full" />
             </div>
 
             <div className="border-outline-variant space-y-3 rounded-2xl border bg-white p-5 shadow-2xs">

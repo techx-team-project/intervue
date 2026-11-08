@@ -109,6 +109,7 @@ public enum ErrorCode {
             HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!"),
     JOB_NOT_EDITABLE(
             HttpStatus.UNPROCESSABLE_CONTENT, "This job can no longer be edited or deleted!"),
+    SAVED_LIMIT_REACHED(HttpStatus.CONFLICT, "You have reached the maximum number of saved items!"),
     ALREADY_APPLIED(HttpStatus.CONFLICT, "You have already applied to this job!"),
     JOB_NOT_OPEN(HttpStatus.UNPROCESSABLE_CONTENT, "This job is not accepting applications!"),
     CANNOT_APPLY_TO_OWN_COMPANY(

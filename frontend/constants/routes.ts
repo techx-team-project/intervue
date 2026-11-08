@@ -9,6 +9,7 @@ export const ROUTES = {
   CANDIDATE_PROFILE: '/candidate/profile',
   CANDIDATE_CVS: '/candidate/cvs',
   CANDIDATE_INTERVIEWS: '/candidate/interviews',
+  CANDIDATE_SAVED_JOBS: '/candidate/saved-jobs',
   JOBS: '/jobs',
   CANDIDATE_JOB_ALERTS: '/candidate/job-alerts',
   ACCOUNT_PASSWORD: '/account/password',

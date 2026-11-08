@@ -9,6 +9,7 @@ import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.entities.Skill;
 import com.techx.intervue.modules.job.enums.JobStatus;
 import com.techx.intervue.modules.job.events.JobClosedEvent;
+import com.techx.intervue.modules.job.events.JobPublishedEvent;
 import com.techx.intervue.modules.job.mappers.JobMapper;
 import com.techx.intervue.modules.job.repositories.JobRepository;
 import com.techx.intervue.modules.job.repositories.JobRepository.StatusCount;
@@ -118,7 +119,14 @@ public class JobService implements JobServiceInterface {
     public JobResource publish(Long jobId, Long recruiterId) {
         Job job = requireOwned(jobId, recruiterId);
         requireStatus(job, Set.of(JobStatus.DRAFT));
-        return goLive(job, recruiterId);
+        JobResource published = goLive(job, recruiterId);
+        eventPublisher.publishEvent(
+                new JobPublishedEvent(
+                        job.getId(),
+                        job.getCompanyId(),
+                        job.getTitle(),
+                        companyService.findSummary(job.getCompanyId()).name()));
+        return published;
     }
 
     @Override
