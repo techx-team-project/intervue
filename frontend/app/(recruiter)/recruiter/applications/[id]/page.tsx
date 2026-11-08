@@ -1,18 +1,13 @@
-import ApplicationDetailPageView from '@/components/recruiter/applications/ApplicationDetailPageView';
-import { fetchMockApplication } from '@/mocks/recruiter-application.mock';
+import ReviewApplicationDetailView from '@/components/recruiter/applications/review/ReviewApplicationDetailView';
 import { notFound } from 'next/navigation';
-
-export const dynamic = 'force-dynamic';
 
 interface ApplicationDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
 export default async function ApplicationDetailPage({ params }: ApplicationDetailPageProps) {
-  const { id } = await params;
-  const application = await fetchMockApplication(id);
+  const id = Number((await params).id);
+  if (!Number.isInteger(id) || id <= 0) notFound();
 
-  if (!application) notFound();
-
-  return <ApplicationDetailPageView initialApplication={application} />;
+  return <ReviewApplicationDetailView applicationId={id} />;
 }
