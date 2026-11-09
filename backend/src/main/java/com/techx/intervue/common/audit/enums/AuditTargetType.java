@@ -8,5 +8,7 @@ public enum AuditTargetType {
     BUSINESS_DOCUMENT,
     BLOG_POST,
     NOTIFICATION_BROADCAST,
-    JOB
+    JOB,
+    SERVICE_CATEGORY,
+    SERVICE_PACKAGE
 }
