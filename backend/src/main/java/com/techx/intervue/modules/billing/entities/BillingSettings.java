@@ -38,4 +38,17 @@ public class BillingSettings extends BaseEntity {
 
     @Column(name = "max_pending_orders", nullable = false)
     private Integer maxPendingOrders;
+
+    @Column(name = "bank_code", length = 30)
+    private String bankCode;
+
+    @Column(name = "bank_account_number", length = 30)
+    private String bankAccountNumber;
+
+    @Column(name = "bank_account_name", length = 150)
+    private String bankAccountName;
+
+    @Column(name = "payment_sync_enabled", nullable = false)
+    @Builder.Default
+    private Boolean paymentSyncEnabled = false;
 }

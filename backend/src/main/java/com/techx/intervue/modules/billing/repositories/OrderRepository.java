@@ -13,6 +13,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<Order> findByCodeAndCompanyId(String code, Long companyId);
 
+    Optional<Order> findByCode(String code);
+
     Page<Order> findAllByCompanyIdOrderByCreatedAtDesc(Long companyId, Pageable pageable);
 
     long countByCompanyIdAndStatus(Long companyId, OrderStatus status);

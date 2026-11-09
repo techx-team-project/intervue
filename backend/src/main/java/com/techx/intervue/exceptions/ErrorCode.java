@@ -179,7 +179,16 @@ public enum ErrorCode {
     ORDER_EXPIRED(HttpStatus.UNPROCESSABLE_CONTENT, "This order has expired!"),
     TRIAL_ALREADY_USED(
             HttpStatus.UNPROCESSABLE_CONTENT,
-            "Your company has already bought this one-time package!");
+            "Your company has already bought this one-time package!"),
+    PAYMENT_NOT_CONFIGURED(
+            HttpStatus.SERVICE_UNAVAILABLE,
+            "Online payment is not available yet, please contact support!"),
+    PAYMENT_PROVIDER_ERROR(
+            HttpStatus.BAD_GATEWAY, "The payment provider returned an unexpected error!"),
+    PAYMENT_SYNC_RUNNING(
+            HttpStatus.CONFLICT, "A payment reconciliation run is already in progress!"),
+    TRANSACTION_ALREADY_MATCHED(
+            HttpStatus.CONFLICT, "This bank transaction is already linked to an order!");
 
     private final HttpStatus status;
     private final String message;
