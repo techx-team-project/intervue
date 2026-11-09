@@ -317,6 +317,27 @@ Candidates submit a national ID and a portrait; an admin reviews them by hand (n
 
 Anything other than the stated source status returns `422 INVALID_STATUS_TRANSITION`.
 
+## Service catalog (billing)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/service-packages` | recruiter | The whole buy-services page in one call: `ServiceCatalogResource { categories: [ServiceCategoryResource] }`. Only active categories that still hold at least one `ACTIVE` package are returned, categories and packages sorted by `displayOrder`. |
+| `GET` | `/recruiter/service-packages/{slug}` | recruiter | `ServicePackageDetailResource`. `404 PACKAGE_NOT_AVAILABLE` when the slug is unknown or the package is not `ACTIVE`. |
+| `GET` | `/admin/service-categories` | admin | `AdminServiceCategoryResource[]` including inactive ones, each with `packageCount`. |
+| `POST` · `PUT` | `/admin/service-categories` · `/{id}` | admin | Body `SaveServiceCategoryRequest`. `409 DUPLICATE_PACKAGE_CODE` when `code` is taken. |
+| `DELETE` | `/admin/service-categories/{id}` | admin | `409 SERVICE_CATEGORY_IN_USE` while any package still points at it. |
+| `GET` | `/admin/service-packages?query=&categoryId=&status=&page=&size=` | admin | `PageResource<AdminServicePackageResource>`; `query` matches name or code. |
+| `GET` | `/admin/service-packages/{id}` | admin | `AdminServicePackageResource`. |
+| `POST` · `PUT` | `/admin/service-packages` · `/{id}` | admin | Body `SaveServicePackageRequest`. `benefits` and `sections` are a **full replace**; omit them to clear. `409 DUPLICATE_PACKAGE_CODE` when `code` or `slug` is taken. |
+| `POST` | `/admin/service-packages/{id}/activate` · `/deactivate` | admin | Packages are never deleted; a non-`ACTIVE` package disappears from the recruiter catalog. |
+
+- `ServiceCategoryResource`: `{ id, code, name, headline, description, needKey, packages: [ServicePackageCardResource] }`. `needKey` is what the "suggest a package" modal maps a recruiter's chosen need onto (`REACH`, `CONNECT`, `HIGHLIGHT`, `BRANDING`); it is data, never hard-coded in the frontend.
+- `ServicePackageCardResource`: `{ id, code, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, validityDays, bonusCredits, oneTimePerCompany, benefits }`. `badge` is `NONE`, `NEW` or `SPECIAL_OFFER`. `price` is an integer amount of `currency` (`VND`), **excluding VAT** — the UI shows it with the red asterisk.
+- `ServicePackageDetailResource` adds `heroImageUrl`, `categoryCode`, `categoryName`, `categoryHeadline` and `sections: [{ heading, iconName, accentColor, body, imageUrl }]`, where `body` is markdown.
+- `ServicePackageBenefitResource`: `{ entitlementType, quantity, durationDays, label }`. `entitlementType` is the machine-readable right a purchase grants (`JOB_POST_SLOT`, `JOB_BOOST`, `JOB_LABEL_URGENT`, `JOB_LABEL_HOT`, `JOB_HIGHLIGHT`, `JOB_RETOP`, `JOB_ALERT_PUSH`, `AI_RESUME_MATCH`, `AI_JD_GENERATE`, `BRAND_PAGE`, `FEATURED_COMPANY`, `AD_SLOT_WEEK`, `CREDIT`); `label` is the Vietnamese line shown on the card.
+- `SaveServicePackageRequest`: `{ categoryId, code, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, heroImageUrl, validityDays, bonusCredits, oneTimePerCompany, status, displayOrder, benefits: [{ entitlementType, quantity, durationDays, label }], sections: [{ heading, iconName, accentColor, body, imageUrl }] }`. `code` is `^[A-Z0-9_]+$`, `slug` is `^[a-z0-9-]+$`.
+- Every admin write is audited (`SERVICE_CATEGORY_*`, `SERVICE_PACKAGE_*`).
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -330,6 +351,9 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `FORBIDDEN` | 403 | Role/ownership failure |
 | `NOT_FOUND` | 404 | |
 | `METHOD_NOT_ALLOWED` | 405 | The HTTP method is not supported by this endpoint |
+| `PACKAGE_NOT_AVAILABLE` | 404 | Unknown slug/id, or the service package is not `ACTIVE` |
+| `DUPLICATE_PACKAGE_CODE` | 409 | A service category or package already uses this `code`/`slug` |
+| `SERVICE_CATEGORY_IN_USE` | 409 | The category still has packages and cannot be deleted |
 | `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
 | `INTERVIEW_ALREADY_SCHEDULED` | 409 | The application already has an active interview |
 | `SAVED_LIMIT_REACHED` | 409 | The candidate already saved or follows the maximum number of items |
