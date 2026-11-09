@@ -43,6 +43,7 @@ public class AdminPaymentService implements AdminPaymentServiceInterface {
     private final PaymentTransactionRepository transactionRepository;
     private final OrderRepository orderRepository;
     private final BillingNotifier billingNotifier;
+    private final OrderFulfillmentService orderFulfillmentService;
     private final AuditLogServiceInterface auditLogService;
     private final SepayProperties sepayProperties;
 
@@ -133,6 +134,7 @@ public class AdminPaymentService implements AdminPaymentServiceInterface {
                 order.getCode());
 
         if (becamePaid) {
+            orderFulfillmentService.fulfil(order);
             billingNotifier.orderPaid(order);
         } else {
             billingNotifier.orderUnderpaid(order);

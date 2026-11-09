@@ -97,7 +97,7 @@ public class OrderMapper {
                 order.getCreatedAt());
     }
 
-    private List<ServicePackageBenefitResource> readBenefits(String json) {
+    public List<ServicePackageBenefitResource> readBenefits(String json) {
         if (json == null || json.isBlank()) {
             return List.of();
         }

@@ -34,6 +34,7 @@ public class PaymentMatcher {
 
     private final OrderRepository orderRepository;
     private final PaymentTransactionRepository transactionRepository;
+    private final OrderFulfillmentService orderFulfillmentService;
 
     public record MatchOutcome(
             PaymentTransactionStatus status, Order order, boolean orderBecamePaid) {}
@@ -89,6 +90,9 @@ public class PaymentMatcher {
         }
 
         transactionRepository.save(transaction);
+        if (becamePaid) {
+            orderFulfillmentService.fulfil(order);
+        }
         return new MatchOutcome(PaymentTransactionStatus.MATCHED, order, becamePaid);
     }
 
