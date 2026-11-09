@@ -21,7 +21,13 @@ interface AdminServicePackageFormProps {
   initial?: AdminServicePackage;
 }
 
-type BenefitDraft = { entitlementType: EntitlementType; quantity: string; durationDays: string; label: string };
+type BenefitDraft = {
+  entitlementType: EntitlementType;
+  quantity: string;
+  tier: string;
+  durationDays: string;
+  label: string;
+};
 type SectionDraft = { heading: string; iconName: string; accentColor: string; body: string; imageUrl: string };
 
 const BADGE_OPTIONS = [
@@ -36,7 +42,13 @@ const STATUS_OPTIONS = [
   { value: 'INACTIVE', label: 'Inactive' },
 ];
 
-const EMPTY_BENEFIT: BenefitDraft = { entitlementType: 'JOB_POST_SLOT', quantity: '1', durationDays: '', label: '' };
+const EMPTY_BENEFIT: BenefitDraft = {
+  entitlementType: 'JOB_POST_SLOT',
+  quantity: '1',
+  tier: '1',
+  durationDays: '',
+  label: '',
+};
 const EMPTY_SECTION: SectionDraft = { heading: '', iconName: '', accentColor: '', body: '', imageUrl: '' };
 
 function toOptionalNumber(value: string): number | null {
@@ -72,6 +84,7 @@ export default function AdminServicePackageForm({ categories, initial }: AdminSe
     initial?.benefits.map((benefit) => ({
       entitlementType: benefit.entitlementType,
       quantity: String(benefit.quantity),
+      tier: String(benefit.tier ?? 1),
       durationDays: benefit.durationDays ? String(benefit.durationDays) : '',
       label: benefit.label,
     })) ?? [],
@@ -114,6 +127,7 @@ export default function AdminServicePackageForm({ categories, initial }: AdminSe
       benefits: benefits.map((benefit) => ({
         entitlementType: benefit.entitlementType,
         quantity: Number(benefit.quantity),
+        tier: Number(benefit.tier),
         durationDays: toOptionalNumber(benefit.durationDays),
         label: benefit.label.trim(),
       })),
@@ -276,7 +290,7 @@ export default function AdminServicePackageForm({ categories, initial }: AdminSe
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="border-outline-variant grid gap-3 rounded-xl border p-3 sm:grid-cols-[200px_90px_110px_minmax(0,1fr)_auto]"
+                className="border-outline-variant grid gap-3 rounded-xl border p-3 sm:grid-cols-[180px_80px_80px_100px_minmax(0,1fr)_auto]"
               >
                 <Select
                   value={benefit.entitlementType}
@@ -298,6 +312,20 @@ export default function AdminServicePackageForm({ categories, initial }: AdminSe
                     setBenefits((previous) =>
                       previous.map((item, position) =>
                         position === index ? { ...item, quantity: event.target.value } : item,
+                      ),
+                    )
+                  }
+                />
+                <Input
+                  type="number"
+                  min={1}
+                  max={5}
+                  value={benefit.tier}
+                  placeholder="Tier"
+                  onChange={(event) =>
+                    setBenefits((previous) =>
+                      previous.map((item, position) =>
+                        position === index ? { ...item, tier: event.target.value } : item,
                       ),
                     )
                   }

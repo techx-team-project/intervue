@@ -70,7 +70,13 @@ export interface SaveServicePackageInput {
   oneTimePerCompany: boolean;
   status: ServicePackageStatus;
   displayOrder: number;
-  benefits: { entitlementType: EntitlementType; quantity: number; durationDays?: number | null; label: string }[];
+  benefits: {
+    entitlementType: EntitlementType;
+    quantity: number;
+    tier: number;
+    durationDays?: number | null;
+    label: string;
+  }[];
   sections: {
     heading: string;
     iconName?: string | null;

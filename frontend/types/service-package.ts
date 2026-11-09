@@ -20,6 +20,7 @@ export type ServiceNeedKey = 'REACH' | 'CONNECT' | 'HIGHLIGHT' | 'BRANDING';
 export interface ServicePackageBenefit {
   entitlementType: EntitlementType;
   quantity: number;
+  tier: number;
   durationDays: number | null;
   label: string;
 }
