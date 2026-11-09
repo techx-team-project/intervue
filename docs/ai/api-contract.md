@@ -360,6 +360,23 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 - Orders expire after `billing_settings.order_expire_hours` (default 72). A scheduler every 10 minutes moves overdue `PENDING_PAYMENT` orders to `EXPIRED`.
 - `billing_settings` is a single row holding `vat_rate`, `order_expire_hours`, `order_code_prefix` and `max_pending_orders`.
 
+## Payments (SePay)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/orders/{code}/payment` | recruiter | `OrderPaymentResource`. When the bank account is not configured yet it returns `configured: false` with every bank field `null` — the endpoint never fails for that reason. |
+| `GET` · `PUT` | `/admin/payments/settings` | admin | `BillingSettingsResource` / `SaveBillingSettingsRequest`. `apiTokenConfigured` is read-only and reports whether `SEPAY_API_TOKEN` is present in the server environment. |
+| `GET` | `/admin/payments/transactions?status=&page=&size=` | admin | `PageResource<PaymentTransactionResource>`, newest first. `status` is `MATCHED` or `UNMATCHED`. |
+| `POST` | `/admin/payments/transactions/{id}/match` | admin | Body `{ orderCode, note? }`. Links an `UNMATCHED` transfer to an order by hand. `409 TRANSACTION_ALREADY_MATCHED`, `422 ORDER_NOT_PAYABLE`. |
+| `POST` | `/admin/payments/sync` | admin | Runs reconciliation immediately and returns `PaymentSyncResultResource { at, ok, message, fetched, created, matched }`. Never throws for a misconfiguration; it answers `ok: false` with the reason. |
+
+- `OrderPaymentResource`: `{ orderCode, status, totalAmount, paidAmount, currency, expiresAt, configured, bankCode, accountNumber, accountName, transferContent, qrUrl }`. `transferContent` is the order code — the recruiter must keep it intact for automatic matching. `qrUrl` points at `qr.sepay.vn` and carries the **outstanding** amount, so a top-up QR after a short payment is already correct.
+- **Reconciliation** polls `https://my.sepay.vn/userapi/transactions/list` (no webhook). It is off until `billing_settings.payment_sync_enabled` is true, a bank account is saved and `SEPAY_API_TOKEN` is set.
+- **Matching:** the transfer content is upper-cased and stripped of whitespace, then matched against `PREFIX[A-Z0-9]{8}`. Unknown code → the transfer is stored `UNMATCHED` for an admin to resolve.
+- **Amount rules:** received totals at or above the order total mark it `PAID` (any overage is recorded in the transaction note); less marks it `UNDERPAID` and the order stays open until its expiry so the recruiter can top up with the same content.
+- `payment_transactions.sepay_id` is `UNIQUE`: the same bank transfer can never be credited twice, even if two reconciliation runs overlap.
+- **Notifications:** `ORDER_CREATED` goes to every active recruiter of the company, `ORDER_PAID` to the whole company, `ORDER_UNDERPAID` to the buyer.
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -383,6 +400,10 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `ORDER_NOT_PAYABLE` | 422 | The order is not in a state that allows this action |
 | `ORDER_EXPIRED` | 422 | The payment window has closed |
 | `TRIAL_ALREADY_USED` | 422 | A one-time-per-company package was bought before |
+| `PAYMENT_NOT_CONFIGURED` | 503 | `SEPAY_API_TOKEN` or the bank account is missing |
+| `PAYMENT_PROVIDER_ERROR` | 502 | SePay answered with an error or an unexpected payload |
+| `PAYMENT_SYNC_RUNNING` | 409 | A reconciliation run is already in progress |
+| `TRANSACTION_ALREADY_MATCHED` | 409 | The bank transfer is already linked to an order |
 | `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
 | `INTERVIEW_ALREADY_SCHEDULED` | 409 | The application already has an active interview |
 | `SAVED_LIMIT_REACHED` | 409 | The candidate already saved or follows the maximum number of items |
