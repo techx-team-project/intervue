@@ -20,6 +20,9 @@ public interface InterviewRepository extends JpaRepository<Interview, Long> {
 
     Optional<Interview> findByIdAndCandidateId(Long id, Long candidateId);
 
+    List<Interview> findByApplicationIdAndStatusIn(
+            Long applicationId, Collection<InterviewStatus> statuses);
+
     boolean existsByApplicationIdAndStatusIn(
             Long applicationId, Collection<InterviewStatus> statuses);
 
