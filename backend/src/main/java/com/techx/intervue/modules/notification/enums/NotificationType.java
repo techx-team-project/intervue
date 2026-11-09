@@ -34,6 +34,8 @@ public enum NotificationType {
     ACCOUNT_ROLES_CHANGED(NotificationCategory.ACCOUNT, NotificationSeverity.INFO, true),
     SECURITY_NEW_DEVICE_LOGIN(NotificationCategory.SECURITY, NotificationSeverity.WARNING, true),
     SECURITY_SETTING_CHANGED(NotificationCategory.SECURITY, NotificationSeverity.INFO, true),
+    IDENTITY_VERIFIED(NotificationCategory.ACCOUNT, NotificationSeverity.INFO, true),
+    IDENTITY_REJECTED(NotificationCategory.ACCOUNT, NotificationSeverity.WARNING, true),
     ADMIN_REVIEW_QUEUE_ITEM(NotificationCategory.MODERATION, NotificationSeverity.INFO, false),
     ANNOUNCEMENT(NotificationCategory.SYSTEM, NotificationSeverity.INFO, false);
 

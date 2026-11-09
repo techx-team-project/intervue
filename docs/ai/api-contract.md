@@ -239,7 +239,7 @@ An application is one row per candidate and job (`UNIQUE job_id, candidate_id`);
 | `GET` | `/candidate/applications/{id}/cv` | candidate | Streams the application's own CV copy. |
 
 - A job belongs to the candidate's own company when a recruiter account with the same email is an active member of it; that is refused with `CANNOT_APPLY_TO_OWN_COMPANY`.
-- `applications.require-identity-verification` (env `APPLICATIONS_REQUIRE_IDENTITY_VERIFICATION`, default `false`) turns on the eKYC gate. Until the eKYC module supplies a real lookup, turning it on blocks every candidate.
+- `applications.require-identity-verification` (env `APPLICATIONS_REQUIRE_IDENTITY_VERIFICATION`, default `true`) turns on the eKYC gate: only candidates whose identity verification is `APPROVED` can apply.
 - Screening questions cannot change once the job has a submitted (non-draft) application (`SCREENING_QUESTIONS_LOCKED`).
 
 ## Recruiter Applications
@@ -299,6 +299,23 @@ All endpoints are `candidate` only. Saving and following are idempotent (`PUT` t
 
 - Publishing a job (`DRAFT` to `PUBLISHED`, not a resume from `PAUSED`) notifies every follower of the company with `FOLLOWED_COMPANY_NEW_JOB` (category `JOBS`, not mandatory, so followers can switch it off in notification preferences).
 
+## Identity verification (eKYC)
+
+Candidates submit a national ID and a portrait; an admin reviews them by hand (no automatic scoring yet). Images live in the private `IDENTITY_DOCUMENT` store and are streamed only to admins. The ID number is stored as a SHA-256 hash plus its last 4 digits.
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/candidate/identity-verification` | candidate | `{ status?, rejectReason?, attemptsLeft, canSubmit, required, fullName?, idNumberLast4?, submittedAt?, reviewedAt? }`. `status` is absent until the first submission; `required` mirrors `applications.require-identity-verification`. |
+| `POST` | `/candidate/identity-verification` | candidate | `multipart/form-data`: `fullName` (max 120), `idNumber` (9 or 12 digits), `dateOfBirth` (ISO date), files `front`, `back`, `selfie` (JPG/PNG, max 5MB each). Creates a `PENDING` review and notifies admins. `403 EMAIL_NOT_VERIFIED`, `409 IDENTITY_ALREADY_VERIFIED`, `409 IDENTITY_REVIEW_PENDING`, `422 IDENTITY_ATTEMPTS_EXHAUSTED`, `422 IDENTITY_UNDER_MINIMUM_AGE` (under 16). A rejected candidate resubmits with the same call. |
+| `GET` | `/admin/identity-verifications?status=&q=&page=&size=` | admin | Paged `AdminIdentityVerificationResource { id, userId, userEmail, fullName, dateOfBirth, idNumberLast4, status, idNumberUsedByAnotherAccount, rejectReason?, rejectionCount, attemptLimit, submittedAt, reviewedAt? }`. Pending items are oldest first, others newest first. `q` matches name or last 4 digits. |
+| `GET` | `/admin/identity-verifications/{id}` | admin | One item. |
+| `GET` | `/admin/identity-verifications/{id}/documents/{FRONT\|BACK\|SELFIE}` | admin | Streams the image inline. |
+| `POST` | `/admin/identity-verifications/{id}/approve` | admin | `PENDING` to `APPROVED`; notifies the candidate (`IDENTITY_VERIFIED`) and writes an audit entry. `409 IDENTITY_NUMBER_ALREADY_USED` when another account already holds the same approved ID number. |
+| `POST` | `/admin/identity-verifications/{id}/reject` | admin | Body `{ reason }` (required, max 500). `PENDING` to `REJECTED`, counts one attempt, notifies the candidate (`IDENTITY_REJECTED`). |
+| `POST` | `/admin/identity-verifications/{id}/grant-attempts` | admin | Adds 3 attempts to a rejected candidate who used all 5. |
+
+Anything other than the stated source status returns `422 INVALID_STATUS_TRANSITION`.
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -330,6 +347,11 @@ All endpoints are `candidate` only. Saving and following are idempotent (`PUT` t
 | `JOB_NOT_OPEN` | 422 | The job is not published or its deadline has passed |
 | `CANNOT_APPLY_TO_OWN_COMPANY` | 422 | An active member of the job's company cannot apply to it |
 | `IDENTITY_NOT_VERIFIED` | 422 | The eKYC gate is on and the candidate is not verified |
+| `IDENTITY_ALREADY_VERIFIED` | 409 | The candidate is already verified |
+| `IDENTITY_REVIEW_PENDING` | 409 | A submission is already awaiting review |
+| `IDENTITY_ATTEMPTS_EXHAUSTED` | 422 | All 5 attempts were rejected; an admin must grant more |
+| `IDENTITY_UNDER_MINIMUM_AGE` | 422 | Date of birth shows the candidate is under 16 |
+| `IDENTITY_NUMBER_ALREADY_USED` | 409 | The ID number is already approved on another account |
 | `RESUME_LIMIT_REACHED` | 409 | The candidate already has the maximum number of CVs |
 | `SCREENING_QUESTIONS_LOCKED` | 422 | The job already has applications, so its screening questions cannot change |
 | `SKILL_NAME_ALREADY_USED` | 409 | A skill with this name already exists |
