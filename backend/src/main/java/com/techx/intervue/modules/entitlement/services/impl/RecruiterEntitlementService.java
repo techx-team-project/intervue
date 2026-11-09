@@ -48,9 +48,17 @@ public class RecruiterEntitlementService implements RecruiterEntitlementServiceI
     @Transactional(readOnly = true)
     public List<EntitlementUsageResource> listActive(Long recruiterId) {
         Long companyId = requireCompanyId(recruiterId);
+        // A spent job slot is not a running effect; the stock card already shows what is left
         List<EntitlementUsage> usages =
-                usageRepository.findAllByCompanyIdAndStatusOrderByEndsAtAsc(
-                        companyId, EntitlementUsageStatus.ACTIVE);
+                usageRepository
+                        .findAllByCompanyIdAndStatusOrderByEndsAtAsc(
+                                companyId, EntitlementUsageStatus.ACTIVE)
+                        .stream()
+                        .filter(
+                                usage ->
+                                        EntitlementMapper.ACTIVATABLE_ON_JOB.contains(
+                                                usage.getEntitlementType()))
+                        .toList();
         if (usages.isEmpty()) {
             return List.of();
         }
