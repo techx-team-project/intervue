@@ -334,7 +334,7 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 - `ServiceCategoryResource`: `{ id, code, name, headline, description, needKey, packages: [ServicePackageCardResource] }`. `needKey` is what the "suggest a package" modal maps a recruiter's chosen need onto (`REACH`, `CONNECT`, `HIGHLIGHT`, `BRANDING`); it is data, never hard-coded in the frontend.
 - `ServicePackageCardResource`: `{ id, code, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, validityDays, bonusCredits, oneTimePerCompany, benefits }`. `badge` is `NONE`, `NEW` or `SPECIAL_OFFER`. `price` is an integer amount of `currency` (`VND`), **excluding VAT** — the UI shows it with the red asterisk.
 - `ServicePackageDetailResource` adds `heroImageUrl`, `categoryCode`, `categoryName`, `categoryHeadline` and `sections: [{ heading, iconName, accentColor, body, imageUrl }]`, where `body` is markdown.
-- `ServicePackageBenefitResource`: `{ entitlementType, quantity, durationDays, label }`. `entitlementType` is the machine-readable right a purchase grants (`JOB_POST_SLOT`, `JOB_BOOST`, `JOB_LABEL_URGENT`, `JOB_LABEL_HOT`, `JOB_HIGHLIGHT`, `JOB_RETOP`, `JOB_ALERT_PUSH`, `AI_RESUME_MATCH`, `AI_JD_GENERATE`, `BRAND_PAGE`, `FEATURED_COMPANY`, `AD_SLOT_WEEK`, `CREDIT`); `label` is the Vietnamese line shown on the card.
+- `ServicePackageBenefitResource`: `{ entitlementType, quantity, tier, durationDays, label }`. `tier` is how strong the right is (used today by `JOB_BOOST` for search ranking). `entitlementType` is the machine-readable right a purchase grants (`JOB_POST_SLOT`, `JOB_BOOST`, `JOB_LABEL_URGENT`, `JOB_LABEL_HOT`, `JOB_HIGHLIGHT`, `JOB_RETOP`, `JOB_ALERT_PUSH`, `AI_RESUME_MATCH`, `AI_JD_GENERATE`, `BRAND_PAGE`, `FEATURED_COMPANY`, `AD_SLOT_WEEK`, `CREDIT`); `label` is the Vietnamese line shown on the card.
 - `SaveServicePackageRequest`: `{ categoryId, code, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, heroImageUrl, validityDays, bonusCredits, oneTimePerCompany, status, displayOrder, benefits: [{ entitlementType, quantity, durationDays, label }], sections: [{ heading, iconName, accentColor, body, imageUrl }] }`. `code` is `^[A-Z0-9_]+$`, `slug` is `^[a-z0-9-]+$`.
 - Every admin write is audited (`SERVICE_CATEGORY_*`, `SERVICE_PACKAGE_*`).
 
@@ -377,6 +377,24 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 - `payment_transactions.sepay_id` is `UNIQUE`: the same bank transfer can never be credited twice, even if two reconciliation runs overlap.
 - **Notifications:** `ORDER_CREATED` goes to every active recruiter of the company, `ORDER_PAID` to the whole company, `ORDER_UNDERPAID` to the buyer.
 
+## Entitlements (what a company owns)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/entitlements` | recruiter | `EntitlementResource[]` — the company's stock, newest purchase first. `activatable` says whether the recruiter applies it to a job by hand. |
+| `GET` | `/recruiter/entitlements/active` | recruiter | `EntitlementUsageResource[]` — what is running right now and when each ends. |
+| `POST` | `/recruiter/entitlements/{id}/activate` | recruiter | Body `{ jobId }`. Applies one unit to a published job of the company. **Irreversible.** |
+
+- `EntitlementResource`: `{ id, entitlementType, label, totalQuantity, remainingQuantity, tier, durationDays, status, activationDeadline, purchasedByRecruiterId, activatable, purchasedAt }`. `status` is `AVAILABLE`, `CONSUMED` or `EXPIRED`.
+- **Grant:** a paid order is turned into entitlements in the same transaction that records the payment, then the order moves to `FULFILLED`. One row per benefit line, `quantity = benefit quantity × order item quantity`.
+- **Clock:** `durationDays` starts at **activation**, not at payment. Unused stock dies at `activationDeadline` (12 months after purchase).
+- **Activatable on a job:** `JOB_BOOST`, `JOB_LABEL_URGENT`, `JOB_LABEL_HOT`, `JOB_HIGHLIGHT`. The target must be a `PUBLISHED` job of the same company and must not already carry the same service (`422 ADDON_REQUIRES_ACTIVE_JOB`). Anything else answers `422 ENTITLEMENT_NOT_ACTIVATABLE`.
+- **Job slots** are not activated by hand: publishing a job consumes one `JOB_POST_SLOT` automatically, oldest-deadline first. Resuming a paused job never costs a second slot. When `billing.require-job-slot` is `false` (the default) publishing still succeeds without stock; set `BILLING_REQUIRE_JOB_SLOT=true` to make a slot mandatory (`422 ENTITLEMENT_EXHAUSTED`).
+- **Concurrency:** stock is decremented with one conditional `UPDATE ... WHERE remaining_quantity >= ?`, so two publishes racing for the last slot cannot both win.
+- **Expiry:** an hourly job ends usages whose window has passed and clears the matching job effect. **The job stays published** — only the paid display effect stops. Unused stock past its deadline flips to `EXPIRED`.
+- `jobs` gained `boost_level`, `boost_expires_at`, `highlight_label`, `highlight_label_expires_at`, `highlighted` and `highlight_expires_at`, plus an index on `(status, boost_level, published_at)` for ranking.
+- `service_package_benefits.tier` and `company_entitlements.tier` carry the boost strength (3 for `PRO_MAX_PLUS`, 2 for `PRO_MAX`/`PRO_TRIAL`, 1 for `ECO_PLUS`/`STANDARD_COMBO`).
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -404,6 +422,10 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `PAYMENT_PROVIDER_ERROR` | 502 | SePay answered with an error or an unexpected payload |
 | `PAYMENT_SYNC_RUNNING` | 409 | A reconciliation run is already in progress |
 | `TRANSACTION_ALREADY_MATCHED` | 409 | The bank transfer is already linked to an order |
+| `ENTITLEMENT_EXHAUSTED` | 422 | No units of this service remain |
+| `ENTITLEMENT_EXPIRED` | 422 | The activation deadline has passed |
+| `ENTITLEMENT_NOT_ACTIVATABLE` | 422 | This service is consumed automatically, not applied by hand |
+| `ADDON_REQUIRES_ACTIVE_JOB` | 422 | Target is not a published job of the company, or already has this service |
 | `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
 | `INTERVIEW_ALREADY_SCHEDULED` | 409 | The application already has an active interview |
 | `SAVED_LIMIT_REACHED` | 409 | The candidate already saved or follows the maximum number of items |
