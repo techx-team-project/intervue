@@ -79,6 +79,16 @@ public class CompanyService implements CompanyServiceInterface {
         return buildResource(requireMembership(userId));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> findActiveMemberIds(Long companyId) {
+        return companyMemberRepository
+                .findByCompanyIdAndStatus(companyId, CompanyMemberStatus.ACTIVE)
+                .stream()
+                .map(CompanyMember::getUserId)
+                .toList();
+    }
+
     // Not transactional: the registry lookup is an external call and must not hold a transaction.
     @Override
     public CompanyResource create(CreateCompanyRequest request, RequestActor actor) {

@@ -36,6 +36,8 @@ public interface CompanyServiceInterface {
 
     CompanySummaryResource findSummary(Long companyId);
 
+    List<Long> findActiveMemberIds(Long companyId);
+
     PublicCompanyResource findPublic(Long companyId);
 
     boolean hasActiveMemberWithEmail(Long companyId, String email);
