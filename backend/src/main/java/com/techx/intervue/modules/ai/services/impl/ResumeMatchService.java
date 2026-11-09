@@ -16,16 +16,15 @@ import com.techx.intervue.modules.ai.resources.ResumeMatchResult;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.CandidatePrivacySanitizerInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
+import com.techx.intervue.modules.ai.services.interfaces.ResumeMatchQuotaServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.ResumeMatchServiceInterface;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -43,14 +42,8 @@ public class ResumeMatchService implements ResumeMatchServiceInterface {
     private final AiGatewayServiceInterface aiGatewayService;
     private final PromptServiceInterface promptService;
     private final CandidatePrivacySanitizerInterface privacySanitizer;
+    private final ResumeMatchQuotaServiceInterface quotaService;
     private final ObjectMapper objectMapper;
-
-    @Override
-    @Async("aiTaskExecutor")
-    public CompletableFuture<ResumeMatchResult> analyzeAsync(
-            Long recruiterUserId, String ip, ResumeMatchRequest request) {
-        return CompletableFuture.completedFuture(analyze(recruiterUserId, ip, request));
-    }
 
     @Override
     public ResumeMatchResult analyze(Long recruiterUserId, String ip, ResumeMatchRequest request) {
@@ -59,6 +52,8 @@ public class ResumeMatchService implements ResumeMatchServiceInterface {
                 || request.jobRequirements().isEmpty()) {
             throw new AppException(ErrorCode.VALIDATION_FAILED);
         }
+
+        quotaService.assertHasQuota(recruiterUserId);
 
         String sanitizedCandidateData =
                 privacySanitizer.sanitizeCandidateData(request.candidateData(), request.cvText());
@@ -74,6 +69,7 @@ public class ResumeMatchService implements ResumeMatchServiceInterface {
 
         AiChatResult result = aiGatewayService.chat(context, chatRequest);
         ParsedMatchPayload parsed = parseModelResponse(result.text(), request.jobRequirements());
+        quotaService.consume(recruiterUserId);
 
         return new ResumeMatchResult(
                 request.applicationId(),
