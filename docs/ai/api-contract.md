@@ -310,6 +310,7 @@ Candidates submit a national ID and a portrait; an admin reviews them by hand (n
 | `GET` | `/admin/identity-verifications?status=&q=&page=&size=` | admin | Paged `AdminIdentityVerificationResource { id, userId, userEmail, fullName, dateOfBirth, idNumberLast4, status, idNumberUsedByAnotherAccount, rejectReason?, rejectionCount, attemptLimit, submittedAt, reviewedAt? }`. Pending items are oldest first, others newest first. `q` matches name or last 4 digits. |
 | `GET` | `/admin/identity-verifications/{id}` | admin | One item. |
 | `GET` | `/admin/identity-verifications/{id}/documents/{FRONT\|BACK\|SELFIE}` | admin | Streams the image inline. |
+| `POST` | `/candidate/identity-verification/manual-review` | candidate | After every attempt was rejected, asks an admin to look at the case once. Returns the status with `manualReviewRequestedAt`; notifies admins. `422 IDENTITY_MANUAL_REVIEW_UNAVAILABLE`, `409 IDENTITY_MANUAL_REVIEW_ALREADY_REQUESTED`. Granting attempts or resubmitting clears the request. |
 | `POST` | `/admin/identity-verifications/{id}/approve` | admin | `PENDING` to `APPROVED`; notifies the candidate (`IDENTITY_VERIFIED`) and writes an audit entry. `409 IDENTITY_NUMBER_ALREADY_USED` when another account already holds the same approved ID number. |
 | `POST` | `/admin/identity-verifications/{id}/reject` | admin | Body `{ reason }` (required, max 500). `PENDING` to `REJECTED`, counts one attempt, notifies the candidate (`IDENTITY_REJECTED`). |
 | `POST` | `/admin/identity-verifications/{id}/grant-attempts` | admin | Adds 3 attempts to a rejected candidate who used all 5. |
@@ -350,6 +351,8 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `IDENTITY_ALREADY_VERIFIED` | 409 | The candidate is already verified |
 | `IDENTITY_REVIEW_PENDING` | 409 | A submission is already awaiting review |
 | `IDENTITY_ATTEMPTS_EXHAUSTED` | 422 | All 5 attempts were rejected; an admin must grant more |
+| `IDENTITY_MANUAL_REVIEW_UNAVAILABLE` | 422 | A manual review can be requested only after all attempts were rejected |
+| `IDENTITY_MANUAL_REVIEW_ALREADY_REQUESTED` | 409 | A manual review request is already waiting |
 | `IDENTITY_UNDER_MINIMUM_AGE` | 422 | Date of birth shows the candidate is under 16 |
 | `IDENTITY_NUMBER_ALREADY_USED` | 409 | The ID number is already approved on another account |
 | `RESUME_LIMIT_REACHED` | 409 | The candidate already has the maximum number of CVs |
@@ -364,7 +367,7 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `OAUTH_ACCOUNT_NOT_FOUND` | 404 | No account for this provider identity and the terms were not accepted; send the user to `/register` |
 | `SOCIAL_LOGIN_NOT_ALLOWED` | 403 | The matching account holds the `ADMIN` role; admins sign in only through `/admin/login` |
 | `PASSWORD_NOT_SET` | 422 | The action needs a password and the account has none (change email, disable 2FA, grant `ADMIN`); set one first with `POST /users/me/change-password` |
-| `RATE_LIMITED` | 429 | Honor `Retry-After` |
+| `RATE_LIMITED` | 429 | Honor `Retry-After`. Global `RateLimitFilter`: 10/min per IP on login, register, forgot/reset-password and verify-2fa; 20/min per account on `/ai/**`; 300/min per account or IP on `/api/**` |
 | `AI_USER_QUOTA_EXCEEDED` | 429 | Daily AI limit per user reached; honor `Retry-After` |
 | `AI_IP_QUOTA_EXCEEDED` | 429 | Hourly AI limit per IP reached; honor `Retry-After` |
 | `AI_NOT_CONFIGURED` | 503 | AI provider key missing or rejected |

@@ -21,7 +21,7 @@ public interface IdentityVerificationAdminServiceInterface {
 
     AdminIdentityVerificationResource findOne(Long id);
 
-    StoredDocumentContent readDocument(Long id, DocumentSide side);
+    StoredDocumentContent readDocument(Long id, DocumentSide side, RequestActor actor);
 
     AdminIdentityVerificationResource approve(Long id, RequestActor actor);
 

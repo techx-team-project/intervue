@@ -52,8 +52,13 @@ public class AdminIdentityVerificationController extends BaseController {
     // Streams the bytes inline so reviewing an identity image never saves it to the reviewer's
     // disk.
     @GetMapping("/{id}/documents/{side}")
-    public ResponseEntity<byte[]> document(@PathVariable Long id, @PathVariable DocumentSide side) {
-        StoredDocumentContent content = adminService.readDocument(id, side);
+    public ResponseEntity<byte[]> document(
+            @PathVariable Long id,
+            @PathVariable DocumentSide side,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        StoredDocumentContent content =
+                adminService.readDocument(id, side, actor(principal, httpRequest));
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(content.contentType()))
                 .header(

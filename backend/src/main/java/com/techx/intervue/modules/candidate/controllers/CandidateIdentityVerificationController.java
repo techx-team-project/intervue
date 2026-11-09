@@ -36,6 +36,14 @@ public class CandidateIdentityVerificationController extends BaseController {
                 "Identity verification status retrieved successfully!");
     }
 
+    @PostMapping("/manual-review")
+    public ResponseEntity<ApiResource<IdentityVerificationResource>> requestManualReview(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                identityVerificationService.requestManualReview(principal.getId()),
+                "Manual review requested! An admin will look at your case.");
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResource<IdentityVerificationResource>> submit(
             @Valid @ModelAttribute SubmitIdentityVerificationRequest request,

@@ -8,6 +8,8 @@ public interface IdentityVerificationServiceInterface {
 
     IdentityVerificationResource findStatus(Long userId);
 
+    IdentityVerificationResource requestManualReview(Long userId);
+
     IdentityVerificationResource submit(
             Long userId,
             SubmitIdentityVerificationRequest request,

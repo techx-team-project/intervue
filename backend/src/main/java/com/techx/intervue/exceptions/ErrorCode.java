@@ -122,6 +122,11 @@ public enum ErrorCode {
     IDENTITY_ATTEMPTS_EXHAUSTED(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "You have used all identity verification attempts. Contact support for a manual review!"),
+    IDENTITY_MANUAL_REVIEW_UNAVAILABLE(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "A manual review can only be requested after all attempts were rejected!"),
+    IDENTITY_MANUAL_REVIEW_ALREADY_REQUESTED(
+            HttpStatus.CONFLICT, "A manual review has already been requested!"),
     IDENTITY_UNDER_MINIMUM_AGE(
             HttpStatus.UNPROCESSABLE_CONTENT, "You must be at least 16 years old to verify!"),
     IDENTITY_NUMBER_ALREADY_USED(

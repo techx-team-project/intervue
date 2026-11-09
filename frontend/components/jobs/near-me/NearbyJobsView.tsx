@@ -1,5 +1,6 @@
 'use client';
 
+import { geocodeAddress } from '@/apiRequest/geocoding';
 import Spinner from '@/components/common/Spinner';
 import { Button } from '@/components/ui/Button';
 import { MAP_DEFAULT_CENTER, NEARBY_DEFAULT_RADIUS_KM, NEARBY_RADIUS_OPTIONS } from '@/constants/map';
@@ -7,10 +8,10 @@ import { useNearbyJobs } from '@/hooks/useNearbyJobs';
 import { cn } from '@/lib/utils';
 import { formatSalary } from '@/utils/public-company';
 import { getErrorMessage } from '@/utils/error';
-import { LocateFixed } from 'lucide-react';
+import { LocateFixed, Search } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { toast } from 'sonner';
 import type { MapOrigin } from './NearbyJobsMap';
 
@@ -24,11 +25,29 @@ export default function NearbyJobsView() {
   const [radiusKm, setRadiusKm] = useState<number>(NEARBY_DEFAULT_RADIUS_KM);
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
   const [locating, setLocating] = useState(false);
+  const [address, setAddress] = useState('');
+  const [searching, setSearching] = useState(false);
   const { data: jobs = [], isLoading, isError, error, refetch } = useNearbyJobs({ ...origin, radiusKm });
 
   const moveOrigin = (next: MapOrigin) => {
     setSelectedJobId(null);
     setOrigin({ lat: Number(next.lat.toFixed(5)), lng: Number(next.lng.toFixed(5)) });
+  };
+
+  const searchAddress = async (event: FormEvent) => {
+    event.preventDefault();
+    const query = address.trim();
+    if (!query) return;
+    setSearching(true);
+    try {
+      const result = await geocodeAddress(query);
+      if (result) moveOrigin(result);
+      else toast.info('Không tìm thấy địa chỉ này. Hãy thử nhập cụ thể hơn hoặc bấm lên bản đồ.');
+    } catch {
+      toast.error('Không tìm được địa chỉ lúc này. Bạn hãy bấm trực tiếp lên bản đồ.');
+    } finally {
+      setSearching(false);
+    }
   };
 
   const locateMe = () => {
@@ -56,10 +75,24 @@ export default function NearbyJobsView() {
         <div>
           <h1 className="text-2xl font-black text-slate-900">Việc làm gần tôi</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Bấm “Vị trí của tôi” hoặc bấm lên bản đồ để chọn nơi bạn muốn tìm việc quanh đó.
+            Nhập địa chỉ, bấm “Vị trí của tôi” hoặc bấm lên bản đồ để chọn nơi bạn muốn tìm việc quanh đó.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <form onSubmit={searchAddress} className="flex gap-1.5" role="search">
+            <input
+              type="search"
+              value={address}
+              onChange={(event) => setAddress(event.target.value)}
+              placeholder="Nhập địa chỉ, quận, thành phố..."
+              aria-label="Địa chỉ cần tìm việc quanh đó"
+              maxLength={200}
+              className="focus:border-primary h-9 w-56 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none sm:w-72"
+            />
+            <Button type="submit" size="sm" disabled={searching || !address.trim()}>
+              <Search className="h-4 w-4" aria-hidden /> {searching ? 'Đang tìm...' : 'Tìm'}
+            </Button>
+          </form>
           <Button type="button" variant="outline" size="sm" disabled={locating} onClick={locateMe}>
             <LocateFixed className="h-4 w-4" aria-hidden /> {locating ? 'Đang định vị...' : 'Vị trí của tôi'}
           </Button>

@@ -4,4 +4,6 @@ import java.time.Duration;
 
 public interface RateLimitServiceInterface {
     void enforce(String route, String subject, Duration cooldown, int maxInWindow, Duration window);
+
+    long retryAfterSeconds(String route, String subject, int maxInWindow, Duration window);
 }

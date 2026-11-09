@@ -520,7 +520,8 @@ public class UserAdminService implements UserAdminServiceInterface {
             case JOB_HIDDEN, JOB_RESTORED -> "moderation";
             case IDENTITY_VERIFICATION_APPROVED,
                     IDENTITY_VERIFICATION_REJECTED,
-                    IDENTITY_VERIFICATION_ATTEMPTS_GRANTED ->
+                    IDENTITY_VERIFICATION_ATTEMPTS_GRANTED,
+                    IDENTITY_DOCUMENT_VIEWED ->
                     "identity";
         };
     }
@@ -587,6 +588,7 @@ public class UserAdminService implements UserAdminServiceInterface {
             case IDENTITY_VERIFICATION_REJECTED -> "Identity verification rejected";
             case IDENTITY_VERIFICATION_ATTEMPTS_GRANTED ->
                     "Additional identity verification attempts granted";
+            case IDENTITY_DOCUMENT_VIEWED -> "Identity document viewed by an admin";
         };
     }
 
