@@ -205,6 +205,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                             .servicePackage(servicePackage)
                             .entitlementType(benefit.entitlementType())
                             .quantity(benefit.quantity())
+                            .tier(benefit.tier())
                             .durationDays(benefit.durationDays())
                             .label(benefit.label().trim())
                             .displayOrder(index)

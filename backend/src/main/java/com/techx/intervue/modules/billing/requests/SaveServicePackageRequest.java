@@ -4,6 +4,8 @@ import com.techx.intervue.modules.billing.enums.ServicePackageBadge;
 import com.techx.intervue.modules.billing.enums.ServicePackageStatus;
 import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -35,6 +37,7 @@ public record SaveServicePackageRequest(
     public record Benefit(
             @NotNull EntitlementType entitlementType,
             @NotNull @Positive Integer quantity,
+            @NotNull @Min(1) @Max(5) Integer tier,
             @Positive Integer durationDays,
             @NotBlank @Size(max = 255) String label) {}
 

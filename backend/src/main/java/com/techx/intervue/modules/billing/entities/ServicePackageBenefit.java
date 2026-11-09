@@ -44,6 +44,10 @@ public class ServicePackageBenefit extends BaseEntity {
     @Builder.Default
     private Integer quantity = 1;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer tier = 1;
+
     @Column(name = "duration_days")
     private Integer durationDays;
 
