@@ -338,6 +338,28 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 - `SaveServicePackageRequest`: `{ categoryId, code, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, heroImageUrl, validityDays, bonusCredits, oneTimePerCompany, status, displayOrder, benefits: [{ entitlementType, quantity, durationDays, label }], sections: [{ heading, iconName, accentColor, body, imageUrl }] }`. `code` is `^[A-Z0-9_]+$`, `slug` is `^[a-z0-9-]+$`.
 - Every admin write is audited (`SERVICE_CATEGORY_*`, `SERVICE_PACKAGE_*`).
 
+## Cart and orders (billing)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/cart` | recruiter | `CartResource`. The cart belongs to the **recruiter**, not the company; it is created on first access. |
+| `POST` | `/recruiter/cart/items` | recruiter | Body `{ packageId, quantity }` (1-99). Adding a package already in the cart increases its quantity (capped at 99). Max 20 distinct items → `422 CART_ITEM_LIMIT_EXCEEDED`. `404 PACKAGE_NOT_AVAILABLE` for a non-`ACTIVE` package. |
+| `PATCH` | `/recruiter/cart/items/{id}` | recruiter | Body `{ quantity }`. `404 NOT_FOUND` for another recruiter's cart item. |
+| `DELETE` | `/recruiter/cart/items/{id}` · `/recruiter/cart` | recruiter | Remove one line, or empty the cart. |
+| `GET` | `/recruiter/orders?page=&size=` | recruiter | `PageResource<OrderSummaryResource>` of the **company's** orders, newest first — every recruiter of the company sees them all. |
+| `GET` | `/recruiter/orders/{code}` | recruiter | `OrderResource`. `404 NOT_FOUND` for another company's order. |
+| `POST` | `/recruiter/orders` | recruiter | Checkout. Omit `packageId` to buy the whole cart; send `packageId` (+ optional `quantity`) to buy one package without touching the cart. |
+| `POST` | `/recruiter/orders/{code}/cancel` | recruiter | Only the recruiter who created the order may cancel it (`403 FORBIDDEN` otherwise), and only while `PENDING_PAYMENT` or `UNDERPAID` (`422 ORDER_NOT_PAYABLE`). |
+
+- `CartResource`: `{ items, subtotal, vatRate, vatAmount, totalAmount, currency }`. `CartItemResource`: `{ id, packageId, code, slug, name, shortDescription, unitPrice, currency, quantity, lineTotal, validityDays, oneTimePerCompany }`.
+- `CheckoutRequest`: `{ packageId?, quantity?, invoiceType: BUSINESS | PERSONAL, taxId?, companyName?, companyAddress?, fullName?, identityNumber?, personalAddress?, recipientEmail, termsAccepted }`. A `BUSINESS` invoice requires `taxId` and `companyName`; a `PERSONAL` invoice requires `fullName`; `termsAccepted` must be true. All three surface as `400 VALIDATION_FAILED`.
+- **Money:** `totalAmount = (subtotal − discountAmount) + vatAmount`, where `vatAmount` is the VAT rate applied to the amount **after** discount and rounded `HALF_UP` to whole đồng. Catalog prices exclude VAT; the order stores all five figures plus the `vatRate` used, so changing the rate later never alters an existing order.
+- **Ownership:** an order belongs to `company_id` and records `purchased_by_recruiter_id`. A recruiter with no company gets `403 NOT_COMPANY_MEMBER` on checkout and on every order read.
+- **Order codes** are `IVO` + 8 characters from `ABCDEFGHJKLMNPQRSTUVWXYZ23456789` (0/O and 1/I omitted because customers retype the code into the bank transfer note).
+- **Guards:** a repeated submit with the same total within 2 minutes returns the existing pending order instead of creating a second one — this runs *before* the purchase rules, so a retried click never surfaces `TRIAL_ALREADY_USED`. A company may hold at most 3 `PENDING_PAYMENT` orders (`422 TOO_MANY_PENDING_ORDERS`). A package flagged `oneTimePerCompany` cannot be bought twice (`422 TRIAL_ALREADY_USED`).
+- Orders expire after `billing_settings.order_expire_hours` (default 72). A scheduler every 10 minutes moves overdue `PENDING_PAYMENT` orders to `EXPIRED`.
+- `billing_settings` is a single row holding `vat_rate`, `order_expire_hours`, `order_code_prefix` and `max_pending_orders`.
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -354,6 +376,13 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `PACKAGE_NOT_AVAILABLE` | 404 | Unknown slug/id, or the service package is not `ACTIVE` |
 | `DUPLICATE_PACKAGE_CODE` | 409 | A service category or package already uses this `code`/`slug` |
 | `SERVICE_CATEGORY_IN_USE` | 409 | The category still has packages and cannot be deleted |
+| `BILLING_NOT_CONFIGURED` | 503 | `billing_settings` has no row |
+| `CART_EMPTY` | 422 | Checkout with nothing to buy |
+| `CART_ITEM_LIMIT_EXCEEDED` | 422 | More than 20 distinct packages in the cart |
+| `TOO_MANY_PENDING_ORDERS` | 422 | The company already holds the maximum unpaid orders |
+| `ORDER_NOT_PAYABLE` | 422 | The order is not in a state that allows this action |
+| `ORDER_EXPIRED` | 422 | The payment window has closed |
+| `TRIAL_ALREADY_USED` | 422 | A one-time-per-company package was bought before |
 | `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
 | `INTERVIEW_ALREADY_SCHEDULED` | 409 | The application already has an active interview |
 | `SAVED_LIMIT_REACHED` | 409 | The candidate already saved or follows the maximum number of items |
