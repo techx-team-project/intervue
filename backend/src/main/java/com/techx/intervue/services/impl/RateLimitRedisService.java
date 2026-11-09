@@ -22,6 +22,16 @@ public class RateLimitRedisService implements RateLimitServiceInterface {
         enforceWindow(PREFIX + route + ":win:" + subject, maxInWindow, window);
     }
 
+    @Override
+    public long retryAfterSeconds(String route, String subject, int maxInWindow, Duration window) {
+        String key = PREFIX + route + ":win:" + subject;
+        Long count = redis.opsForValue().increment(key);
+        if (count != null && count == 1) {
+            redis.expire(key, window);
+        }
+        return count != null && count > maxInWindow ? remainingSeconds(key, window) : 0;
+    }
+
     private void enforceCooldown(String key, Duration cooldown) {
         if (!Boolean.TRUE.equals(redis.opsForValue().setIfAbsent(key, "1", cooldown))) {
             throw AppException.rateLimited(remainingSeconds(key, cooldown));

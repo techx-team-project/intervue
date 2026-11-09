@@ -105,7 +105,7 @@ sms:
     timeout: 10s
 
 jwt:
-  secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
+  secret: ${JWT_SECRET}
   expiration: 900000
   issuer: InterVue
   refresh-token-ttl-days: 14
@@ -123,6 +123,9 @@ auth:
   resend-cooldown: 2s
   resend-max-attempts: 100
   resend-window: 15m
+
+jwt:
+  secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
 
 seed:
   accounts:
