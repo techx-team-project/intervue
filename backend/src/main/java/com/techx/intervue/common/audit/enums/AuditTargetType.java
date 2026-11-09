@@ -2,6 +2,7 @@ package com.techx.intervue.common.audit.enums;
 
 public enum AuditTargetType {
     USER,
+    IDENTITY_VERIFICATION,
     COMPANY,
     COMPANY_MEMBER,
     BUSINESS_DOCUMENT,

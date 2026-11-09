@@ -518,6 +518,10 @@ public class UserAdminService implements UserAdminServiceInterface {
                     BROADCAST_CANCELLED ->
                     "notification";
             case JOB_HIDDEN, JOB_RESTORED -> "moderation";
+            case IDENTITY_VERIFICATION_APPROVED,
+                    IDENTITY_VERIFICATION_REJECTED,
+                    IDENTITY_VERIFICATION_ATTEMPTS_GRANTED ->
+                    "identity";
         };
     }
 
@@ -579,6 +583,10 @@ public class UserAdminService implements UserAdminServiceInterface {
                     detail != null && !detail.isBlank() ? detail : "Broadcast activity";
             case JOB_HIDDEN -> "Job hidden by an admin";
             case JOB_RESTORED -> "Job restored by an admin";
+            case IDENTITY_VERIFICATION_APPROVED -> "Identity verification approved";
+            case IDENTITY_VERIFICATION_REJECTED -> "Identity verification rejected";
+            case IDENTITY_VERIFICATION_ATTEMPTS_GRANTED ->
+                    "Additional identity verification attempts granted";
         };
     }
 

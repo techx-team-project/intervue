@@ -10,6 +10,7 @@ export const ROUTES = {
   CANDIDATE_CVS: '/candidate/cvs',
   CANDIDATE_INTERVIEWS: '/candidate/interviews',
   CANDIDATE_SAVED_JOBS: '/candidate/saved-jobs',
+  CANDIDATE_IDENTITY_VERIFICATION: '/candidate/identity-verification',
   JOBS: '/jobs',
   JOBS_NEAR_ME: '/jobs/near-me',
   CANDIDATE_JOB_ALERTS: '/candidate/job-alerts',

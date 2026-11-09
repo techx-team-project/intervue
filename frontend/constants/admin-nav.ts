@@ -33,7 +33,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: BadgeCheck,
         queue: 'identityVerification',
         permission: 'verification.identity',
-        comingSoon: true,
+        comingSoon: false,
       },
       {
         label: 'Business verification',
