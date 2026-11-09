@@ -161,7 +161,12 @@ public enum ErrorCode {
             HttpStatus.NOT_FOUND, "No account yet, sign up and accept the terms first!"),
     SOCIAL_LOGIN_NOT_ALLOWED(
             HttpStatus.FORBIDDEN, "This account cannot sign in with a social provider!"),
-    PASSWORD_NOT_SET(HttpStatus.UNPROCESSABLE_CONTENT, "Set a password first!");
+    PASSWORD_NOT_SET(HttpStatus.UNPROCESSABLE_CONTENT, "Set a password first!"),
+    PACKAGE_NOT_AVAILABLE(HttpStatus.NOT_FOUND, "This service package is not available!"),
+    DUPLICATE_PACKAGE_CODE(
+            HttpStatus.CONFLICT, "A service package with this code or slug already exists!"),
+    SERVICE_CATEGORY_IN_USE(
+            HttpStatus.CONFLICT, "This category still has service packages and cannot be removed!");
 
     private final HttpStatus status;
     private final String message;
