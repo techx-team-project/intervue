@@ -72,3 +72,18 @@ export interface CheckoutPayload {
   recipientEmail: string;
   termsAccepted: boolean;
 }
+
+export interface OrderPayment {
+  orderCode: string;
+  status: RecruiterOrderStatus;
+  totalAmount: number;
+  paidAmount: number;
+  currency: string;
+  expiresAt: string;
+  configured: boolean;
+  bankCode: string | null;
+  accountNumber: string | null;
+  accountName: string | null;
+  transferContent: string;
+  qrUrl: string | null;
+}

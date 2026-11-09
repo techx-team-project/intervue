@@ -1,13 +1,13 @@
 'use client';
 
 import Spinner from '@/components/common/Spinner';
+import OrderPaymentPanel from '@/components/recruiter/orders/OrderPaymentPanel';
 import { ORDER_CANCELLABLE, ORDER_STATUS_LABEL, ORDER_STATUS_STYLE } from '@/constants/recruiter-order';
 import { ROUTES } from '@/constants/routes';
-import { formatRemaining, useCountdown } from '@/hooks/useCountdown';
 import { useRecruiterOrder, useRecruiterOrderMutations } from '@/hooks/useRecruiterOrders';
 import { formatServicePrice } from '@/utils/service-package';
 import { getErrorMessage } from '@/utils/error';
-import { AlertCircle, ArrowLeft, Clock, Info } from 'lucide-react';
+import { AlertCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -19,7 +19,6 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
   const { data, isPending, isError, error } = useRecruiterOrder(code);
   const { cancel } = useRecruiterOrderMutations();
   const [actionError, setActionError] = useState<string | null>(null);
-  const remaining = useCountdown(data?.status === 'PENDING_PAYMENT' ? (data?.expiresAt ?? null) : null);
 
   if (isPending) {
     return (
@@ -70,22 +69,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
         </div>
       )}
 
-      {data.status === 'PENDING_PAYMENT' && (
-        <div className="flex flex-col gap-3 rounded-lg border-l-4 border-sky-500 bg-sky-50 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex gap-3">
-            <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-sky-600" />
-            <p className="text-on-surface-variant text-sm leading-relaxed">
-              Hướng dẫn chuyển khoản và mã QR sẽ hiển thị tại đây ngay khi cổng thanh toán được bật.
-            </p>
-          </div>
-          {remaining !== null && (
-            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-rose-300 px-3 py-1 text-xs font-bold text-rose-600">
-              <Clock className="h-3.5 w-3.5" />
-              {formatRemaining(remaining)}
-            </span>
-          )}
-        </div>
-      )}
+      <OrderPaymentPanel code={data.code} status={data.status} />
 
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="border-outline-variant overflow-hidden rounded-2xl border bg-white shadow-2xs">
