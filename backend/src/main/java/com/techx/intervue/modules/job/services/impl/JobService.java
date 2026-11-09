@@ -1,10 +1,12 @@
 package com.techx.intervue.modules.job.services.impl;
 
+import com.techx.intervue.config.BillingProperties;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
+import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
 import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.entities.Skill;
 import com.techx.intervue.modules.job.enums.JobStatus;
@@ -53,6 +55,8 @@ public class JobService implements JobServiceInterface {
     private final ApplicationEventPublisher eventPublisher;
     private final CompanyServiceInterface companyService;
     private final CompanyVerificationServiceInterface companyVerificationService;
+    private final EntitlementServiceInterface entitlementService;
+    private final BillingProperties billingProperties;
 
     @Override
     @Transactional
@@ -120,6 +124,7 @@ public class JobService implements JobServiceInterface {
         Job job = requireOwned(jobId, recruiterId);
         requireStatus(job, Set.of(JobStatus.DRAFT));
         JobResource published = goLive(job, recruiterId);
+        consumeJobSlot(job, recruiterId);
         eventPublisher.publishEvent(
                 new JobPublishedEvent(
                         job.getId(),
@@ -181,6 +186,15 @@ public class JobService implements JobServiceInterface {
             throw new AppException(ErrorCode.SCREENING_QUESTIONS_LOCKED);
         }
         jobMapper.replaceScreeningQuestions(job, questions);
+    }
+
+    // A slot is spent only on the first publish; resuming a paused job must not cost another one.
+    private void consumeJobSlot(Job job, Long recruiterId) {
+        boolean consumed =
+                entitlementService.consumeJobSlot(job.getCompanyId(), job.getId(), recruiterId);
+        if (!consumed && billingProperties.requiresJobSlot()) {
+            throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
+        }
     }
 
     private JobResource goLive(Job job, Long recruiterId) {
