@@ -2,10 +2,11 @@
 
 import Spinner from '@/components/common/Spinner';
 import { Button } from '@/components/ui/Button';
-import { useIdentityVerification } from '@/hooks/useIdentityVerification';
+import { useIdentityVerification, useRequestManualIdentityReview } from '@/hooks/useIdentityVerification';
 import { formatDateTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
 import { CheckCircle2, Clock, ShieldAlert } from 'lucide-react';
+import { toast } from 'sonner';
 import IdentityVerificationForm from './IdentityVerificationForm';
 
 function StatusCard({
@@ -38,6 +39,13 @@ function StatusCard({
 
 export default function IdentityVerificationView() {
   const { data, isLoading, isError, error, refetch } = useIdentityVerification();
+  const manualReview = useRequestManualIdentityReview();
+
+  const requestManualReview = () =>
+    manualReview.mutate(undefined, {
+      onSuccess: () => toast.success('Đã gửi yêu cầu. Quản trị viên sẽ xem xét hồ sơ của bạn.'),
+      onError: (failure) => toast.error(getErrorMessage(failure)),
+    });
 
   if (isLoading) {
     return (
@@ -88,8 +96,19 @@ export default function IdentityVerificationView() {
           <p>
             {data.canSubmit
               ? `Bạn còn ${data.attemptsLeft} lượt gửi lại.`
-              : 'Bạn đã dùng hết lượt gửi lại. Vui lòng liên hệ hỗ trợ để được xét duyệt thủ công.'}
+              : 'Bạn đã dùng hết lượt gửi lại. Hãy gửi yêu cầu để quản trị viên xét duyệt thủ công.'}
           </p>
+          {data.canRequestManualReview && (
+            <Button size="sm" className="mt-2" disabled={manualReview.isPending} onClick={requestManualReview}>
+              {manualReview.isPending ? 'Đang gửi...' : 'Yêu cầu duyệt thủ công'}
+            </Button>
+          )}
+          {data.manualReviewRequestedAt && (
+            <p className="font-semibold">
+              Đã gửi yêu cầu duyệt thủ công lúc {formatDateTime(data.manualReviewRequestedAt)}. Chúng tôi sẽ phản hồi
+              sớm.
+            </p>
+          )}
         </StatusCard>
       )}
 

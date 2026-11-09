@@ -12,8 +12,10 @@ public record IdentityVerificationResource(
         String rejectReason,
         int attemptsLeft,
         boolean canSubmit,
+        boolean canRequestManualReview,
         boolean required,
         String fullName,
         String idNumberLast4,
         Instant submittedAt,
-        Instant reviewedAt) {}
+        Instant reviewedAt,
+        Instant manualReviewRequestedAt) {}

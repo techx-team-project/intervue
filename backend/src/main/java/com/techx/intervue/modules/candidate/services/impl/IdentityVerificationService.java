@@ -40,6 +40,7 @@ public class IdentityVerificationService implements IdentityVerificationServiceI
     private static final int MINIMUM_AGE = 16;
     private static final ZoneId ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
     private static final String QUEUE_LABEL = "Xác thực danh tính ứng viên";
+    private static final String MANUAL_REVIEW_QUEUE_LABEL = "Yêu cầu duyệt thủ công danh tính";
 
     private final IdentityVerificationRepository repository;
     private final StorageServiceInterface storageService;
@@ -59,6 +60,7 @@ public class IdentityVerificationService implements IdentityVerificationServiceI
                                 IdentityVerificationResource.builder()
                                         .attemptsLeft(IdentityVerification.DEFAULT_ATTEMPT_LIMIT)
                                         .canSubmit(true)
+                                        .canRequestManualReview(false)
                                         .required(properties.requireIdentityVerification())
                                         .build());
     }
@@ -95,7 +97,7 @@ public class IdentityVerificationService implements IdentityVerificationServiceI
                                             selfieFile,
                                             replaced));
             replaced.forEach(id -> storageService.delete(id, StorageTarget.IDENTITY_DOCUMENT));
-            notifyAdmins(request.fullName().trim());
+            notifyAdmins(request.fullName().trim(), QUEUE_LABEL);
             return toResource(saved);
         } catch (RuntimeException e) {
             uploaded.forEach(
@@ -104,6 +106,28 @@ public class IdentityVerificationService implements IdentityVerificationServiceI
                                     file.publicId(), StorageTarget.IDENTITY_DOCUMENT));
             throw e;
         }
+    }
+
+    @Override
+    @Transactional
+    public IdentityVerificationResource requestManualReview(Long userId) {
+        IdentityVerification verification =
+                repository
+                        .findByUserId(userId)
+                        .filter(
+                                existing ->
+                                        existing.getStatus() == IdentityVerificationStatus.REJECTED
+                                                && existing.attemptsLeft() == 0)
+                        .orElseThrow(
+                                () ->
+                                        new AppException(
+                                                ErrorCode.IDENTITY_MANUAL_REVIEW_UNAVAILABLE));
+        if (verification.getManualReviewRequestedAt() != null) {
+            throw new AppException(ErrorCode.IDENTITY_MANUAL_REVIEW_ALREADY_REQUESTED);
+        }
+        verification.setManualReviewRequestedAt(Instant.now());
+        notifyAdmins(verification.getFullName(), MANUAL_REVIEW_QUEUE_LABEL);
+        return toResource(verification);
     }
 
     private StoredFile upload(MultipartFile file, List<StoredFile> uploaded) {
@@ -144,6 +168,7 @@ public class IdentityVerificationService implements IdentityVerificationServiceI
         verification.setReviewedAt(null);
         verification.setReviewedBy(null);
         verification.setRejectReason(null);
+        verification.setManualReviewRequestedAt(null);
         return repository.save(verification);
     }
 
@@ -169,7 +194,7 @@ public class IdentityVerificationService implements IdentityVerificationServiceI
         }
     }
 
-    private void notifyAdmins(String candidateName) {
+    private void notifyAdmins(String candidateName, String queueLabel) {
         List<NotificationCommand> commands =
                 userService.findActiveIdsByRole(RoleType.ADMIN).stream()
                         .map(
@@ -181,7 +206,7 @@ public class IdentityVerificationService implements IdentityVerificationServiceI
                                                 .params(
                                                         Map.of(
                                                                 "companyName", candidateName,
-                                                                "queueLabel", QUEUE_LABEL))
+                                                                "queueLabel", queueLabel))
                                                 .actionUrl("/admin/verification/identity")
                                                 .build())
                         .toList();
@@ -189,19 +214,24 @@ public class IdentityVerificationService implements IdentityVerificationServiceI
     }
 
     private IdentityVerificationResource toResource(IdentityVerification verification) {
-        boolean canSubmit =
-                verification.getStatus() == IdentityVerificationStatus.REJECTED
-                        && verification.attemptsLeft() > 0;
+        boolean rejected = verification.getStatus() == IdentityVerificationStatus.REJECTED;
+        boolean canSubmit = rejected && verification.attemptsLeft() > 0;
+        boolean canRequestManualReview =
+                rejected
+                        && verification.attemptsLeft() == 0
+                        && verification.getManualReviewRequestedAt() == null;
         return IdentityVerificationResource.builder()
                 .status(verification.getStatus())
                 .rejectReason(verification.getRejectReason())
                 .attemptsLeft(verification.attemptsLeft())
                 .canSubmit(canSubmit)
+                .canRequestManualReview(canRequestManualReview)
                 .required(properties.requireIdentityVerification())
                 .fullName(verification.getFullName())
                 .idNumberLast4(verification.getIdNumberLast4())
                 .submittedAt(verification.getSubmittedAt())
                 .reviewedAt(verification.getReviewedAt())
+                .manualReviewRequestedAt(verification.getManualReviewRequestedAt())
                 .build();
     }
 }

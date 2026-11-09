@@ -29,6 +29,14 @@ export function useSubmitIdentityVerification() {
   });
 }
 
+export function useRequestManualIdentityReview() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: identityVerificationApi.requestManualReview,
+    onSuccess: (data) => queryClient.setQueryData(statusKey, data),
+  });
+}
+
 export function useAdminIdentityVerifications(params: AdminIdentitySearchParams) {
   return useQuery({
     queryKey: [...adminKey, params],

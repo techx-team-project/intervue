@@ -11,7 +11,7 @@ function messageFor(identity: IdentityVerificationResource) {
   if (identity.status === 'REJECTED') {
     return identity.canSubmit
       ? `Hồ sơ xác thực chưa được duyệt: ${identity.rejectReason}. Hãy gửi lại để ứng tuyển.`
-      : 'Hồ sơ xác thực chưa được duyệt và bạn đã hết lượt gửi lại. Vui lòng liên hệ hỗ trợ.';
+      : 'Hồ sơ xác thực chưa được duyệt và bạn đã hết lượt gửi lại. Bạn có thể yêu cầu quản trị viên duyệt thủ công.';
   }
   return 'Bạn cần xác thực danh tính bằng CCCD trước khi ứng tuyển. Chỉ mất vài phút.';
 }

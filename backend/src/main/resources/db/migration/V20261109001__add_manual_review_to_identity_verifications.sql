@@ -1,0 +1,1 @@
+ALTER TABLE identity_verifications ADD COLUMN manual_review_requested_at TIMESTAMP NULL AFTER attempt_limit;
