@@ -5,11 +5,13 @@ import { MarkdownRenderer } from '@/components/support-chat/MarkdownRenderer';
 import { NumberStepper } from '@/components/ui/NumberStepper';
 import { SERVICE_VAT_NOTE } from '@/constants/service-package';
 import { ROUTES } from '@/constants/routes';
+import { useAddToCart } from '@/hooks/useRecruiterCart';
 import { useServicePackage } from '@/hooks/useServiceCatalog';
 import { formatServicePrice } from '@/utils/service-package';
 import { isApiError } from '@/lib/api-error';
 import { getErrorMessage } from '@/utils/error';
-import { AlertCircle, ArrowLeft, CheckCircle2, Clock, Gift, ShoppingCart, X } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Check, CheckCircle2, Clock, Gift, ShoppingCart, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -23,6 +25,8 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
   const { data, isPending, isError, error } = useServicePackage(slug);
   const [quantity, setQuantity] = useState(1);
   const [notice, setNotice] = useState<string | null>(null);
+  const router = useRouter();
+  const addToCart = useAddToCart();
 
   if (isPending) {
     return (
@@ -91,16 +95,24 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
       </section>
 
       {notice && (
-        <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-900">
-          <span>{notice}</span>
-          <button
-            type="button"
-            onClick={() => setNotice(null)}
-            className="cursor-pointer text-amber-600 transition hover:text-amber-800"
-            aria-label="Đóng thông báo"
-          >
-            <X className="h-4 w-4" />
-          </button>
+        <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-900">
+          <span className="flex items-center gap-2">
+            <Check className="h-4 w-4 text-emerald-600" />
+            {notice}
+          </span>
+          <span className="flex items-center gap-3">
+            <Link href={ROUTES.RECRUITER_CART} className="text-primary font-bold hover:underline">
+              Xem giỏ hàng
+            </Link>
+            <button
+              type="button"
+              onClick={() => setNotice(null)}
+              className="cursor-pointer text-emerald-600 transition hover:text-emerald-800"
+              aria-label="Đóng thông báo"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </span>
         </div>
       )}
 
@@ -184,16 +196,34 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
             <div className="mt-4 flex flex-col gap-2.5">
               <button
                 type="button"
-                onClick={() => setNotice('Giỏ hàng và thanh toán sẽ sẵn sàng trong bản cập nhật tới.')}
-                className="border-primary text-primary inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 rounded-lg border bg-white text-sm font-semibold transition hover:bg-emerald-50 active:scale-[0.98]"
+                disabled={addToCart.isPending}
+                onClick={() =>
+                  addToCart.mutate(
+                    { packageId: data.id, quantity },
+                    {
+                      onSuccess: () => setNotice(`Đã thêm "${data.name}" vào giỏ hàng.`),
+                      onError: (cause) => setNotice(getErrorMessage(cause)),
+                    },
+                  )
+                }
+                className="border-primary text-primary inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 rounded-lg border bg-white text-sm font-semibold transition hover:bg-emerald-50 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <ShoppingCart className="h-4 w-4" />
                 Thêm vào giỏ
               </button>
               <button
                 type="button"
-                onClick={() => setNotice('Giỏ hàng và thanh toán sẽ sẵn sàng trong bản cập nhật tới.')}
-                className="bg-primary inline-flex h-10 cursor-pointer items-center justify-center rounded-lg text-sm font-semibold text-white transition hover:brightness-95 active:scale-[0.98]"
+                disabled={addToCart.isPending}
+                onClick={() =>
+                  addToCart.mutate(
+                    { packageId: data.id, quantity },
+                    {
+                      onSuccess: () => router.push(ROUTES.RECRUITER_CART),
+                      onError: (cause) => setNotice(getErrorMessage(cause)),
+                    },
+                  )
+                }
+                className="bg-primary inline-flex h-10 cursor-pointer items-center justify-center rounded-lg text-sm font-semibold text-white transition hover:brightness-95 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Mua ngay
               </button>

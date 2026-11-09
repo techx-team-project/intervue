@@ -8,12 +8,14 @@ import Link from 'next/link';
 
 interface ServicePackageCardProps {
   item: ServicePackageCardType;
-  onPurchaseAction: (item: ServicePackageCardType) => void;
+  onAddToCart: (item: ServicePackageCardType) => void;
+  onBuyNow: (item: ServicePackageCardType) => void;
+  isBusy: boolean;
 }
 
 const DEFAULT_ACCENT = '#16a34a';
 
-export default function ServicePackageCard({ item, onPurchaseAction }: ServicePackageCardProps) {
+export default function ServicePackageCard({ item, onAddToCart, onBuyNow, isBusy }: ServicePackageCardProps) {
   const accent = item.accentColor ?? DEFAULT_ACCENT;
 
   return (
@@ -66,10 +68,12 @@ export default function ServicePackageCard({ item, onPurchaseAction }: ServicePa
         <div className="mt-auto flex gap-2.5 pt-5">
           <button
             type="button"
-            onClick={() => onPurchaseAction(item)}
+            onClick={() => onAddToCart(item)}
+            disabled={isBusy}
             className={cn(
               'border-primary text-primary inline-flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5',
               'rounded-lg border bg-white text-sm font-semibold transition hover:bg-emerald-50 active:scale-[0.98]',
+              'disabled:cursor-not-allowed disabled:opacity-60',
             )}
           >
             <ShoppingCart className="h-4 w-4" />
@@ -77,8 +81,9 @@ export default function ServicePackageCard({ item, onPurchaseAction }: ServicePa
           </button>
           <button
             type="button"
-            onClick={() => onPurchaseAction(item)}
-            className="bg-primary inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-lg text-sm font-semibold text-white transition hover:brightness-95 active:scale-[0.98]"
+            onClick={() => onBuyNow(item)}
+            disabled={isBusy}
+            className="bg-primary inline-flex h-10 flex-1 cursor-pointer items-center justify-center rounded-lg text-sm font-semibold text-white transition hover:brightness-95 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
           >
             Mua ngay
           </button>

@@ -4,10 +4,17 @@ import type { ServiceCategory, ServicePackageCard as ServicePackageCardType } fr
 
 interface ServiceCategorySectionProps {
   category: ServiceCategory;
-  onPurchaseAction: (item: ServicePackageCardType) => void;
+  onAddToCart: (item: ServicePackageCardType) => void;
+  onBuyNow: (item: ServicePackageCardType) => void;
+  isBusy: boolean;
 }
 
-export default function ServiceCategorySection({ category, onPurchaseAction }: ServiceCategorySectionProps) {
+export default function ServiceCategorySection({
+  category,
+  onAddToCart,
+  onBuyNow,
+  isBusy,
+}: ServiceCategorySectionProps) {
   return (
     <section id={`${SERVICE_CATEGORY_ANCHOR_PREFIX}${category.code}`} className="scroll-mt-24">
       <h2 className="flex flex-wrap items-center gap-2 text-lg font-bold sm:text-xl">
@@ -23,7 +30,7 @@ export default function ServiceCategorySection({ category, onPurchaseAction }: S
 
       <div className="mt-4 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {category.packages.map((item) => (
-          <ServicePackageCard key={item.id} item={item} onPurchaseAction={onPurchaseAction} />
+          <ServicePackageCard key={item.id} item={item} onAddToCart={onAddToCart} onBuyNow={onBuyNow} isBusy={isBusy} />
         ))}
       </div>
     </section>

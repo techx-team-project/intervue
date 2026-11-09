@@ -6,11 +6,15 @@ import ServiceCategorySection from '@/components/recruiter/services/ServiceCateg
 import ServiceImportantNotice from '@/components/recruiter/services/ServiceImportantNotice';
 import ServiceNeedSuggestionModal from '@/components/recruiter/services/ServiceNeedSuggestionModal';
 import { SERVICE_CATEGORY_ANCHOR_PREFIX, SERVICE_VAT_NOTE } from '@/constants/service-package';
+import { useAddToCart } from '@/hooks/useRecruiterCart';
 import { useServiceCatalog } from '@/hooks/useServiceCatalog';
 import { useServiceNeedModal } from '@/hooks/useServiceNeedModal';
 import type { ServiceNeedKey } from '@/types/service-package';
 import { getErrorMessage } from '@/utils/error';
-import { AlertCircle, X } from 'lucide-react';
+import { AlertCircle, Check, X } from 'lucide-react';
+import { ROUTES } from '@/constants/routes';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useState } from 'react';
 
 export default function ServiceCatalogView() {
@@ -18,6 +22,8 @@ export default function ServiceCatalogView() {
   const { dismissedForever, dismissForever } = useServiceNeedModal();
   const [modalClosed, setModalClosed] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const router = useRouter();
+  const addToCart = useAddToCart();
 
   const categories = data?.categories ?? [];
   const isModalOpen = !dismissedForever && !modalClosed && categories.length > 0;
@@ -61,16 +67,24 @@ export default function ServiceCatalogView() {
       <ServiceImportantNotice />
 
       {notice && (
-        <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-900">
-          <span>{notice}</span>
-          <button
-            type="button"
-            onClick={() => setNotice(null)}
-            className="cursor-pointer text-amber-600 transition hover:text-amber-800"
-            aria-label="Đóng thông báo"
-          >
-            <X className="h-4 w-4" />
-          </button>
+        <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-900">
+          <span className="flex items-center gap-2">
+            <Check className="h-4 w-4 text-emerald-600" />
+            {notice}
+          </span>
+          <span className="flex items-center gap-3">
+            <Link href={ROUTES.RECRUITER_CART} className="text-primary font-bold hover:underline">
+              Xem giỏ hàng
+            </Link>
+            <button
+              type="button"
+              onClick={() => setNotice(null)}
+              className="cursor-pointer text-emerald-600 transition hover:text-emerald-800"
+              aria-label="Đóng thông báo"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </span>
         </div>
       )}
 
@@ -78,7 +92,25 @@ export default function ServiceCatalogView() {
         <ServiceCategorySection
           key={category.id}
           category={category}
-          onPurchaseAction={() => setNotice('Giỏ hàng và thanh toán sẽ sẵn sàng trong bản cập nhật tới.')}
+          isBusy={addToCart.isPending}
+          onAddToCart={(item) =>
+            addToCart.mutate(
+              { packageId: item.id, quantity: 1 },
+              {
+                onSuccess: () => setNotice(`Đã thêm "${item.name}" vào giỏ hàng.`),
+                onError: (cause) => setNotice(getErrorMessage(cause)),
+              },
+            )
+          }
+          onBuyNow={(item) =>
+            addToCart.mutate(
+              { packageId: item.id, quantity: 1 },
+              {
+                onSuccess: () => router.push(ROUTES.RECRUITER_CART),
+                onError: (cause) => setNotice(getErrorMessage(cause)),
+              },
+            )
+          }
         />
       ))}
 
