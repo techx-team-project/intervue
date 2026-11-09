@@ -21,6 +21,7 @@ import com.techx.intervue.modules.ai.services.impl.CoverLetterService;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.CandidatePrivacySanitizerInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
+import com.techx.intervue.modules.candidate.repositories.CandidateProfileRepository;
 import com.techx.intervue.modules.candidate.repositories.CandidateResumeRepository;
 import com.techx.intervue.modules.candidate.services.impl.CvTextCleaner;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Test;
 
 class CoverLetterServiceTest {
 
+    private CandidateProfileRepository profileRepository;
     private CandidateResumeRepository resumeRepository;
     private CvTextCleaner cvTextCleaner;
     private CandidatePrivacySanitizerInterface privacySanitizer;
@@ -39,6 +41,7 @@ class CoverLetterServiceTest {
 
     @BeforeEach
     void setUp() {
+        profileRepository = mock(CandidateProfileRepository.class);
         resumeRepository = mock(CandidateResumeRepository.class);
         cvTextCleaner = mock(CvTextCleaner.class);
         privacySanitizer = mock(CandidatePrivacySanitizerInterface.class);
@@ -47,6 +50,7 @@ class CoverLetterServiceTest {
 
         coverLetterService =
                 new CoverLetterService(
+                        profileRepository,
                         resumeRepository,
                         cvTextCleaner,
                         privacySanitizer,
