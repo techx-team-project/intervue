@@ -83,6 +83,23 @@ public class EntitlementService implements EntitlementServiceInterface {
         return spend(companyId, EntitlementType.JOB_ALERT_PUSH, jobId, null).isPresent();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public int remainingOf(Long companyId, EntitlementType type) {
+        return entitlementRepository
+                .findAllByCompanyIdAndEntitlementTypeAndStatusOrderByActivationDeadlineAsc(
+                        companyId, type, EntitlementStatus.AVAILABLE)
+                .stream()
+                .mapToInt(CompanyEntitlement::getRemainingQuantity)
+                .sum();
+    }
+
+    @Override
+    @Transactional
+    public boolean consumeUnit(Long companyId, EntitlementType type) {
+        return spend(companyId, type, null, null).isPresent();
+    }
+
     // Nearest activation deadline first, so stock that would expire soonest is used up first
     private Optional<CompanyEntitlement> spend(
             Long companyId, EntitlementType type, Long jobId, Long recruiterId) {

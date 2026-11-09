@@ -26,4 +26,10 @@ public interface EntitlementServiceInterface {
 
     /** Spends one alert-priority slot; false when the company had none left. */
     boolean consumeAlertPush(Long companyId, Long jobId);
+
+    /** Units of a type the company still holds, without spending anything. */
+    int remainingOf(Long companyId, EntitlementType type);
+
+    /** Spends one unit of a type not tied to a job; false when the company had none left. */
+    boolean consumeUnit(Long companyId, EntitlementType type);
 }
