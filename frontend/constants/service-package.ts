@@ -1,10 +1,10 @@
-import type { ServiceNeedKey } from '@/types/service-package';
+import type { EntitlementType, ServiceNeedKey } from '@/types/service-package';
 
 export const SERVICE_NEED_MODAL_STORAGE_KEY = 'intervue.services.needModal.dismissed';
 
 export const SERVICE_NEED_OPTIONS: { key: ServiceNeedKey; label: string }[] = [
   { key: 'REACH', label: 'Hỗ trợ quảng cáo và tăng lượt tiếp cận với ứng viên' },
-  { key: 'CONNECT', label: 'Chủ động tìm kiếm và kết nối ứng viên' },
+  { key: 'CONNECT', label: 'Linh hoạt chọn tiện ích theo từng giai đoạn tuyển dụng' },
   { key: 'HIGHLIGHT', label: 'Làm nổi bật tin tuyển dụng để tăng hiệu quả với ứng viên' },
   {
     key: 'BRANDING',
@@ -32,3 +32,19 @@ export const SERVICE_BADGE_LABEL: Record<'NEW' | 'SPECIAL_OFFER', string> = {
 };
 
 export const SERVICE_CATEGORY_ANCHOR_PREFIX = 'service-category-';
+
+export const ENTITLEMENT_TYPE_OPTIONS: { value: EntitlementType; label: string }[] = [
+  { value: 'JOB_POST_SLOT', label: 'Job post slot' },
+  { value: 'JOB_BOOST', label: 'Job ranking boost' },
+  { value: 'JOB_LABEL_URGENT', label: 'Label: urgent' },
+  { value: 'JOB_LABEL_HOT', label: 'Label: hot' },
+  { value: 'JOB_HIGHLIGHT', label: 'Highlighted job row' },
+  { value: 'JOB_RETOP', label: 'Re-top push' },
+  { value: 'JOB_ALERT_PUSH', label: 'Job alert push' },
+  { value: 'AI_RESUME_MATCH', label: 'AI resume match' },
+  { value: 'AI_JD_GENERATE', label: 'AI job description' },
+  { value: 'BRAND_PAGE', label: 'Brand page' },
+  { value: 'FEATURED_COMPANY', label: 'Featured company' },
+  { value: 'AD_SLOT_WEEK', label: 'Ad slot week' },
+  { value: 'CREDIT', label: 'Credits' },
+];

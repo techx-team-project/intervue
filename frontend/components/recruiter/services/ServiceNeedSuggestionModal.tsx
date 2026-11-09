@@ -35,7 +35,7 @@ export default function ServiceNeedSuggestionModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title={SERVICE_NEED_MODAL_COPY.title} maxWidth="2xl">
+    <Modal isOpen={isOpen} onClose={handleClose} title={SERVICE_NEED_MODAL_COPY.title} maxWidth="4xl">
       <p className="text-on-surface-variant text-sm leading-relaxed">{SERVICE_NEED_MODAL_COPY.description}</p>
 
       <div className="mt-5 grid items-center gap-6 sm:grid-cols-[minmax(0,1fr)_200px]">
