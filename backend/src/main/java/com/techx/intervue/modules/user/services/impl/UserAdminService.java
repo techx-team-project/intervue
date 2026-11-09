@@ -528,7 +528,9 @@ public class UserAdminService implements UserAdminServiceInterface {
                     SERVICE_CATEGORY_DELETED,
                     SERVICE_PACKAGE_CREATED,
                     SERVICE_PACKAGE_UPDATED,
-                    SERVICE_PACKAGE_STATUS_CHANGED ->
+                    SERVICE_PACKAGE_STATUS_CHANGED,
+                    BILLING_SETTINGS_UPDATED,
+                    PAYMENT_TRANSACTION_MATCHED ->
                     "billing";
         };
     }
@@ -601,7 +603,9 @@ public class UserAdminService implements UserAdminServiceInterface {
                     SERVICE_CATEGORY_DELETED,
                     SERVICE_PACKAGE_CREATED,
                     SERVICE_PACKAGE_UPDATED,
-                    SERVICE_PACKAGE_STATUS_CHANGED ->
+                    SERVICE_PACKAGE_STATUS_CHANGED,
+                    BILLING_SETTINGS_UPDATED,
+                    PAYMENT_TRANSACTION_MATCHED ->
                     detail != null && !detail.isBlank() ? detail : "Service catalog activity";
         };
     }
