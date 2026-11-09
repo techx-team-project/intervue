@@ -395,6 +395,18 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 - `jobs` gained `boost_level`, `boost_expires_at`, `highlight_label`, `highlight_label_expires_at`, `highlighted` and `highlight_expires_at`, plus an index on `(status, boost_level, published_at)` for ranking.
 - `service_package_benefits.tier` and `company_entitlements.tier` carry the boost strength (3 for `PRO_MAX_PLUS`, 2 for `PRO_MAX`/`PRO_TRIAL`, 1 for `ECO_PLUS`/`STANDARD_COMBO`).
 
+## AI resume match quota
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `POST` | `/recruiter/ai/resume-match` | recruiter | Moved out of `/ai/**`: `SecurityConfig` denies recruiter tokens outside `/api/v1/recruiter/**`, so the old path answered `403` for everyone. |
+| `POST` | `/recruiter/ai/applications/{id}/analyze` | recruiter | Same move. |
+| `GET` | `/recruiter/ai/resume-match/quota` | recruiter | `{ freeUsedThisMonth, freeLimit, freeRemaining, paidRemaining, totalRemaining, resetAt }`. |
+
+- **Free tier plus top-up.** Each company gets `ai.quota.resume-match-free-per-month` analyses a month (default 30, Redis key `ai:quota:resume_match:{companyId}:{yyyy-MM}`, resets at the first of the month Vietnam time). Beyond that, one `AI_RESUME_MATCH` entitlement unit is spent per analysis. With neither left the call answers `422 AI_USER_QUOTA_EXCEEDED`.
+- Quota is **checked before** the model call and **spent after** it succeeds, so a failed analysis never costs a paid unit. The existing per-user daily AI quota (`ai.quota.user-per-day`) still applies on top and covers the gap between check and spend.
+- These controllers are **synchronous**. Returning `CompletableFuture` made Spring Security re-evaluate the `ASYNC` dispatch without a `SecurityContext`, which answered `401` even when the analysis had succeeded and the quota had already been spent.
+
 ## Error codes
 
 | Code | HTTP | Meaning |

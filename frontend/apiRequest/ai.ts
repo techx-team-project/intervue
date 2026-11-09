@@ -49,7 +49,7 @@ export interface CoverLetterApiResponse {
 }
 
 export async function requestResumeMatch(payload: ResumeMatchApiPayload): Promise<ResumeMatchApiResponse> {
-  return request<ResumeMatchApiResponse>('/ai/resume-match', {
+  return request<ResumeMatchApiResponse>('/recruiter/ai/resume-match', {
     method: 'POST',
     body: payload,
     auth: false,
