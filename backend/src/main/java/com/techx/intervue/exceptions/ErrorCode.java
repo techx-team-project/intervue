@@ -188,7 +188,17 @@ public enum ErrorCode {
     PAYMENT_SYNC_RUNNING(
             HttpStatus.CONFLICT, "A payment reconciliation run is already in progress!"),
     TRANSACTION_ALREADY_MATCHED(
-            HttpStatus.CONFLICT, "This bank transaction is already linked to an order!");
+            HttpStatus.CONFLICT, "This bank transaction is already linked to an order!"),
+    ENTITLEMENT_EXHAUSTED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "You have used up this service, please buy more!"),
+    ENTITLEMENT_EXPIRED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This service has passed its activation deadline!"),
+    ENTITLEMENT_NOT_ACTIVATABLE(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "This service is used automatically and cannot be applied to a job!"),
+    ADDON_REQUIRES_ACTIVE_JOB(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "Choose a published job of your company to apply this service to!");
 
     private final HttpStatus status;
     private final String message;
