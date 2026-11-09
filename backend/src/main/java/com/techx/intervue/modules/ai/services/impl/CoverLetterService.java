@@ -14,6 +14,7 @@ import com.techx.intervue.modules.ai.services.interfaces.CandidatePrivacySanitiz
 import com.techx.intervue.modules.ai.services.interfaces.CoverLetterServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
 import com.techx.intervue.modules.candidate.entities.CandidateResume;
+import com.techx.intervue.modules.candidate.repositories.CandidateProfileRepository;
 import com.techx.intervue.modules.candidate.repositories.CandidateResumeRepository;
 import com.techx.intervue.modules.candidate.services.impl.CvTextCleaner;
 import java.util.List;
@@ -33,6 +34,7 @@ public class CoverLetterService implements CoverLetterServiceInterface {
     public static final String EDIT_NOTICE =
             "Bản nháp do AI tạo từ thông tin CV và tin tuyển dụng. Bạn có thể chỉnh sửa tự do trước khi nộp; thư không bao giờ được gửi tự động.";
 
+    private final CandidateProfileRepository profileRepository;
     private final CandidateResumeRepository resumeRepository;
     private final CvTextCleaner cvTextCleaner;
     private final CandidatePrivacySanitizerInterface privacySanitizer;
@@ -53,8 +55,12 @@ public class CoverLetterService implements CoverLetterServiceInterface {
         String cvContent = "";
         if (request.resumeId() != null) {
             CandidateResume resume =
-                    resumeRepository
-                            .findById(request.resumeId())
+                    profileRepository
+                            .findByUserId(candidateUserId)
+                            .flatMap(
+                                    profile ->
+                                            resumeRepository.findByIdAndCandidateProfileId(
+                                                    request.resumeId(), profile.getId()))
                             .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
             cvContent =
                     resume.getParsedSummary() != null && !resume.getParsedSummary().isBlank()
