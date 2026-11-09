@@ -1,12 +1,11 @@
 package com.techx.intervue.modules.billing.services.impl;
 
 import com.techx.intervue.modules.billing.entities.CartItem;
-import com.techx.intervue.modules.billing.entities.ServicePackage;
 import com.techx.intervue.modules.billing.repositories.CartItemRepository;
 import com.techx.intervue.modules.billing.repositories.CartRepository;
-import java.util.LinkedHashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,19 +16,23 @@ public class CartLineReader {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
 
-    public Map<ServicePackage, Integer> read(Long recruiterId) {
-        Map<ServicePackage, Integer> lines = new LinkedHashMap<>();
-        cartRepository
+    public List<CartItem> read(Long recruiterId, Collection<Long> itemIds) {
+        return cartRepository
                 .findByRecruiterId(recruiterId)
-                .ifPresent(
-                        cart -> {
-                            List<CartItem> items =
-                                    cartItemRepository.findAllByCartIdOrderByCreatedAtAsc(
-                                            cart.getId());
-                            for (CartItem item : items) {
-                                lines.put(item.getServicePackage(), item.getQuantity());
-                            }
-                        });
-        return lines;
+                .map(
+                        cart ->
+                                filter(
+                                        cartItemRepository.findAllByCartIdOrderByCreatedAtAsc(
+                                                cart.getId()),
+                                        itemIds))
+                .orElseGet(List::of);
+    }
+
+    private List<CartItem> filter(List<CartItem> items, Collection<Long> itemIds) {
+        if (itemIds == null || itemIds.isEmpty()) {
+            return items;
+        }
+        Set<Long> wanted = Set.copyOf(itemIds);
+        return items.stream().filter(item -> wanted.contains(item.getId())).toList();
     }
 }

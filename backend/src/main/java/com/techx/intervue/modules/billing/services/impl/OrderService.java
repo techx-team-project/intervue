@@ -3,6 +3,7 @@ package com.techx.intervue.modules.billing.services.impl;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.billing.entities.BillingSettings;
+import com.techx.intervue.modules.billing.entities.CartItem;
 import com.techx.intervue.modules.billing.entities.Order;
 import com.techx.intervue.modules.billing.entities.OrderInvoiceDetail;
 import com.techx.intervue.modules.billing.entities.OrderItem;
@@ -11,6 +12,7 @@ import com.techx.intervue.modules.billing.enums.OrderStatus;
 import com.techx.intervue.modules.billing.enums.ServicePackageStatus;
 import com.techx.intervue.modules.billing.mappers.OrderMapper;
 import com.techx.intervue.modules.billing.mappers.ServicePackageMapper;
+import com.techx.intervue.modules.billing.repositories.CartItemRepository;
 import com.techx.intervue.modules.billing.repositories.OrderInvoiceDetailRepository;
 import com.techx.intervue.modules.billing.repositories.OrderItemRepository;
 import com.techx.intervue.modules.billing.repositories.OrderRepository;
@@ -20,7 +22,6 @@ import com.techx.intervue.modules.billing.requests.CheckoutRequest;
 import com.techx.intervue.modules.billing.resources.OrderResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
-import com.techx.intervue.modules.billing.services.interfaces.CartServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
@@ -61,7 +62,7 @@ public class OrderService implements OrderServiceInterface {
     private final OrderPricing orderPricing;
     private final OrderCodeGenerator codeGenerator;
     private final BillingSettingsServiceInterface billingSettings;
-    private final CartServiceInterface cartService;
+    private final CartItemRepository cartItemRepository;
     private final CartLineReader cartLineReader;
     private final CompanyServiceInterface companyService;
 
@@ -72,10 +73,10 @@ public class OrderService implements OrderServiceInterface {
         BillingSettings settings = billingSettings.current();
 
         boolean fromCart = request.packageId() == null;
+        List<CartItem> cartItems =
+                fromCart ? cartLineReader.read(recruiterId, request.cartItemIds()) : List.of();
         Map<ServicePackage, Integer> lines =
-                fromCart
-                        ? cartLineReader.read(recruiterId)
-                        : singleLine(request.packageId(), request.quantity());
+                fromCart ? toLines(cartItems) : singleLine(request.packageId(), request.quantity());
         if (lines.isEmpty()) {
             throw new AppException(ErrorCode.CART_EMPTY);
         }
@@ -132,7 +133,9 @@ public class OrderService implements OrderServiceInterface {
         invoiceDetailRepository.save(buildInvoiceDetail(order, request));
 
         if (fromCart) {
-            cartService.clear(recruiterId);
+            // Only the purchased lines leave the cart; anything left unselected stays
+            cartItemRepository.deleteAll(cartItems);
+            cartItemRepository.flush();
         }
         return toResource(order);
     }
@@ -169,6 +172,14 @@ public class OrderService implements OrderServiceInterface {
         order.setStatus(OrderStatus.CANCELLED);
         order.setCancelledAt(Instant.now());
         return toResource(order);
+    }
+
+    private Map<ServicePackage, Integer> toLines(List<CartItem> cartItems) {
+        Map<ServicePackage, Integer> lines = new LinkedHashMap<>();
+        for (CartItem item : cartItems) {
+            lines.put(item.getServicePackage(), item.getQuantity());
+        }
+        return lines;
     }
 
     private Map<ServicePackage, Integer> singleLine(Long packageId, Integer quantity) {

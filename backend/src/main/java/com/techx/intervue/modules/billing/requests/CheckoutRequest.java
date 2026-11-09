@@ -8,10 +8,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 
 public record CheckoutRequest(
         Long packageId,
         @Min(1) @Max(99) Integer quantity,
+        List<Long> cartItemIds,
         @NotNull InvoiceType invoiceType,
         @Size(max = 30) String taxId,
         @Size(max = 255) String companyName,
