@@ -2,8 +2,10 @@ package com.techx.intervue.modules.billing.controllers;
 
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.billing.requests.CheckoutRequest;
+import com.techx.intervue.modules.billing.resources.OrderPaymentResource;
 import com.techx.intervue.modules.billing.resources.OrderResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
+import com.techx.intervue.modules.billing.services.interfaces.OrderPaymentServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RecruiterOrderController extends BaseController {
 
     private final OrderServiceInterface orderService;
+    private final OrderPaymentServiceInterface orderPaymentService;
 
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<OrderSummaryResource>>> search(
@@ -41,6 +44,14 @@ public class RecruiterOrderController extends BaseController {
             @PathVariable String code, @AuthenticationPrincipal CustomUserDetails principal) {
         return ok(
                 orderService.findByCode(code, principal.getId()), "Order retrieved successfully!");
+    }
+
+    @GetMapping("/{code}/payment")
+    public ResponseEntity<ApiResource<OrderPaymentResource>> payment(
+            @PathVariable String code, @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                orderPaymentService.getPayment(code, principal.getId()),
+                "Payment details retrieved successfully!");
     }
 
     @PostMapping

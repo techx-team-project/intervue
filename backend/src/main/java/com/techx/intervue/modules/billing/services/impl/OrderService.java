@@ -25,6 +25,7 @@ import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsSer
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
+import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterServiceInterface;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -65,6 +66,8 @@ public class OrderService implements OrderServiceInterface {
     private final CartItemRepository cartItemRepository;
     private final CartLineReader cartLineReader;
     private final CompanyServiceInterface companyService;
+    private final RecruiterServiceInterface recruiterService;
+    private final BillingNotifier billingNotifier;
 
     @Override
     @Transactional
@@ -137,6 +140,8 @@ public class OrderService implements OrderServiceInterface {
             cartItemRepository.deleteAll(cartItems);
             cartItemRepository.flush();
         }
+
+        billingNotifier.orderCreated(order, recruiterService.getMe(recruiterId).name());
         return toResource(order);
     }
 
