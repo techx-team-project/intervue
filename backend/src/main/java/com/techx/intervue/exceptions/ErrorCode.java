@@ -166,7 +166,20 @@ public enum ErrorCode {
     DUPLICATE_PACKAGE_CODE(
             HttpStatus.CONFLICT, "A service package with this code or slug already exists!"),
     SERVICE_CATEGORY_IN_USE(
-            HttpStatus.CONFLICT, "This category still has service packages and cannot be removed!");
+            HttpStatus.CONFLICT, "This category still has service packages and cannot be removed!"),
+    BILLING_NOT_CONFIGURED(
+            HttpStatus.SERVICE_UNAVAILABLE,
+            "Billing is not configured yet, please try again later!"),
+    CART_EMPTY(HttpStatus.UNPROCESSABLE_CONTENT, "Your cart is empty!"),
+    CART_ITEM_LIMIT_EXCEEDED(HttpStatus.UNPROCESSABLE_CONTENT, "Your cart is full!"),
+    TOO_MANY_PENDING_ORDERS(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "You have too many unpaid orders, please finish or cancel one first!"),
+    ORDER_NOT_PAYABLE(HttpStatus.UNPROCESSABLE_CONTENT, "This order can no longer be paid!"),
+    ORDER_EXPIRED(HttpStatus.UNPROCESSABLE_CONTENT, "This order has expired!"),
+    TRIAL_ALREADY_USED(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "Your company has already bought this one-time package!");
 
     private final HttpStatus status;
     private final String message;
