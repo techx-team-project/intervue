@@ -92,6 +92,15 @@ templates:
       **Ghi chú của quản trị viên:** {reason}
     actionLabel: "Xem thoả thuận"
 
+  FOLLOWED_COMPANY_NEW_JOB:
+    title: "{companyName} vừa đăng tin tuyển dụng mới"
+    summary: "{companyName} đang tuyển vị trí {jobTitle}."
+    body: |
+      Công ty **{companyName}** mà bạn đang theo dõi vừa đăng tin tuyển dụng vị trí **{jobTitle}**.
+
+      Bạn có thể tắt thông báo này trong phần cài đặt thông báo.
+    actionLabel: "Xem tin tuyển dụng"
+
   JOB_HIDDEN_BY_ADMIN:
     title: "Tin tuyển dụng {jobTitle} đã bị ẩn"
     summary: "Quản trị viên đã ẩn tin {jobTitle} khỏi kết quả tìm kiếm."
@@ -245,6 +254,26 @@ templates:
 
       Nếu không phải bạn thực hiện, hãy đổi mật khẩu ngay và liên hệ bộ phận hỗ trợ.
     actionLabel: "Kiểm tra bảo mật"
+
+  IDENTITY_VERIFIED:
+    title: "Danh tính của bạn đã được xác thực"
+    summary: "Tài khoản của bạn đã được xác thực. Bạn có thể ứng tuyển ngay."
+    body: |
+      Quản trị viên đã duyệt hồ sơ xác thực danh tính của bạn.
+
+      Tài khoản của bạn đã chuyển sang trạng thái **Đã xác thực**, bạn có thể nộp hồ sơ ứng tuyển.
+    actionLabel: "Xem trạng thái"
+
+  IDENTITY_REJECTED:
+    title: "Hồ sơ xác thực danh tính bị từ chối"
+    summary: "Lý do: {reason}"
+    body: |
+      Hồ sơ xác thực danh tính của bạn chưa được duyệt.
+
+      **Lý do:** {reason}
+
+      Bạn còn **{attemptsLeft}** lượt gửi lại. Hãy chụp lại giấy tờ rõ nét, đủ bốn góc và gửi lại hồ sơ.
+    actionLabel: "Gửi lại hồ sơ"
 
   ADMIN_REVIEW_QUEUE_ITEM:
     title: "Hồ sơ mới chờ thẩm định: {queueLabel}"

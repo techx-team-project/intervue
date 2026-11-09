@@ -1,6 +1,6 @@
 import { request } from '@/apiRequest/http';
 import type { Page } from '@/types/api';
-import type { PublicJobResource, PublicJobSummaryResource } from '@/types/public-job';
+import type { NearbyJobResource, PublicJobResource, PublicJobSummaryResource } from '@/types/public-job';
 
 export type PublicJobSearchParams = {
   q?: string;
@@ -28,6 +28,9 @@ function toQuery(params: PublicJobSearchParams) {
 
 export const publicJobApi = {
   search: (params: PublicJobSearchParams) => request<Page<PublicJobSummaryResource>>(`/jobs?${toQuery(params)}`),
+
+  nearby: (params: { lat: number; lng: number; radiusKm: number }) =>
+    request<NearbyJobResource[]>(`/jobs/nearby?lat=${params.lat}&lng=${params.lng}&radiusKm=${params.radiusKm}`),
 
   get: (id: number) => request<PublicJobResource>(`/jobs/${id}`),
 };

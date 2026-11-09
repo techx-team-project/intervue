@@ -47,6 +47,8 @@ export const jobPostSchema = z
     workingArrangement: workingArrangementSchema,
     city: z.string().trim().min(1, 'Vui lòng nhập nơi làm việc.').max(100, 'Tối đa 100 ký tự.'),
     address: z.string().trim().max(500, 'Tối đa 500 ký tự.'),
+    latitude: z.number().min(-90).max(90).optional(),
+    longitude: z.number().min(-180).max(180).optional(),
     salaryNegotiable: z.boolean(),
     salaryMin: z.number().positive('Nhập số lớn hơn 0.').optional(),
     salaryMax: z.number().positive('Nhập số lớn hơn 0.').optional(),

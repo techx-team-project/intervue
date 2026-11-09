@@ -212,7 +212,7 @@ public class CvReviewService implements CvReviewServiceInterface {
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
         if (!review.getCandidateProfile().getUserId().equals(candidateUserId)) {
-            throw new AppException(ErrorCode.FORBIDDEN);
+            throw new AppException(ErrorCode.NOT_FOUND);
         }
 
         return toResult(review, false);

@@ -2,11 +2,13 @@ package com.techx.intervue.modules.job.repositories;
 
 import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.enums.JobStatus;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -26,6 +28,26 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
 
     @EntityGraph(attributePaths = "skills")
     Optional<Job> findByIdAndStatus(Long id, JobStatus status);
+
+    @EntityGraph(attributePaths = "skills")
+    List<Job> findByIdInAndStatus(Collection<Long> ids, JobStatus status);
+
+    @EntityGraph(attributePaths = "skills")
+    @Query(
+            "SELECT j FROM Job j WHERE j.status = :status AND j.deadline >= :today"
+                    + " AND j.latitude BETWEEN :minLat AND :maxLat"
+                    + " AND j.longitude BETWEEN :minLng AND :maxLng")
+    List<Job> findPublishedInBounds(
+            @Param("status") JobStatus status,
+            @Param("today") LocalDate today,
+            @Param("minLat") BigDecimal minLat,
+            @Param("maxLat") BigDecimal maxLat,
+            @Param("minLng") BigDecimal minLng,
+            @Param("maxLng") BigDecimal maxLng,
+            Pageable pageable);
+
+    boolean existsByIdAndStatusAndDeadlineGreaterThanEqual(
+            Long id, JobStatus status, LocalDate deadline);
 
     @Query(
             "SELECT j.status AS status, COUNT(j) AS total FROM Job j"

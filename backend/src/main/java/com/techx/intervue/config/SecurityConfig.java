@@ -75,7 +75,7 @@ public class SecurityConfig {
                                         .requestMatchers("/ping")
                                         .permitAll()
                                         // 2. Public API
-                                        .requestMatchers("/api/v1/ai/**")
+                                        .requestMatchers("/api/v1/ai/chat")
                                         .permitAll()
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()

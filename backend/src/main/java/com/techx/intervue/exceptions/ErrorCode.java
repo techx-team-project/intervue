@@ -109,12 +109,23 @@ public enum ErrorCode {
             HttpStatus.CONFLICT, "You have reached the maximum number of items for this section!"),
     JOB_NOT_EDITABLE(
             HttpStatus.UNPROCESSABLE_CONTENT, "This job can no longer be edited or deleted!"),
+    SAVED_LIMIT_REACHED(HttpStatus.CONFLICT, "You have reached the maximum number of saved items!"),
     ALREADY_APPLIED(HttpStatus.CONFLICT, "You have already applied to this job!"),
     JOB_NOT_OPEN(HttpStatus.UNPROCESSABLE_CONTENT, "This job is not accepting applications!"),
     CANNOT_APPLY_TO_OWN_COMPANY(
             HttpStatus.UNPROCESSABLE_CONTENT, "You cannot apply to a job of your own company!"),
     IDENTITY_NOT_VERIFIED(
             HttpStatus.UNPROCESSABLE_CONTENT, "Verify your identity before applying!"),
+    IDENTITY_ALREADY_VERIFIED(HttpStatus.CONFLICT, "Your identity is already verified!"),
+    IDENTITY_REVIEW_PENDING(
+            HttpStatus.CONFLICT, "Your identity verification is already awaiting review!"),
+    IDENTITY_ATTEMPTS_EXHAUSTED(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "You have used all identity verification attempts. Contact support for a manual review!"),
+    IDENTITY_UNDER_MINIMUM_AGE(
+            HttpStatus.UNPROCESSABLE_CONTENT, "You must be at least 16 years old to verify!"),
+    IDENTITY_NUMBER_ALREADY_USED(
+            HttpStatus.CONFLICT, "This ID number is already verified on another account!"),
     RESUME_LIMIT_REACHED(HttpStatus.CONFLICT, "You have reached the maximum number of CVs!"),
     SCREENING_QUESTIONS_LOCKED(
             HttpStatus.UNPROCESSABLE_CONTENT,

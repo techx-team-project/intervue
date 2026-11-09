@@ -40,9 +40,9 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /auth/reset-password` | public | `{ token, password, confirmPassword }` | – (link valid 15 min, single use; logs out all devices) |
 | ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, hasPassword, roles, createdAt }` (`hasPassword` is `false` for an account created with Google that never set a password) |
 | ✅ | `POST /ai/chat` | public / optional user | `{ message, sessionId? }` | `{ answer, sources, remainingQuota }` |
-| ✅ | `POST /ai/resume-match` | public / recruiter / user | `{ applicationId?, jobTitle, jobRequirements, jobDescription?, candidateData?, cvText? }` | `ResumeMatchResult` `{ applicationId, experienceSummary, requirements, questionsToAsk, model, promptVersion, aiProcessedCandidateData, analyzedAt, disclaimer }` (Runs async; sensitive PII/KYC and screening questions strictly stripped) |
+| ✅ | `POST /ai/resume-match` | recruiter | `{ applicationId?, jobTitle, jobRequirements, jobDescription?, candidateData?, cvText? }` | `ResumeMatchResult` `{ applicationId, experienceSummary, requirements, questionsToAsk, model, promptVersion, aiProcessedCandidateData, analyzedAt, disclaimer }` (Runs async; sensitive PII/KYC and screening questions strictly stripped) |
 | ✅ | `POST /ai/cv-reviews` | candidate | `{ resumeId?, cvText?, targetPosition? }` | `CvReviewResult` `{ fileHash, overallScore, summary, comments: [{ section, quote, problem, fix }], modelVersion, promptVersion, fromCache }` (3 uses/day, resets 00:00 VN time; unchanged CV returns cached result without using quota) |
-| ✅ | `POST /ai/cover-letter` | candidate / user | `{ jobTitle, companyName, jobRequirements?, jobDescription?, resumeId?, cvText?, candidateName? }` | `CoverLetterGenerateResult` `{ coverLetter, modelVersion, promptVersion, notice }` (Fact-only draft from CV and job; user edits before sending; never sent automatically) |
+| ✅ | `POST /ai/cover-letter` | candidate | `{ jobTitle, companyName, jobRequirements?, jobDescription?, resumeId?, cvText?, candidateName? }` | `CoverLetterGenerateResult` `{ coverLetter, modelVersion, promptVersion, notice }` (Fact-only draft from CV and job; user edits before sending; never sent automatically) |
 | ✅ | `POST /ai/cv-reviews/upload` | candidate | multipart `file`, `targetPosition?` | `CvReviewResult` (PDF upload; unreadable detected with clear reason; cached by hash) |
 | ✅ | `GET /ai/cv-reviews/quota` | candidate | – | `CvReviewQuotaResource` `{ usedToday, remaining, maxDaily, resetAt }` |
 | ✅ | `GET /ai/cv-reviews/{id}` | candidate | – | `CvReviewResult` (strictly accessible only by candidate owner) |
@@ -194,7 +194,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `GET` | `/recruiter/jobs/summary` | recruiter | `{ total, byStatus: { DRAFT, PUBLISHED, PAUSED, CLOSED, EXPIRED, HIDDEN_BY_ADMIN } }`. |
 | `GET` | `/recruiter/jobs/{id}` | recruiter | `JobResource` (includes `hiddenReason` and `hiddenAt` while the job is hidden by an admin). `404 NOT_FOUND` for someone else's job. |
 | `POST` | `/recruiter/jobs` | recruiter | Creates a `DRAFT`. Only `title` is required; everything else may be partial. `403 NOT_COMPANY_MEMBER` without a company. The company name is snapshotted on the job. |
-| `PUT` | `/recruiter/jobs/{id}` | recruiter | Allowed in `DRAFT`, `PUBLISHED`, `PAUSED` (otherwise `422 JOB_NOT_EDITABLE`). A non-draft job must stay complete. |
+| `PUT` | `/recruiter/jobs/{id}` | recruiter | Location also accepts optional `latitude`/`longitude` (sent together, -90..90 / -180..180). Allowed in `DRAFT`, `PUBLISHED`, `PAUSED` (otherwise `422 JOB_NOT_EDITABLE`). A non-draft job must stay complete. |
 | `POST` | `/recruiter/jobs/{id}/publish` | recruiter | `DRAFT` to `PUBLISHED`. Runs the publish gate (`assertCanPublish`) and a completeness check; incomplete jobs return `400 VALIDATION_FAILED` with the missing `fieldErrors`. |
 | `POST` | `/recruiter/jobs/{id}/pause` · `/resume` · `/close` | recruiter | `PUBLISHED` to `PAUSED`, `PAUSED` to `PUBLISHED` (gate re-checked), `PUBLISHED`/`PAUSED` to `CLOSED`. Anything else is `422 INVALID_STATUS_TRANSITION`. |
 | `DELETE` | `/recruiter/jobs/{id}` | recruiter | Drafts only (`422 JOB_NOT_EDITABLE` otherwise). |
@@ -204,6 +204,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `POST` | `/admin/jobs/{id}/hide` | admin | Body `{ reason }` (required, max 500). `PUBLISHED` or `PAUSED` to `HIDDEN_BY_ADMIN`; anything else is `422 INVALID_STATUS_TRANSITION`. Stores `hiddenReason`, `hiddenAt`, writes an audit entry (`JOB_HIDDEN`) and notifies the recruiter (`JOB_HIDDEN_BY_ADMIN`, mandatory). A hidden job is not `PUBLISHED`, so it leaves public search and detail. |
 | `POST` | `/admin/jobs/{id}/restore` | admin | `HIDDEN_BY_ADMIN` to `PUBLISHED`, or to `EXPIRED` when the deadline has passed. Clears the hidden fields, audits `JOB_RESTORED` and notifies the recruiter. |
 | `GET` | `/jobs?q=&city=&contractType=&workingArrangement=&level=&skillIds=&salaryFrom=&currency=&page=&size=` | public | `PageResource<PublicJobSummaryResource>` of `PUBLISHED` jobs whose deadline is today or later, newest first (client sort is ignored). `q` matches title or company name; `companyId` limits to one company; `city` is an exact match; `skillIds` matches any of up to 10; `salaryFrom` keeps non-negotiable jobs whose maximum is at least that amount in `currency` (default `VND`). Item: `{ id, title, company: { id, name, logoUrl? }, level, contractType, workingArrangement, city, salary, skills, deadline, publishedAt }`. |
+| `GET` | `/jobs/nearby?lat=&lng=&radiusKm=` | public | `NearbyJobResource[] { job: PublicJobSummaryResource, address?, latitude, longitude, distanceKm }` for `PUBLISHED`, not-expired jobs that have coordinates within `radiusKm` (1-100, default 10) of the point, nearest first, max 100. `400 VALIDATION_FAILED` for missing or out-of-range `lat` (-90..90) / `lng` (-180..180). |
 | `GET` | `/jobs/{id}` | public | `PublicJobResource` (summary fields plus `location`, `description`, `requirements`, `benefits`, `openings`, and `company.address`). `404 NOT_FOUND` unless the job is `PUBLISHED` and not past its deadline. Also returns `screening: { questionCount, requiredCount, estimatedMinutes }` so candidates see the effort before applying; the questions themselves are not public. |
 
 - `SaveJobRequest`: `{ title, level, contractType, workingArrangement, location: { city, address }, salary: { negotiable, min, max, currency }, skillIds, description, requirements, benefits, deadline, openings, screeningQuestions? }`. Salary is monthly, in the minor unit of `currency` (`VND` or `USD`); `deadline` is a date in Vietnam time.
@@ -238,7 +239,7 @@ An application is one row per candidate and job (`UNIQUE job_id, candidate_id`);
 | `GET` | `/candidate/applications/{id}/cv` | candidate | Streams the application's own CV copy. |
 
 - A job belongs to the candidate's own company when a recruiter account with the same email is an active member of it; that is refused with `CANNOT_APPLY_TO_OWN_COMPANY`.
-- `applications.require-identity-verification` (env `APPLICATIONS_REQUIRE_IDENTITY_VERIFICATION`, default `false`) turns on the eKYC gate. Until the eKYC module supplies a real lookup, turning it on blocks every candidate.
+- `applications.require-identity-verification` (env `APPLICATIONS_REQUIRE_IDENTITY_VERIFICATION`, default `true`) turns on the eKYC gate: only candidates whose identity verification is `APPROVED` can apply.
 - Screening questions cannot change once the job has a submitted (non-draft) application (`SCREENING_QUESTIONS_LOCKED`).
 
 ## Recruiter Applications
@@ -281,6 +282,40 @@ Resource: `{ id, applicationId, jobId, jobTitle, companyName, candidateName, sta
 - Every event notifies the other side in-app and by email (`INTERVIEW_INVITED`, `_UPDATED`, `_CANCELLED` to the candidate; `_CONFIRMED`, `_DECLINED`, `_RESCHEDULE_REQUESTED` to the recruiter who scheduled it).
 - Confirmed interviews send `INTERVIEW_REMINDER` to both sides 24 hours and 1 hour before the start, each once (checked every 5 minutes).
 
+## Saved jobs and followed companies
+
+All endpoints are `candidate` only. Saving and following are idempotent (`PUT` twice is fine, `DELETE` of something not saved is fine). Each list is capped at 200 items (`409 SAVED_LIMIT_REACHED`).
+
+| Method | Path | Notes |
+|---|---|---|
+| `GET` | `/candidate/saved-jobs` | Paged, newest first. Item `{ jobId, savedAt, job? }`; `job` is the public job summary and is absent when the job is closed, expired, hidden or deleted. |
+| `GET` | `/candidate/saved-jobs/ids` | All saved job ids, used to show the heart state on lists. |
+| `PUT` | `/candidate/saved-jobs/{jobId}` | Only a currently public job (`404 NOT_FOUND` otherwise). |
+| `DELETE` | `/candidate/saved-jobs/{jobId}` | |
+| `GET` | `/candidate/followed-companies` | Paged, newest first. Item `{ companyId, followedAt, company }` with the public company resource. |
+| `GET` | `/candidate/followed-companies/ids` | All followed company ids. |
+| `PUT` | `/candidate/followed-companies/{companyId}` | `404 NOT_FOUND` for an unknown company. |
+| `DELETE` | `/candidate/followed-companies/{companyId}` | |
+
+- Publishing a job (`DRAFT` to `PUBLISHED`, not a resume from `PAUSED`) notifies every follower of the company with `FOLLOWED_COMPANY_NEW_JOB` (category `JOBS`, not mandatory, so followers can switch it off in notification preferences).
+
+## Identity verification (eKYC)
+
+Candidates submit a national ID and a portrait; an admin reviews them by hand (no automatic scoring yet). Images live in the private `IDENTITY_DOCUMENT` store and are streamed only to admins. The ID number is stored as a SHA-256 hash plus its last 4 digits.
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/candidate/identity-verification` | candidate | `{ status?, rejectReason?, attemptsLeft, canSubmit, required, fullName?, idNumberLast4?, submittedAt?, reviewedAt? }`. `status` is absent until the first submission; `required` mirrors `applications.require-identity-verification`. |
+| `POST` | `/candidate/identity-verification` | candidate | `multipart/form-data`: `fullName` (max 120), `idNumber` (9 or 12 digits), `dateOfBirth` (ISO date), files `front`, `back`, `selfie` (JPG/PNG, max 5MB each). Creates a `PENDING` review and notifies admins. `403 EMAIL_NOT_VERIFIED`, `409 IDENTITY_ALREADY_VERIFIED`, `409 IDENTITY_REVIEW_PENDING`, `422 IDENTITY_ATTEMPTS_EXHAUSTED`, `422 IDENTITY_UNDER_MINIMUM_AGE` (under 16). A rejected candidate resubmits with the same call. |
+| `GET` | `/admin/identity-verifications?status=&q=&page=&size=` | admin | Paged `AdminIdentityVerificationResource { id, userId, userEmail, fullName, dateOfBirth, idNumberLast4, status, idNumberUsedByAnotherAccount, rejectReason?, rejectionCount, attemptLimit, submittedAt, reviewedAt? }`. Pending items are oldest first, others newest first. `q` matches name or last 4 digits. |
+| `GET` | `/admin/identity-verifications/{id}` | admin | One item. |
+| `GET` | `/admin/identity-verifications/{id}/documents/{FRONT\|BACK\|SELFIE}` | admin | Streams the image inline. |
+| `POST` | `/admin/identity-verifications/{id}/approve` | admin | `PENDING` to `APPROVED`; notifies the candidate (`IDENTITY_VERIFIED`) and writes an audit entry. `409 IDENTITY_NUMBER_ALREADY_USED` when another account already holds the same approved ID number. |
+| `POST` | `/admin/identity-verifications/{id}/reject` | admin | Body `{ reason }` (required, max 500). `PENDING` to `REJECTED`, counts one attempt, notifies the candidate (`IDENTITY_REJECTED`). |
+| `POST` | `/admin/identity-verifications/{id}/grant-attempts` | admin | Adds 3 attempts to a rejected candidate who used all 5. |
+
+Anything other than the stated source status returns `422 INVALID_STATUS_TRANSITION`.
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -296,6 +331,7 @@ Resource: `{ id, applicationId, jobId, jobTitle, companyName, candidateName, sta
 | `METHOD_NOT_ALLOWED` | 405 | The HTTP method is not supported by this endpoint |
 | `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
 | `INTERVIEW_ALREADY_SCHEDULED` | 409 | The application already has an active interview |
+| `SAVED_LIMIT_REACHED` | 409 | The candidate already saved or follows the maximum number of items |
 | `INTERNAL_ERROR` | 500 | Unexpected server error; the cause is logged server-side and never returned |
 | `EMAIL_ALREADY_USED` | 409 | |
 | `ACCOUNT_BANNED` | 403 | The account is banned, so signing in and refreshing are both refused. Only raised after the password matches, so it never reveals the state of an account to someone who does not hold its credentials |
@@ -311,6 +347,11 @@ Resource: `{ id, applicationId, jobId, jobTitle, companyName, candidateName, sta
 | `JOB_NOT_OPEN` | 422 | The job is not published or its deadline has passed |
 | `CANNOT_APPLY_TO_OWN_COMPANY` | 422 | An active member of the job's company cannot apply to it |
 | `IDENTITY_NOT_VERIFIED` | 422 | The eKYC gate is on and the candidate is not verified |
+| `IDENTITY_ALREADY_VERIFIED` | 409 | The candidate is already verified |
+| `IDENTITY_REVIEW_PENDING` | 409 | A submission is already awaiting review |
+| `IDENTITY_ATTEMPTS_EXHAUSTED` | 422 | All 5 attempts were rejected; an admin must grant more |
+| `IDENTITY_UNDER_MINIMUM_AGE` | 422 | Date of birth shows the candidate is under 16 |
+| `IDENTITY_NUMBER_ALREADY_USED` | 409 | The ID number is already approved on another account |
 | `RESUME_LIMIT_REACHED` | 409 | The candidate already has the maximum number of CVs |
 | `SCREENING_QUESTIONS_LOCKED` | 422 | The job already has applications, so its screening questions cannot change |
 | `SKILL_NAME_ALREADY_USED` | 409 | A skill with this name already exists |

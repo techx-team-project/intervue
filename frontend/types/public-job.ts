@@ -20,6 +20,14 @@ export interface PublicJobSummaryResource {
   publishedAt?: string;
 }
 
+export interface NearbyJobResource {
+  job: PublicJobSummaryResource;
+  address?: string;
+  latitude: number;
+  longitude: number;
+  distanceKm: number;
+}
+
 export interface PublicJobCompanyDetail extends PublicJobCompany {
   address?: string;
 }

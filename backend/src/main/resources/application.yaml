@@ -110,6 +110,9 @@ jwt:
   issuer: InterVue
   refresh-token-ttl-days: 14
 
+applications:
+  require-identity-verification: ${APPLICATIONS_REQUIRE_IDENTITY_VERIFICATION:true}
+
 ---
 spring:
   config:
