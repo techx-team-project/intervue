@@ -135,7 +135,13 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             label: 'Service packages',
             href: ROUTES.ADMIN_SERVICE_PACKAGES,
             permission: 'services.manage',
-            comingSoon: true,
+            comingSoon: false,
+          },
+          {
+            label: 'Service categories',
+            href: ROUTES.ADMIN_SERVICE_CATEGORIES,
+            permission: 'services.manage',
+            comingSoon: false,
           },
           {
             label: 'Pricing & quotas',
