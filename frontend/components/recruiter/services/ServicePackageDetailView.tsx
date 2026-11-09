@@ -7,6 +7,7 @@ import { SERVICE_VAT_NOTE } from '@/constants/service-package';
 import { ROUTES } from '@/constants/routes';
 import { useServicePackage } from '@/hooks/useServiceCatalog';
 import { formatServicePrice } from '@/utils/service-package';
+import { isApiError } from '@/lib/api-error';
 import { getErrorMessage } from '@/utils/error';
 import { AlertCircle, ArrowLeft, CheckCircle2, Clock, Gift, ShoppingCart, X } from 'lucide-react';
 import Link from 'next/link';
@@ -32,10 +33,20 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
   }
 
   if (isError || !data) {
+    const notFound = isApiError(error) && error.code === 'PACKAGE_NOT_AVAILABLE';
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800">
-        <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
-        {getErrorMessage(error)}
+      <div className="border-outline-variant rounded-xl border border-dashed px-6 py-16 text-center">
+        <AlertCircle className="text-on-surface-variant mx-auto h-8 w-8" />
+        <p className="text-on-surface mt-3 text-base font-bold">
+          {notFound ? 'Không tìm thấy gói dịch vụ' : 'Không tải được gói dịch vụ'}
+        </p>
+        <p className="text-on-surface-variant mt-1 text-sm">{getErrorMessage(error)}</p>
+        <Link
+          href={ROUTES.RECRUITER_SERVICES}
+          className="bg-primary mt-5 inline-flex h-10 items-center justify-center rounded-lg px-6 text-sm font-semibold text-white transition hover:brightness-95"
+        >
+          Quay lại danh sách dịch vụ
+        </Link>
       </div>
     );
   }
