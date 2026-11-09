@@ -48,3 +48,9 @@ export const ENTITLEMENT_TYPE_OPTIONS: { value: EntitlementType; label: string }
   { value: 'AD_SLOT_WEEK', label: 'Ad slot week' },
   { value: 'CREDIT', label: 'Credits' },
 ];
+
+export const BOOST_TIER_OPTIONS = [
+  { value: '1', label: 'Tier 1 — Ưu tiên' },
+  { value: '2', label: 'Tier 2 — Cao' },
+  { value: '3', label: 'Tier 3 — Cao nhất' },
+];

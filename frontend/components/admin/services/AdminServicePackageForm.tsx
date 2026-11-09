@@ -5,7 +5,7 @@ import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import Switch from '@/components/ui/Switch';
 import Textarea from '@/components/ui/Textarea';
-import { ENTITLEMENT_TYPE_OPTIONS } from '@/constants/service-package';
+import { BOOST_TIER_OPTIONS, ENTITLEMENT_TYPE_OPTIONS } from '@/constants/service-package';
 import { ROUTES } from '@/constants/routes';
 import { adminServicePackageApi } from '@/apiRequest/admin-service-package';
 import type { AdminServiceCategory, AdminServicePackage, SaveServicePackageInput } from '@/types/admin-service-package';
@@ -271,7 +271,12 @@ export default function AdminServicePackageForm({ categories, initial }: AdminSe
 
       <section className="border-outline-variant rounded-2xl border bg-white p-5 shadow-2xs">
         <div className="flex items-center justify-between">
-          <h2 className="text-on-surface text-base font-bold">Benefits</h2>
+          <div>
+            <h2 className="text-on-surface text-base font-bold">Benefits</h2>
+            <p className="text-on-surface-variant mt-0.5 text-xs">
+              Tier only affects <code>JOB_BOOST</code>: it decides how high the job ranks in search.
+            </p>
+          </div>
           <Button
             type="button"
             variant="outline"
@@ -290,7 +295,7 @@ export default function AdminServicePackageForm({ categories, initial }: AdminSe
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="border-outline-variant grid gap-3 rounded-xl border p-3 sm:grid-cols-[180px_80px_80px_100px_minmax(0,1fr)_auto]"
+                className="border-outline-variant grid gap-3 rounded-xl border p-3 sm:grid-cols-[180px_70px_150px_90px_minmax(0,1fr)_auto]"
               >
                 <Select
                   value={benefit.entitlementType}
@@ -316,12 +321,10 @@ export default function AdminServicePackageForm({ categories, initial }: AdminSe
                     )
                   }
                 />
-                <Input
-                  type="number"
-                  min={1}
-                  max={5}
+                <Select
                   value={benefit.tier}
-                  placeholder="Tier"
+                  options={BOOST_TIER_OPTIONS}
+                  title="Ranking strength — only used by JOB_BOOST"
                   onChange={(event) =>
                     setBenefits((previous) =>
                       previous.map((item, position) =>
