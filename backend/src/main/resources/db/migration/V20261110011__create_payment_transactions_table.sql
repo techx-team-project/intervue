@@ -1,0 +1,20 @@
+CREATE TABLE payment_transactions (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    sepay_id VARCHAR(40) NOT NULL,
+    gateway VARCHAR(100) NULL,
+    account_number VARCHAR(30) NULL,
+    content TEXT NULL,
+    amount_in BIGINT UNSIGNED NOT NULL,
+    reference_code VARCHAR(100) NULL,
+    transaction_at TIMESTAMP NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    matched_order_id BIGINT UNSIGNED NULL,
+    matched_by_admin_id BIGINT UNSIGNED NULL,
+    note VARCHAR(500) NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    CONSTRAINT fk_payment_transactions_order FOREIGN KEY (matched_order_id) REFERENCES orders (id),
+    UNIQUE KEY uk_payment_transactions_sepay (sepay_id),
+    INDEX idx_payment_transactions_status_at (status, transaction_at),
+    INDEX idx_payment_transactions_order (matched_order_id)
+);

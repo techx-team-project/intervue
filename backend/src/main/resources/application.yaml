@@ -95,6 +95,15 @@ oauth:
     client-id: ${GOOGLE_CLIENT_ID:}
     client-secret: ${GOOGLE_CLIENT_SECRET:}
 
+sepay:
+  base-url: https://my.sepay.vn
+  qr-base-url: https://qr.sepay.vn
+  api-token: ${SEPAY_API_TOKEN:}
+  timeout: 15s
+  sync:
+    cron: "0 */2 * * * *"
+    limit: 100
+
 sms:
   esms:
     base-url: https://rest.esms.vn
