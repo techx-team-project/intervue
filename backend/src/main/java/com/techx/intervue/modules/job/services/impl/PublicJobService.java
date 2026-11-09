@@ -34,8 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PublicJobService implements PublicJobServiceInterface {
 
+    // Paid boost outranks recency; ties fall back to the newest job
     private static final Sort NEWEST_FIRST =
-            Sort.by(Sort.Direction.DESC, "publishedAt").and(Sort.by(Sort.Direction.DESC, "id"));
+            Sort.by(Sort.Direction.DESC, "boostLevel")
+                    .and(Sort.by(Sort.Direction.DESC, "publishedAt"))
+                    .and(Sort.by(Sort.Direction.DESC, "id"));
 
     private static final int NEARBY_CANDIDATE_LIMIT = 500;
     private static final int NEARBY_RESULT_LIMIT = 100;
