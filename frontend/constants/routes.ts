@@ -78,6 +78,7 @@ export const ROUTES = {
   ADMIN_EDUCATION_CODES: '/admin/services/education-codes',
   ADMIN_FINANCE_ORDERS: '/admin/finance/orders',
   ADMIN_FINANCE_TRANSACTIONS: '/admin/finance/transactions',
+  ADMIN_FINANCE_SETTINGS: '/admin/finance/settings',
   ADMIN_FINANCE_REFUNDS: '/admin/finance/refunds',
   ADMIN_FINANCE_VAT_INVOICES: '/admin/finance/vat-invoices',
   ADMIN_FINANCE_REVENUE: '/admin/finance/revenue',
