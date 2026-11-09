@@ -10,6 +10,7 @@ export const CANDIDATE_JOBS_MENU = [
   { href: ROUTES.CANDIDATE_JOB_ALERTS, label: 'Job alerts' },
   { href: ROUTES.CANDIDATE_SAVED_JOBS, label: 'Saved jobs' },
   { href: ROUTES.CANDIDATE_INTERVIEWS, label: 'Interviews' },
+  { href: ROUTES.CANDIDATE_IDENTITY_VERIFICATION, label: 'Identity verification' },
 ];
 
 export const CANDIDATE_CV_MENU = [

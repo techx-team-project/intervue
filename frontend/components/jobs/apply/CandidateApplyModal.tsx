@@ -6,12 +6,14 @@ import Modal from '@/components/ui/Modal';
 import { ROUTES } from '@/constants/routes';
 import { useApplyForm } from '@/hooks/useCandidateApplication';
 import { useCandidateCvs } from '@/hooks/useCandidateCvs';
+import { useIdentityVerification } from '@/hooks/useIdentityVerification';
 import { useAuth } from '@/hooks/useAuth';
 import { getErrorMessage } from '@/utils/error';
 import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import ApplyDraftForm from './ApplyDraftForm';
+import ApplyIdentityGate from './ApplyIdentityGate';
 import ApplyReapplyView from './ApplyReapplyView';
 import ApplySubmittedView from './ApplySubmittedView';
 
@@ -32,9 +34,10 @@ interface CandidateApplyModalProps {
 function ApplyContent({ job }: { job: ApplyJob }) {
   const form = useApplyForm(job.id, true);
   const resumes = useCandidateCvs();
+  const identity = useIdentityVerification();
   const [justSubmitted, setJustSubmitted] = useState(false);
 
-  if (form.isLoading || resumes.isLoading) {
+  if (form.isLoading || resumes.isLoading || identity.isLoading) {
     return (
       <div className="flex justify-center py-12">
         <Spinner />
@@ -66,6 +69,9 @@ function ApplyContent({ job }: { job: ApplyJob }) {
   }
   if (application && application.status !== 'DRAFT' && application.status !== 'WITHDRAWN') {
     return <ApplySubmittedView application={application} />;
+  }
+  if (identity.data?.required && identity.data.status !== 'APPROVED') {
+    return <ApplyIdentityGate identity={identity.data} />;
   }
   if (application?.status === 'WITHDRAWN') {
     return <ApplyReapplyView application={application} resumes={resumes.data} open={form.data.open} />;
