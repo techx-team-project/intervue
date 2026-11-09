@@ -229,10 +229,10 @@ class CvReviewServiceTest {
 
         when(aiCvReviewRepository.findById(10L)).thenReturn(Optional.of(review));
 
-        // When another user requests the review, forbidden exception is thrown
+        // When another user requests the review, not found exception is thrown (prevents IDOR)
         assertThatThrownBy(() -> cvReviewService.getReviewById(otherUserId, 10L))
                 .isInstanceOf(AppException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.FORBIDDEN);
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND);
 
         // When the owner requests, it succeeds
         CvReviewResult result = cvReviewService.getReviewById(ownerUserId, 10L);
