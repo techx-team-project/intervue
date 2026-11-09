@@ -10,7 +10,11 @@ import com.techx.intervue.modules.entitlement.repositories.EntitlementUsageRepos
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -54,15 +58,39 @@ public class EntitlementService implements EntitlementServiceInterface {
 
     @Override
     @Transactional
-    public boolean consumeJobSlot(Long companyId, Long jobId, Long recruiterId) {
+    public Optional<Integer> consumeJobSlot(Long companyId, Long jobId, Long recruiterId) {
+        return spend(companyId, EntitlementType.JOB_POST_SLOT, jobId, recruiterId)
+                .map(CompanyEntitlement::getDurationDays);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Set<Long> companiesWithAlertPush(Collection<Long> companyIds) {
+        if (companyIds.isEmpty()) {
+            return Set.of();
+        }
+        return entitlementRepository
+                .findAllByCompanyIdInAndEntitlementTypeAndStatus(
+                        companyIds, EntitlementType.JOB_ALERT_PUSH, EntitlementStatus.AVAILABLE)
+                .stream()
+                .map(CompanyEntitlement::getCompanyId)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    @Transactional
+    public boolean consumeAlertPush(Long companyId, Long jobId) {
+        return spend(companyId, EntitlementType.JOB_ALERT_PUSH, jobId, null).isPresent();
+    }
+
+    // Nearest activation deadline first, so stock that would expire soonest is used up first
+    private Optional<CompanyEntitlement> spend(
+            Long companyId, EntitlementType type, Long jobId, Long recruiterId) {
         List<CompanyEntitlement> candidates =
                 entitlementRepository
                         .findAllByCompanyIdAndEntitlementTypeAndStatusOrderByActivationDeadlineAsc(
-                                companyId,
-                                EntitlementType.JOB_POST_SLOT,
-                                EntitlementStatus.AVAILABLE);
+                                companyId, type, EntitlementStatus.AVAILABLE);
 
-        // Nearest deadline first so stock that would expire soonest is used up first
         for (CompanyEntitlement candidate : candidates) {
             if (entitlementRepository.consume(candidate.getId(), 1) == 0) {
                 continue;
@@ -71,7 +99,7 @@ public class EntitlementService implements EntitlementServiceInterface {
                     EntitlementUsage.builder()
                             .entitlementId(candidate.getId())
                             .companyId(companyId)
-                            .entitlementType(EntitlementType.JOB_POST_SLOT)
+                            .entitlementType(type)
                             .jobId(jobId)
                             .quantity(1)
                             .activatedByRecruiterId(recruiterId)
@@ -79,9 +107,9 @@ public class EntitlementService implements EntitlementServiceInterface {
                             .endsAt(endsAt(candidate.getDurationDays()))
                             .status(EntitlementUsageStatus.ACTIVE)
                             .build());
-            return true;
+            return Optional.of(candidate);
         }
-        return false;
+        return Optional.empty();
     }
 
     static Instant endsAt(Integer durationDays) {

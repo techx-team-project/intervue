@@ -198,7 +198,10 @@ public enum ErrorCode {
             "This service is used automatically and cannot be applied to a job!"),
     ADDON_REQUIRES_ACTIVE_JOB(
             HttpStatus.UNPROCESSABLE_CONTENT,
-            "Choose a published job of your company to apply this service to!");
+            "Choose a published job of your company to apply this service to!"),
+    JOB_DEADLINE_EXCEEDS_PACKAGE(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "The deadline is later than the package you bought allows!");
 
     private final HttpStatus status;
     private final String message;

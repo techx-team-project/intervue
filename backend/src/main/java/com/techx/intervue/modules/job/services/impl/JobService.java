@@ -25,10 +25,12 @@ import com.techx.intervue.modules.job.resources.JobSummaryResource;
 import com.techx.intervue.modules.job.services.interfaces.JobApplicationLookupInterface;
 import com.techx.intervue.modules.job.services.interfaces.JobServiceInterface;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -190,10 +192,19 @@ public class JobService implements JobServiceInterface {
 
     // A slot is spent only on the first publish; resuming a paused job must not cost another one.
     private void consumeJobSlot(Job job, Long recruiterId) {
-        boolean consumed =
+        Optional<Integer> durationDays =
                 entitlementService.consumeJobSlot(job.getCompanyId(), job.getId(), recruiterId);
-        if (!consumed && billingProperties.requiresJobSlot()) {
-            throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
+        if (durationDays.isEmpty()) {
+            if (billingProperties.requiresJobSlot()) {
+                throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
+            }
+            return;
+        }
+        // Rejecting rolls the whole publish back, which returns the slot we just took
+        LocalDate latestAllowed = JobDeadlines.today().plusDays(durationDays.get());
+        if (job.getDeadline() != null && job.getDeadline().isAfter(latestAllowed)) {
+            throw AppException.validation(
+                    "deadline", "The package you bought runs until " + latestAllowed);
         }
     }
 

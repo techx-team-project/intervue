@@ -4,6 +4,7 @@ import com.techx.intervue.modules.entitlement.entities.CompanyEntitlement;
 import com.techx.intervue.modules.entitlement.enums.EntitlementStatus;
 import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,9 @@ public interface CompanyEntitlementRepository extends JpaRepository<CompanyEntit
     List<CompanyEntitlement> findAllByCompanyIdOrderByCreatedAtDesc(Long companyId);
 
     Optional<CompanyEntitlement> findByIdAndCompanyId(Long id, Long companyId);
+
+    List<CompanyEntitlement> findAllByCompanyIdInAndEntitlementTypeAndStatus(
+            Collection<Long> companyIds, EntitlementType entitlementType, EntitlementStatus status);
 
     List<CompanyEntitlement>
             findAllByCompanyIdAndEntitlementTypeAndStatusOrderByActivationDeadlineAsc(
