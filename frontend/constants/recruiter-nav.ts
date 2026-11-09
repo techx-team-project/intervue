@@ -63,7 +63,7 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
   {
     title: 'Services',
     items: [
-      { label: 'Service packages', href: ROUTES.RECRUITER_SERVICES, icon: ShoppingBag, comingSoon: true },
+      { label: 'Service packages', href: ROUTES.RECRUITER_SERVICES, icon: ShoppingBag },
       { label: 'Cart', href: ROUTES.RECRUITER_CART, icon: ShoppingCart },
       { label: 'Transaction history', href: ROUTES.RECRUITER_SERVICES_TRANSACTIONS, icon: Receipt, comingSoon: true },
     ],
