@@ -112,6 +112,16 @@ public class PublicJobService implements PublicJobServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
+    public Map<Long, Long> findCompanyIdsByJobIds(Collection<Long> jobIds) {
+        if (jobIds.isEmpty()) {
+            return Map.of();
+        }
+        return jobRepository.findAllById(jobIds).stream()
+                .collect(Collectors.toMap(Job::getId, Job::getCompanyId, (first, second) -> first));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public boolean isAvailable(Long jobId) {
         return jobRepository.existsByIdAndStatusAndDeadlineGreaterThanEqual(
                 jobId, JobStatus.PUBLISHED, JobDeadlines.today());
