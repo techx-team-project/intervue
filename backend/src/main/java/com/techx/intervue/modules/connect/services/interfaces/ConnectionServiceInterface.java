@@ -7,6 +7,7 @@ import com.techx.intervue.modules.connect.resources.ConversationSummaryResource;
 import com.techx.intervue.modules.connect.resources.EligibleCandidateResource;
 import com.techx.intervue.modules.connect.resources.InvitationResource;
 import com.techx.intervue.modules.connect.resources.MessageResource;
+import com.techx.intervue.modules.moderation.enums.ReportReasonCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,4 +51,11 @@ public interface ConnectionServiceInterface {
 
     AttachmentContent downloadAttachment(
             ConnectActorType actorType, Long actorId, Long connectionId, Long messageId);
+
+    void report(
+            ConnectActorType actorType,
+            Long actorId,
+            Long connectionId,
+            ReportReasonCode reasonCode,
+            String reasonNote);
 }

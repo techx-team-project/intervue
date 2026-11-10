@@ -26,9 +26,15 @@ import com.techx.intervue.modules.connect.services.interfaces.CandidateEligibili
 import com.techx.intervue.modules.connect.services.interfaces.CandidateEligibilityPortInterface.EligibleCandidate;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectModerationServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectQuotaServiceInterface;
+import com.techx.intervue.modules.connect.services.interfaces.ConnectSseServiceInterface;
+import com.techx.intervue.modules.connect.services.interfaces.ConnectUnreadServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectionServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.LinkPreviewServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.LinkPreviewServiceInterface.LinkPreview;
+import com.techx.intervue.modules.moderation.enums.ReportReasonCode;
+import com.techx.intervue.modules.moderation.enums.ReportTargetType;
+import com.techx.intervue.modules.moderation.enums.ReporterType;
+import com.techx.intervue.modules.moderation.services.interfaces.ReportServiceInterface;
 import com.techx.intervue.modules.notification.enums.NotificationType;
 import com.techx.intervue.modules.notification.enums.RecipientType;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface;
@@ -64,6 +70,9 @@ public class ConnectionService implements ConnectionServiceInterface {
     private final ConnectModerationServiceInterface moderationService;
     private final LinkPreviewServiceInterface linkPreviewService;
     private final StorageServiceInterface storageService;
+    private final ConnectSseServiceInterface sseService;
+    private final ConnectUnreadServiceInterface unreadService;
+    private final ReportServiceInterface reportService;
     private final ConnectMapper mapper;
 
     @Override
@@ -228,7 +237,9 @@ public class ConnectionService implements ConnectionServiceInterface {
                                 .linkDescription(preview.map(LinkPreview::description).orElse(null))
                                 .linkImageUrl(preview.map(LinkPreview::imageUrl).orElse(null))
                                 .build());
-        return mapper.toMessage(message);
+        MessageResource resource = mapper.toMessage(message);
+        notifyRecipients(connection, actorType, resource);
+        return resource;
     }
 
     @Override
@@ -274,7 +285,9 @@ public class ConnectionService implements ConnectionServiceInterface {
                                 .attachmentContentType(stored.contentType())
                                 .attachmentFileSizeBytes(stored.sizeInBytes())
                                 .build());
-        return mapper.toMessage(message);
+        MessageResource resource = mapper.toMessage(message);
+        notifyRecipients(connection, actorType, resource);
+        return resource;
     }
 
     @Override
@@ -282,6 +295,7 @@ public class ConnectionService implements ConnectionServiceInterface {
     public Page<MessageResource> listMessages(
             ConnectActorType actorType, Long actorId, Long connectionId, Pageable pageable) {
         requireParticipant(connectionId, actorType, actorId);
+        unreadService.clear(actorType, actorId, connectionId);
         Pageable newestFirst =
                 PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), NEWEST_FIRST);
         return messageRepository
@@ -319,6 +333,48 @@ public class ConnectionService implements ConnectionServiceInterface {
         connection.setBlockedByActorType(actorType);
         connection.setBlockedByActorId(actorId);
         connection.setBlockedAt(Instant.now());
+    }
+
+    @Override
+    public void report(
+            ConnectActorType actorType,
+            Long actorId,
+            Long connectionId,
+            ReportReasonCode reasonCode,
+            String reasonNote) {
+        requireParticipant(connectionId, actorType, actorId);
+        ReporterType reporterType =
+                actorType == ConnectActorType.CANDIDATE
+                        ? ReporterType.CANDIDATE
+                        : ReporterType.RECRUITER;
+        reportService.file(
+                reporterType,
+                actorId,
+                ReportTargetType.CONVERSATION,
+                connectionId,
+                reasonCode,
+                reasonNote);
+    }
+
+    private void notifyRecipients(
+            Connection connection, ConnectActorType senderType, MessageResource message) {
+        if (senderType == ConnectActorType.CANDIDATE) {
+            companyService
+                    .findActiveMemberIds(connection.getCompanyId())
+                    .forEach(
+                            recruiterId -> {
+                                sseService.publish(
+                                        ConnectActorType.RECRUITER, recruiterId, message);
+                                unreadService.increment(
+                                        ConnectActorType.RECRUITER,
+                                        recruiterId,
+                                        connection.getId());
+                            });
+        } else {
+            Long candidateId = connection.getCandidateId();
+            sseService.publish(ConnectActorType.CANDIDATE, candidateId, message);
+            unreadService.increment(ConnectActorType.CANDIDATE, candidateId, connection.getId());
+        }
     }
 
     private Connection requireParticipant(
