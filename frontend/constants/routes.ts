@@ -35,7 +35,7 @@ export const ROUTES = {
   RECRUITER_CANDIDATES: '/recruiter/candidates',
   RECRUITER_CANDIDATES_SAVED: '/recruiter/candidates/saved',
   RECRUITER_INTERVIEWS: '/recruiter/interviews',
-  RECRUITER_MESSAGES: '/recruiter/messages',
+  RECRUITER_MESSAGES: '/recruiter/conversations',
   RECRUITER_COMPANY: '/recruiter/company',
   RECRUITER_COMPANY_VERIFICATION: '/recruiter/company/verification',
   RECRUITER_COMPANY_PHONE_VERIFY: '/recruiter/company/verification/phone',

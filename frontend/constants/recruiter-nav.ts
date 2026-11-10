@@ -47,7 +47,7 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
       { label: 'Saved candidates', href: ROUTES.RECRUITER_CANDIDATES_SAVED, icon: Bookmark },
       { label: 'Candidate search', href: ROUTES.RECRUITER_CANDIDATES, icon: Users, comingSoon: true },
       { label: 'Interviews', href: ROUTES.RECRUITER_INTERVIEWS, icon: CalendarClock },
-      { label: 'Messages', href: ROUTES.RECRUITER_MESSAGES, icon: MessageSquare, comingSoon: true },
+      { label: 'Messages', href: ROUTES.RECRUITER_MESSAGES, icon: MessageSquare },
     ],
   },
   {

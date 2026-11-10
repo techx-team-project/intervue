@@ -193,12 +193,22 @@ public class ConnectionService implements ConnectionServiceInterface {
     public Page<ConversationSummaryResource> recruiterConversations(
             Long recruiterId, Pageable pageable) {
         Long companyId = companyScope.companyIdOf(recruiterId);
-        return connectionRepository
-                .findByCompanyIdAndStatusIn(
+        Page<Connection> connections =
+                connectionRepository.findByCompanyIdAndStatusIn(
                         companyId,
                         List.of(ConnectionStatus.PENDING, ConnectionStatus.ACCEPTED),
-                        pageable)
-                .map(mapper::toConversationSummary);
+                        pageable);
+        Map<Long, Long> unreadByConnection =
+                unreadService.breakdown(ConnectActorType.RECRUITER, recruiterId);
+        return connections.map(
+                connection ->
+                        mapper.toConversationSummary(
+                                connection,
+                                unreadByConnection.getOrDefault(connection.getId(), 0L),
+                                messageRepository
+                                        .findFirstByConnectionIdOrderByCreatedAtDesc(
+                                                connection.getId())
+                                        .orElse(null)));
     }
 
     private Connection requirePending(Long connectionId, Long candidateId) {

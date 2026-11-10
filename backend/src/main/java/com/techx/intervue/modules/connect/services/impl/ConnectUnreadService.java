@@ -3,6 +3,8 @@ package com.techx.intervue.modules.connect.services.impl;
 import com.techx.intervue.modules.connect.enums.ConnectActorType;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectUnreadServiceInterface;
 import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -30,6 +32,16 @@ public class ConnectUnreadService implements ConnectUnreadServiceInterface {
     public long total(ConnectActorType actorType, Long actorId) {
         Collection<String> values = ops().values(key(actorType, actorId));
         return values.stream().mapToLong(Long::parseLong).sum();
+    }
+
+    @Override
+    public Map<Long, Long> breakdown(ConnectActorType actorType, Long actorId) {
+        Map<String, String> entries = ops().entries(key(actorType, actorId));
+        return entries.entrySet().stream()
+                .collect(
+                        Collectors.toMap(
+                                entry -> Long.valueOf(entry.getKey()),
+                                entry -> Long.valueOf(entry.getValue())));
     }
 
     private HashOperations<String, String, String> ops() {
