@@ -11,6 +11,7 @@ public enum AuditTargetType {
     JOB,
     SERVICE_CATEGORY,
     SERVICE_PACKAGE,
+    CREDIT_PRICE,
     BILLING_SETTINGS,
     PAYMENT_TRANSACTION
 }
