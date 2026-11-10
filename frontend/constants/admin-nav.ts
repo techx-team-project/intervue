@@ -144,10 +144,10 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             comingSoon: false,
           },
           {
-            label: 'Pricing & quotas',
+            label: 'Credit prices',
             href: ROUTES.ADMIN_SERVICE_PRICING,
             permission: 'services.manage',
-            comingSoon: true,
+            comingSoon: false,
           },
           {
             label: 'Education codes',
