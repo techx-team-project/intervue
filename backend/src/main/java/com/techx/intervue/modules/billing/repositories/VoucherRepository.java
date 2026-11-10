@@ -15,8 +15,10 @@ public interface VoucherRepository
 
     boolean existsByCode(String code);
 
-    // Single atomic statement: two checkouts racing for the last redemption cannot both win
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    // Single atomic statement: two checkouts racing for the last redemption cannot both win.
+    // No clearAutomatically: the voucher is never edited in memory, and clearing would detach the
+    // order being built in the same transaction.
+    @Modifying(flushAutomatically = true)
     @Query(
             """
             update Voucher voucher
@@ -26,7 +28,7 @@ public interface VoucherRepository
             """)
     int claim(@Param("id") Long id);
 
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Modifying(flushAutomatically = true)
     @Query(
             """
             update Voucher voucher
