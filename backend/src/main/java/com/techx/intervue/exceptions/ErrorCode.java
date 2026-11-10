@@ -253,7 +253,14 @@ public enum ErrorCode {
             HttpStatus.CONFLICT, "A connection with this candidate already exists!"),
     NOT_ELIGIBLE_TO_CONNECT(
             HttpStatus.UNPROCESSABLE_CONTENT,
-            "This candidate has not applied to your company yet!");
+            "This candidate has not applied to your company yet!"),
+    CONNECTION_NOT_ACCEPTED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This connection has not been accepted yet!"),
+    CONNECTION_BLOCKED(HttpStatus.FORBIDDEN, "This conversation has been blocked!"),
+    MESSAGE_BLOCKED_BY_FILTER(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This message contains inappropriate content!"),
+    CONNECT_MUTED(
+            HttpStatus.FORBIDDEN, "You have been temporarily restricted from sending messages!");
 
     private final HttpStatus status;
     private final String message;
