@@ -1,8 +1,15 @@
 package com.techx.intervue.modules.moderation.services.interfaces;
 
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.modules.moderation.enums.ReportReasonCode;
+import com.techx.intervue.modules.moderation.enums.ReportResolveAction;
+import com.techx.intervue.modules.moderation.enums.ReportStatus;
 import com.techx.intervue.modules.moderation.enums.ReportTargetType;
 import com.techx.intervue.modules.moderation.enums.ReporterType;
+import com.techx.intervue.modules.moderation.resources.AdminReportDetailResource;
+import com.techx.intervue.modules.moderation.resources.AdminReportSummaryResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ReportServiceInterface {
 
@@ -13,4 +20,19 @@ public interface ReportServiceInterface {
             Long targetId,
             ReportReasonCode reasonCode,
             String reasonNote);
+
+    Page<AdminReportSummaryResource> search(
+            ReportTargetType targetType, ReportStatus status, Pageable pageable);
+
+    AdminReportDetailResource get(Long reportId);
+
+    void dismiss(Long reportId, String note, RequestActor actor);
+
+    void resolve(
+            Long reportId,
+            ReportResolveAction action,
+            String note,
+            ReporterType lockActorType,
+            Long lockActorId,
+            RequestActor actor);
 }
