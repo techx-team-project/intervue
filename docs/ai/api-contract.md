@@ -400,12 +400,22 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | Method | Path | Auth | Notes |
 |---|---|---|---|
 | `POST` | `/recruiter/ai/resume-match` | recruiter | Moved out of `/ai/**`: `SecurityConfig` denies recruiter tokens outside `/api/v1/recruiter/**`, so the old path answered `403` for everyone. |
-| `POST` | `/recruiter/ai/applications/{id}/analyze` | recruiter | Same move. |
+| `POST` | `/recruiter/ai/applications/{id}/resume-match` | recruiter | No body. The server resolves job title, requirements (one per line of `jobs.requirements`, max 25) and CV text from the application itself, so the client cannot invent requirements. `404` when the application is not in the recruiter's company, `422 JOB_REQUIREMENTS_MISSING` / `CV_TEXT_NOT_READABLE`. |
 | `GET` | `/recruiter/ai/resume-match/quota` | recruiter | `{ freeUsedThisMonth, freeLimit, freeRemaining, paidRemaining, totalRemaining, resetAt }`. |
 
 - **Free tier plus top-up.** Each company gets `ai.quota.resume-match-free-per-month` analyses a month (default 30, Redis key `ai:quota:resume_match:{companyId}:{yyyy-MM}`, resets at the first of the month Vietnam time). Beyond that, one `AI_RESUME_MATCH` entitlement unit is spent per analysis. With neither left the call answers `422 AI_USER_QUOTA_EXCEEDED`.
 - Quota is **checked before** the model call and **spent after** it succeeds, so a failed analysis never costs a paid unit. The existing per-user daily AI quota (`ai.quota.user-per-day`) still applies on top and covers the gap between check and spend.
 - These controllers are **synchronous**. Returning `CompletableFuture` made Spring Security re-evaluate the `ASYNC` dispatch without a `SecurityContext`, which answered `401` even when the analysis had succeeded and the quota had already been spent.
+
+## Paid company branding
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/companies/featured?limit=` | public | `FeaturedCompanyResource[]` `{ id, name, logoUrl, industry }` — companies whose `featured_until` is still in the future, newest window first. Max `limit` 20. |
+
+- `GET /recruiter/company` now also returns `photoLimit`, `brandPageUntil`, `featuredUntil`. The limit is **3 photos** on the free tier and **10** while a `BRAND_PAGE` window is open; `addPhotos` enforces the same number.
+- `FEATURED_COMPANY` and `BRAND_PAGE` are activated **on the company**, so `POST /recruiter/entitlements/{id}/activate` accepts an empty body for them. Buying again while a window is open **extends** it instead of restarting it.
+- The home page lists featured companies first and fills the remaining slots from recent job posts, so the section never looks empty before anyone has bought the slot.
 
 ## Error codes
 
@@ -420,6 +430,8 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `FORBIDDEN` | 403 | Role/ownership failure |
 | `NOT_FOUND` | 404 | |
 | `METHOD_NOT_ALLOWED` | 405 | The HTTP method is not supported by this endpoint |
+| `JOB_REQUIREMENTS_MISSING` | 422 | The job has no requirement lines, so there is nothing for the AI to match against |
+| `CV_TEXT_NOT_READABLE` | 422 | The CV attached to the application could not be read as text (scanned image, corrupt file) |
 | `PACKAGE_NOT_AVAILABLE` | 404 | Unknown slug/id, or the service package is not `ACTIVE` |
 | `DUPLICATE_PACKAGE_CODE` | 409 | A service category or package already uses this `code`/`slug` |
 | `SERVICE_CATEGORY_IN_USE` | 409 | The category still has packages and cannot be deleted |
