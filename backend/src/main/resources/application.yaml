@@ -146,6 +146,10 @@ seed:
       email: local.admin@intervue.test
       name: Local Admin
       roles: [ADMIN]
+    admin2:
+      email: local.admin2@intervue.test
+      name: Local Admin 2
+      roles: [ADMIN]
     candidate:
       email: local.candidate@intervue.test
       name: Local Candidate
