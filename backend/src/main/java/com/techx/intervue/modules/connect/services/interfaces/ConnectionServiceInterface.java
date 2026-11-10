@@ -47,6 +47,8 @@ public interface ConnectionServiceInterface {
     Page<MessageResource> listMessages(
             ConnectActorType actorType, Long actorId, Long connectionId, Pageable pageable);
 
+    Page<MessageResource> adminListMessages(Long connectionId, Pageable pageable);
+
     void block(ConnectActorType actorType, Long actorId, Long connectionId);
 
     AttachmentContent downloadAttachment(

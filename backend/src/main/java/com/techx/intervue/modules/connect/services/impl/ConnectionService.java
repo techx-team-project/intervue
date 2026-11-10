@@ -294,8 +294,22 @@ public class ConnectionService implements ConnectionServiceInterface {
     @Transactional(readOnly = true)
     public Page<MessageResource> listMessages(
             ConnectActorType actorType, Long actorId, Long connectionId, Pageable pageable) {
-        requireParticipant(connectionId, actorType, actorId);
+        Connection connection = requireParticipant(connectionId, actorType, actorId);
         unreadService.clear(actorType, actorId, connectionId);
+        boolean redact = connection.getContentHiddenAt() != null;
+        Pageable newestFirst =
+                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), NEWEST_FIRST);
+        return messageRepository
+                .findByConnectionId(connectionId, newestFirst)
+                .map(message -> mapper.toMessage(message, redact));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<MessageResource> adminListMessages(Long connectionId, Pageable pageable) {
+        if (!connectionRepository.existsById(connectionId)) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
         Pageable newestFirst =
                 PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), NEWEST_FIRST);
         return messageRepository
