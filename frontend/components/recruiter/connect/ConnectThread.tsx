@@ -14,9 +14,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 type ConnectThreadProps = {
   conversation: ConversationSummary;
+  onBack?: () => void;
 };
 
-export default function ConnectThread({ conversation }: ConnectThreadProps) {
+export default function ConnectThread({ conversation, onBack }: ConnectThreadProps) {
   const queryClient = useQueryClient();
   const { messages, isLoading, hasOlder, isLoadingOlder, loadOlder } = useConversationMessages(conversation.id);
   const { ref: topSentinelRef, inView: topInView } = useInView<HTMLDivElement>();
@@ -68,6 +69,7 @@ export default function ConnectThread({ conversation }: ConnectThreadProps) {
         conversation={conversation}
         onBlock={() => setBlockDialogOpen(true)}
         onReport={() => setReportModalOpen(true)}
+        onBack={onBack}
       />
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
