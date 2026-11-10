@@ -198,6 +198,10 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "You have used up this service, please buy more!"),
     ENTITLEMENT_EXPIRED(
             HttpStatus.UNPROCESSABLE_CONTENT, "This service has passed its activation deadline!"),
+    INVOICE_NOT_ISSUED_YET(
+            HttpStatus.UNPROCESSABLE_CONTENT, "The invoice is issued once the order is paid!"),
+    INVOICE_RENDER_FAILED(
+            HttpStatus.INTERNAL_SERVER_ERROR, "The invoice document could not be produced!"),
     VOUCHER_NOT_FOUND(HttpStatus.NOT_FOUND, "This voucher code does not exist!"),
     DUPLICATE_VOUCHER_CODE(HttpStatus.CONFLICT, "A voucher already uses this code!"),
     VOUCHER_NOT_USABLE(

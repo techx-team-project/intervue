@@ -6,6 +6,7 @@ import com.techx.intervue.modules.billing.enums.OrderStatus;
 import com.techx.intervue.modules.billing.mappers.OrderMapper;
 import com.techx.intervue.modules.billing.repositories.OrderItemRepository;
 import com.techx.intervue.modules.billing.resources.ServicePackageBenefitResource;
+import com.techx.intervue.modules.billing.services.interfaces.InvoiceServiceInterface;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface.EntitlementGrant;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class OrderFulfillmentService {
     private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
     private final EntitlementServiceInterface entitlementService;
+    private final InvoiceServiceInterface invoiceService;
 
     /**
      * Turns a paid order into company entitlements. Runs inside the caller's transaction so a
@@ -50,6 +52,7 @@ public class OrderFulfillmentService {
             entitlementService.grant(
                     order.getCompanyId(), order.getPurchasedByRecruiterId(), grants);
         }
+        invoiceService.issueFor(order);
         order.setStatus(OrderStatus.FULFILLED);
     }
 }
