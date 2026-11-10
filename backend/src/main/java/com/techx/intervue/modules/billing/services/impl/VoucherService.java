@@ -86,16 +86,24 @@ public class VoucherService implements VoucherServiceInterface {
     @Override
     @Transactional
     public void claim(AppliedVoucher applied, Long orderId, Long companyId) {
-        if (voucherRepository.claim(applied.voucher().getId()) == 0) {
+        Voucher voucher = applied.voucher();
+        if (voucherRepository.claim(voucher.getId()) == 0) {
             throw new AppException(ErrorCode.VOUCHER_EXHAUSTED);
         }
-        redemptionRepository.save(
+        redemptionRepository.saveAndFlush(
                 VoucherRedemption.builder()
-                        .voucherId(applied.voucher().getId())
+                        .voucherId(voucher.getId())
                         .orderId(orderId)
                         .companyId(companyId)
                         .discountAmount(applied.discountAmount())
                         .build());
+
+        // Counted again after the write: two checkouts racing would both have read the old count
+        if (voucher.getPerCompanyLimit() != null
+                && redemptionRepository.countByVoucherIdAndCompanyId(voucher.getId(), companyId)
+                        > voucher.getPerCompanyLimit()) {
+            throw new AppException(ErrorCode.VOUCHER_ALREADY_USED);
+        }
     }
 
     @Override
