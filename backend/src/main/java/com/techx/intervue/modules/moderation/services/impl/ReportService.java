@@ -30,6 +30,8 @@ import com.techx.intervue.modules.user.requests.RestrictUserRequest;
 import com.techx.intervue.modules.user.services.interfaces.UserAdminServiceInterface;
 import java.time.Instant;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +47,8 @@ public class ReportService implements ReportServiceInterface {
     // recruiter_refresh_tokens.revoked_reason is VARCHAR(32) - keep this short and code-like,
     // same style as RecruiterService's own DELETION_REQUESTED_REASON/ACCOUNT_PURGED_REASON.
     private static final String RECRUITER_SUSPEND_REASON = "CONNECT_VIOLATION";
+    private static final Pattern SYSTEM_ACTOR_PATTERN =
+            Pattern.compile("Actor:\\s*(CANDIDATE|RECRUITER)#(\\d+)");
 
     private final ReportRepository reportRepository;
     private final ReportMapper reportMapper;
@@ -116,8 +120,16 @@ public class ReportService implements ReportServiceInterface {
         Report report = requirePending(reportId);
 
         switch (action) {
-            case HIDE_CONTENT -> contentHidePort.hideContent(report.getTargetId());
-            case LOCK_ACCOUNT -> lockAccount(lockActorType, lockActorId, note, actor);
+            case HIDE_CONTENT -> {
+                if (report.getTargetType() != ReportTargetType.CONVERSATION
+                        || report.getTargetId() == null
+                        || report.getTargetId() <= 0) {
+                    throw AppException.validation(
+                            "action", "No conversation exists to hide for this report");
+                }
+                contentHidePort.hideContent(report.getTargetId());
+            }
+            case LOCK_ACCOUNT -> lockAccount(report, lockActorType, lockActorId, note, actor);
             case NONE -> {
                 // Reviewed, nothing punitive - the note alone is the outcome.
             }
@@ -136,18 +148,55 @@ public class ReportService implements ReportServiceInterface {
     }
 
     private void lockAccount(
-            ReporterType lockActorType, Long lockActorId, String note, RequestActor actor) {
-        if (lockActorType == null || lockActorId == null || lockActorType == ReporterType.SYSTEM) {
+            Report report,
+            ReporterType lockActorType,
+            Long lockActorId,
+            String note,
+            RequestActor actor) {
+        ReporterType resolvedType = lockActorType;
+        Long resolvedId = lockActorId;
+
+        if (resolvedId == null
+                && report.getReporterType() == ReporterType.SYSTEM
+                && report.getReasonNote() != null) {
+            Matcher matcher = SYSTEM_ACTOR_PATTERN.matcher(report.getReasonNote());
+            if (matcher.find()) {
+                resolvedType = ReporterType.valueOf(matcher.group(1));
+                resolvedId = Long.parseLong(matcher.group(2));
+            }
+        }
+
+        if (resolvedId == null
+                && report.getTargetType() == ReportTargetType.CONVERSATION
+                && report.getTargetId() != null
+                && report.getTargetId() > 0) {
+            var participantsOpt = contentHidePort.findParticipants(report.getTargetId());
+            if (participantsOpt.isPresent()) {
+                var participants = participantsOpt.get();
+                if (resolvedType == null) {
+                    resolvedType =
+                            report.getReporterType() == ReporterType.RECRUITER
+                                    ? ReporterType.CANDIDATE
+                                    : ReporterType.RECRUITER;
+                }
+                resolvedId =
+                        resolvedType == ReporterType.CANDIDATE
+                                ? participants.candidateId()
+                                : participants.initiatedByRecruiterId();
+            }
+        }
+
+        if (resolvedType == null || resolvedId == null || resolvedType == ReporterType.SYSTEM) {
             throw AppException.validation(
                     "lockActorType", "Specify which candidate or recruiter account to lock");
         }
-        if (lockActorType == ReporterType.CANDIDATE) {
+        if (resolvedType == ReporterType.CANDIDATE) {
             userAdminService.restrict(
-                    lockActorId,
+                    resolvedId,
                     new RestrictUserRequest(LOCK_REASON, blankToNull(note), true, null),
                     actor);
         } else {
-            recruiterService.suspend(lockActorId, RECRUITER_SUSPEND_REASON);
+            recruiterService.suspend(resolvedId, RECRUITER_SUSPEND_REASON);
         }
     }
 
