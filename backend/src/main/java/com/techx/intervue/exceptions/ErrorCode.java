@@ -246,7 +246,14 @@ public enum ErrorCode {
             "Choose a published job of your company to apply this service to!"),
     JOB_DEADLINE_EXCEEDS_PACKAGE(
             HttpStatus.UNPROCESSABLE_CONTENT,
-            "The deadline is later than the package you bought allows!");
+            "The deadline is later than the package you bought allows!"),
+    CONNECTION_QUOTA_EXCEEDED(
+            HttpStatus.TOO_MANY_REQUESTS, "You have reached your daily invitation limit!"),
+    CONNECTION_ALREADY_EXISTS(
+            HttpStatus.CONFLICT, "A connection with this candidate already exists!"),
+    NOT_ELIGIBLE_TO_CONNECT(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "This candidate has not applied to your company yet!");
 
     private final HttpStatus status;
     private final String message;
