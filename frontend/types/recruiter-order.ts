@@ -70,6 +70,7 @@ export interface CheckoutPayload {
   identityNumber?: string;
   personalAddress?: string;
   recipientEmail: string;
+  voucherCode?: string;
   termsAccepted: boolean;
 }
 
