@@ -1,5 +1,6 @@
 'use client';
 
+import AdSlot from '@/components/common/AdSlot';
 import PageHero from '@/components/common/PageHero';
 import Pagination from '@/components/common/Pagination';
 import Spinner from '@/components/common/Spinner';
@@ -91,6 +92,8 @@ export default function PublicJobsListView() {
           </div>
         ) : (
           <>
+            <AdSlot code="JOBS_TOP" className="mb-4" />
+
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {jobs.map((job) => (
                 <PublicJobCard key={job.id} job={job} />

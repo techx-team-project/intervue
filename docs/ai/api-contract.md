@@ -442,6 +442,26 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 - **Revenue is counted, never estimated.** `collectedTotal` sums `paid_amount` over every order that money reached — including refunded ones, because the money did arrive — while `refundedTotal` sums the **approved** refund amounts, so `netTotal` is what the platform actually still holds. `pendingTotal` is what open orders still owe. Months with no collection simply do not appear.
 - **Refunds return only what was never activated.** A line that delivered several benefits shares its value across them by unit count, because a benefit carries no price of its own; the result is then scaled by `subtotal_after_discount / subtotal` so a discounted order cannot be over-refunded. Approving revokes the untouched units (`EntitlementStatus.REVOKED`) and leaves anything already running on a job alone. **The system never moves money** — SePay's user API has no payout; an admin makes the transfer by hand and records the amount.
 
+## Banner advertising
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/ads/slots/{code}` | **public** | The banner running this ISO week, the house ad when nobody bought it, or `null` when the slot has neither. Counts an impression in Redis. |
+| `POST` | `/ads/slots/{code}/click` | **public** | One click per IP per slot per minute is counted; the rest are dropped. |
+| `GET` | `/recruiter/ads/slots` | recruiter | Every slot on sale with its size and weekly price. |
+| `GET` | `/recruiter/ads/slots/{code}/calendar?weeks=` | recruiter | Which weeks are free, and which are already the caller's. |
+| `GET` | `/recruiter/ads/bookings` | recruiter | The company's weeks with artwork status and totals. |
+| `POST` | `/recruiter/ads/bookings/{id}/creative` | recruiter | `multipart/form-data`: `file` plus a `data` part `{ targetUrl, altText }`. |
+| `GET`/`PUT` | `/admin/ads/slots[/{id}]` | admin | Price, description, house ad and whether the slot is on sale. Audited as `AD_SLOT_UPDATED`. |
+| `GET` | `/admin/ads/creatives?status=` | admin | Artwork queue. |
+| `POST` | `/admin/ads/creatives/{id}/approve`, `/reject` | admin | Audited as `AD_CREATIVE_APPROVED` / `AD_CREATIVE_REJECTED`. |
+
+- **Inventory is whole ISO weeks**, never arbitrary date ranges. That turns overlap checking into `UNIQUE (ad_slot_id, week_start)` and lets the database settle a tie between two buyers instead of application locking. The current week is never on sale — it is already running.
+- **Weeks are held the moment the order is placed** (`RESERVED`), become `BOOKED` when the money arrives, and are deleted when the order is cancelled or expires. A row is deleted rather than flagged because a `RELEASED` row would keep holding the unique key. An `UNDERPAID` order keeps its hold until the order itself expires — the buyer did send real money.
+- **A banner is bought through the normal cart**, so it shares one checkout, VAT, voucher, invoice and refund path with every other package. The chosen weeks ride along in `cart_items.meta_json` / `order_items.meta_json`; quantity must equal the number of weeks.
+- **Nothing goes live unreviewed.** Every upload, including a replacement, returns to `PENDING`. A week whose artwork is not approved in time shows the house ad and is **not** extended.
+- **Views never touch the database.** Impressions and clicks accumulate in Redis and a job flushes them into `ad_metrics` every five minutes.
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -459,6 +479,11 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `CV_TEXT_NOT_READABLE` | 422 | The CV attached to the application could not be read as text (scanned image, corrupt file) |
 | `PACKAGE_NOT_AVAILABLE` | 404 | Unknown slug/id, or the service package is not `ACTIVE` |
 | `INSUFFICIENT_CREDITS` | 422 | The company does not hold enough credits for this exchange |
+| `AD_SLOT_NOT_FOUND` | 404 | Unknown or inactive advertising slot |
+| `AD_SLOT_UNAVAILABLE` | 409 | Another buyer took one of the chosen weeks first |
+| `AD_WEEKS_REQUIRED` | 422 | A banner line was submitted without any week |
+| `AD_BOOKING_NOT_READY` | 422 | Artwork can only be uploaded once the order is paid |
+| `AD_CREATIVE_ALREADY_REVIEWED` | 409 | The artwork was already approved or rejected |
 | `CREDIT_PRICE_NOT_AVAILABLE` | 404 | No active credit price for that service and tier |
 | `VOUCHER_NOT_FOUND` | 404 | Unknown code |
 | `VOUCHER_NOT_USABLE` | 422 | Inactive, not started yet, or past its end date |

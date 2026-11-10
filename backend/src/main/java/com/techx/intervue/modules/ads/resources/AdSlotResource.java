@@ -13,4 +13,7 @@ public record AdSlotResource(
         Integer height,
         Long pricePerWeek,
         String packageSlug,
+        String houseImageUrl,
+        String houseTargetUrl,
+        Integer displayOrder,
         boolean active) {}
