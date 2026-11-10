@@ -13,4 +13,6 @@ public interface ConnectionMessageRepository extends JpaRepository<ConnectionMes
     Page<ConnectionMessage> findByConnectionId(Long connectionId, Pageable pageable);
 
     Optional<ConnectionMessage> findByIdAndConnectionId(Long id, Long connectionId);
+
+    Optional<ConnectionMessage> findFirstByConnectionIdOrderByCreatedAtDesc(Long connectionId);
 }

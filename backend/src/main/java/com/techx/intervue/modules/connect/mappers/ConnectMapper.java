@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConnectMapper {
 
+    private static final int PREVIEW_MAX_LENGTH = 80;
+
     public InvitationResource toInvitation(Connection connection, String openingMessage) {
         return InvitationResource.builder()
                 .id(connection.getId())
@@ -21,6 +23,11 @@ public class ConnectMapper {
     }
 
     public ConversationSummaryResource toConversationSummary(Connection connection) {
+        return toConversationSummary(connection, 0, null);
+    }
+
+    public ConversationSummaryResource toConversationSummary(
+            Connection connection, long unreadCount, ConnectionMessage latestMessage) {
         return ConversationSummaryResource.builder()
                 .id(connection.getId())
                 .status(connection.getStatus())
@@ -30,7 +37,37 @@ public class ConnectMapper {
                 .candidateName(connection.getCandidateName())
                 .invitedAt(connection.getInvitedAt())
                 .respondedAt(connection.getRespondedAt())
+                .unreadCount(unreadCount)
+                .lastMessageAt(latestMessage == null ? null : latestMessage.getCreatedAt())
+                .lastMessagePreview(
+                        latestMessage == null
+                                ? null
+                                : lastMessagePreview(connection, latestMessage))
                 .build();
+    }
+
+    private String lastMessagePreview(Connection connection, ConnectionMessage message) {
+        if (connection.getContentHiddenAt() != null) {
+            return "Nội dung đã được ẩn";
+        }
+        return switch (message.getMessageType()) {
+            case IMAGE -> "Đã gửi một hình ảnh";
+            case FILE -> "Đã gửi một tệp đính kèm";
+            case LINK ->
+                    message.getLinkTitle() != null
+                            ? message.getLinkTitle()
+                            : truncate(message.getBody());
+            case TEXT -> truncate(message.getBody());
+        };
+    }
+
+    private String truncate(String text) {
+        if (text == null) {
+            return null;
+        }
+        return text.length() > PREVIEW_MAX_LENGTH
+                ? text.substring(0, PREVIEW_MAX_LENGTH) + "…"
+                : text;
     }
 
     public MessageResource toMessage(ConnectionMessage message) {

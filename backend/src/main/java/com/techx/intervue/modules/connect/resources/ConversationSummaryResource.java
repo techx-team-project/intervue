@@ -15,4 +15,7 @@ public record ConversationSummaryResource(
         Long candidateId,
         String candidateName,
         Instant invitedAt,
-        Instant respondedAt) {}
+        Instant respondedAt,
+        long unreadCount,
+        Instant lastMessageAt,
+        String lastMessagePreview) {}
