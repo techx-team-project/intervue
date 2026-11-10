@@ -167,7 +167,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         label: 'Finance',
         icon: Wallet,
         children: [
-          { label: 'Orders', href: ROUTES.ADMIN_FINANCE_ORDERS, permission: 'finance.manage', comingSoon: true },
+          { label: 'Orders', href: ROUTES.ADMIN_FINANCE_ORDERS, permission: 'finance.manage', comingSoon: false },
           {
             label: 'Transactions',
             href: ROUTES.ADMIN_FINANCE_TRANSACTIONS,
@@ -192,7 +192,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             label: 'Revenue reports',
             href: ROUTES.ADMIN_FINANCE_REVENUE,
             permission: 'finance.manage',
-            comingSoon: true,
+            comingSoon: false,
           },
         ],
       },
