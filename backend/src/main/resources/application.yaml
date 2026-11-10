@@ -98,6 +98,12 @@ oauth:
 
 billing:
   require-job-slot: ${BILLING_REQUIRE_JOB_SLOT:false}
+  seller:
+    name: ${BILLING_SELLER_NAME:InterVue}
+    tax-code: ${BILLING_SELLER_TAX_CODE:}
+    address: ${BILLING_SELLER_ADDRESS:}
+    email: ${BILLING_SELLER_EMAIL:}
+    phone: ${BILLING_SELLER_PHONE:}
 
 sepay:
   base-url: https://my.sepay.vn
