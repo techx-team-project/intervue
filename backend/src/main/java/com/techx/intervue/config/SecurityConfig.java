@@ -86,6 +86,10 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/v1/job-alerts/**")
                                         .permitAll()
+                                        // Banners are served to guests, so the slot and the click
+                                        // counter have to answer without a token
+                                        .requestMatchers("/api/v1/ads/slots/**")
+                                        .permitAll()
                                         .requestMatchers(HttpMethod.GET, "/api/v1/skills")
                                         .permitAll()
                                         .requestMatchers(
