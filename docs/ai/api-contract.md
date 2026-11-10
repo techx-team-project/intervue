@@ -467,8 +467,9 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 Chat between a Candidate and a company's Recruiters (`modules/connect`). A `connection` is one per
 `(candidate, company)` pair, not per job. Wave 1 built the invitation lifecycle; wave 2 added free
 messaging, attachments, link preview, block and the content filter; wave 3 added real-time delivery,
-the unread counter and the human-facing report endpoint; wave 4 (below) adds the admin report queue,
-hide-content and lock-account. All frontend is still to come.
+the unread counter and the human-facing report endpoint; wave 4 added the admin report queue,
+hide-content and lock-account; wave 5 (below) is the recruiter frontend plus the two backend additions
+it needed. Candidate frontend is still to come (wave 6).
 
 **Lifecycle (wave 1)**
 
@@ -525,6 +526,16 @@ hide-content and lock-account. All frontend is still to come.
 - **`HIDE_CONTENT`** sets `connections.content_hidden_at` (via a `moderation → connect` port, same declare-in-consumer/implement-in-owner shape as `entitlement`↔`job`/`company`). From that point, `GET .../messages` for the **candidate and recruiter** on that connection returns every message with `body`/attachment/link fields stripped to `null` — only `id`/`senderType`/`senderId`/`messageType`/`createdAt` survive. The admin endpoint above is the one exception, by design.
 - **`LOCK_ACCOUNT` needs `lockActorType` (`CANDIDATE`/`RECRUITER`) and `lockActorId` explicitly** — `moderation` has no way to infer which side of a company-wide conversation is the offender; the admin decides after reading the conversation and says so directly. `CANDIDATE` reuses the existing ban flow (`UserAdminServiceInterface.restrict`, a real `UserRestriction` row, session killed, user notified). `RECRUITER` calls the **first-ever** `RecruiterServiceInterface.suspend(...)` — sets `RecruiterStatus.SUSPENDED`, kills the session, revokes refresh tokens; `RecruiterAuthService`'s existing `ensureSignInAllowed` check now actually rejects login for the first time (that enum value existed with nothing that ever set it). No restriction-history table or un-suspend path for recruiters yet — deliberately out of scope, same minimal-fix spirit as the gap note that asked for this.
 - **Every dismiss/resolve notifies the reporter** (`REPORT_DISMISSED`/`REPORT_RESOLVED`, resolved from the report's own `reporterType` — no cross-module lookup) and writes one `AuditAction.REPORT_DISMISSED`/`REPORT_RESOLVED` entry (`AuditTargetType.REPORT`, detail = the action taken).
+
+**Recruiter frontend (wave 5)** — two small additive backend changes the UI needed, both found missing
+from the wave 1 design during implementation:
+
+| Method | Path | Notes |
+|---|---|---|
+| `GET` | `/recruiter/connect/rules-ack` | `ConnectRulesAckResource { acknowledged, acknowledgedAt }`. Per-account, backed by `connect_rules_acknowledgements` (`UNIQUE(actor_type, actor_id)`) — wave 1's design called for this endpoint but it was never implemented until now. Candidate's mirror (`/candidate/connect/rules-ack`) is wave 6's job, same service. |
+| `POST` | `/recruiter/connect/rules-ack` | Idempotent — acknowledging twice keeps the first `acknowledgedAt`. |
+
+- **`ConversationSummaryResource` gained `unreadCount`, `lastMessageAt`, `lastMessagePreview`** — the recruiter conversation list needed a last-message preview and a per-row unread flag (the "Chưa đọc" tab) and neither existed; `GET .../unread-count` only ever returned a `total` sum. `unreadCount` reads the same Redis hash wave 3 built (`ConnectUnreadServiceInterface.breakdown`, one `HGETALL`, no schema change); `lastMessageAt`/`lastMessagePreview` come from one extra `findFirstByConnectionIdOrderByCreatedAtDesc` query per connection in the returned page (accepted as a bounded N+1 — page size is capped at 100). `lastMessagePreview` is a short Vietnamese label for `IMAGE`/`FILE`, the link title for `LINK`, truncated body for `TEXT`, or "Nội dung đã được ẩn" if the connection's content is hidden. Only `recruiterConversations` populates real values this wave; the candidate-side resource still returns `unreadCount: 0` and no last-message fields (harmless — the field isn't nullable so `@JsonInclude(NON_NULL)` can't hide it — wave 6 wires it properly).
 
 ## Error codes
 
