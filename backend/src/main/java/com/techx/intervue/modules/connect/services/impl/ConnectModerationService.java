@@ -18,6 +18,8 @@ import com.techx.intervue.modules.moderation.services.interfaces.ReportServiceIn
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,10 +54,22 @@ public class ConnectModerationService implements ConnectModerationServiceInterfa
         }
         String normalized = text.toLowerCase();
         for (ConnectFilterWord word : filterWordRepository.findByActiveTrue()) {
-            boolean matched =
-                    word.isRegex()
-                            ? normalized.matches(".*" + word.getPattern().toLowerCase() + ".*")
-                            : normalized.contains(word.getPattern().toLowerCase());
+            boolean matched;
+            if (word.isRegex()) {
+                try {
+                    Pattern pattern =
+                            Pattern.compile(
+                                    word.getPattern(),
+                                    Pattern.CASE_INSENSITIVE
+                                            | Pattern.DOTALL
+                                            | Pattern.UNICODE_CASE);
+                    matched = pattern.matcher(text).find();
+                } catch (PatternSyntaxException e) {
+                    matched = normalized.contains(word.getPattern().toLowerCase());
+                }
+            } else {
+                matched = normalized.contains(word.getPattern().toLowerCase());
+            }
             if (matched) {
                 recordViolation(actorType, actorId, connectionId, word);
                 throw new AppException(ErrorCode.MESSAGE_BLOCKED_BY_FILTER);
