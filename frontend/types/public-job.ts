@@ -18,6 +18,9 @@ export interface PublicJobSummaryResource {
   skills: SkillResource[];
   deadline?: string;
   publishedAt?: string;
+  boostLevel?: number;
+  highlightLabel?: 'URGENT' | 'HOT' | null;
+  highlighted?: boolean;
 }
 
 export interface NearbyJobResource {

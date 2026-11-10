@@ -28,6 +28,9 @@ public record CompanyResource(
         String logoUrl,
         List<CompanyPhotoResource> photos,
         boolean profileComplete,
+        int photoLimit,
+        Instant brandPageUntil,
+        Instant featuredUntil,
         List<String> missingFields,
         Instant createdAt,
         Instant updatedAt) {}

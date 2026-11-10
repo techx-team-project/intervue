@@ -35,8 +35,15 @@ com.techx.intervue
    ├─ ai/             CV feedback, mock interview, matching, cover letter, chatbot (RAG)
    ├─ notification/   in-app, email, push
    ├─ content/        blog, FAQ
+   ├─ billing/        service catalog, cart, orders, payments (SePay), vouchers, invoices
+   ├─ entitlement/    what a company owns and may consume (quota ledger)
+   ├─ ads/            ad slots, weekly bookings, creatives, serving                      [planned]
    └─ admin/          moderation, verification review, reports
 ```
+
+Money and rights are separate modules on purpose: `billing` owns payment, `entitlement` owns what a
+company may consume. The dependency is one-way — `billing`, `job` and `ai` may depend on
+`entitlement`; `entitlement` never imports a peer module.
 
 Each module:
 

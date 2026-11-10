@@ -59,6 +59,8 @@ export interface RecruiterJobSummaryResource {
   openings: number;
   deadline?: string;
   publishedAt?: string;
+  boostLevel?: number;
+  highlightLabel?: 'URGENT' | 'HOT' | null;
   updatedAt: string;
 }
 
@@ -84,6 +86,12 @@ export interface RecruiterJobResource {
   hiddenAt?: string;
   createdAt: string;
   updatedAt: string;
+  boostLevel?: number;
+  boostExpiresAt?: string;
+  highlightLabel?: 'URGENT' | 'HOT' | null;
+  highlightLabelExpiresAt?: string;
+  highlighted?: boolean;
+  highlightExpiresAt?: string;
 }
 
 export interface RecruiterJobCounts {
@@ -131,4 +139,6 @@ export interface RecruiterJobPost {
   updatedAt: string;
   expiresAt?: string;
   publishedAt?: string;
+  boostLevel?: number;
+  highlightLabel?: 'URGENT' | 'HOT' | null;
 }

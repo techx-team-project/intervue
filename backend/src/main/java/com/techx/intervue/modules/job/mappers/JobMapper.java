@@ -82,6 +82,12 @@ public class JobMapper {
                 .publishedAt(job.getPublishedAt())
                 .hiddenReason(job.getHiddenReason())
                 .hiddenAt(job.getHiddenAt())
+                .boostLevel(job.getBoostLevel())
+                .boostExpiresAt(job.getBoostExpiresAt())
+                .highlightLabel(job.getHighlightLabel())
+                .highlightLabelExpiresAt(job.getHighlightLabelExpiresAt())
+                .highlighted(job.getHighlighted())
+                .highlightExpiresAt(job.getHighlightExpiresAt())
                 .createdAt(job.getCreatedAt())
                 .updatedAt(job.getUpdatedAt())
                 .build();
@@ -100,6 +106,8 @@ public class JobMapper {
                 .openings(job.getOpenings())
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
+                .boostLevel(job.getBoostLevel())
+                .highlightLabel(job.getHighlightLabel())
                 .updatedAt(job.getUpdatedAt())
                 .build();
     }
@@ -134,6 +142,9 @@ public class JobMapper {
                 .skills(toSkills(job))
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
+                .boostLevel(job.getBoostLevel())
+                .highlightLabel(job.getHighlightLabel())
+                .highlighted(job.getHighlighted())
                 .build();
     }
 

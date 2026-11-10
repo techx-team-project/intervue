@@ -135,7 +135,13 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             label: 'Service packages',
             href: ROUTES.ADMIN_SERVICE_PACKAGES,
             permission: 'services.manage',
-            comingSoon: true,
+            comingSoon: false,
+          },
+          {
+            label: 'Service categories',
+            href: ROUTES.ADMIN_SERVICE_CATEGORIES,
+            permission: 'services.manage',
+            comingSoon: false,
           },
           {
             label: 'Pricing & quotas',
@@ -161,7 +167,13 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             href: ROUTES.ADMIN_FINANCE_TRANSACTIONS,
             queue: 'unmatchedTransactions',
             permission: 'finance.manage',
-            comingSoon: true,
+            comingSoon: false,
+          },
+          {
+            label: 'Payment settings',
+            href: ROUTES.ADMIN_FINANCE_SETTINGS,
+            permission: 'finance.manage',
+            comingSoon: false,
           },
           { label: 'Refunds', href: ROUTES.ADMIN_FINANCE_REFUNDS, permission: 'finance.manage', comingSoon: true },
           {

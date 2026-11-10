@@ -38,6 +38,11 @@ public enum ErrorCode {
     AI_REQUEST_REFUSED(
             HttpStatus.UNPROCESSABLE_CONTENT, "The AI service declined to process this request!"),
     AI_PROMPT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "The AI prompt is not available!"),
+    JOB_REQUIREMENTS_MISSING(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "This job has no requirements to match the resume against!"),
+    CV_TEXT_NOT_READABLE(
+            HttpStatus.UNPROCESSABLE_CONTENT, "The attached CV could not be read as text!"),
     ACCOUNT_BANNED(HttpStatus.FORBIDDEN, "This account has been banned!"),
     ACCOUNT_ALREADY_RESTRICTED(HttpStatus.CONFLICT, "This account is already banned!"),
     ACCOUNT_NOT_RESTRICTED(HttpStatus.CONFLICT, "This account has no restriction to lift!"),
@@ -161,7 +166,47 @@ public enum ErrorCode {
             HttpStatus.NOT_FOUND, "No account yet, sign up and accept the terms first!"),
     SOCIAL_LOGIN_NOT_ALLOWED(
             HttpStatus.FORBIDDEN, "This account cannot sign in with a social provider!"),
-    PASSWORD_NOT_SET(HttpStatus.UNPROCESSABLE_CONTENT, "Set a password first!");
+    PASSWORD_NOT_SET(HttpStatus.UNPROCESSABLE_CONTENT, "Set a password first!"),
+    PACKAGE_NOT_AVAILABLE(HttpStatus.NOT_FOUND, "This service package is not available!"),
+    DUPLICATE_PACKAGE_CODE(
+            HttpStatus.CONFLICT, "A service package with this code or slug already exists!"),
+    SERVICE_CATEGORY_IN_USE(
+            HttpStatus.CONFLICT, "This category still has service packages and cannot be removed!"),
+    BILLING_NOT_CONFIGURED(
+            HttpStatus.SERVICE_UNAVAILABLE,
+            "Billing is not configured yet, please try again later!"),
+    CART_EMPTY(HttpStatus.UNPROCESSABLE_CONTENT, "Your cart is empty!"),
+    CART_ITEM_LIMIT_EXCEEDED(HttpStatus.UNPROCESSABLE_CONTENT, "Your cart is full!"),
+    TOO_MANY_PENDING_ORDERS(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "You have too many unpaid orders, please finish or cancel one first!"),
+    ORDER_NOT_PAYABLE(HttpStatus.UNPROCESSABLE_CONTENT, "This order can no longer be paid!"),
+    ORDER_EXPIRED(HttpStatus.UNPROCESSABLE_CONTENT, "This order has expired!"),
+    TRIAL_ALREADY_USED(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "Your company has already bought this one-time package!"),
+    PAYMENT_NOT_CONFIGURED(
+            HttpStatus.SERVICE_UNAVAILABLE,
+            "Online payment is not available yet, please contact support!"),
+    PAYMENT_PROVIDER_ERROR(
+            HttpStatus.BAD_GATEWAY, "The payment provider returned an unexpected error!"),
+    PAYMENT_SYNC_RUNNING(
+            HttpStatus.CONFLICT, "A payment reconciliation run is already in progress!"),
+    TRANSACTION_ALREADY_MATCHED(
+            HttpStatus.CONFLICT, "This bank transaction is already linked to an order!"),
+    ENTITLEMENT_EXHAUSTED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "You have used up this service, please buy more!"),
+    ENTITLEMENT_EXPIRED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This service has passed its activation deadline!"),
+    ENTITLEMENT_NOT_ACTIVATABLE(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "This service is used automatically and cannot be applied to a job!"),
+    ADDON_REQUIRES_ACTIVE_JOB(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "Choose a published job of your company to apply this service to!"),
+    JOB_DEADLINE_EXCEEDS_PACKAGE(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "The deadline is later than the package you bought allows!");
 
     private final HttpStatus status;
     private final String message;

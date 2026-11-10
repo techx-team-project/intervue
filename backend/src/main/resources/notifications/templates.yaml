@@ -283,3 +283,29 @@ templates:
 
       Hồ sơ đang chờ quản trị viên thẩm định.
     actionLabel: "Mở hàng chờ"
+  ORDER_CREATED:
+    title: "Đơn hàng {orderCode} đã được tạo"
+    summary: "{buyerName} vừa tạo đơn hàng {orderCode} trị giá {totalAmount}."
+    body: |
+      **{buyerName}** vừa tạo đơn hàng **{orderCode}** cho doanh nghiệp.
+
+      Tổng tiền (đã gồm VAT): **{totalAmount}**
+
+      Đơn hàng được giữ đến **{expiresAt}**. Sau thời điểm này đơn sẽ tự hết hạn.
+    actionLabel: "Xem đơn hàng"
+  ORDER_PAID:
+    title: "Đơn hàng {orderCode} đã thanh toán thành công"
+    summary: "InterVue đã nhận được {paidAmount} cho đơn hàng {orderCode}."
+    body: |
+      InterVue đã nhận được thanh toán cho đơn hàng **{orderCode}**.
+
+      Số tiền nhận được: **{paidAmount}**
+    actionLabel: "Xem đơn hàng"
+  ORDER_UNDERPAID:
+    title: "Đơn hàng {orderCode} chưa đủ số tiền"
+    summary: "Đơn {orderCode} còn thiếu {missingAmount}."
+    body: |
+      InterVue đã nhận được **{paidAmount}** cho đơn hàng **{orderCode}**, nhưng tổng đơn là **{totalAmount}**.
+
+      Vui lòng chuyển bổ sung **{missingAmount}** với cùng nội dung chuyển khoản **{orderCode}** trước **{expiresAt}**.
+    actionLabel: "Xem đơn hàng"

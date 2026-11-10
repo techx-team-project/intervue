@@ -36,6 +36,12 @@ public record JobResource(
         Instant publishedAt,
         String hiddenReason,
         Instant hiddenAt,
+        Integer boostLevel,
+        Instant boostExpiresAt,
+        String highlightLabel,
+        Instant highlightLabelExpiresAt,
+        Boolean highlighted,
+        Instant highlightExpiresAt,
         Instant createdAt,
         Instant updatedAt) {
 

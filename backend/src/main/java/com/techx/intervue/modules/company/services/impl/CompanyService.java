@@ -31,6 +31,7 @@ import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.resources.CompanySummaryResource;
+import com.techx.intervue.modules.company.resources.FeaturedCompanyResource;
 import com.techx.intervue.modules.company.resources.PublicCompanyResource;
 import com.techx.intervue.modules.company.resources.TaxLookupResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
@@ -54,7 +55,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class CompanyService implements CompanyServiceInterface {
 
-    private static final int MAX_PHOTOS = 10;
     private static final int PUBLIC_PROFILE_CANDIDATES = 20;
     private static final String LOGO_FOLDER = "companies/logos";
     private static final String PHOTO_FOLDER = "companies/photos";
@@ -69,6 +69,7 @@ public class CompanyService implements CompanyServiceInterface {
     private final TaxCodeLookupInterface taxCodeLookup;
     private final CompanyMapper companyMapper;
     private final CompanyProfileCompleteness completeness;
+    private final CompanyBrandingPolicy brandingPolicy;
     private final CompanyLinker companyLinker;
     private final CompanyAuditor companyAuditor;
     private final ApplicationEventPublisher eventPublisher;
@@ -77,6 +78,49 @@ public class CompanyService implements CompanyServiceInterface {
     @Transactional(readOnly = true)
     public CompanyResource findMyCompany(Long userId) {
         return buildResource(requireMembership(userId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FeaturedCompanyResource> findFeatured(int limit) {
+        return companyRepository.findFeatured(Instant.now(), PageRequest.of(0, limit)).stream()
+                .map(
+                        company -> {
+                            CompanyProfile profile = publicProfileOf(company.getId());
+                            return FeaturedCompanyResource.builder()
+                                    .id(company.getId())
+                                    .name(company.getName())
+                                    .industry(profile == null ? null : profile.getIndustry())
+                                    .logoUrl(
+                                            profile == null
+                                                    ? null
+                                                    : companyMapper.logoUrlOf(profile))
+                                    .build();
+                        })
+                .toList();
+    }
+
+    private CompanyProfile publicProfileOf(Long companyId) {
+        List<CompanyProfile> candidates =
+                companyProfileRepository.findByCompanyAndMemberStatus(
+                        companyId,
+                        CompanyMemberStatus.ACTIVE,
+                        PageRequest.of(0, PUBLIC_PROFILE_CANDIDATES));
+        return candidates.stream()
+                .filter(candidate -> candidate.getDescription() != null)
+                .findFirst()
+                .or(() -> candidates.stream().findFirst())
+                .orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> findActiveMemberIds(Long companyId) {
+        return companyMemberRepository
+                .findByCompanyIdAndStatus(companyId, CompanyMemberStatus.ACTIVE)
+                .stream()
+                .map(CompanyMember::getUserId)
+                .toList();
     }
 
     // Not transactional: the registry lookup is an external call and must not hold a transaction.
@@ -242,9 +286,10 @@ public class CompanyService implements CompanyServiceInterface {
         CompanyProfile profile = profileOf(membership);
 
         long existing = companyPhotoRepository.countByProfileId(profile.getId());
-        if (existing + files.size() > MAX_PHOTOS) {
+        int allowed = brandingPolicy.photoLimit(membership.getCompany());
+        if (existing + files.size() > allowed) {
             throw AppException.validation(
-                    "photos", "A company can keep at most " + MAX_PHOTOS + " photos");
+                    "photos", "A company can keep at most " + allowed + " photos");
         }
 
         int sortOrder = (int) existing;

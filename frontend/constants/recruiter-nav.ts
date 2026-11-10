@@ -12,6 +12,7 @@ import {
   MessageSquare,
   Receipt,
   ShieldCheck,
+  PackageOpen,
   ShoppingBag,
   ShoppingCart,
   Smartphone,
@@ -63,8 +64,10 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
   {
     title: 'Services',
     items: [
-      { label: 'Service packages', href: ROUTES.RECRUITER_SERVICES, icon: ShoppingBag, comingSoon: true },
+      { label: 'Service packages', href: ROUTES.RECRUITER_SERVICES, icon: ShoppingBag },
+      { label: 'My services', href: ROUTES.RECRUITER_SERVICES_MY, icon: PackageOpen },
       { label: 'Cart', href: ROUTES.RECRUITER_CART, icon: ShoppingCart },
+      { label: 'Orders', href: ROUTES.RECRUITER_ORDERS, icon: Receipt },
       { label: 'Transaction history', href: ROUTES.RECRUITER_SERVICES_TRANSACTIONS, icon: Receipt, comingSoon: true },
     ],
   },

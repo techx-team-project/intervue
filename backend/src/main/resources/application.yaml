@@ -77,6 +77,7 @@ ai:
   quota:
     user-per-day: 30
     ip-per-hour: 10
+    resume-match-free-per-month: ${AI_RESUME_MATCH_FREE_PER_MONTH:30}
 
 storage:
   cloudinary-url: ${CLOUDINARY_URL:}
@@ -94,6 +95,18 @@ oauth:
   google:
     client-id: ${GOOGLE_CLIENT_ID:}
     client-secret: ${GOOGLE_CLIENT_SECRET:}
+
+billing:
+  require-job-slot: ${BILLING_REQUIRE_JOB_SLOT:false}
+
+sepay:
+  base-url: https://my.sepay.vn
+  qr-base-url: https://qr.sepay.vn
+  api-token: ${SEPAY_API_TOKEN:}
+  timeout: 15s
+  sync:
+    cron: "0 */2 * * * *"
+    limit: 100
 
 sms:
   esms:

@@ -523,6 +523,15 @@ public class UserAdminService implements UserAdminServiceInterface {
                     IDENTITY_VERIFICATION_ATTEMPTS_GRANTED,
                     IDENTITY_DOCUMENT_VIEWED ->
                     "identity";
+            case SERVICE_CATEGORY_CREATED,
+                    SERVICE_CATEGORY_UPDATED,
+                    SERVICE_CATEGORY_DELETED,
+                    SERVICE_PACKAGE_CREATED,
+                    SERVICE_PACKAGE_UPDATED,
+                    SERVICE_PACKAGE_STATUS_CHANGED,
+                    BILLING_SETTINGS_UPDATED,
+                    PAYMENT_TRANSACTION_MATCHED ->
+                    "billing";
         };
     }
 
@@ -589,6 +598,15 @@ public class UserAdminService implements UserAdminServiceInterface {
             case IDENTITY_VERIFICATION_ATTEMPTS_GRANTED ->
                     "Additional identity verification attempts granted";
             case IDENTITY_DOCUMENT_VIEWED -> "Identity document viewed by an admin";
+            case SERVICE_CATEGORY_CREATED,
+                    SERVICE_CATEGORY_UPDATED,
+                    SERVICE_CATEGORY_DELETED,
+                    SERVICE_PACKAGE_CREATED,
+                    SERVICE_PACKAGE_UPDATED,
+                    SERVICE_PACKAGE_STATUS_CHANGED,
+                    BILLING_SETTINGS_UPDATED,
+                    PAYMENT_TRANSACTION_MATCHED ->
+                    detail != null && !detail.isBlank() ? detail : "Service catalog activity";
         };
     }
 

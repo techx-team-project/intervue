@@ -3,6 +3,7 @@
 import { recruiterCompanyApi } from '@/apiRequest/recruiter-company';
 import Modal from '@/components/ui/Modal';
 import { ROUTES } from '@/constants/routes';
+import { formatDate } from '@/utils/datetime';
 import { useCompanyVerification } from '@/hooks/useCompanyVerification';
 import { getErrorMessage } from '@/utils/error';
 import type { CompanySummaryResource, SaveCompanyProfileRequest } from '@/types/recruiter-company';
@@ -1257,6 +1258,20 @@ export function CompanyProfileView() {
                   Showcase office spaces, team culture, and corporate events to boost candidate confidence. For optimal
                   display, choose photos with a 3:2 ratio (recommended: 1200 × 800 px).
                 </p>
+                {company && (
+                  <p className="text-on-surface-variant pt-1 text-xs">
+                    Đã dùng {allPhotos.length}/{company.photoLimit} ảnh.{' '}
+                    {company.brandPageUntil ? (
+                      <span className="font-semibold text-emerald-700">
+                        Trang thương hiệu đang chạy tới {formatDate(company.brandPageUntil)}.
+                      </span>
+                    ) : (
+                      <Link href={ROUTES.RECRUITER_SERVICES} className="text-primary font-semibold hover:underline">
+                        Mua gói Trang thương hiệu để tăng lên 10 ảnh
+                      </Link>
+                    )}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center gap-3">

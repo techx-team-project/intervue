@@ -7,6 +7,7 @@ import com.techx.intervue.modules.company.requests.SaveCompanyProfileRequest;
 import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.resources.CompanySummaryResource;
+import com.techx.intervue.modules.company.resources.FeaturedCompanyResource;
 import com.techx.intervue.modules.company.resources.PublicCompanyResource;
 import com.techx.intervue.modules.company.resources.TaxLookupResource;
 import java.util.Collection;
@@ -35,6 +36,10 @@ public interface CompanyServiceInterface {
     TaxLookupResource lookupTax(String taxCode);
 
     CompanySummaryResource findSummary(Long companyId);
+
+    List<Long> findActiveMemberIds(Long companyId);
+
+    List<FeaturedCompanyResource> findFeatured(int limit);
 
     PublicCompanyResource findPublic(Long companyId);
 

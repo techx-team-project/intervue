@@ -34,8 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PublicJobService implements PublicJobServiceInterface {
 
+    // Paid boost outranks recency; ties fall back to the newest job
     private static final Sort NEWEST_FIRST =
-            Sort.by(Sort.Direction.DESC, "publishedAt").and(Sort.by(Sort.Direction.DESC, "id"));
+            Sort.by(Sort.Direction.DESC, "boostLevel")
+                    .and(Sort.by(Sort.Direction.DESC, "publishedAt"))
+                    .and(Sort.by(Sort.Direction.DESC, "id"));
 
     private static final int NEARBY_CANDIDATE_LIMIT = 500;
     private static final int NEARBY_RESULT_LIMIT = 100;
@@ -105,6 +108,16 @@ public class PublicJobService implements PublicJobServiceInterface {
         String logo = logosOf(List.of(job)).get(job.getRecruiterId());
         String address = companyService.findSummary(job.getCompanyId()).address();
         return jobMapper.toPublicResource(job, logo, address);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<Long, Long> findCompanyIdsByJobIds(Collection<Long> jobIds) {
+        if (jobIds.isEmpty()) {
+            return Map.of();
+        }
+        return jobRepository.findAllById(jobIds).stream()
+                .collect(Collectors.toMap(Job::getId, Job::getCompanyId, (first, second) -> first));
     }
 
     @Override

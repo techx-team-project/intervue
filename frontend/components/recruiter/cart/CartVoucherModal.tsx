@@ -1,7 +1,6 @@
 'use client';
 
 import Modal from '@/components/ui/Modal';
-import { AVAILABLE_VOUCHERS } from '@/mocks/recruiter-cart.mock';
 import type { DiscountVoucher } from '@/types/recruiter-cart';
 import { Check, Tag, Ticket } from 'lucide-react';
 import { useState } from 'react';
@@ -12,7 +11,6 @@ interface CartVoucherModalProps {
   appliedVoucher: DiscountVoucher | null;
   onApplyVoucher: (code: string) => { success: boolean; message: string };
   onRemoveVoucher: () => void;
-  subtotal: number;
 }
 
 export default function CartVoucherModal({
@@ -21,7 +19,6 @@ export default function CartVoucherModal({
   appliedVoucher,
   onApplyVoucher,
   onRemoveVoucher,
-  subtotal,
 }: CartVoucherModalProps) {
   const [inputCode, setInputCode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -109,58 +106,11 @@ export default function CartVoucherModal({
           </div>
         )}
 
-        {/* Available coupons list */}
+        {/* Promotions are issued from Wave 6 onward; nothing to list yet */}
         <div className="border-outline-variant border-t pt-3">
           <p className="text-outline mb-2.5 text-xs font-bold tracking-wider uppercase">Available for you</p>
-
-          <div className="space-y-2.5">
-            {AVAILABLE_VOUCHERS.map((voucher) => {
-              const isApplied = appliedVoucher?.code === voucher.code;
-              const isEligible = !voucher.minOrderValue || subtotal >= voucher.minOrderValue;
-
-              return (
-                <div
-                  key={voucher.code}
-                  className={`flex items-start justify-between rounded-xl border p-3.5 transition ${
-                    isApplied
-                      ? 'border-primary bg-emerald-50/40 ring-1 ring-[#00b14f]'
-                      : isEligible
-                        ? 'border-outline-variant hover:border-primary/50 bg-white'
-                        : 'border-outline-variant bg-surface-container-low/60 opacity-60'
-                  }`}
-                >
-                  <div className="flex-1 pr-3">
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-bold tracking-wider text-emerald-800">
-                        {voucher.code}
-                      </span>
-                      <span className="text-on-surface text-xs font-bold">{voucher.label}</span>
-                    </div>
-                    <p className="text-on-surface-variant mt-1 text-xs">{voucher.description}</p>
-                    {voucher.minOrderValue && (
-                      <p className="text-label-sm text-outline mt-1">
-                        Min. order: {voucher.minOrderValue.toLocaleString('vi-VN')} VND
-                      </p>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    disabled={!isEligible || isApplied}
-                    onClick={() => handleApply(voucher.code)}
-                    className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
-                      isApplied
-                        ? 'bg-emerald-600 text-white'
-                        : isEligible
-                          ? 'border-primary text-primary hover:bg-primary cursor-pointer border hover:text-white'
-                          : 'border-outline-variant text-outline cursor-not-allowed border'
-                    }`}
-                  >
-                    {isApplied ? 'Applied' : 'Apply'}
-                  </button>
-                </div>
-              );
-            })}
+          <div className="border-outline-variant text-on-surface-variant rounded-xl border border-dashed px-4 py-8 text-center text-xs">
+            Hiện chưa có mã ưu đãi nào dành cho tài khoản của bạn.
           </div>
         </div>
       </div>

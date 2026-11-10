@@ -1,3 +1,5 @@
+import { JOB_HIGHLIGHT_LABEL, JOB_HIGHLIGHT_STYLE } from '@/constants/job-highlight';
+import { cn } from '@/lib/utils';
 import type { PublicJobSummaryResource } from '@/types/public-job';
 import { jobFacts } from '@/utils/public-job';
 import { formatSalary } from '@/utils/public-company';
@@ -16,7 +18,12 @@ export default function PublicJobCard({ job }: PublicJobCardProps) {
   const facts = jobFacts(job).slice(0, MAX_FACT_TAGS);
 
   return (
-    <article className="bg-surface hover:bg-primary-light hover:border-l-primary ease-standard hover:shadow-elevation-1 relative flex h-full flex-col justify-between gap-3 rounded-xl border-l-4 border-l-transparent p-4 transition-all duration-200 hover:-translate-y-0.5">
+    <article
+      className={cn(
+        'bg-surface hover:bg-primary-light hover:border-l-primary ease-standard hover:shadow-elevation-1 relative flex h-full flex-col justify-between gap-3 rounded-xl border-l-4 border-l-transparent p-4 transition-all duration-200 hover:-translate-y-0.5',
+        job.highlighted && 'border-l-primary bg-emerald-50/60',
+      )}
+    >
       <div className="flex gap-4">
         <Link href={`/companies/${job.company.id}`} aria-label={job.company.name} className="shrink-0">
           <CompanyLogo name={job.company.name} src={job.company.logoUrl} className="h-20 w-20 rounded-lg" />
@@ -24,6 +31,16 @@ export default function PublicJobCard({ job }: PublicJobCardProps) {
 
         <div className="min-w-0 flex-1 space-y-1 pr-8">
           <h3 className="text-title-md text-on-surface line-clamp-2 font-bold">
+            {job.highlightLabel && (
+              <span
+                className={cn(
+                  'mr-1.5 inline-block rounded px-1.5 py-0.5 align-middle text-[11px] font-extrabold',
+                  JOB_HIGHLIGHT_STYLE[job.highlightLabel],
+                )}
+              >
+                {JOB_HIGHLIGHT_LABEL[job.highlightLabel]}
+              </span>
+            )}
             <Link href={`/jobs/${job.id}`} className="hover:text-primary">
               {job.title}
             </Link>

@@ -22,4 +22,7 @@ public record PublicJobSummaryResource(
         JobResource.Salary salary,
         List<SkillResource> skills,
         LocalDate deadline,
-        Instant publishedAt) {}
+        Instant publishedAt,
+        Integer boostLevel,
+        String highlightLabel,
+        Boolean highlighted) {}

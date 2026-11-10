@@ -1,11 +1,26 @@
 export interface RecruiterCartItem {
-  id: string;
+  id: number;
+  packageId: number;
   code: string;
+  slug: string;
   name: string;
   description: string;
   unitPrice: number;
+  currency: string;
   quantity: number;
+  lineTotal: number;
+  validityDays: number | null;
+  oneTimePerCompany: boolean;
   selected?: boolean;
+}
+
+export interface RecruiterCart {
+  items: RecruiterCartItem[];
+  subtotal: number;
+  vatRate: number;
+  vatAmount: number;
+  totalAmount: number;
+  currency: string;
 }
 
 export type InvoiceType = 'business' | 'personal';
@@ -31,27 +46,4 @@ export interface DiscountVoucher {
   discountValue: number;
   minOrderValue?: number;
   description: string;
-}
-
-export interface CartCreatedOrder {
-  orderId: string;
-  orderCode: string;
-  createdAt: string;
-  expiresAt: string;
-  items: RecruiterCartItem[];
-  subtotal: number;
-  discountAmount: number;
-  discountCode?: string;
-  subtotalAfterDiscount: number;
-  vatRate: number;
-  vatAmount: number;
-  totalAmount: number;
-  invoiceType: InvoiceType;
-  invoiceData: BusinessInvoiceInfo | PersonalInvoiceInfo;
-  bankAccount: {
-    bankName: string;
-    accountNumber: string;
-    accountHolder: string;
-    transferSyntax: string;
-  };
 }

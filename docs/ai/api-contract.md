@@ -203,7 +203,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `GET` | `/admin/jobs/{id}` | admin | Full `JobResource`; `404` for a draft. |
 | `POST` | `/admin/jobs/{id}/hide` | admin | Body `{ reason }` (required, max 500). `PUBLISHED` or `PAUSED` to `HIDDEN_BY_ADMIN`; anything else is `422 INVALID_STATUS_TRANSITION`. Stores `hiddenReason`, `hiddenAt`, writes an audit entry (`JOB_HIDDEN`) and notifies the recruiter (`JOB_HIDDEN_BY_ADMIN`, mandatory). A hidden job is not `PUBLISHED`, so it leaves public search and detail. |
 | `POST` | `/admin/jobs/{id}/restore` | admin | `HIDDEN_BY_ADMIN` to `PUBLISHED`, or to `EXPIRED` when the deadline has passed. Clears the hidden fields, audits `JOB_RESTORED` and notifies the recruiter. |
-| `GET` | `/jobs?q=&city=&contractType=&workingArrangement=&level=&skillIds=&salaryFrom=&currency=&page=&size=` | public | `PageResource<PublicJobSummaryResource>` of `PUBLISHED` jobs whose deadline is today or later, newest first (client sort is ignored). `q` matches title or company name; `companyId` limits to one company; `city` is an exact match; `skillIds` matches any of up to 10; `salaryFrom` keeps non-negotiable jobs whose maximum is at least that amount in `currency` (default `VND`). Item: `{ id, title, company: { id, name, logoUrl? }, level, contractType, workingArrangement, city, salary, skills, deadline, publishedAt }`. |
+| `GET` | `/jobs?q=&city=&contractType=&workingArrangement=&level=&skillIds=&salaryFrom=&currency=&page=&size=` | public | `PageResource<PublicJobSummaryResource>` of `PUBLISHED` jobs whose deadline is today or later, ordered by **paid boost level first, then newest** (client sort is ignored). `q` matches title or company name; `companyId` limits to one company; `city` is an exact match; `skillIds` matches any of up to 10; `salaryFrom` keeps non-negotiable jobs whose maximum is at least that amount in `currency` (default `VND`). Item: `{ id, title, company: { id, name, logoUrl? }, level, contractType, workingArrangement, city, salary, skills, deadline, publishedAt, boostLevel, highlightLabel, highlighted }`. `highlightLabel` is `URGENT` or `HOT` and renders as a badge; `highlighted` tints the card. All three come from entitlements the company activated. |
 | `GET` | `/jobs/nearby?lat=&lng=&radiusKm=` | public | `NearbyJobResource[] { job: PublicJobSummaryResource, address?, latitude, longitude, distanceKm }` for `PUBLISHED`, not-expired jobs that have coordinates within `radiusKm` (1-100, default 10) of the point, nearest first, max 100. `400 VALIDATION_FAILED` for missing or out-of-range `lat` (-90..90) / `lng` (-180..180). |
 | `GET` | `/jobs/{id}` | public | `PublicJobResource` (summary fields plus `location`, `description`, `requirements`, `benefits`, `openings`, and `company.address`). `404 NOT_FOUND` unless the job is `PUBLISHED` and not past its deadline. Also returns `screening: { questionCount, requiredCount, estimatedMinutes }` so candidates see the effort before applying; the questions themselves are not public. |
 
@@ -317,6 +317,106 @@ Candidates submit a national ID and a portrait; an admin reviews them by hand (n
 
 Anything other than the stated source status returns `422 INVALID_STATUS_TRANSITION`.
 
+## Service catalog (billing)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/service-packages` | recruiter | The whole buy-services page in one call: `ServiceCatalogResource { categories: [ServiceCategoryResource] }`. Only active categories that still hold at least one `ACTIVE` package are returned, categories and packages sorted by `displayOrder`. |
+| `GET` | `/recruiter/service-packages/{slug}` | recruiter | `ServicePackageDetailResource`. `404 PACKAGE_NOT_AVAILABLE` when the slug is unknown or the package is not `ACTIVE`. |
+| `GET` | `/admin/service-categories` | admin | `AdminServiceCategoryResource[]` including inactive ones, each with `packageCount`. |
+| `POST` · `PUT` | `/admin/service-categories` · `/{id}` | admin | Body `SaveServiceCategoryRequest`. `409 DUPLICATE_PACKAGE_CODE` when `code` is taken. |
+| `DELETE` | `/admin/service-categories/{id}` | admin | `409 SERVICE_CATEGORY_IN_USE` while any package still points at it. |
+| `GET` | `/admin/service-packages?query=&categoryId=&status=&page=&size=` | admin | `PageResource<AdminServicePackageResource>`; `query` matches name or code. |
+| `GET` | `/admin/service-packages/{id}` | admin | `AdminServicePackageResource`. |
+| `POST` · `PUT` | `/admin/service-packages` · `/{id}` | admin | Body `SaveServicePackageRequest`. `benefits` and `sections` are a **full replace**; omit them to clear. `409 DUPLICATE_PACKAGE_CODE` when `code` or `slug` is taken. |
+| `POST` | `/admin/service-packages/{id}/activate` · `/deactivate` | admin | Packages are never deleted; a non-`ACTIVE` package disappears from the recruiter catalog. |
+
+- `ServiceCategoryResource`: `{ id, code, name, headline, description, needKey, packages: [ServicePackageCardResource] }`. `needKey` is what the "suggest a package" modal maps a recruiter's chosen need onto (`REACH`, `CONNECT`, `HIGHLIGHT`, `BRANDING`); it is data, never hard-coded in the frontend.
+- `ServicePackageCardResource`: `{ id, code, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, validityDays, bonusCredits, oneTimePerCompany, benefits }`. `badge` is `NONE`, `NEW` or `SPECIAL_OFFER`. `price` is an integer amount of `currency` (`VND`), **excluding VAT** — the UI shows it with the red asterisk.
+- `ServicePackageDetailResource` adds `heroImageUrl`, `categoryCode`, `categoryName`, `categoryHeadline` and `sections: [{ heading, iconName, accentColor, body, imageUrl }]`, where `body` is markdown.
+- `ServicePackageBenefitResource`: `{ entitlementType, quantity, tier, durationDays, label }`. `tier` is how strong the right is (used today by `JOB_BOOST` for search ranking). `entitlementType` is the machine-readable right a purchase grants (`JOB_POST_SLOT`, `JOB_BOOST`, `JOB_LABEL_URGENT`, `JOB_LABEL_HOT`, `JOB_HIGHLIGHT`, `JOB_RETOP`, `JOB_ALERT_PUSH`, `AI_RESUME_MATCH`, `AI_JD_GENERATE`, `BRAND_PAGE`, `FEATURED_COMPANY`, `AD_SLOT_WEEK`, `CREDIT`); `label` is the Vietnamese line shown on the card.
+- `SaveServicePackageRequest`: `{ categoryId, code, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, heroImageUrl, validityDays, bonusCredits, oneTimePerCompany, status, displayOrder, benefits: [{ entitlementType, quantity, durationDays, label }], sections: [{ heading, iconName, accentColor, body, imageUrl }] }`. `code` is `^[A-Z0-9_]+$`, `slug` is `^[a-z0-9-]+$`.
+- Every admin write is audited (`SERVICE_CATEGORY_*`, `SERVICE_PACKAGE_*`).
+
+## Cart and orders (billing)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/cart` | recruiter | `CartResource`. The cart belongs to the **recruiter**, not the company; it is created on first access. |
+| `POST` | `/recruiter/cart/items` | recruiter | Body `{ packageId, quantity }` (1-99). Adding a package already in the cart increases its quantity (capped at 99). Max 20 distinct items → `422 CART_ITEM_LIMIT_EXCEEDED`. `404 PACKAGE_NOT_AVAILABLE` for a non-`ACTIVE` package. |
+| `PATCH` | `/recruiter/cart/items/{id}` | recruiter | Body `{ quantity }`. `404 NOT_FOUND` for another recruiter's cart item. |
+| `DELETE` | `/recruiter/cart/items/{id}` · `/recruiter/cart` | recruiter | Remove one line, or empty the cart. |
+| `GET` | `/recruiter/orders?page=&size=` | recruiter | `PageResource<OrderSummaryResource>` of the **company's** orders, newest first — every recruiter of the company sees them all. |
+| `GET` | `/recruiter/orders/{code}` | recruiter | `OrderResource`. `404 NOT_FOUND` for another company's order. |
+| `POST` | `/recruiter/orders` | recruiter | Checkout. Send `packageId` (+ optional `quantity`) to buy one package without touching the cart. Otherwise the cart is used: `cartItemIds` buys only those lines and leaves the rest in the cart, omitting it buys everything. |
+| `POST` | `/recruiter/orders/{code}/cancel` | recruiter | Only the recruiter who created the order may cancel it (`403 FORBIDDEN` otherwise), and only while `PENDING_PAYMENT` or `UNDERPAID` (`422 ORDER_NOT_PAYABLE`). |
+
+- `CartResource`: `{ items, subtotal, vatRate, vatAmount, totalAmount, currency }`. `CartItemResource`: `{ id, packageId, code, slug, name, shortDescription, unitPrice, currency, quantity, lineTotal, validityDays, oneTimePerCompany }`.
+- `CheckoutRequest`: `{ packageId?, quantity?, cartItemIds?, invoiceType: BUSINESS | PERSONAL, taxId?, companyName?, companyAddress?, fullName?, identityNumber?, personalAddress?, recipientEmail, termsAccepted }`. A `BUSINESS` invoice requires `taxId` and `companyName`; a `PERSONAL` invoice requires `fullName`; `termsAccepted` must be true. All three surface as `400 VALIDATION_FAILED`.
+- **Money:** `totalAmount = (subtotal − discountAmount) + vatAmount`, where `vatAmount` is the VAT rate applied to the amount **after** discount and rounded `HALF_UP` to whole đồng. Catalog prices exclude VAT; the order stores all five figures plus the `vatRate` used, so changing the rate later never alters an existing order.
+- **Ownership:** an order belongs to `company_id` and records `purchased_by_recruiter_id`. A recruiter with no company gets `403 NOT_COMPANY_MEMBER` on checkout and on every order read.
+- **Order codes** are `IVO` + 8 characters from `ABCDEFGHJKLMNPQRSTUVWXYZ23456789` (0/O and 1/I omitted because customers retype the code into the bank transfer note).
+- **Guards:** a repeated submit with the same total within 2 minutes returns the existing pending order instead of creating a second one — this runs *before* the purchase rules, so a retried click never surfaces `TRIAL_ALREADY_USED`. A company may hold at most 3 `PENDING_PAYMENT` orders (`422 TOO_MANY_PENDING_ORDERS`). A package flagged `oneTimePerCompany` cannot be bought twice (`422 TRIAL_ALREADY_USED`).
+- Orders expire after `billing_settings.order_expire_hours` (default 72). A scheduler every 10 minutes moves overdue `PENDING_PAYMENT` orders to `EXPIRED`.
+- `billing_settings` is a single row holding `vat_rate`, `order_expire_hours`, `order_code_prefix` and `max_pending_orders`.
+
+## Payments (SePay)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/orders/{code}/payment` | recruiter | `OrderPaymentResource`. When the bank account is not configured yet it returns `configured: false` with every bank field `null` — the endpoint never fails for that reason. |
+| `GET` · `PUT` | `/admin/payments/settings` | admin | `BillingSettingsResource` / `SaveBillingSettingsRequest`. `apiTokenConfigured` is read-only and reports whether `SEPAY_API_TOKEN` is present in the server environment. |
+| `GET` | `/admin/payments/transactions?status=&page=&size=` | admin | `PageResource<PaymentTransactionResource>`, newest first. `status` is `MATCHED` or `UNMATCHED`. |
+| `POST` | `/admin/payments/transactions/{id}/match` | admin | Body `{ orderCode, note? }`. Links an `UNMATCHED` transfer to an order by hand. `409 TRANSACTION_ALREADY_MATCHED`, `422 ORDER_NOT_PAYABLE`. |
+| `POST` | `/admin/payments/sync` | admin | Runs reconciliation immediately and returns `PaymentSyncResultResource { at, ok, message, fetched, created, matched }`. Never throws for a misconfiguration; it answers `ok: false` with the reason. |
+
+- `OrderPaymentResource`: `{ orderCode, status, totalAmount, paidAmount, currency, expiresAt, configured, bankCode, accountNumber, accountName, transferContent, qrUrl }`. `transferContent` is the order code — the recruiter must keep it intact for automatic matching. `qrUrl` points at `qr.sepay.vn` and carries the **outstanding** amount, so a top-up QR after a short payment is already correct.
+- **Reconciliation** polls `https://my.sepay.vn/userapi/transactions/list` (no webhook). It is off until `billing_settings.payment_sync_enabled` is true, a bank account is saved and `SEPAY_API_TOKEN` is set.
+- **Matching:** the transfer content is upper-cased and stripped of whitespace, then matched against `PREFIX[A-Z0-9]{8}`. Unknown code → the transfer is stored `UNMATCHED` for an admin to resolve.
+- **Amount rules:** received totals at or above the order total mark it `PAID` (any overage is recorded in the transaction note); less marks it `UNDERPAID` and the order stays open until its expiry so the recruiter can top up with the same content.
+- `payment_transactions.sepay_id` is `UNIQUE`: the same bank transfer can never be credited twice, even if two reconciliation runs overlap.
+- **Notifications:** `ORDER_CREATED` goes to every active recruiter of the company, `ORDER_PAID` to the whole company, `ORDER_UNDERPAID` to the buyer.
+
+## Entitlements (what a company owns)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/entitlements` | recruiter | `EntitlementResource[]` — the company's stock, newest purchase first. `activatable` says whether the recruiter applies it to a job by hand. |
+| `GET` | `/recruiter/entitlements/active` | recruiter | `EntitlementUsageResource[]` — what is running right now and when each ends. |
+| `POST` | `/recruiter/entitlements/{id}/activate` | recruiter | Body `{ jobId }`. Applies one unit to a published job of the company. **Irreversible.** |
+
+- `EntitlementResource`: `{ id, entitlementType, label, totalQuantity, remainingQuantity, tier, durationDays, status, activationDeadline, purchasedByRecruiterId, activatable, purchasedAt }`. `status` is `AVAILABLE`, `CONSUMED` or `EXPIRED`.
+- **Grant:** a paid order is turned into entitlements in the same transaction that records the payment, then the order moves to `FULFILLED`. One row per benefit line, `quantity = benefit quantity × order item quantity`.
+- **Clock:** `durationDays` starts at **activation**, not at payment. Unused stock dies at `activationDeadline` (12 months after purchase).
+- **Activatable on a job:** `JOB_BOOST`, `JOB_LABEL_URGENT`, `JOB_LABEL_HOT`, `JOB_HIGHLIGHT`. The target must be a `PUBLISHED` job of the same company and must not already carry the same service (`422 ADDON_REQUIRES_ACTIVE_JOB`). Anything else answers `422 ENTITLEMENT_NOT_ACTIVATABLE`.
+- **Job slots** are not activated by hand: publishing a job consumes one `JOB_POST_SLOT` automatically, oldest-deadline first. Resuming a paused job never costs a second slot. When `billing.require-job-slot` is `false` (the default) publishing still succeeds without stock; set `BILLING_REQUIRE_JOB_SLOT=true` to make a slot mandatory (`422 ENTITLEMENT_EXHAUSTED`).
+- **Concurrency:** stock is decremented with one conditional `UPDATE ... WHERE remaining_quantity >= ?`, so two publishes racing for the last slot cannot both win.
+- **Expiry:** an hourly job ends usages whose window has passed and clears the matching job effect. **The job stays published** — only the paid display effect stops. Unused stock past its deadline flips to `EXPIRED`.
+- `jobs` gained `boost_level`, `boost_expires_at`, `highlight_label`, `highlight_label_expires_at`, `highlighted` and `highlight_expires_at`, plus an index on `(status, boost_level, published_at)` for ranking.
+- `service_package_benefits.tier` and `company_entitlements.tier` carry the boost strength (3 for `PRO_MAX_PLUS`, 2 for `PRO_MAX`/`PRO_TRIAL`, 1 for `ECO_PLUS`/`STANDARD_COMBO`).
+
+## AI resume match quota
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `POST` | `/recruiter/ai/resume-match` | recruiter | Moved out of `/ai/**`: `SecurityConfig` denies recruiter tokens outside `/api/v1/recruiter/**`, so the old path answered `403` for everyone. |
+| `POST` | `/recruiter/ai/applications/{id}/resume-match` | recruiter | No body. The server resolves job title, requirements (one per line of `jobs.requirements`, max 25) and CV text from the application itself, so the client cannot invent requirements. `404` when the application is not in the recruiter's company, `422 JOB_REQUIREMENTS_MISSING` / `CV_TEXT_NOT_READABLE`. |
+| `GET` | `/recruiter/ai/resume-match/quota` | recruiter | `{ freeUsedThisMonth, freeLimit, freeRemaining, paidRemaining, totalRemaining, resetAt }`. |
+
+- **Free tier plus top-up.** Each company gets `ai.quota.resume-match-free-per-month` analyses a month (default 30, Redis key `ai:quota:resume_match:{companyId}:{yyyy-MM}`, resets at the first of the month Vietnam time). Beyond that, one `AI_RESUME_MATCH` entitlement unit is spent per analysis. With neither left the call answers `422 AI_USER_QUOTA_EXCEEDED`.
+- Quota is **checked before** the model call and **spent after** it succeeds, so a failed analysis never costs a paid unit. The existing per-user daily AI quota (`ai.quota.user-per-day`) still applies on top and covers the gap between check and spend.
+- These controllers are **synchronous**. Returning `CompletableFuture` made Spring Security re-evaluate the `ASYNC` dispatch without a `SecurityContext`, which answered `401` even when the analysis had succeeded and the quota had already been spent.
+
+## Paid company branding
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/companies/featured?limit=` | public | `FeaturedCompanyResource[]` `{ id, name, logoUrl, industry }` — companies whose `featured_until` is still in the future, newest window first. Max `limit` 20. |
+
+- `GET /recruiter/company` now also returns `photoLimit`, `brandPageUntil`, `featuredUntil`. The limit is **3 photos** on the free tier and **10** while a `BRAND_PAGE` window is open; `addPhotos` enforces the same number.
+- `FEATURED_COMPANY` and `BRAND_PAGE` are activated **on the company**, so `POST /recruiter/entitlements/{id}/activate` accepts an empty body for them. Buying again while a window is open **extends** it instead of restarting it.
+- The home page lists featured companies first and fills the remaining slots from recent job posts, so the section never looks empty before anyone has bought the slot.
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -330,6 +430,26 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `FORBIDDEN` | 403 | Role/ownership failure |
 | `NOT_FOUND` | 404 | |
 | `METHOD_NOT_ALLOWED` | 405 | The HTTP method is not supported by this endpoint |
+| `JOB_REQUIREMENTS_MISSING` | 422 | The job has no requirement lines, so there is nothing for the AI to match against |
+| `CV_TEXT_NOT_READABLE` | 422 | The CV attached to the application could not be read as text (scanned image, corrupt file) |
+| `PACKAGE_NOT_AVAILABLE` | 404 | Unknown slug/id, or the service package is not `ACTIVE` |
+| `DUPLICATE_PACKAGE_CODE` | 409 | A service category or package already uses this `code`/`slug` |
+| `SERVICE_CATEGORY_IN_USE` | 409 | The category still has packages and cannot be deleted |
+| `BILLING_NOT_CONFIGURED` | 503 | `billing_settings` has no row |
+| `CART_EMPTY` | 422 | Checkout with nothing to buy |
+| `CART_ITEM_LIMIT_EXCEEDED` | 422 | More than 20 distinct packages in the cart |
+| `TOO_MANY_PENDING_ORDERS` | 422 | The company already holds the maximum unpaid orders |
+| `ORDER_NOT_PAYABLE` | 422 | The order is not in a state that allows this action |
+| `ORDER_EXPIRED` | 422 | The payment window has closed |
+| `TRIAL_ALREADY_USED` | 422 | A one-time-per-company package was bought before |
+| `PAYMENT_NOT_CONFIGURED` | 503 | `SEPAY_API_TOKEN` or the bank account is missing |
+| `PAYMENT_PROVIDER_ERROR` | 502 | SePay answered with an error or an unexpected payload |
+| `PAYMENT_SYNC_RUNNING` | 409 | A reconciliation run is already in progress |
+| `TRANSACTION_ALREADY_MATCHED` | 409 | The bank transfer is already linked to an order |
+| `ENTITLEMENT_EXHAUSTED` | 422 | No units of this service remain |
+| `ENTITLEMENT_EXPIRED` | 422 | The activation deadline has passed |
+| `ENTITLEMENT_NOT_ACTIVATABLE` | 422 | This service is consumed automatically, not applied by hand |
+| `ADDON_REQUIRES_ACTIVE_JOB` | 422 | Target is not a published job of the company, or already has this service |
 | `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
 | `INTERVIEW_ALREADY_SCHEDULED` | 409 | The application already has an active interview |
 | `SAVED_LIMIT_REACHED` | 409 | The candidate already saved or follows the maximum number of items |
