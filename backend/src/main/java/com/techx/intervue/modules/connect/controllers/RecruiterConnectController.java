@@ -5,11 +5,13 @@ import com.techx.intervue.modules.connect.enums.ConnectActorType;
 import com.techx.intervue.modules.connect.requests.ReportConversationRequest;
 import com.techx.intervue.modules.connect.requests.SendInvitationRequest;
 import com.techx.intervue.modules.connect.requests.SendMessageRequest;
+import com.techx.intervue.modules.connect.resources.ConnectRulesAckResource;
 import com.techx.intervue.modules.connect.resources.ConnectUnreadCountResource;
 import com.techx.intervue.modules.connect.resources.ConversationSummaryResource;
 import com.techx.intervue.modules.connect.resources.EligibleCandidateResource;
 import com.techx.intervue.modules.connect.resources.InvitationResource;
 import com.techx.intervue.modules.connect.resources.MessageResource;
+import com.techx.intervue.modules.connect.services.interfaces.ConnectRulesAckServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectSseServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectUnreadServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectionServiceInterface;
@@ -45,6 +47,7 @@ public class RecruiterConnectController extends BaseController {
     private final ConnectionServiceInterface connectionService;
     private final ConnectSseServiceInterface sseService;
     private final ConnectUnreadServiceInterface unreadService;
+    private final ConnectRulesAckServiceInterface rulesAckService;
 
     @GetMapping("/eligible-candidates")
     public ResponseEntity<ApiResource<PageResource<EligibleCandidateResource>>> eligibleCandidates(
@@ -159,5 +162,21 @@ public class RecruiterConnectController extends BaseController {
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter stream(@AuthenticationPrincipal CustomUserDetails principal) {
         return sseService.subscribe(ConnectActorType.RECRUITER, principal.getId());
+    }
+
+    @GetMapping("/rules-ack")
+    public ResponseEntity<ApiResource<ConnectRulesAckResource>> rulesAck(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                rulesAckService.get(ConnectActorType.RECRUITER, principal.getId()),
+                "Rules acknowledgement retrieved successfully!");
+    }
+
+    @PostMapping("/rules-ack")
+    public ResponseEntity<ApiResource<ConnectRulesAckResource>> acknowledgeRules(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                rulesAckService.acknowledge(ConnectActorType.RECRUITER, principal.getId()),
+                "Rules acknowledged successfully!");
     }
 }
