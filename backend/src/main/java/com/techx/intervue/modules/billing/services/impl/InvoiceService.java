@@ -8,6 +8,7 @@ import com.techx.intervue.modules.billing.entities.OrderInvoiceDetail;
 import com.techx.intervue.modules.billing.entities.OrderItem;
 import com.techx.intervue.modules.billing.enums.InvoiceType;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
+import com.techx.intervue.modules.billing.events.InvoiceIssuedEvent;
 import com.techx.intervue.modules.billing.repositories.InvoiceRepository;
 import com.techx.intervue.modules.billing.repositories.OrderInvoiceDetailRepository;
 import com.techx.intervue.modules.billing.repositories.OrderItemRepository;
@@ -18,6 +19,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ public class InvoiceService implements InvoiceServiceInterface {
     private final OrderInvoiceDetailRepository invoiceDetailRepository;
     private final InvoicePdfRenderer renderer;
     private final RecruiterCompanyResolver companyResolver;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -74,6 +77,7 @@ public class InvoiceService implements InvoiceServiceInterface {
         invoice.setNumber(
                 "INV-%d-%06d".formatted(issuedAt.atZone(VIETNAM).getYear(), invoice.getId()));
         invoiceRepository.save(invoice);
+        eventPublisher.publishEvent(new InvoiceIssuedEvent(invoice.getId()));
     }
 
     @Override
