@@ -43,4 +43,12 @@ public interface EntitlementServiceInterface {
      * than leaving part of the stock consumed.
      */
     void consumeUnits(Long companyId, EntitlementType type, int amount);
+
+    /** What an order line delivered and how much of it is still untouched. */
+    record UnusedUnits(Long sourceOrderItemId, int totalQuantity, int remainingQuantity) {}
+
+    List<UnusedUnits> unusedFromOrderItems(Collection<Long> orderItemIds);
+
+    /** Takes back the units of those order lines that were never activated. */
+    void revokeUnusedFromOrderItems(Collection<Long> orderItemIds);
 }
