@@ -17,6 +17,13 @@ export interface CreditWallet {
   prices: CreditPrice[];
 }
 
+export interface CreditLedgerEntry {
+  credit: boolean;
+  quantity: number;
+  label: string;
+  at: string;
+}
+
 export interface ConvertCreditsInput {
   entitlementType: EntitlementType;
   tier: number;

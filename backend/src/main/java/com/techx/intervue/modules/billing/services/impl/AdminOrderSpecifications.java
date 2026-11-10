@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.billing.services.impl;
 
 import com.techx.intervue.modules.billing.entities.Order;
+import com.techx.intervue.modules.billing.enums.OrderStatus;
 import com.techx.intervue.modules.billing.requests.SearchAdminOrdersRequest;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
@@ -31,6 +32,11 @@ public final class AdminOrderSpecifications {
             }
             if (request.to() != null) {
                 predicates.add(builder.lessThanOrEqualTo(root.get("createdAt"), request.to()));
+            }
+            if (Boolean.TRUE.equals(request.needsManualRefund())) {
+                predicates.add(builder.equal(root.get("status"), OrderStatus.EXPIRED));
+                predicates.add(builder.greaterThan(root.get("paidAmount"), 0L));
+                predicates.add(builder.isNull(root.get("manualRefundResolvedAt")));
             }
             return predicates.isEmpty() ? null : builder.and(predicates.toArray(Predicate[]::new));
         };

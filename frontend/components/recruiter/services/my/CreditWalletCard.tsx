@@ -3,10 +3,10 @@
 import ConvertCreditsModal from '@/components/recruiter/services/my/ConvertCreditsModal';
 import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants/routes';
-import { useConvertCredits, useCreditWallet } from '@/hooks/useCredits';
-import { formatDate } from '@/utils/datetime';
+import { useConvertCredits, useCreditLedger, useCreditWallet } from '@/hooks/useCredits';
+import { formatDate, formatDateTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
-import { Coins } from 'lucide-react';
+import { ChevronDown, ChevronUp, Coins } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -15,6 +15,8 @@ export default function CreditWalletCard({ onConverted }: { onConverted: (messag
   const convert = useConvertCredits();
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showLedger, setShowLedger] = useState(false);
+  const ledger = useCreditLedger(showLedger);
 
   if (wallet.isPending || wallet.isError) return null;
 
@@ -50,6 +52,44 @@ export default function CreditWalletCard({ onConverted }: { onConverted: (messag
           </Link>
         )}
       </div>
+
+      <button
+        type="button"
+        onClick={() => setShowLedger((current) => !current)}
+        className="text-on-surface-variant mt-3 inline-flex items-center gap-1 text-xs font-semibold hover:underline"
+      >
+        {showLedger ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+        Lịch sử đổi credits
+      </button>
+
+      {showLedger && (
+        <div className="mt-2 max-h-56 overflow-y-auto rounded-xl border border-dashed border-slate-200">
+          {ledger.isPending ? (
+            <p className="text-on-surface-variant px-4 py-3 text-xs">Đang tải...</p>
+          ) : ledger.isError || !ledger.data || ledger.data.length === 0 ? (
+            <p className="text-on-surface-variant px-4 py-3 text-xs">Chưa có giao dịch credits nào.</p>
+          ) : (
+            <table className="w-full text-xs">
+              <tbody className="divide-y divide-slate-100">
+                {ledger.data.map((entry, index) => (
+                  <tr key={`${entry.at}-${index}`}>
+                    <td className="text-on-surface-variant px-4 py-2 whitespace-nowrap">{formatDateTime(entry.at)}</td>
+                    <td className="text-on-surface px-4 py-2">{entry.label}</td>
+                    <td
+                      className={`px-4 py-2 text-right font-semibold whitespace-nowrap ${
+                        entry.credit ? 'text-emerald-700' : 'text-rose-600'
+                      }`}
+                    >
+                      {entry.credit ? '+' : '−'}
+                      {entry.quantity.toLocaleString('vi-VN')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
 
       <ConvertCreditsModal
         isOpen={isOpen}

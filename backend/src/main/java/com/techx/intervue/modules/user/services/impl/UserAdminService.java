@@ -538,7 +538,8 @@ public class UserAdminService implements UserAdminServiceInterface {
                     AD_CREATIVE_APPROVED,
                     AD_CREATIVE_REJECTED,
                     AD_SLOT_UPDATED,
-                    PAYMENT_TRANSACTION_MATCHED ->
+                    PAYMENT_TRANSACTION_MATCHED,
+                    ORDER_MANUAL_REFUND_RESOLVED ->
                     "billing";
         };
     }
@@ -621,7 +622,8 @@ public class UserAdminService implements UserAdminServiceInterface {
                     AD_CREATIVE_APPROVED,
                     AD_CREATIVE_REJECTED,
                     AD_SLOT_UPDATED,
-                    PAYMENT_TRANSACTION_MATCHED ->
+                    PAYMENT_TRANSACTION_MATCHED,
+                    ORDER_MANUAL_REFUND_RESOLVED ->
                     detail != null && !detail.isBlank() ? detail : "Service catalog activity";
         };
     }

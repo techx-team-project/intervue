@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,4 +51,15 @@ public class AdBooking extends BaseEntity {
     @Column(nullable = false, length = 20)
     @Builder.Default
     private AdBookingStatus status = AdBookingStatus.RESERVED;
+
+    /**
+     * Set once this week has started and its entitlement unit was spent; null means still
+     * refundable.
+     */
+    @Column(name = "consumed_at")
+    private Instant consumedAt;
+
+    /** Set the first time the "week starting soon, no approved creative" reminder goes out. */
+    @Column(name = "reminder_sent_at")
+    private Instant reminderSentAt;
 }

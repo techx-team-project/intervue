@@ -6,6 +6,8 @@ import com.techx.intervue.modules.notification.enums.NotificationType;
 import com.techx.intervue.modules.notification.enums.RecipientType;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface.NotificationCommand;
+import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import java.text.NumberFormat;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +27,7 @@ public class BillingNotifier {
 
     private final NotificationPublisherInterface notificationPublisher;
     private final CompanyServiceInterface companyService;
+    private final UserServiceInterface userService;
 
     public void orderCreated(Order order, String buyerName) {
         publishAll(
@@ -60,6 +63,57 @@ public class BillingNotifier {
                         "totalAmount", money(order.getTotalAmount(), order.getCurrency()),
                         "missingAmount", money(missing, order.getCurrency()),
                         "expiresAt", MOMENT.format(order.getExpiresAt())));
+    }
+
+    public void refundApproved(Order order, long approvedAmount) {
+        publishAll(
+                companyService.findActiveMemberIds(order.getCompanyId()),
+                order,
+                NotificationType.REFUND_APPROVED,
+                Map.of(
+                        "orderCode", order.getCode(),
+                        "approvedAmount", money(approvedAmount, order.getCurrency())));
+    }
+
+    public void refundRejected(Order order) {
+        publishAll(
+                companyService.findActiveMemberIds(order.getCompanyId()),
+                order,
+                NotificationType.REFUND_REJECTED,
+                Map.of("orderCode", order.getCode()));
+    }
+
+    public void orderExpiredUnderpaid(Order order) {
+        publishAll(
+                companyService.findActiveMemberIds(order.getCompanyId()),
+                order,
+                NotificationType.ORDER_EXPIRED_UNDERPAID,
+                Map.of(
+                        "orderCode", order.getCode(),
+                        "paidAmount", money(order.getPaidAmount(), order.getCurrency())));
+    }
+
+    public void orderExpiredNeedsManualRefund(Order order) {
+        List<Long> adminIds = userService.findActiveIdsByRole(RoleType.ADMIN);
+        if (adminIds.isEmpty()) {
+            return;
+        }
+        Map<String, Object> params =
+                Map.of(
+                        "orderCode", order.getCode(),
+                        "paidAmount", money(order.getPaidAmount(), order.getCurrency()));
+        notificationPublisher.publishAll(
+                adminIds.stream()
+                        .map(
+                                adminId ->
+                                        NotificationCommand.builder()
+                                                .recipientType(RecipientType.USER)
+                                                .recipientId(adminId)
+                                                .type(NotificationType.ORDER_EXPIRED_WITH_PAYMENT)
+                                                .params(params)
+                                                .actionUrl("/admin/finance/orders")
+                                                .build())
+                        .toList());
     }
 
     private void publishAll(

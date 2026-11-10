@@ -25,7 +25,10 @@ import com.techx.intervue.modules.ads.resources.AdminAdCreativeResource;
 import com.techx.intervue.modules.ads.resources.RecruiterAdBookingResource;
 import com.techx.intervue.modules.ads.services.interfaces.AdCreativeServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.time.Instant;
+import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +49,7 @@ public class AdCreativeService implements AdCreativeServiceInterface {
     private final CompanyServiceInterface companyService;
     private final AdBookingPresenter presenter;
     private final AuditLogServiceInterface auditLogService;
+    private final AdsNotifier adsNotifier;
 
     @Override
     @Transactional
@@ -60,6 +64,11 @@ public class AdCreativeService implements AdCreativeServiceInterface {
         if (booking.getStatus() != AdBookingStatus.BOOKED) {
             throw new AppException(ErrorCode.AD_BOOKING_NOT_READY);
         }
+        AdSlot slot =
+                slotRepository
+                        .findById(booking.getAdSlotId())
+                        .orElseThrow(() -> new AppException(ErrorCode.AD_SLOT_NOT_FOUND));
+        requireMatchingSize(image, slot);
 
         StoredFile stored = storageService.upload(image, StorageTarget.IMAGE, FOLDER);
         AdCreative creative =
@@ -102,6 +111,9 @@ public class AdCreativeService implements AdCreativeServiceInterface {
         creative.setRejectionReason(null);
         stamp(creative, actor);
         audit(actor, AuditAction.AD_CREATIVE_APPROVED, creative, "approved");
+        bookingRepository
+                .findById(creative.getAdBookingId())
+                .ifPresent(adsNotifier::creativeApproved);
         return toAdminResource(creative);
     }
 
@@ -114,7 +126,26 @@ public class AdCreativeService implements AdCreativeServiceInterface {
         creative.setRejectionReason(request.rejectionReason());
         stamp(creative, actor);
         audit(actor, AuditAction.AD_CREATIVE_REJECTED, creative, request.rejectionReason());
+        bookingRepository
+                .findById(creative.getAdBookingId())
+                .ifPresent(
+                        booking ->
+                                adsNotifier.creativeRejected(booking, request.rejectionReason()));
         return toAdminResource(creative);
+    }
+
+    private void requireMatchingSize(MultipartFile image, AdSlot slot) {
+        BufferedImage decoded;
+        try {
+            decoded = ImageIO.read(image.getInputStream());
+        } catch (IOException cause) {
+            throw AppException.validation("image", "Could not read this image file");
+        }
+        if (decoded == null
+                || decoded.getWidth() != slot.getWidth()
+                || decoded.getHeight() != slot.getHeight()) {
+            throw new AppException(ErrorCode.AD_CREATIVE_WRONG_SIZE);
+        }
     }
 
     private AdCreative requirePending(Long id) {

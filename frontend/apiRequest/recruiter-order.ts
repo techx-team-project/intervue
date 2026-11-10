@@ -5,6 +5,7 @@ import type {
   OrderInvoice,
   OrderPayment,
   OrderRefundRequest,
+  RecruiterPaymentTransaction,
   RefundQuote,
   RecruiterOrder,
   RecruiterOrderSummary,
@@ -13,6 +14,12 @@ import type {
 export const recruiterOrderApi = {
   search: (page: number, size: number) =>
     request<Page<RecruiterOrderSummary>>(`/recruiter/orders?page=${page}&size=${size}`),
+
+  searchPayments: (page: number, size: number) =>
+    request<Page<RecruiterPaymentTransaction>>(`/recruiter/orders/payments?page=${page}&size=${size}`),
+
+  searchRefunds: (page: number, size: number) =>
+    request<Page<OrderRefundRequest>>(`/recruiter/orders/refunds?page=${page}&size=${size}`),
 
   get: (code: string) => request<RecruiterOrder>(`/recruiter/orders/${code}`),
 

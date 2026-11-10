@@ -14,4 +14,6 @@ public interface RefundRequestRepository extends JpaRepository<RefundRequest, Lo
     Page<RefundRequest> findAllByStatusOrderByCreatedAtDesc(RefundStatus status, Pageable pageable);
 
     Page<RefundRequest> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    Page<RefundRequest> findAllByCompanyIdOrderByCreatedAtDesc(Long companyId, Pageable pageable);
 }

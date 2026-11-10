@@ -40,7 +40,16 @@ public enum NotificationType {
     ANNOUNCEMENT(NotificationCategory.SYSTEM, NotificationSeverity.INFO, false),
     ORDER_CREATED(NotificationCategory.COMPANY, NotificationSeverity.INFO, true),
     ORDER_PAID(NotificationCategory.COMPANY, NotificationSeverity.SUCCESS, true),
-    ORDER_UNDERPAID(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true);
+    ORDER_UNDERPAID(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
+    ORDER_EXPIRED_UNDERPAID(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
+    ORDER_EXPIRED_WITH_PAYMENT(
+            NotificationCategory.MODERATION, NotificationSeverity.WARNING, false),
+    AD_CREATIVE_APPROVED(NotificationCategory.COMPANY, NotificationSeverity.SUCCESS, true),
+    AD_CREATIVE_REJECTED(NotificationCategory.COMPANY, NotificationSeverity.DANGER, true),
+    AD_WEEK_STARTING_SOON_NO_CREATIVE(
+            NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
+    REFUND_APPROVED(NotificationCategory.COMPANY, NotificationSeverity.SUCCESS, true),
+    REFUND_REJECTED(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true);
 
     private final NotificationCategory category;
     private final NotificationSeverity severity;

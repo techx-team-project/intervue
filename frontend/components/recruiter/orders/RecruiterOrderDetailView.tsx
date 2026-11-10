@@ -12,6 +12,7 @@ import {
 } from '@/constants/recruiter-order';
 import { ROUTES } from '@/constants/routes';
 import { useRecruiterOrder, useRecruiterOrderMutations } from '@/hooks/useRecruiterOrders';
+import { formatDate } from '@/utils/datetime';
 import { formatServicePrice } from '@/utils/service-package';
 import { getErrorMessage } from '@/utils/error';
 import { AlertCircle, ArrowLeft, FileDown } from 'lucide-react';
@@ -110,6 +111,11 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
                           <li key={`${item.id}-${benefit.label}`}>• {benefit.label}</li>
                         ))}
                       </ul>
+                    )}
+                    {item.bookedWeeks.length > 0 && (
+                      <p className="text-on-surface-variant mt-1.5 text-xs">
+                        Tuần: {item.bookedWeeks.map((week) => formatDate(week)).join(', ')}
+                      </p>
                     )}
                   </td>
                   <td className="text-on-surface-variant px-4 py-3.5 text-center">{item.quantity}</td>

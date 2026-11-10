@@ -18,6 +18,11 @@ public interface CompanyEntitlementRepository extends JpaRepository<CompanyEntit
 
     List<CompanyEntitlement> findAllBySourceOrderItemIdIn(Collection<Long> sourceOrderItemIds);
 
+    List<CompanyEntitlement> findAllByCompanyIdAndEntitlementTypeOrderByCreatedAtDesc(
+            Long companyId, EntitlementType entitlementType);
+
+    Optional<CompanyEntitlement> findBySourceOrderItemId(Long sourceOrderItemId);
+
     Optional<CompanyEntitlement> findByIdAndCompanyId(Long id, Long companyId);
 
     List<CompanyEntitlement> findAllByCompanyIdInAndEntitlementTypeAndStatus(

@@ -22,4 +22,5 @@ public record AdminOrderResource(
         Instant expiresAt,
         Instant paidAt,
         Instant createdAt,
+        Instant manualRefundResolvedAt,
         List<OrderItemResource> items) {}

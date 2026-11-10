@@ -13,6 +13,8 @@ import com.techx.intervue.modules.ads.repositories.AdMetricRepository;
 import com.techx.intervue.modules.ads.repositories.AdSlotRepository;
 import com.techx.intervue.modules.ads.resources.RecruiterAdBookingResource;
 import com.techx.intervue.modules.ads.services.interfaces.AdBookingServiceInterface;
+import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +37,7 @@ public class AdBookingService implements AdBookingServiceInterface {
     private final AdCreativeRepository creativeRepository;
     private final AdMetricRepository metricRepository;
     private final AdBookingPresenter presenter;
+    private final EntitlementServiceInterface entitlementService;
 
     @Override
     @Transactional
@@ -92,6 +95,30 @@ public class AdBookingService implements AdBookingServiceInterface {
         bookings.removeIf(booking -> booking.getStatus() != AdBookingStatus.RESERVED);
         if (!bookings.isEmpty()) {
             bookingRepository.deleteAll(bookings);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void releaseUnconsumed(Long orderId) {
+        List<AdBooking> bookings = bookingRepository.findAllByOrderId(orderId);
+        bookings.removeIf(
+                booking ->
+                        booking.getStatus() != AdBookingStatus.BOOKED
+                                || booking.getConsumedAt() != null);
+        if (!bookings.isEmpty()) {
+            bookingRepository.deleteAll(bookings);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void settleElapsedWeeks() {
+        for (AdBooking booking :
+                bookingRepository.findAllByStatusAndWeekStartLessThanEqualAndConsumedAtIsNull(
+                        AdBookingStatus.BOOKED, AdWeeks.currentWeek())) {
+            entitlementService.consumeFromOrderItem(booking.getOrderItemId(), 1);
+            booking.setConsumedAt(Instant.now());
         }
     }
 

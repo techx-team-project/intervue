@@ -53,17 +53,27 @@ export const adminPaymentApi = {
       body: { approvedAmount, adminNote },
     }),
 
-  searchOrders: (params: { code?: string; status?: AdminOrderStatus | ''; page: number; size: number }) =>
+  searchOrders: (params: {
+    code?: string;
+    status?: AdminOrderStatus | '';
+    needsManualRefund?: boolean;
+    page: number;
+    size: number;
+  }) =>
     request<Page<AdminOrder>>(
       `/admin/orders?${new URLSearchParams({
         ...(params.code ? { code: params.code } : {}),
         ...(params.status ? { status: params.status } : {}),
+        ...(params.needsManualRefund ? { needsManualRefund: 'true' } : {}),
         page: String(params.page),
         size: String(params.size),
       })}`,
     ),
 
   getOrder: (code: string) => request<AdminOrder>(`/admin/orders/${code}`),
+
+  resolveManualRefund: (code: string) =>
+    request<AdminOrder>(`/admin/orders/${code}/resolve-manual-refund`, { method: 'POST' }),
 
   revenue: () => request<RevenueReport>('/admin/orders/revenue'),
 

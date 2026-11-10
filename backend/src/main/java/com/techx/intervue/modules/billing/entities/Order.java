@@ -80,4 +80,10 @@ public class Order extends BaseEntity {
 
     @Column(name = "cancelled_at")
     private Instant cancelledAt;
+
+    /**
+     * Set once an admin confirms the leftover payment on an expired order was wired back by hand.
+     */
+    @Column(name = "manual_refund_resolved_at")
+    private Instant manualRefundResolvedAt;
 }

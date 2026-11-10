@@ -17,4 +17,7 @@ public interface EntitlementUsageRepository extends JpaRepository<EntitlementUsa
 
     boolean existsByJobIdAndEntitlementTypeAndStatus(
             Long jobId, EntitlementType entitlementType, EntitlementUsageStatus status);
+
+    List<EntitlementUsage> findAllByCompanyIdAndEntitlementTypeOrderByStartedAtDesc(
+            Long companyId, EntitlementType entitlementType);
 }

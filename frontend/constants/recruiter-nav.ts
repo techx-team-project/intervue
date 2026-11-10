@@ -70,7 +70,7 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
       { label: 'Banner ads', href: ROUTES.RECRUITER_ADS, icon: Megaphone },
       { label: 'Cart', href: ROUTES.RECRUITER_CART, icon: ShoppingCart },
       { label: 'Orders', href: ROUTES.RECRUITER_ORDERS, icon: Receipt },
-      { label: 'Transaction history', href: ROUTES.RECRUITER_SERVICES_TRANSACTIONS, icon: Receipt, comingSoon: true },
+      { label: 'Transaction history', href: ROUTES.RECRUITER_SERVICES_TRANSACTIONS, icon: Receipt },
     ],
   },
   {

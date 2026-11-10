@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.billing.resources;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public record OrderItemResource(
@@ -12,4 +13,5 @@ public record OrderItemResource(
         Long lineTotal,
         Integer validityDays,
         Integer bonusCredits,
-        List<ServicePackageBenefitResource> benefits) {}
+        List<ServicePackageBenefitResource> benefits,
+        List<LocalDate> bookedWeeks) {}

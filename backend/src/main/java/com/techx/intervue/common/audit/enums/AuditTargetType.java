@@ -17,5 +17,6 @@ public enum AuditTargetType {
     AD_CREATIVE,
     AD_SLOT,
     BILLING_SETTINGS,
-    PAYMENT_TRANSACTION
+    PAYMENT_TRANSACTION,
+    ORDER
 }

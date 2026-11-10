@@ -1,5 +1,11 @@
 package com.techx.intervue.modules.billing.services.impl;
 
+import com.techx.intervue.common.audit.enums.AuditAction;
+import com.techx.intervue.common.audit.enums.AuditActorType;
+import com.techx.intervue.common.audit.enums.AuditTargetType;
+import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
+import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
+import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.billing.entities.Invoice;
@@ -19,6 +25,7 @@ import com.techx.intervue.modules.billing.resources.RevenueReportResource.Monthl
 import com.techx.intervue.modules.billing.resources.RevenueReportResource.PackageRevenue;
 import com.techx.intervue.modules.billing.services.interfaces.AdminOrderServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -61,6 +68,7 @@ public class AdminOrderService implements AdminOrderServiceInterface {
     private final InvoiceRepository invoiceRepository;
     private final OrderMapper orderMapper;
     private final CompanyServiceInterface companyService;
+    private final AuditLogServiceInterface auditLogService;
 
     @Override
     @Transactional(readOnly = true)
@@ -175,6 +183,35 @@ public class AdminOrderService implements AdminOrderServiceInterface {
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public AdminOrderResource resolveManualRefund(String code, RequestActor actor) {
+        Order order =
+                orderRepository
+                        .findByCode(code.trim().toUpperCase())
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        if (order.getStatus() != OrderStatus.EXPIRED
+                || order.getPaidAmount() <= 0
+                || order.getManualRefundResolvedAt() != null) {
+            throw new AppException(ErrorCode.ORDER_NOT_AWAITING_MANUAL_REFUND);
+        }
+        order.setManualRefundResolvedAt(Instant.now());
+
+        auditLogService.record(
+                AuditEntry.builder()
+                        .actorType(AuditActorType.ADMIN)
+                        .actorId(actor.userId())
+                        .actorEmail(actor.email())
+                        .action(AuditAction.ORDER_MANUAL_REFUND_RESOLVED)
+                        .targetType(AuditTargetType.ORDER)
+                        .targetId(order.getId())
+                        .detail(order.getCode() + " · " + order.getPaidAmount())
+                        .build());
+
+        List<OrderItem> items = orderItemRepository.findAllByOrderIdOrderByIdAsc(order.getId());
+        return toResource(order, items, companyNames(List.of(order)).get(order.getCompanyId()));
+    }
+
     private Map<Long, String> companyNames(List<Order> orders) {
         Map<Long, String> names = new HashMap<>();
         for (Long companyId :
@@ -209,6 +246,7 @@ public class AdminOrderService implements AdminOrderServiceInterface {
                 .expiresAt(order.getExpiresAt())
                 .paidAt(order.getPaidAt())
                 .createdAt(order.getCreatedAt())
+                .manualRefundResolvedAt(order.getManualRefundResolvedAt())
                 .items(new ArrayList<>(items.stream().map(orderMapper::toItemResource).toList()))
                 .build();
     }

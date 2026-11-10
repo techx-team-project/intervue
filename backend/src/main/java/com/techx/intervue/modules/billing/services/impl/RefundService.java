@@ -8,6 +8,7 @@ import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterf
 import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
+import com.techx.intervue.modules.ads.services.interfaces.AdBookingServiceInterface;
 import com.techx.intervue.modules.billing.entities.Order;
 import com.techx.intervue.modules.billing.entities.OrderItem;
 import com.techx.intervue.modules.billing.entities.RefundRequest;
@@ -50,8 +51,10 @@ public class RefundService implements RefundServiceInterface {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final EntitlementServiceInterface entitlementService;
+    private final AdBookingServiceInterface adBookingService;
     private final RecruiterCompanyResolver companyResolver;
     private final AuditLogServiceInterface auditLogService;
+    private final BillingNotifier billingNotifier;
 
     @Override
     @Transactional(readOnly = true)
@@ -103,6 +106,15 @@ public class RefundService implements RefundServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
+    public Page<RefundRequestResource> listMine(Long recruiterId, Pageable pageable) {
+        Long companyId = companyResolver.requireId(recruiterId);
+        return refundRepository
+                .findAllByCompanyIdOrderByCreatedAtDesc(companyId, pageable)
+                .map(refund -> toResource(refund, requireOrder(refund.getOrderId())));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Page<RefundRequestResource> search(RefundStatus status, Pageable pageable) {
         Page<RefundRequest> page =
                 status == null
@@ -128,6 +140,7 @@ public class RefundService implements RefundServiceInterface {
 
         List<Long> itemIds = itemIdsOf(order);
         entitlementService.revokeUnusedFromOrderItems(itemIds);
+        adBookingService.releaseUnconsumed(order.getId());
 
         refund.setStatus(RefundStatus.APPROVED);
         refund.setApprovedAmount(approved);
@@ -137,6 +150,7 @@ public class RefundService implements RefundServiceInterface {
         order.setStatus(OrderStatus.REFUNDED);
 
         audit(actor, AuditAction.REFUND_APPROVED, refund, order.getCode() + " · " + approved);
+        billingNotifier.refundApproved(order, approved);
         return toResource(refund, order);
     }
 
@@ -154,6 +168,7 @@ public class RefundService implements RefundServiceInterface {
         order.setStatus(OrderStatus.FULFILLED);
 
         audit(actor, AuditAction.REFUND_REJECTED, refund, order.getCode());
+        billingNotifier.refundRejected(order);
         return toResource(refund, order);
     }
 

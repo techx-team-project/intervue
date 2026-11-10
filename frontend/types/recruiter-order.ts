@@ -14,6 +14,7 @@ export interface RecruiterOrderItem {
   validityDays: number | null;
   bonusCredits: number;
   benefits: ServicePackageBenefit[];
+  bookedWeeks: string[];
 }
 
 export interface RecruiterOrderInvoice {
@@ -114,6 +115,22 @@ export interface RefundQuote {
   refundableAmount: number;
   requestable: boolean;
   existingStatus: RefundStatus | null;
+}
+
+export type PaymentTransactionStatus = 'MATCHED' | 'UNMATCHED';
+
+export interface RecruiterPaymentTransaction {
+  id: number;
+  sepayId: string;
+  gateway: string | null;
+  accountNumber: string | null;
+  content: string | null;
+  amountIn: number;
+  referenceCode: string | null;
+  transactionAt: string;
+  status: PaymentTransactionStatus;
+  matchedOrderCode: string | null;
+  note: string | null;
 }
 
 export interface OrderRefundRequest {

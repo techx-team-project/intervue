@@ -7,6 +7,7 @@ import com.techx.intervue.modules.billing.resources.InvoiceResource;
 import com.techx.intervue.modules.billing.resources.OrderPaymentResource;
 import com.techx.intervue.modules.billing.resources.OrderResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
+import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
 import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
 import com.techx.intervue.modules.billing.services.interfaces.InvoiceServiceInterface;
@@ -48,6 +49,22 @@ public class RecruiterOrderController extends BaseController {
             Pageable pageable, @AuthenticationPrincipal CustomUserDetails principal) {
         return page(
                 orderService.search(pageable, principal.getId()), "Orders retrieved successfully!");
+    }
+
+    @GetMapping("/payments")
+    public ResponseEntity<ApiResource<PageResource<PaymentTransactionResource>>> payments(
+            Pageable pageable, @AuthenticationPrincipal CustomUserDetails principal) {
+        return page(
+                orderService.searchPayments(pageable, principal.getId()),
+                "Payments retrieved successfully!");
+    }
+
+    @GetMapping("/refunds")
+    public ResponseEntity<ApiResource<PageResource<RefundRequestResource>>> refunds(
+            Pageable pageable, @AuthenticationPrincipal CustomUserDetails principal) {
+        return page(
+                refundService.listMine(principal.getId(), pageable),
+                "Refund requests retrieved successfully!");
     }
 
     @GetMapping("/{code}")

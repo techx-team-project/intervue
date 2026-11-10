@@ -95,6 +95,7 @@ export interface AdminOrderItem {
   unitPrice: number;
   quantity: number;
   lineTotal: number;
+  bookedWeeks: string[];
 }
 
 export interface AdminOrder {
@@ -113,6 +114,7 @@ export interface AdminOrder {
   expiresAt: string;
   paidAt: string | null;
   createdAt: string;
+  manualRefundResolvedAt: string | null;
   items: AdminOrderItem[];
 }
 
