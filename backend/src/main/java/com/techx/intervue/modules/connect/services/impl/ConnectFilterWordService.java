@@ -12,18 +12,24 @@ import com.techx.intervue.modules.connect.services.interfaces.ConnectFilterWordS
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ConnectFilterWordService implements ConnectFilterWordServiceInterface {
 
+    public static final String ACTIVE_WORDS_CACHE_KEY = "connect:filter-words:active";
+
     private final ConnectFilterWordRepository filterWordRepository;
     private final ConnectMapper connectMapper;
+    private final StringRedisTemplate redis;
 
     @Override
     @Transactional(readOnly = true)
@@ -45,6 +51,7 @@ public class ConnectFilterWordService implements ConnectFilterWordServiceInterfa
                         .build();
 
         ConnectFilterWord saved = filterWordRepository.save(entity);
+        evictCache();
         return connectMapper.toFilterWordResource(saved);
     }
 
@@ -64,6 +71,7 @@ public class ConnectFilterWordService implements ConnectFilterWordServiceInterfa
         entity.setNote(request.note() != null ? request.note().trim() : null);
 
         ConnectFilterWord saved = filterWordRepository.save(entity);
+        evictCache();
         return connectMapper.toFilterWordResource(saved);
     }
 
@@ -74,6 +82,7 @@ public class ConnectFilterWordService implements ConnectFilterWordServiceInterfa
                         .findById(id)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         filterWordRepository.delete(entity);
+        evictCache();
     }
 
     @Override
@@ -84,7 +93,16 @@ public class ConnectFilterWordService implements ConnectFilterWordServiceInterfa
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         entity.setActive(!entity.isActive());
         ConnectFilterWord saved = filterWordRepository.save(entity);
+        evictCache();
         return connectMapper.toFilterWordResource(saved);
+    }
+
+    private void evictCache() {
+        try {
+            redis.delete(ACTIVE_WORDS_CACHE_KEY);
+        } catch (Exception e) {
+            log.debug("Failed to evict active filter words cache: {}", e.getMessage());
+        }
     }
 
     private void validatePattern(String pattern, boolean regex) {
