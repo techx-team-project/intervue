@@ -16,6 +16,8 @@ public interface RefundServiceInterface {
 
     RefundRequestResource request(String orderCode, CreateRefundRequest request, Long recruiterId);
 
+    Page<RefundRequestResource> listMine(Long recruiterId, Pageable pageable);
+
     Page<RefundRequestResource> search(RefundStatus status, Pageable pageable);
 
     RefundRequestResource approve(Long id, ReviewRefundRequest request, RequestActor actor);
