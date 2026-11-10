@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.connect.services.impl;
 
 import com.techx.intervue.modules.connect.enums.ConnectActorType;
+import com.techx.intervue.modules.connect.enums.ConnectionStatus;
 import com.techx.intervue.modules.connect.resources.MessageResource;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectSseServiceInterface;
 import java.io.IOException;
@@ -45,6 +46,23 @@ public class ConnectSseService implements ConnectSseServiceInterface {
                     key(actorType, actorId),
                     emitter,
                     SseEmitter.event().name("message").data(message));
+        }
+    }
+
+    @Override
+    public void publishStatus(
+            ConnectActorType actorType, Long actorId, Long connectionId, ConnectionStatus status) {
+        List<SseEmitter> list = emitters.get(key(actorType, actorId));
+        if (list == null) {
+            return;
+        }
+        for (SseEmitter emitter : list) {
+            send(
+                    key(actorType, actorId),
+                    emitter,
+                    SseEmitter.event()
+                            .name("status")
+                            .data(Map.of("connectionId", connectionId, "status", status.name())));
         }
     }
 

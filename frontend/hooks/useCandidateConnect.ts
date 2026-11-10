@@ -15,6 +15,7 @@ export const candidateConnectKeys = {
   messages: (connectionId: number) => ['connect', 'candidate', 'messages', connectionId] as const,
   unread: ['connect', 'candidate', 'unread'] as const,
   rulesAck: ['connect', 'candidate', 'rules-ack'] as const,
+  muteStatus: ['connect', 'candidate', 'mute-status'] as const,
 };
 
 export function useCandidateConversations() {
@@ -104,6 +105,9 @@ export function useCandidateSendMessage(connectionId: number) {
       queryClient.invalidateQueries({ queryKey: candidateConnectKeys.messages(connectionId) });
       queryClient.invalidateQueries({ queryKey: candidateConnectKeys.conversations });
     },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: candidateConnectKeys.muteStatus });
+    },
   });
 }
 
@@ -115,6 +119,9 @@ export function useCandidateSendAttachment(connectionId: number) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: candidateConnectKeys.messages(connectionId) });
       queryClient.invalidateQueries({ queryKey: candidateConnectKeys.conversations });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: candidateConnectKeys.muteStatus });
     },
   });
 }
@@ -160,6 +167,14 @@ export function useCandidateAcknowledgeRules() {
   return useMutation({
     mutationFn: () => candidateConnectApi.acknowledgeRules(),
     onSuccess: (data) => queryClient.setQueryData(candidateConnectKeys.rulesAck, data),
+  });
+}
+
+export function useCandidateMuteStatus() {
+  return useQuery({
+    queryKey: candidateConnectKeys.muteStatus,
+    queryFn: () => candidateConnectApi.getMuteStatus(),
+    staleTime: 60_000,
   });
 }
 

@@ -2,6 +2,7 @@ import { request } from '@/apiRequest/http';
 import type { Page } from '@/types/api';
 import type {
   ConnectMessage,
+  ConnectMuteStatus,
   ConnectRulesAck,
   ConnectUnreadCount,
   ConversationSummary,
@@ -64,4 +65,6 @@ export const recruiterConnectApi = {
   getRulesAck: () => request<ConnectRulesAck>(`${BASE}/rules-ack`),
 
   acknowledgeRules: () => request<ConnectRulesAck>(`${BASE}/rules-ack`, { method: 'POST' }),
+
+  getMuteStatus: () => request<ConnectMuteStatus>(`${BASE}/mute-status`),
 };

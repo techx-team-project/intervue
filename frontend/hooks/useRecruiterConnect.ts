@@ -13,6 +13,7 @@ export const recruiterConnectKeys = {
   messages: (connectionId: number) => ['connect', 'recruiter', 'messages', connectionId] as const,
   unread: ['connect', 'recruiter', 'unread'] as const,
   rulesAck: ['connect', 'recruiter', 'rules-ack'] as const,
+  muteStatus: ['connect', 'recruiter', 'mute-status'] as const,
   eligibleCandidates: (search: string) => ['connect', 'recruiter', 'eligible-candidates', search] as const,
 };
 
@@ -62,6 +63,9 @@ export function useSendMessage(connectionId: number) {
       queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.messages(connectionId) });
       queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.conversations });
     },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.muteStatus });
+    },
   });
 }
 
@@ -73,6 +77,9 @@ export function useSendAttachment(connectionId: number) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.messages(connectionId) });
       queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.conversations });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.muteStatus });
     },
   });
 }
@@ -140,6 +147,17 @@ export function useSendInvitation() {
       queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.conversations });
       queryClient.invalidateQueries({ queryKey: ['connect', 'recruiter', 'eligible-candidates'] });
     },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.muteStatus });
+    },
+  });
+}
+
+export function useConnectMuteStatus() {
+  return useQuery({
+    queryKey: recruiterConnectKeys.muteStatus,
+    queryFn: () => recruiterConnectApi.getMuteStatus(),
+    staleTime: 60_000,
   });
 }
 

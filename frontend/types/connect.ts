@@ -12,6 +12,8 @@ export type EligibleCandidate = {
   candidateId: number;
   fullName: string;
   email: string;
+  jobTitle?: string;
+  submittedAt?: string;
 };
 
 export type Invitation = {
@@ -61,4 +63,10 @@ export type ConnectUnreadCount = {
 export type ConnectRulesAck = {
   acknowledged: boolean;
   acknowledgedAt?: string;
+};
+
+export type ConnectMuteStatus = {
+  muted: boolean;
+  expiresAt?: string;
+  reason?: string;
 };

@@ -37,7 +37,7 @@ public class ConnectViolation extends BaseEntity {
     @Column(name = "actor_id", nullable = false, updatable = false)
     private Long actorId;
 
-    @Column(name = "connection_id", nullable = false, updatable = false)
+    @Column(name = "connection_id", updatable = false)
     private Long connectionId;
 
     @Column(name = "matched_pattern", nullable = false, updatable = false)

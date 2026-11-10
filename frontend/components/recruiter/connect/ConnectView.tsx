@@ -6,6 +6,7 @@ import ConnectSidebar from '@/components/recruiter/connect/ConnectSidebar';
 import ConnectThread from '@/components/recruiter/connect/ConnectThread';
 import EligibleCandidatesPanel from '@/components/recruiter/connect/EligibleCandidatesPanel';
 import Spinner from '@/components/common/Spinner';
+import Modal from '@/components/ui/Modal';
 import { useConnectStream } from '@/hooks/useConnectStream';
 import { useConnectInvalidation, useConversations, useRulesAck } from '@/hooks/useRecruiterConnect';
 import { useCallback, useState } from 'react';
@@ -13,6 +14,7 @@ import { useCallback, useState } from 'react';
 export default function ConnectView() {
   const { data: rulesAck, isLoading: isRulesLoading } = useRulesAck();
   const [isRulesViewOpen, setRulesViewOpen] = useState(false);
+  const [isEligibleModalOpen, setEligibleModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const { conversations, isLoading, hasMore, isLoadingMore, loadMore } = useConversations();
@@ -54,12 +56,13 @@ export default function ConnectView() {
           selectedId={selectedId}
           onSelect={setSelectedId}
           onOpenRules={() => setRulesViewOpen(true)}
+          onOpenEligible={() => setEligibleModalOpen(true)}
         />
 
         {selectedConversation ? (
-          <ConnectThread conversation={selectedConversation} />
+          <ConnectThread conversation={selectedConversation} onBack={() => setSelectedId(null)} />
         ) : (
-          <div className="flex flex-1 flex-col items-center justify-center bg-slate-50/40 p-6">
+          <div className="hidden flex-1 flex-col items-center justify-center bg-slate-50/40 p-6 md:flex">
             <CatEmptyIllustration
               title="You don't have any conversations..."
               description="Select an applicant on the right to start a conversation."
@@ -72,6 +75,15 @@ export default function ConnectView() {
         {isRulesViewOpen && (
           <ConnectRulesModal mode="view" portal="recruiter" onClose={() => setRulesViewOpen(false)} />
         )}
+
+        <Modal
+          isOpen={isEligibleModalOpen}
+          onClose={() => setEligibleModalOpen(false)}
+          title="Other Candidates"
+          description="Applied to your job postings recently"
+        >
+          <EligibleCandidatesPanel variant="modal" onInvited={() => setEligibleModalOpen(false)} />
+        </Modal>
       </div>
     </div>
   );

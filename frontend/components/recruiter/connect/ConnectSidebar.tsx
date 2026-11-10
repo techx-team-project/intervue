@@ -11,7 +11,7 @@ import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useInView } from '@/hooks/useInView';
 import { cn } from '@/lib/utils';
 import type { ConversationSummary } from '@/types/connect';
-import { Search } from 'lucide-react';
+import { Search, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -27,6 +27,7 @@ type ConnectSidebarProps = {
   selectedId: number | null;
   onSelect: (id: number) => void;
   onOpenRules: () => void;
+  onOpenEligible?: () => void;
 };
 
 export default function ConnectSidebar({
@@ -38,6 +39,7 @@ export default function ConnectSidebar({
   selectedId,
   onSelect,
   onOpenRules,
+  onOpenEligible,
 }: ConnectSidebarProps) {
   const [tab, setTab] = useState<ConnectTab>('ALL');
   const [search, setSearch] = useState('');
@@ -60,10 +62,26 @@ export default function ConnectSidebar({
   }, [conversations, tab, debouncedSearch]);
 
   return (
-    <div className="border-outline-variant flex h-full w-full flex-col border-r bg-white sm:w-80">
+    <div
+      className={cn(
+        'border-outline-variant flex h-full w-full flex-col border-r bg-white md:w-80',
+        selectedId !== null && 'hidden md:flex',
+      )}
+    >
       <div className="border-outline-variant flex items-center justify-between gap-2 border-b px-4 py-3.5">
         <IntervueConnectLogo />
         <div className="flex items-center gap-1">
+          {onOpenEligible && (
+            <button
+              type="button"
+              onClick={onOpenEligible}
+              title="Other Candidates"
+              aria-label="Other Candidates"
+              className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-colors lg:hidden"
+            >
+              <UserPlus className="h-4 w-4" />
+            </button>
+          )}
           <Link
             href={ROUTES.RECRUITER_DASHBOARD}
             className="text-body-sm text-on-surface-variant hover:bg-surface-container-low rounded-full px-2.5 py-1.5 font-semibold transition-colors"

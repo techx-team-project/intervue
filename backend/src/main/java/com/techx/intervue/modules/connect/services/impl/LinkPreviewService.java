@@ -43,7 +43,7 @@ public class LinkPreviewService implements LinkPreviewServiceInterface {
         if (!matcher.find()) {
             return Optional.empty();
         }
-        String url = matcher.group();
+        String url = matcher.group().replaceAll("[.,;:!?)]+$", "");
         String cacheKey = CACHE_PREFIX + sha256(url);
         try {
             String cached = redis.opsForValue().get(cacheKey);

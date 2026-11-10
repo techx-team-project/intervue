@@ -50,11 +50,11 @@ public class ConnectMapper {
 
     private String lastMessagePreview(Connection connection, ConnectionMessage message) {
         if (connection.getContentHiddenAt() != null) {
-            return "Nội dung đã được ẩn";
+            return "Content has been hidden";
         }
         return switch (message.getMessageType()) {
-            case IMAGE -> "Đã gửi một hình ảnh";
-            case FILE -> "Đã gửi một tệp đính kèm";
+            case IMAGE -> "Sent an image";
+            case FILE -> "Sent an attachment";
             case LINK ->
                     message.getLinkTitle() != null
                             ? message.getLinkTitle()

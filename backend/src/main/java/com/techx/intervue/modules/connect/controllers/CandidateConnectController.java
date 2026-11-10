@@ -4,10 +4,12 @@ import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.connect.enums.ConnectActorType;
 import com.techx.intervue.modules.connect.requests.ReportConversationRequest;
 import com.techx.intervue.modules.connect.requests.SendMessageRequest;
+import com.techx.intervue.modules.connect.resources.ConnectMuteStatusResource;
 import com.techx.intervue.modules.connect.resources.ConnectRulesAckResource;
 import com.techx.intervue.modules.connect.resources.ConnectUnreadCountResource;
 import com.techx.intervue.modules.connect.resources.ConversationSummaryResource;
 import com.techx.intervue.modules.connect.resources.MessageResource;
+import com.techx.intervue.modules.connect.services.interfaces.ConnectModerationServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectRulesAckServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectSseServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectUnreadServiceInterface;
@@ -45,6 +47,7 @@ public class CandidateConnectController extends BaseController {
     private final ConnectSseServiceInterface sseService;
     private final ConnectUnreadServiceInterface unreadService;
     private final ConnectRulesAckServiceInterface rulesAckService;
+    private final ConnectModerationServiceInterface moderationService;
 
     @GetMapping("/invitations")
     public ResponseEntity<ApiResource<PageResource<ConversationSummaryResource>>> invitations(
@@ -178,5 +181,13 @@ public class CandidateConnectController extends BaseController {
         return ok(
                 rulesAckService.acknowledge(ConnectActorType.CANDIDATE, principal.getId()),
                 "Rules acknowledged successfully!");
+    }
+
+    @GetMapping("/mute-status")
+    public ResponseEntity<ApiResource<ConnectMuteStatusResource>> muteStatus(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                moderationService.muteStatus(ConnectActorType.CANDIDATE, principal.getId()),
+                "Mute status retrieved successfully!");
     }
 }

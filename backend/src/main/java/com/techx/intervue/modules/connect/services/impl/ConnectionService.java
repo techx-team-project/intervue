@@ -82,6 +82,11 @@ public class ConnectionService implements ConnectionServiceInterface {
     @Override
     @Transactional
     public InvitationResource invite(Long recruiterId, SendInvitationRequest request) {
+        if (moderationService.isMuted(ConnectActorType.RECRUITER, recruiterId)) {
+            throw new AppException(ErrorCode.CONNECT_MUTED);
+        }
+        moderationService.screen(ConnectActorType.RECRUITER, recruiterId, null, request.message());
+
         Long companyId = companyScope.companyIdOf(recruiterId);
         if (connectionRepository.existsByCandidateIdAndCompanyId(
                 request.candidateId(), companyId)) {
@@ -126,6 +131,12 @@ public class ConnectionService implements ConnectionServiceInterface {
                         .actionUrl("/candidate/conversations")
                         .build());
 
+        sseService.publishStatus(
+                ConnectActorType.CANDIDATE,
+                candidate.candidateId(),
+                connection.getId(),
+                ConnectionStatus.PENDING);
+
         return mapper.toInvitation(connection, request.message());
     }
 
@@ -144,6 +155,16 @@ public class ConnectionService implements ConnectionServiceInterface {
                         .params(Map.of("candidateName", connection.getCandidateName()))
                         .actionUrl("/recruiter/conversations")
                         .build());
+
+        companyService
+                .findActiveMemberIds(connection.getCompanyId())
+                .forEach(
+                        recruiterId ->
+                                sseService.publishStatus(
+                                        ConnectActorType.RECRUITER,
+                                        recruiterId,
+                                        connection.getId(),
+                                        ConnectionStatus.ACCEPTED));
     }
 
     @Override
@@ -198,14 +219,23 @@ public class ConnectionService implements ConnectionServiceInterface {
                                 companyId, List.of(ConnectionStatus.values()), Pageable.unpaged())
                         .map(Connection::getCandidateId)
                         .toSet();
+        Pageable sorted =
+                pageable.getSort().isSorted()
+                        ? pageable
+                        : PageRequest.of(
+                                pageable.getPageNumber(),
+                                pageable.getPageSize(),
+                                Sort.by(Sort.Order.desc("submittedAt"), Sort.Order.desc("id")));
         return eligibilityPort
-                .search(companyId, search, alreadyConnected, pageable)
+                .search(companyId, search, alreadyConnected, sorted)
                 .map(
                         candidate ->
                                 EligibleCandidateResource.builder()
                                         .candidateId(candidate.candidateId())
                                         .fullName(candidate.fullName())
                                         .email(candidate.email())
+                                        .jobTitle(candidate.jobTitle())
+                                        .submittedAt(candidate.submittedAt())
                                         .build());
     }
 
@@ -388,6 +418,33 @@ public class ConnectionService implements ConnectionServiceInterface {
         connection.setBlockedByActorType(actorType);
         connection.setBlockedByActorId(actorId);
         connection.setBlockedAt(Instant.now());
+
+        if (actorType == ConnectActorType.CANDIDATE) {
+            companyService
+                    .findActiveMemberIds(connection.getCompanyId())
+                    .forEach(
+                            recruiterId ->
+                                    sseService.publishStatus(
+                                            ConnectActorType.RECRUITER,
+                                            recruiterId,
+                                            connection.getId(),
+                                            ConnectionStatus.BLOCKED));
+        } else {
+            sseService.publishStatus(
+                    ConnectActorType.CANDIDATE,
+                    connection.getCandidateId(),
+                    connection.getId(),
+                    ConnectionStatus.BLOCKED);
+            companyService.findActiveMemberIds(connection.getCompanyId()).stream()
+                    .filter(recruiterId -> !recruiterId.equals(actorId))
+                    .forEach(
+                            otherRecruiterId ->
+                                    sseService.publishStatus(
+                                            ConnectActorType.RECRUITER,
+                                            otherRecruiterId,
+                                            connection.getId(),
+                                            ConnectionStatus.BLOCKED));
+        }
     }
 
     @Override

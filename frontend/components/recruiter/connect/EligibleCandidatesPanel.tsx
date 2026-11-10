@@ -7,23 +7,41 @@ import UserAvatar from '@/components/ui/UserAvatar';
 import { ROUTES } from '@/constants/routes';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useEligibleCandidates } from '@/hooks/useRecruiterConnect';
+import { cn } from '@/lib/utils';
 import type { EligibleCandidate } from '@/types/connect';
+import { formatRelativeDay } from '@/utils/datetime';
 import { MessageSquarePlus, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
-export default function EligibleCandidatesPanel() {
+type EligibleCandidatesPanelProps = {
+  variant?: 'sidebar' | 'modal';
+  onInvited?: () => void;
+};
+
+export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited }: EligibleCandidatesPanelProps) {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebouncedValue(search, 300);
   const { candidates, isLoading } = useEligibleCandidates(debouncedSearch);
   const [inviteTarget, setInviteTarget] = useState<EligibleCandidate | null>(null);
 
+  const isModal = variant === 'modal';
+
   return (
-    <div className="border-outline-variant hidden h-full w-80 shrink-0 flex-col border-l bg-white lg:flex">
-      <div className="border-outline-variant border-b px-4 py-3.5">
-        <p className="text-label-md text-on-surface-variant font-bold tracking-wide uppercase">Other Candidates</p>
-        <p className="text-label-sm text-on-surface-variant mt-0.5">Applied to your job postings in the last 7 days</p>
-        <div className="mt-2.5">
+    <div
+      className={cn(
+        'flex flex-col bg-white',
+        isModal ? 'h-[65vh] w-full' : 'border-outline-variant hidden h-full w-80 shrink-0 border-l lg:flex',
+      )}
+    >
+      <div className={cn('border-outline-variant border-b', isModal ? 'pb-3' : 'px-4 py-3.5')}>
+        {!isModal && (
+          <>
+            <p className="text-label-md text-on-surface-variant font-bold tracking-wide uppercase">Other Candidates</p>
+            <p className="text-label-sm text-on-surface-variant mt-0.5">Applicants who applied to your job postings</p>
+          </>
+        )}
+        <div className={isModal ? '' : 'mt-2.5'}>
           <Input
             placeholder="Search candidate..."
             leftIcon={<Search className="h-4 w-4" />}
@@ -33,7 +51,7 @@ export default function EligibleCandidatesPanel() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-2 py-2">
+      <div className={cn('flex-1 overflow-y-auto py-2', isModal ? '' : 'px-2')}>
         {isLoading ? (
           <div className="flex justify-center py-8">
             <Spinner />
@@ -50,7 +68,14 @@ export default function EligibleCandidatesPanel() {
                 <UserAvatar fullName={candidate.fullName} size="sm" />
                 <div className="min-w-0 flex-1">
                   <p className="text-body-sm text-on-surface truncate font-semibold">{candidate.fullName}</p>
-                  <p className="text-label-sm text-on-surface-variant truncate">{candidate.email}</p>
+                  <p className="text-label-sm text-on-surface-variant truncate">
+                    {candidate.jobTitle || candidate.email}
+                  </p>
+                  {candidate.submittedAt && (
+                    <p className="text-[11px] text-slate-400">
+                      Applied {formatRelativeDay(candidate.submittedAt).toLowerCase()}
+                    </p>
+                  )}
                 </div>
                 <button
                   type="button"
@@ -67,8 +92,7 @@ export default function EligibleCandidatesPanel() {
         )}
       </div>
 
-      {/* Bottom Button (TopCV Image 1 & 2 style) */}
-      <div className="border-outline-variant border-t p-3">
+      <div className={cn('border-outline-variant border-t', isModal ? 'pt-3' : 'p-3')}>
         <Link
           href={ROUTES.RECRUITER_APPLICATIONS}
           className="border-outline-variant text-on-surface hover:bg-surface-container-low flex w-full items-center justify-center rounded-xl border py-2.5 text-xs font-semibold transition-colors"
@@ -77,7 +101,15 @@ export default function EligibleCandidatesPanel() {
         </Link>
       </div>
 
-      {inviteTarget && <InviteCandidateModal prefilledCandidate={inviteTarget} onClose={() => setInviteTarget(null)} />}
+      {inviteTarget && (
+        <InviteCandidateModal
+          prefilledCandidate={inviteTarget}
+          onClose={() => {
+            setInviteTarget(null);
+            onInvited?.();
+          }}
+        />
+      )}
     </div>
   );
 }

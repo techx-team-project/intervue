@@ -6,6 +6,7 @@ import com.techx.intervue.modules.connect.entities.Connection;
 import com.techx.intervue.modules.connect.repositories.ConnectionRepository;
 import com.techx.intervue.modules.moderation.services.interfaces.ConversationContentPortInterface;
 import java.time.Instant;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,5 +27,17 @@ public class ModerationContentHideAdapter implements ConversationContentPortInte
         if (connection.getContentHiddenAt() == null) {
             connection.setContentHiddenAt(Instant.now());
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<ConversationParticipants> findParticipants(Long connectionId) {
+        return connectionRepository
+                .findById(connectionId)
+                .map(
+                        connection ->
+                                new ConversationParticipants(
+                                        connection.getCandidateId(),
+                                        connection.getInitiatedByRecruiterId()));
     }
 }

@@ -49,6 +49,8 @@ public class ConnectEligibilityAdapter implements CandidateEligibilityPortInterf
         return new EligibleCandidate(
                 projection.getCandidateId(),
                 projection.getCandidateName(),
-                projection.getCandidateEmail());
+                projection.getCandidateEmail(),
+                projection.getJobTitle(),
+                projection.getSubmittedAt());
     }
 }

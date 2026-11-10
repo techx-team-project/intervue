@@ -34,21 +34,51 @@ const REASON_LABELS: Record<ReportReasonCode, string> = {
 
 export default function AdminReportReviewModal({ reportSummary, onClose }: AdminReportReviewModalProps) {
   const { data: report } = useAdminReportDetail(reportSummary.id);
-  const isConversation = reportSummary.targetType === 'CONVERSATION';
+  const hasConversationThread = reportSummary.targetType === 'CONVERSATION' && reportSummary.targetId > 0;
+  const isPreConnectionViolation = reportSummary.targetType === 'CONVERSATION' && reportSummary.targetId === 0;
   const { data: messagesPage, isLoading: isMessagesLoading } = useAdminReportConversationMessages(
-    isConversation ? reportSummary.targetId : undefined,
+    hasConversationThread ? reportSummary.targetId : undefined,
     0,
     100,
   );
 
+  const systemActorMatch = useMemo(() => {
+    if (reportSummary.reporterType !== 'SYSTEM') return null;
+    const note = report?.reasonNote;
+    if (!note) return null;
+    const match = note.match(/Actor:\s*(CANDIDATE|RECRUITER)#(\d+)/);
+    if (!match) return null;
+    return {
+      actorType: match[1] as 'CANDIDATE' | 'RECRUITER',
+      actorId: match[2],
+    };
+  }, [reportSummary.reporterType, report?.reasonNote]);
+
   const [activeAction, setActiveAction] = useState<'NONE' | 'DISMISS' | 'RESOLVE'>('NONE');
   const [dismissNote, setDismissNote] = useState('');
-  const [resolveAction, setResolveAction] = useState<ReportResolveAction>('HIDE_CONTENT');
-  const [resolveNote, setResolveNote] = useState('');
-  const [lockActorType, setLockActorType] = useState<'CANDIDATE' | 'RECRUITER'>(
-    reportSummary.reporterType === 'RECRUITER' ? 'CANDIDATE' : 'RECRUITER',
+  const [resolveAction, setResolveAction] = useState<ReportResolveAction>(
+    hasConversationThread ? 'HIDE_CONTENT' : 'LOCK_ACCOUNT',
   );
-  const [lockActorId, setLockActorId] = useState<string>('');
+  const [resolveNote, setResolveNote] = useState('');
+  const [customLockActorType, setCustomLockActorType] = useState<'CANDIDATE' | 'RECRUITER' | null>(null);
+  const [customLockActorId, setCustomLockActorId] = useState<string | null>(null);
+
+  const lockActorType: 'CANDIDATE' | 'RECRUITER' =
+    customLockActorType ??
+    systemActorMatch?.actorType ??
+    (reportSummary.reporterType === 'RECRUITER' ? 'CANDIDATE' : 'RECRUITER');
+
+  const messagesItems = messagesPage?.items;
+  const detectedOffenderId = useMemo(() => {
+    if (systemActorMatch && systemActorMatch.actorType === lockActorType) {
+      return systemActorMatch.actorId;
+    }
+    if (!messagesItems?.length) return '';
+    const offenderMsg = messagesItems.find((m) => m.senderType === lockActorType);
+    return offenderMsg ? String(offenderMsg.senderId) : '';
+  }, [systemActorMatch, messagesItems, lockActorType]);
+
+  const lockActorId = customLockActorId !== null ? customLockActorId : detectedOffenderId;
 
   const dismissMutation = useAdminDismissReport();
   const resolveMutation = useAdminResolveReport();
@@ -154,7 +184,14 @@ export default function AdminReportReviewModal({ reportSummary, onClose }: Admin
         </div>
 
         {/* Conversation Message History Preview */}
-        {isConversation && (
+        {isPreConnectionViolation && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50/70 px-4 py-3 text-xs text-amber-900">
+            This automated report was triggered during a pre-connection invitation message before a conversation thread
+            was created.
+          </div>
+        )}
+
+        {hasConversationThread && (
           <div>
             <div className="flex items-center justify-between pb-2">
               <p className="flex items-center gap-2 text-xs font-bold text-slate-700 uppercase">
@@ -288,26 +325,28 @@ export default function AdminReportReviewModal({ reportSummary, onClose }: Admin
 
                 {/* Resolution Action Radios */}
                 <div className="space-y-2 text-xs">
-                  <label className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 bg-white p-2.5 hover:bg-slate-50">
-                    <input
-                      type="radio"
-                      name="resolveAction"
-                      value="HIDE_CONTENT"
-                      checked={resolveAction === 'HIDE_CONTENT'}
-                      onChange={() => setResolveAction('HIDE_CONTENT')}
-                      className="accent-primary mt-0.5"
-                    />
-                    <div>
-                      <p className="flex items-center gap-1.5 font-bold text-slate-800">
-                        <EyeOff className="h-3.5 w-3.5 text-amber-600" />
-                        Hide Conversation Content
-                      </p>
-                      <p className="mt-0.5 text-[11px] text-slate-500">
-                        Redacts message content for both candidate and recruiter. Conversation stays accessible for
-                        evidence.
-                      </p>
-                    </div>
-                  </label>
+                  {hasConversationThread && (
+                    <label className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 bg-white p-2.5 hover:bg-slate-50">
+                      <input
+                        type="radio"
+                        name="resolveAction"
+                        value="HIDE_CONTENT"
+                        checked={resolveAction === 'HIDE_CONTENT'}
+                        onChange={() => setResolveAction('HIDE_CONTENT')}
+                        className="accent-primary mt-0.5"
+                      />
+                      <div>
+                        <p className="flex items-center gap-1.5 font-bold text-slate-800">
+                          <EyeOff className="h-3.5 w-3.5 text-amber-600" />
+                          Hide Conversation Content
+                        </p>
+                        <p className="mt-0.5 text-[11px] text-slate-500">
+                          Redacts message content for both candidate and recruiter. Conversation stays accessible for
+                          evidence.
+                        </p>
+                      </div>
+                    </label>
+                  )}
 
                   <label className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 bg-white p-2.5 hover:bg-slate-50">
                     <input
@@ -361,7 +400,10 @@ export default function AdminReportReviewModal({ reportSummary, onClose }: Admin
                           name="lockActorType"
                           value="CANDIDATE"
                           checked={lockActorType === 'CANDIDATE'}
-                          onChange={() => setLockActorType('CANDIDATE')}
+                          onChange={() => {
+                            setCustomLockActorType('CANDIDATE');
+                            setCustomLockActorId(null);
+                          }}
                         />
                         <span>Candidate</span>
                       </label>
@@ -371,20 +413,23 @@ export default function AdminReportReviewModal({ reportSummary, onClose }: Admin
                           name="lockActorType"
                           value="RECRUITER"
                           checked={lockActorType === 'RECRUITER'}
-                          onChange={() => setLockActorType('RECRUITER')}
+                          onChange={() => {
+                            setCustomLockActorType('RECRUITER');
+                            setCustomLockActorId(null);
+                          }}
                         />
                         <span>Recruiter</span>
                       </label>
                     </div>
                     <div>
                       <label className="mb-1 block text-[11px] font-medium text-slate-700">
-                        Offender User / Recruiter ID (optional, leave blank to use target participant):
+                        Offender User / Recruiter ID (auto-detected, or leave blank to resolve automatically):
                       </label>
                       <input
                         type="number"
                         placeholder="e.g. 102"
                         value={lockActorId}
-                        onChange={(e) => setLockActorId(e.target.value)}
+                        onChange={(e) => setCustomLockActorId(e.target.value)}
                         className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800"
                       />
                     </div>
