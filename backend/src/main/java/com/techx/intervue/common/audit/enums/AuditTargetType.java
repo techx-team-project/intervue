@@ -13,6 +13,7 @@ public enum AuditTargetType {
     SERVICE_PACKAGE,
     CREDIT_PRICE,
     VOUCHER,
+    REFUND_REQUEST,
     BILLING_SETTINGS,
     PAYMENT_TRANSACTION
 }

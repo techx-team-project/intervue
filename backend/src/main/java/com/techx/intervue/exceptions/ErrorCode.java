@@ -198,6 +198,12 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "You have used up this service, please buy more!"),
     ENTITLEMENT_EXPIRED(
             HttpStatus.UNPROCESSABLE_CONTENT, "This service has passed its activation deadline!"),
+    ORDER_NOT_REFUNDABLE(HttpStatus.UNPROCESSABLE_CONTENT, "Only a paid order can be refunded!"),
+    REFUND_ALREADY_REQUESTED(
+            HttpStatus.CONFLICT, "A refund has already been requested for this order!"),
+    REFUND_ALREADY_REVIEWED(HttpStatus.CONFLICT, "This refund request was already reviewed!"),
+    NOTHING_LEFT_TO_REFUND(
+            HttpStatus.UNPROCESSABLE_CONTENT, "Every service on this order has already been used!"),
     INVOICE_NOT_ISSUED_YET(
             HttpStatus.UNPROCESSABLE_CONTENT, "The invoice is issued once the order is paid!"),
     INVOICE_RENDER_FAILED(
