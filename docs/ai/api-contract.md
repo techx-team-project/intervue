@@ -466,9 +466,9 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 
 Chat between a Candidate and a company's Recruiters (`modules/connect`). A `connection` is one per
 `(candidate, company)` pair, not per job. Wave 1 built the invitation lifecycle; wave 2 added free
-messaging, attachments, link preview, block and the content filter; wave 3 (below) adds real-time
-delivery, the unread counter and the human-facing report endpoint. Admin review screens
-(`GET/POST /admin/reports/...`) and all frontend are still to come.
+messaging, attachments, link preview, block and the content filter; wave 3 added real-time delivery,
+the unread counter and the human-facing report endpoint; wave 4 (below) adds the admin report queue,
+hide-content and lock-account. All frontend is still to come.
 
 **Lifecycle (wave 1)**
 
@@ -511,6 +511,20 @@ delivery, the unread counter and the human-facing report endpoint. Admin review 
 
 - **Recipient resolution**: a candidate's message pushes to **every active member of the recruiting company** (`findActiveMemberIds`) — matches the shared company-wide mailbox model; a recruiter's message pushes to the one candidate.
 - **This is the first real-time push infra in the project** — notification delivery (`frontend/hooks/useNotifications.ts`) is plain 60s polling, not SSE. Connect's channel is independent of it on purpose (different domain, per the original design table).
+
+**Admin report queue (wave 4)** — `modules/moderation`, `@PreAuthorize("hasRole('ADMIN')")`:
+
+| Method | Path | Notes |
+|---|---|---|
+| `GET` | `/admin/reports?targetType=&status=&page=&size=` | Both filters optional (`Specification`, never string-concatenated). `AdminReportSummaryResource` per row. |
+| `GET` | `/admin/reports/{id}` | `AdminReportDetailResource` — the report's own fields only (reporter, target, reason, status, admin note, reviewed by/at). No embedded conversation content. |
+| `GET` | `/admin/connect/conversations/{id}/messages?page=&size=` | **Separate endpoint, inside `connect`** (not `moderation` — `moderation` never imports `connect`). Full, **never-redacted** history regardless of block/hide state, so admin can actually read what happened before deciding. `404 NOT_FOUND` if the connection doesn't exist. |
+| `POST` | `/admin/reports/{id}/dismiss` | Body `{ note? }`. `status` → `DISMISSED`. `404 NOT_FOUND`, `409 REPORT_ALREADY_REVIEWED` if not `PENDING`. |
+| `POST` | `/admin/reports/{id}/resolve` | Body `{ action: NONE\|HIDE_CONTENT\|LOCK_ACCOUNT, note?, lockActorType?, lockActorId? }`. `status` → `ACTION_TAKEN`. Same `404`/`409` as dismiss. |
+
+- **`HIDE_CONTENT`** sets `connections.content_hidden_at` (via a `moderation → connect` port, same declare-in-consumer/implement-in-owner shape as `entitlement`↔`job`/`company`). From that point, `GET .../messages` for the **candidate and recruiter** on that connection returns every message with `body`/attachment/link fields stripped to `null` — only `id`/`senderType`/`senderId`/`messageType`/`createdAt` survive. The admin endpoint above is the one exception, by design.
+- **`LOCK_ACCOUNT` needs `lockActorType` (`CANDIDATE`/`RECRUITER`) and `lockActorId` explicitly** — `moderation` has no way to infer which side of a company-wide conversation is the offender; the admin decides after reading the conversation and says so directly. `CANDIDATE` reuses the existing ban flow (`UserAdminServiceInterface.restrict`, a real `UserRestriction` row, session killed, user notified). `RECRUITER` calls the **first-ever** `RecruiterServiceInterface.suspend(...)` — sets `RecruiterStatus.SUSPENDED`, kills the session, revokes refresh tokens; `RecruiterAuthService`'s existing `ensureSignInAllowed` check now actually rejects login for the first time (that enum value existed with nothing that ever set it). No restriction-history table or un-suspend path for recruiters yet — deliberately out of scope, same minimal-fix spirit as the gap note that asked for this.
+- **Every dismiss/resolve notifies the reporter** (`REPORT_DISMISSED`/`REPORT_RESOLVED`, resolved from the report's own `reporterType` — no cross-module lookup) and writes one `AuditAction.REPORT_DISMISSED`/`REPORT_RESOLVED` entry (`AuditTargetType.REPORT`, detail = the action taken).
 
 ## Error codes
 
@@ -620,6 +634,7 @@ delivery, the unread counter and the human-facing report endpoint. Admin review 
 | `CONNECTION_BLOCKED` | 403 | The conversation has been blocked by one side |
 | `MESSAGE_BLOCKED_BY_FILTER` | 422 | Content filter matched; violation recorded, message not sent |
 | `CONNECT_MUTED` | 403 | Temporarily restricted from sending Connect messages; honor the mute's `expiresAt` |
+| `REPORT_ALREADY_REVIEWED` | 409 | The report is not `PENDING` anymore - dismiss/resolve already happened |
 
 ## Recruiter Account
 
