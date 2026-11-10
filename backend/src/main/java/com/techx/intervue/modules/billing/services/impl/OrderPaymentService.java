@@ -5,6 +5,7 @@ import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.billing.entities.BillingSettings;
 import com.techx.intervue.modules.billing.entities.Order;
+import com.techx.intervue.modules.billing.enums.SupportedBank;
 import com.techx.intervue.modules.billing.repositories.OrderRepository;
 import com.techx.intervue.modules.billing.resources.OrderPaymentResource;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
@@ -49,7 +50,7 @@ public class OrderPaymentService implements OrderPaymentServiceInterface {
                 configured ? settings.getBankCode() : null,
                 configured ? settings.getBankAccountNumber() : null,
                 configured ? settings.getBankAccountName() : null,
-                order.getCode(),
+                SupportedBank.transferContent(settings.getBankCode(), order.getCode()),
                 configured ? qrUrl(settings, order) : null);
     }
 
@@ -63,7 +64,7 @@ public class OrderPaymentService implements OrderPaymentServiceInterface {
                 + "&amount="
                 + remaining
                 + "&des="
-                + encode(order.getCode());
+                + encode(SupportedBank.transferContent(settings.getBankCode(), order.getCode()));
     }
 
     private String encode(String value) {

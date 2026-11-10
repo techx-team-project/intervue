@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.billing.enums;
 
 import java.util.Arrays;
+import java.util.Optional;
 import lombok.Getter;
 
 /** Bank codes accepted by qr.sepay.vn; a code outside this list renders an HTML page, not a QR. */
@@ -40,7 +41,7 @@ public enum SupportedBank {
     VIETBANK("VietBank", "Ngân hàng Việt Nam Thương Tín"),
     VIETCAPITALBANK("VietCapitalBank", "Ngân hàng Bản Việt"),
     VIETCOMBANK("Vietcombank", "Ngân hàng Ngoại thương Việt Nam"),
-    VIETINBANK("VietinBank", "Ngân hàng Công thương Việt Nam"),
+    VIETINBANK("VietinBank", "Ngân hàng Công thương Việt Nam", "SEVQR"),
     VPBANK("VPBank", "Ngân hàng Việt Nam Thịnh Vượng"),
     VRB("VRB", "Ngân hàng Liên doanh Việt - Nga"),
     WOORIBANK("Woori", "Ngân hàng Woori Việt Nam");
@@ -48,12 +49,32 @@ public enum SupportedBank {
     private final String code;
     private final String name;
 
+    /** VietinBank only notifies SePay when the transfer content starts with this keyword. */
+    private final String contentKeyword;
+
     SupportedBank(String code, String name) {
+        this(code, name, null);
+    }
+
+    SupportedBank(String code, String name, String contentKeyword) {
         this.code = code;
         this.name = name;
+        this.contentKeyword = contentKeyword;
+    }
+
+    public static Optional<SupportedBank> byCode(String code) {
+        return Arrays.stream(values()).filter(bank -> bank.code.equals(code)).findFirst();
     }
 
     public static boolean isSupported(String code) {
-        return code != null && Arrays.stream(values()).anyMatch(bank -> bank.code.equals(code));
+        return code != null && byCode(code).isPresent();
+    }
+
+    public static String transferContent(String bankCode, String orderCode) {
+        String keyword =
+                bankCode == null
+                        ? null
+                        : byCode(bankCode).map(SupportedBank::getContentKeyword).orElse(null);
+        return keyword == null ? orderCode : keyword + " " + orderCode;
     }
 }
