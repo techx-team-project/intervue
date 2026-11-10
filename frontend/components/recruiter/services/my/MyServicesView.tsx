@@ -2,6 +2,7 @@
 
 import Spinner from '@/components/common/Spinner';
 import ActivateEntitlementModal from '@/components/recruiter/services/my/ActivateEntitlementModal';
+import CreditWalletCard from '@/components/recruiter/services/my/CreditWalletCard';
 import { ROUTES } from '@/constants/routes';
 import { useActivateEntitlement, useActiveEntitlements, useEntitlementStock } from '@/hooks/useEntitlements';
 import { cn } from '@/lib/utils';
@@ -45,6 +46,8 @@ export default function MyServicesView() {
 
   return (
     <div className="space-y-5 pb-16">
+      <CreditWalletCard onConverted={setNotice} />
+
       <div className="border-outline-variant flex gap-1 border-b">
         {(
           [
