@@ -37,7 +37,7 @@ com.techx.intervue
    ├─ content/        blog, FAQ
    ├─ billing/        service catalog, cart, orders, payments (SePay), vouchers, invoices
    ├─ entitlement/    what a company owns and may consume (quota ledger)
-   ├─ ads/            ad slots, weekly bookings, creatives, serving                      [planned]
+   ├─ ads/            ad slots, weekly bookings, creatives, serving, metrics
    └─ admin/          moderation, verification review, reports
 ```
 
