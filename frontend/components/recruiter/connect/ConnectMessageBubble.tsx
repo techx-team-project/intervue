@@ -86,6 +86,7 @@ export default function ConnectMessageBubble({ message, isOwn }: ConnectMessageB
                     alt={message.linkTitle ?? message.linkUrl}
                     width={280}
                     height={140}
+                    unoptimized
                     className="h-28 w-full object-cover"
                   />
                 )}

@@ -477,11 +477,11 @@ it needed. Candidate frontend is still to come (wave 6).
 |---|---|---|---|
 | `GET` | `/recruiter/connect/eligible-candidates?search=` | recruiter | Candidates who have at least one `Application` to the recruiter's company and have no `connection` with it yet. `EligibleCandidateResource { candidateId, fullName, email }`. |
 | `POST` | `/recruiter/connect/invitations` | recruiter | Body `{ candidateId, message (max 1000) }`. Creates a `PENDING` connection plus its opening message, charges the daily quota, notifies the candidate (`CONNECT_INVITATION_RECEIVED`). `409 CONNECTION_ALREADY_EXISTS`, `422 NOT_ELIGIBLE_TO_CONNECT`, `429 CONNECTION_QUOTA_EXCEEDED`. |
-| `GET` | `/recruiter/connect/conversations` | recruiter | Company-wide, `PENDING` + `ACCEPTED`, paged. |
+| `GET` | `/recruiter/connect/conversations` | recruiter | Company-wide, `PENDING` + `ACCEPTED` + `BLOCKED`, paged by `lastMessageAt` descending. |
 | `GET` | `/candidate/connect/invitations` | candidate | Own `PENDING` invitations, each with the opening message. |
 | `POST` | `/candidate/connect/invitations/{id}/accept` | candidate | `PENDING` to `ACCEPTED`; notifies the inviting recruiter (`CONNECT_INVITATION_ACCEPTED`). `404 NOT_FOUND` if not owned or not `PENDING`. |
 | `POST` | `/candidate/connect/invitations/{id}/decline` | candidate | `PENDING` to `DECLINED`. The pair is locked — a recruiter cannot invite the same candidate again in v1. |
-| `GET` | `/candidate/connect/conversations` | candidate | Own `ACCEPTED` connections, paged. |
+| `GET` | `/candidate/connect/conversations` | candidate | Own `ACCEPTED` + `BLOCKED` connections, paged by `lastMessageAt` descending. |
 
 - **Quota**: 100 new invitations per calendar day (Asia/Ho_Chi_Minh), counted **per recruiter**, not per company. Declining later does not refund it.
 - **Eligibility is a port**: `connect` depends on `CandidateEligibilityPortInterface`, implemented in `application` off the existing `Application` rows (already carry `candidateName`/`candidateEmail`, no call into `candidate` needed). A Candidate Search module can plug in as a second source later without touching `connect`.
@@ -532,8 +532,10 @@ from the wave 1 design during implementation:
 
 | Method | Path | Notes |
 |---|---|---|
-| `GET` | `/recruiter/connect/rules-ack` | `ConnectRulesAckResource { acknowledged, acknowledgedAt }`. Per-account, backed by `connect_rules_acknowledgements` (`UNIQUE(actor_type, actor_id)`) — wave 1's design called for this endpoint but it was never implemented until now. Candidate's mirror (`/candidate/connect/rules-ack`) is wave 6's job, same service. |
+| `GET` | `/recruiter/connect/rules-ack` | `ConnectRulesAckResource { acknowledged, acknowledgedAt }`. Per-account, backed by `connect_rules_acknowledgements` (`UNIQUE(actor_type, actor_id)`). |
 | `POST` | `/recruiter/connect/rules-ack` | Idempotent — acknowledging twice keeps the first `acknowledgedAt`. |
+| `GET` | `/candidate/connect/rules-ack` | `ConnectRulesAckResource { acknowledged, acknowledgedAt }`. Candidate's mirror. |
+| `POST` | `/candidate/connect/rules-ack` | Idempotent — acknowledges the rules for candidate. |
 
 - **`ConversationSummaryResource` gained `unreadCount`, `lastMessageAt`, `lastMessagePreview`** — the recruiter conversation list needed a last-message preview and a per-row unread flag (the "Chưa đọc" tab) and neither existed; `GET .../unread-count` only ever returned a `total` sum. `unreadCount` reads the same Redis hash wave 3 built (`ConnectUnreadServiceInterface.breakdown`, one `HGETALL`, no schema change); `lastMessageAt`/`lastMessagePreview` come from one extra `findFirstByConnectionIdOrderByCreatedAtDesc` query per connection in the returned page (accepted as a bounded N+1 — page size is capped at 100). `lastMessagePreview` is a short Vietnamese label for `IMAGE`/`FILE`, the link title for `LINK`, truncated body for `TEXT`, or "Nội dung đã được ẩn" if the connection's content is hidden. Only `recruiterConversations` populates real values this wave; the candidate-side resource still returns `unreadCount: 0` and no last-message fields (harmless — the field isn't nullable so `@JsonInclude(NON_NULL)` can't hide it — wave 6 wires it properly).
 

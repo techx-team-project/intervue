@@ -2,14 +2,18 @@
 
 import InviteCandidateModal from '@/components/recruiter/connect/InviteCandidateModal';
 import Spinner from '@/components/common/Spinner';
+import { Input } from '@/components/ui/Input';
 import UserAvatar from '@/components/ui/UserAvatar';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useEligibleCandidates } from '@/hooks/useRecruiterConnect';
 import type { EligibleCandidate } from '@/types/connect';
-import { MessageSquarePlus } from 'lucide-react';
+import { MessageSquarePlus, Search } from 'lucide-react';
 import { useState } from 'react';
 
 export default function EligibleCandidatesPanel() {
-  const { candidates, isLoading } = useEligibleCandidates('');
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebouncedValue(search, 300);
+  const { candidates, isLoading } = useEligibleCandidates(debouncedSearch);
   const [inviteTarget, setInviteTarget] = useState<EligibleCandidate | null>(null);
 
   return (
@@ -19,6 +23,14 @@ export default function EligibleCandidatesPanel() {
         <p className="text-label-sm text-on-surface-variant mt-1">
           Đã ứng tuyển vào công ty bạn, chưa có cuộc trò chuyện
         </p>
+        <div className="mt-2.5">
+          <Input
+            placeholder="Tìm ứng viên..."
+            leftIcon={<Search className="h-4 w-4" />}
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto px-2 py-2">

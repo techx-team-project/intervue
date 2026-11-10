@@ -71,4 +71,7 @@ public class Connection extends BaseEntity {
 
     @Column(name = "content_hidden_at")
     private Instant contentHiddenAt;
+
+    @Column(name = "last_message_at")
+    private Instant lastMessageAt;
 }

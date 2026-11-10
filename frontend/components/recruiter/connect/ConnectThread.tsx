@@ -7,8 +7,9 @@ import ReportConversationModal from '@/components/recruiter/connect/ReportConver
 import BlockConversationDialog from '@/components/recruiter/connect/BlockConversationDialog';
 import Spinner from '@/components/common/Spinner';
 import { useInView } from '@/hooks/useInView';
-import { useConversationMessages } from '@/hooks/useRecruiterConnect';
+import { recruiterConnectKeys, useConversationMessages } from '@/hooks/useRecruiterConnect';
 import type { ConversationSummary } from '@/types/connect';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 type ConnectThreadProps = {
@@ -16,11 +17,29 @@ type ConnectThreadProps = {
 };
 
 export default function ConnectThread({ conversation }: ConnectThreadProps) {
+  const queryClient = useQueryClient();
   const { messages, isLoading, hasOlder, isLoadingOlder, loadOlder } = useConversationMessages(conversation.id);
   const { ref: topSentinelRef, inView: topInView } = useInView<HTMLDivElement>();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isBlockDialogOpen, setBlockDialogOpen] = useState(false);
   const [isReportModalOpen, setReportModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (conversation.unreadCount > 0) {
+      queryClient.setQueryData(recruiterConnectKeys.conversations, (old: unknown) => {
+        if (!old || typeof old !== 'object' || !('pages' in old)) return old;
+        const infiniteData = old as { pages: Array<{ items: ConversationSummary[] }> };
+        return {
+          ...infiniteData,
+          pages: infiniteData.pages.map((page) => ({
+            ...page,
+            items: page.items.map((item) => (item.id === conversation.id ? { ...item, unreadCount: 0 } : item)),
+          })),
+        };
+      });
+      queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.unread });
+    }
+  }, [conversation.id, conversation.unreadCount, queryClient]);
 
   const chronological = useMemo(() => [...messages].reverse(), [messages]);
   const newestMessageId = chronological.at(-1)?.id;
