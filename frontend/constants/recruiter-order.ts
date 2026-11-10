@@ -23,3 +23,5 @@ export const ORDER_STATUS_STYLE: Record<RecruiterOrderStatus, string> = {
 };
 
 export const ORDER_CANCELLABLE: RecruiterOrderStatus[] = ['PENDING_PAYMENT', 'UNDERPAID'];
+
+export const INVOICED_STATUSES: RecruiterOrderStatus[] = ['PAID', 'FULFILLED', 'REFUND_REQUESTED', 'REFUNDED'];

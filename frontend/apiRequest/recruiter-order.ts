@@ -1,6 +1,12 @@
 import { request } from '@/apiRequest/http';
 import type { Page } from '@/types/api';
-import type { CheckoutPayload, OrderPayment, RecruiterOrder, RecruiterOrderSummary } from '@/types/recruiter-order';
+import type {
+  CheckoutPayload,
+  OrderInvoice,
+  OrderPayment,
+  RecruiterOrder,
+  RecruiterOrderSummary,
+} from '@/types/recruiter-order';
 
 export const recruiterOrderApi = {
   search: (page: number, size: number) =>
@@ -12,6 +18,10 @@ export const recruiterOrderApi = {
 
   checkout: (payload: CheckoutPayload) =>
     request<RecruiterOrder>('/recruiter/orders', { method: 'POST', body: payload }),
+
+  invoice: (code: string) => request<OrderInvoice>(`/recruiter/orders/${code}/invoice`),
+
+  invoicePdf: (code: string) => request<Blob>(`/recruiter/orders/${code}/invoice/pdf`, { responseType: 'blob' }),
 
   cancel: (code: string) => request<RecruiterOrder>(`/recruiter/orders/${code}/cancel`, { method: 'POST' }),
 };
