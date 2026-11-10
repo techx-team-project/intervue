@@ -1,14 +1,13 @@
 'use client';
 
+import CatEmptyIllustration from '@/components/connect/CatEmptyIllustration';
 import ConnectRulesModal from '@/components/recruiter/connect/ConnectRulesModal';
 import ConnectSidebar from '@/components/recruiter/connect/ConnectSidebar';
 import ConnectThread from '@/components/recruiter/connect/ConnectThread';
 import EligibleCandidatesPanel from '@/components/recruiter/connect/EligibleCandidatesPanel';
-import EmptyState from '@/components/common/EmptyState';
 import Spinner from '@/components/common/Spinner';
 import { useConnectStream } from '@/hooks/useConnectStream';
 import { useConnectInvalidation, useConversations, useRulesAck } from '@/hooks/useRecruiterConnect';
-import { MessageSquare } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
 export default function ConnectView() {
@@ -32,33 +31,48 @@ export default function ConnectView() {
   }
 
   if (!rulesAck?.acknowledged) {
-    return <ConnectRulesModal mode="gate" onClose={() => {}} />;
+    return <ConnectRulesModal mode="gate" portal="recruiter" onClose={() => {}} />;
   }
 
   return (
-    <div className="border-outline-variant flex h-[calc(100vh-8rem)] overflow-hidden rounded-2xl border bg-white">
-      <ConnectSidebar
-        conversations={conversations}
-        isLoading={isLoading}
-        hasMore={hasMore}
-        isLoadingMore={isLoadingMore}
-        onLoadMore={loadMore}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-        onOpenRules={() => setRulesViewOpen(true)}
-      />
+    <div className="flex h-[calc(100vh-5rem)] flex-col bg-slate-50 p-2 sm:p-3">
+      {/* Top Banner Tagline (TopCV style) */}
+      <div className="mb-2 hidden items-center justify-center py-1 text-center md:flex">
+        <p className="text-xs font-semibold text-slate-800">
+          New way to follow your chance. <span className="font-bold text-[#00b14f]">More engage, more success</span>
+        </p>
+      </div>
 
-      {selectedConversation ? (
-        <ConnectThread conversation={selectedConversation} />
-      ) : (
-        <div className="flex flex-1 items-center justify-center">
-          <EmptyState icon={MessageSquare} title="Chọn một cuộc trò chuyện để bắt đầu" className="border-none" />
-        </div>
-      )}
+      {/* Main 3-column Window */}
+      <div className="border-outline-variant flex flex-1 overflow-hidden rounded-2xl border bg-white shadow-xs">
+        <ConnectSidebar
+          conversations={conversations}
+          isLoading={isLoading}
+          hasMore={hasMore}
+          isLoadingMore={isLoadingMore}
+          onLoadMore={loadMore}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+          onOpenRules={() => setRulesViewOpen(true)}
+        />
 
-      <EligibleCandidatesPanel />
+        {selectedConversation ? (
+          <ConnectThread conversation={selectedConversation} />
+        ) : (
+          <div className="flex flex-1 flex-col items-center justify-center bg-slate-50/40 p-6">
+            <CatEmptyIllustration
+              title="You don't have any conversations..."
+              description="Select an applicant on the right to start a conversation."
+            />
+          </div>
+        )}
 
-      {isRulesViewOpen && <ConnectRulesModal mode="view" onClose={() => setRulesViewOpen(false)} />}
+        <EligibleCandidatesPanel />
+
+        {isRulesViewOpen && (
+          <ConnectRulesModal mode="view" portal="recruiter" onClose={() => setRulesViewOpen(false)} />
+        )}
+      </div>
     </div>
   );
 }

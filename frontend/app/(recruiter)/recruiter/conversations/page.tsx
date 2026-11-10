@@ -6,7 +6,7 @@ export default function RecruiterConversationsPage() {
     <>
       <PageHeader
         title="InterVue Connect"
-        description="Trò chuyện trực tiếp với ứng viên đã ứng tuyển vào công ty bạn."
+        description="Chat directly with candidates who applied to your company job postings."
       />
       <ConnectView />
     </>

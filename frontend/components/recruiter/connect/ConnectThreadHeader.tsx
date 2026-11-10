@@ -18,8 +18,8 @@ export default function ConnectThreadHeader({ conversation, onBlock, onReport }:
           <p className="text-body-lg text-on-surface truncate font-bold">{conversation.candidateName}</p>
           <p className="text-label-sm text-on-surface-variant truncate">{conversation.companyName}</p>
         </div>
-        {conversation.status === 'PENDING' && <Badge variant="warning">Đang chờ chấp nhận</Badge>}
-        {conversation.status === 'BLOCKED' && <Badge variant="danger">Đã chặn</Badge>}
+        {conversation.status === 'PENDING' && <Badge variant="warning">Pending acceptance</Badge>}
+        {conversation.status === 'BLOCKED' && <Badge variant="danger">Blocked</Badge>}
       </div>
 
       <ConversationActionsMenu onBlock={onBlock} onReport={onReport} blocked={conversation.status === 'BLOCKED'} />

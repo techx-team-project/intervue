@@ -73,7 +73,7 @@ export default function ConversationActionsMenu({ onBlock, onReport, blocked }: 
         ref={triggerRef}
         type="button"
         onClick={toggleMenu}
-        aria-label="Tuỳ chọn hội thoại"
+        aria-label="Conversation options"
         aria-expanded={isOpen}
         className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-colors"
       >
@@ -99,7 +99,7 @@ export default function ConversationActionsMenu({ onBlock, onReport, blocked }: 
                 className="text-body-md text-on-surface hover:bg-surface-container-low flex w-full cursor-pointer items-center gap-2.5 px-3.5 py-2.5 text-left font-medium transition-colors"
               >
                 <Ban className="h-4 w-4" />
-                <span>Chặn cuộc trò chuyện</span>
+                <span>Block conversation</span>
               </button>
             )}
             <button
@@ -112,7 +112,7 @@ export default function ConversationActionsMenu({ onBlock, onReport, blocked }: 
               className="text-error text-body-md hover:bg-surface-container-low flex w-full cursor-pointer items-center gap-2.5 px-3.5 py-2.5 text-left font-medium transition-colors"
             >
               <Flag className="h-4 w-4" />
-              <span>Báo cáo</span>
+              <span>Report</span>
             </button>
           </div>,
           document.body,

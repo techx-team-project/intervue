@@ -1,7 +1,9 @@
 'use client';
 
+import CatEmptyIllustration from '@/components/connect/CatEmptyIllustration';
+import ConnectSettingsDropdown from '@/components/connect/ConnectSettingsDropdown';
+import IntervueConnectLogo from '@/components/connect/IntervueConnectLogo';
 import ConversationListItem from '@/components/recruiter/connect/ConversationListItem';
-import EmptyState from '@/components/common/EmptyState';
 import Spinner from '@/components/common/Spinner';
 import { Input } from '@/components/ui/Input';
 import { ROUTES } from '@/constants/routes';
@@ -9,9 +11,10 @@ import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useInView } from '@/hooks/useInView';
 import { cn } from '@/lib/utils';
 import type { ConversationSummary } from '@/types/connect';
-import { MessagesSquare, Search, Settings } from 'lucide-react';
+import { Search } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 type ConnectTab = 'ALL' | 'UNREAD';
 
@@ -59,36 +62,42 @@ export default function ConnectSidebar({
   return (
     <div className="border-outline-variant flex h-full w-full flex-col border-r bg-white sm:w-80">
       <div className="border-outline-variant flex items-center justify-between gap-2 border-b px-4 py-3.5">
-        <div className="flex items-center gap-1.5">
-          <span className="text-title-md text-on-surface font-bold">InterVue Connect</span>
-          <span className="text-label-sm bg-primary-light text-primary rounded-full px-1.5 py-0.5 font-bold">Beta</span>
-        </div>
+        <IntervueConnectLogo />
         <div className="flex items-center gap-1">
           <Link
             href={ROUTES.RECRUITER_DASHBOARD}
             className="text-body-sm text-on-surface-variant hover:bg-surface-container-low rounded-full px-2.5 py-1.5 font-semibold transition-colors"
           >
-            Về trang chủ
+            Home
           </Link>
-          <button
-            type="button"
-            onClick={onOpenRules}
-            title="Quy định sử dụng"
-            aria-label="Quy định sử dụng"
-            className="text-on-surface-variant hover:bg-surface-container-low flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors"
-          >
-            <Settings className="h-4 w-4" />
-          </button>
+          <ConnectSettingsDropdown onOpenRules={onOpenRules} />
         </div>
       </div>
 
       <div className="px-4 pt-3">
         <Input
-          placeholder="Họ tên ứng viên..."
+          placeholder="Search candidate name..."
           leftIcon={<Search className="h-4 w-4" />}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
+      </div>
+
+      {/* Feedback Card (TopCV Image 2 style) */}
+      <div className="px-4 pt-3">
+        <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
+          <p className="text-xs font-semibold text-slate-800">How is your experience with InterVue Connect?</p>
+          <p className="mt-1 text-[11px] leading-tight text-slate-500">
+            Share your thoughts with our team to help us improve your experience.
+          </p>
+          <button
+            type="button"
+            onClick={() => toast.info('Thank you! Feedback feature is coming soon.')}
+            className="mt-2.5 w-full cursor-pointer rounded-lg bg-blue-50 py-1.5 text-xs font-semibold text-blue-600 transition-colors hover:bg-blue-100"
+          >
+            Send feedback
+          </button>
+        </div>
       </div>
 
       <div className="border-outline-variant mt-3 flex items-center gap-5 border-b px-4">
@@ -104,7 +113,7 @@ export default function ConnectSidebar({
                 : 'text-on-surface-variant hover:text-on-surface border-transparent',
             )}
           >
-            {value === 'ALL' ? 'Tất cả' : 'Chưa đọc'}
+            {value === 'ALL' ? 'All' : 'Unread'}
           </button>
         ))}
       </div>
@@ -115,12 +124,12 @@ export default function ConnectSidebar({
             <Spinner />
           </div>
         ) : filtered.length === 0 ? (
-          <EmptyState
-            icon={MessagesSquare}
-            title="Bạn không có cuộc trò chuyện nào..."
-            description={tab === 'UNREAD' ? 'Không có hội thoại chưa đọc.' : undefined}
-            className="mt-6 border-none"
-          />
+          <div className="py-12">
+            <CatEmptyIllustration
+              title="You don't have any conversations..."
+              description={tab === 'UNREAD' ? 'No unread conversations.' : undefined}
+            />
+          </div>
         ) : (
           <div className="space-y-1">
             {filtered.map((conversation) => (

@@ -15,11 +15,11 @@ import { toast } from 'sonner';
 const FORM_ID = 'report-conversation-form';
 
 const REASON_OPTIONS: { value: ReportReasonCode; label: string }[] = [
-  { value: 'SCAM', label: 'Lừa đảo' },
-  { value: 'HARASSMENT', label: 'Quấy rối' },
-  { value: 'SPAM', label: 'Tin nhắn rác' },
-  { value: 'INAPPROPRIATE', label: 'Nội dung không phù hợp' },
-  { value: 'OTHER', label: 'Khác' },
+  { value: 'SCAM', label: 'Scam or fraud' },
+  { value: 'HARASSMENT', label: 'Harassment or abuse' },
+  { value: 'SPAM', label: 'Spam or automated messages' },
+  { value: 'INAPPROPRIATE', label: 'Inappropriate content' },
+  { value: 'OTHER', label: 'Other' },
 ];
 
 type ReportConversationModalProps = {
@@ -39,7 +39,7 @@ export default function ReportConversationModal({ connectionId, onClose }: Repor
       { reasonCode: values.reasonCode, reasonNote: values.reasonNote },
       {
         onSuccess: () => {
-          toast.success('Báo cáo của bạn đã được gửi.');
+          toast.success('Your report has been submitted.');
           onClose();
         },
         onError: (error) => toast.error(getErrorMessage(error)),
@@ -51,15 +51,15 @@ export default function ReportConversationModal({ connectionId, onClose }: Repor
     <Modal
       isOpen
       onClose={onClose}
-      title="Báo cáo cuộc trò chuyện"
-      description="Quản trị viên sẽ xem xét và thông báo kết quả cho bạn."
+      title="Report conversation"
+      description="An administrator will review this report and take appropriate action."
       footer={
         <>
           <Button type="button" variant="ghost" onClick={onClose}>
-            Huỷ
+            Cancel
           </Button>
           <Button type="submit" form={FORM_ID} isLoading={report.isPending}>
-            Gửi báo cáo
+            Submit report
           </Button>
         </>
       }
@@ -96,8 +96,8 @@ export default function ReportConversationModal({ connectionId, onClose }: Repor
         />
 
         <Textarea
-          label="Ghi chú (không bắt buộc)"
-          placeholder="Mô tả thêm về vấn đề bạn gặp phải..."
+          label="Notes (optional)"
+          placeholder="Describe the issue you encountered..."
           rows={3}
           {...register('reasonNote')}
         />

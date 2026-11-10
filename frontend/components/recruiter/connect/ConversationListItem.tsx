@@ -10,10 +10,10 @@ type ConversationListItemProps = {
 };
 
 const STATUS_LABEL: Record<ConversationSummary['status'], string> = {
-  PENDING: 'Đang chờ chấp nhận',
+  PENDING: 'Pending acceptance',
   ACCEPTED: '',
-  DECLINED: 'Đã từ chối',
-  BLOCKED: 'Đã chặn',
+  DECLINED: 'Declined',
+  BLOCKED: 'Blocked',
 };
 
 export default function ConversationListItem({ conversation, isActive, onClick }: ConversationListItemProps) {
@@ -52,7 +52,7 @@ export default function ConversationListItem({ conversation, isActive, onClick }
           <p
             className={cn('truncate text-xs', hasUnread ? 'text-on-surface font-semibold' : 'text-on-surface-variant')}
           >
-            {statusLabel || conversation.lastMessagePreview || 'Chưa có tin nhắn'}
+            {statusLabel || conversation.lastMessagePreview || 'No messages yet'}
           </p>
           {hasUnread && (
             <span className="text-label-sm flex h-4.5 min-w-4.5 shrink-0 items-center justify-center rounded-full bg-[#e03e2d] px-1 font-bold text-white">
