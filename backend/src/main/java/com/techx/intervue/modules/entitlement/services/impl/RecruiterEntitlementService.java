@@ -15,6 +15,7 @@ import com.techx.intervue.modules.entitlement.repositories.EntitlementUsageRepos
 import com.techx.intervue.modules.entitlement.requests.ActivateEntitlementRequest;
 import com.techx.intervue.modules.entitlement.resources.EntitlementResource;
 import com.techx.intervue.modules.entitlement.resources.EntitlementUsageResource;
+import com.techx.intervue.modules.entitlement.services.interfaces.CompanyBrandPortInterface;
 import com.techx.intervue.modules.entitlement.services.interfaces.JobBoostPortInterface;
 import com.techx.intervue.modules.entitlement.services.interfaces.RecruiterEntitlementServiceInterface;
 import java.time.Instant;
@@ -34,6 +35,7 @@ public class RecruiterEntitlementService implements RecruiterEntitlementServiceI
     private final EntitlementMapper entitlementMapper;
     private final CompanyServiceInterface companyService;
     private final JobBoostPortInterface jobBoostPort;
+    private final CompanyBrandPortInterface companyBrandPort;
 
     @Override
     @Transactional(readOnly = true)
@@ -90,19 +92,28 @@ public class RecruiterEntitlementService implements RecruiterEntitlementServiceI
                         .findByIdAndCompanyId(entitlementId, companyId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
-        if (!EntitlementMapper.ACTIVATABLE_ON_JOB.contains(entitlement.getEntitlementType())) {
+        boolean onJob =
+                EntitlementMapper.ACTIVATABLE_ON_JOB.contains(entitlement.getEntitlementType());
+        boolean onCompany =
+                EntitlementMapper.ACTIVATABLE_ON_COMPANY.contains(entitlement.getEntitlementType());
+        if (!onJob && !onCompany) {
             throw new AppException(ErrorCode.ENTITLEMENT_NOT_ACTIVATABLE);
         }
         if (entitlement.getStatus() == EntitlementStatus.EXPIRED
                 || entitlement.getActivationDeadline().isBefore(Instant.now())) {
             throw new AppException(ErrorCode.ENTITLEMENT_EXPIRED);
         }
-        if (!jobBoostPort.isPublishedJobOfCompany(request.jobId(), companyId)) {
-            throw new AppException(ErrorCode.ADDON_REQUIRES_ACTIVE_JOB);
-        }
-        if (usageRepository.existsByJobIdAndEntitlementTypeAndStatus(
-                request.jobId(), entitlement.getEntitlementType(), EntitlementUsageStatus.ACTIVE)) {
-            throw new AppException(ErrorCode.ADDON_REQUIRES_ACTIVE_JOB);
+        if (onJob) {
+            if (request.jobId() == null
+                    || !jobBoostPort.isPublishedJobOfCompany(request.jobId(), companyId)) {
+                throw new AppException(ErrorCode.ADDON_REQUIRES_ACTIVE_JOB);
+            }
+            if (usageRepository.existsByJobIdAndEntitlementTypeAndStatus(
+                    request.jobId(),
+                    entitlement.getEntitlementType(),
+                    EntitlementUsageStatus.ACTIVE)) {
+                throw new AppException(ErrorCode.ADDON_REQUIRES_ACTIVE_JOB);
+            }
         }
         if (entitlementRepository.consume(entitlement.getId(), 1) == 0) {
             throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
@@ -114,7 +125,7 @@ public class RecruiterEntitlementService implements RecruiterEntitlementServiceI
                         .entitlementId(entitlement.getId())
                         .companyId(companyId)
                         .entitlementType(entitlement.getEntitlementType())
-                        .jobId(request.jobId())
+                        .jobId(onJob ? request.jobId() : null)
                         .quantity(1)
                         .activatedByRecruiterId(recruiterId)
                         .startedAt(Instant.now())
@@ -123,7 +134,11 @@ public class RecruiterEntitlementService implements RecruiterEntitlementServiceI
                         .build());
 
         applyEffect(
-                entitlement.getEntitlementType(), request.jobId(), entitlement.getTier(), endsAt);
+                entitlement.getEntitlementType(),
+                companyId,
+                request.jobId(),
+                entitlement.getTier(),
+                endsAt);
 
         return entitlementMapper.toResource(
                 entitlementRepository
@@ -131,12 +146,15 @@ public class RecruiterEntitlementService implements RecruiterEntitlementServiceI
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND)));
     }
 
-    private void applyEffect(EntitlementType type, Long jobId, int tier, Instant endsAt) {
+    private void applyEffect(
+            EntitlementType type, Long companyId, Long jobId, int tier, Instant endsAt) {
         switch (type) {
             case JOB_BOOST -> jobBoostPort.applyBoost(jobId, tier, endsAt);
             case JOB_LABEL_URGENT -> jobBoostPort.applyLabel(jobId, "URGENT", endsAt);
             case JOB_LABEL_HOT -> jobBoostPort.applyLabel(jobId, "HOT", endsAt);
             case JOB_HIGHLIGHT -> jobBoostPort.applyHighlight(jobId, endsAt);
+            case FEATURED_COMPANY -> companyBrandPort.grantFeatured(companyId, endsAt);
+            case BRAND_PAGE -> companyBrandPort.grantBrandPage(companyId, endsAt);
             default -> throw new AppException(ErrorCode.ENTITLEMENT_NOT_ACTIVATABLE);
         }
     }

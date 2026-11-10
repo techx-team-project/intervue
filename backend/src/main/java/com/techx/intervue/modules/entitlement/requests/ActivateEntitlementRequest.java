@@ -1,5 +1,4 @@
 package com.techx.intervue.modules.entitlement.requests;
 
-import jakarta.validation.constraints.NotNull;
-
-public record ActivateEntitlementRequest(@NotNull Long jobId) {}
+/** {@code jobId} is required only for services applied to a single job. */
+public record ActivateEntitlementRequest(Long jobId) {}

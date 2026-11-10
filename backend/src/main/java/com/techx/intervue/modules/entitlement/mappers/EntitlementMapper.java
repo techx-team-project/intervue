@@ -18,6 +18,9 @@ public class EntitlementMapper {
                     EntitlementType.JOB_LABEL_HOT,
                     EntitlementType.JOB_HIGHLIGHT);
 
+    public static final Set<EntitlementType> ACTIVATABLE_ON_COMPANY =
+            Set.of(EntitlementType.BRAND_PAGE, EntitlementType.FEATURED_COMPANY);
+
     public EntitlementResource toResource(CompanyEntitlement entitlement) {
         return new EntitlementResource(
                 entitlement.getId(),
@@ -30,7 +33,8 @@ public class EntitlementMapper {
                 entitlement.getStatus(),
                 entitlement.getActivationDeadline(),
                 entitlement.getPurchasedByRecruiterId(),
-                ACTIVATABLE_ON_JOB.contains(entitlement.getEntitlementType()),
+                ACTIVATABLE_ON_JOB.contains(entitlement.getEntitlementType())
+                        || ACTIVATABLE_ON_COMPANY.contains(entitlement.getEntitlementType()),
                 entitlement.getCreatedAt());
     }
 
