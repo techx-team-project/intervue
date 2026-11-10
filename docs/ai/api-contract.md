@@ -417,6 +417,27 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 - `FEATURED_COMPANY` and `BRAND_PAGE` are activated **on the company**, so `POST /recruiter/entitlements/{id}/activate` accepts an empty body for them. Buying again while a window is open **extends** it instead of restarting it.
 - The home page lists featured companies first and fills the remaining slots from recent job posts, so the section never looks empty before anyone has bought the slot.
 
+## Credits, vouchers, invoices and refunds
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/credits` | recruiter | `{ balance, nearestExpiryAt, prices[] }`. Credits live in `company_entitlements` as type `CREDIT`, so there is no second ledger. |
+| `POST` | `/recruiter/credits/convert` | recruiter | `{ entitlementType, tier, quantity }` spends credits and grants the service with `source_order_item_id = null`. `422 INSUFFICIENT_CREDITS`, `404 CREDIT_PRICE_NOT_AVAILABLE`. |
+| `GET`/`PUT` | `/admin/credit-prices[/{id}]` | admin | What one unit of each service costs in credits. Audited as `CREDIT_PRICE_UPDATED`. |
+| `POST` | `/recruiter/vouchers/validate` | recruiter | `{ code, cartItemIds[] }` or `{ code, packageId, quantity }` → the discount preview. |
+| `GET`/`POST`/`PUT` | `/admin/vouchers[/{id}]` | admin | The code is never rewritten after creation, so a voucher already handed out keeps working. |
+| `GET` | `/recruiter/orders/{code}/invoice` | recruiter | Metadata. `422 INVOICE_NOT_ISSUED_YET` until the order is paid. |
+| `GET` | `/recruiter/orders/{code}/invoice/pdf` | recruiter | The document itself, `application/pdf`. |
+| `GET` | `/admin/invoices`, `/admin/invoices/{id}/pdf` | admin | Every issued document. |
+| `GET`/`POST` | `/recruiter/orders/{code}/refund` | recruiter | `GET` quotes what would come back; `POST` submits `{ reason }`. |
+| `GET` | `/admin/refunds` | admin | Optional `?status=PENDING\|APPROVED\|REJECTED`. |
+| `POST` | `/admin/refunds/{id}/approve`, `/reject` | admin | `{ approvedAmount?, adminNote? }`. Audited as `REFUND_APPROVED` / `REFUND_REJECTED`. |
+
+- **Credits expire after 12 months.** No new mechanism: `EntitlementService.ACTIVATION_WINDOW` is already 365 days and `EntitlementExpiryScheduler` flips a lot to `EXPIRED` past its deadline.
+- **Vouchers:** VAT is charged on the amount **after** the discount. `voucher_redemptions.order_id` is UNIQUE, so one order carries one voucher and can never claim it twice. Cancelling or expiring an order releases the redemption and decrements `used_count`.
+- **Invoices** are issued inside the same transaction that grants the entitlements, so a paid order can never end up without one. The number is derived from the key (`INV-{year}-{id}`), which needs no lock; a gap only means a rolled-back order. The document is rendered on demand from the stored snapshot, never saved to disk. It is an **internal record**, not an e-invoice carrying a tax authority code — that needs a registered business, a digital certificate and a provider contract.
+- **Refunds return only what was never activated.** A line that delivered several benefits shares its value across them by unit count, because a benefit carries no price of its own; the result is then scaled by `subtotal_after_discount / subtotal` so a discounted order cannot be over-refunded. Approving revokes the untouched units (`EntitlementStatus.REVOKED`) and leaves anything already running on a job alone. **The system never moves money** — SePay's user API has no payout; an admin makes the transfer by hand and records the amount.
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -433,6 +454,19 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `JOB_REQUIREMENTS_MISSING` | 422 | The job has no requirement lines, so there is nothing for the AI to match against |
 | `CV_TEXT_NOT_READABLE` | 422 | The CV attached to the application could not be read as text (scanned image, corrupt file) |
 | `PACKAGE_NOT_AVAILABLE` | 404 | Unknown slug/id, or the service package is not `ACTIVE` |
+| `INSUFFICIENT_CREDITS` | 422 | The company does not hold enough credits for this exchange |
+| `CREDIT_PRICE_NOT_AVAILABLE` | 404 | No active credit price for that service and tier |
+| `VOUCHER_NOT_FOUND` | 404 | Unknown code |
+| `VOUCHER_NOT_USABLE` | 422 | Inactive, not started yet, or past its end date |
+| `VOUCHER_EXHAUSTED` | 422 | The total redemption limit is used up |
+| `VOUCHER_ALREADY_USED` | 422 | The company hit its per-company limit |
+| `VOUCHER_MIN_ORDER_NOT_MET` | 422 | The order is below the voucher's minimum |
+| `DUPLICATE_VOUCHER_CODE` | 409 | A voucher already uses this code |
+| `INVOICE_NOT_ISSUED_YET` | 422 | The order has not been paid, so no document exists |
+| `ORDER_NOT_REFUNDABLE` | 422 | Only a `PAID` or `FULFILLED` order can be refunded |
+| `REFUND_ALREADY_REQUESTED` | 409 | This order already has a refund request |
+| `REFUND_ALREADY_REVIEWED` | 409 | The request was already approved or rejected |
+| `NOTHING_LEFT_TO_REFUND` | 422 | Every service on the order has been activated |
 | `DUPLICATE_PACKAGE_CODE` | 409 | A service category or package already uses this `code`/`slug` |
 | `SERVICE_CATEGORY_IN_USE` | 409 | The category still has packages and cannot be deleted |
 | `BILLING_NOT_CONFIGURED` | 503 | `billing_settings` has no row |
