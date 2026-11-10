@@ -10,7 +10,6 @@ import com.techx.intervue.modules.billing.resources.OrderPaymentResource;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderPaymentServiceInterface;
 import com.techx.intervue.modules.company.resources.CompanyResource;
-import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +22,13 @@ public class OrderPaymentService implements OrderPaymentServiceInterface {
 
     private final OrderRepository orderRepository;
     private final BillingSettingsServiceInterface billingSettings;
-    private final CompanyServiceInterface companyService;
+    private final RecruiterCompanyResolver companyResolver;
     private final SepayProperties sepayProperties;
 
     @Override
     @Transactional(readOnly = true)
     public OrderPaymentResource getPayment(String code, Long recruiterId) {
-        CompanyResource company = requireCompany(recruiterId);
+        CompanyResource company = companyResolver.require(recruiterId);
         Order order =
                 orderRepository
                         .findByCodeAndCompanyId(code, company.id())
@@ -73,16 +72,5 @@ public class OrderPaymentService implements OrderPaymentServiceInterface {
 
     private boolean isFilled(String value) {
         return value != null && !value.isBlank();
-    }
-
-    private CompanyResource requireCompany(Long recruiterId) {
-        try {
-            return companyService.findMyCompany(recruiterId);
-        } catch (AppException cause) {
-            if (cause.getErrorCode() == ErrorCode.NOT_FOUND) {
-                throw new AppException(ErrorCode.NOT_COMPANY_MEMBER);
-            }
-            throw cause;
-        }
     }
 }
