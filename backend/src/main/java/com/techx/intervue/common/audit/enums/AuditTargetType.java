@@ -14,6 +14,8 @@ public enum AuditTargetType {
     CREDIT_PRICE,
     VOUCHER,
     REFUND_REQUEST,
+    AD_CREATIVE,
+    AD_SLOT,
     BILLING_SETTINGS,
     PAYMENT_TRANSACTION
 }

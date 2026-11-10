@@ -198,6 +198,21 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "You have used up this service, please buy more!"),
     ENTITLEMENT_EXPIRED(
             HttpStatus.UNPROCESSABLE_CONTENT, "This service has passed its activation deadline!"),
+    AD_SLOT_NOT_FOUND(HttpStatus.NOT_FOUND, "This advertising slot does not exist!"),
+    AD_SLOT_UNAVAILABLE(
+            HttpStatus.CONFLICT, "One of the chosen weeks has just been taken by someone else!"),
+    AD_WEEKS_REQUIRED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "Choose at least one week for this banner!"),
+    AD_BOOKING_NOT_READY(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "The banner slot is only editable once the order is paid!"),
+    AD_CREATIVE_ALREADY_REVIEWED(
+            HttpStatus.CONFLICT, "This artwork was already approved or rejected!"),
+    AD_CREATIVE_NOT_APPROVED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This banner artwork has not been approved yet!"),
+    AD_CREATIVE_WRONG_SIZE(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "The artwork does not match the size this slot requires!"),
     ORDER_NOT_REFUNDABLE(HttpStatus.UNPROCESSABLE_CONTENT, "Only a paid order can be refunded!"),
     REFUND_ALREADY_REQUESTED(
             HttpStatus.CONFLICT, "A refund has already been requested for this order!"),

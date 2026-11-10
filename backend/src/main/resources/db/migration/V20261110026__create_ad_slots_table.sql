@@ -1,0 +1,20 @@
+CREATE TABLE ad_slots (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(40) NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    placement VARCHAR(60) NOT NULL,
+    description VARCHAR(500) NULL,
+    width INT UNSIGNED NOT NULL,
+    height INT UNSIGNED NOT NULL,
+    price_per_week BIGINT UNSIGNED NOT NULL,
+    service_package_id BIGINT UNSIGNED NULL,
+    house_image_url VARCHAR(500) NULL,
+    house_target_url VARCHAR(500) NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    display_order INT UNSIGNED NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    CONSTRAINT uq_ad_slots_code UNIQUE (code),
+    CONSTRAINT fk_ad_slots_package FOREIGN KEY (service_package_id) REFERENCES service_packages (id) ON DELETE SET NULL,
+    INDEX idx_ad_slots_active_order (is_active, display_order)
+);

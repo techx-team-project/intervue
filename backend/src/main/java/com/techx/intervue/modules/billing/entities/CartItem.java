@@ -39,4 +39,7 @@ public class CartItem extends BaseEntity {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Column(name = "meta_json", columnDefinition = "TEXT")
+    private String metaJson;
 }

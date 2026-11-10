@@ -59,6 +59,9 @@ public class OrderItem extends BaseEntity {
     @Builder.Default
     private Integer bonusCredits = 0;
 
+    @Column(name = "meta_json", columnDefinition = "TEXT")
+    private String metaJson;
+
     @Column(name = "benefits_json", columnDefinition = "TEXT")
     private String benefitsJson;
 }

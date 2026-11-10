@@ -535,6 +535,9 @@ public class UserAdminService implements UserAdminServiceInterface {
                     VOUCHER_UPDATED,
                     REFUND_APPROVED,
                     REFUND_REJECTED,
+                    AD_CREATIVE_APPROVED,
+                    AD_CREATIVE_REJECTED,
+                    AD_SLOT_UPDATED,
                     PAYMENT_TRANSACTION_MATCHED ->
                     "billing";
         };
@@ -615,6 +618,9 @@ public class UserAdminService implements UserAdminServiceInterface {
                     VOUCHER_UPDATED,
                     REFUND_APPROVED,
                     REFUND_REJECTED,
+                    AD_CREATIVE_APPROVED,
+                    AD_CREATIVE_REJECTED,
+                    AD_SLOT_UPDATED,
                     PAYMENT_TRANSACTION_MATCHED ->
                     detail != null && !detail.isBlank() ? detail : "Service catalog activity";
         };

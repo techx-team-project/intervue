@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.billing.services.impl;
 
+import com.techx.intervue.modules.ads.services.interfaces.AdBookingServiceInterface;
 import com.techx.intervue.modules.billing.entities.Order;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
 import com.techx.intervue.modules.billing.repositories.OrderRepository;
@@ -19,6 +20,7 @@ public class OrderExpiryScheduler {
 
     private final OrderRepository orderRepository;
     private final VoucherServiceInterface voucherService;
+    private final AdBookingServiceInterface adBookingService;
 
     @Scheduled(cron = "0 */10 * * * *", zone = "Asia/Ho_Chi_Minh")
     @Transactional
@@ -33,6 +35,7 @@ public class OrderExpiryScheduler {
                 order -> {
                     order.setStatus(OrderStatus.EXPIRED);
                     voucherService.release(order.getId());
+                    adBookingService.release(order.getId());
                 });
         log.info("Expired {} unpaid orders", overdue.size());
     }
