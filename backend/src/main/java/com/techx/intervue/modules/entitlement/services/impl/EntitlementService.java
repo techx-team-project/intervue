@@ -10,10 +10,13 @@ import com.techx.intervue.modules.entitlement.enums.EntitlementUsageStatus;
 import com.techx.intervue.modules.entitlement.repositories.CompanyEntitlementRepository;
 import com.techx.intervue.modules.entitlement.repositories.EntitlementUsageRepository;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
+import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface.LedgerEntry;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface.UnusedUnits;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -150,7 +153,7 @@ public class EntitlementService implements EntitlementServiceInterface {
 
     @Override
     @Transactional
-    public void consumeUnits(Long companyId, EntitlementType type, int amount) {
+    public void consumeUnits(Long companyId, EntitlementType type, int amount, String note) {
         if (amount <= 0 || remainingOf(companyId, type) < amount) {
             throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
         }
@@ -173,6 +176,7 @@ public class EntitlementService implements EntitlementServiceInterface {
                             .companyId(companyId)
                             .entitlementType(type)
                             .quantity(take)
+                            .note(note)
                             .startedAt(Instant.now())
                             .status(EntitlementUsageStatus.ENDED)
                             .build());
@@ -182,6 +186,60 @@ public class EntitlementService implements EntitlementServiceInterface {
         if (left > 0) {
             throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
         }
+    }
+
+    private static final String CONVERSION_LABEL = "Đổi credits sang tiện ích";
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<LedgerEntry> ledgerOf(Long companyId, EntitlementType type) {
+        List<LedgerEntry> entries = new ArrayList<>();
+        for (CompanyEntitlement grant :
+                entitlementRepository.findAllByCompanyIdAndEntitlementTypeOrderByCreatedAtDesc(
+                        companyId, type)) {
+            entries.add(
+                    new LedgerEntry(
+                            true,
+                            grant.getTotalQuantity(),
+                            grant.getLabel(),
+                            grant.getCreatedAt()));
+        }
+        for (EntitlementUsage usage :
+                usageRepository.findAllByCompanyIdAndEntitlementTypeOrderByStartedAtDesc(
+                        companyId, type)) {
+            entries.add(
+                    new LedgerEntry(
+                            false,
+                            usage.getQuantity(),
+                            usage.getNote() != null ? usage.getNote() : CONVERSION_LABEL,
+                            usage.getStartedAt()));
+        }
+        entries.sort(Comparator.comparing(LedgerEntry::at).reversed());
+        return entries;
+    }
+
+    @Override
+    @Transactional
+    public void consumeFromOrderItem(Long sourceOrderItemId, int amount) {
+        CompanyEntitlement entitlement =
+                entitlementRepository.findBySourceOrderItemId(sourceOrderItemId).orElse(null);
+        if (entitlement == null
+                || entitlementRepository.consume(entitlement.getId(), amount) == 0) {
+            log.warn(
+                    "Could not consume {} unit(s) from order item {}: lot missing or exhausted",
+                    amount,
+                    sourceOrderItemId);
+            return;
+        }
+        usageRepository.save(
+                EntitlementUsage.builder()
+                        .entitlementId(entitlement.getId())
+                        .companyId(entitlement.getCompanyId())
+                        .entitlementType(entitlement.getEntitlementType())
+                        .quantity(amount)
+                        .startedAt(Instant.now())
+                        .status(EntitlementUsageStatus.ENDED)
+                        .build());
     }
 
     // Nearest activation deadline first, so stock that would expire soonest is used up first

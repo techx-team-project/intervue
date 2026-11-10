@@ -48,6 +48,10 @@ public class EntitlementUsage extends BaseEntity {
     @Builder.Default
     private Integer quantity = 1;
 
+    /** What the units were drawn for, e.g. a credit conversion's target package; optional. */
+    @Column(length = 255)
+    private String note;
+
     @Column(name = "activated_by_recruiter_id")
     private Long activatedByRecruiterId;
 
