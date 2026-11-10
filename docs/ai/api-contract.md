@@ -432,10 +432,14 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `GET`/`POST` | `/recruiter/orders/{code}/refund` | recruiter | `GET` quotes what would come back; `POST` submits `{ reason }`. |
 | `GET` | `/admin/refunds` | admin | Optional `?status=PENDING\|APPROVED\|REJECTED`. |
 | `POST` | `/admin/refunds/{id}/approve`, `/reject` | admin | `{ approvedAmount?, adminNote? }`. Audited as `REFUND_APPROVED` / `REFUND_REJECTED`. |
+| `GET` | `/admin/orders` | admin | Filters `code`, `status`, `companyId`, `from`, `to`; paginated. |
+| `GET` | `/admin/orders/{code}` | admin | One order with its lines. |
+| `GET` | `/admin/orders/revenue` | admin | `{ collectedTotal, refundedTotal, netTotal, pendingTotal, paidOrderCount, ordersByStatus, byMonth, byPackage }`. |
 
 - **Credits expire after 12 months.** No new mechanism: `EntitlementService.ACTIVATION_WINDOW` is already 365 days and `EntitlementExpiryScheduler` flips a lot to `EXPIRED` past its deadline.
 - **Vouchers:** VAT is charged on the amount **after** the discount. `voucher_redemptions.order_id` is UNIQUE, so one order carries one voucher and can never claim it twice. Cancelling or expiring an order releases the redemption and decrements `used_count`. **A refund does not release it** — the buyer did use the offer and did receive the services; only the part never activated comes back as money.
 - **Invoices** are issued inside the same transaction that grants the entitlements, so a paid order can never end up without one. The number is derived from the key (`INV-{year}-{id}`), which needs no lock; a gap only means a rolled-back order. The document is rendered on demand from the stored snapshot, never saved to disk. It is an **internal record**, not an e-invoice carrying a tax authority code — that needs a registered business, a digital certificate and a provider contract.
+- **Revenue is counted, never estimated.** `collectedTotal` sums `paid_amount` over every order that money reached — including refunded ones, because the money did arrive — while `refundedTotal` sums the **approved** refund amounts, so `netTotal` is what the platform actually still holds. `pendingTotal` is what open orders still owe. Months with no collection simply do not appear.
 - **Refunds return only what was never activated.** A line that delivered several benefits shares its value across them by unit count, because a benefit carries no price of its own; the result is then scaled by `subtotal_after_discount / subtotal` so a discounted order cannot be over-refunded. Approving revokes the untouched units (`EntitlementStatus.REVOKED`) and leaves anything already running on a job alone. **The system never moves money** — SePay's user API has no payout; an admin makes the transfer by hand and records the amount.
 
 ## Error codes

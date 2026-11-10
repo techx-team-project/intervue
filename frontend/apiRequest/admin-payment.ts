@@ -5,7 +5,10 @@ import type {
   PaymentTransaction,
   PaymentTransactionStatus,
   AdminInvoice,
+  AdminOrder,
+  AdminOrderStatus,
   AdminRefundRequest,
+  RevenueReport,
   SaveBillingSettingsInput,
   SupportedBank,
 } from '@/types/admin-payment';
@@ -49,6 +52,20 @@ export const adminPaymentApi = {
       method: 'POST',
       body: { approvedAmount, adminNote },
     }),
+
+  searchOrders: (params: { code?: string; status?: AdminOrderStatus | ''; page: number; size: number }) =>
+    request<Page<AdminOrder>>(
+      `/admin/orders?${new URLSearchParams({
+        ...(params.code ? { code: params.code } : {}),
+        ...(params.status ? { status: params.status } : {}),
+        page: String(params.page),
+        size: String(params.size),
+      })}`,
+    ),
+
+  getOrder: (code: string) => request<AdminOrder>(`/admin/orders/${code}`),
+
+  revenue: () => request<RevenueReport>('/admin/orders/revenue'),
 
   rejectRefund: (id: number, adminNote: string) =>
     request<AdminRefundRequest>(`/admin/refunds/${id}/reject`, { method: 'POST', body: { adminNote } }),
