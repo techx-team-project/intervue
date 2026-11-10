@@ -23,5 +23,11 @@ public interface AdBookingServiceInterface {
     /** The order died, so the weeks go back on sale. */
     void release(Long orderId);
 
+    /** A refund was approved: weeks that have not started yet go back on sale; past ones stay. */
+    void releaseUnconsumed(Long orderId);
+
+    /** Spends one entitlement unit for every booked week that has started but was not spent yet. */
+    void settleElapsedWeeks();
+
     List<RecruiterAdBookingResource> listForCompany(Long companyId);
 }

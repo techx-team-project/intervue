@@ -20,4 +20,13 @@ public interface AdBookingRepository extends JpaRepository<AdBooking, Long> {
 
     List<AdBooking> findAllByCompanyIdAndStatusOrderByWeekStartDesc(
             Long companyId, AdBookingStatus status);
+
+    List<AdBooking> findAllByStatusAndWeekStartLessThanEqualAndConsumedAtIsNull(
+            AdBookingStatus status, LocalDate weekStart);
+
+    List<AdBooking> findAllByStatusAndWeekStartBetweenAndConsumedAtIsNull(
+            AdBookingStatus status, LocalDate from, LocalDate to);
+
+    List<AdBooking> findAllByStatusAndWeekStartBetweenAndReminderSentAtIsNull(
+            AdBookingStatus status, LocalDate from, LocalDate to);
 }
