@@ -541,6 +541,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     PAYMENT_TRANSACTION_MATCHED,
                     ORDER_MANUAL_REFUND_RESOLVED ->
                     "billing";
+            case REPORT_DISMISSED, REPORT_RESOLVED -> "moderation";
         };
     }
 
@@ -625,6 +626,11 @@ public class UserAdminService implements UserAdminServiceInterface {
                     PAYMENT_TRANSACTION_MATCHED,
                     ORDER_MANUAL_REFUND_RESOLVED ->
                     detail != null && !detail.isBlank() ? detail : "Service catalog activity";
+            case REPORT_DISMISSED -> "Report dismissed";
+            case REPORT_RESOLVED ->
+                    detail != null && !detail.isBlank()
+                            ? "Report resolved: " + detail
+                            : "Report resolved";
         };
     }
 

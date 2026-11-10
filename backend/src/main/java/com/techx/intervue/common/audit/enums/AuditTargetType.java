@@ -18,5 +18,6 @@ public enum AuditTargetType {
     AD_SLOT,
     BILLING_SETTINGS,
     PAYMENT_TRANSACTION,
-    ORDER
+    ORDER,
+    REPORT
 }
