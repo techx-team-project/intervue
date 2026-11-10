@@ -104,8 +104,9 @@ export default function OrderPaymentPanel({ code, status }: OrderPaymentPanelPro
       </div>
 
       <p className="text-on-surface-variant mt-4 text-xs leading-relaxed">
-        Giữ nguyên nội dung chuyển khoản để hệ thống đối soát tự động. Trạng thái đơn hàng sẽ tự cập nhật trong vài phút
-        sau khi ngân hàng ghi nhận giao dịch.
+        Quét mã QR là chắc nhất. Nếu nhập tay, hãy giữ <strong>nguyên vẹn toàn bộ</strong> nội dung chuyển khoản ở trên
+        — thiếu một ký tự là ngân hàng không báo về và đơn sẽ không tự cập nhật. Sau khi ngân hàng ghi nhận, trạng thái
+        đơn đổi trong vài phút.
       </p>
     </div>
   );
