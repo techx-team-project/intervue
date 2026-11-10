@@ -198,6 +198,16 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "You have used up this service, please buy more!"),
     ENTITLEMENT_EXPIRED(
             HttpStatus.UNPROCESSABLE_CONTENT, "This service has passed its activation deadline!"),
+    VOUCHER_NOT_FOUND(HttpStatus.NOT_FOUND, "This voucher code does not exist!"),
+    DUPLICATE_VOUCHER_CODE(HttpStatus.CONFLICT, "A voucher already uses this code!"),
+    VOUCHER_NOT_USABLE(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This voucher is not valid at the moment!"),
+    VOUCHER_EXHAUSTED(HttpStatus.UNPROCESSABLE_CONTENT, "This voucher has been fully used!"),
+    VOUCHER_ALREADY_USED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "Your company has already used this voucher!"),
+    VOUCHER_MIN_ORDER_NOT_MET(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "The order value is below what this voucher requires!"),
     INSUFFICIENT_CREDITS(
             HttpStatus.UNPROCESSABLE_CONTENT, "Your company does not have enough credits left!"),
     CREDIT_PRICE_NOT_AVAILABLE(
