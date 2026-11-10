@@ -38,9 +38,18 @@ export default function CandidateConnectView() {
   useConnectStream('candidate', onStreamMessage, rulesAck?.acknowledged === true);
 
   const selectedConversation =
-    selectedTab === 'ALL'
-      ? (conversations.find((conversation) => conversation.id === selectedId) ?? null)
-      : (invitations.find((invitation) => invitation.id === selectedId) ?? null);
+    selectedTab === 'INVITATIONS'
+      ? (invitations.find((invitation) => invitation.id === selectedId) ?? null)
+      : (conversations.find((conversation) => conversation.id === selectedId) ?? null);
+
+  const handleInvitationAccepted = (connectionId: number) => {
+    setSelectedTab('ALL');
+    setSelectedId(connectionId);
+  };
+
+  const handleInvitationDeclined = () => {
+    setSelectedId(null);
+  };
 
   if (isRulesLoading) {
     return (
@@ -84,9 +93,14 @@ export default function CandidateConnectView() {
         />
 
         {selectedConversation ? (
-          <CandidateConnectThread conversation={selectedConversation} />
+          <CandidateConnectThread
+            conversation={selectedConversation}
+            onAccepted={handleInvitationAccepted}
+            onDeclined={handleInvitationDeclined}
+            onBack={() => setSelectedId(null)}
+          />
         ) : (
-          <div className="flex flex-1 flex-col items-center justify-center bg-slate-50/40 p-6">
+          <div className="hidden flex-1 flex-col items-center justify-center bg-slate-50/40 p-6 md:flex">
             <CatEmptyIllustration
               title={
                 selectedTab === 'ALL'

@@ -20,15 +20,23 @@ import type { ConversationSummary } from '@/types/connect';
 import { formatDateTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
 import { useQueryClient } from '@tanstack/react-query';
-import { Mail, CheckCircle2, XCircle } from 'lucide-react';
+import { ArrowLeft, Mail, CheckCircle2, XCircle } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 type CandidateConnectThreadProps = {
   conversation: ConversationSummary;
+  onAccepted?: (connectionId: number) => void;
+  onDeclined?: () => void;
+  onBack?: () => void;
 };
 
-export default function CandidateConnectThread({ conversation }: CandidateConnectThreadProps) {
+export default function CandidateConnectThread({
+  conversation,
+  onAccepted,
+  onDeclined,
+  onBack,
+}: CandidateConnectThreadProps) {
   const queryClient = useQueryClient();
   const { messages, isLoading, hasOlder, isLoadingOlder, loadOlder } = useCandidateMessages(conversation.id);
   const { ref: topSentinelRef, inView: topInView } = useInView<HTMLDivElement>();
@@ -82,14 +90,20 @@ export default function CandidateConnectThread({ conversation }: CandidateConnec
 
   const handleAccept = () => {
     acceptInvitation.mutate(conversation.id, {
-      onSuccess: () => toast.success('You have accepted the chat invitation!'),
+      onSuccess: () => {
+        toast.success('You have accepted the chat invitation!');
+        onAccepted?.(conversation.id);
+      },
       onError: (err) => toast.error(getErrorMessage(err)),
     });
   };
 
   const handleDecline = () => {
     declineInvitation.mutate(conversation.id, {
-      onSuccess: () => toast.success('You have declined the chat invitation.'),
+      onSuccess: () => {
+        toast.success('You have declined the chat invitation.');
+        onDeclined?.();
+      },
       onError: (err) => toast.error(getErrorMessage(err)),
     });
   };
@@ -97,8 +111,18 @@ export default function CandidateConnectThread({ conversation }: CandidateConnec
   return (
     <div className="flex h-full min-w-0 flex-1 flex-col bg-white">
       {/* Thread Header */}
-      <div className="border-outline-variant flex items-center justify-between gap-3 border-b bg-white px-5 py-3">
-        <div className="flex min-w-0 items-center gap-3">
+      <div className="border-outline-variant flex items-center justify-between gap-3 border-b bg-white px-4 py-3 sm:px-5">
+        <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              aria-label="Back to conversations"
+              className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface -ml-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full md:hidden"
+            >
+              <ArrowLeft className="h-4.5 w-4.5" />
+            </button>
+          )}
           <UserAvatar fullName={conversation.companyName} size="md" />
           <div className="min-w-0">
             <p className="text-body-lg text-on-surface truncate font-bold">{conversation.companyName}</p>

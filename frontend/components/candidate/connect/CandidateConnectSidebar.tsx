@@ -16,7 +16,7 @@ import { Search, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
-export type CandidateConnectTab = 'ALL' | 'INVITATIONS';
+export type CandidateConnectTab = 'ALL' | 'UNREAD' | 'INVITATIONS';
 
 type CandidateConnectSidebarProps = {
   conversations: ConversationSummary[];
@@ -57,16 +57,19 @@ export default function CandidateConnectSidebar({
     }
   }, [inView, hasMoreConversations, isLoadingMoreConversations, onLoadMoreConversations, selectedTab]);
 
+  const unreadCountTotal = useMemo(() => conversations.filter((c) => c.unreadCount > 0).length, [conversations]);
+
   const filteredConversations = useMemo(() => {
     const term = debouncedSearch.trim().toLowerCase();
     return conversations.filter((conversation) => {
+      if (selectedTab === 'UNREAD' && conversation.unreadCount === 0) return false;
       if (!term) return true;
       return (
         conversation.companyName.toLowerCase().includes(term) ||
         (conversation.lastMessagePreview?.toLowerCase().includes(term) ?? false)
       );
     });
-  }, [conversations, debouncedSearch]);
+  }, [conversations, selectedTab, debouncedSearch]);
 
   const filteredInvitations = useMemo(() => {
     const term = debouncedSearch.trim().toLowerCase();
@@ -79,11 +82,16 @@ export default function CandidateConnectSidebar({
     });
   }, [invitations, debouncedSearch]);
 
-  const activeList = selectedTab === 'ALL' ? filteredConversations : filteredInvitations;
-  const isLoading = selectedTab === 'ALL' ? isLoadingConversations : isLoadingInvitations;
+  const activeList = selectedTab === 'INVITATIONS' ? filteredInvitations : filteredConversations;
+  const isLoading = selectedTab === 'INVITATIONS' ? isLoadingInvitations : isLoadingConversations;
 
   return (
-    <div className="border-outline-variant flex h-full w-full flex-col border-r bg-white sm:w-80">
+    <div
+      className={cn(
+        'border-outline-variant flex h-full w-full flex-col border-r bg-white md:w-80',
+        selectedId !== null && 'hidden md:flex',
+      )}
+    >
       {/* Top Header of Sidebar */}
       <div className="border-outline-variant flex items-center justify-between gap-2 border-b px-4 py-3.5">
         <IntervueConnectLogo />
@@ -126,7 +134,7 @@ export default function CandidateConnectSidebar({
       </div>
 
       {/* Navigation Tabs */}
-      <div className="border-outline-variant mt-3 flex items-center gap-5 border-b px-4">
+      <div className="border-outline-variant mt-3 flex items-center gap-4 border-b px-4">
         <button
           type="button"
           onClick={() => onSelectTab('ALL')}
@@ -141,6 +149,24 @@ export default function CandidateConnectSidebar({
           {conversations.length > 0 && (
             <span className="py-0.2 rounded-full bg-slate-100 px-1.5 text-xs font-medium text-slate-600">
               {conversations.length}
+            </span>
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onSelectTab('UNREAD')}
+          className={cn(
+            'text-body-md -mb-px flex items-center gap-1.5 border-b-2 px-0.5 py-2.5 font-semibold transition-colors',
+            selectedTab === 'UNREAD'
+              ? 'border-primary text-primary'
+              : 'text-on-surface-variant hover:text-on-surface border-transparent',
+          )}
+        >
+          <span>Unread</span>
+          {unreadCountTotal > 0 && (
+            <span className="py-0.2 rounded-full bg-[#e03e2d] px-1.5 text-xs font-bold text-white">
+              {unreadCountTotal}
             </span>
           )}
         </button>
@@ -173,17 +199,25 @@ export default function CandidateConnectSidebar({
         ) : activeList.length === 0 ? (
           <div className="py-12">
             <CatEmptyIllustration
-              title={selectedTab === 'ALL' ? 'No conversations yet...' : 'No invitations yet...'}
+              title={
+                selectedTab === 'INVITATIONS'
+                  ? 'No invitations yet...'
+                  : selectedTab === 'UNREAD'
+                    ? 'No unread conversations'
+                    : 'No conversations yet...'
+              }
               description={
-                selectedTab === 'ALL'
-                  ? 'Companies you connect with will appear here.'
-                  : 'Chat invitations from recruiters will arrive here.'
+                selectedTab === 'INVITATIONS'
+                  ? 'Chat invitations from recruiters will arrive here.'
+                  : selectedTab === 'UNREAD'
+                    ? 'All conversations have been read.'
+                    : 'Companies you connect with will appear here.'
               }
             />
           </div>
         ) : (
           <div className="space-y-1">
-            {selectedTab === 'ALL'
+            {selectedTab !== 'INVITATIONS'
               ? activeList.map((conversation) => (
                   <CandidateConversationListItem
                     key={conversation.id}
@@ -201,7 +235,7 @@ export default function CandidateConnectSidebar({
                   />
                 ))}
 
-            {selectedTab === 'ALL' && <div ref={sentinelRef} />}
+            {selectedTab !== 'INVITATIONS' && <div ref={sentinelRef} />}
             {isLoadingMoreConversations && (
               <div className="flex justify-center py-3">
                 <Spinner />
