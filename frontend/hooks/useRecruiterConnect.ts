@@ -122,7 +122,7 @@ export function useAcknowledgeRules() {
 export function useEligibleCandidates(search: string) {
   const query = useQuery({
     queryKey: recruiterConnectKeys.eligibleCandidates(search),
-    queryFn: () => recruiterConnectApi.eligibleCandidates(search || undefined, 0, 10),
+    queryFn: () => recruiterConnectApi.eligibleCandidates(search || undefined, 0, 20),
   });
 
   return {
