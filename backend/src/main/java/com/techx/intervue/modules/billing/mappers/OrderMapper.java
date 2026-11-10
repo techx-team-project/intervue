@@ -10,6 +10,7 @@ import com.techx.intervue.modules.billing.resources.OrderItemResource;
 import com.techx.intervue.modules.billing.resources.OrderResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
 import com.techx.intervue.modules.billing.resources.ServicePackageBenefitResource;
+import com.techx.intervue.modules.billing.services.impl.AdCartMeta;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ public class OrderMapper {
             new TypeReference<>() {};
 
     private final ObjectMapper objectMapper;
+    private final AdCartMeta adCartMeta;
 
     public String writeBenefits(List<ServicePackageBenefitResource> benefits) {
         try {
@@ -45,7 +47,8 @@ public class OrderMapper {
                 item.getLineTotal(),
                 item.getValidityDays(),
                 item.getBonusCredits(),
-                readBenefits(item.getBenefitsJson()));
+                readBenefits(item.getBenefitsJson()),
+                adCartMeta.readWeeks(item.getMetaJson()));
     }
 
     public OrderInvoiceDetailResource toInvoiceResource(OrderInvoiceDetail detail) {
