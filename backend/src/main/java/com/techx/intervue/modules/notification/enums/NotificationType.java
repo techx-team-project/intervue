@@ -49,7 +49,10 @@ public enum NotificationType {
     AD_WEEK_STARTING_SOON_NO_CREATIVE(
             NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
     REFUND_APPROVED(NotificationCategory.COMPANY, NotificationSeverity.SUCCESS, true),
-    REFUND_REJECTED(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true);
+    REFUND_REJECTED(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
+    CONNECT_INVITATION_RECEIVED(NotificationCategory.CONNECTIONS, NotificationSeverity.INFO, false),
+    CONNECT_INVITATION_ACCEPTED(
+            NotificationCategory.CONNECTIONS, NotificationSeverity.SUCCESS, false);
 
     private final NotificationCategory category;
     private final NotificationSeverity severity;

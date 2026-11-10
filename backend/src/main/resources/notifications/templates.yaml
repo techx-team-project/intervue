@@ -365,3 +365,19 @@ templates:
     body: |
       Yêu cầu hoàn tiền cho đơn hàng **{orderCode}** đã bị quản trị viên từ chối.
     actionLabel: "Xem đơn hàng"
+  CONNECT_INVITATION_RECEIVED:
+    title: "{companyName} muốn kết nối với bạn"
+    summary: "{companyName} vừa gửi cho bạn một lời mời trò chuyện trên InterVue Connect."
+    body: |
+      **{companyName}** vừa gửi cho bạn một lời mời trò chuyện trên InterVue Connect.
+
+      Xem tin nhắn mở đầu và quyết định chấp nhận hoặc từ chối lời mời này.
+    actionLabel: "Xem lời mời"
+  CONNECT_INVITATION_ACCEPTED:
+    title: "{candidateName} đã chấp nhận lời mời trò chuyện"
+    summary: "{candidateName} đã đồng ý kết nối với bạn trên InterVue Connect."
+    body: |
+      **{candidateName}** đã chấp nhận lời mời trò chuyện của bạn trên InterVue Connect.
+
+      Bạn có thể bắt đầu trao đổi với ứng viên ngay bây giờ.
+    actionLabel: "Mở cuộc trò chuyện"
