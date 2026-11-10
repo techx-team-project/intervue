@@ -9,7 +9,13 @@ export interface BillingSettings {
   bankAccountNumber: string | null;
   bankAccountName: string | null;
   paymentSyncEnabled: boolean;
+  paymentSyncSince: string | null;
   apiTokenConfigured: boolean;
+}
+
+export interface SupportedBank {
+  code: string;
+  name: string;
 }
 
 export interface SaveBillingSettingsInput {
@@ -44,4 +50,37 @@ export interface PaymentSyncResult {
   fetched: number;
   created: number;
   matched: number;
+}
+
+export interface AdminInvoice {
+  id: number;
+  number: string;
+  orderCode: string;
+  issuedAt: string;
+  invoiceType: 'BUSINESS' | 'PERSONAL';
+  buyerName: string;
+  buyerTaxId: string | null;
+  recipientEmail: string;
+  subtotal: number;
+  discountAmount: number;
+  vatRate: number;
+  vatAmount: number;
+  totalAmount: number;
+  currency: string;
+}
+
+export type AdminRefundStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export interface AdminRefundRequest {
+  id: number;
+  orderCode: string;
+  companyId: number;
+  reason: string;
+  status: AdminRefundStatus;
+  orderTotal: number;
+  refundableAmount: number;
+  approvedAmount: number | null;
+  adminNote: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
 }

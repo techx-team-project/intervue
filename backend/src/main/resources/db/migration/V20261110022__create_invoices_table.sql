@@ -1,0 +1,23 @@
+CREATE TABLE invoices (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    order_id BIGINT UNSIGNED NOT NULL,
+    number VARCHAR(30) NOT NULL,
+    issued_at TIMESTAMP NOT NULL,
+    invoice_type VARCHAR(20) NOT NULL,
+    buyer_name VARCHAR(255) NOT NULL,
+    buyer_tax_id VARCHAR(30) NULL,
+    buyer_address VARCHAR(500) NULL,
+    recipient_email VARCHAR(255) NOT NULL,
+    subtotal BIGINT UNSIGNED NOT NULL,
+    discount_amount BIGINT UNSIGNED NOT NULL,
+    vat_rate DECIMAL(5,4) NOT NULL,
+    vat_amount BIGINT UNSIGNED NOT NULL,
+    total_amount BIGINT UNSIGNED NOT NULL,
+    currency CHAR(3) NOT NULL DEFAULT 'VND',
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    CONSTRAINT fk_invoices_order FOREIGN KEY (order_id) REFERENCES orders (id),
+    CONSTRAINT uq_invoices_order UNIQUE (order_id),
+    CONSTRAINT uq_invoices_number UNIQUE (number),
+    INDEX idx_invoices_issued_at (issued_at)
+);

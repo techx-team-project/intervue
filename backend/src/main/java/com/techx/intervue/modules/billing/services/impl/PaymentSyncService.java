@@ -67,9 +67,18 @@ public class PaymentSyncService implements PaymentSyncServiceInterface {
                         ? DEFAULT_LIMIT
                         : sepayProperties.sync().limit();
 
+        // The bank account also carries transactions that are none of the platform's business, so
+        // nothing before the moment reconciliation was switched on is ever read
+        Instant since = settings.getPaymentSyncSince();
         List<SepayTransaction> remote =
-                sepayClient.listTransactions(settings.getBankAccountNumber(), limit).stream()
+                sepayClient.listTransactions(settings.getBankAccountNumber(), limit, since).stream()
                         .filter(item -> paymentMatcher.parseAmount(item.amountIn()) > 0)
+                        .filter(
+                                item ->
+                                        since == null
+                                                || !paymentMatcher
+                                                        .parseMoment(item.transactionDate())
+                                                        .isBefore(since))
                         .toList();
         if (remote.isEmpty()) {
             return result(true, "No incoming transactions", 0, 0, 0);

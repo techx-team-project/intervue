@@ -4,12 +4,17 @@ import type {
   PaymentSyncResult,
   PaymentTransaction,
   PaymentTransactionStatus,
+  AdminInvoice,
+  AdminRefundRequest,
   SaveBillingSettingsInput,
+  SupportedBank,
 } from '@/types/admin-payment';
 import type { Page } from '@/types/api';
 
 export const adminPaymentApi = {
   getSettings: () => request<BillingSettings>('/admin/payments/settings'),
+
+  getBanks: () => request<SupportedBank[]>('/admin/payments/banks'),
 
   updateSettings: (data: SaveBillingSettingsInput) =>
     request<BillingSettings>('/admin/payments/settings', { method: 'PUT', body: data }),
@@ -30,4 +35,21 @@ export const adminPaymentApi = {
     }),
 
   sync: () => request<PaymentSyncResult>('/admin/payments/sync', { method: 'POST' }),
+
+  searchInvoices: (page: number, size: number) =>
+    request<Page<AdminInvoice>>(`/admin/invoices?page=${page}&size=${size}`),
+
+  invoicePdf: (id: number) => request<Blob>(`/admin/invoices/${id}/pdf`, { responseType: 'blob' }),
+
+  searchRefunds: (page: number, size: number) =>
+    request<Page<AdminRefundRequest>>(`/admin/refunds?page=${page}&size=${size}`),
+
+  approveRefund: (id: number, approvedAmount: number | null, adminNote: string) =>
+    request<AdminRefundRequest>(`/admin/refunds/${id}/approve`, {
+      method: 'POST',
+      body: { approvedAmount, adminNote },
+    }),
+
+  rejectRefund: (id: number, adminNote: string) =>
+    request<AdminRefundRequest>(`/admin/refunds/${id}/reject`, { method: 'POST', body: { adminNote } }),
 };

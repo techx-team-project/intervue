@@ -21,6 +21,7 @@ public record CheckoutRequest(
         @Size(max = 150) String fullName,
         @Size(max = 30) String identityNumber,
         @Size(max = 500) String personalAddress,
+        @Size(max = 40) String voucherCode,
         @NotBlank @Email @Size(max = 255) String recipientEmail,
         @NotNull Boolean termsAccepted) {
 

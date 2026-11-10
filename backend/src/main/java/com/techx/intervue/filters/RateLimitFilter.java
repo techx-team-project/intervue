@@ -48,7 +48,17 @@ public class RateLimitFilter extends OncePerRequestFilter {
                                     "/api/v1/recruiter/auth/verify-2fa"),
                             10,
                             Duration.ofMinutes(1)),
-                    new Policy("ai", List.of("/api/v1/ai/**"), 20, Duration.ofMinutes(1)),
+                    new Policy(
+                            "ai",
+                            List.of("/api/v1/ai/**", "/api/v1/recruiter/ai/**"),
+                            20,
+                            Duration.ofMinutes(1)),
+                    // A voucher code is guessable, so this stays far below the generic API budget
+                    new Policy(
+                            "voucher",
+                            List.of("/api/v1/recruiter/vouchers/validate"),
+                            10,
+                            Duration.ofMinutes(1)),
                     new Policy("api", List.of("/api/**"), 300, Duration.ofMinutes(1)));
 
     private final RateLimitServiceInterface rateLimitService;

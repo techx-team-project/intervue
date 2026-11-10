@@ -1,7 +1,7 @@
 'use client';
 
 import { recruiterOrderApi } from '@/apiRequest/recruiter-order';
-import type { CheckoutPayload } from '@/types/recruiter-order';
+import type { RecruiterOrderStatus, CheckoutPayload } from '@/types/recruiter-order';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const recruiterOrderKeys = {
@@ -28,12 +28,23 @@ export function useRecruiterOrder(code: string) {
   });
 }
 
-// While an order is still awaiting money the panel polls; a settled order stops polling
+const SETTLED: RecruiterOrderStatus[] = ['PAID', 'FULFILLED', 'EXPIRED', 'CANCELLED'];
+
+// While an order is still awaiting money the panel polls; the moment the bank reports the payment
+// the order itself is refetched, otherwise the status badge and the invoice button stay stale
 export function useOrderPayment(code: string, live: boolean) {
+  const queryClient = useQueryClient();
   return useQuery({
     queryKey: recruiterOrderKeys.payment(code),
-    queryFn: () => recruiterOrderApi.payment(code),
-    refetchInterval: live ? PAYMENT_POLL_MS : false,
+    queryFn: async () => {
+      const payment = await recruiterOrderApi.payment(code);
+      if (SETTLED.includes(payment.status)) {
+        queryClient.invalidateQueries({ queryKey: recruiterOrderKeys.detail(code) });
+      }
+      return payment;
+    },
+    refetchInterval: (query) =>
+      live && !SETTLED.includes(query.state.data?.status ?? 'PENDING_PAYMENT') ? PAYMENT_POLL_MS : false,
   });
 }
 

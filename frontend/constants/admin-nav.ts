@@ -144,10 +144,16 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             comingSoon: false,
           },
           {
-            label: 'Pricing & quotas',
+            label: 'Credit prices',
             href: ROUTES.ADMIN_SERVICE_PRICING,
             permission: 'services.manage',
-            comingSoon: true,
+            comingSoon: false,
+          },
+          {
+            label: 'Vouchers',
+            href: ROUTES.ADMIN_SERVICE_VOUCHERS,
+            permission: 'services.manage',
+            comingSoon: false,
           },
           {
             label: 'Education codes',
@@ -175,13 +181,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             permission: 'finance.manage',
             comingSoon: false,
           },
-          { label: 'Refunds', href: ROUTES.ADMIN_FINANCE_REFUNDS, permission: 'finance.manage', comingSoon: true },
+          { label: 'Refunds', href: ROUTES.ADMIN_FINANCE_REFUNDS, permission: 'finance.manage', comingSoon: false },
           {
-            label: 'VAT invoices',
+            label: 'Invoices',
             href: ROUTES.ADMIN_FINANCE_VAT_INVOICES,
-            queue: 'vatInvoices',
             permission: 'finance.manage',
-            comingSoon: true,
+            comingSoon: false,
           },
           {
             label: 'Revenue reports',

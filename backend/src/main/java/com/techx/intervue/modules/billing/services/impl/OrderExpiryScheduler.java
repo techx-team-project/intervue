@@ -3,6 +3,7 @@ package com.techx.intervue.modules.billing.services.impl;
 import com.techx.intervue.modules.billing.entities.Order;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
 import com.techx.intervue.modules.billing.repositories.OrderRepository;
+import com.techx.intervue.modules.billing.services.interfaces.VoucherServiceInterface;
 import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderExpiryScheduler {
 
     private final OrderRepository orderRepository;
+    private final VoucherServiceInterface voucherService;
 
     @Scheduled(cron = "0 */10 * * * *", zone = "Asia/Ho_Chi_Minh")
     @Transactional
@@ -27,7 +29,11 @@ public class OrderExpiryScheduler {
         if (overdue.isEmpty()) {
             return;
         }
-        overdue.forEach(order -> order.setStatus(OrderStatus.EXPIRED));
+        overdue.forEach(
+                order -> {
+                    order.setStatus(OrderStatus.EXPIRED);
+                    voucherService.release(order.getId());
+                });
         log.info("Expired {} unpaid orders", overdue.size());
     }
 }

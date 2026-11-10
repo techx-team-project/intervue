@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.billing.resources;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 public record BillingSettingsResource(
         BigDecimal vatRate,
@@ -11,4 +12,5 @@ public record BillingSettingsResource(
         String bankAccountNumber,
         String bankAccountName,
         Boolean paymentSyncEnabled,
+        Instant paymentSyncSince,
         boolean apiTokenConfigured) {}

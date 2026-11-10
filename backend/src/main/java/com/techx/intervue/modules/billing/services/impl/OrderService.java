@@ -23,6 +23,8 @@ import com.techx.intervue.modules.billing.resources.OrderResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
+import com.techx.intervue.modules.billing.services.interfaces.VoucherServiceInterface;
+import com.techx.intervue.modules.billing.services.interfaces.VoucherServiceInterface.AppliedVoucher;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterServiceInterface;
 import java.time.Duration;
@@ -67,6 +69,8 @@ public class OrderService implements OrderServiceInterface {
     private final RecruiterCompanyResolver companyResolver;
     private final RecruiterServiceInterface recruiterService;
     private final BillingNotifier billingNotifier;
+    private final VoucherServiceInterface voucherService;
+    private final OrderFulfillmentService orderFulfillmentService;
 
     @Override
     @Transactional
@@ -87,7 +91,13 @@ public class OrderService implements OrderServiceInterface {
         for (Map.Entry<ServicePackage, Integer> line : lines.entrySet()) {
             subtotal += line.getKey().getPrice() * line.getValue();
         }
-        OrderPricing.Totals totals = orderPricing.compute(subtotal, 0L, settings.getVatRate());
+        AppliedVoucher applied =
+                isFilled(request.voucherCode())
+                        ? voucherService.apply(request.voucherCode(), subtotal, company.id())
+                        : null;
+        long discount = applied == null ? 0L : applied.discountAmount();
+        OrderPricing.Totals totals =
+                orderPricing.compute(subtotal, discount, settings.getVatRate());
 
         Order duplicate =
                 orderRepository
@@ -133,6 +143,17 @@ public class OrderService implements OrderServiceInterface {
 
         orderItemRepository.saveAll(buildItems(order, lines));
         invoiceDetailRepository.save(buildInvoiceDetail(order, request));
+        if (applied != null) {
+            voucherService.claim(applied, order.getId(), company.id());
+        }
+
+        // Nobody will ever transfer zero, so a fully discounted order settles on the spot
+        if (totals.totalAmount() == 0) {
+            orderItemRepository.flush();
+            order.setStatus(OrderStatus.PAID);
+            order.setPaidAt(Instant.now());
+            orderFulfillmentService.fulfil(order);
+        }
 
         if (fromCart) {
             // Only the purchased lines leave the cart; anything left unselected stays
@@ -175,7 +196,12 @@ public class OrderService implements OrderServiceInterface {
         }
         order.setStatus(OrderStatus.CANCELLED);
         order.setCancelledAt(Instant.now());
+        voucherService.release(order.getId());
         return toResource(order);
+    }
+
+    private boolean isFilled(String value) {
+        return value != null && !value.isBlank();
     }
 
     private Map<ServicePackage, Integer> toLines(List<CartItem> cartItems) {

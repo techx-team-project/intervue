@@ -14,6 +14,7 @@ import com.techx.intervue.modules.billing.entities.Order;
 import com.techx.intervue.modules.billing.entities.PaymentTransaction;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
 import com.techx.intervue.modules.billing.enums.PaymentTransactionStatus;
+import com.techx.intervue.modules.billing.enums.SupportedBank;
 import com.techx.intervue.modules.billing.repositories.BillingSettingsRepository;
 import com.techx.intervue.modules.billing.repositories.OrderRepository;
 import com.techx.intervue.modules.billing.repositories.PaymentTransactionRepository;
@@ -21,9 +22,12 @@ import com.techx.intervue.modules.billing.requests.MatchPaymentTransactionReques
 import com.techx.intervue.modules.billing.requests.SaveBillingSettingsRequest;
 import com.techx.intervue.modules.billing.resources.BillingSettingsResource;
 import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
+import com.techx.intervue.modules.billing.resources.SupportedBankResource;
 import com.techx.intervue.modules.billing.services.interfaces.AdminPaymentServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -54,6 +58,13 @@ public class AdminPaymentService implements AdminPaymentServiceInterface {
     }
 
     @Override
+    public List<SupportedBankResource> supportedBanks() {
+        return Arrays.stream(SupportedBank.values())
+                .map(bank -> new SupportedBankResource(bank.getCode(), bank.getName()))
+                .toList();
+    }
+
+    @Override
     @Transactional
     public BillingSettingsResource updateSettings(
             SaveBillingSettingsRequest request, RequestActor actor) {
@@ -65,10 +76,19 @@ public class AdminPaymentService implements AdminPaymentServiceInterface {
         settings.setOrderExpireHours(request.orderExpireHours());
         settings.setOrderCodePrefix(request.orderCodePrefix().trim().toUpperCase());
         settings.setMaxPendingOrders(request.maxPendingOrders());
-        settings.setBankCode(trimToNull(request.bankCode()));
+        String bankCode = trimToNull(request.bankCode());
+        if (bankCode != null && !SupportedBank.isSupported(bankCode)) {
+            throw AppException.validation("bankCode", "This bank is not supported by SePay");
+        }
+        settings.setBankCode(bankCode);
         settings.setBankAccountNumber(trimToNull(request.bankAccountNumber()));
         settings.setBankAccountName(trimToNull(request.bankAccountName()));
         settings.setPaymentSyncEnabled(request.paymentSyncEnabled());
+        // Set once, never re-baselined: a payment made while sync was off must still be found
+        if (Boolean.TRUE.equals(request.paymentSyncEnabled())
+                && settings.getPaymentSyncSince() == null) {
+            settings.setPaymentSyncSince(Instant.now());
+        }
 
         audit(
                 actor,
@@ -152,6 +172,7 @@ public class AdminPaymentService implements AdminPaymentServiceInterface {
                 settings.getBankAccountNumber(),
                 settings.getBankAccountName(),
                 settings.getPaymentSyncEnabled(),
+                settings.getPaymentSyncSince(),
                 sepayProperties.apiToken() != null && !sepayProperties.apiToken().isBlank());
     }
 

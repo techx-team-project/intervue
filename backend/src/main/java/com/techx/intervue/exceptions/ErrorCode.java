@@ -198,6 +198,26 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "You have used up this service, please buy more!"),
     ENTITLEMENT_EXPIRED(
             HttpStatus.UNPROCESSABLE_CONTENT, "This service has passed its activation deadline!"),
+    ORDER_NOT_REFUNDABLE(HttpStatus.UNPROCESSABLE_CONTENT, "Only a paid order can be refunded!"),
+    REFUND_ALREADY_REQUESTED(
+            HttpStatus.CONFLICT, "A refund has already been requested for this order!"),
+    REFUND_ALREADY_REVIEWED(HttpStatus.CONFLICT, "This refund request was already reviewed!"),
+    NOTHING_LEFT_TO_REFUND(
+            HttpStatus.UNPROCESSABLE_CONTENT, "Every service on this order has already been used!"),
+    INVOICE_NOT_ISSUED_YET(
+            HttpStatus.UNPROCESSABLE_CONTENT, "The invoice is issued once the order is paid!"),
+    INVOICE_RENDER_FAILED(
+            HttpStatus.INTERNAL_SERVER_ERROR, "The invoice document could not be produced!"),
+    VOUCHER_NOT_FOUND(HttpStatus.NOT_FOUND, "This voucher code does not exist!"),
+    DUPLICATE_VOUCHER_CODE(HttpStatus.CONFLICT, "A voucher already uses this code!"),
+    VOUCHER_NOT_USABLE(
+            HttpStatus.UNPROCESSABLE_CONTENT, "This voucher is not valid at the moment!"),
+    VOUCHER_EXHAUSTED(HttpStatus.UNPROCESSABLE_CONTENT, "This voucher has been fully used!"),
+    VOUCHER_ALREADY_USED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "Your company has already used this voucher!"),
+    VOUCHER_MIN_ORDER_NOT_MET(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "The order value is below what this voucher requires!"),
     INSUFFICIENT_CREDITS(
             HttpStatus.UNPROCESSABLE_CONTENT, "Your company does not have enough credits left!"),
     CREDIT_PRICE_NOT_AVAILABLE(

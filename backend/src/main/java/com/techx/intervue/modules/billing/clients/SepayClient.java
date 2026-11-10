@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.techx.intervue.config.SepayProperties;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +19,9 @@ import org.springframework.web.client.RestClientException;
 public class SepayClient implements SepayClientInterface {
 
     private static final String LIST_PATH = "/userapi/transactions/list";
+    private static final ZoneId VIETNAM = ZoneId.of("Asia/Ho_Chi_Minh");
+    private static final DateTimeFormatter SEPAY_MOMENT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final RestClient restClient;
     private final SepayProperties properties;
@@ -35,7 +41,7 @@ public class SepayClient implements SepayClientInterface {
     }
 
     @Override
-    public List<SepayTransaction> listTransactions(String accountNumber, int limit) {
+    public List<SepayTransaction> listTransactions(String accountNumber, int limit, Instant since) {
         if (!isConfigured()) {
             throw new AppException(ErrorCode.PAYMENT_NOT_CONFIGURED);
         }
@@ -45,11 +51,19 @@ public class SepayClient implements SepayClientInterface {
                     restClient
                             .get()
                             .uri(
-                                    builder ->
-                                            builder.path(LIST_PATH)
-                                                    .queryParam("account_number", accountNumber)
-                                                    .queryParam("limit", limit)
-                                                    .build())
+                                    builder -> {
+                                        builder.path(LIST_PATH)
+                                                .queryParam("account_number", accountNumber)
+                                                .queryParam("limit", limit);
+                                        if (since != null) {
+                                            builder.queryParam(
+                                                    "transaction_date_min",
+                                                    SEPAY_MOMENT.format(
+                                                            since.atZone(VIETNAM)
+                                                                    .toLocalDateTime()));
+                                        }
+                                        return builder.build();
+                                    })
                             .header("Authorization", "Bearer " + properties.apiToken())
                             .retrieve()
                             .body(ListResponse.class);

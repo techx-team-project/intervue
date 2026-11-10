@@ -10,6 +10,7 @@ import com.techx.intervue.modules.entitlement.enums.EntitlementUsageStatus;
 import com.techx.intervue.modules.entitlement.repositories.CompanyEntitlementRepository;
 import com.techx.intervue.modules.entitlement.repositories.EntitlementUsageRepository;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
+import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface.UnusedUnits;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
@@ -111,6 +112,40 @@ public class EntitlementService implements EntitlementServiceInterface {
     @Transactional
     public boolean consumeUnit(Long companyId, EntitlementType type) {
         return spend(companyId, type, null, null).isPresent();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UnusedUnits> unusedFromOrderItems(Collection<Long> orderItemIds) {
+        if (orderItemIds.isEmpty()) {
+            return List.of();
+        }
+        return entitlementRepository.findAllBySourceOrderItemIdIn(orderItemIds).stream()
+                .map(
+                        entitlement ->
+                                new UnusedUnits(
+                                        entitlement.getSourceOrderItemId(),
+                                        entitlement.getTotalQuantity(),
+                                        entitlement.getStatus() == EntitlementStatus.AVAILABLE
+                                                ? entitlement.getRemainingQuantity()
+                                                : 0))
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public void revokeUnusedFromOrderItems(Collection<Long> orderItemIds) {
+        if (orderItemIds.isEmpty()) {
+            return;
+        }
+        for (CompanyEntitlement entitlement :
+                entitlementRepository.findAllBySourceOrderItemIdIn(orderItemIds)) {
+            if (entitlement.getStatus() != EntitlementStatus.AVAILABLE) {
+                continue;
+            }
+            entitlement.setRemainingQuantity(0);
+            entitlement.setStatus(EntitlementStatus.REVOKED);
+        }
     }
 
     @Override

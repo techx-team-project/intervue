@@ -1,7 +1,8 @@
 'use client';
 
 import Modal from '@/components/ui/Modal';
-import type { BusinessInvoiceInfo, DiscountVoucher, InvoiceType, PersonalInvoiceInfo } from '@/types/recruiter-cart';
+import type { BusinessInvoiceInfo, InvoiceType, PersonalInvoiceInfo } from '@/types/recruiter-cart';
+import type { VoucherPreview } from '@/types/voucher';
 import { FileText, Info, Receipt, Tag, Ticket } from 'lucide-react';
 import { useState } from 'react';
 
@@ -11,7 +12,7 @@ interface CartOrderSummaryProps {
   subtotalAfterDiscount: number;
   vatAmount: number;
   totalAmount: number;
-  appliedVoucher: DiscountVoucher | null;
+  appliedVoucher: VoucherPreview | null;
   onOpenVoucherModal: () => void;
   invoiceType: InvoiceType | null;
   onSelectInvoiceType: (type: InvoiceType) => void;
@@ -102,7 +103,7 @@ export default function CartOrderSummary({
               }`}
             >
               <Tag className="h-3.5 w-3.5" />
-              <span>{appliedVoucher ? appliedVoucher.code : 'Select coupon'}</span>
+              <span>{appliedVoucher ? appliedVoucher.code : 'Chọn mã ưu đãi'}</span>
             </button>
           </div>
         </div>

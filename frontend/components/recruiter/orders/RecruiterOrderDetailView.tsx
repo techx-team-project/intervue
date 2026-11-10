@@ -1,13 +1,20 @@
 'use client';
 
+import { recruiterOrderApi } from '@/apiRequest/recruiter-order';
 import Spinner from '@/components/common/Spinner';
 import OrderPaymentPanel from '@/components/recruiter/orders/OrderPaymentPanel';
-import { ORDER_CANCELLABLE, ORDER_STATUS_LABEL, ORDER_STATUS_STYLE } from '@/constants/recruiter-order';
+import OrderRefundPanel from '@/components/recruiter/orders/OrderRefundPanel';
+import {
+  INVOICED_STATUSES,
+  ORDER_CANCELLABLE,
+  ORDER_STATUS_LABEL,
+  ORDER_STATUS_STYLE,
+} from '@/constants/recruiter-order';
 import { ROUTES } from '@/constants/routes';
 import { useRecruiterOrder, useRecruiterOrderMutations } from '@/hooks/useRecruiterOrders';
 import { formatServicePrice } from '@/utils/service-package';
 import { getErrorMessage } from '@/utils/error';
-import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { AlertCircle, ArrowLeft, FileDown } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -16,9 +23,19 @@ interface RecruiterOrderDetailViewProps {
 }
 
 export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailViewProps) {
-  const { data, isPending, isError, error } = useRecruiterOrder(code);
+  const { data, isPending, isError, error, refetch } = useRecruiterOrder(code);
   const { cancel } = useRecruiterOrderMutations();
   const [actionError, setActionError] = useState<string | null>(null);
+
+  const downloadInvoice = async () => {
+    setActionError(null);
+    try {
+      const blob = await recruiterOrderApi.invoicePdf(code);
+      window.open(URL.createObjectURL(blob), '_blank', 'noopener');
+    } catch (cause) {
+      setActionError(getErrorMessage(cause));
+    }
+  };
 
   if (isPending) {
     return (
@@ -145,6 +162,19 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
                 <div>Email nhận hoá đơn: {invoice.recipientEmail}</div>
               </dl>
             </div>
+          )}
+
+          <OrderRefundPanel code={data.code} onRequested={refetch} />
+
+          {INVOICED_STATUSES.includes(data.status) && (
+            <button
+              type="button"
+              onClick={downloadInvoice}
+              className="border-outline-variant text-on-surface-variant inline-flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white text-sm font-semibold transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700"
+            >
+              <FileDown className="h-4 w-4" aria-hidden />
+              Tải hoá đơn (PDF)
+            </button>
           )}
 
           {ORDER_CANCELLABLE.includes(data.status) && (

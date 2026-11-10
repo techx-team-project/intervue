@@ -8,6 +8,8 @@ import CartItemsTable from '@/components/recruiter/cart/CartItemsTable';
 import CartNoticeBanner from '@/components/recruiter/cart/CartNoticeBanner';
 import CartOrderSummary from '@/components/recruiter/cart/CartOrderSummary';
 import CartVoucherModal from '@/components/recruiter/cart/CartVoucherModal';
+import { voucherApi } from '@/apiRequest/voucher';
+import type { VoucherPreview } from '@/types/voucher';
 import { useRecruiterCart } from '@/hooks/useRecruiterCart';
 import { useRecruiterOrderMutations } from '@/hooks/useRecruiterOrders';
 import type { BusinessInvoiceInfo, InvoiceType, PersonalInvoiceInfo } from '@/types/recruiter-cart';
@@ -39,8 +41,7 @@ export default function RecruiterCartView() {
     isError,
     error,
     subtotal,
-    vatAmount,
-    totalAmount,
+    vatRate,
     undoDeletedItem,
     toggleItemSelect,
     toggleSelectAll,
@@ -57,8 +58,27 @@ export default function RecruiterCartView() {
   const [personalInvoice, setPersonalInvoice] = useState(DEFAULT_PERSONAL_INVOICE);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
+  const [voucher, setVoucher] = useState<VoucherPreview | null>(null);
   const [createdOrder, setCreatedOrder] = useState<RecruiterOrder | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // The discount is computed from the selected lines, so a changed selection invalidates it
+  const dropVoucher = () => setVoucher(null);
+
+  const applyVoucher = async (code: string) => {
+    try {
+      const preview = await voucherApi.validate({ code, cartItemIds: selectedItems.map((item) => item.id) });
+      setVoucher(preview);
+      return { success: true, message: `Đã áp mã, giảm ${preview.discountAmount.toLocaleString('vi-VN')}đ.` };
+    } catch (cause) {
+      setVoucher(null);
+      return { success: false, message: getErrorMessage(cause) };
+    }
+  };
+
+  const discountAmount = voucher?.discountAmount ?? 0;
+  const subtotalAfterDiscount = Math.max(0, subtotal - discountAmount);
+  const vatAfterDiscount = Math.round(subtotalAfterDiscount * vatRate);
 
   const handleSubmitOrder = () => {
     setErrorMessage(null);
@@ -93,7 +113,12 @@ export default function RecruiterCartView() {
           };
 
     checkout.mutate(
-      { cartItemIds: selectedItems.map((item) => item.id), termsAccepted, ...invoice },
+      {
+        cartItemIds: selectedItems.map((item) => item.id),
+        termsAccepted,
+        voucherCode: voucher?.code,
+        ...invoice,
+      },
       {
         onSuccess: (order) => setCreatedOrder(order),
         onError: (cause) => setErrorMessage(getErrorMessage(cause)),
@@ -146,8 +171,14 @@ export default function RecruiterCartView() {
             <CartItemsTable
               items={items}
               isAllSelected={isAllSelected}
-              onToggleSelectAll={toggleSelectAll}
-              onToggleSelect={toggleItemSelect}
+              onToggleSelectAll={() => {
+                dropVoucher();
+                toggleSelectAll();
+              }}
+              onToggleSelect={(id) => {
+                dropVoucher();
+                toggleItemSelect(id);
+              }}
               onUpdateQuantity={updateQuantity}
               onRemoveItem={removeItem}
             />
@@ -159,11 +190,11 @@ export default function RecruiterCartView() {
         <div className="space-y-4 lg:sticky lg:top-20 lg:col-span-4">
           <CartOrderSummary
             subtotal={subtotal}
-            discountAmount={0}
-            subtotalAfterDiscount={subtotal}
-            vatAmount={vatAmount}
-            totalAmount={totalAmount}
-            appliedVoucher={null}
+            discountAmount={discountAmount}
+            subtotalAfterDiscount={subtotalAfterDiscount}
+            vatAmount={vatAfterDiscount}
+            totalAmount={subtotalAfterDiscount + vatAfterDiscount}
+            appliedVoucher={voucher}
             onOpenVoucherModal={() => setIsVoucherModalOpen(true)}
             invoiceType={invoiceType}
             onSelectInvoiceType={setInvoiceType}
@@ -214,9 +245,9 @@ export default function RecruiterCartView() {
       <CartVoucherModal
         isOpen={isVoucherModalOpen}
         onClose={() => setIsVoucherModalOpen(false)}
-        appliedVoucher={null}
-        onApplyVoucher={() => ({ success: false, message: 'Hiện chưa có mã ưu đãi nào khả dụng.' })}
-        onRemoveVoucher={() => undefined}
+        appliedVoucher={voucher}
+        onApplyVoucher={applyVoucher}
+        onRemoveVoucher={dropVoucher}
       />
 
       <CartCheckoutSuccessModal

@@ -6,10 +6,14 @@ import com.techx.intervue.modules.billing.requests.MatchPaymentTransactionReques
 import com.techx.intervue.modules.billing.requests.SaveBillingSettingsRequest;
 import com.techx.intervue.modules.billing.resources.BillingSettingsResource;
 import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
+import com.techx.intervue.modules.billing.resources.SupportedBankResource;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface AdminPaymentServiceInterface {
+
+    List<SupportedBankResource> supportedBanks();
 
     BillingSettingsResource getSettings();
 

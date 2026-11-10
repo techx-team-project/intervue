@@ -2,17 +2,26 @@ package com.techx.intervue.modules.billing.controllers;
 
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.billing.requests.CheckoutRequest;
+import com.techx.intervue.modules.billing.requests.CreateRefundRequest;
+import com.techx.intervue.modules.billing.resources.InvoiceResource;
 import com.techx.intervue.modules.billing.resources.OrderPaymentResource;
 import com.techx.intervue.modules.billing.resources.OrderResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
+import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
+import com.techx.intervue.modules.billing.resources.RefundRequestResource;
+import com.techx.intervue.modules.billing.services.interfaces.InvoiceServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderPaymentServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
+import com.techx.intervue.modules.billing.services.interfaces.RefundServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,6 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class RecruiterOrderController extends BaseController {
 
     private final OrderServiceInterface orderService;
+    private final InvoiceServiceInterface invoiceService;
+    private final RefundServiceInterface refundService;
     private final OrderPaymentServiceInterface orderPaymentService;
 
     @GetMapping
@@ -60,6 +71,50 @@ public class RecruiterOrderController extends BaseController {
             @AuthenticationPrincipal CustomUserDetails principal) {
         return created(
                 orderService.checkout(request, principal.getId()), "Order created successfully!");
+    }
+
+    @GetMapping("/{code}/invoice")
+    public ResponseEntity<ApiResource<InvoiceResource>> invoice(
+            @PathVariable("code") String code,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                invoiceService.findForOrder(code, principal.getId()),
+                "Invoice retrieved successfully!");
+    }
+
+    @GetMapping("/{code}/invoice/pdf")
+    public ResponseEntity<byte[]> invoicePdf(
+            @PathVariable("code") String code,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        byte[] pdf = invoiceService.renderForRecruiter(code, principal.getId());
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.inline()
+                                .filename("invoice-" + code + ".pdf")
+                                .build()
+                                .toString())
+                .body(pdf);
+    }
+
+    @GetMapping("/{code}/refund")
+    public ResponseEntity<ApiResource<RefundQuoteResource>> refundQuote(
+            @PathVariable("code") String code,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                refundService.quote(code, principal.getId()),
+                "Refund quote retrieved successfully!");
+    }
+
+    @PostMapping("/{code}/refund")
+    public ResponseEntity<ApiResource<RefundRequestResource>> requestRefund(
+            @PathVariable("code") String code,
+            @Valid @RequestBody CreateRefundRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return created(
+                refundService.request(code, request, principal.getId()),
+                "Refund request submitted successfully!");
     }
 
     @PostMapping("/{code}/cancel")

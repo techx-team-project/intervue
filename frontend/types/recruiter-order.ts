@@ -70,6 +70,7 @@ export interface CheckoutPayload {
   identityNumber?: string;
   personalAddress?: string;
   recipientEmail: string;
+  voucherCode?: string;
   termsAccepted: boolean;
 }
 
@@ -86,4 +87,45 @@ export interface OrderPayment {
   accountName: string | null;
   transferContent: string;
   qrUrl: string | null;
+}
+
+export interface OrderInvoice {
+  id: number;
+  number: string;
+  orderCode: string;
+  issuedAt: string;
+  invoiceType: 'BUSINESS' | 'PERSONAL';
+  buyerName: string;
+  buyerTaxId: string | null;
+  recipientEmail: string;
+  subtotal: number;
+  discountAmount: number;
+  vatRate: number;
+  vatAmount: number;
+  totalAmount: number;
+  currency: string;
+}
+
+export type RefundStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export interface RefundQuote {
+  orderCode: string;
+  orderTotal: number;
+  refundableAmount: number;
+  requestable: boolean;
+  existingStatus: RefundStatus | null;
+}
+
+export interface OrderRefundRequest {
+  id: number;
+  orderCode: string;
+  companyId: number;
+  reason: string;
+  status: RefundStatus;
+  orderTotal: number;
+  refundableAmount: number;
+  approvedAmount: number | null;
+  adminNote: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
 }
