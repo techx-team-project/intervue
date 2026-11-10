@@ -38,12 +38,3 @@ export interface PersonalInvoiceInfo {
   personalAddress: string;
   recipientEmail: string;
 }
-
-export interface DiscountVoucher {
-  code: string;
-  label: string;
-  discountType: 'percentage' | 'fixed';
-  discountValue: number;
-  minOrderValue?: number;
-  description: string;
-}
