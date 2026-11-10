@@ -70,6 +70,7 @@ public class OrderService implements OrderServiceInterface {
     private final RecruiterServiceInterface recruiterService;
     private final BillingNotifier billingNotifier;
     private final VoucherServiceInterface voucherService;
+    private final OrderFulfillmentService orderFulfillmentService;
 
     @Override
     @Transactional
@@ -144,6 +145,14 @@ public class OrderService implements OrderServiceInterface {
         invoiceDetailRepository.save(buildInvoiceDetail(order, request));
         if (applied != null) {
             voucherService.claim(applied, order.getId(), company.id());
+        }
+
+        // Nobody will ever transfer zero, so a fully discounted order settles on the spot
+        if (totals.totalAmount() == 0) {
+            orderItemRepository.flush();
+            order.setStatus(OrderStatus.PAID);
+            order.setPaidAt(Instant.now());
+            orderFulfillmentService.fulfil(order);
         }
 
         if (fromCart) {
