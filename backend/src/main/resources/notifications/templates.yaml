@@ -381,3 +381,21 @@ templates:
 
       Bạn có thể bắt đầu trao đổi với ứng viên ngay bây giờ.
     actionLabel: "Mở cuộc trò chuyện"
+  REPORT_DISMISSED:
+    title: "Báo cáo của bạn đã được xem xét"
+    summary: "Quản trị viên đã xem xét báo cáo của bạn và không phát hiện vi phạm."
+    body: |
+      Quản trị viên InterVue đã xem xét báo cáo của bạn và không phát hiện vi phạm nào.
+
+      Ghi chú từ quản trị viên: {note}
+    actionLabel: "Xem cuộc trò chuyện"
+  REPORT_RESOLVED:
+    title: "Báo cáo của bạn đã được xử lý"
+    summary: "Quản trị viên đã xử lý báo cáo của bạn."
+    body: |
+      Quản trị viên InterVue đã xem xét báo cáo của bạn.
+
+      Kết quả xử lý: **{action}**
+
+      Ghi chú từ quản trị viên: {note}
+    actionLabel: "Xem cuộc trò chuyện"

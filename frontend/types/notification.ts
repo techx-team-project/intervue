@@ -46,7 +46,9 @@ export type NotificationType =
   | 'REFUND_APPROVED'
   | 'REFUND_REJECTED'
   | 'CONNECT_INVITATION_RECEIVED'
-  | 'CONNECT_INVITATION_ACCEPTED';
+  | 'CONNECT_INVITATION_ACCEPTED'
+  | 'REPORT_DISMISSED'
+  | 'REPORT_RESOLVED';
 
 export interface NotificationListResource {
   id: number;
