@@ -105,3 +105,27 @@ export interface OrderInvoice {
   totalAmount: number;
   currency: string;
 }
+
+export type RefundStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export interface RefundQuote {
+  orderCode: string;
+  orderTotal: number;
+  refundableAmount: number;
+  requestable: boolean;
+  existingStatus: RefundStatus | null;
+}
+
+export interface OrderRefundRequest {
+  id: number;
+  orderCode: string;
+  companyId: number;
+  reason: string;
+  status: RefundStatus;
+  orderTotal: number;
+  refundableAmount: number;
+  approvedAmount: number | null;
+  adminNote: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
+}

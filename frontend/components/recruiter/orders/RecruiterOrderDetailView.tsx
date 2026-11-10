@@ -3,6 +3,7 @@
 import { recruiterOrderApi } from '@/apiRequest/recruiter-order';
 import Spinner from '@/components/common/Spinner';
 import OrderPaymentPanel from '@/components/recruiter/orders/OrderPaymentPanel';
+import OrderRefundPanel from '@/components/recruiter/orders/OrderRefundPanel';
 import {
   INVOICED_STATUSES,
   ORDER_CANCELLABLE,
@@ -22,7 +23,7 @@ interface RecruiterOrderDetailViewProps {
 }
 
 export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailViewProps) {
-  const { data, isPending, isError, error } = useRecruiterOrder(code);
+  const { data, isPending, isError, error, refetch } = useRecruiterOrder(code);
   const { cancel } = useRecruiterOrderMutations();
   const [actionError, setActionError] = useState<string | null>(null);
 
@@ -162,6 +163,8 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
               </dl>
             </div>
           )}
+
+          <OrderRefundPanel code={data.code} onRequested={refetch} />
 
           {INVOICED_STATUSES.includes(data.status) && (
             <button
