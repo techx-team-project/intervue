@@ -3,6 +3,7 @@
 import { refreshSession } from '@/apiRequest/http';
 import { env } from '@/config/env';
 import { useAuthStore } from '@/store/auth.store';
+import { playNotificationSound, showDesktopNotification } from '@/utils/sound';
 import { useEffect, useRef } from 'react';
 
 const MIN_BACKOFF_MS = 1_000;
@@ -60,6 +61,34 @@ export function useConnectStream(portal: ConnectStreamPortal, onMessage: () => v
         for (const frame of frames) {
           const isHeartbeatComment = frame.trimStart().startsWith(':');
           if (!isHeartbeatComment && frame.includes('data:')) {
+            const eventMatch = frame.match(/^event:\s*(.+)$/m);
+            const eventName = eventMatch?.[1]?.trim();
+            const dataMatch = frame.match(/^data:\s*(.+)$/m);
+
+            if (eventName === 'message' || !eventName) {
+              let preview = 'You have a new message';
+              if (dataMatch?.[1]) {
+                try {
+                  const parsed = JSON.parse(dataMatch[1]) as { body?: string; messageType?: string };
+                  if (parsed.body) preview = parsed.body.slice(0, 80);
+                  else if (parsed.messageType === 'IMAGE') preview = 'Sent an image';
+                  else if (parsed.messageType === 'FILE') preview = 'Sent an attachment';
+                } catch {}
+              }
+              playNotificationSound();
+              showDesktopNotification('InterVue Connect', preview);
+            } else if (eventName === 'status' && dataMatch?.[1]) {
+              try {
+                const parsed = JSON.parse(dataMatch[1]) as { status?: string };
+                if (parsed.status === 'PENDING') {
+                  playNotificationSound();
+                  showDesktopNotification('InterVue Connect', 'You received a new chat invitation');
+                } else if (parsed.status === 'ACCEPTED') {
+                  playNotificationSound();
+                  showDesktopNotification('InterVue Connect', 'Candidate accepted your chat invitation');
+                }
+              } catch {}
+            }
             onMessageRef.current();
           }
         }

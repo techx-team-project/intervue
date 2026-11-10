@@ -38,6 +38,9 @@ export default function ConnectSettingsDropdown({ onOpenRules }: ConnectSettings
     setReceiveNotifications(val);
     try {
       localStorage.setItem('connect_receive_notifications', String(val));
+      if (val && typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
+        void Notification.requestPermission();
+      }
     } catch {}
   };
 
