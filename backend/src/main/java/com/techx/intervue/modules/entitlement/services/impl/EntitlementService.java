@@ -1,5 +1,7 @@
 package com.techx.intervue.modules.entitlement.services.impl;
 
+import com.techx.intervue.exceptions.AppException;
+import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.entitlement.entities.CompanyEntitlement;
 import com.techx.intervue.modules.entitlement.entities.EntitlementUsage;
 import com.techx.intervue.modules.entitlement.enums.EntitlementStatus;
@@ -95,9 +97,56 @@ public class EntitlementService implements EntitlementServiceInterface {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<Instant> nearestExpiryOf(Long companyId, EntitlementType type) {
+        return entitlementRepository
+                .findAllByCompanyIdAndEntitlementTypeAndStatusOrderByActivationDeadlineAsc(
+                        companyId, type, EntitlementStatus.AVAILABLE)
+                .stream()
+                .map(CompanyEntitlement::getActivationDeadline)
+                .findFirst();
+    }
+
+    @Override
     @Transactional
     public boolean consumeUnit(Long companyId, EntitlementType type) {
         return spend(companyId, type, null, null).isPresent();
+    }
+
+    @Override
+    @Transactional
+    public void consumeUnits(Long companyId, EntitlementType type, int amount) {
+        if (amount <= 0 || remainingOf(companyId, type) < amount) {
+            throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
+        }
+
+        int left = amount;
+        for (CompanyEntitlement candidate :
+                entitlementRepository
+                        .findAllByCompanyIdAndEntitlementTypeAndStatusOrderByActivationDeadlineAsc(
+                                companyId, type, EntitlementStatus.AVAILABLE)) {
+            if (left == 0) {
+                break;
+            }
+            int take = Math.min(left, candidate.getRemainingQuantity());
+            if (entitlementRepository.consume(candidate.getId(), take) == 0) {
+                continue;
+            }
+            usageRepository.save(
+                    EntitlementUsage.builder()
+                            .entitlementId(candidate.getId())
+                            .companyId(companyId)
+                            .entitlementType(type)
+                            .quantity(take)
+                            .startedAt(Instant.now())
+                            .status(EntitlementUsageStatus.ENDED)
+                            .build());
+            left -= take;
+        }
+
+        if (left > 0) {
+            throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
+        }
     }
 
     // Nearest activation deadline first, so stock that would expire soonest is used up first
