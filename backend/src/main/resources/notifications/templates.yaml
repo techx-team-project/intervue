@@ -309,3 +309,59 @@ templates:
 
       Vui lòng chuyển bổ sung **{missingAmount}** với cùng nội dung chuyển khoản **{orderCode}** trước **{expiresAt}**.
     actionLabel: "Xem đơn hàng"
+  ORDER_EXPIRED_UNDERPAID:
+    title: "Đơn hàng {orderCode} đã hết hạn"
+    summary: "Đơn {orderCode} chưa đủ tiền và đã hết hạn. InterVue sẽ liên hệ hoàn lại {paidAmount}."
+    body: |
+      Đơn hàng **{orderCode}** chưa được thanh toán đủ trong thời hạn giữ chỗ nên đã tự hết hạn.
+
+      Số tiền bạn đã chuyển trước đó (**{paidAmount}**) sẽ được InterVue liên hệ hoàn lại thủ công.
+    actionLabel: "Xem đơn hàng"
+  ORDER_EXPIRED_WITH_PAYMENT:
+    title: "Đơn {orderCode} hết hạn còn tiền chưa hoàn"
+    summary: "Đơn {orderCode} đã hết hạn nhưng khách đã chuyển {paidAmount}, cần hoàn tiền thủ công."
+    body: |
+      Đơn hàng **{orderCode}** đã tự hết hạn vì chưa đủ tiền, nhưng khách đã chuyển **{paidAmount}**.
+
+      Vui lòng kiểm tra tại trang Finance và chuyển khoản hoàn lại cho khách.
+    actionLabel: "Mở danh sách đơn hàng"
+  AD_CREATIVE_APPROVED:
+    title: "Ảnh banner tuần {weekStart} đã được duyệt"
+    summary: "Ảnh banner cho tuần {weekStart} đã được quản trị viên duyệt."
+    body: |
+      Ảnh banner bạn tải lên cho tuần **{weekStart}** đã được quản trị viên **duyệt**.
+
+      Banner sẽ hiển thị đúng hạn khi tuần đó bắt đầu.
+    actionLabel: "Xem banner của tôi"
+  AD_CREATIVE_REJECTED:
+    title: "Ảnh banner tuần {weekStart} bị từ chối"
+    summary: "Ảnh banner cho tuần {weekStart} bị từ chối: {reason}"
+    body: |
+      Ảnh banner bạn tải lên cho tuần **{weekStart}** đã bị quản trị viên **từ chối**.
+
+      Lý do: **{reason}**
+
+      Vui lòng tải lại ảnh khác trước khi tuần này bắt đầu để banner không bị bỏ trống.
+    actionLabel: "Tải ảnh khác"
+  AD_WEEK_STARTING_SOON_NO_CREATIVE:
+    title: "Tuần banner {weekStart} sắp chạy mà chưa có ảnh được duyệt"
+    summary: "Tuần {weekStart} sắp bắt đầu nhưng banner của bạn chưa có ảnh được duyệt."
+    body: |
+      Tuần banner **{weekStart}** của bạn sắp bắt đầu nhưng chưa có ảnh được duyệt.
+
+      Nếu không tải ảnh kịp, vị trí sẽ hiển thị nội dung mặc định của InterVue cho tuần này và sẽ **không được bù**.
+    actionLabel: "Tải ảnh ngay"
+  REFUND_APPROVED:
+    title: "Hoàn tiền đơn {orderCode} đã được duyệt"
+    summary: "InterVue đã duyệt hoàn {approvedAmount} cho đơn {orderCode}."
+    body: |
+      Yêu cầu hoàn tiền cho đơn hàng **{orderCode}** đã được quản trị viên duyệt.
+
+      Số tiền hoàn: **{approvedAmount}**. InterVue sẽ chuyển khoản lại trong thời gian tới.
+    actionLabel: "Xem đơn hàng"
+  REFUND_REJECTED:
+    title: "Hoàn tiền đơn {orderCode} bị từ chối"
+    summary: "Yêu cầu hoàn tiền cho đơn {orderCode} đã bị từ chối."
+    body: |
+      Yêu cầu hoàn tiền cho đơn hàng **{orderCode}** đã bị quản trị viên từ chối.
+    actionLabel: "Xem đơn hàng"

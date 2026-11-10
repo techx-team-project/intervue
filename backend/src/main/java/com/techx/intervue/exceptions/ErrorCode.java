@@ -208,8 +208,6 @@ public enum ErrorCode {
             "The banner slot is only editable once the order is paid!"),
     AD_CREATIVE_ALREADY_REVIEWED(
             HttpStatus.CONFLICT, "This artwork was already approved or rejected!"),
-    AD_CREATIVE_NOT_APPROVED(
-            HttpStatus.UNPROCESSABLE_CONTENT, "This banner artwork has not been approved yet!"),
     AD_CREATIVE_WRONG_SIZE(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "The artwork does not match the size this slot requires!"),
