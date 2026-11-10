@@ -17,6 +17,8 @@ import com.techx.intervue.modules.billing.resources.CartItemResource;
 import com.techx.intervue.modules.billing.resources.CartResource;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.CartServiceInterface;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,14 +56,18 @@ public class CartService implements CartServiceInterface {
                 cartItemRepository
                         .findByCartIdAndServicePackageId(cart.getId(), servicePackage.getId())
                         .orElse(null);
-        // Banner weeks are a choice, not a count, so a second pick replaces the first
         if (existing != null && metaJson == null) {
             existing.setQuantity(Math.min(99, existing.getQuantity() + request.quantity()));
             return toResource(cart);
         }
+        // Banner weeks accumulate: a second pick adds to the weeks already chosen, deduped
         if (existing != null) {
-            existing.setQuantity(request.quantity());
-            existing.setMetaJson(metaJson);
+            List<LocalDate> combined =
+                    new ArrayList<>(adCartMeta.readWeeks(existing.getMetaJson()));
+            combined.addAll(request.weeks());
+            List<LocalDate> merged = combined.stream().distinct().sorted().toList();
+            existing.setMetaJson(adCartMeta.build(servicePackage, merged, merged.size()));
+            existing.setQuantity(merged.size());
             return toResource(cart);
         }
 
