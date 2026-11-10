@@ -29,12 +29,24 @@ export default function OrderPaymentPanel({ code, status }: OrderPaymentPanelPro
   };
 
   if (data.status === 'PAID' || data.status === 'FULFILLED') {
+    const overpaid = data.paidAmount - data.totalAmount;
     return (
-      <div className="flex items-center gap-3 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 px-4 py-3.5">
-        <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
-        <p className="text-sm font-semibold text-emerald-900">
-          Đã nhận {formatServicePrice(data.paidAmount, data.currency)}. Đơn hàng đã được thanh toán.
-        </p>
+      <div className="space-y-2">
+        <div className="flex items-center gap-3 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 px-4 py-3.5">
+          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+          <p className="text-sm font-semibold text-emerald-900">
+            Đã nhận {formatServicePrice(data.paidAmount, data.currency)}. Đơn hàng đã được thanh toán.
+          </p>
+        </div>
+        {overpaid > 0 && (
+          <div className="flex gap-3 rounded-lg border-l-4 border-amber-400 bg-amber-50 px-4 py-3">
+            <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-600" />
+            <p className="text-sm leading-relaxed text-amber-900">
+              Bạn đã chuyển dư {formatServicePrice(overpaid, data.currency)}. Khoản dư không tự cộng vào tài khoản — hãy
+              liên hệ InterVue để được hoàn lại.
+            </p>
+          </div>
+        )}
       </div>
     );
   }
