@@ -4,6 +4,7 @@ import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.ai.requests.ResumeMatchRequest;
 import com.techx.intervue.modules.ai.resources.ResumeMatchQuotaResource;
 import com.techx.intervue.modules.ai.resources.ResumeMatchResult;
+import com.techx.intervue.modules.ai.services.interfaces.ApplicationResumeMatchServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.ResumeMatchQuotaServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.ResumeMatchServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ResumeMatchController extends BaseController {
 
     private final ResumeMatchServiceInterface resumeMatchService;
+    private final ApplicationResumeMatchServiceInterface applicationResumeMatchService;
     private final ResumeMatchQuotaServiceInterface resumeMatchQuotaService;
 
     @GetMapping("/resume-match/quota")
@@ -51,28 +53,14 @@ public class ResumeMatchController extends BaseController {
                 "Resume matched with job requirements successfully!");
     }
 
-    @PostMapping("/applications/{id}/analyze")
+    @PostMapping("/applications/{id}/resume-match")
     public ResponseEntity<ApiResource<ResumeMatchResult>> analyzeApplication(
-            @PathVariable("id") String id,
+            @PathVariable("id") Long id,
             @AuthenticationPrincipal CustomUserDetails principal,
-            @Valid @RequestBody ResumeMatchRequest request,
             HttpServletRequest httpRequest) {
-        Long userId = principal.getId();
-        String ip = resolveClientIp(httpRequest);
-
-        ResumeMatchRequest effectiveRequest =
-                (request.applicationId() == null || !request.applicationId().equals(id))
-                        ? new ResumeMatchRequest(
-                                id,
-                                request.jobTitle(),
-                                request.jobRequirements(),
-                                request.jobDescription(),
-                                request.candidateData(),
-                                request.cvText())
-                        : request;
-
         return ok(
-                resumeMatchService.analyze(userId, ip, effectiveRequest),
+                applicationResumeMatchService.analyze(
+                        principal.getId(), resolveClientIp(httpRequest), id),
                 "Application analyzed with AI successfully!");
     }
 

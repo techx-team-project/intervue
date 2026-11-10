@@ -38,6 +38,11 @@ public enum ErrorCode {
     AI_REQUEST_REFUSED(
             HttpStatus.UNPROCESSABLE_CONTENT, "The AI service declined to process this request!"),
     AI_PROMPT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "The AI prompt is not available!"),
+    JOB_REQUIREMENTS_MISSING(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "This job has no requirements to match the resume against!"),
+    CV_TEXT_NOT_READABLE(
+            HttpStatus.UNPROCESSABLE_CONTENT, "The attached CV could not be read as text!"),
     ACCOUNT_BANNED(HttpStatus.FORBIDDEN, "This account has been banned!"),
     ACCOUNT_ALREADY_RESTRICTED(HttpStatus.CONFLICT, "This account is already banned!"),
     ACCOUNT_NOT_RESTRICTED(HttpStatus.CONFLICT, "This account has no restriction to lift!"),
