@@ -17,6 +17,9 @@ public interface PaymentTransactionRepository extends JpaRepository<PaymentTrans
 
     Page<PaymentTransaction> findAllByOrderByTransactionAtDesc(Pageable pageable);
 
+    Page<PaymentTransaction> findAllByMatchedOrder_CompanyIdOrderByTransactionAtDesc(
+            Long companyId, Pageable pageable);
+
     Optional<PaymentTransaction> findBySepayId(String sepayId);
 
     @Query(

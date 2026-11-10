@@ -9,6 +9,8 @@ export const recruiterOrderKeys = {
   list: (page: number, size: number) => ['recruiter', 'orders', 'list', page, size] as const,
   detail: (code: string) => ['recruiter', 'orders', 'detail', code] as const,
   payment: (code: string) => ['recruiter', 'orders', 'payment', code] as const,
+  payments: (page: number, size: number) => ['recruiter', 'orders', 'payments', page, size] as const,
+  refunds: (page: number, size: number) => ['recruiter', 'orders', 'refunds', page, size] as const,
 };
 
 const PAYMENT_POLL_MS = 5000;
@@ -25,6 +27,22 @@ export function useRecruiterOrder(code: string) {
   return useQuery({
     queryKey: recruiterOrderKeys.detail(code),
     queryFn: () => recruiterOrderApi.get(code),
+  });
+}
+
+export function useRecruiterPayments(page: number, size = 10) {
+  return useQuery({
+    queryKey: recruiterOrderKeys.payments(page, size),
+    queryFn: () => recruiterOrderApi.searchPayments(page, size),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useRecruiterRefunds(page: number, size = 10) {
+  return useQuery({
+    queryKey: recruiterOrderKeys.refunds(page, size),
+    queryFn: () => recruiterOrderApi.searchRefunds(page, size),
+    placeholderData: keepPreviousData,
   });
 }
 

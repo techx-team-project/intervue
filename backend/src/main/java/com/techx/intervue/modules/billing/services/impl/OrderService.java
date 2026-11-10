@@ -8,6 +8,7 @@ import com.techx.intervue.modules.billing.entities.CartItem;
 import com.techx.intervue.modules.billing.entities.Order;
 import com.techx.intervue.modules.billing.entities.OrderInvoiceDetail;
 import com.techx.intervue.modules.billing.entities.OrderItem;
+import com.techx.intervue.modules.billing.entities.PaymentTransaction;
 import com.techx.intervue.modules.billing.entities.ServicePackage;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
 import com.techx.intervue.modules.billing.enums.ServicePackageStatus;
@@ -17,11 +18,13 @@ import com.techx.intervue.modules.billing.repositories.CartItemRepository;
 import com.techx.intervue.modules.billing.repositories.OrderInvoiceDetailRepository;
 import com.techx.intervue.modules.billing.repositories.OrderItemRepository;
 import com.techx.intervue.modules.billing.repositories.OrderRepository;
+import com.techx.intervue.modules.billing.repositories.PaymentTransactionRepository;
 import com.techx.intervue.modules.billing.repositories.ServicePackageBenefitRepository;
 import com.techx.intervue.modules.billing.repositories.ServicePackageRepository;
 import com.techx.intervue.modules.billing.requests.CheckoutRequest;
 import com.techx.intervue.modules.billing.resources.OrderResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
+import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.VoucherServiceInterface;
@@ -75,6 +78,7 @@ public class OrderService implements OrderServiceInterface {
     private final OrderFulfillmentService orderFulfillmentService;
     private final AdCartMeta adCartMeta;
     private final AdBookingServiceInterface adBookingService;
+    private final PaymentTransactionRepository paymentTransactionRepository;
 
     @Override
     @Transactional
@@ -206,6 +210,32 @@ public class OrderService implements OrderServiceInterface {
         voucherService.release(order.getId());
         adBookingService.release(order.getId());
         return toResource(order);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PaymentTransactionResource> searchPayments(Pageable pageable, Long recruiterId) {
+        Long companyId = companyResolver.requireId(recruiterId);
+        return paymentTransactionRepository
+                .findAllByMatchedOrder_CompanyIdOrderByTransactionAtDesc(companyId, pageable)
+                .map(this::toPaymentResource);
+    }
+
+    private PaymentTransactionResource toPaymentResource(PaymentTransaction transaction) {
+        return new PaymentTransactionResource(
+                transaction.getId(),
+                transaction.getSepayId(),
+                transaction.getGateway(),
+                transaction.getAccountNumber(),
+                transaction.getContent(),
+                transaction.getAmountIn(),
+                transaction.getReferenceCode(),
+                transaction.getTransactionAt(),
+                transaction.getStatus(),
+                transaction.getMatchedOrder() == null
+                        ? null
+                        : transaction.getMatchedOrder().getCode(),
+                transaction.getNote());
     }
 
     private boolean isFilled(String value) {
