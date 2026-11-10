@@ -1,3 +1,4 @@
+import AdSlot from '@/components/common/AdSlot';
 import Footer from '@/components/common/Footer';
 import Header from '@/components/common/Header';
 import AiShowcaseSection from '@/components/home/ai-showcase/AiShowcaseSection';
@@ -22,11 +23,13 @@ export default function Home() {
 
       <main id="main-content" className="flex-1">
         <HomeHero />
+        <AdSlot code="HOME_TOP" className="mx-auto w-full max-w-[1200px] px-4 pt-6" />
         <MarketPulse />
         <FeaturedJobsSection />
         <TopCategoriesSection />
         <HowItWorksSection />
         <AiShowcaseSection />
+        <AdSlot code="HOME_MID" className="mx-auto w-full max-w-[1200px] px-4 py-6" />
         <HiringCompaniesSection />
         <CallToActionSection />
       </main>
