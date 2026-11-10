@@ -4,6 +4,7 @@ import type {
   PaymentSyncResult,
   PaymentTransaction,
   PaymentTransactionStatus,
+  AdminInvoice,
   SaveBillingSettingsInput,
   SupportedBank,
 } from '@/types/admin-payment';
@@ -33,4 +34,9 @@ export const adminPaymentApi = {
     }),
 
   sync: () => request<PaymentSyncResult>('/admin/payments/sync', { method: 'POST' }),
+
+  searchInvoices: (page: number, size: number) =>
+    request<Page<AdminInvoice>>(`/admin/invoices?page=${page}&size=${size}`),
+
+  invoicePdf: (id: number) => request<Blob>(`/admin/invoices/${id}/pdf`, { responseType: 'blob' }),
 };

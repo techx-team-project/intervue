@@ -51,3 +51,20 @@ export interface PaymentSyncResult {
   created: number;
   matched: number;
 }
+
+export interface AdminInvoice {
+  id: number;
+  number: string;
+  orderCode: string;
+  issuedAt: string;
+  invoiceType: 'BUSINESS' | 'PERSONAL';
+  buyerName: string;
+  buyerTaxId: string | null;
+  recipientEmail: string;
+  subtotal: number;
+  discountAmount: number;
+  vatRate: number;
+  vatAmount: number;
+  totalAmount: number;
+  currency: string;
+}
