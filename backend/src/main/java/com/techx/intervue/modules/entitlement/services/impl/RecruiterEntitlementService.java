@@ -41,7 +41,9 @@ public class RecruiterEntitlementService implements RecruiterEntitlementServiceI
     @Transactional(readOnly = true)
     public List<EntitlementResource> listStock(Long recruiterId) {
         Long companyId = requireCompanyId(recruiterId);
+        // Credits are a wallet balance, not a stock card; they have their own panel
         return entitlementRepository.findAllByCompanyIdOrderByCreatedAtDesc(companyId).stream()
+                .filter(entitlement -> entitlement.getEntitlementType() != EntitlementType.CREDIT)
                 .map(entitlementMapper::toResource)
                 .toList();
     }

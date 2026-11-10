@@ -198,6 +198,10 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "You have used up this service, please buy more!"),
     ENTITLEMENT_EXPIRED(
             HttpStatus.UNPROCESSABLE_CONTENT, "This service has passed its activation deadline!"),
+    INSUFFICIENT_CREDITS(
+            HttpStatus.UNPROCESSABLE_CONTENT, "Your company does not have enough credits left!"),
+    CREDIT_PRICE_NOT_AVAILABLE(
+            HttpStatus.NOT_FOUND, "This service cannot be exchanged for credits right now!"),
     ENTITLEMENT_NOT_ACTIVATABLE(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "This service is used automatically and cannot be applied to a job!"),

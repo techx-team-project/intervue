@@ -24,7 +24,6 @@ import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.company.resources.CompanyResource;
-import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterServiceInterface;
 import java.time.Duration;
 import java.time.Instant;
@@ -65,14 +64,14 @@ public class OrderService implements OrderServiceInterface {
     private final BillingSettingsServiceInterface billingSettings;
     private final CartItemRepository cartItemRepository;
     private final CartLineReader cartLineReader;
-    private final CompanyServiceInterface companyService;
+    private final RecruiterCompanyResolver companyResolver;
     private final RecruiterServiceInterface recruiterService;
     private final BillingNotifier billingNotifier;
 
     @Override
     @Transactional
     public OrderResource checkout(CheckoutRequest request, Long recruiterId) {
-        CompanyResource company = requireCompany(recruiterId);
+        CompanyResource company = companyResolver.require(recruiterId);
         BillingSettings settings = billingSettings.current();
 
         boolean fromCart = request.packageId() == null;
@@ -148,7 +147,7 @@ public class OrderService implements OrderServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public Page<OrderSummaryResource> search(Pageable pageable, Long recruiterId) {
-        CompanyResource company = requireCompany(recruiterId);
+        CompanyResource company = companyResolver.require(recruiterId);
         Page<Order> page =
                 orderRepository.findAllByCompanyIdOrderByCreatedAtDesc(company.id(), pageable);
         Map<Long, Integer> counts = countItems(page.getContent());
@@ -265,7 +264,7 @@ public class OrderService implements OrderServiceInterface {
     }
 
     private Order requireOrder(String code, Long recruiterId) {
-        CompanyResource company = requireCompany(recruiterId);
+        CompanyResource company = companyResolver.require(recruiterId);
         return orderRepository
                 .findByCodeAndCompanyId(code, company.id())
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
@@ -276,16 +275,5 @@ public class OrderService implements OrderServiceInterface {
                 order,
                 orderItemRepository.findAllByOrderIdOrderByIdAsc(order.getId()),
                 invoiceDetailRepository.findByOrderId(order.getId()).orElse(null));
-    }
-
-    private CompanyResource requireCompany(Long recruiterId) {
-        try {
-            return companyService.findMyCompany(recruiterId);
-        } catch (AppException cause) {
-            if (cause.getErrorCode() == ErrorCode.NOT_FOUND) {
-                throw new AppException(ErrorCode.NOT_COMPANY_MEMBER);
-            }
-            throw cause;
-        }
     }
 }

@@ -27,13 +27,14 @@ public interface CompanyEntitlementRepository extends JpaRepository<CompanyEntit
 
     // Single atomic statement: two publishes racing for the last slot cannot both win
     @Modifying(clearAutomatically = true, flushAutomatically = true)
+    // MySQL assigns left to right, so status must read remainingQuantity before it is lowered
     @Query(
             """
             update CompanyEntitlement entitlement
-               set entitlement.remainingQuantity = entitlement.remainingQuantity - :amount,
-                   entitlement.status = case when entitlement.remainingQuantity - :amount = 0
+               set entitlement.status = case when entitlement.remainingQuantity - :amount = 0
                                              then com.techx.intervue.modules.entitlement.enums.EntitlementStatus.CONSUMED
-                                             else entitlement.status end
+                                             else entitlement.status end,
+                   entitlement.remainingQuantity = entitlement.remainingQuantity - :amount
              where entitlement.id = :id
                and entitlement.remainingQuantity >= :amount
                and entitlement.status = com.techx.intervue.modules.entitlement.enums.EntitlementStatus.AVAILABLE
