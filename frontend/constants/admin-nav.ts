@@ -2,6 +2,7 @@ import { ROUTES } from '@/constants/routes';
 import type { AdminNavSection } from '@/types/admin';
 import {
   BadgeCheck,
+  Megaphone,
   Bell,
   Building2,
   FileText,
@@ -160,6 +161,19 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             href: ROUTES.ADMIN_EDUCATION_CODES,
             permission: 'services.manage',
             comingSoon: true,
+          },
+        ],
+      },
+      {
+        label: 'Ads',
+        icon: Megaphone,
+        children: [
+          { label: 'Ad slots', href: ROUTES.ADMIN_ADS_SLOTS, permission: 'services.manage', comingSoon: false },
+          {
+            label: 'Banner artwork',
+            href: ROUTES.ADMIN_ADS_CREATIVES,
+            permission: 'services.manage',
+            comingSoon: false,
           },
         ],
       },
