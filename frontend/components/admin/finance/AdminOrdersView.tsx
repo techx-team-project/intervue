@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import type { AdminOrder, AdminOrderStatus } from '@/types/admin-payment';
-import { formatDateTime } from '@/utils/datetime';
+import { formatDate, formatDateTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
 import { AlertCircle, ChevronDown, ChevronRight } from 'lucide-react';
 import { Fragment, useState } from 'react';
+import type { MouseEvent } from 'react';
 
 const PAGE_SIZE = 50;
 
@@ -36,21 +37,53 @@ export default function AdminOrdersView({ initialOrders }: { initialOrders: Admi
   const [orders, setOrders] = useState(initialOrders);
   const [code, setCode] = useState('');
   const [status, setStatus] = useState<AdminOrderStatus | ''>('');
+  const [needsManualRefund, setNeedsManualRefund] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resolvingCode, setResolvingCode] = useState<string | null>(null);
 
-  const search = async () => {
+  const search = async (overrideNeedsManualRefund = needsManualRefund) => {
     setIsSearching(true);
     setError(null);
     try {
-      const page = await adminPaymentApi.searchOrders({ code: code.trim(), status, page: 0, size: PAGE_SIZE });
+      const page = await adminPaymentApi.searchOrders({
+        code: code.trim(),
+        status,
+        needsManualRefund: overrideNeedsManualRefund,
+        page: 0,
+        size: PAGE_SIZE,
+      });
       setOrders(page.items);
       setExpanded(null);
     } catch (cause) {
       setError(getErrorMessage(cause));
     } finally {
       setIsSearching(false);
+    }
+  };
+
+  const toggleNeedsManualRefund = () => {
+    const next = !needsManualRefund;
+    setNeedsManualRefund(next);
+    void search(next);
+  };
+
+  const resolveManualRefund = async (event: MouseEvent, order: AdminOrder) => {
+    event.stopPropagation();
+    setResolvingCode(order.code);
+    setError(null);
+    try {
+      const updated = await adminPaymentApi.resolveManualRefund(order.code);
+      setOrders((current) =>
+        current.map((item) =>
+          item.code === order.code ? { ...item, manualRefundResolvedAt: updated.manualRefundResolvedAt } : item,
+        ),
+      );
+    } catch (cause) {
+      setError(getErrorMessage(cause));
+    } finally {
+      setResolvingCode(null);
     }
   };
 
@@ -92,9 +125,20 @@ export default function AdminOrdersView({ initialOrders }: { initialOrders: Admi
           onChange={(event) => setStatus(event.target.value as AdminOrderStatus | '')}
           options={STATUS_OPTIONS}
         />
-        <Button isLoading={isSearching} onClick={search}>
+        <Button isLoading={isSearching} onClick={() => search()}>
           Search
         </Button>
+        <button
+          type="button"
+          onClick={toggleNeedsManualRefund}
+          className={`rounded-full border px-3 py-2 text-xs font-semibold transition-colors ${
+            needsManualRefund
+              ? 'border-rose-300 bg-rose-50 text-rose-700'
+              : 'border-outline-variant text-on-surface-variant hover:bg-surface-container-low'
+          }`}
+        >
+          Cần hoàn tiền thủ công
+        </button>
       </div>
 
       {error && (
@@ -151,9 +195,32 @@ export default function AdminOrdersView({ initialOrders }: { initialOrders: Admi
                       {money(order.paidAmount, order.currency)}
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${STATUS_STYLE[order.status]}`}>
-                        {order.status}
-                      </span>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${STATUS_STYLE[order.status]}`}>
+                          {order.status}
+                        </span>
+                        {order.status === 'EXPIRED' &&
+                          order.paidAmount > 0 &&
+                          (order.manualRefundResolvedAt ? (
+                            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">
+                              ✓ Đã hoàn tiền (thủ công)
+                            </span>
+                          ) : (
+                            <>
+                              <span className="rounded-full bg-rose-100 px-2.5 py-1 text-xs font-bold text-rose-700">
+                                Cần hoàn tiền thủ công
+                              </span>
+                              <button
+                                type="button"
+                                disabled={resolvingCode === order.code}
+                                onClick={(event) => resolveManualRefund(event, order)}
+                                className="rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 transition hover:bg-emerald-100 disabled:opacity-50"
+                              >
+                                Đã hoàn tiền xong
+                              </button>
+                            </>
+                          ))}
+                      </div>
                     </td>
                   </tr>
                   {expanded === order.code && (
@@ -165,11 +232,18 @@ export default function AdminOrdersView({ initialOrders }: { initialOrders: Admi
                         ) : (
                           <ul className="space-y-1">
                             {order.items.map((item) => (
-                              <li key={item.id} className="text-on-surface-variant flex justify-between text-xs">
-                                <span>
-                                  {item.packageName} × {item.quantity}
-                                </span>
-                                <span>{money(item.lineTotal, order.currency)}</span>
+                              <li key={item.id} className="text-on-surface-variant text-xs">
+                                <div className="flex justify-between">
+                                  <span>
+                                    {item.packageName} × {item.quantity}
+                                  </span>
+                                  <span>{money(item.lineTotal, order.currency)}</span>
+                                </div>
+                                {item.bookedWeeks.length > 0 && (
+                                  <p className="mt-0.5 text-[11px] text-slate-400">
+                                    Tuần: {item.bookedWeeks.map((week) => formatDate(week)).join(', ')}
+                                  </p>
+                                )}
                               </li>
                             ))}
                           </ul>

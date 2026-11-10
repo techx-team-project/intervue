@@ -181,6 +181,9 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT,
             "You have too many unpaid orders, please finish or cancel one first!"),
     ORDER_NOT_PAYABLE(HttpStatus.UNPROCESSABLE_CONTENT, "This order can no longer be paid!"),
+    ORDER_NOT_AWAITING_MANUAL_REFUND(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "This order isn't an expired order with a leftover payment to refund!"),
     ORDER_EXPIRED(HttpStatus.UNPROCESSABLE_CONTENT, "This order has expired!"),
     TRIAL_ALREADY_USED(
             HttpStatus.UNPROCESSABLE_CONTENT,

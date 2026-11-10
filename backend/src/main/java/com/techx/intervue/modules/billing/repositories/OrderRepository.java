@@ -3,6 +3,7 @@ package com.techx.intervue.modules.billing.repositories;
 import com.techx.intervue.modules.billing.entities.Order;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,8 @@ public interface OrderRepository
 
     long countByCompanyIdAndStatus(Long companyId, OrderStatus status);
 
-    List<Order> findAllByStatusAndExpiresAtBefore(OrderStatus status, Instant moment);
+    List<Order> findAllByStatusInAndExpiresAtBefore(
+            Collection<OrderStatus> statuses, Instant moment);
 
     Optional<Order> findFirstByPurchasedByRecruiterIdAndStatusAndTotalAmountAndCreatedAtAfter(
             Long recruiterId, OrderStatus status, Long totalAmount, Instant createdAfter);
