@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,4 +52,7 @@ public class BillingSettings extends BaseEntity {
     @Column(name = "payment_sync_enabled", nullable = false)
     @Builder.Default
     private Boolean paymentSyncEnabled = false;
+
+    @Column(name = "payment_sync_since")
+    private Instant paymentSyncSince;
 }
