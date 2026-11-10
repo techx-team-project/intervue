@@ -462,6 +462,28 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 - **Nothing goes live unreviewed.** Every upload, including a replacement, returns to `PENDING`. A week whose artwork is not approved in time shows the house ad and is **not** extended.
 - **Views never touch the database.** Impressions and clicks accumulate in Redis and a job flushes them into `ad_metrics` every five minutes.
 
+## InterVue Connect
+
+Chat between a Candidate and a company's Recruiters (`modules/connect`). A `connection` is one per
+`(candidate, company)` pair, not per job. Wave 1 covers only the invitation lifecycle; sending free
+messages, attachments, block, report and real-time delivery land in later waves — the
+`connection_messages`/`connect_filter_words`/`connect_violations`/`connect_mutes`/`reports` tables
+already exist but have no endpoints yet.
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/connect/eligible-candidates?search=` | recruiter | Candidates who have at least one `Application` to the recruiter's company and have no `connection` with it yet. `EligibleCandidateResource { candidateId, fullName, email }`. |
+| `POST` | `/recruiter/connect/invitations` | recruiter | Body `{ candidateId, message (max 1000) }`. Creates a `PENDING` connection plus its opening message, charges the daily quota, notifies the candidate (`CONNECT_INVITATION_RECEIVED`). `409 CONNECTION_ALREADY_EXISTS`, `422 NOT_ELIGIBLE_TO_CONNECT`, `429 CONNECTION_QUOTA_EXCEEDED`. |
+| `GET` | `/recruiter/connect/conversations` | recruiter | Company-wide, `PENDING` + `ACCEPTED`, paged. |
+| `GET` | `/candidate/connect/invitations` | candidate | Own `PENDING` invitations, each with the opening message. |
+| `POST` | `/candidate/connect/invitations/{id}/accept` | candidate | `PENDING` to `ACCEPTED`; notifies the inviting recruiter (`CONNECT_INVITATION_ACCEPTED`). `404 NOT_FOUND` if not owned or not `PENDING`. |
+| `POST` | `/candidate/connect/invitations/{id}/decline` | candidate | `PENDING` to `DECLINED`. The pair is locked — a recruiter cannot invite the same candidate again in v1. |
+| `GET` | `/candidate/connect/conversations` | candidate | Own `ACCEPTED` connections, paged. |
+
+- **Quota**: 100 new invitations per calendar day (Asia/Ho_Chi_Minh), counted **per recruiter**, not per company. Declining later does not refund it.
+- **Eligibility is a port**: `connect` depends on `CandidateEligibilityPortInterface`, implemented in `application` off the existing `Application` rows (already carry `candidateName`/`candidateEmail`, no call into `candidate` needed). A Candidate Search module can plug in as a second source later without touching `connect`.
+- **Ownership checks return `404`**, never a connect-specific error code, matching the IDOR pattern used everywhere else.
+
 ## Error codes
 
 | Code | HTTP | Meaning |
@@ -563,6 +585,9 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `TAX_CODE_NOT_FOUND` | 422 | The tax code was not found in the national business registry |
 | `TAX_LOOKUP_BUSY` | 429 | The registry lookup is rate limited; honor `Retry-After` |
 | `TAX_LOOKUP_UNAVAILABLE` | 503 | The registry lookup is not reachable right now |
+| `CONNECTION_QUOTA_EXCEEDED` | 429 | Recruiter's 100 new Connect invitations/day reached; honor `Retry-After` |
+| `CONNECTION_ALREADY_EXISTS` | 409 | A connection already exists for this candidate + company pair |
+| `NOT_ELIGIBLE_TO_CONNECT` | 422 | Candidate has no `Application` to the recruiter's company yet |
 
 ## Recruiter Account
 

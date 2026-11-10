@@ -44,7 +44,9 @@ export type NotificationType =
   | 'AD_CREATIVE_REJECTED'
   | 'AD_WEEK_STARTING_SOON_NO_CREATIVE'
   | 'REFUND_APPROVED'
-  | 'REFUND_REJECTED';
+  | 'REFUND_REJECTED'
+  | 'CONNECT_INVITATION_RECEIVED'
+  | 'CONNECT_INVITATION_ACCEPTED';
 
 export interface NotificationListResource {
   id: number;
