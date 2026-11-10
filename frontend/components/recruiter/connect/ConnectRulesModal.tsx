@@ -2,29 +2,33 @@
 
 import { Button } from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
+import { useCandidateAcknowledgeRules } from '@/hooks/useCandidateConnect';
 import { useAcknowledgeRules } from '@/hooks/useRecruiterConnect';
 import { getErrorMessage } from '@/utils/error';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 const RULES = [
-  'Phiên bản hiện tại là phiên bản thử nghiệm nên trong quá trình sử dụng có thể gặp lỗi hoặc một số tính năng có thể không hoạt động đúng cách.',
-  'Tài khoản nhà tuyển dụng được gửi tối đa 100 cuộc hội thoại mới mỗi ngày. Ứng viên có thể chấp nhận hoặc từ chối lời mời trò chuyện bất cứ lúc nào.',
-  'Lịch sự khi tương tác, trao đổi. Không gửi hoặc tạo điều kiện cho việc truyền nội dung không phù hợp, số lượng lớn tin nhắn thương mại hay tự động.',
-  'Không dùng tính năng InterVue Connect để thực hiện hành vi lừa đảo (hoặc có dấu hiệu lừa đảo).',
-  'Không yêu cầu hoặc thu thập dữ liệu nhạy cảm. Không mạo danh người khác. Không cung cấp thông tin không đúng về bản thân. Không dùng InterVue Connect để quấy rối, đe doạ hoặc dọa dẫm người khác.',
-  'Không cho phép lan truyền phần mềm độc hại, vi-rút, Trojan horse, tệp hỏng hay bất cứ thứ gì có thể gây hại hoặc can thiệp vào hoạt động của hệ thống InterVue hay tổ chức khác.',
-  'InterVue có thể vô hiệu hoá những tài khoản bị phát hiện vi phạm các quy định này.',
+  'The current version is in Beta testing, so minor issues or temporary delays may occur during usage.',
+  'Employer accounts can initiate up to 100 new conversations per day. Candidates can accept or decline invitations at any time.',
+  'Maintain polite and professional communication. Do not send spam, unauthorized promotional content, or automated mass messages.',
+  'Do not use InterVue Connect for fraudulent activities, scams, or unlawful financial requests.',
+  'Do not request or share sensitive personal credentials. Impersonation, harassment, discrimination, or abusive behavior is strictly prohibited.',
+  'Do not distribute malware, viruses, malicious files, or any content harmful to users or the InterVue platform.',
+  'InterVue reserves the right to restrict or suspend accounts found in violation of these community standards.',
 ];
 
 type ConnectRulesModalProps = {
   mode: 'gate' | 'view';
+  portal?: 'recruiter' | 'candidate';
   onClose: () => void;
 };
 
-export default function ConnectRulesModal({ mode, onClose }: ConnectRulesModalProps) {
+export default function ConnectRulesModal({ mode, portal = 'recruiter', onClose }: ConnectRulesModalProps) {
   const [agreed, setAgreed] = useState(false);
-  const acknowledge = useAcknowledgeRules();
+  const recruiterAck = useAcknowledgeRules();
+  const candidateAck = useCandidateAcknowledgeRules();
+  const acknowledge = portal === 'candidate' ? candidateAck : recruiterAck;
 
   const handleAgree = () => {
     acknowledge.mutate(undefined, {
@@ -39,15 +43,15 @@ export default function ConnectRulesModal({ mode, onClose }: ConnectRulesModalPr
       onClose={mode === 'view' ? onClose : () => {}}
       showCloseButton={mode === 'view'}
       maxWidth="2xl"
-      title="Quy định sử dụng tính năng InterVue Connect"
+      title="InterVue Connect Community Guidelines"
       footer={
         mode === 'gate' ? (
           <Button onClick={handleAgree} disabled={!agreed} isLoading={acknowledge.isPending} className="w-full">
-            Tôi đồng ý
+            I agree
           </Button>
         ) : (
           <Button variant="outline" onClick={onClose}>
-            Đóng
+            Close
           </Button>
         )
       }
@@ -72,7 +76,7 @@ export default function ConnectRulesModal({ mode, onClose }: ConnectRulesModalPr
             className="accent-primary mt-0.5"
           />
           <span className="text-body-sm text-on-surface">
-            Tôi đồng ý với các quy định và hoàn toàn chịu trách nhiệm nếu vi phạm
+            I agree to the guidelines and accept responsibility for any violations.
           </span>
         </label>
       )}

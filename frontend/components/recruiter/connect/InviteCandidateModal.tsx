@@ -35,7 +35,7 @@ export default function InviteCandidateModal({ prefilledCandidate, onClose }: In
       { candidateId: values.candidateId, message: values.message },
       {
         onSuccess: () => {
-          toast.success('Đã gửi lời mời trò chuyện.');
+          toast.success('Invitation sent successfully.');
           onClose();
         },
         onError: (error) => toast.error(getErrorMessage(error)),
@@ -47,14 +47,14 @@ export default function InviteCandidateModal({ prefilledCandidate, onClose }: In
     <Modal
       isOpen
       onClose={onClose}
-      title="Mời trò chuyện"
+      title="Invite to Connect"
       footer={
         <>
           <Button type="button" variant="ghost" onClick={onClose}>
-            Huỷ
+            Cancel
           </Button>
           <Button type="submit" form={FORM_ID} isLoading={sendInvitation.isPending}>
-            Gửi lời mời
+            Send invitation
           </Button>
         </>
       }
@@ -69,8 +69,8 @@ export default function InviteCandidateModal({ prefilledCandidate, onClose }: In
         </div>
 
         <Textarea
-          label="Lời nhắn mở đầu"
-          placeholder="Chào bạn, công ty mình đang có vị trí phù hợp với bạn..."
+          label="Opening message"
+          placeholder="Hello, our company has an exciting position matching your profile..."
           rows={4}
           error={errors.message?.message}
           {...register('message')}

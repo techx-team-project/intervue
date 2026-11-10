@@ -1,5 +1,6 @@
 'use client';
 
+import { candidateConnectApi } from '@/apiRequest/candidate-connect';
 import { recruiterConnectApi } from '@/apiRequest/recruiter-connect';
 import { cn } from '@/lib/utils';
 import type { ConnectMessage } from '@/types/connect';
@@ -12,6 +13,7 @@ import { toast } from 'sonner';
 type ConnectMessageBubbleProps = {
   message: ConnectMessage;
   isOwn: boolean;
+  portal?: 'recruiter' | 'candidate';
 };
 
 function isRedacted(message: ConnectMessage): boolean {
@@ -25,13 +27,14 @@ function formatFileSize(bytes?: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-async function downloadFile(message: ConnectMessage) {
+async function downloadFile(message: ConnectMessage, portal: 'recruiter' | 'candidate' = 'recruiter') {
   try {
-    const blob = await recruiterConnectApi.downloadAttachment(message.connectionId, message.id);
+    const api = portal === 'candidate' ? candidateConnectApi : recruiterConnectApi;
+    const blob = await api.downloadAttachment(message.connectionId, message.id);
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = message.attachmentFileName ?? 'tep-dinh-kem';
+    link.download = message.attachmentFileName ?? 'attachment';
     link.click();
     URL.revokeObjectURL(url);
   } catch (error) {
@@ -39,7 +42,7 @@ async function downloadFile(message: ConnectMessage) {
   }
 }
 
-export default function ConnectMessageBubble({ message, isOwn }: ConnectMessageBubbleProps) {
+export default function ConnectMessageBubble({ message, isOwn, portal = 'recruiter' }: ConnectMessageBubbleProps) {
   const redacted = isRedacted(message);
 
   return (
@@ -52,17 +55,21 @@ export default function ConnectMessageBubble({ message, isOwn }: ConnectMessageB
         )}
       >
         {redacted ? (
-          <p>Nội dung đã được quản trị viên ẩn</p>
+          <p>This message was hidden by an administrator</p>
         ) : message.messageType === 'IMAGE' && message.attachmentUrl ? (
           <Image
             src={message.attachmentUrl}
-            alt={message.attachmentFileName ?? 'Hình ảnh'}
+            alt={message.attachmentFileName ?? 'Image attachment'}
             width={280}
             height={200}
             className="max-h-72 w-full rounded-lg object-cover"
           />
         ) : message.messageType === 'FILE' ? (
-          <button type="button" onClick={() => downloadFile(message)} className="flex items-center gap-2.5 text-left">
+          <button
+            type="button"
+            onClick={() => downloadFile(message, portal)}
+            className="flex cursor-pointer items-center gap-2.5 text-left"
+          >
             <FileText className="h-8 w-8 shrink-0" />
             <span className="min-w-0 flex-1">
               <span className="block truncate font-semibold">{message.attachmentFileName}</span>
@@ -73,7 +80,7 @@ export default function ConnectMessageBubble({ message, isOwn }: ConnectMessageB
         ) : (
           <div className="space-y-2">
             <p className="whitespace-pre-wrap">{message.body}</p>
-            {message.messageType === 'LINK' && message.linkUrl && (
+            {message.linkUrl && (
               <a
                 href={message.linkUrl}
                 target="_blank"

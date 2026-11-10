@@ -93,10 +93,10 @@ export default function ConnectThread({ conversation }: ConnectThreadProps) {
         disabled={!canSend}
         disabledReason={
           conversation.status === 'PENDING'
-            ? 'Đang chờ ứng viên chấp nhận lời mời trò chuyện.'
+            ? 'Waiting for candidate to accept the chat invitation.'
             : conversation.status === 'BLOCKED'
-              ? 'Cuộc trò chuyện này đã bị chặn.'
-              : 'Ứng viên đã từ chối lời mời trò chuyện.'
+              ? 'This conversation has been blocked.'
+              : 'The candidate declined the chat invitation.'
         }
       />
 

@@ -17,7 +17,7 @@ export default function BlockConversationDialog({ connectionId, onClose }: Block
   const handleConfirm = () => {
     block.mutate(undefined, {
       onSuccess: () => {
-        toast.success('Đã chặn cuộc trò chuyện.');
+        toast.success('Conversation blocked.');
         onClose();
       },
       onError: (error) => toast.error(getErrorMessage(error)),
@@ -29,21 +29,21 @@ export default function BlockConversationDialog({ connectionId, onClose }: Block
       isOpen
       onClose={onClose}
       maxWidth="sm"
-      title="Chặn cuộc trò chuyện?"
-      description="Cả hai bên sẽ không thể gửi tin nhắn mới. Lịch sử trò chuyện hiện tại vẫn được giữ lại và xem được như bình thường."
+      title="Block conversation?"
+      description="Both parties will no longer be able to send new messages. Current chat history is preserved and accessible."
       footer={
         <>
           <Button variant="outline" onClick={onClose}>
-            Huỷ
+            Cancel
           </Button>
           <Button variant="danger" onClick={handleConfirm} isLoading={block.isPending}>
-            Chặn
+            Block
           </Button>
         </>
       }
     >
       <p className="text-body-sm text-on-surface-variant">
-        Bạn có thể cân nhắc báo cáo nếu đây là vi phạm nghiêm trọng.
+        You may consider reporting this conversation if there is a severe violation.
       </p>
     </Modal>
   );
