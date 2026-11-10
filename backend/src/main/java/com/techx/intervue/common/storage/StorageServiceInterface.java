@@ -10,7 +10,11 @@ public interface StorageServiceInterface {
 
     byte[] fetchDocument(String publicId, StorageTarget target);
 
-    String publicImageUrl(String publicId);
+    String publicUrl(String publicId, StorageTarget target);
+
+    default String publicImageUrl(String publicId) {
+        return publicUrl(publicId, StorageTarget.IMAGE);
+    }
 
     void delete(String publicId, StorageTarget target);
 }

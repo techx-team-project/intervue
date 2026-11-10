@@ -1,7 +1,7 @@
 package com.techx.intervue.common.geolocation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.net.InetAddress;
+import com.techx.intervue.common.net.PrivateNetworkGuard;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,23 +84,7 @@ public class GeoLocationService implements GeoLocationServiceInterface {
     }
 
     private boolean isPrivateOrLocal(String ip) {
-        if ("127.0.0.1".equals(ip)
-                || "0:0:0:0:0:0:0:1".equals(ip)
-                || "::1".equals(ip)
-                || "localhost".equalsIgnoreCase(ip)) {
-            return true;
-        }
-        try {
-            InetAddress addr = InetAddress.ofLiteral(ip);
-            return addr.isLoopbackAddress()
-                    || addr.isSiteLocalAddress()
-                    || addr.isLinkLocalAddress();
-        } catch (IllegalArgumentException e) {
-            return ip.startsWith("10.")
-                    || ip.startsWith("192.168.")
-                    || ip.startsWith("172.")
-                    || ip.startsWith("169.254.");
-        }
+        return PrivateNetworkGuard.isPrivateOrLocal(ip);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

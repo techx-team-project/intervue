@@ -124,7 +124,7 @@ public class CloudinaryStorageService implements StorageServiceInterface {
     }
 
     @Override
-    public String publicImageUrl(String publicId) {
+    public String publicUrl(String publicId, StorageTarget target) {
         if (publicId == null) {
             return null;
         }
@@ -138,8 +138,8 @@ public class CloudinaryStorageService implements StorageServiceInterface {
             return "/images/placeholder.png";
         }
         return client.url()
-                .resourceType(StorageTarget.IMAGE.resourceType())
-                .type(StorageTarget.IMAGE.deliveryType())
+                .resourceType(target.resourceType())
+                .type(target.deliveryType())
                 .secure(true)
                 .generate(publicId);
     }
@@ -238,7 +238,7 @@ public class CloudinaryStorageService implements StorageServiceInterface {
 
     private long maxBytesFor(StorageTarget target) {
         return switch (target) {
-            case LEGAL_DOCUMENT, RESUME, IDENTITY_DOCUMENT ->
+            case LEGAL_DOCUMENT, RESUME, IDENTITY_DOCUMENT, CHAT_FILE ->
                     properties.maxDocumentSize().toBytes();
             case IMAGE -> properties.maxImageSize().toBytes();
         };
