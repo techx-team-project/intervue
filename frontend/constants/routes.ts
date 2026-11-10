@@ -76,6 +76,7 @@ export const ROUTES = {
   ADMIN_SERVICE_PACKAGES: '/admin/services/packages',
   ADMIN_SERVICE_CATEGORIES: '/admin/services/categories',
   ADMIN_SERVICE_PRICING: '/admin/services/pricing',
+  ADMIN_SERVICE_VOUCHERS: '/admin/services/vouchers',
   ADMIN_EDUCATION_CODES: '/admin/services/education-codes',
   ADMIN_FINANCE_ORDERS: '/admin/finance/orders',
   ADMIN_FINANCE_TRANSACTIONS: '/admin/finance/transactions',

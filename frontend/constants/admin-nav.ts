@@ -150,6 +150,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             comingSoon: false,
           },
           {
+            label: 'Vouchers',
+            href: ROUTES.ADMIN_SERVICE_VOUCHERS,
+            permission: 'services.manage',
+            comingSoon: false,
+          },
+          {
             label: 'Education codes',
             href: ROUTES.ADMIN_EDUCATION_CODES,
             permission: 'services.manage',
