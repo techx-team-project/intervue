@@ -34,13 +34,22 @@ public class ConnectMapper {
     }
 
     public MessageResource toMessage(ConnectionMessage message) {
-        return MessageResource.builder()
-                .id(message.getId())
-                .connectionId(message.getConnectionId())
-                .senderType(message.getSenderType())
-                .senderId(message.getSenderId())
-                .messageType(message.getMessageType())
-                .body(message.getBody())
+        return toMessage(message, false);
+    }
+
+    public MessageResource toMessage(ConnectionMessage message, boolean redact) {
+        MessageResource.MessageResourceBuilder builder =
+                MessageResource.builder()
+                        .id(message.getId())
+                        .connectionId(message.getConnectionId())
+                        .senderType(message.getSenderType())
+                        .senderId(message.getSenderId())
+                        .messageType(message.getMessageType())
+                        .createdAt(message.getCreatedAt());
+        if (redact) {
+            return builder.build();
+        }
+        return builder.body(message.getBody())
                 .attachmentUrl(message.getAttachmentUrl())
                 .attachmentFileName(message.getAttachmentFileName())
                 .attachmentContentType(message.getAttachmentContentType())
@@ -49,7 +58,6 @@ public class ConnectMapper {
                 .linkTitle(message.getLinkTitle())
                 .linkDescription(message.getLinkDescription())
                 .linkImageUrl(message.getLinkImageUrl())
-                .createdAt(message.getCreatedAt())
                 .build();
     }
 }

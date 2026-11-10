@@ -52,7 +52,9 @@ public enum NotificationType {
     REFUND_REJECTED(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
     CONNECT_INVITATION_RECEIVED(NotificationCategory.CONNECTIONS, NotificationSeverity.INFO, false),
     CONNECT_INVITATION_ACCEPTED(
-            NotificationCategory.CONNECTIONS, NotificationSeverity.SUCCESS, false);
+            NotificationCategory.CONNECTIONS, NotificationSeverity.SUCCESS, false),
+    REPORT_DISMISSED(NotificationCategory.MODERATION, NotificationSeverity.INFO, false),
+    REPORT_RESOLVED(NotificationCategory.MODERATION, NotificationSeverity.INFO, false);
 
     private final NotificationCategory category;
     private final NotificationSeverity severity;

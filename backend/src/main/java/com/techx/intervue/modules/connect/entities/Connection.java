@@ -68,4 +68,7 @@ public class Connection extends BaseEntity {
 
     @Column(name = "responded_at")
     private Instant respondedAt;
+
+    @Column(name = "content_hidden_at")
+    private Instant contentHiddenAt;
 }

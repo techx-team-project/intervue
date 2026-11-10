@@ -260,7 +260,8 @@ public enum ErrorCode {
     MESSAGE_BLOCKED_BY_FILTER(
             HttpStatus.UNPROCESSABLE_CONTENT, "This message contains inappropriate content!"),
     CONNECT_MUTED(
-            HttpStatus.FORBIDDEN, "You have been temporarily restricted from sending messages!");
+            HttpStatus.FORBIDDEN, "You have been temporarily restricted from sending messages!"),
+    REPORT_ALREADY_REVIEWED(HttpStatus.CONFLICT, "This report has already been reviewed!");
 
     private final HttpStatus status;
     private final String message;
