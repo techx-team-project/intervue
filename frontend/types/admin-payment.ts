@@ -68,3 +68,19 @@ export interface AdminInvoice {
   totalAmount: number;
   currency: string;
 }
+
+export type AdminRefundStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export interface AdminRefundRequest {
+  id: number;
+  orderCode: string;
+  companyId: number;
+  reason: string;
+  status: AdminRefundStatus;
+  orderTotal: number;
+  refundableAmount: number;
+  approvedAmount: number | null;
+  adminNote: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
+}

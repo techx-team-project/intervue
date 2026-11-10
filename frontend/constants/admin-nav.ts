@@ -181,7 +181,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             permission: 'finance.manage',
             comingSoon: false,
           },
-          { label: 'Refunds', href: ROUTES.ADMIN_FINANCE_REFUNDS, permission: 'finance.manage', comingSoon: true },
+          { label: 'Refunds', href: ROUTES.ADMIN_FINANCE_REFUNDS, permission: 'finance.manage', comingSoon: false },
           {
             label: 'Invoices',
             href: ROUTES.ADMIN_FINANCE_VAT_INVOICES,

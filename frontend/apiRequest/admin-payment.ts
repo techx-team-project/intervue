@@ -5,6 +5,7 @@ import type {
   PaymentTransaction,
   PaymentTransactionStatus,
   AdminInvoice,
+  AdminRefundRequest,
   SaveBillingSettingsInput,
   SupportedBank,
 } from '@/types/admin-payment';
@@ -39,4 +40,16 @@ export const adminPaymentApi = {
     request<Page<AdminInvoice>>(`/admin/invoices?page=${page}&size=${size}`),
 
   invoicePdf: (id: number) => request<Blob>(`/admin/invoices/${id}/pdf`, { responseType: 'blob' }),
+
+  searchRefunds: (page: number, size: number) =>
+    request<Page<AdminRefundRequest>>(`/admin/refunds?page=${page}&size=${size}`),
+
+  approveRefund: (id: number, approvedAmount: number | null, adminNote: string) =>
+    request<AdminRefundRequest>(`/admin/refunds/${id}/approve`, {
+      method: 'POST',
+      body: { approvedAmount, adminNote },
+    }),
+
+  rejectRefund: (id: number, adminNote: string) =>
+    request<AdminRefundRequest>(`/admin/refunds/${id}/reject`, { method: 'POST', body: { adminNote } }),
 };
