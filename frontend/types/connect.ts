@@ -4,6 +4,8 @@ export type ConnectActorType = 'CANDIDATE' | 'RECRUITER';
 
 export type ConnectMessageType = 'TEXT' | 'IMAGE' | 'FILE' | 'LINK';
 
+export type ConnectFilterSeverity = 'MILD' | 'SEVERE';
+
 export type ReportReasonCode = 'SCAM' | 'HARASSMENT' | 'SPAM' | 'INAPPROPRIATE' | 'OTHER';
 
 export type EligibleCandidate = {
