@@ -59,6 +59,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class ConnectionService implements ConnectionServiceInterface {
 
     private static final Sort NEWEST_FIRST = Sort.by("createdAt").descending();
+    private static final List<ConnectionStatus> RECRUITER_VISIBLE_STATUSES =
+            List.of(ConnectionStatus.PENDING, ConnectionStatus.ACCEPTED, ConnectionStatus.BLOCKED);
+    private static final List<ConnectionStatus> CANDIDATE_VISIBLE_STATUSES =
+            List.of(ConnectionStatus.ACCEPTED, ConnectionStatus.BLOCKED);
 
     private final ConnectionRepository connectionRepository;
     private final ConnectionMessageRepository messageRepository;
@@ -90,6 +94,7 @@ public class ConnectionService implements ConnectionServiceInterface {
         quotaService.reserve(recruiterId);
         CompanySummaryResource company = companyService.findSummary(companyId);
 
+        Instant now = Instant.now();
         Connection connection =
                 connectionRepository.save(
                         Connection.builder()
@@ -100,7 +105,8 @@ public class ConnectionService implements ConnectionServiceInterface {
                                 .companyName(company.name())
                                 .initiatedByRecruiterId(recruiterId)
                                 .status(ConnectionStatus.PENDING)
-                                .invitedAt(Instant.now())
+                                .invitedAt(now)
+                                .lastMessageAt(now)
                                 .build());
         messageRepository.save(
                 ConnectionMessage.builder()
@@ -161,9 +167,24 @@ public class ConnectionService implements ConnectionServiceInterface {
     @Transactional(readOnly = true)
     public Page<ConversationSummaryResource> candidateConversations(
             Long candidateId, Pageable pageable) {
+        Pageable sorted =
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        Sort.by(Sort.Order.desc("lastMessageAt"), Sort.Order.desc("id")));
+        Map<Long, Long> unreadByConnection =
+                unreadService.breakdown(ConnectActorType.CANDIDATE, candidateId);
         return connectionRepository
-                .findByCandidateIdAndStatus(candidateId, ConnectionStatus.ACCEPTED, pageable)
-                .map(mapper::toConversationSummary);
+                .findByCandidateIdAndStatusIn(candidateId, CANDIDATE_VISIBLE_STATUSES, sorted)
+                .map(
+                        connection ->
+                                mapper.toConversationSummary(
+                                        connection,
+                                        unreadByConnection.getOrDefault(connection.getId(), 0L),
+                                        messageRepository
+                                                .findFirstByConnectionIdOrderByCreatedAtDesc(
+                                                        connection.getId())
+                                                .orElse(null)));
     }
 
     @Override
@@ -193,11 +214,14 @@ public class ConnectionService implements ConnectionServiceInterface {
     public Page<ConversationSummaryResource> recruiterConversations(
             Long recruiterId, Pageable pageable) {
         Long companyId = companyScope.companyIdOf(recruiterId);
+        Pageable sorted =
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        Sort.by(Sort.Order.desc("lastMessageAt"), Sort.Order.desc("id")));
         Page<Connection> connections =
                 connectionRepository.findByCompanyIdAndStatusIn(
-                        companyId,
-                        List.of(ConnectionStatus.PENDING, ConnectionStatus.ACCEPTED),
-                        pageable);
+                        companyId, RECRUITER_VISIBLE_STATUSES, sorted);
         Map<Long, Long> unreadByConnection =
                 unreadService.breakdown(ConnectActorType.RECRUITER, recruiterId);
         return connections.map(
@@ -248,6 +272,8 @@ public class ConnectionService implements ConnectionServiceInterface {
                                 .linkImageUrl(preview.map(LinkPreview::imageUrl).orElse(null))
                                 .build());
         MessageResource resource = mapper.toMessage(message);
+        connection.setLastMessageAt(message.getCreatedAt());
+        connectionRepository.save(connection);
         notifyRecipients(connection, actorType, resource);
         return resource;
     }
@@ -296,6 +322,8 @@ public class ConnectionService implements ConnectionServiceInterface {
                                 .attachmentFileSizeBytes(stored.sizeInBytes())
                                 .build());
         MessageResource resource = mapper.toMessage(message);
+        connection.setLastMessageAt(message.getCreatedAt());
+        connectionRepository.save(connection);
         notifyRecipients(connection, actorType, resource);
         return resource;
     }
@@ -330,7 +358,10 @@ public class ConnectionService implements ConnectionServiceInterface {
     @Override
     public AttachmentContent downloadAttachment(
             ConnectActorType actorType, Long actorId, Long connectionId, Long messageId) {
-        requireParticipant(connectionId, actorType, actorId);
+        Connection connection = requireParticipant(connectionId, actorType, actorId);
+        if (connection.getContentHiddenAt() != null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
         ConnectionMessage message =
                 messageRepository
                         .findByIdAndConnectionId(messageId, connectionId)
@@ -398,6 +429,12 @@ public class ConnectionService implements ConnectionServiceInterface {
             Long candidateId = connection.getCandidateId();
             sseService.publish(ConnectActorType.CANDIDATE, candidateId, message);
             unreadService.increment(ConnectActorType.CANDIDATE, candidateId, connection.getId());
+            companyService.findActiveMemberIds(connection.getCompanyId()).stream()
+                    .filter(recruiterId -> !recruiterId.equals(message.senderId()))
+                    .forEach(
+                            otherRecruiterId ->
+                                    sseService.publish(
+                                            ConnectActorType.RECRUITER, otherRecruiterId, message));
         }
     }
 
