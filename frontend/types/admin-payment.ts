@@ -84,3 +84,45 @@ export interface AdminRefundRequest {
   reviewedAt: string | null;
   createdAt: string;
 }
+
+export type AdminOrderStatus =
+  'PENDING_PAYMENT' | 'UNDERPAID' | 'PAID' | 'FULFILLED' | 'EXPIRED' | 'CANCELLED' | 'REFUND_REQUESTED' | 'REFUNDED';
+
+export interface AdminOrderItem {
+  id: number;
+  packageCode: string;
+  packageName: string;
+  unitPrice: number;
+  quantity: number;
+  lineTotal: number;
+}
+
+export interface AdminOrder {
+  id: number;
+  code: string;
+  status: AdminOrderStatus;
+  companyId: number;
+  companyName: string | null;
+  subtotal: number;
+  discountAmount: number;
+  vatAmount: number;
+  totalAmount: number;
+  paidAmount: number;
+  currency: string;
+  invoiceNumber: string | null;
+  expiresAt: string;
+  paidAt: string | null;
+  createdAt: string;
+  items: AdminOrderItem[];
+}
+
+export interface RevenueReport {
+  collectedTotal: number;
+  refundedTotal: number;
+  netTotal: number;
+  pendingTotal: number;
+  paidOrderCount: number;
+  ordersByStatus: Partial<Record<AdminOrderStatus, number>>;
+  byMonth: Array<{ month: string; collected: number; orderCount: number }>;
+  byPackage: Array<{ packageCode: string; packageName: string; quantity: number; collected: number }>;
+}
