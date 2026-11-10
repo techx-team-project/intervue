@@ -9,7 +9,13 @@ export interface BillingSettings {
   bankAccountNumber: string | null;
   bankAccountName: string | null;
   paymentSyncEnabled: boolean;
+  paymentSyncSince: string | null;
   apiTokenConfigured: boolean;
+}
+
+export interface SupportedBank {
+  code: string;
+  name: string;
 }
 
 export interface SaveBillingSettingsInput {

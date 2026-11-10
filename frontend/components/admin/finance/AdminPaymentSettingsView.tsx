@@ -4,16 +4,19 @@ import { adminPaymentApi } from '@/apiRequest/admin-payment';
 import { Button } from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Switch from '@/components/ui/Switch';
-import type { BillingSettings } from '@/types/admin-payment';
+import Select from '@/components/ui/Select';
+import type { BillingSettings, SupportedBank } from '@/types/admin-payment';
+import { formatDateTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
 import { AlertCircle, Check, KeyRound } from 'lucide-react';
 import { useState } from 'react';
 
 interface AdminPaymentSettingsViewProps {
   initial: BillingSettings;
+  banks: SupportedBank[];
 }
 
-export default function AdminPaymentSettingsView({ initial }: AdminPaymentSettingsViewProps) {
+export default function AdminPaymentSettingsView({ initial, banks }: AdminPaymentSettingsViewProps) {
   const [vatPercent, setVatPercent] = useState(String(Math.round(initial.vatRate * 10000) / 100));
   const [orderExpireHours, setOrderExpireHours] = useState(String(initial.orderExpireHours));
   const [orderCodePrefix, setOrderCodePrefix] = useState(initial.orderCodePrefix);
@@ -122,11 +125,15 @@ export default function AdminPaymentSettingsView({ initial }: AdminPaymentSettin
             Recruiters see these details and the matching VietQR code on their order page.
           </p>
         </div>
-        <Input
-          label="Bank code"
+        <Select
+          label="Bank"
           value={bankCode}
           onChange={(event) => setBankCode(event.target.value)}
-          helperText="As used by SePay QR, e.g. MBBank or Vietcombank"
+          options={[
+            { value: '', label: '— Not set —' },
+            ...banks.map((bank) => ({ value: bank.code, label: `${bank.code} — ${bank.name}` })),
+          ]}
+          helperText="Only banks SePay can render a QR for are listed"
         />
         <Input
           label="Account number"
@@ -161,6 +168,12 @@ export default function AdminPaymentSettingsView({ initial }: AdminPaymentSettin
           />
           <span className="text-on-surface font-medium">Run automatic reconciliation on a schedule</span>
         </label>
+
+        <p className="text-on-surface-variant text-xs sm:col-span-2">
+          {initial.paymentSyncSince
+            ? `Only transactions from ${formatDateTime(initial.paymentSyncSince)} onwards are read. Anything on the account before that is ignored, so personal transfers never enter the platform.`
+            : 'Reconciliation has never been switched on. The moment it is, that becomes the cut-off and nothing older on the account is read.'}
+        </p>
       </section>
 
       <div className="flex justify-end">

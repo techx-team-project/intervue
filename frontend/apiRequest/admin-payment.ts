@@ -5,11 +5,14 @@ import type {
   PaymentTransaction,
   PaymentTransactionStatus,
   SaveBillingSettingsInput,
+  SupportedBank,
 } from '@/types/admin-payment';
 import type { Page } from '@/types/api';
 
 export const adminPaymentApi = {
   getSettings: () => request<BillingSettings>('/admin/payments/settings'),
+
+  getBanks: () => request<SupportedBank[]>('/admin/payments/banks'),
 
   updateSettings: (data: SaveBillingSettingsInput) =>
     request<BillingSettings>('/admin/payments/settings', { method: 'PUT', body: data }),
