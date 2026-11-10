@@ -2,13 +2,17 @@ package com.techx.intervue.modules.billing.controllers;
 
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.billing.requests.CheckoutRequest;
+import com.techx.intervue.modules.billing.requests.CreateRefundRequest;
 import com.techx.intervue.modules.billing.resources.InvoiceResource;
 import com.techx.intervue.modules.billing.resources.OrderPaymentResource;
 import com.techx.intervue.modules.billing.resources.OrderResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
+import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
+import com.techx.intervue.modules.billing.resources.RefundRequestResource;
 import com.techx.intervue.modules.billing.services.interfaces.InvoiceServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderPaymentServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
+import com.techx.intervue.modules.billing.services.interfaces.RefundServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
@@ -36,6 +40,7 @@ public class RecruiterOrderController extends BaseController {
 
     private final OrderServiceInterface orderService;
     private final InvoiceServiceInterface invoiceService;
+    private final RefundServiceInterface refundService;
     private final OrderPaymentServiceInterface orderPaymentService;
 
     @GetMapping
@@ -91,6 +96,25 @@ public class RecruiterOrderController extends BaseController {
                                 .build()
                                 .toString())
                 .body(pdf);
+    }
+
+    @GetMapping("/{code}/refund")
+    public ResponseEntity<ApiResource<RefundQuoteResource>> refundQuote(
+            @PathVariable("code") String code,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                refundService.quote(code, principal.getId()),
+                "Refund quote retrieved successfully!");
+    }
+
+    @PostMapping("/{code}/refund")
+    public ResponseEntity<ApiResource<RefundRequestResource>> requestRefund(
+            @PathVariable("code") String code,
+            @Valid @RequestBody CreateRefundRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return created(
+                refundService.request(code, request, principal.getId()),
+                "Refund request submitted successfully!");
     }
 
     @PostMapping("/{code}/cancel")
