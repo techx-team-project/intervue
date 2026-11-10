@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.billing.services.impl;
 
+import com.techx.intervue.modules.ads.services.interfaces.AdBookingServiceInterface;
 import com.techx.intervue.modules.billing.entities.Order;
 import com.techx.intervue.modules.billing.entities.OrderItem;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
@@ -22,6 +23,7 @@ public class OrderFulfillmentService {
     private final OrderMapper orderMapper;
     private final EntitlementServiceInterface entitlementService;
     private final InvoiceServiceInterface invoiceService;
+    private final AdBookingServiceInterface adBookingService;
 
     /**
      * Turns a paid order into company entitlements. Runs inside the caller's transaction so a
@@ -53,6 +55,7 @@ public class OrderFulfillmentService {
                     order.getCompanyId(), order.getPurchasedByRecruiterId(), grants);
         }
         invoiceService.issueFor(order);
+        adBookingService.confirm(order.getId());
         order.setStatus(OrderStatus.FULFILLED);
     }
 }

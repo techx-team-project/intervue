@@ -2,6 +2,7 @@ package com.techx.intervue.modules.billing.services.impl;
 
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
+import com.techx.intervue.modules.ads.services.interfaces.AdBookingServiceInterface;
 import com.techx.intervue.modules.billing.entities.BillingSettings;
 import com.techx.intervue.modules.billing.entities.CartItem;
 import com.techx.intervue.modules.billing.entities.Order;
@@ -29,6 +30,7 @@ import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterServiceInterface;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -71,6 +73,8 @@ public class OrderService implements OrderServiceInterface {
     private final BillingNotifier billingNotifier;
     private final VoucherServiceInterface voucherService;
     private final OrderFulfillmentService orderFulfillmentService;
+    private final AdCartMeta adCartMeta;
+    private final AdBookingServiceInterface adBookingService;
 
     @Override
     @Transactional
@@ -81,15 +85,17 @@ public class OrderService implements OrderServiceInterface {
         boolean fromCart = request.packageId() == null;
         List<CartItem> cartItems =
                 fromCart ? cartLineReader.read(recruiterId, request.cartItemIds()) : List.of();
-        Map<ServicePackage, Integer> lines =
-                fromCart ? toLines(cartItems) : singleLine(request.packageId(), request.quantity());
+        List<Line> lines =
+                fromCart
+                        ? toLines(cartItems)
+                        : singleLine(request.packageId(), request.quantity(), request.weeks());
         if (lines.isEmpty()) {
             throw new AppException(ErrorCode.CART_EMPTY);
         }
 
         long subtotal = 0;
-        for (Map.Entry<ServicePackage, Integer> line : lines.entrySet()) {
-            subtotal += line.getKey().getPrice() * line.getValue();
+        for (Line line : lines) {
+            subtotal += line.servicePackage().getPrice() * line.quantity();
         }
         AppliedVoucher applied =
                 isFilled(request.voucherCode())
@@ -113,7 +119,7 @@ public class OrderService implements OrderServiceInterface {
             return toResource(duplicate);
         }
 
-        assertPackagesPurchasable(lines.keySet(), company.id());
+        assertPackagesPurchasable(lines.stream().map(Line::servicePackage).toList(), company.id());
 
         if (orderRepository.countByCompanyIdAndStatus(company.id(), OrderStatus.PENDING_PAYMENT)
                 >= settings.getMaxPendingOrders()) {
@@ -141,8 +147,9 @@ public class OrderService implements OrderServiceInterface {
                                                                 settings.getOrderExpireHours())))
                                 .build());
 
-        orderItemRepository.saveAll(buildItems(order, lines));
+        List<OrderItem> savedItems = orderItemRepository.saveAll(buildItems(order, lines));
         invoiceDetailRepository.save(buildInvoiceDetail(order, request));
+        reserveAdWeeks(order, savedItems, company.id());
         if (applied != null) {
             voucherService.claim(applied, order.getId(), company.id());
         }
@@ -197,6 +204,7 @@ public class OrderService implements OrderServiceInterface {
         order.setStatus(OrderStatus.CANCELLED);
         order.setCancelledAt(Instant.now());
         voucherService.release(order.getId());
+        adBookingService.release(order.getId());
         return toResource(order);
     }
 
@@ -204,25 +212,46 @@ public class OrderService implements OrderServiceInterface {
         return value != null && !value.isBlank();
     }
 
-    private Map<ServicePackage, Integer> toLines(List<CartItem> cartItems) {
-        Map<ServicePackage, Integer> lines = new LinkedHashMap<>();
-        for (CartItem item : cartItems) {
-            lines.put(item.getServicePackage(), item.getQuantity());
+    private void reserveAdWeeks(Order order, List<OrderItem> items, Long companyId) {
+        for (OrderItem item : items) {
+            List<LocalDate> weeks = adCartMeta.readWeeks(item.getMetaJson());
+            if (weeks.isEmpty()) {
+                continue;
+            }
+            adBookingService.reserve(
+                    companyId,
+                    order.getId(),
+                    item.getId(),
+                    item.getServicePackage().getId(),
+                    weeks);
         }
-        return lines;
     }
 
-    private Map<ServicePackage, Integer> singleLine(Long packageId, Integer quantity) {
+    /** A banner line carries the weeks it bought, so the quantity alone is not the whole line. */
+    private record Line(ServicePackage servicePackage, int quantity, String metaJson) {}
+
+    private List<Line> toLines(List<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(
+                        item ->
+                                new Line(
+                                        item.getServicePackage(),
+                                        item.getQuantity(),
+                                        item.getMetaJson()))
+                .toList();
+    }
+
+    private List<Line> singleLine(Long packageId, Integer quantity, List<LocalDate> weeks) {
         ServicePackage servicePackage =
                 packageRepository
                         .findById(packageId)
                         .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE));
-        Map<ServicePackage, Integer> lines = new LinkedHashMap<>();
-        lines.put(servicePackage, quantity == null ? 1 : quantity);
-        return lines;
+        int amount = quantity == null ? 1 : quantity;
+        return List.of(
+                new Line(servicePackage, amount, adCartMeta.build(servicePackage, weeks, amount)));
     }
 
-    private void assertPackagesPurchasable(Set<ServicePackage> packages, Long companyId) {
+    private void assertPackagesPurchasable(List<ServicePackage> packages, Long companyId) {
         for (ServicePackage servicePackage : packages) {
             if (servicePackage.getStatus() != ServicePackageStatus.ACTIVE) {
                 throw new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE);
@@ -235,11 +264,11 @@ public class OrderService implements OrderServiceInterface {
         }
     }
 
-    private List<OrderItem> buildItems(Order order, Map<ServicePackage, Integer> lines) {
+    private List<OrderItem> buildItems(Order order, List<Line> lines) {
         List<OrderItem> items = new ArrayList<>();
-        for (Map.Entry<ServicePackage, Integer> line : lines.entrySet()) {
-            ServicePackage servicePackage = line.getKey();
-            int quantity = line.getValue();
+        for (Line line : lines) {
+            ServicePackage servicePackage = line.servicePackage();
+            int quantity = line.quantity();
             items.add(
                     OrderItem.builder()
                             .order(order)
@@ -249,6 +278,7 @@ public class OrderService implements OrderServiceInterface {
                             .unitPrice(servicePackage.getPrice())
                             .quantity(quantity)
                             .lineTotal(servicePackage.getPrice() * quantity)
+                            .metaJson(line.metaJson())
                             .validityDays(servicePackage.getValidityDays())
                             .bonusCredits(servicePackage.getBonusCredits())
                             .benefitsJson(

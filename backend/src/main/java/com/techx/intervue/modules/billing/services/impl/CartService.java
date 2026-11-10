@@ -30,6 +30,7 @@ public class CartService implements CartServiceInterface {
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final AdCartMeta adCartMeta;
     private final ServicePackageRepository packageRepository;
     private final CartMapper cartMapper;
     private final OrderPricing orderPricing;
@@ -47,12 +48,20 @@ public class CartService implements CartServiceInterface {
         Cart cart = requireCart(recruiterId);
         ServicePackage servicePackage = requireActivePackage(request.packageId());
 
+        String metaJson = adCartMeta.build(servicePackage, request.weeks(), request.quantity());
+
         CartItem existing =
                 cartItemRepository
                         .findByCartIdAndServicePackageId(cart.getId(), servicePackage.getId())
                         .orElse(null);
-        if (existing != null) {
+        // Banner weeks are a choice, not a count, so a second pick replaces the first
+        if (existing != null && metaJson == null) {
             existing.setQuantity(Math.min(99, existing.getQuantity() + request.quantity()));
+            return toResource(cart);
+        }
+        if (existing != null) {
+            existing.setQuantity(request.quantity());
+            existing.setMetaJson(metaJson);
             return toResource(cart);
         }
 
@@ -64,6 +73,7 @@ public class CartService implements CartServiceInterface {
                         .cart(cart)
                         .servicePackage(servicePackage)
                         .quantity(request.quantity())
+                        .metaJson(metaJson)
                         .build());
         return toResource(cart);
     }

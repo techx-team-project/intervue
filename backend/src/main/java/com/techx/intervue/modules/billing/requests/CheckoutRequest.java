@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.List;
 
 public record CheckoutRequest(
@@ -21,6 +22,7 @@ public record CheckoutRequest(
         @Size(max = 150) String fullName,
         @Size(max = 30) String identityNumber,
         @Size(max = 500) String personalAddress,
+        List<LocalDate> weeks,
         @Size(max = 40) String voucherCode,
         @NotBlank @Email @Size(max = 255) String recipientEmail,
         @NotNull Boolean termsAccepted) {
