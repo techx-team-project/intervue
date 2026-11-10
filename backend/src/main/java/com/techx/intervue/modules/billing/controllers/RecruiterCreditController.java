@@ -2,11 +2,13 @@ package com.techx.intervue.modules.billing.controllers;
 
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.billing.requests.ConvertCreditsRequest;
+import com.techx.intervue.modules.billing.resources.CreditLedgerEntryResource;
 import com.techx.intervue.modules.billing.resources.CreditWalletResource;
 import com.techx.intervue.modules.billing.services.interfaces.CreditServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +33,12 @@ public class RecruiterCreditController extends BaseController {
         return ok(
                 creditService.getWallet(principal.getId()),
                 "Credit wallet retrieved successfully!");
+    }
+
+    @GetMapping("/ledger")
+    public ResponseEntity<ApiResource<List<CreditLedgerEntryResource>>> ledger(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(creditService.ledger(principal.getId()), "Credit ledger retrieved successfully!");
     }
 
     @PostMapping("/convert")

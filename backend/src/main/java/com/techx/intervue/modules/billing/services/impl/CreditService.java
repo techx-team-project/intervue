@@ -6,6 +6,7 @@ import com.techx.intervue.modules.billing.entities.CreditPrice;
 import com.techx.intervue.modules.billing.mappers.CreditPriceMapper;
 import com.techx.intervue.modules.billing.repositories.CreditPriceRepository;
 import com.techx.intervue.modules.billing.requests.ConvertCreditsRequest;
+import com.techx.intervue.modules.billing.resources.CreditLedgerEntryResource;
 import com.techx.intervue.modules.billing.resources.CreditWalletResource;
 import com.techx.intervue.modules.billing.services.interfaces.CreditServiceInterface;
 import com.techx.intervue.modules.entitlement.enums.EntitlementType;
@@ -46,7 +47,8 @@ public class CreditService implements CreditServiceInterface {
             throw new AppException(ErrorCode.INSUFFICIENT_CREDITS);
         }
 
-        entitlementService.consumeUnits(companyId, EntitlementType.CREDIT, cost);
+        entitlementService.consumeUnits(
+                companyId, EntitlementType.CREDIT, cost, "Đổi lấy " + price.getLabel());
         entitlementService.grant(
                 companyId,
                 recruiterId,
@@ -60,6 +62,21 @@ public class CreditService implements CreditServiceInterface {
                                 price.getLabel())));
 
         return render(companyId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CreditLedgerEntryResource> ledger(Long recruiterId) {
+        Long companyId = companyResolver.requireId(recruiterId);
+        return entitlementService.ledgerOf(companyId, EntitlementType.CREDIT).stream()
+                .map(
+                        entry ->
+                                new CreditLedgerEntryResource(
+                                        entry.credit(),
+                                        entry.quantity(),
+                                        entry.label(),
+                                        entry.at()))
+                .toList();
     }
 
     private CreditWalletResource render(Long companyId) {
