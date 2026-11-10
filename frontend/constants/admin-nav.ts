@@ -66,7 +66,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: Flag,
         queue: 'reports',
         permission: 'moderation.reports',
-        comingSoon: true,
+        comingSoon: false,
       },
       {
         label: 'Support tickets',
