@@ -9,6 +9,7 @@ import com.techx.intervue.modules.company.resources.CompanyPhotoResource;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.resources.CompanySummaryResource;
 import com.techx.intervue.modules.company.resources.PublicCompanyResource;
+import com.techx.intervue.modules.company.services.impl.CompanyBrandingPolicy;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 public class CompanyMapper {
 
     private final StorageServiceInterface storageService;
+    private final CompanyBrandingPolicy brandingPolicy;
 
     public void applyProfile(CompanyProfile profile, SaveCompanyProfileRequest request) {
         profile.setTradingName(request.tradingName());
@@ -59,6 +61,9 @@ public class CompanyMapper {
                 .logoUrl(imageUrl(profile.getLogoPublicId()))
                 .photos(photos.stream().map(this::toPhotoResource).toList())
                 .profileComplete(missingFields.isEmpty())
+                .photoLimit(brandingPolicy.photoLimit(company))
+                .brandPageUntil(company.getBrandPageUntil())
+                .featuredUntil(company.getFeaturedUntil())
                 .missingFields(missingFields)
                 .createdAt(profile.getCreatedAt())
                 .updatedAt(profile.getUpdatedAt())
@@ -108,6 +113,10 @@ public class CompanyMapper {
                 .url(imageUrl(photo.getPublicId()))
                 .sortOrder(photo.getSortOrder())
                 .build();
+    }
+
+    public String logoUrlOf(CompanyProfile profile) {
+        return imageUrl(profile.getLogoPublicId());
     }
 
     private String imageUrl(String publicId) {
