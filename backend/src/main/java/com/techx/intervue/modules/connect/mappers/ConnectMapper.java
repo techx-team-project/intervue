@@ -1,7 +1,9 @@
 package com.techx.intervue.modules.connect.mappers;
 
+import com.techx.intervue.modules.connect.entities.ConnectFilterWord;
 import com.techx.intervue.modules.connect.entities.Connection;
 import com.techx.intervue.modules.connect.entities.ConnectionMessage;
+import com.techx.intervue.modules.connect.resources.ConnectFilterWordResource;
 import com.techx.intervue.modules.connect.resources.ConversationSummaryResource;
 import com.techx.intervue.modules.connect.resources.InvitationResource;
 import com.techx.intervue.modules.connect.resources.MessageResource;
@@ -95,6 +97,22 @@ public class ConnectMapper {
                 .linkTitle(message.getLinkTitle())
                 .linkDescription(message.getLinkDescription())
                 .linkImageUrl(message.getLinkImageUrl())
+                .build();
+    }
+
+    public ConnectFilterWordResource toFilterWordResource(ConnectFilterWord entity) {
+        if (entity == null) {
+            return null;
+        }
+        return ConnectFilterWordResource.builder()
+                .id(entity.getId())
+                .pattern(entity.getPattern())
+                .regex(entity.isRegex())
+                .severity(entity.getSeverity())
+                .active(entity.isActive())
+                .note(entity.getNote())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
                 .build();
     }
 }
