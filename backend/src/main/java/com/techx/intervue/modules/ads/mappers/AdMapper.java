@@ -18,6 +18,9 @@ public class AdMapper {
                 .height(slot.getHeight())
                 .pricePerWeek(slot.getPricePerWeek())
                 .packageSlug(packageSlug)
+                .houseImageUrl(slot.getHouseImageUrl())
+                .houseTargetUrl(slot.getHouseTargetUrl())
+                .displayOrder(slot.getDisplayOrder())
                 .active(Boolean.TRUE.equals(slot.getIsActive()))
                 .build();
     }
