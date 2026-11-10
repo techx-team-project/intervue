@@ -7,6 +7,7 @@ import com.techx.intervue.modules.billing.requests.SaveBillingSettingsRequest;
 import com.techx.intervue.modules.billing.resources.BillingSettingsResource;
 import com.techx.intervue.modules.billing.resources.PaymentSyncResultResource;
 import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
+import com.techx.intervue.modules.billing.resources.SupportedBankResource;
 import com.techx.intervue.modules.billing.services.interfaces.AdminPaymentServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.PaymentSyncServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
@@ -14,6 +15,7 @@ import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +52,11 @@ public class AdminPaymentController extends BaseController {
         return ok(
                 adminPaymentService.updateSettings(body, actor(principal, request)),
                 "Billing settings updated successfully!");
+    }
+
+    @GetMapping("/banks")
+    public ResponseEntity<ApiResource<List<SupportedBankResource>>> banks() {
+        return ok(adminPaymentService.supportedBanks(), "Supported banks retrieved successfully!");
     }
 
     @GetMapping("/transactions")
