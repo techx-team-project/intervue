@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.connect.services.interfaces;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -11,7 +12,12 @@ import org.springframework.data.domain.Pageable;
  */
 public interface CandidateEligibilityPortInterface {
 
-    record EligibleCandidate(Long candidateId, String fullName, String email) {}
+    record EligibleCandidate(
+            Long candidateId,
+            String fullName,
+            String email,
+            String jobTitle,
+            Instant submittedAt) {}
 
     Optional<EligibleCandidate> findCandidateSummary(Long candidateId, Long companyId);
 
