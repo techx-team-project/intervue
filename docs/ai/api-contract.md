@@ -465,9 +465,10 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 ## InterVue Connect
 
 Chat between a Candidate and a company's Recruiters (`modules/connect`). A `connection` is one per
-`(candidate, company)` pair, not per job. Wave 1 built the invitation lifecycle; wave 2 (below) adds
-free messaging, attachments, link preview, block and the content filter. SSE delivery, unread
-counters, the human-facing `POST .../report` endpoint and all admin review screens are still to come.
+`(candidate, company)` pair, not per job. Wave 1 built the invitation lifecycle; wave 2 added free
+messaging, attachments, link preview, block and the content filter; wave 3 (below) adds real-time
+delivery, the unread counter and the human-facing report endpoint. Admin review screens
+(`GET/POST /admin/reports/...`) and all frontend are still to come.
 
 **Lifecycle (wave 1)**
 
@@ -498,7 +499,18 @@ counters, the human-facing `POST .../report` endpoint and all admin review scree
 - **Content filter runs on every `body`/`caption` before persisting**, against the admin-managed `connect_filter_words` list. A match is never silently dropped: it's recorded in `connect_violations`, counted against a 30-day strike window (3 `MILD` or 1 `SEVERE` → mute), and a `SEVERE` match auto-files a `PENDING` report (`reporter_type = SYSTEM`) into the generic moderation queue — all **before** the request fails with `422 MESSAGE_BLOCKED_BY_FILTER`, so the evidence survives the rejection.
 - **Muting is Connect-only**, not an account ban — `connect_mutes`, first offense 24h, a repeat offense after a mute has expired extends it to 7 days (same row, "extend don't restart").
 - **Link preview** fetches `og:title`/`og:description`/`og:image` (Jsoup, 2s timeout, no redirects followed), guarded against SSRF by resolving the host and rejecting private/loopback/link-local addresses **before** connecting. Cached in Redis 7 days by URL hash, including a cached "no preview" result for dead links.
-- **Known gap**: chat `FILE` (PDF) delivery requires the Cloudinary account's "Restricted media types" setting to allow authenticated raw delivery — a dashboard/account setting, not a code path. `IMAGE` delivery is unaffected (public `upload` type, already used elsewhere in the app).
+- **Chat `FILE` (PDF) delivery** requires the Cloudinary account's "Restricted media types" setting to allow authenticated raw delivery — a dashboard/account setting, not a code path; already enabled on this project's account and verified working end to end.
+
+**Real-time, unread counter, report (wave 3)** — same `{candidate|recruiter}` prefix:
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/connect/stream` | both | `text/event-stream`, no `ApiResource` envelope. Emits a `message` event (the full `MessageResource` as JSON) whenever a new message/attachment lands in any of that actor's connections, plus a `:ping` comment every 20s to keep the connection alive through proxies. In-memory emitter registry — **single backend instance only**, no Redis pub/sub fan-out yet. |
+| `GET` | `/connect/unread-count` | both | `ConnectUnreadCountResource { total }`. Backed by a Redis hash (`connect:unread:{actorType}:{actorId}`, one field per `connectionId`) — there is no "read" table, this hash is the only record, not a cache. Incremented on every message/attachment the recipient side didn't send; cleared per-connection the moment that connection's `GET .../messages` is called. |
+| `POST` | `/connect/conversations/{id}/report` | both | Body `{ reasonCode, reasonNote (max 1000) }`. Files a `PENDING` row into the generic `moderation` report queue (`reporter_type = CANDIDATE`/`RECRUITER`, the real actor this time, unlike the filter's `SYSTEM` auto-reports). Valid on a connection in **any** status — you often report right when blocking someone. Does **not** change `connections.status`. |
+
+- **Recipient resolution**: a candidate's message pushes to **every active member of the recruiting company** (`findActiveMemberIds`) — matches the shared company-wide mailbox model; a recruiter's message pushes to the one candidate.
+- **This is the first real-time push infra in the project** — notification delivery (`frontend/hooks/useNotifications.ts`) is plain 60s polling, not SSE. Connect's channel is independent of it on purpose (different domain, per the original design table).
 
 ## Error codes
 
