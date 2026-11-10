@@ -6,6 +6,9 @@ export const entitlementApi = {
 
   active: () => request<EntitlementUsage[]>('/recruiter/entitlements/active'),
 
-  activate: (id: number, jobId: number) =>
-    request<Entitlement>(`/recruiter/entitlements/${id}/activate`, { method: 'POST', body: { jobId } }),
+  activate: (id: number, jobId?: number) =>
+    request<Entitlement>(`/recruiter/entitlements/${id}/activate`, {
+      method: 'POST',
+      body: jobId ? { jobId } : {},
+    }),
 };

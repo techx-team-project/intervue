@@ -173,7 +173,7 @@ export default function MyServicesView() {
             {
               onSuccess: () => {
                 setTarget(null);
-                setNotice('Đã áp dụng dịch vụ cho tin tuyển dụng.');
+                setNotice('Đã kích hoạt dịch vụ.');
               },
               onError: (cause) => setModalError(getErrorMessage(cause)),
             },

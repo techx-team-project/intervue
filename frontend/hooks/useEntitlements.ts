@@ -20,7 +20,7 @@ export function useActiveEntitlements() {
 export function useActivateEntitlement() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, jobId }: { id: number; jobId: number }) => entitlementApi.activate(id, jobId),
+    mutationFn: ({ id, jobId }: { id: number; jobId?: number }) => entitlementApi.activate(id, jobId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: entitlementKeys.all }),
   });
 }
