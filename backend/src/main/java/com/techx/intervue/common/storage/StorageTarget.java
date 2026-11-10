@@ -8,7 +8,8 @@ public enum StorageTarget {
             "authenticated", "raw", EnumSet.of(FileType.PDF, FileType.JPEG, FileType.PNG), true),
     RESUME("authenticated", "raw", EnumSet.of(FileType.PDF), true),
     IDENTITY_DOCUMENT("authenticated", "raw", EnumSet.of(FileType.JPEG, FileType.PNG), true),
-    IMAGE("upload", "image", EnumSet.of(FileType.JPEG, FileType.PNG), false);
+    IMAGE("upload", "image", EnumSet.of(FileType.JPEG, FileType.PNG), false),
+    CHAT_FILE("authenticated", "raw", EnumSet.of(FileType.PDF), true);
 
     private final String deliveryType;
     private final String resourceType;

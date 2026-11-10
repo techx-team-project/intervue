@@ -1,5 +1,9 @@
 package com.techx.intervue.modules.connect.services.impl;
 
+import com.techx.intervue.common.storage.FileType;
+import com.techx.intervue.common.storage.StorageServiceInterface;
+import com.techx.intervue.common.storage.StorageTarget;
+import com.techx.intervue.common.storage.StoredFile;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.resources.CompanySummaryResource;
@@ -13,30 +17,42 @@ import com.techx.intervue.modules.connect.mappers.ConnectMapper;
 import com.techx.intervue.modules.connect.repositories.ConnectionMessageRepository;
 import com.techx.intervue.modules.connect.repositories.ConnectionRepository;
 import com.techx.intervue.modules.connect.requests.SendInvitationRequest;
+import com.techx.intervue.modules.connect.requests.SendMessageRequest;
 import com.techx.intervue.modules.connect.resources.ConversationSummaryResource;
 import com.techx.intervue.modules.connect.resources.EligibleCandidateResource;
 import com.techx.intervue.modules.connect.resources.InvitationResource;
+import com.techx.intervue.modules.connect.resources.MessageResource;
 import com.techx.intervue.modules.connect.services.interfaces.CandidateEligibilityPortInterface;
 import com.techx.intervue.modules.connect.services.interfaces.CandidateEligibilityPortInterface.EligibleCandidate;
+import com.techx.intervue.modules.connect.services.interfaces.ConnectModerationServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectQuotaServiceInterface;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectionServiceInterface;
+import com.techx.intervue.modules.connect.services.interfaces.LinkPreviewServiceInterface;
+import com.techx.intervue.modules.connect.services.interfaces.LinkPreviewServiceInterface.LinkPreview;
 import com.techx.intervue.modules.notification.enums.NotificationType;
 import com.techx.intervue.modules.notification.enums.RecipientType;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface.NotificationCommand;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class ConnectionService implements ConnectionServiceInterface {
+
+    private static final Sort NEWEST_FIRST = Sort.by("createdAt").descending();
 
     private final ConnectionRepository connectionRepository;
     private final ConnectionMessageRepository messageRepository;
@@ -45,6 +61,9 @@ public class ConnectionService implements ConnectionServiceInterface {
     private final ConnectCompanyScope companyScope;
     private final CompanyServiceInterface companyService;
     private final NotificationPublisherInterface notificationPublisher;
+    private final ConnectModerationServiceInterface moderationService;
+    private final LinkPreviewServiceInterface linkPreviewService;
+    private final StorageServiceInterface storageService;
     private final ConnectMapper mapper;
 
     @Override
@@ -178,5 +197,166 @@ public class ConnectionService implements ConnectionServiceInterface {
                 .findByIdAndCandidateId(connectionId, candidateId)
                 .filter(connection -> connection.getStatus() == ConnectionStatus.PENDING)
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+    }
+
+    @Override
+    public MessageResource sendMessage(
+            ConnectActorType actorType,
+            Long actorId,
+            Long connectionId,
+            SendMessageRequest request) {
+        Connection connection = requireActiveParticipant(connectionId, actorType, actorId);
+        if (moderationService.isMuted(actorType, actorId)) {
+            throw new AppException(ErrorCode.CONNECT_MUTED);
+        }
+        moderationService.screen(actorType, actorId, connectionId, request.body());
+
+        Optional<LinkPreview> preview = linkPreviewService.resolve(request.body());
+        ConnectionMessage message =
+                messageRepository.save(
+                        ConnectionMessage.builder()
+                                .connectionId(connection.getId())
+                                .senderType(actorType)
+                                .senderId(actorId)
+                                .messageType(
+                                        preview.isPresent()
+                                                ? ConnectMessageType.LINK
+                                                : ConnectMessageType.TEXT)
+                                .body(request.body())
+                                .linkUrl(preview.map(LinkPreview::url).orElse(null))
+                                .linkTitle(preview.map(LinkPreview::title).orElse(null))
+                                .linkDescription(preview.map(LinkPreview::description).orElse(null))
+                                .linkImageUrl(preview.map(LinkPreview::imageUrl).orElse(null))
+                                .build());
+        return mapper.toMessage(message);
+    }
+
+    @Override
+    public MessageResource sendAttachment(
+            ConnectActorType actorType,
+            Long actorId,
+            Long connectionId,
+            MultipartFile file,
+            String caption) {
+        Connection connection = requireActiveParticipant(connectionId, actorType, actorId);
+        if (moderationService.isMuted(actorType, actorId)) {
+            throw new AppException(ErrorCode.CONNECT_MUTED);
+        }
+        if (caption != null && !caption.isBlank()) {
+            moderationService.screen(actorType, actorId, connectionId, caption);
+        }
+
+        byte[] content = readBytes(file);
+        FileType detected =
+                FileType.detect(content)
+                        .orElseThrow(() -> new AppException(ErrorCode.UNSUPPORTED_FILE_TYPE));
+        boolean isImage = detected == FileType.JPEG || detected == FileType.PNG;
+        StorageTarget target = isImage ? StorageTarget.IMAGE : StorageTarget.CHAT_FILE;
+        ConnectMessageType messageType =
+                isImage ? ConnectMessageType.IMAGE : ConnectMessageType.FILE;
+
+        StoredFile stored = storageService.upload(file, target, "connect/" + connectionId);
+        // FILE attachments stay signed/authenticated (Cloudinary blocks public raw delivery by
+        // default); the frontend downloads them through downloadAttachment below instead of a URL.
+        String url = isImage ? storageService.publicUrl(stored.publicId(), target) : null;
+
+        ConnectionMessage message =
+                messageRepository.save(
+                        ConnectionMessage.builder()
+                                .connectionId(connection.getId())
+                                .senderType(actorType)
+                                .senderId(actorId)
+                                .messageType(messageType)
+                                .body(caption)
+                                .attachmentPublicId(stored.publicId())
+                                .attachmentUrl(url)
+                                .attachmentFileName(stored.originalFileName())
+                                .attachmentContentType(stored.contentType())
+                                .attachmentFileSizeBytes(stored.sizeInBytes())
+                                .build());
+        return mapper.toMessage(message);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<MessageResource> listMessages(
+            ConnectActorType actorType, Long actorId, Long connectionId, Pageable pageable) {
+        requireParticipant(connectionId, actorType, actorId);
+        Pageable newestFirst =
+                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), NEWEST_FIRST);
+        return messageRepository
+                .findByConnectionId(connectionId, newestFirst)
+                .map(mapper::toMessage);
+    }
+
+    @Override
+    public AttachmentContent downloadAttachment(
+            ConnectActorType actorType, Long actorId, Long connectionId, Long messageId) {
+        requireParticipant(connectionId, actorType, actorId);
+        ConnectionMessage message =
+                messageRepository
+                        .findByIdAndConnectionId(messageId, connectionId)
+                        .filter(found -> found.getMessageType() == ConnectMessageType.FILE)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        byte[] bytes =
+                storageService.fetchDocument(
+                        message.getAttachmentPublicId(), StorageTarget.CHAT_FILE);
+        return new AttachmentContent(
+                message.getAttachmentFileName(), message.getAttachmentContentType(), bytes);
+    }
+
+    @Override
+    @Transactional
+    public void block(ConnectActorType actorType, Long actorId, Long connectionId) {
+        Connection connection = requireParticipant(connectionId, actorType, actorId);
+        if (connection.getStatus() == ConnectionStatus.BLOCKED) {
+            return;
+        }
+        if (connection.getStatus() != ConnectionStatus.ACCEPTED) {
+            throw new AppException(ErrorCode.CONNECTION_NOT_ACCEPTED);
+        }
+        connection.setStatus(ConnectionStatus.BLOCKED);
+        connection.setBlockedByActorType(actorType);
+        connection.setBlockedByActorId(actorId);
+        connection.setBlockedAt(Instant.now());
+    }
+
+    private Connection requireParticipant(
+            Long connectionId, ConnectActorType actorType, Long actorId) {
+        Connection connection =
+                connectionRepository
+                        .findById(connectionId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        boolean owns =
+                actorType == ConnectActorType.CANDIDATE
+                        ? connection.getCandidateId().equals(actorId)
+                        : connection.getCompanyId().equals(companyScope.companyIdOf(actorId));
+        if (!owns) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        return connection;
+    }
+
+    private Connection requireActiveParticipant(
+            Long connectionId, ConnectActorType actorType, Long actorId) {
+        Connection connection = requireParticipant(connectionId, actorType, actorId);
+        if (connection.getStatus() == ConnectionStatus.BLOCKED) {
+            throw new AppException(ErrorCode.CONNECTION_BLOCKED);
+        }
+        if (connection.getStatus() != ConnectionStatus.ACCEPTED) {
+            throw new AppException(ErrorCode.CONNECTION_NOT_ACCEPTED);
+        }
+        return connection;
+    }
+
+    private byte[] readBytes(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw AppException.validation("file", "A file is required");
+        }
+        try {
+            return file.getBytes();
+        } catch (IOException e) {
+            throw new AppException(ErrorCode.STORAGE_UNAVAILABLE);
+        }
     }
 }

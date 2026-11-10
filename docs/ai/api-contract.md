@@ -465,10 +465,11 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 ## InterVue Connect
 
 Chat between a Candidate and a company's Recruiters (`modules/connect`). A `connection` is one per
-`(candidate, company)` pair, not per job. Wave 1 covers only the invitation lifecycle; sending free
-messages, attachments, block, report and real-time delivery land in later waves — the
-`connection_messages`/`connect_filter_words`/`connect_violations`/`connect_mutes`/`reports` tables
-already exist but have no endpoints yet.
+`(candidate, company)` pair, not per job. Wave 1 built the invitation lifecycle; wave 2 (below) adds
+free messaging, attachments, link preview, block and the content filter. SSE delivery, unread
+counters, the human-facing `POST .../report` endpoint and all admin review screens are still to come.
+
+**Lifecycle (wave 1)**
 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
@@ -483,6 +484,21 @@ already exist but have no endpoints yet.
 - **Quota**: 100 new invitations per calendar day (Asia/Ho_Chi_Minh), counted **per recruiter**, not per company. Declining later does not refund it.
 - **Eligibility is a port**: `connect` depends on `CandidateEligibilityPortInterface`, implemented in `application` off the existing `Application` rows (already carry `candidateName`/`candidateEmail`, no call into `candidate` needed). A Candidate Search module can plug in as a second source later without touching `connect`.
 - **Ownership checks return `404`**, never a connect-specific error code, matching the IDOR pattern used everywhere else.
+
+**Messaging, attachments, link preview, block (wave 2)** — same `{candidate|recruiter}` prefix as above:
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `POST` | `/connect/conversations/{id}/messages` | both | Body `{ body (max 2000) }`. `messageType` is `LINK` if the text contains a fetchable URL, else `TEXT`. `422 CONNECTION_NOT_ACCEPTED`, `403 CONNECTION_BLOCKED`, `403 CONNECT_MUTED`, `422 MESSAGE_BLOCKED_BY_FILTER` (generic message only — never the matched word). |
+| `POST` | `/connect/conversations/{id}/messages/attachment` | both | `multipart/form-data`: `file` (JPEG/PNG → `IMAGE`, PDF → `FILE`), optional `caption` (screened like a text body). `400 UNSUPPORTED_FILE_TYPE`, `400 FILE_TOO_LARGE`. |
+| `GET` | `/connect/conversations/{id}/messages?page=&size=` | both | Newest first, same convention as every other list. History stays readable even on a `BLOCKED` connection. |
+| `GET` | `/connect/conversations/{id}/messages/{messageId}/attachment` | both | Streams a `FILE`-type attachment through the backend (signed Cloudinary fetch, same pattern as CV/identity documents) — `IMAGE` attachments are served directly via the public `attachmentUrl` in the message instead. `404 NOT_FOUND` if the message isn't a `FILE` attachment of that connection. |
+| `POST` | `/connect/conversations/{id}/block` | both | `ACCEPTED` → `BLOCKED`; idempotent if already blocked. `422 CONNECTION_NOT_ACCEPTED` while still `PENDING`/`DECLINED`. |
+
+- **Content filter runs on every `body`/`caption` before persisting**, against the admin-managed `connect_filter_words` list. A match is never silently dropped: it's recorded in `connect_violations`, counted against a 30-day strike window (3 `MILD` or 1 `SEVERE` → mute), and a `SEVERE` match auto-files a `PENDING` report (`reporter_type = SYSTEM`) into the generic moderation queue — all **before** the request fails with `422 MESSAGE_BLOCKED_BY_FILTER`, so the evidence survives the rejection.
+- **Muting is Connect-only**, not an account ban — `connect_mutes`, first offense 24h, a repeat offense after a mute has expired extends it to 7 days (same row, "extend don't restart").
+- **Link preview** fetches `og:title`/`og:description`/`og:image` (Jsoup, 2s timeout, no redirects followed), guarded against SSRF by resolving the host and rejecting private/loopback/link-local addresses **before** connecting. Cached in Redis 7 days by URL hash, including a cached "no preview" result for dead links.
+- **Known gap**: chat `FILE` (PDF) delivery requires the Cloudinary account's "Restricted media types" setting to allow authenticated raw delivery — a dashboard/account setting, not a code path. `IMAGE` delivery is unaffected (public `upload` type, already used elsewhere in the app).
 
 ## Error codes
 
@@ -588,6 +604,10 @@ already exist but have no endpoints yet.
 | `CONNECTION_QUOTA_EXCEEDED` | 429 | Recruiter's 100 new Connect invitations/day reached; honor `Retry-After` |
 | `CONNECTION_ALREADY_EXISTS` | 409 | A connection already exists for this candidate + company pair |
 | `NOT_ELIGIBLE_TO_CONNECT` | 422 | Candidate has no `Application` to the recruiter's company yet |
+| `CONNECTION_NOT_ACCEPTED` | 422 | The connection is still `PENDING`/`DECLINED`, can't message or block yet |
+| `CONNECTION_BLOCKED` | 403 | The conversation has been blocked by one side |
+| `MESSAGE_BLOCKED_BY_FILTER` | 422 | Content filter matched; violation recorded, message not sent |
+| `CONNECT_MUTED` | 403 | Temporarily restricted from sending Connect messages; honor the mute's `expiresAt` |
 
 ## Recruiter Account
 

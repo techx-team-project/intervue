@@ -37,7 +37,7 @@ public class Report extends BaseEntity {
     @Column(name = "reporter_type", nullable = false, length = 20)
     private ReporterType reporterType;
 
-    @Column(name = "reporter_id", nullable = false)
+    @Column(name = "reporter_id")
     private Long reporterId;
 
     @Enumerated(EnumType.STRING)
