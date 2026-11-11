@@ -1,16 +1,24 @@
 'use client';
 
-import ConnectComposer from '@/components/recruiter/connect/ConnectComposer';
-import ConnectMessageBubble from '@/components/recruiter/connect/ConnectMessageBubble';
-import ConnectThreadHeader from '@/components/recruiter/connect/ConnectThreadHeader';
-import ReportConversationModal from '@/components/recruiter/connect/ReportConversationModal';
+import { recruiterConnectApi } from '@/apiRequest/recruiter-connect';
+import ConnectThreadFrame from '@/components/connect/ConnectThreadFrame';
 import BlockConversationDialog from '@/components/recruiter/connect/BlockConversationDialog';
-import Spinner from '@/components/common/Spinner';
-import { useInView } from '@/hooks/useInView';
-import { recruiterConnectKeys, useConversationMessages } from '@/hooks/useRecruiterConnect';
+import ReportConversationModal from '@/components/recruiter/connect/ReportConversationModal';
+import {
+  useConversationMessages,
+  useEditMessage,
+  useMarkConversationRead,
+  useReactMessage,
+  useSendAttachment,
+  useSendMessage,
+  useSendTyping,
+  useUnblockConversation,
+  useUnsendMessage,
+} from '@/hooks/useRecruiterConnect';
+import { useAuthStore } from '@/store/auth.store';
 import type { ConversationSummary } from '@/types/connect';
-import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { triggerConnectBlobDownload } from '@/utils/connect-chat';
+import { useCallback } from 'react';
 
 type ConnectThreadProps = {
   conversation: ConversationSummary;
@@ -18,96 +26,60 @@ type ConnectThreadProps = {
 };
 
 export default function ConnectThread({ conversation, onBack }: ConnectThreadProps) {
-  const queryClient = useQueryClient();
-  const { messages, isLoading, hasOlder, isLoadingOlder, loadOlder } = useConversationMessages(conversation.id);
-  const { ref: topSentinelRef, inView: topInView } = useInView<HTMLDivElement>();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isBlockDialogOpen, setBlockDialogOpen] = useState(false);
-  const [isReportModalOpen, setReportModalOpen] = useState(false);
+  const currentUserId = useAuthStore((s) => s.recruiter.user?.id ?? 0);
+  const { messages, isLoading, hasOlder, loadOlder, isLoadingOlder } = useConversationMessages(conversation.id);
+  const sendMessage = useSendMessage(conversation.id);
+  const sendAttachment = useSendAttachment(conversation.id);
+  const editMessage = useEditMessage(conversation.id);
+  const unsendMessage = useUnsendMessage(conversation.id);
+  const reactMessage = useReactMessage(conversation.id);
+  const { mutate: markReadMutate } = useMarkConversationRead(conversation.id);
+  const { mutate: sendTypingMutate } = useSendTyping(conversation.id);
+  const unblock = useUnblockConversation(conversation.id);
 
-  useEffect(() => {
-    if (conversation.unreadCount > 0) {
-      queryClient.setQueryData(recruiterConnectKeys.conversations, (old: unknown) => {
-        if (!old || typeof old !== 'object' || !('pages' in old)) return old;
-        const infiniteData = old as { pages: Array<{ items: ConversationSummary[] }> };
-        return {
-          ...infiniteData,
-          pages: infiniteData.pages.map((page) => ({
-            ...page,
-            items: page.items.map((item) => (item.id === conversation.id ? { ...item, unreadCount: 0 } : item)),
-          })),
-        };
-      });
-      queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.unread });
-    }
-  }, [conversation.id, conversation.unreadCount, queryClient]);
+  const handleMarkRead = useCallback(
+    (lastReadMessageId?: number) => {
+      markReadMutate(lastReadMessageId);
+    },
+    [markReadMutate],
+  );
 
-  const chronological = useMemo(() => [...messages].reverse(), [messages]);
-  const newestMessageId = chronological.at(-1)?.id;
-  const loadingOlderRef = useRef(false);
-
-  useEffect(() => {
-    if (topInView && hasOlder && !isLoadingOlder) {
-      loadingOlderRef.current = true;
-      loadOlder();
-    }
-  }, [topInView, hasOlder, isLoadingOlder, loadOlder]);
-
-  useEffect(() => {
-    if (loadingOlderRef.current) {
-      loadingOlderRef.current = false;
-      return;
-    }
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-  }, [conversation.id, newestMessageId]);
-
-  const canSend = conversation.status === 'ACCEPTED';
+  const handleTypingChange = useCallback(
+    (typing: boolean) => {
+      sendTypingMutate(typing);
+    },
+    [sendTypingMutate],
+  );
 
   return (
-    <div className="flex h-full min-w-0 flex-1 flex-col">
-      <ConnectThreadHeader
-        conversation={conversation}
-        onBlock={() => setBlockDialogOpen(true)}
-        onReport={() => setReportModalOpen(true)}
-        onBack={onBack}
-      />
-
-      <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
-        {hasOlder && <div ref={topSentinelRef} />}
-        {isLoadingOlder && (
-          <div className="flex justify-center py-2">
-            <Spinner />
-          </div>
-        )}
-        {isLoading ? (
-          <div className="flex h-full items-center justify-center">
-            <Spinner />
-          </div>
-        ) : (
-          chronological.map((message) => (
-            <ConnectMessageBubble key={message.id} message={message} isOwn={message.senderType === 'RECRUITER'} />
-          ))
-        )}
-      </div>
-
-      <ConnectComposer
-        connectionId={conversation.id}
-        disabled={!canSend}
-        disabledReason={
-          conversation.status === 'PENDING'
-            ? 'Waiting for candidate to accept the chat invitation.'
-            : conversation.status === 'BLOCKED'
-              ? 'This conversation has been blocked.'
-              : 'The candidate declined the chat invitation.'
-        }
-      />
-
-      {isBlockDialogOpen && (
-        <BlockConversationDialog connectionId={conversation.id} onClose={() => setBlockDialogOpen(false)} />
-      )}
-      {isReportModalOpen && (
-        <ReportConversationModal connectionId={conversation.id} onClose={() => setReportModalOpen(false)} />
-      )}
-    </div>
+    <ConnectThreadFrame
+      key={conversation.id}
+      portal="recruiter"
+      conversation={conversation}
+      currentUserId={currentUserId}
+      messages={messages}
+      isLoading={isLoading}
+      hasOlder={Boolean(hasOlder)}
+      isLoadingOlder={isLoadingOlder}
+      onLoadOlder={loadOlder}
+      isComposerPending={sendMessage.isPending || sendAttachment.isPending || editMessage.isPending}
+      isUnblocking={unblock.isPending}
+      onSendText={(payload) => sendMessage.mutateAsync(payload)}
+      onSendAttachment={(payload) => sendAttachment.mutateAsync(payload)}
+      onEditMessage={(messageId, payload) => editMessage.mutateAsync({ messageId, payload })}
+      onUnsendMessage={(messageId, scope) => unsendMessage.mutateAsync({ messageId, scope })}
+      onReactMessage={(messageId, emoji) => reactMessage.mutateAsync({ messageId, emoji })}
+      onMarkRead={handleMarkRead}
+      onTypingChange={handleTypingChange}
+      onUnblock={() => unblock.mutateAsync()}
+      onDownloadAttachment={async (msg) => {
+        const blob = await recruiterConnectApi.downloadAttachment(conversation.id, msg.id);
+        triggerConnectBlobDownload(blob, msg.attachmentFileName ?? 'attachment');
+      }}
+      onFetchLinkPreview={(url) => recruiterConnectApi.linkPreview(url)}
+      onBack={onBack}
+      renderBlockModal={(onClose) => <BlockConversationDialog connectionId={conversation.id} onClose={onClose} />}
+      renderReportModal={(onClose) => <ReportConversationModal connectionId={conversation.id} onClose={onClose} />}
+    />
   );
 }
