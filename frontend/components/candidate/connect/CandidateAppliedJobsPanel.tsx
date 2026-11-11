@@ -57,9 +57,9 @@ export default function CandidateAppliedJobsPanel({ selectedCompanyId }: Candida
     <div className="border-outline-variant hidden h-full shrink-0 flex-col border-l bg-white lg:flex lg:w-[356px] xl:w-[388px] 2xl:w-[404px]">
       {/* Header */}
       <div className="flex h-14 shrink-0 items-center justify-between gap-2 px-4">
-        <p className="text-xs font-bold tracking-wide text-slate-800 uppercase">Applied Jobs</p>
+        <p className="text-sm font-bold tracking-wide text-slate-800 uppercase">Applied Jobs</p>
         {selectedCompanyId && (
-          <span className="text-primary text-[11px] font-medium whitespace-nowrap">This company</span>
+          <span className="text-primary text-xs font-semibold whitespace-nowrap">This company</span>
         )}
       </div>
 
@@ -72,8 +72,8 @@ export default function CandidateAppliedJobsPanel({ selectedCompanyId }: Candida
         ) : applications.length === 0 ? (
           <div className="py-10 text-center">
             <Briefcase className="mx-auto h-8 w-8 text-slate-300" />
-            <p className="mt-2 text-sm font-medium text-slate-500">No applications found</p>
-            <p className="text-xs text-slate-400">
+            <p className="mt-2 text-base font-semibold text-slate-700">No applications found</p>
+            <p className="mt-1 text-sm text-slate-500">
               {selectedCompanyId ? 'No applications for this company.' : 'You have not applied for any jobs yet.'}
             </p>
           </div>
@@ -82,20 +82,20 @@ export default function CandidateAppliedJobsPanel({ selectedCompanyId }: Candida
             <Link
               key={app.id}
               href={`${ROUTES.JOBS}/${app.jobId}`}
-              className="hover:border-primary border-outline-variant block rounded-xl border bg-slate-50/50 p-3 transition-colors hover:bg-white"
+              className="hover:border-primary border-outline-variant block rounded-xl border bg-slate-50/50 p-3.5 transition-colors hover:bg-white"
             >
               <div className="flex items-start justify-between gap-2">
-                <p className="line-clamp-2 text-xs font-bold text-slate-800">{app.jobTitle}</p>
-                <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                <p className="line-clamp-2 text-sm leading-snug font-semibold text-slate-900">{app.jobTitle}</p>
+                <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
               </div>
 
-              <p className="mt-1 truncate text-xs text-slate-500">{app.companyName}</p>
+              <p className="mt-1 truncate text-[13px] text-slate-600">{app.companyName}</p>
 
-              <div className="mt-2 flex items-center justify-between text-[11px]">
+              <div className="mt-2.5 flex items-center justify-between text-xs">
                 <Badge variant={STATUS_VARIANT[app.status] ?? 'default'}>
                   {STATUS_LABEL[app.status] ?? app.status}
                 </Badge>
-                {app.submittedAt && <span className="text-slate-400">{formatRelativeDay(app.submittedAt)}</span>}
+                {app.submittedAt && <span className="text-slate-500">{formatRelativeDay(app.submittedAt)}</span>}
               </div>
             </Link>
           ))

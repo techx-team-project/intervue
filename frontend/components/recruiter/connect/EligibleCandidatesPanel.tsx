@@ -39,7 +39,7 @@ export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited
       {!isModal ? (
         <div className="shrink-0">
           <div className="flex h-14 items-center px-4">
-            <p className="text-xs font-bold tracking-wide text-slate-800 uppercase">Other Candidates</p>
+            <p className="text-sm font-bold tracking-wide text-slate-800 uppercase">Other Candidates</p>
           </div>
           <div className="border-outline-variant border-b px-4 pt-1 pb-3">
             <Input
@@ -49,9 +49,9 @@ export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited
               leftIcon={<Search className="h-4 w-4" />}
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              className="h-9.5 bg-slate-50/70 text-[13px]"
+              className="h-10 bg-slate-50/70 text-sm"
             />
-            <p className="mt-1.5 px-1 text-[11px] text-slate-400">Applicants who applied to your job postings</p>
+            <p className="mt-2 px-1 text-xs text-slate-500">Applicants who applied to your job postings</p>
           </div>
         </div>
       ) : (
@@ -63,7 +63,7 @@ export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited
             leftIcon={<Search className="h-4 w-4" />}
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            className="h-9.5 bg-slate-50/70 text-[13px]"
+            className="h-10 bg-slate-50/70 text-sm"
           />
         </div>
       )}
@@ -74,22 +74,20 @@ export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited
             <Spinner />
           </div>
         ) : candidates.length === 0 ? (
-          <p className="text-body-sm text-on-surface-variant px-2.5 py-6 text-center">No eligible candidates found.</p>
+          <p className="px-3 py-8 text-center text-sm text-slate-500">No eligible candidates found.</p>
         ) : (
           <div className="space-y-1">
             {candidates.map((candidate) => (
               <div
                 key={candidate.candidateId}
-                className="hover:bg-surface-container-low flex items-center gap-2.5 rounded-xl px-2.5 py-2 transition-colors"
+                className="hover:bg-surface-container-low flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors"
               >
                 <UserAvatar fullName={candidate.fullName} size="sm" />
                 <div className="min-w-0 flex-1">
-                  <p className="text-body-sm text-on-surface truncate font-semibold">{candidate.fullName}</p>
-                  <p className="text-label-sm text-on-surface-variant truncate">
-                    {candidate.jobTitle || candidate.email}
-                  </p>
+                  <p className="truncate text-sm font-semibold text-slate-900">{candidate.fullName}</p>
+                  <p className="truncate text-[13px] text-slate-600">{candidate.jobTitle || candidate.email}</p>
                   {candidate.submittedAt && (
-                    <p className="text-[11px] text-slate-400">
+                    <p className="mt-0.5 text-xs text-slate-500">
                       Applied {formatRelativeDay(candidate.submittedAt).toLowerCase()}
                     </p>
                   )}
