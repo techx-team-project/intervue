@@ -1,0 +1,20 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+
+linter:
+  rules:
+    - prefer_single_quotes
+    - always_use_package_imports
+    - avoid_print
+    - unawaited_futures
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - require_trailing_commas

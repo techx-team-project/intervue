@@ -1,0 +1,8 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          # Spring Boot response dùng snake_case (company_name, salary_max...)
+          field_rename: snake
+          explicit_to_json: true
