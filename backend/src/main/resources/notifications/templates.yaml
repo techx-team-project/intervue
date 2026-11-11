@@ -381,6 +381,12 @@ templates:
 
       Bạn có thể bắt đầu trao đổi với ứng viên ngay bây giờ.
     actionLabel: "Mở cuộc trò chuyện"
+  CONNECT_INVITATION_DECLINED:
+    title: "{candidateName} đã từ chối lời mời trò chuyện"
+    summary: "{candidateName} đã từ chối kết nối với bạn trên InterVue Connect."
+    body: |
+      **{candidateName}** đã từ chối lời mời trò chuyện của bạn trên InterVue Connect.
+    actionLabel: "Xem cuộc trò chuyện"
   REPORT_DISMISSED:
     title: "Báo cáo của bạn đã được xem xét"
     summary: "Quản trị viên đã xem xét báo cáo của bạn và không phát hiện vi phạm."

@@ -53,6 +53,8 @@ public enum NotificationType {
     CONNECT_INVITATION_RECEIVED(NotificationCategory.CONNECTIONS, NotificationSeverity.INFO, false),
     CONNECT_INVITATION_ACCEPTED(
             NotificationCategory.CONNECTIONS, NotificationSeverity.SUCCESS, false),
+    CONNECT_INVITATION_DECLINED(
+            NotificationCategory.CONNECTIONS, NotificationSeverity.WARNING, false),
     REPORT_DISMISSED(NotificationCategory.MODERATION, NotificationSeverity.INFO, false),
     REPORT_RESOLVED(NotificationCategory.MODERATION, NotificationSeverity.INFO, false);
 
