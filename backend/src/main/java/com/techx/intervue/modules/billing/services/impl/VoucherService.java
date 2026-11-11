@@ -138,6 +138,9 @@ public class VoucherService implements VoucherServiceInterface {
                     packageRepository
                             .findById(request.packageId())
                             .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE));
+            if (!servicePackage.isAvailableInCatalog()) {
+                throw new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE);
+            }
             int quantity = request.quantity() == null ? 1 : request.quantity();
             return servicePackage.getPrice() * quantity;
         }
@@ -146,8 +149,14 @@ public class VoucherService implements VoucherServiceInterface {
         if (items.isEmpty()) {
             throw new AppException(ErrorCode.CART_EMPTY);
         }
-        return items.stream()
-                .mapToLong(item -> item.getServicePackage().getPrice() * item.getQuantity())
-                .sum();
+        long subtotal = 0L;
+        for (CartItem item : items) {
+            ServicePackage servicePackage = item.getServicePackage();
+            if (!servicePackage.isAvailableInCatalog()) {
+                throw new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE);
+            }
+            subtotal += servicePackage.getPrice() * item.getQuantity();
+        }
+        return subtotal;
     }
 }

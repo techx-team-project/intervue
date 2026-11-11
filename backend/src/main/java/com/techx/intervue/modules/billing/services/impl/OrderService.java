@@ -11,7 +11,6 @@ import com.techx.intervue.modules.billing.entities.OrderItem;
 import com.techx.intervue.modules.billing.entities.PaymentTransaction;
 import com.techx.intervue.modules.billing.entities.ServicePackage;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
-import com.techx.intervue.modules.billing.enums.ServicePackageStatus;
 import com.techx.intervue.modules.billing.mappers.OrderMapper;
 import com.techx.intervue.modules.billing.mappers.ServicePackageMapper;
 import com.techx.intervue.modules.billing.repositories.CartItemRepository;
@@ -283,7 +282,7 @@ public class OrderService implements OrderServiceInterface {
 
     private void assertPackagesPurchasable(List<ServicePackage> packages, Long companyId) {
         for (ServicePackage servicePackage : packages) {
-            if (servicePackage.getStatus() != ServicePackageStatus.ACTIVE) {
+            if (!servicePackage.isAvailableInCatalog()) {
                 throw new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE);
             }
             if (Boolean.TRUE.equals(servicePackage.getOneTimePerCompany())

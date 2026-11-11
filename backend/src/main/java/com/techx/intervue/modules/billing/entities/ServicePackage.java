@@ -89,4 +89,10 @@ public class ServicePackage extends BaseEntity {
 
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder;
+
+    public boolean isAvailableInCatalog() {
+        return status == ServicePackageStatus.ACTIVE
+                && category != null
+                && Boolean.TRUE.equals(category.getIsActive());
+    }
 }
