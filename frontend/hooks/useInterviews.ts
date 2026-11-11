@@ -4,9 +4,12 @@ import { candidateInterviewApi, recruiterInterviewApi } from '@/apiRequest/inter
 import type { InterviewFormValues, InterviewStatus } from '@/types/interview';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+const INTERVIEW_COUNTS_POLL_MS = 30_000;
+
 export const interviewKeys = {
   recruiter: ['recruiter', 'interviews'] as const,
   recruiterList: (page: number, status?: InterviewStatus) => ['recruiter', 'interviews', 'list', page, status] as const,
+  recruiterRescheduleCount: ['recruiter', 'interviews', 'reschedule-count'] as const,
   forApplication: (applicationId: number) => ['recruiter', 'interviews', 'application', applicationId] as const,
   candidate: ['candidate', 'interviews'] as const,
   candidateList: (page: number) => ['candidate', 'interviews', 'list', page] as const,
@@ -17,7 +20,22 @@ export function useRecruiterInterviews(page: number, size: number, status?: Inte
     queryKey: interviewKeys.recruiterList(page, status),
     queryFn: () => recruiterInterviewApi.search(page, size, status),
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
+}
+
+export function useRecruiterRescheduleCount(enabled = true) {
+  const query = useQuery({
+    queryKey: interviewKeys.recruiterRescheduleCount,
+    queryFn: () => recruiterInterviewApi.search(0, 1, 'RESCHEDULE_REQUESTED'),
+    enabled,
+    refetchInterval: INTERVIEW_COUNTS_POLL_MS,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+  });
+
+  return query.data?.totalItems ?? 0;
 }
 
 export function useApplicationInterviews(applicationId: number) {
