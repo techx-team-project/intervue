@@ -538,6 +538,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     REFUND_REJECTED,
                     AD_CREATIVE_APPROVED,
                     AD_CREATIVE_REJECTED,
+                    AD_SLOT_CREATED,
                     AD_SLOT_UPDATED,
                     PAYMENT_TRANSACTION_MATCHED,
                     ORDER_MANUAL_REFUND_RESOLVED ->
@@ -624,6 +625,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     REFUND_REJECTED,
                     AD_CREATIVE_APPROVED,
                     AD_CREATIVE_REJECTED,
+                    AD_SLOT_CREATED,
                     AD_SLOT_UPDATED,
                     PAYMENT_TRANSACTION_MATCHED,
                     ORDER_MANUAL_REFUND_RESOLVED ->

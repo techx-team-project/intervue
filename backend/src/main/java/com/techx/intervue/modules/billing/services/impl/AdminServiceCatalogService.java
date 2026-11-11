@@ -11,6 +11,7 @@ import com.techx.intervue.common.storage.StoredFile;
 import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
+import com.techx.intervue.modules.ads.repositories.AdSlotRepository;
 import com.techx.intervue.modules.billing.entities.ServiceCategory;
 import com.techx.intervue.modules.billing.entities.ServicePackage;
 import com.techx.intervue.modules.billing.entities.ServicePackageBenefit;
@@ -29,8 +30,10 @@ import com.techx.intervue.modules.billing.requests.SaveServicePackageRequest;
 import com.techx.intervue.modules.billing.resources.AdminServiceCategoryResource;
 import com.techx.intervue.modules.billing.resources.AdminServicePackageResource;
 import com.techx.intervue.modules.billing.services.interfaces.AdminServiceCatalogServiceInterface;
+import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -50,10 +53,22 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class AdminServiceCatalogService implements AdminServiceCatalogServiceInterface {
 
+    private static final Set<EntitlementType> DURATION_REQUIRED_TYPES =
+            EnumSet.of(
+                    EntitlementType.JOB_POST_SLOT,
+                    EntitlementType.JOB_BOOST,
+                    EntitlementType.JOB_LABEL_URGENT,
+                    EntitlementType.JOB_LABEL_HOT,
+                    EntitlementType.JOB_HIGHLIGHT,
+                    EntitlementType.BRAND_PAGE,
+                    EntitlementType.FEATURED_COMPANY,
+                    EntitlementType.AD_SLOT_WEEK);
+
     private final ServiceCategoryRepository categoryRepository;
     private final ServicePackageRepository packageRepository;
     private final ServicePackageBenefitRepository benefitRepository;
     private final ServicePackageSectionRepository sectionRepository;
+    private final AdSlotRepository adSlotRepository;
     private final ServicePackageMapper mapper;
     private final AuditLogServiceInterface auditLogService;
     private final StorageServiceInterface storageService;
@@ -215,8 +230,10 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 || packageRepository.existsBySlug(request.slug())) {
             throw new AppException(ErrorCode.DUPLICATE_PACKAGE_CODE);
         }
+        validateBenefits(request.benefits());
         ServicePackage servicePackage = new ServicePackage();
         mapper.apply(servicePackage, request, requireCategory(request.categoryId()));
+        syncBonusCreditsFromBenefits(servicePackage, request);
         ServicePackage saved = packageRepository.save(servicePackage);
         replaceChildren(saved, request);
         audit(
@@ -237,7 +254,12 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 || packageRepository.existsBySlugAndIdNot(request.slug(), id)) {
             throw new AppException(ErrorCode.DUPLICATE_PACKAGE_CODE);
         }
+        validateBenefits(request.benefits());
         mapper.apply(servicePackage, request, requireCategory(request.categoryId()));
+        syncBonusCreditsFromBenefits(servicePackage, request);
+        adSlotRepository
+                .findByServicePackageId(servicePackage.getId())
+                .ifPresent(slot -> slot.setPricePerWeek(servicePackage.getPrice()));
         replaceChildren(servicePackage, request);
         audit(
                 actor,
@@ -282,12 +304,14 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 request.benefits() == null ? List.of() : request.benefits();
         for (int index = 0; index < requestedBenefits.size(); index++) {
             SaveServicePackageRequest.Benefit benefit = requestedBenefits.get(index);
+            int normalizedTier =
+                    benefit.entitlementType() == EntitlementType.JOB_BOOST ? benefit.tier() : 1;
             benefits.add(
                     ServicePackageBenefit.builder()
                             .servicePackage(servicePackage)
                             .entitlementType(benefit.entitlementType())
                             .quantity(benefit.quantity())
-                            .tier(benefit.tier())
+                            .tier(normalizedTier)
                             .durationDays(benefit.durationDays())
                             .label(benefit.label().trim())
                             .displayOrder(index)
@@ -374,6 +398,36 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                         : packageRepository.countByCategoryIdAndStatus(
                                 category.getId(), ServicePackageStatus.ACTIVE);
         return mapper.toAdminCategoryResource(category, total, active);
+    }
+
+    private void validateBenefits(List<SaveServicePackageRequest.Benefit> benefits) {
+        if (benefits == null) {
+            return;
+        }
+        for (int i = 0; i < benefits.size(); i++) {
+            SaveServicePackageRequest.Benefit benefit = benefits.get(i);
+            if (DURATION_REQUIRED_TYPES.contains(benefit.entitlementType())
+                    && (benefit.durationDays() == null || benefit.durationDays() < 1)) {
+                throw AppException.validation(
+                        "benefits[" + i + "].durationDays",
+                        "Duration in days is required for " + benefit.entitlementType().name());
+            }
+        }
+    }
+
+    private void syncBonusCreditsFromBenefits(
+            ServicePackage servicePackage, SaveServicePackageRequest request) {
+        if (request.benefits() == null) {
+            return;
+        }
+        int creditSum =
+                request.benefits().stream()
+                        .filter(benefit -> benefit.entitlementType() == EntitlementType.CREDIT)
+                        .mapToInt(SaveServicePackageRequest.Benefit::quantity)
+                        .sum();
+        if (creditSum > 0) {
+            servicePackage.setBonusCredits(creditSum);
+        }
     }
 
     private ServiceCategory requireCategory(Long id) {

@@ -42,6 +42,10 @@ public class AdCartMeta {
         }
     }
 
+    public boolean isAdPackage(Long servicePackageId) {
+        return packageLookup.isAdPackage(servicePackageId);
+    }
+
     public List<LocalDate> readWeeks(String metaJson) {
         if (metaJson == null || metaJson.isBlank()) {
             return List.of();

@@ -37,7 +37,7 @@ public record SaveServicePackageRequest(
     public record Benefit(
             @NotNull EntitlementType entitlementType,
             @NotNull @Positive Integer quantity,
-            @NotNull @Min(1) @Max(5) Integer tier,
+            @NotNull @Min(1) @Max(3) Integer tier,
             @Positive Integer durationDays,
             @NotBlank @Size(max = 255) String label) {}
 

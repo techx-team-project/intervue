@@ -2,6 +2,7 @@ package com.techx.intervue.modules.ads.controllers;
 
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.ads.enums.AdCreativeStatus;
+import com.techx.intervue.modules.ads.requests.CreateAdSlotRequest;
 import com.techx.intervue.modules.ads.requests.ReviewAdCreativeRequest;
 import com.techx.intervue.modules.ads.requests.SaveAdSlotRequest;
 import com.techx.intervue.modules.ads.resources.AdSlotResource;
@@ -40,6 +41,16 @@ public class AdminAdController extends BaseController {
     @GetMapping("/slots")
     public ResponseEntity<ApiResource<List<AdSlotResource>>> slots() {
         return ok(adminAdSlotService.list(), "Ad slots retrieved successfully!");
+    }
+
+    @PostMapping("/slots")
+    public ResponseEntity<ApiResource<AdSlotResource>> createSlot(
+            @Valid @RequestBody CreateAdSlotRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return created(
+                adminAdSlotService.create(request, actor(principal, httpRequest)),
+                "Ad slot created successfully!");
     }
 
     @PutMapping("/slots/{id}")
