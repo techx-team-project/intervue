@@ -1,17 +1,33 @@
+'use client';
+
 import ConversationActionsMenu from '@/components/recruiter/connect/ConversationActionsMenu';
-import { Badge } from '@/components/ui/Badge';
 import UserAvatar from '@/components/ui/UserAvatar';
-import type { ConversationSummary } from '@/types/connect';
+import type { ConnectPortal, ConversationSummary } from '@/types/connect';
 import { ArrowLeft } from 'lucide-react';
 
 type ConnectThreadHeaderProps = {
   conversation: ConversationSummary;
+  portal?: ConnectPortal;
   onBlock: () => void;
+  onUnblock?: () => void;
+  isUnblocking?: boolean;
   onReport: () => void;
   onBack?: () => void;
 };
 
-export default function ConnectThreadHeader({ conversation, onBlock, onReport, onBack }: ConnectThreadHeaderProps) {
+export default function ConnectThreadHeader({
+  conversation,
+  portal = 'recruiter',
+  onBlock,
+  onUnblock,
+  isUnblocking = false,
+  onReport,
+  onBack,
+}: ConnectThreadHeaderProps) {
+  const displayName = portal === 'recruiter' ? conversation.candidateName : conversation.companyName;
+  const viewerActorType = portal === 'recruiter' ? 'RECRUITER' : 'CANDIDATE';
+  const canUnblock = conversation.status === 'BLOCKED' && conversation.blockedByActorType === viewerActorType;
+
   return (
     <div className="border-outline-variant flex h-14 shrink-0 items-center justify-between gap-3 border-b bg-white px-4 sm:px-5">
       <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
@@ -25,16 +41,34 @@ export default function ConnectThreadHeader({ conversation, onBlock, onReport, o
             <ArrowLeft className="h-4.5 w-4.5" />
           </button>
         )}
-        <UserAvatar fullName={conversation.candidateName} size="md" />
+        <UserAvatar fullName={displayName} size="md" />
         <div className="min-w-0">
-          <p className="text-body-lg text-on-surface truncate font-bold">{conversation.candidateName}</p>
-          <p className="text-label-sm text-on-surface-variant truncate">{conversation.companyName}</p>
+          <p className="text-body-lg text-on-surface truncate font-bold">{displayName}</p>
+          <p className="text-label-sm truncate text-slate-500">
+            {conversation.status === 'PENDING' && (
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                {portal === 'recruiter'
+                  ? `${conversation.companyName} · Awaiting candidate response`
+                  : 'Invitation pending your response'}
+              </span>
+            )}
+            {conversation.status === 'BLOCKED' && <span className="text-rose-600">Conversation blocked</span>}
+            {conversation.status === 'DECLINED' && <span className="text-rose-600">Invitation declined</span>}
+            {conversation.status === 'ACCEPTED' &&
+              (portal === 'recruiter' ? conversation.companyName : 'Connected company')}
+          </p>
         </div>
-        {conversation.status === 'PENDING' && <Badge variant="warning">Pending acceptance</Badge>}
-        {conversation.status === 'BLOCKED' && <Badge variant="danger">Blocked</Badge>}
       </div>
 
-      <ConversationActionsMenu onBlock={onBlock} onReport={onReport} blocked={conversation.status === 'BLOCKED'} />
+      <ConversationActionsMenu
+        onBlock={onBlock}
+        onUnblock={onUnblock}
+        isUnblocking={isUnblocking}
+        onReport={onReport}
+        blocked={conversation.status === 'BLOCKED'}
+        canUnblock={canUnblock}
+      />
     </div>
   );
 }

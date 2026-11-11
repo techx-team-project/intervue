@@ -21,7 +21,7 @@ const FORM_ID = 'invite-candidate-form';
 
 type InviteCandidateModalProps = {
   prefilledCandidate: EligibleCandidate;
-  onClose: () => void;
+  onClose: (createdConnectionId?: number) => void;
 };
 
 export default function InviteCandidateModal({ prefilledCandidate, onClose }: InviteCandidateModalProps) {
@@ -46,9 +46,9 @@ export default function InviteCandidateModal({ prefilledCandidate, onClose }: In
     sendInvitation.mutate(
       { candidateId: values.candidateId, message: values.message },
       {
-        onSuccess: () => {
+        onSuccess: (created) => {
           toast.success('Invitation sent successfully.');
-          onClose();
+          onClose(created?.id);
         },
         onError: (error) => {
           if (isApiError(error)) {
@@ -70,14 +70,15 @@ export default function InviteCandidateModal({ prefilledCandidate, onClose }: In
     <>
       <Modal
         isOpen
-        onClose={onClose}
+        onClose={() => onClose()}
+        radius="md"
         title="Invite to Connect"
         footer={
           <>
-            <Button type="button" variant="ghost" onClick={onClose}>
+            <Button type="button" variant="ghost" radius="md" onClick={() => onClose()}>
               Cancel
             </Button>
-            <Button type="submit" form={FORM_ID} disabled={isMuted} isLoading={sendInvitation.isPending}>
+            <Button type="submit" radius="md" form={FORM_ID} disabled={isMuted} isLoading={sendInvitation.isPending}>
               Send invitation
             </Button>
           </>

@@ -51,14 +51,15 @@ export default function ReportConversationModal({ connectionId, onClose }: Repor
     <Modal
       isOpen
       onClose={onClose}
+      radius="md"
       title="Report conversation"
       description="An administrator will review this report and take appropriate action."
       footer={
         <>
-          <Button type="button" variant="ghost" onClick={onClose}>
+          <Button type="button" variant="ghost" radius="md" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit" form={FORM_ID} isLoading={report.isPending}>
+          <Button type="submit" radius="md" form={FORM_ID} isLoading={report.isPending}>
             Submit report
           </Button>
         </>

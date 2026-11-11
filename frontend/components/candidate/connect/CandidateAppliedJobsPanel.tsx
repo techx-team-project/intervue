@@ -105,7 +105,7 @@ export default function CandidateAppliedJobsPanel({ selectedCompanyId }: Candida
       {/* Bottom Action Button */}
       <div className="border-outline-variant border-t p-3">
         <Link
-          href={ROUTES.CANDIDATE_SAVED_JOBS}
+          href={`${ROUTES.CANDIDATE_SAVED_JOBS}?tab=applied`}
           className="flex h-10.5 w-full items-center justify-center rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 transition-colors hover:border-slate-400 hover:bg-slate-50"
         >
           Manage applied jobs

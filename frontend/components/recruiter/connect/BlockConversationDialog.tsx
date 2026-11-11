@@ -29,14 +29,15 @@ export default function BlockConversationDialog({ connectionId, onClose }: Block
       isOpen
       onClose={onClose}
       maxWidth="sm"
+      radius="md"
       title="Block conversation?"
       description="Both parties will no longer be able to send new messages. Current chat history is preserved and accessible."
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" radius="md" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleConfirm} isLoading={block.isPending}>
+          <Button variant="danger" radius="md" onClick={handleConfirm} isLoading={block.isPending}>
             Block
           </Button>
         </>
