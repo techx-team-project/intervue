@@ -1,8 +1,16 @@
 import { request } from '@/apiRequest/http';
-import type { AdminVoucher, SaveVoucherInput, ValidateVoucherInput, VoucherPreview } from '@/types/voucher';
+import type {
+  AdminVoucher,
+  AvailableVoucher,
+  SaveVoucherInput,
+  ValidateVoucherInput,
+  VoucherPreview,
+} from '@/types/voucher';
 import type { Page } from '@/types/api';
 
 export const voucherApi = {
+  listAvailable: () => request<AvailableVoucher[]>('/recruiter/vouchers'),
+
   validate: (data: ValidateVoucherInput) =>
     request<VoucherPreview>('/recruiter/vouchers/validate', { method: 'POST', body: data }),
 };
