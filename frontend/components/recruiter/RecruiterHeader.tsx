@@ -10,7 +10,7 @@ import {
   Bell,
   ChevronDown,
   Menu,
-  MessageSquare,
+  MessageCircleMore,
   PanelLeftClose,
   PanelLeftOpen,
   Plus,
@@ -87,13 +87,29 @@ export default function RecruiterHeader({
         </div>
 
         <div className="flex items-center gap-3 sm:gap-4 md:gap-4.5 lg:gap-5">
-          <Link
-            href={ROUTES.RECRUITER_JOBS}
-            className="bg-primary hover:bg-primary-hover hidden items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-white transition-colors sm:inline-flex"
-          >
-            <Plus className="h-4 w-4" />
-            <span>Post a job</span>
-          </Link>
+          <div className="hidden items-center gap-2.5 sm:flex">
+            <Link
+              href={ROUTES.RECRUITER_JOBS}
+              className="bg-primary hover:bg-primary-hover inline-flex h-9 items-center gap-1.5 rounded-full px-4 text-sm font-semibold text-white transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Post a job</span>
+            </Link>
+
+            <Link
+              href={ROUTES.RECRUITER_MESSAGES}
+              title="InterVue Connect"
+              className="bg-primary hover:bg-primary-hover relative inline-flex h-9 items-center gap-1.5 rounded-full px-4 text-sm font-semibold text-white transition-colors"
+            >
+              <MessageCircleMore className="h-4 w-4" />
+              <span>Connect</span>
+              {connectUnreadCount > 0 && (
+                <span className="ml-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 text-[11px] font-bold text-white shadow-xs">
+                  {connectUnreadCount > 99 ? '99+' : connectUnreadCount}
+                </span>
+              )}
+            </Link>
+          </div>
 
           <div className="relative">
             <button
@@ -125,9 +141,10 @@ export default function RecruiterHeader({
           <Link
             href={ROUTES.RECRUITER_MESSAGES}
             title="InterVue Connect"
-            className="bg-surface-container-high text-on-surface hover:bg-surface-container-high relative flex h-10 w-10 items-center justify-center rounded-full transition-colors sm:h-9.5 sm:w-9.5"
+            aria-label="InterVue Connect"
+            className="bg-surface-container-high text-on-surface hover:bg-surface-container-high relative flex h-10 w-10 items-center justify-center rounded-full transition-colors sm:hidden"
           >
-            <MessageSquare className="h-4.5 w-4.5" />
+            <MessageCircleMore className="h-4.5 w-4.5" />
             {connectUnreadCount > 0 && (
               <span className="text-label-sm absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 font-bold text-white shadow-xs">
                 {connectUnreadCount > 99 ? '99+' : connectUnreadCount}

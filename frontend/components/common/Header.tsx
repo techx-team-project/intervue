@@ -95,7 +95,7 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
           </nav>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 sm:gap-4 md:gap-4.5">
           {isRecruiterPortal && (
             <>
               <Link href={ROUTES.HOME} className={`${NAV_LINK_CLASS} hidden xl:flex`}>
@@ -107,7 +107,12 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
 
           <HeaderAccountActions portal={portal} />
 
-          {!isRecruiterPortal && <RecruiterEntryButton />}
+          {!isRecruiterPortal && (
+            <>
+              <div className="bg-surface-container-high hidden h-6 w-px md:block" aria-hidden="true" />
+              <RecruiterEntryButton />
+            </>
+          )}
 
           {isRecruiterPortal && (
             <Link
