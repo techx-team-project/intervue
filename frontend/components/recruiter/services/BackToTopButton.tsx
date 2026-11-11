@@ -1,8 +1,24 @@
 'use client';
 
 import { ArrowUp } from 'lucide-react';
+import { useSyncExternalStore } from 'react';
+
+const SCROLL_THRESHOLD_PX = 360;
+
+function subscribeScroll(onStoreChange: () => void) {
+  window.addEventListener('scroll', onStoreChange, { passive: true });
+  return () => window.removeEventListener('scroll', onStoreChange);
+}
+
+function getScrolledPast(): boolean {
+  return window.scrollY > SCROLL_THRESHOLD_PX;
+}
 
 export default function BackToTopButton() {
+  const isVisible = useSyncExternalStore(subscribeScroll, getScrolledPast, () => false);
+
+  if (!isVisible) return null;
+
   return (
     <button
       type="button"

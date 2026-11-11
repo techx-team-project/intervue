@@ -5,36 +5,113 @@ import BackToTopButton from '@/components/recruiter/services/BackToTopButton';
 import ServiceCategorySection from '@/components/recruiter/services/ServiceCategorySection';
 import ServiceImportantNotice from '@/components/recruiter/services/ServiceImportantNotice';
 import ServiceNeedSuggestionModal from '@/components/recruiter/services/ServiceNeedSuggestionModal';
-import { SERVICE_CATEGORY_ANCHOR_PREFIX, SERVICE_VAT_NOTE } from '@/constants/service-package';
+import { ROUTES } from '@/constants/routes';
+import { SERVICE_CATEGORY_ANCHOR_PREFIX, SERVICE_NEED_OPTIONS, SERVICE_VAT_NOTE } from '@/constants/service-package';
 import { useAddToCart } from '@/hooks/useRecruiterCart';
 import { useServiceCatalog } from '@/hooks/useServiceCatalog';
 import { useServiceNeedModal } from '@/hooks/useServiceNeedModal';
+import { cn } from '@/lib/utils';
 import type { ServiceNeedKey } from '@/types/service-package';
 import { getErrorMessage } from '@/utils/error';
-import { AlertCircle, Check, X } from 'lucide-react';
-import { ROUTES } from '@/constants/routes';
-import { useRouter } from 'next/navigation';
+import { AlertCircle, Check, Sparkles, X } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
+
+type ActionFeedback = {
+  type: 'success' | 'error';
+  message: string;
+};
 
 export default function ServiceCatalogView() {
   const { data, isPending, isError, error } = useServiceCatalog();
   const { dismissedForever, dismissForever } = useServiceNeedModal();
-  const [modalClosed, setModalClosed] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
+
+  const [autoModalClosed, setAutoModalClosed] = useState(false);
+  const [suggestedNeed, setSuggestedNeed] = useState<ServiceNeedKey | null>(null);
+  const [feedback, setFeedback] = useState<ActionFeedback | null>(null);
+
   const router = useRouter();
   const addToCart = useAddToCart();
 
-  const categories = data?.categories ?? [];
-  const isModalOpen = !dismissedForever && !modalClosed && categories.length > 0;
+  const categories = useMemo(() => data?.categories ?? [], [data?.categories]);
 
-  const scrollToNeed = (need: ServiceNeedKey) => {
-    setModalClosed(true);
-    const target = categories.find((category) => category.needKey === need);
-    if (!target) return;
-    document
-      .getElementById(`${SERVICE_CATEGORY_ANCHOR_PREFIX}${target.code}`)
-      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const availableNeedKeys = useMemo(() => {
+    const keys = new Set<ServiceNeedKey>();
+    for (const category of categories) {
+      if (category.needKey) keys.add(category.needKey);
+    }
+    return keys;
+  }, [categories]);
+
+  const suggestedCategories = useMemo(
+    () => (suggestedNeed ? categories.filter((category) => category.needKey === suggestedNeed) : []),
+    [categories, suggestedNeed],
+  );
+
+  const isModalOpen = !dismissedForever && !autoModalClosed && categories.length > 0;
+
+  useEffect(() => {
+    if (categories.length === 0) return;
+    const hash = window.location.hash.replace(/^#/, '');
+    if (!hash.startsWith(SERVICE_CATEGORY_ANCHOR_PREFIX)) return;
+    const element = document.getElementById(hash);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [categories]);
+
+  const scrollToCategoryCode = (code: string) => {
+    window.requestAnimationFrame(() => {
+      document
+        .getElementById(`${SERVICE_CATEGORY_ANCHOR_PREFIX}${code}`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  const handleConfirmNeed = (need: ServiceNeedKey) => {
+    setAutoModalClosed(true);
+    const matches = categories.filter((category) => category.needKey === need);
+    if (matches.length === 0) {
+      toast.info('Hiện chưa có danh mục phù hợp với nhu cầu bạn đã chọn.');
+      return;
+    }
+
+    setSuggestedNeed(need);
+    scrollToCategoryCode(matches[0].code);
+  };
+
+  const handleAddToCart = (packageId: number, packageName: string) => {
+    addToCart.mutate(
+      { packageId, quantity: 1 },
+      {
+        onSuccess: () => {
+          const message = `Đã thêm "${packageName}" vào giỏ hàng.`;
+          setFeedback({ type: 'success', message });
+          toast.success(message);
+        },
+        onError: (cause) => {
+          const message = getErrorMessage(cause);
+          setFeedback({ type: 'error', message });
+          toast.error(message);
+        },
+      },
+    );
+  };
+
+  const handleBuyNow = (packageId: number) => {
+    addToCart.mutate(
+      { packageId, quantity: 1 },
+      {
+        onSuccess: () => router.push(ROUTES.RECRUITER_CART),
+        onError: (cause) => {
+          const message = getErrorMessage(cause);
+          setFeedback({ type: 'error', message });
+          toast.error(message);
+        },
+      },
+    );
   };
 
   if (isPending) {
@@ -56,30 +133,79 @@ export default function ServiceCatalogView() {
 
   if (categories.length === 0) {
     return (
-      <div className="border-outline-variant text-on-surface-variant rounded-lg border border-dashed px-6 py-16 text-center text-sm">
+      <div className="border-outline-variant text-on-surface-variant rounded-xl border border-dashed bg-white px-6 py-16 text-center text-sm">
         Chưa có gói dịch vụ nào đang mở bán.
       </div>
     );
   }
 
+  const suggestedNeedLabel = SERVICE_NEED_OPTIONS.find((item) => item.key === suggestedNeed)?.label;
+
   return (
     <div className="space-y-8 pb-20">
       <ServiceImportantNotice />
 
-      {notice && (
-        <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-900">
+      {suggestedNeed && suggestedCategories.length > 0 && (
+        <div className="flex flex-col gap-2 rounded-xl border border-emerald-200 bg-emerald-50/70 px-4 py-3 text-sm text-emerald-950 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1">
+            <p className="flex items-center gap-1.5 font-semibold text-emerald-800">
+              <Sparkles className="h-4 w-4 shrink-0" />
+              <span>Gợi ý cho nhu cầu: {suggestedNeedLabel}</span>
+            </p>
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              <span className="text-emerald-800/80">Nhóm phù hợp:</span>
+              {suggestedCategories.map((category) => (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => scrollToCategoryCode(category.code)}
+                  className="cursor-pointer rounded-full border border-emerald-300 bg-white px-2.5 py-0.5 font-semibold text-emerald-700 transition hover:bg-emerald-100"
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setSuggestedNeed(null)}
+            aria-label="Ẩn gợi ý"
+            className="cursor-pointer self-end rounded p-1 text-emerald-700 transition hover:bg-emerald-100 sm:self-center"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
+      {feedback && (
+        <div
+          role={feedback.type === 'error' ? 'alert' : 'status'}
+          className={cn(
+            'flex items-center justify-between rounded-lg border px-4 py-3 text-sm font-semibold',
+            feedback.type === 'success'
+              ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
+              : 'border-rose-200 bg-rose-50 text-rose-800',
+          )}
+        >
           <span className="flex items-center gap-2">
-            <Check className="h-4 w-4 text-emerald-600" />
-            {notice}
+            {feedback.type === 'success' ? (
+              <Check className="h-4 w-4 shrink-0 text-emerald-600" />
+            ) : (
+              <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+            )}
+            {feedback.message}
           </span>
           <span className="flex items-center gap-3">
-            <Link href={ROUTES.RECRUITER_CART} className="text-primary font-bold hover:underline">
-              Xem giỏ hàng
-            </Link>
+            {feedback.type === 'success' && (
+              <Link href={ROUTES.RECRUITER_CART} className="text-primary font-bold hover:underline">
+                Xem giỏ hàng
+              </Link>
+            )}
             <button
               type="button"
-              onClick={() => setNotice(null)}
-              className="cursor-pointer text-emerald-600 transition hover:text-emerald-800"
+              onClick={() => setFeedback(null)}
+              className="cursor-pointer opacity-70 transition hover:opacity-100"
               aria-label="Đóng thông báo"
             >
               <X className="h-4 w-4" />
@@ -93,24 +219,9 @@ export default function ServiceCatalogView() {
           key={category.id}
           category={category}
           isBusy={addToCart.isPending}
-          onAddToCart={(item) =>
-            addToCart.mutate(
-              { packageId: item.id, quantity: 1 },
-              {
-                onSuccess: () => setNotice(`Đã thêm "${item.name}" vào giỏ hàng.`),
-                onError: (cause) => setNotice(getErrorMessage(cause)),
-              },
-            )
-          }
-          onBuyNow={(item) =>
-            addToCart.mutate(
-              { packageId: item.id, quantity: 1 },
-              {
-                onSuccess: () => router.push(ROUTES.RECRUITER_CART),
-                onError: (cause) => setNotice(getErrorMessage(cause)),
-              },
-            )
-          }
+          isSuggested={suggestedNeed !== null && category.needKey === suggestedNeed}
+          onAddToCart={(item) => handleAddToCart(item.id, item.name)}
+          onBuyNow={(item) => handleBuyNow(item.id)}
         />
       ))}
 
@@ -118,12 +229,16 @@ export default function ServiceCatalogView() {
 
       <BackToTopButton />
 
-      <ServiceNeedSuggestionModal
-        isOpen={isModalOpen}
-        onClose={() => setModalClosed(true)}
-        onConfirm={scrollToNeed}
-        onDismissForever={dismissForever}
-      />
+      {isModalOpen && (
+        <ServiceNeedSuggestionModal
+          isOpen
+          onClose={() => setAutoModalClosed(true)}
+          onConfirm={handleConfirmNeed}
+          onDismissForever={dismissForever}
+          availableNeedKeys={availableNeedKeys}
+          allowDismissForever={!dismissedForever}
+        />
+      )}
     </div>
   );
 }
