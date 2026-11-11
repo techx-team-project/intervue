@@ -14,6 +14,7 @@ const shared = createParticipantConnectHooks('candidate', candidateConnectApi);
 export const candidateConnectKeys = shared.keys;
 export const useCandidateConversations = shared.useConversationsList;
 export const useCandidateConversation = shared.useSingleConversation;
+export const useCandidateConversationByKey = shared.useConversationByKey;
 export const useCandidateMessages = shared.useThreadMessages;
 export const useCandidateSendMessage = shared.useSendTextMessage;
 export const useCandidateSendAttachment = shared.useSendMediaAttachment;

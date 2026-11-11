@@ -177,6 +177,7 @@ export default function ConnectRealtimeBridge() {
         void queryClient.invalidateQueries({ queryKey: keys.conversations });
         void queryClient.invalidateQueries({ queryKey: keys.invitations });
         void queryClient.invalidateQueries({ queryKey: keys.conversation(payload.connectionId) });
+        void queryClient.invalidateQueries({ queryKey: keys.conversationByKeyPrefix });
         void queryClient.invalidateQueries({ queryKey: keys.unread });
 
         if (portal === 'candidate' && payload.status === 'PENDING') {

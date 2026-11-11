@@ -14,6 +14,7 @@ export const recruiterConnectKeys = {
 
 export const useConversations = shared.useConversationsList;
 export const useRecruiterConversation = shared.useSingleConversation;
+export const useRecruiterConversationByKey = shared.useConversationByKey;
 export const useConversationMessages = shared.useThreadMessages;
 export const useSendMessage = shared.useSendTextMessage;
 export const useSendAttachment = shared.useSendMediaAttachment;

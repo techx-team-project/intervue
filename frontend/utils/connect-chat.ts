@@ -5,6 +5,7 @@ export const CONNECT_EDIT_WINDOW_MS = 15 * 60 * 1000;
 const CLUSTER_GAP_MS = 5 * 60 * 1000;
 const DIVIDER_GAP_MS = 20 * 60 * 1000;
 const URL_REGEX = /https?:\/\/\S+/;
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function createClientMessageId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -13,11 +14,10 @@ export function createClientMessageId(): string {
   return `cid-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export function parseConnectRouteId(raw: string | string[] | undefined): number | null {
-  const value = Array.isArray(raw) ? raw[0] : raw;
-  if (!value || !/^\d+$/.test(value)) return null;
-  const parsed = Number(value);
-  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
+export function parseConnectRouteKey(raw: string | string[] | undefined): string | null {
+  const value = (Array.isArray(raw) ? raw[0] : raw)?.trim();
+  if (!value || !UUID_REGEX.test(value)) return null;
+  return value.toLowerCase();
 }
 
 export function extractFirstHttpUrl(text: string): string | null {
