@@ -33,7 +33,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ConnectModerationService implements ConnectModerationServiceInterface {
 
-    private static final int MILD_STRIKE_THRESHOLD = 3;
+    private static final int MILD_STRIKE_THRESHOLD = 5;
+    private static final int SEVERE_STRIKE_THRESHOLD = 3;
     private static final Duration STRIKE_WINDOW = Duration.ofDays(30);
     private static final Duration FIRST_MUTE_DURATION = Duration.ofHours(24);
     private static final Duration REPEAT_MUTE_DURATION = Duration.ofDays(7);
@@ -149,13 +150,15 @@ public class ConnectModerationService implements ConnectModerationServiceInterfa
                         .build());
 
         Instant windowStart = Instant.now().minus(STRIKE_WINDOW);
-        long mildCount =
+        long strikeCount =
                 violationRepository.countByActorTypeAndActorIdAndSeverityAndCreatedAtAfter(
-                        actorType, actorId, ConnectFilterSeverity.MILD, windowStart);
-        boolean crossesThreshold =
-                severity == ConnectFilterSeverity.SEVERE || mildCount >= MILD_STRIKE_THRESHOLD;
-        if (crossesThreshold) {
-            applyMute(actorType, actorId, (int) mildCount);
+                        actorType, actorId, severity, windowStart);
+        int threshold =
+                severity == ConnectFilterSeverity.SEVERE
+                        ? SEVERE_STRIKE_THRESHOLD
+                        : MILD_STRIKE_THRESHOLD;
+        if (strikeCount >= threshold) {
+            applyMute(actorType, actorId, (int) strikeCount);
         }
         if (severity == ConnectFilterSeverity.SEVERE) {
             reportService.file(

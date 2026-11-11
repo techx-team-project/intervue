@@ -10,12 +10,19 @@ import ContentViolationWarningModal from '@/components/connect/ContentViolationW
 import ConnectThreadHeader from '@/components/recruiter/connect/ConnectThreadHeader';
 import { Button } from '@/components/ui/Button';
 import { isApiError } from '@/lib/api-error';
-import type { ConnectMessage, ConnectPortal, ConversationSummary, LinkPreview, UnsendScope } from '@/types/connect';
+import type {
+  ConnectMessage,
+  ConnectMuteStatus,
+  ConnectPortal,
+  ConversationSummary,
+  LinkPreview,
+  UnsendScope,
+} from '@/types/connect';
 import { createClientMessageId, getMessagePreviewText } from '@/utils/connect-chat';
 import { formatDateTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
-import { CheckCircle2, XCircle } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
+import { CheckCircle2, ShieldAlert, XCircle } from 'lucide-react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 
 type PendingControls = {
@@ -50,6 +57,8 @@ type ConnectThreadFrameProps = {
   renderBlockModal: (onClose: () => void) => ReactNode;
   renderReportModal: (onClose: () => void) => ReactNode;
   pendingControls?: PendingControls;
+  muteStatus?: ConnectMuteStatus;
+  onMuteExpired?: () => void;
 };
 
 export default function ConnectThreadFrame({
@@ -77,6 +86,8 @@ export default function ConnectThreadFrame({
   renderBlockModal,
   renderReportModal,
   pendingControls,
+  muteStatus,
+  onMuteExpired,
 }: ConnectThreadFrameProps) {
   const [replyTo, setReplyTo] = useState<ComposerReplyTarget | null>(null);
   const [editingMessage, setEditingMessage] = useState<ComposerEditTarget | null>(null);
@@ -86,6 +97,18 @@ export default function ConnectThreadFrame({
 
   const viewerActorType = portal === 'recruiter' ? 'RECRUITER' : 'CANDIDATE';
   const peerName = portal === 'recruiter' ? conversation.candidateName : conversation.companyName;
+  const isMuted = Boolean(muteStatus?.muted);
+
+  useEffect(() => {
+    if (!muteStatus?.muted || !muteStatus.expiresAt || !onMuteExpired) return;
+    const remainingMs = new Date(muteStatus.expiresAt).getTime() - Date.now();
+    if (!Number.isFinite(remainingMs)) return;
+    const delayMs = Math.max(0, Math.min(remainingMs + 500, 2_147_483_647));
+    const timer = setTimeout(() => {
+      onMuteExpired();
+    }, delayMs);
+    return () => clearTimeout(timer);
+  }, [muteStatus?.muted, muteStatus?.expiresAt, onMuteExpired]);
 
   const handleActionError = (error: unknown) => {
     if (isApiError(error) && error.code === 'MESSAGE_BLOCKED_BY_FILTER') {
@@ -299,22 +322,40 @@ export default function ConnectThreadFrame({
         </div>
       )}
 
-      {conversation.status === 'ACCEPTED' && (
-        <ConnectComposerShell
-          portal={portal}
-          placeholder="Type a message..."
-          isPending={isComposerPending}
-          replyTo={replyTo}
-          onCancelReply={() => setReplyTo(null)}
-          editingMessage={editingMessage}
-          onCancelEdit={() => setEditingMessage(null)}
-          onSaveEdit={handleSaveEdit}
-          onSendText={handleSendText}
-          onSendAttachment={handleSendAttachment}
-          onTypingChange={onTypingChange}
-          onFetchLinkPreview={onFetchLinkPreview}
-        />
-      )}
+      {conversation.status === 'ACCEPTED' &&
+        (isMuted ? (
+          <div className="border-outline-variant shrink-0 border-t bg-rose-50/70 px-4 py-3.5 sm:px-6">
+            <div className="flex items-center justify-center gap-2 text-center">
+              <ShieldAlert className="h-4 w-4 shrink-0 text-rose-600" />
+              <p className="text-xs leading-relaxed text-rose-800 sm:text-[13px]">
+                {muteStatus?.expiresAt ? (
+                  <>
+                    You are temporarily restricted from sending messages until{' '}
+                    <span className="font-semibold">{formatDateTime(muteStatus.expiresAt)}</span> due to community
+                    guideline violations.
+                  </>
+                ) : (
+                  'You are temporarily restricted from sending messages due to community guideline violations.'
+                )}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <ConnectComposerShell
+            portal={portal}
+            placeholder="Type a message..."
+            isPending={isComposerPending}
+            replyTo={replyTo}
+            onCancelReply={() => setReplyTo(null)}
+            editingMessage={editingMessage}
+            onCancelEdit={() => setEditingMessage(null)}
+            onSaveEdit={handleSaveEdit}
+            onSendText={handleSendText}
+            onSendAttachment={handleSendAttachment}
+            onTypingChange={onTypingChange}
+            onFetchLinkPreview={onFetchLinkPreview}
+          />
+        ))}
 
       <ContentViolationWarningModal isOpen={showViolationModal} onClose={() => setShowViolationModal(false)} />
       {showBlockModal && renderBlockModal(() => setShowBlockModal(false))}

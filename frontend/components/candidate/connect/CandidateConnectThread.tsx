@@ -9,6 +9,7 @@ import {
   useCandidateEditMessage,
   useCandidateMarkRead,
   useCandidateMessages,
+  useCandidateMuteStatus,
   useCandidateReactMessage,
   useCandidateSendAttachment,
   useCandidateSendMessage,
@@ -36,6 +37,7 @@ export default function CandidateConnectThread({
   onAcceptedInvitation,
 }: CandidateConnectThreadProps) {
   const currentUserId = useAuthStore((s) => s.candidate.user?.id ?? 0);
+  const { data: muteStatus, refetch: refetchMuteStatus } = useCandidateMuteStatus();
   const { messages, isLoading, hasOlder, loadOlder, isLoadingOlder } = useCandidateMessages(conversation.id);
   const sendMessage = useCandidateSendMessage(conversation.id);
   const sendAttachment = useCandidateSendAttachment(conversation.id);
@@ -61,6 +63,10 @@ export default function CandidateConnectThread({
     },
     [sendTypingMutate],
   );
+
+  const handleMuteExpired = useCallback(() => {
+    void refetchMuteStatus();
+  }, [refetchMuteStatus]);
 
   return (
     <ConnectThreadFrame
@@ -89,6 +95,8 @@ export default function CandidateConnectThread({
       }}
       onFetchLinkPreview={(url) => candidateConnectApi.linkPreview(url)}
       onBack={onBack}
+      muteStatus={muteStatus}
+      onMuteExpired={handleMuteExpired}
       renderBlockModal={(onClose) => (
         <CandidateBlockConversationDialog connectionId={conversation.id} onClose={onClose} />
       )}
