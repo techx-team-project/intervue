@@ -1,30 +1,35 @@
 'use client';
 
-import CatEmptyIllustration from '@/components/connect/CatEmptyIllustration';
+import Spinner from '@/components/common/Spinner';
 import ConnectRulesModal from '@/components/recruiter/connect/ConnectRulesModal';
 import ConnectSidebar from '@/components/recruiter/connect/ConnectSidebar';
-import ConnectThread from '@/components/recruiter/connect/ConnectThread';
 import EligibleCandidatesPanel from '@/components/recruiter/connect/EligibleCandidatesPanel';
-import Spinner from '@/components/common/Spinner';
 import Modal from '@/components/ui/Modal';
-import { useConnectStream } from '@/hooks/useConnectStream';
-import { useConnectInvalidation, useConversations, useRulesAck } from '@/hooks/useRecruiterConnect';
-import { useCallback, useState } from 'react';
+import { recruiterConversationUrl } from '@/constants/routes';
+import { useConversations, useRulesAck } from '@/hooks/useRecruiterConnect';
+import { cn } from '@/lib/utils';
+import { useConnectUiStore } from '@/store/connect-ui.store';
+import { parseConnectRouteId } from '@/utils/connect-chat';
+import { useParams, useRouter } from 'next/navigation';
+import { useState, type ReactNode } from 'react';
 
-export default function ConnectView() {
-  const { data: rulesAck, isLoading: isRulesLoading } = useRulesAck();
-  const [isRulesViewOpen, setRulesViewOpen] = useState(false);
-  const [isEligibleModalOpen, setEligibleModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+type ConnectViewProps = {
+  children: ReactNode;
+};
 
+export default function ConnectView({ children }: ConnectViewProps) {
+  const router = useRouter();
+  const params = useParams<{ id?: string }>();
+  const selectedId = parseConnectRouteId(params?.id);
+
+  const [showRules, setShowRules] = useState(false);
+  const mobileEligibleOpen = useConnectUiStore((s) => s.mobileEligibleOpen);
+  const setMobileEligibleOpen = useConnectUiStore((s) => s.setMobileEligibleOpen);
+
+  const { data: rulesAck, isLoading: isLoadingRules } = useRulesAck();
   const { conversations, isLoading, hasMore, isLoadingMore, loadMore } = useConversations();
-  const invalidate = useConnectInvalidation();
-  const onStreamMessage = useCallback(() => invalidate(selectedId ?? undefined), [invalidate, selectedId]);
-  useConnectStream('recruiter', onStreamMessage, rulesAck?.acknowledged === true);
 
-  const selectedConversation = conversations.find((conversation) => conversation.id === selectedId) ?? null;
-
-  if (isRulesLoading) {
+  if (isLoadingRules) {
     return (
       <div className="flex h-screen items-center justify-center bg-white">
         <Spinner />
@@ -32,12 +37,8 @@ export default function ConnectView() {
     );
   }
 
-  if (!rulesAck?.acknowledged) {
-    return <ConnectRulesModal mode="gate" portal="recruiter" onClose={() => {}} />;
-  }
-
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-white">
+    <div className="flex h-screen overflow-hidden bg-white">
       <ConnectSidebar
         conversations={conversations}
         isLoading={isLoading}
@@ -45,41 +46,43 @@ export default function ConnectView() {
         isLoadingMore={isLoadingMore}
         onLoadMore={loadMore}
         selectedId={selectedId}
-        onSelect={setSelectedId}
-        onOpenRules={() => setRulesViewOpen(true)}
-        onOpenEligible={() => setEligibleModalOpen(true)}
+        onSelect={(id) => router.push(recruiterConversationUrl(id))}
+        onOpenRules={() => setShowRules(true)}
+        onOpenEligible={() => setMobileEligibleOpen(true)}
       />
 
-      {selectedConversation ? (
-        <ConnectThread conversation={selectedConversation} onBack={() => setSelectedId(null)} />
-      ) : (
-        <div className="hidden min-w-0 flex-1 flex-col bg-white md:flex">
-          <div className="border-outline-variant flex h-14 shrink-0 items-center border-b px-5">
-            <p className="text-xs font-semibold text-slate-800 sm:text-[13px]">
-              New way to follow your chance. <span className="font-bold text-[#00b14f]">More engage, more success</span>
-            </p>
-          </div>
-          <div className="flex flex-1 flex-col items-center justify-center bg-white p-6">
-            <CatEmptyIllustration
-              title={conversations.length > 0 ? 'Select a conversation to start chatting' : 'No conversations yet...'}
-              description="Select an applicant on the right to start a conversation."
-            />
-          </div>
-        </div>
-      )}
+      <main className={cn('min-w-0 flex-1 flex-col bg-white', selectedId === null ? 'hidden md:flex' : 'flex')}>
+        {children}
+      </main>
 
-      <EligibleCandidatesPanel />
-
-      {isRulesViewOpen && <ConnectRulesModal mode="view" portal="recruiter" onClose={() => setRulesViewOpen(false)} />}
+      <EligibleCandidatesPanel
+        onInvited={(createdId) => {
+          if (createdId) {
+            router.push(recruiterConversationUrl(createdId));
+          }
+        }}
+      />
 
       <Modal
-        isOpen={isEligibleModalOpen}
-        onClose={() => setEligibleModalOpen(false)}
+        isOpen={mobileEligibleOpen}
+        onClose={() => setMobileEligibleOpen(false)}
+        maxWidth="md"
+        radius="md"
         title="Other Candidates"
-        description="Applied to your job postings recently"
       >
-        <EligibleCandidatesPanel variant="modal" onInvited={() => setEligibleModalOpen(false)} />
+        <EligibleCandidatesPanel
+          variant="modal"
+          onInvited={(createdId) => {
+            setMobileEligibleOpen(false);
+            if (createdId) {
+              router.push(recruiterConversationUrl(createdId));
+            }
+          }}
+        />
       </Modal>
+
+      {rulesAck && !rulesAck.acknowledged && <ConnectRulesModal mode="gate" portal="recruiter" onClose={() => {}} />}
+      {showRules && <ConnectRulesModal mode="view" portal="recruiter" onClose={() => setShowRules(false)} />}
     </div>
   );
 }
