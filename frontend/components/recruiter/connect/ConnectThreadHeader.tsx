@@ -30,22 +30,22 @@ export default function ConnectThreadHeader({
   const canUnblock = conversation.status === 'BLOCKED' && conversation.blockedByActorType === viewerActorType;
 
   return (
-    <div className="border-outline-variant flex h-14 shrink-0 items-center justify-between gap-3 border-b bg-white px-4 sm:px-5">
-      <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+    <div className="border-outline-variant flex h-[68px] shrink-0 items-center justify-between gap-3 border-b bg-white px-4 sm:px-6">
+      <div className="flex min-w-0 items-center gap-3 sm:gap-3.5">
         {onBack && (
           <button
             type="button"
             onClick={onBack}
             aria-label="Back to conversations"
-            className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface -ml-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full md:hidden"
+            className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface -ml-1 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full md:hidden"
           >
             <ArrowLeft className="h-4.5 w-4.5" />
           </button>
         )}
         <UserAvatar fullName={displayName} size="md" />
         <div className="min-w-0">
-          <p className="text-body-lg text-on-surface truncate font-bold">{displayName}</p>
-          <p className="text-label-sm truncate text-slate-500">
+          <p className="text-on-surface truncate text-[15px] leading-tight font-bold sm:text-base">{displayName}</p>
+          <p className="mt-0.5 truncate text-[13px] text-slate-500">
             {conversation.status === 'PENDING' && (
               <span className="inline-flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
