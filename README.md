@@ -76,12 +76,21 @@ Web and a Flutter mobile app, sharing the same account, listing, and application
 | Styling | Tailwind CSS 4 |
 | Linting / Formatting | ESLint 9, Prettier 3 |
 
+### Mobile
+
+| | |
+|---|---|
+| Framework | Flutter (Dart `^3.13.2`) |
+| Architecture | Feature-First + Pragmatic Clean Architecture (BLoC/Cubit) |
+| Routing / DI | GoRouter 14, GetIt 8 |
+| Network / Modeling | Dio 5 (`ApiResource<T>` unwrap + refresh interceptor), Freezed 4, `json_serializable` |
+
 ### Infrastructure & Tooling
 
 | | |
 |---|---|
 | Containers | Docker Compose (MySQL, Redis) |
-| Git hooks | Lefthook — auto-formats Java (Spotless) and TS/JS (Prettier) on commit |
+| Git hooks | Lefthook — auto-formats Java (Spotless), TS/JS (Prettier), and Dart (`dart format`) on commit |
 
 ## Getting Started
 
@@ -95,6 +104,7 @@ Install the following tools and verify each one with its check command:
 | JDK | **25** | `java -version` | `JAVA_HOME` must point to JDK 25 (e.g. Eclipse Temurin 25) |
 | Node.js | **>= 20.9** | `node -v` | Comes with `npm` |
 | Docker Desktop | Latest, with Compose v2 | `docker compose version` | On Windows, enable WSL 2 |
+| Flutter SDK | Dart `>= 3.13` *(optional, mobile only)* | `flutter --version` | Needed only for `mobile/` with an Android/iOS simulator |
 
 > You do **not** need to install Maven, MySQL or Redis. The project uses the Maven Wrapper (`mvnw`), and MySQL + Redis run in Docker.
 
@@ -298,12 +308,25 @@ npm run dev
 
 The frontend runs at **http://localhost:3000**.
 
+#### Step 8 — Run the mobile app (optional)
+
+With the backend running at `http://localhost:8080` and an Android emulator booted:
+
+```bash
+cd mobile
+flutter pub get
+flutter run --dart-define-from-file=env/dev.json
+```
+
+`env/dev.json` points to `http://10.0.2.2:8080` (host loopback from Android Emulator). For a real device or iOS Simulator, pass `--dart-define=BASE_URL=http://<host-ip>:8080` or use `localhost` for iOS.
+
 ### Daily Run
 
 ```bash
 docker compose up -d                                                  # project root
 cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local  # terminal 1
 cd frontend && npm run dev                                            # terminal 2
+cd mobile && flutter run --dart-define-from-file=env/dev.json         # terminal 3 (optional)
 ```
 
 ### Useful Commands
@@ -321,6 +344,10 @@ docker exec -it intervue-redis redis-cli
 # Backend (backend/)
 ./mvnw test                         # run tests
 ./mvnw spotless:apply               # format Java code
+
+# Mobile (mobile/)
+flutter analyze && flutter test     # static checks & tests
+dart format .                       # format Dart code
 ```
 
 ## Troubleshooting

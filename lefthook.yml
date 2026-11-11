@@ -11,3 +11,8 @@ pre-commit:
       glob: "**/*.java"
       run: ./mvnw -q spotless:apply
       stage_fixed: true
+    mobile-format:
+      root: "mobile/"
+      glob: "*.dart"
+      run: dart format {staged_files}
+      stage_fixed: true

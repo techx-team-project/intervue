@@ -23,5 +23,9 @@ indent_size = 2
 [*.kts]
 indent_size = 4
 
+# Dart — Flutter convention 2 space
+[*.dart]
+indent_size = 2
+
 [*.md]
 trim_trailing_whitespace = false
