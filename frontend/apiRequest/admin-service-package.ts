@@ -15,6 +15,7 @@ export type AdminServicePackageSearchParams = {
   status?: ServicePackageStatus;
   page?: number;
   size?: number;
+  sort?: string;
 };
 
 function toQuery(params: AdminServicePackageSearchParams) {
@@ -24,6 +25,7 @@ function toQuery(params: AdminServicePackageSearchParams) {
   if (params.status) query.set('status', params.status);
   query.set('page', String(params.page ?? 0));
   query.set('size', String(params.size ?? 20));
+  if (params.sort) query.set('sort', params.sort);
   return query.toString();
 }
 
@@ -63,4 +65,13 @@ export const adminServicePackageApi = {
     request<AdminServicePackage>(`/admin/service-packages/${id}/${active ? 'activate' : 'deactivate'}`, {
       method: 'POST',
     }),
+
+  uploadImage: (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return request<{ url: string; publicId: string }>('/admin/service-packages/upload-image', {
+      method: 'POST',
+      body: formData,
+    });
+  },
 };
