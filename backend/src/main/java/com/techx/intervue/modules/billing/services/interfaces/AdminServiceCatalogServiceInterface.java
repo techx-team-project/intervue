@@ -3,6 +3,7 @@ package com.techx.intervue.modules.billing.services.interfaces;
 import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.modules.billing.enums.ServicePackageStatus;
 import com.techx.intervue.modules.billing.requests.AdminSearchServicePackagesRequest;
+import com.techx.intervue.modules.billing.requests.ReorderServiceCategoriesRequest;
 import com.techx.intervue.modules.billing.requests.SaveServiceCategoryRequest;
 import com.techx.intervue.modules.billing.requests.SaveServicePackageRequest;
 import com.techx.intervue.modules.billing.resources.AdminServiceCategoryResource;
@@ -15,11 +16,18 @@ public interface AdminServiceCatalogServiceInterface {
 
     List<AdminServiceCategoryResource> listCategories();
 
+    AdminServiceCategoryResource getCategory(Long id);
+
     AdminServiceCategoryResource createCategory(
             SaveServiceCategoryRequest request, RequestActor actor);
 
     AdminServiceCategoryResource updateCategory(
             Long id, SaveServiceCategoryRequest request, RequestActor actor);
+
+    AdminServiceCategoryResource setCategoryActive(Long id, boolean active, RequestActor actor);
+
+    List<AdminServiceCategoryResource> reorderCategories(
+            ReorderServiceCategoriesRequest request, RequestActor actor);
 
     void deleteCategory(Long id, RequestActor actor);
 

@@ -170,8 +170,13 @@ public enum ErrorCode {
     PACKAGE_NOT_AVAILABLE(HttpStatus.NOT_FOUND, "This service package is not available!"),
     DUPLICATE_PACKAGE_CODE(
             HttpStatus.CONFLICT, "A service package with this code or slug already exists!"),
+    DUPLICATE_SERVICE_CATEGORY_CODE(
+            HttpStatus.CONFLICT, "A service category with this code already exists!"),
     SERVICE_CATEGORY_IN_USE(
             HttpStatus.CONFLICT, "This category still has service packages and cannot be removed!"),
+    SERVICE_CATEGORY_CODE_LOCKED(
+            HttpStatus.CONFLICT,
+            "Category code cannot be changed while service packages are linked to it!"),
     BILLING_NOT_CONFIGURED(
             HttpStatus.SERVICE_UNAVAILABLE,
             "Billing is not configured yet, please try again later!"),
