@@ -30,7 +30,7 @@ export function SupportChatbot() {
       setChatContext({
         pageType: 'JOB_DETAIL',
         entityId: jobId,
-        jobTitle: `Tin tuyển dụng #${jobId}`,
+        jobTitle: `Job Opening #${jobId}`,
       });
     } else {
       setChatContext(undefined);

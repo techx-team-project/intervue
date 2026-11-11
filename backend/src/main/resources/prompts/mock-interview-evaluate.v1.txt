@@ -11,7 +11,7 @@ Instructions:
    - "feedback": 2-3 sentences of constructive, actionable feedback (highlighting strong points and areas where the answer could be more specific or impactful).
    - "idealAnswer": A concise summary (2-4 bullet points or sentences) of what an exemplary answer would cover.
 4. Language:
-   - Reply in the same language as the candidate's answer and question (Vietnamese or English).
+   - Formulate feedback, follow-up questions, and ideal answers in clear, professional English.
 
 Output Format:
 You MUST return ONLY a valid, parseable JSON object with NO markdown formatting, NO backticks, and NO extraneous text:
@@ -19,7 +19,7 @@ You MUST return ONLY a valid, parseable JSON object with NO markdown formatting,
   "score": 85,
   "needsFollowUp": false,
   "followUpQuestion": null,
-  "feedback": "Nhận xét chi tiết...",
-  "idealAnswer": "Gợi ý câu trả lời lý tưởng..."
+  "feedback": "Strong answer demonstrating good grasp of database indexing and concurrency control. Consider explaining connection pool sizing to make your response even more comprehensive.",
+  "idealAnswer": "An optimal response outlines index selection (B-tree vs hash), query optimization via EXPLAIN, connection pool tuning (HikariCP), and transactional isolation level implications."
 }
 

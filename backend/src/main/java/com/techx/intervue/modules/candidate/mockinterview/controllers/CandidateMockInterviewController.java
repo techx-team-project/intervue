@@ -41,7 +41,7 @@ public class CandidateMockInterviewController extends BaseController {
         String ip = IpHelper.getClientIp(servletRequest);
         return ok(
                 mockInterviewService.startSession(principal.getId(), request, ip),
-                "Bắt đầu buổi phỏng vấn thử thành công!");
+                "Mock interview session started successfully!");
     }
 
     @GetMapping
@@ -70,7 +70,7 @@ public class CandidateMockInterviewController extends BaseController {
         String ip = IpHelper.getClientIp(servletRequest);
         return ok(
                 mockInterviewService.submitAnswer(principal.getId(), id, questionId, request, ip),
-                "Nộp câu trả lời thành công!");
+                "Answer submitted successfully!");
     }
 
     @PostMapping("/{id}/questions/{questionId}/follow-up")
@@ -83,6 +83,6 @@ public class CandidateMockInterviewController extends BaseController {
         String ip = IpHelper.getClientIp(servletRequest);
         return ok(
                 mockInterviewService.submitFollowUp(principal.getId(), id, questionId, request, ip),
-                "Nộp câu trả lời làm rõ thành công!");
+                "Follow-up answer submitted successfully!");
     }
 }

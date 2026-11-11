@@ -26,9 +26,9 @@ export default function MockInterviewHistoryList({ onSelectSession, onStartNew }
   if (isError) {
     return (
       <div className="space-y-3 rounded-2xl border border-rose-200 bg-rose-50 p-8 text-center">
-        <p className="text-sm font-semibold text-rose-700">Không thể tải lịch sử phỏng vấn thử.</p>
+        <p className="text-sm font-semibold text-rose-700">Unable to load mock interview history.</p>
         <Button variant="outline" size="sm" onClick={() => refetch()}>
-          Thử lại
+          Try Again
         </Button>
       </div>
     );
@@ -41,14 +41,14 @@ export default function MockInterviewHistoryList({ onSelectSession, onStartNew }
           <HelpCircle className="h-6 w-6" />
         </div>
         <div className="space-y-1">
-          <h3 className="text-navy text-base font-bold">Bạn chưa có buổi phỏng vấn thử nào</h3>
+          <h3 className="text-navy text-base font-bold">No mock interviews yet</h3>
           <p className="mx-auto max-w-md text-xs text-slate-500">
-            Hãy bắt đầu một buổi phỏng vấn thử cùng AI dựa trên CV của bạn để kiểm tra kiến thức và nhận phản hồi chi
-            tiết.
+            Start your first AI mock interview tailored to your resume to assess your knowledge and receive in-depth
+            feedback.
           </p>
         </div>
         <Button variant="primary" onClick={onStartNew} leftIcon={<Sparkles className="h-4 w-4" />}>
-          Bắt đầu phỏng vấn thử ngay
+          Start Mock Interview Now
         </Button>
       </div>
     );
@@ -57,9 +57,9 @@ export default function MockInterviewHistoryList({ onSelectSession, onStartNew }
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-navy text-sm font-bold">Lịch sử các buổi phỏng vấn đã lưu ({history.length})</h3>
+        <h3 className="text-navy text-sm font-bold">Saved Interview History ({history.length})</h3>
         <Button variant="primary" size="sm" onClick={onStartNew} leftIcon={<Sparkles className="h-4 w-4" />}>
-          Phỏng vấn mới
+          New Interview
         </Button>
       </div>
 
@@ -89,12 +89,12 @@ export default function MockInterviewHistoryList({ onSelectSession, onStartNew }
                     {formatDate(session.createdAt)}
                   </span>
                   <span>•</span>
-                  <span>{session.questionCount} câu hỏi</span>
+                  <span>{session.questionCount} questions</span>
                   <span>•</span>
                   <span className={isCompleted ? 'font-semibold text-emerald-700' : 'font-semibold text-amber-700'}>
                     {isCompleted
-                      ? 'Đã hoàn thành'
-                      : `Đang làm (${session.currentQuestionIndex}/${session.questionCount})`}
+                      ? 'Completed'
+                      : `In Progress (${session.currentQuestionIndex}/${session.questionCount})`}
                   </span>
                 </div>
               </div>
@@ -109,7 +109,7 @@ export default function MockInterviewHistoryList({ onSelectSession, onStartNew }
                 )}
 
                 <Button variant="ghost" size="sm" rightIcon={<ChevronRight className="h-4 w-4" />}>
-                  {isCompleted ? 'Xem báo cáo' : 'Tiếp tục'}
+                  {isCompleted ? 'View Report' : 'Continue'}
                 </Button>
               </div>
             </div>

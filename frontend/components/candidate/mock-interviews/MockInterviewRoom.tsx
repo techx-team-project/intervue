@@ -31,7 +31,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
 
   const handleSendAnswer = async () => {
     if (!currentAnswer.trim() || !currentQuestion) {
-      toast.error('Vui lòng nhập câu trả lời của bạn.');
+      toast.error('Please enter your answer.');
       return;
     }
 
@@ -47,13 +47,13 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
         onFinish(res.completedSession);
       }
     } catch {
-      toast.error('Không thể nộp câu trả lời. Vui lòng thử lại.');
+      toast.error('Failed to submit answer. Please try again.');
     }
   };
 
   const handleSendFollowUp = async () => {
     if (!currentFollowUpAnswer.trim() || !currentQuestion) {
-      toast.error('Vui lòng nhập câu trả lời bổ sung.');
+      toast.error('Please enter your follow-up explanation.');
       return;
     }
 
@@ -69,7 +69,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
         onFinish(res.completedSession);
       }
     } catch {
-      toast.error('Không thể nộp câu trả lời bổ sung. Vui lòng thử lại.');
+      toast.error('Failed to submit follow-up response. Please try again.');
     }
   };
 
@@ -107,7 +107,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
   if (!currentQuestion) {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
-        <p className="text-sm text-slate-600">Không tìm thấy câu hỏi cho buổi phỏng vấn này.</p>
+        <p className="text-sm text-slate-600">No questions found for this interview session.</p>
       </div>
     );
   }
@@ -128,12 +128,12 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
                 {session.seniorityLevel}
               </span>
             </div>
-            <h2 className="text-navy mt-1 text-base font-bold">Phòng phỏng vấn AI tương tác</h2>
+            <h2 className="text-navy mt-1 text-base font-bold">Interactive AI Interview Room</h2>
           </div>
 
           <div className="text-right">
             <span className="text-xs font-bold text-slate-500">
-              Câu hỏi {session.currentQuestionIndex + 1} / {session.questionCount}
+              Question {session.currentQuestionIndex + 1} of {session.questionCount}
             </span>
             <div className="mt-1 h-2 w-36 overflow-hidden rounded-full bg-slate-100">
               <div className="bg-primary h-full transition-all duration-300" style={{ width: `${progressPercent}%` }} />
@@ -148,7 +148,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
           <div className="mb-2 flex items-center gap-2 text-xs font-bold tracking-wider text-slate-400 uppercase">
             <HelpCircle className="text-primary h-4 w-4" />
             <span>
-              Câu hỏi {currentQuestion.questionOrder} • Nhóm: {currentQuestion.category}
+              Question {currentQuestion.questionOrder} • Category: {currentQuestion.category}
             </span>
           </div>
           <h3 className="text-navy text-lg leading-relaxed font-bold sm:text-xl">{currentQuestion.questionText}</h3>
@@ -158,20 +158,19 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
         {!activeResult && (
           <div className="space-y-4 pt-2">
             <div>
-              <label className="text-navy mb-1.5 block text-xs font-bold">Câu trả lời của bạn:</label>
+              <label className="text-navy mb-1.5 block text-xs font-bold">Your Answer:</label>
               <textarea
                 rows={5}
                 value={currentAnswer}
                 onChange={(e) => setCurrentAnswer(e.target.value)}
-                placeholder="Trình bày giải pháp, kinh nghiệm thực tế hoặc giải thuật của bạn..."
+                placeholder="Explain your approach, technical solution, or practical experience..."
                 className="text-navy focus:border-primary focus:ring-primary w-full rounded-2xl border border-slate-200 p-4 text-sm focus:ring-1 focus:outline-none"
               />
               <div className="mt-1 flex items-center justify-between text-[11px] text-slate-400">
                 <span>
-                  Mẹo: Bạn có thể trình bày theo mô hình STAR (Situation, Task, Action, Result) để câu trả lời rõ ràng
-                  hơn.
+                  Tip: Structure your response using the STAR method (Situation, Task, Action, Result) for clarity.
                 </span>
-                <span>{currentAnswer.length} ký tự</span>
+                <span>{currentAnswer.length} characters</span>
               </div>
             </div>
 
@@ -183,7 +182,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
                 leftIcon={<Send className="h-4 w-4" />}
                 disabled={!currentAnswer.trim()}
               >
-                Gửi câu trả lời
+                Submit Answer
               </Button>
             </div>
           </div>
@@ -196,7 +195,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
             <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
               <p className="mb-1 flex items-center gap-1.5 text-xs font-bold text-slate-500">
                 <MessageSquare className="h-3.5 w-3.5" />
-                Câu trả lời của bạn:
+                Your Answer:
               </p>
               <p className="text-navy text-xs leading-relaxed whitespace-pre-wrap">{currentAnswer}</p>
             </div>
@@ -206,12 +205,12 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Sparkles className="text-primary h-4 w-4" />
-                  <span className="text-navy text-xs font-bold">Nhận xét từ AI:</span>
+                  <span className="text-navy text-xs font-bold">AI Feedback & Assessment:</span>
                 </div>
                 {activeResult.score !== null && activeResult.score !== undefined && (
                   <span className="flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-bold text-emerald-800">
                     <Award className="h-3.5 w-3.5" />
-                    {activeResult.score}/100 điểm
+                    {activeResult.score}/100 pts
                   </span>
                 )}
               </div>
@@ -222,7 +221,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
                 <div className="border-primary/10 border-t pt-2">
                   <p className="mb-1 flex items-center gap-1 text-xs font-bold text-emerald-800">
                     <Lightbulb className="h-3.5 w-3.5" />
-                    Gợi ý câu trả lời chuẩn:
+                    Model Answer / Recommendation:
                   </p>
                   <p className="text-xs leading-relaxed text-slate-600 italic">{activeResult.idealAnswer}</p>
                 </div>
@@ -234,7 +233,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
               <div className="space-y-4 rounded-2xl border-2 border-amber-300 bg-amber-50/50 p-5">
                 <div className="flex items-center gap-2 text-xs font-bold text-amber-800">
                   <HelpCircle className="h-4 w-4" />
-                  <span>AI Đặt câu hỏi làm rõ (Tối đa 1 câu hỏi follow-up):</span>
+                  <span>AI Follow-Up Clarification (Max 1 follow-up question):</span>
                 </div>
                 <p className="text-navy text-sm leading-relaxed font-semibold">{activeResult.followUpQuestion}</p>
 
@@ -243,7 +242,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
                     rows={4}
                     value={currentFollowUpAnswer}
                     onChange={(e) => setCurrentFollowUpAnswer(e.target.value)}
-                    placeholder="Nhập phần giải thích bổ sung cho câu hỏi đào sâu..."
+                    placeholder="Enter your additional explanation to clarify this question..."
                     className="text-navy w-full rounded-xl border border-amber-200 bg-white p-3 text-xs focus:border-amber-400 focus:outline-none"
                   />
                   <div className="flex justify-end">
@@ -254,7 +253,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
                       leftIcon={<Send className="h-4 w-4" />}
                       disabled={!currentFollowUpAnswer.trim()}
                     >
-                      Gửi câu trả lời làm rõ
+                      Submit Clarification
                     </Button>
                   </div>
                 </div>
@@ -265,7 +264,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
             {!activeResult.needsFollowUp && (
               <div className="flex items-center justify-end pt-3">
                 <Button variant="primary" onClick={handleNextQuestion} rightIcon={<ChevronRight className="h-4 w-4" />}>
-                  {activeResult.sessionCompleted ? 'Xem báo cáo tổng kết phỏng vấn' : 'Chuyển sang câu hỏi tiếp theo'}
+                  {activeResult.sessionCompleted ? 'View Full Interview Report' : 'Proceed to Next Question'}
                 </Button>
               </div>
             )}

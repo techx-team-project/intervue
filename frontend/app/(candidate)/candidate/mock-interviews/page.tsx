@@ -5,7 +5,8 @@ import MockInterviewClientView from '@/components/candidate/mock-interviews/Mock
 
 export const metadata: Metadata = {
   title: 'AI Mock Interview | InterVue Candidate',
-  description: 'Luyện tập phỏng vấn thử cùng AI dựa trên CV thật và nhận đánh giá 3 điểm mạnh, 3 điểm cần cải thiện.',
+  description:
+    'Practice 1-on-1 AI mock interviews tailored to your resume and target role. Receive STAR feedback, 3 key strengths, and 3 areas for improvement.',
 };
 
 export default function CandidateMockInterviewPage() {
