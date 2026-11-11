@@ -16,5 +16,9 @@ public record AiProperties(Gemini gemini, Embedding embedding, Quota quota) {
 
     public record Embedding(String model, int dimensions) {}
 
-    public record Quota(int userPerDay, int ipPerHour, int resumeMatchFreePerMonth) {}
+    public record Quota(
+            int userPerDay,
+            int ipPerHour,
+            int resumeMatchFreePerMonth,
+            int jdGenerateFreePerMonth) {}
 }

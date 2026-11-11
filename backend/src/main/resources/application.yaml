@@ -78,6 +78,7 @@ ai:
     user-per-day: 30
     ip-per-hour: 10
     resume-match-free-per-month: ${AI_RESUME_MATCH_FREE_PER_MONTH:30}
+    jd-generate-free-per-month: ${AI_JD_GENERATE_FREE_PER_MONTH:10}
 
 storage:
   cloudinary-url: ${CLOUDINARY_URL:}
