@@ -53,7 +53,7 @@ export default function CandidateConnectView() {
 
   if (isRulesLoading) {
     return (
-      <div className="flex h-[calc(100vh-10rem)] items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-white">
         <Spinner />
       </div>
     );
@@ -63,61 +63,61 @@ export default function CandidateConnectView() {
     return <ConnectRulesModal mode="gate" portal="candidate" onClose={() => {}} />;
   }
 
+  const emptyTitle =
+    selectedTab === 'INVITATIONS'
+      ? invitations.length > 0
+        ? 'Select an invitation to view recruiter message'
+        : 'No invitations yet...'
+      : conversations.length > 0
+        ? 'Select a conversation to start chatting'
+        : 'No conversations yet...';
+
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-slate-50 p-2 sm:p-3">
-      {/* Top Banner Tagline (TopCV Image 2 & 3 style) */}
-      <div className="mb-2 hidden items-center justify-center py-1 text-center md:flex">
-        <p className="text-xs font-semibold text-slate-800">
-          New way to follow your chance. <span className="font-bold text-[#00b14f]">More engage, more success</span>
-        </p>
-      </div>
+    <div className="flex h-screen w-full overflow-hidden bg-white">
+      <CandidateConnectSidebar
+        conversations={conversations}
+        invitations={invitations}
+        isLoadingConversations={isLoadingConversations}
+        isLoadingInvitations={isLoadingInvitations}
+        hasMoreConversations={hasMoreConversations}
+        isLoadingMoreConversations={isLoadingMoreConversations}
+        onLoadMoreConversations={loadMoreConversations}
+        selectedId={selectedId}
+        selectedTab={selectedTab}
+        onSelectTab={(tab) => {
+          setSelectedTab(tab);
+          setSelectedId(null);
+        }}
+        onSelectConversation={setSelectedId}
+        onOpenRules={() => setRulesViewOpen(true)}
+      />
 
-      {/* Main 3-column Window */}
-      <div className="border-outline-variant flex flex-1 overflow-hidden rounded-2xl border bg-white shadow-xs">
-        <CandidateConnectSidebar
-          conversations={conversations}
-          invitations={invitations}
-          isLoadingConversations={isLoadingConversations}
-          isLoadingInvitations={isLoadingInvitations}
-          hasMoreConversations={hasMoreConversations}
-          isLoadingMoreConversations={isLoadingMoreConversations}
-          onLoadMoreConversations={loadMoreConversations}
-          selectedId={selectedId}
-          selectedTab={selectedTab}
-          onSelectTab={(tab) => {
-            setSelectedTab(tab);
-            setSelectedId(null);
-          }}
-          onSelectConversation={setSelectedId}
-          onOpenRules={() => setRulesViewOpen(true)}
+      {selectedConversation ? (
+        <CandidateConnectThread
+          conversation={selectedConversation}
+          onAccepted={handleInvitationAccepted}
+          onDeclined={handleInvitationDeclined}
+          onBack={() => setSelectedId(null)}
         />
-
-        {selectedConversation ? (
-          <CandidateConnectThread
-            conversation={selectedConversation}
-            onAccepted={handleInvitationAccepted}
-            onDeclined={handleInvitationDeclined}
-            onBack={() => setSelectedId(null)}
-          />
-        ) : (
-          <div className="hidden flex-1 flex-col items-center justify-center bg-slate-50/40 p-6 md:flex">
+      ) : (
+        <div className="hidden min-w-0 flex-1 flex-col bg-white md:flex">
+          <div className="border-outline-variant flex h-14 shrink-0 items-center border-b px-5">
+            <p className="text-xs font-semibold text-slate-800 sm:text-[13px]">
+              New way to follow your chance. <span className="font-bold text-[#00b14f]">More engage, more success</span>
+            </p>
+          </div>
+          <div className="flex flex-1 flex-col items-center justify-center bg-white p-6">
             <CatEmptyIllustration
-              title={
-                selectedTab === 'ALL'
-                  ? 'Select a conversation to start chatting'
-                  : 'Select an invitation to view recruiter message'
-              }
+              title={emptyTitle}
               description="Real-time messaging between candidates and verified recruiters."
             />
           </div>
-        )}
+        </div>
+      )}
 
-        <CandidateAppliedJobsPanel selectedCompanyId={selectedConversation?.companyId} />
+      <CandidateAppliedJobsPanel selectedCompanyId={selectedConversation?.companyId} />
 
-        {isRulesViewOpen && (
-          <ConnectRulesModal mode="view" portal="candidate" onClose={() => setRulesViewOpen(false)} />
-        )}
-      </div>
+      {isRulesViewOpen && <ConnectRulesModal mode="view" portal="candidate" onClose={() => setRulesViewOpen(false)} />}
     </div>
   );
 }
