@@ -40,6 +40,9 @@ export type ConversationSummary = {
   candidateName: string;
   invitedAt: string;
   respondedAt?: string;
+  inviteCount?: number;
+  maxInvites?: number;
+  reinviteAvailableAt?: string;
   unreadCount: number;
   lastMessageAt?: string;
   lastMessagePreview?: string;
@@ -121,6 +124,11 @@ export type ConnectStatusEventPayload = {
   connectionId: number;
   status: ConnectionStatus;
   blockedByActorType?: ConnectActorType;
+  invitedAt?: string;
+  respondedAt?: string;
+  inviteCount?: number;
+  maxInvites?: number;
+  reinviteAvailableAt?: string;
 };
 
 export type ConnectReactionEventPayload = {

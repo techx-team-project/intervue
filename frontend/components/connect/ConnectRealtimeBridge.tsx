@@ -173,11 +173,20 @@ export default function ConnectRealtimeBridge() {
           ...current,
           status: payload.status,
           blockedByActorType: payload.status === 'BLOCKED' ? payload.blockedByActorType : undefined,
+          invitedAt: payload.invitedAt ?? current.invitedAt,
+          respondedAt: payload.status === 'PENDING' ? undefined : (payload.respondedAt ?? current.respondedAt),
+          inviteCount: payload.inviteCount ?? current.inviteCount,
+          maxInvites: payload.maxInvites ?? current.maxInvites,
+          reinviteAvailableAt:
+            payload.status === 'PENDING' ? undefined : (payload.reinviteAvailableAt ?? current.reinviteAvailableAt),
         }));
         void queryClient.invalidateQueries({ queryKey: keys.conversations });
         void queryClient.invalidateQueries({ queryKey: keys.invitations });
         void queryClient.invalidateQueries({ queryKey: keys.conversation(payload.connectionId) });
         void queryClient.invalidateQueries({ queryKey: keys.conversationByKeyPrefix });
+        if (payload.status === 'PENDING') {
+          void queryClient.invalidateQueries({ queryKey: keys.messages(payload.connectionId) });
+        }
         void queryClient.invalidateQueries({ queryKey: keys.unread });
 
         if (portal === 'candidate' && payload.status === 'PENDING') {
