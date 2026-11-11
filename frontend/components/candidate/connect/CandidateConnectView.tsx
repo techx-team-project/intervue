@@ -28,6 +28,7 @@ export default function CandidateConnectView({ children }: CandidateConnectViewP
 
   const selectedTab = useConnectUiStore((s) => s.candidateTab);
   const setSelectedTab = useConnectUiStore((s) => s.setCandidateTab);
+  const rightPanelOpen = useConnectUiStore((s) => s.rightPanelOpen);
   const lastAutoSyncedIdRef = useRef<number | null>(null);
   const [showRules, setShowRules] = useState(false);
 
@@ -91,7 +92,7 @@ export default function CandidateConnectView({ children }: CandidateConnectViewP
         {children}
       </main>
 
-      <CandidateAppliedJobsPanel selectedCompanyId={selectedConversation?.companyId} />
+      {rightPanelOpen && <CandidateAppliedJobsPanel selectedCompanyId={selectedConversation?.companyId} />}
 
       {rulesAck && !rulesAck.acknowledged && <ConnectRulesModal mode="gate" portal="candidate" onClose={() => {}} />}
       {showRules && <ConnectRulesModal mode="view" portal="candidate" onClose={() => setShowRules(false)} />}

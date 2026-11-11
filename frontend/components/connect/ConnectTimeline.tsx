@@ -348,13 +348,8 @@ export default function ConnectTimeline({
                           ? `Seen ${formatConnectExactTime(conversation.peerLastReadAt)}`
                           : 'Seen'
                       }
-                      className="mt-1 flex items-center justify-end gap-1 pr-0.5 text-[11px] text-slate-400"
+                      className="mt-1 flex items-center justify-end pr-0.5 text-[11px] font-medium text-slate-400"
                     >
-                      <UserAvatar
-                        fullName={peerName}
-                        size="sm"
-                        className="h-4 w-4 rounded-full text-[8px] font-semibold"
-                      />
                       <span>Seen</span>
                     </div>
                   )}

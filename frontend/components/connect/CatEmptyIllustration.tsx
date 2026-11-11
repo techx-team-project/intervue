@@ -138,8 +138,24 @@ export default function CatEmptyIllustration({
         <ellipse cx="126" cy="131" rx="7.5" ry="5" fill="#ffffff" stroke="#94a3b8" strokeWidth="2.3" />
       </svg>
 
-      <p className="mt-2 text-sm font-medium text-slate-600">{title}</p>
-      {description && <p className="mt-1 text-xs text-slate-400">{description}</p>}
+      <p
+        className={cn(
+          compact
+            ? 'mt-2 text-sm font-medium text-slate-600'
+            : 'mt-3 text-base font-semibold text-slate-800 sm:text-lg',
+        )}
+      >
+        {title}
+      </p>
+      {description && (
+        <p
+          className={cn(
+            compact ? 'mt-1 text-xs text-slate-500' : 'mt-1.5 max-w-md text-sm leading-relaxed text-slate-500',
+          )}
+        >
+          {description}
+        </p>
+      )}
     </div>
   );
 }

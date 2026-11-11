@@ -25,6 +25,7 @@ export default function ConnectView({ children }: ConnectViewProps) {
   const [showRules, setShowRules] = useState(false);
   const mobileEligibleOpen = useConnectUiStore((s) => s.mobileEligibleOpen);
   const setMobileEligibleOpen = useConnectUiStore((s) => s.setMobileEligibleOpen);
+  const rightPanelOpen = useConnectUiStore((s) => s.rightPanelOpen);
 
   const { data: rulesAck, isLoading: isLoadingRules } = useRulesAck();
   const { conversations, isLoading, hasMore, isLoadingMore, loadMore } = useConversations();
@@ -55,13 +56,15 @@ export default function ConnectView({ children }: ConnectViewProps) {
         {children}
       </main>
 
-      <EligibleCandidatesPanel
-        onInvited={(createdId) => {
-          if (createdId) {
-            router.push(recruiterConversationUrl(createdId));
-          }
-        }}
-      />
+      {rightPanelOpen && (
+        <EligibleCandidatesPanel
+          onInvited={(createdId) => {
+            if (createdId) {
+              router.push(recruiterConversationUrl(createdId));
+            }
+          }}
+        />
+      )}
 
       <Modal
         isOpen={mobileEligibleOpen}

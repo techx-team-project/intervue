@@ -390,12 +390,12 @@ export default function ConnectComposerShell({
       )}
 
       {!isEditing && replyTo && (
-        <div className="mb-2 flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs">
+        <div className="border-l-primary mb-2 flex items-center justify-between gap-2 rounded-xl border border-l-[3px] border-slate-200 bg-slate-50/90 px-3 py-2 text-xs">
           <div className="flex min-w-0 items-start gap-2">
             <Reply className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-500" />
             <div className="min-w-0">
-              <p className="font-semibold text-slate-700">Replying to {replyTo.senderName}</p>
-              <p className="truncate text-slate-500">{replyTo.previewText}</p>
+              <p className="font-semibold text-slate-800">Replying to {replyTo.senderName}</p>
+              <p className="truncate text-slate-600">{replyTo.previewText}</p>
             </div>
           </div>
           <button
