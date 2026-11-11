@@ -342,6 +342,7 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `GET` | `/admin/service-packages?query=&categoryId=&status=&page=&size=` | admin | `PageResource<AdminServicePackageResource>`; `query` matches name or code. |
 | `GET` | `/admin/service-packages/{id}` | admin | `AdminServicePackageResource`. |
 | `POST` · `PUT` | `/admin/service-packages` · `/{id}` | admin | Body `SaveServicePackageRequest`. `benefits` and `sections` are a **full replace**; omit them to clear. `409 DUPLICATE_PACKAGE_CODE` when `code` or `slug` is taken. |
+| `POST` | `/admin/service-packages/upload-image` | admin | Multipart `file` (`JPEG`/`PNG`, max 5 MB). Returns `{ url, publicId }` stored in Cloudinary for hero or detail section artwork. |
 | `POST` | `/admin/service-packages/{id}/activate` · `/deactivate` | admin | Packages are never deleted; a non-`ACTIVE` package disappears from the recruiter catalog. |
 
 - `ServiceCategoryResource`: `{ id, code, name, headline, description, needKey, packages: [ServicePackageCardResource] }`. `needKey` is what the "suggest a package" modal maps a recruiter's chosen need onto (`REACH`, `CONNECT`, `HIGHLIGHT`, `BRANDING`); it is data, never hard-coded in the frontend.
@@ -437,6 +438,7 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `GET` | `/recruiter/credits` | recruiter | `{ balance, nearestExpiryAt, prices[] }`. Credits live in `company_entitlements` as type `CREDIT`, so there is no second ledger. |
 | `POST` | `/recruiter/credits/convert` | recruiter | `{ entitlementType, tier, quantity }` spends credits and grants the service with `source_order_item_id = null`. `422 INSUFFICIENT_CREDITS`, `404 CREDIT_PRICE_NOT_AVAILABLE`. |
 | `GET`/`PUT` | `/admin/credit-prices[/{id}]` | admin | What one unit of each service costs in credits. Audited as `CREDIT_PRICE_UPDATED`. |
+| `GET` | `/recruiter/vouchers` | recruiter | Lists active, non-exhausted vouchers currently usable by the recruiter's company (sorted soonest expiry first). |
 | `POST` | `/recruiter/vouchers/validate` | recruiter | `{ code, cartItemIds[] }` or `{ code, packageId, quantity }` → the discount preview. |
 | `GET`/`POST`/`PUT` | `/admin/vouchers[/{id}]` | admin | The code is never rewritten after creation, so a voucher already handed out keeps working. |
 | `GET` | `/recruiter/orders/{code}/invoice` | recruiter | Metadata. `422 INVOICE_NOT_ISSUED_YET` until the order is paid. |
