@@ -3,7 +3,7 @@
 ## CV Upload Specifications and Rules
 Candidates can store, manage, and designate multiple CVs for different IT specializations on InterVue:
 - Supported Format: Exclusively Adobe PDF files (.pdf). Scanned image-only PDFs or password-protected PDFs are rejected.
-- Size and Page Limits: Maximum file size of 5 MB and maximum length of 5 pages.
+- Size and Page Limits: Maximum file size of 5 MB and maximum length of 5 pages (tối đa 5 trang).
 - Naming and Default CV: Candidates can assign custom names to uploaded CVs and select a default CV used for one-click job applications.
 
 ## CV Storage Quotas by Plan
@@ -19,6 +19,12 @@ Submitted Application Immutability: When you apply for a job, InterVue captures 
 Uploaded CVs are strictly private:
 - Search engines and unauthorized external parties cannot crawl or view your CVs.
 - Only the candidate and authorized hiring managers of job posts to which the candidate explicitly submitted an application have permission to inspect or download the CV.
+
+## AI Profile Synchronization from CV
+Candidates can automatically synchronize and pre-fill their InterVue candidate profile directly from an uploaded CV:
+- Empty Profile Confirmation: If the candidate's profile is empty, AI extracts all professional fields (headline, bio, total years of experience, skills, work experiences, education history, certifications, languages) and presents a comprehensive preview for one-click confirmation.
+- Existing Profile Old-to-New Selection: If the profile already contains data, AI compares existing records against newly parsed CV data, displaying an Old vs New comparison per field. Candidates selectively choose which individual sections to apply.
+- Unreadable CV Diagnosis: When a CV cannot be processed (scanned image without OCR text, password-protected/encrypted file, or corrupted PDF), the system identifies the specific reason and guides the user to manual profile entry.
 
 ## AI CV Review and Feedback Levels
 InterVue provides intelligent AI evaluation to help candidates refine their CVs before submitting applications:
@@ -38,4 +44,3 @@ Performs a deep comparison between the candidate's CV and the explicit technical
 - Transparency: Every feedback item provides a concrete snippet quote from the CV, explains the diagnosed issue, and suggests actionable wording improvements.
 - Integrity: AI never suggests adding fictitious work history, fabricated credentials, or false technologies.
 - Anti-Discrimination: AI models never evaluate or factor in candidate age, gender, photograph, hometown, or KYC personal records.
-

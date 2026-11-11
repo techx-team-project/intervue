@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSupportChat } from '@/hooks/useSupportChat';
-import type { ChatContext } from '@/types/ai-chat';
 import { ChatPanel } from './ChatPanel';
 import { FloatingChatButton } from './FloatingChatButton';
 
