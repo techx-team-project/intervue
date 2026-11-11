@@ -11,6 +11,8 @@ export interface RecruiterCartItem {
   lineTotal: number;
   validityDays: number | null;
   oneTimePerCompany: boolean;
+  adSlotItem?: boolean;
+  weeks?: string[];
   selected?: boolean;
 }
 

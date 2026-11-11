@@ -1,11 +1,14 @@
 'use client';
 
 import { FormattedTextarea } from '@/components/recruiter/job-posts/FormattedTextarea';
+import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import type { JobPostFormData } from '@/schemas/job.schema';
-import { CheckCircle2, CircleAlert } from 'lucide-react';
+import { CheckCircle2, CircleAlert, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { toast } from 'sonner';
+import AiJdGeneratorModal from './AiJdGeneratorModal';
 import ScreeningQuestionsEditor from './ScreeningQuestionsEditor';
 
 type ContentField = 'description' | 'requirements' | 'benefits';
@@ -43,14 +46,41 @@ export default function JobContentStep({ initialTab = 'description' }: JobConten
   const {
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useFormContext<JobPostFormData>();
   const [active, setActive] = useState<ContentTab>(initialTab);
+  const [aiModalOpen, setAiModalOpen] = useState(false);
   const tab = TABS.find((item) => item.field === active) ?? TABS[0];
   const questionCount = watch('screeningQuestions').length;
+  const [title, level, contractType, workingArrangement, city, skills, description, requirements, benefits] = watch([
+    'title',
+    'level',
+    'contractType',
+    'workingArrangement',
+    'city',
+    'skills',
+    'description',
+    'requirements',
+    'benefits',
+  ]);
 
   return (
     <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-emerald-200 bg-emerald-50/70 px-3.5 py-2.5">
+        <p className="text-xs font-medium text-emerald-900">
+          Cần soạn nhanh Mô tả, Yêu cầu và Quyền lợi theo chuẩn IT?
+        </p>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          leftIcon={<Sparkles className="h-3.5 w-3.5 text-emerald-600" />}
+          onClick={() => setAiModalOpen(true)}
+        >
+          Tạo JD bằng AI
+        </Button>
+      </div>
       <div
         role="tablist"
         aria-label="Nội dung tin tuyển dụng"
@@ -122,6 +152,27 @@ export default function JobContentStep({ initialTab = 'description' }: JobConten
           )}
         />
       )}
+
+      <AiJdGeneratorModal
+        isOpen={aiModalOpen}
+        onClose={() => setAiModalOpen(false)}
+        values={{ title, level, contractType, workingArrangement, city, skills, description, requirements, benefits }}
+        onApply={(result, overwriteFilled) => {
+          const applyField = (field: 'description' | 'requirements' | 'benefits', nextValue: string) => {
+            if (!nextValue.trim()) return;
+            if (!overwriteFilled && valuesForField(field).trim()) return;
+            setValue(field, nextValue, { shouldDirty: true, shouldValidate: true });
+          };
+          const valuesForField = (field: 'description' | 'requirements' | 'benefits') =>
+            field === 'description' ? description : field === 'requirements' ? requirements : benefits;
+
+          applyField('description', result.description);
+          applyField('requirements', result.requirements);
+          applyField('benefits', result.benefits);
+          setAiModalOpen(false);
+          toast.success('Đã điền nội dung JD từ AI.');
+        }}
+      />
     </div>
   );
 }

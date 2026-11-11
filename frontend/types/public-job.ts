@@ -58,4 +58,7 @@ export interface PublicJobResource {
   screening: ScreeningSummary;
   deadline?: string;
   publishedAt?: string;
+  boostLevel?: number;
+  highlightLabel?: 'URGENT' | 'HOT' | null;
+  highlighted?: boolean;
 }

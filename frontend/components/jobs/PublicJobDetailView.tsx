@@ -4,6 +4,7 @@ import PageHero from '@/components/common/PageHero';
 import FollowCompanyButton from '@/components/candidate/saved/FollowCompanyButton';
 import SaveJobButton from '@/components/candidate/saved/SaveJobButton';
 import { Button } from '@/components/ui/Button';
+import { JOB_HIGHLIGHT_LABEL, JOB_HIGHLIGHT_STYLE } from '@/constants/job-highlight';
 import type { PublicJobResource } from '@/types/public-job';
 import { formatDate } from '@/utils/datetime';
 import { formatSalary } from '@/utils/public-company';
@@ -52,7 +53,23 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
       <PageHero
         id="job-title"
         eyebrow={job.company.name}
-        title={job.title}
+        title={
+          <span className="flex flex-wrap items-center gap-2.5">
+            <span>{job.title}</span>
+            {job.highlighted && (
+              <span className="rounded-full bg-amber-400 px-3 py-0.5 text-xs font-bold tracking-wide text-amber-950 uppercase">
+                Nổi bật
+              </span>
+            )}
+            {job.highlightLabel && (
+              <span
+                className={`rounded-full px-3 py-0.5 text-xs font-bold tracking-wide uppercase ${JOB_HIGHLIGHT_STYLE[job.highlightLabel]}`}
+              >
+                {JOB_HIGHLIGHT_LABEL[job.highlightLabel]}
+              </span>
+            )}
+          </span>
+        }
         crumbs={[{ label: 'Home', href: '/' }, { label: 'Jobs', href: '/jobs' }, { label: job.title }]}
         overlap
       >

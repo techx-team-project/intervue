@@ -27,6 +27,7 @@ export default function ActivateEntitlementModal({
   error,
 }: ActivateEntitlementModalProps) {
   const onCompany = entitlement !== null && COMPANY_LEVEL.includes(entitlement.entitlementType);
+  const isRetop = entitlement?.entitlementType === 'JOB_RETOP';
   const { data } = useRecruiterJobList({ status: 'PUBLISHED', page: 0, size: 100 });
   const [jobId, setJobId] = useState('');
 
@@ -35,13 +36,14 @@ export default function ActivateEntitlementModal({
     ...(data?.items ?? []).map((job) => ({ value: String(job.id), label: job.title })),
   ];
 
+  const modalTitle = onCompany
+    ? 'Kích hoạt dịch vụ cho công ty'
+    : isRetop
+      ? 'Đẩy top tin tuyển dụng'
+      : 'Áp dụng dịch vụ cho tin tuyển dụng';
+
   return (
-    <Modal
-      isOpen={entitlement !== null}
-      onClose={onClose}
-      title={onCompany ? 'Kích hoạt dịch vụ cho công ty' : 'Áp dụng dịch vụ cho tin tuyển dụng'}
-      maxWidth="lg"
-    >
+    <Modal isOpen={entitlement !== null} onClose={onClose} title={modalTitle} maxWidth="lg">
       {entitlement && (
         <>
           <p className="text-on-surface-variant text-sm">
@@ -73,7 +75,15 @@ export default function ActivateEntitlementModal({
           <div className="mt-4 flex gap-3 rounded-lg border-l-4 border-amber-400 bg-amber-50 px-4 py-3">
             <AlertTriangle className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-600" />
             <p className="text-sm leading-relaxed text-amber-900">
-              Đã áp dụng thì <strong>không gỡ ra được</strong>. Thời gian hiệu lực bắt đầu tính từ lúc này.
+              {isRetop ? (
+                <>
+                  Tin tuyển dụng được chọn sẽ lên đầu danh sách ngay lập tức và <strong>trừ 1 lượt đẩy top</strong>.
+                </>
+              ) : (
+                <>
+                  Đã áp dụng thì <strong>không gỡ ra được</strong>. Thời gian hiệu lực bắt đầu tính từ lúc này.
+                </>
+              )}
             </p>
           </div>
 
@@ -88,7 +98,7 @@ export default function ActivateEntitlementModal({
               disabled={!onCompany && !jobId}
               isLoading={isBusy}
             >
-              Xác nhận áp dụng
+              {isRetop ? 'Đẩy top ngay' : 'Xác nhận áp dụng'}
             </Button>
           </div>
         </>

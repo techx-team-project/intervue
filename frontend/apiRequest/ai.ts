@@ -139,3 +139,47 @@ export async function getMyCvReviews(): Promise<CvReviewResult[]> {
     auth: true,
   });
 }
+
+export interface JdGeneratePayload {
+  title: string;
+  level?: string;
+  contractType?: string;
+  workingArrangement?: string;
+  city?: string;
+  skills?: string[];
+  language?: 'vi' | 'en';
+  notes?: string;
+}
+
+export interface JdGenerateResult {
+  description: string;
+  requirements: string;
+  benefits: string;
+  model: string;
+  promptVersion: string;
+  generatedAt: string;
+}
+
+export interface JdGenerateQuota {
+  freeUsedThisMonth: number;
+  freeLimit: number;
+  freeRemaining: number;
+  paidRemaining: number;
+  totalRemaining: number;
+  resetAt: string;
+}
+
+export async function getJdGenerateQuota(): Promise<JdGenerateQuota> {
+  return request<JdGenerateQuota>('/recruiter/ai/jd-generate/quota', {
+    method: 'GET',
+    auth: true,
+  });
+}
+
+export async function generateJobDescription(payload: JdGeneratePayload): Promise<JdGenerateResult> {
+  return request<JdGenerateResult>('/recruiter/ai/jd-generate', {
+    method: 'POST',
+    body: payload,
+    auth: true,
+  });
+}

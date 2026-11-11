@@ -34,6 +34,9 @@ export function useJobPostActions() {
 
   const closeJob = (id: string) => run(id, () => mutations.close.mutateAsync(Number(id)), 'Đã đóng tin.');
 
+  const retopJob = (id: string) =>
+    run(id, () => mutations.retop.mutateAsync(Number(id)), 'Đã đẩy tin lên đầu danh sách.');
+
   const deleteJob = (id: string) => run(id, () => mutations.remove.mutateAsync(Number(id)), 'Đã xóa bản nháp.');
 
   const toggleJobStatus = (id: string, currentStatus: JobStatus) => {
@@ -77,6 +80,7 @@ export function useJobPostActions() {
     reopenJob,
     toggleJobStatus,
     closeJob,
+    retopJob,
     deleteJob,
     duplicateJob,
     bulkPauseJobs,
