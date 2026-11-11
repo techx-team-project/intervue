@@ -3,6 +3,7 @@
 import { recruiterConnectApi } from '@/apiRequest/recruiter-connect';
 import ConnectThreadFrame from '@/components/connect/ConnectThreadFrame';
 import BlockConversationDialog from '@/components/recruiter/connect/BlockConversationDialog';
+import InviteCandidateModal from '@/components/recruiter/connect/InviteCandidateModal';
 import ReportConversationModal from '@/components/recruiter/connect/ReportConversationModal';
 import {
   useConnectMuteStatus,
@@ -19,7 +20,7 @@ import {
 import { useAuthStore } from '@/store/auth.store';
 import type { ConversationSummary } from '@/types/connect';
 import { triggerConnectBlobDownload } from '@/utils/connect-chat';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 type ConnectThreadProps = {
   conversation: ConversationSummary;
@@ -38,6 +39,7 @@ export default function ConnectThread({ conversation, onBack }: ConnectThreadPro
   const { mutate: markReadMutate } = useMarkConversationRead(conversation.id);
   const { mutate: sendTypingMutate } = useSendTyping(conversation.id);
   const unblock = useUnblockConversation(conversation.id);
+  const [showReinviteModal, setShowReinviteModal] = useState(false);
 
   const handleMarkRead = useCallback(
     (lastReadMessageId?: number) => {
@@ -58,36 +60,50 @@ export default function ConnectThread({ conversation, onBack }: ConnectThreadPro
   }, [refetchMuteStatus]);
 
   return (
-    <ConnectThreadFrame
-      key={conversation.id}
-      portal="recruiter"
-      conversation={conversation}
-      currentUserId={currentUserId}
-      messages={messages}
-      isLoading={isLoading}
-      hasOlder={Boolean(hasOlder)}
-      isLoadingOlder={isLoadingOlder}
-      onLoadOlder={loadOlder}
-      isComposerPending={sendMessage.isPending || sendAttachment.isPending || editMessage.isPending}
-      isUnblocking={unblock.isPending}
-      onSendText={(payload) => sendMessage.mutateAsync(payload)}
-      onSendAttachment={(payload) => sendAttachment.mutateAsync(payload)}
-      onEditMessage={(messageId, payload) => editMessage.mutateAsync({ messageId, payload })}
-      onUnsendMessage={(messageId, scope) => unsendMessage.mutateAsync({ messageId, scope })}
-      onReactMessage={(messageId, emoji) => reactMessage.mutateAsync({ messageId, emoji })}
-      onMarkRead={handleMarkRead}
-      onTypingChange={handleTypingChange}
-      onUnblock={() => unblock.mutateAsync()}
-      onDownloadAttachment={async (msg) => {
-        const blob = await recruiterConnectApi.downloadAttachment(conversation.id, msg.id);
-        triggerConnectBlobDownload(blob, msg.attachmentFileName ?? 'attachment');
-      }}
-      onFetchLinkPreview={(url) => recruiterConnectApi.linkPreview(url)}
-      onBack={onBack}
-      muteStatus={muteStatus}
-      onMuteExpired={handleMuteExpired}
-      renderBlockModal={(onClose) => <BlockConversationDialog connectionId={conversation.id} onClose={onClose} />}
-      renderReportModal={(onClose) => <ReportConversationModal connectionId={conversation.id} onClose={onClose} />}
-    />
+    <>
+      <ConnectThreadFrame
+        key={conversation.id}
+        portal="recruiter"
+        conversation={conversation}
+        currentUserId={currentUserId}
+        messages={messages}
+        isLoading={isLoading}
+        hasOlder={Boolean(hasOlder)}
+        isLoadingOlder={isLoadingOlder}
+        onLoadOlder={loadOlder}
+        isComposerPending={sendMessage.isPending || sendAttachment.isPending || editMessage.isPending}
+        isUnblocking={unblock.isPending}
+        onSendText={(payload) => sendMessage.mutateAsync(payload)}
+        onSendAttachment={(payload) => sendAttachment.mutateAsync(payload)}
+        onEditMessage={(messageId, payload) => editMessage.mutateAsync({ messageId, payload })}
+        onUnsendMessage={(messageId, scope) => unsendMessage.mutateAsync({ messageId, scope })}
+        onReactMessage={(messageId, emoji) => reactMessage.mutateAsync({ messageId, emoji })}
+        onMarkRead={handleMarkRead}
+        onTypingChange={handleTypingChange}
+        onUnblock={() => unblock.mutateAsync()}
+        onDownloadAttachment={async (msg) => {
+          const blob = await recruiterConnectApi.downloadAttachment(conversation.id, msg.id);
+          triggerConnectBlobDownload(blob, msg.attachmentFileName ?? 'attachment');
+        }}
+        onFetchLinkPreview={(url) => recruiterConnectApi.linkPreview(url)}
+        onBack={onBack}
+        onReinvite={() => setShowReinviteModal(true)}
+        muteStatus={muteStatus}
+        onMuteExpired={handleMuteExpired}
+        renderBlockModal={(onClose) => <BlockConversationDialog connectionId={conversation.id} onClose={onClose} />}
+        renderReportModal={(onClose) => <ReportConversationModal connectionId={conversation.id} onClose={onClose} />}
+      />
+
+      {showReinviteModal && (
+        <InviteCandidateModal
+          mode="reinvite"
+          prefilledCandidate={{
+            candidateId: conversation.candidateId,
+            fullName: conversation.candidateName,
+          }}
+          onClose={() => setShowReinviteModal(false)}
+        />
+      )}
+    </>
   );
 }

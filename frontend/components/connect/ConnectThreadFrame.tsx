@@ -21,7 +21,7 @@ import type {
 import { createClientMessageId, getMessagePreviewText } from '@/utils/connect-chat';
 import { formatDateTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
-import { CheckCircle2, ShieldAlert, XCircle } from 'lucide-react';
+import { CheckCircle2, Send, ShieldAlert, XCircle } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 
@@ -57,6 +57,7 @@ type ConnectThreadFrameProps = {
   renderBlockModal: (onClose: () => void) => ReactNode;
   renderReportModal: (onClose: () => void) => ReactNode;
   pendingControls?: PendingControls;
+  onReinvite?: () => void;
   muteStatus?: ConnectMuteStatus;
   onMuteExpired?: () => void;
 };
@@ -86,6 +87,7 @@ export default function ConnectThreadFrame({
   renderBlockModal,
   renderReportModal,
   pendingControls,
+  onReinvite,
   muteStatus,
   onMuteExpired,
 }: ConnectThreadFrameProps) {
@@ -94,10 +96,20 @@ export default function ConnectThreadFrame({
   const [showBlockModal, setShowBlockModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showViolationModal, setShowViolationModal] = useState(false);
+  const [nowMs, setNowMs] = useState(() => Date.now());
 
   const viewerActorType = portal === 'recruiter' ? 'RECRUITER' : 'CANDIDATE';
   const peerName = portal === 'recruiter' ? conversation.candidateName : conversation.companyName;
   const isMuted = Boolean(muteStatus?.muted);
+  const inviteCount = conversation.inviteCount ?? 1;
+  const maxInvites = conversation.maxInvites ?? 2;
+  const hasReachedInviteLimit = inviteCount >= maxInvites;
+  const reinviteTargetMs = conversation.reinviteAvailableAt
+    ? new Date(conversation.reinviteAvailableAt).getTime()
+    : NaN;
+  const isInReinviteCooldown = Boolean(
+    conversation.reinviteAvailableAt && Number.isFinite(reinviteTargetMs) && nowMs < reinviteTargetMs,
+  );
 
   useEffect(() => {
     if (!muteStatus?.muted || !muteStatus.expiresAt || !onMuteExpired) return;
@@ -109,6 +121,18 @@ export default function ConnectThreadFrame({
     }, delayMs);
     return () => clearTimeout(timer);
   }, [muteStatus?.muted, muteStatus?.expiresAt, onMuteExpired]);
+
+  useEffect(() => {
+    if (conversation.status !== 'DECLINED' || !conversation.reinviteAvailableAt) return;
+    const targetMs = new Date(conversation.reinviteAvailableAt).getTime();
+    if (!Number.isFinite(targetMs)) return;
+    const remainingMs = targetMs - Date.now();
+    const delayMs = Math.max(0, Math.min(remainingMs + 500, 2_147_483_647));
+    const timer = setTimeout(() => {
+      setNowMs(Date.now());
+    }, delayMs);
+    return () => clearTimeout(timer);
+  }, [conversation.status, conversation.reinviteAvailableAt]);
 
   const handleActionError = (error: unknown) => {
     if (isApiError(error) && error.code === 'MESSAGE_BLOCKED_BY_FILTER') {
@@ -272,13 +296,85 @@ export default function ConnectThreadFrame({
           </div>
         ))}
 
-      {conversation.status === 'DECLINED' && (
+      {conversation.status === 'DECLINED' && portal === 'candidate' && (
         <div className="border-outline-variant text-on-surface-variant text-body-sm shrink-0 border-t bg-slate-50 px-5 py-3 text-center">
-          {portal === 'candidate'
-            ? 'You declined this chat invitation.'
-            : 'The candidate declined your chat invitation.'}
+          You declined this chat invitation.
         </div>
       )}
+
+      {conversation.status === 'DECLINED' &&
+        portal === 'recruiter' &&
+        (hasReachedInviteLimit ? (
+          <div className="border-outline-variant text-on-surface-variant text-body-sm shrink-0 border-t bg-slate-50 px-5 py-3 text-center">
+            The candidate declined your chat invitations ({inviteCount}/{maxInvites} attempts used). You cannot invite
+            this candidate again.
+          </div>
+        ) : isMuted ? (
+          <div className="border-outline-variant shrink-0 border-t bg-rose-50/70 px-4 py-3 sm:px-6">
+            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-2">
+                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+                <p className="text-xs leading-relaxed text-rose-800">
+                  {muteStatus?.expiresAt ? (
+                    <>
+                      The candidate declined your invitation. You are temporarily restricted from sending invitations
+                      until <span className="font-semibold">{formatDateTime(muteStatus.expiresAt)}</span>.
+                    </>
+                  ) : (
+                    'The candidate declined your invitation. Your account is temporarily restricted from sending invitations.'
+                  )}
+                </p>
+              </div>
+              {onReinvite && (
+                <Button type="button" size="sm" radius="md" disabled leftIcon={<Send className="h-3.5 w-3.5" />}>
+                  Send new invitation
+                </Button>
+              )}
+            </div>
+          </div>
+        ) : isInReinviteCooldown && conversation.reinviteAvailableAt ? (
+          <div className="border-outline-variant shrink-0 border-t bg-slate-50 px-4 py-3 sm:px-6">
+            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs leading-relaxed text-slate-600">
+                The candidate declined your invitation ({inviteCount}/{maxInvites}). You can send one final invitation
+                after{' '}
+                <span className="font-semibold text-slate-800">{formatDateTime(conversation.reinviteAvailableAt)}</span>
+                .
+              </p>
+              {onReinvite && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  radius="md"
+                  disabled
+                  leftIcon={<Send className="h-3.5 w-3.5" />}
+                >
+                  Send new invitation
+                </Button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="border-outline-variant shrink-0 border-t bg-slate-50 px-4 py-3 sm:px-6">
+            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs leading-relaxed text-slate-600">
+                The candidate declined your invitation ({inviteCount}/{maxInvites}). You may send one final invitation.
+              </p>
+              {onReinvite && (
+                <Button
+                  type="button"
+                  size="sm"
+                  radius="md"
+                  leftIcon={<Send className="h-3.5 w-3.5" />}
+                  onClick={onReinvite}
+                >
+                  Send new invitation
+                </Button>
+              )}
+            </div>
+          </div>
+        ))}
 
       {conversation.status === 'PENDING' && portal === 'recruiter' && (
         <div className="border-outline-variant text-on-surface-variant text-body-sm shrink-0 border-t bg-slate-50 px-5 py-3 text-center">

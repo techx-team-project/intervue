@@ -8,7 +8,6 @@ import UserAvatar from '@/components/ui/UserAvatar';
 import { useConnectMuteStatus, useSendInvitation } from '@/hooks/useRecruiterConnect';
 import { isApiError } from '@/lib/api-error';
 import { sendInvitationSchema, type SendInvitationFormValues } from '@/schemas/connect.schema';
-import type { EligibleCandidate } from '@/types/connect';
 import { formatDateTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,18 +18,32 @@ import { toast } from 'sonner';
 
 const FORM_ID = 'invite-candidate-form';
 
+export type InviteCandidateTarget = {
+  candidateId: number;
+  fullName: string;
+  email?: string;
+  jobTitle?: string;
+};
+
 type InviteCandidateModalProps = {
-  prefilledCandidate: EligibleCandidate;
+  prefilledCandidate: InviteCandidateTarget;
+  mode?: 'invite' | 'reinvite';
   onClose: (createdPublicId?: string) => void;
 };
 
-export default function InviteCandidateModal({ prefilledCandidate, onClose }: InviteCandidateModalProps) {
+export default function InviteCandidateModal({
+  prefilledCandidate,
+  mode = 'invite',
+  onClose,
+}: InviteCandidateModalProps) {
   const { data: muteStatus } = useConnectMuteStatus();
   const sendInvitation = useSendInvitation();
   const [showViolationModal, setShowViolationModal] = useState(false);
   const [muteTriggered, setMuteTriggered] = useState(false);
 
+  const isReinvite = mode === 'reinvite';
   const isMuted = muteStatus ? muteStatus.muted : muteTriggered;
+  const candidateSubtitle = [prefilledCandidate.jobTitle, prefilledCandidate.email].filter(Boolean).join(' • ');
 
   const {
     register,
@@ -47,7 +60,7 @@ export default function InviteCandidateModal({ prefilledCandidate, onClose }: In
       { candidateId: values.candidateId, message: values.message },
       {
         onSuccess: (created) => {
-          toast.success('Invitation sent successfully.');
+          toast.success(isReinvite ? 'New invitation sent successfully.' : 'Invitation sent successfully.');
           onClose(created?.publicId);
         },
         onError: (error) => {
@@ -58,6 +71,9 @@ export default function InviteCandidateModal({ prefilledCandidate, onClose }: In
             }
             if (error.code === 'CONNECT_MUTED') {
               setMuteTriggered(true);
+            }
+            if (error.code === 'CONNECTION_INVITE_LIMIT_REACHED' || error.code === 'CONNECTION_REINVITE_COOLDOWN') {
+              onClose();
             }
           }
           toast.error(getErrorMessage(error));
@@ -72,14 +88,14 @@ export default function InviteCandidateModal({ prefilledCandidate, onClose }: In
         isOpen
         onClose={() => onClose()}
         radius="md"
-        title="Invite to Connect"
+        title={isReinvite ? 'Send new invitation' : 'Invite to Connect'}
         footer={
           <>
             <Button type="button" variant="ghost" radius="md" onClick={() => onClose()}>
               Cancel
             </Button>
             <Button type="submit" radius="md" form={FORM_ID} disabled={isMuted} isLoading={sendInvitation.isPending}>
-              Send invitation
+              {isReinvite ? 'Send new invitation' : 'Send invitation'}
             </Button>
           </>
         }
@@ -103,13 +119,22 @@ export default function InviteCandidateModal({ prefilledCandidate, onClose }: In
             <UserAvatar fullName={prefilledCandidate.fullName} size="sm" />
             <div className="min-w-0">
               <p className="text-body-sm text-on-surface truncate font-semibold">{prefilledCandidate.fullName}</p>
-              <p className="text-label-sm text-on-surface-variant truncate">
-                {prefilledCandidate.jobTitle
-                  ? `${prefilledCandidate.jobTitle} • ${prefilledCandidate.email}`
-                  : prefilledCandidate.email}
-              </p>
+              {candidateSubtitle ? (
+                <p className="text-label-sm text-on-surface-variant truncate">{candidateSubtitle}</p>
+              ) : (
+                isReinvite && (
+                  <p className="text-label-sm text-on-surface-variant truncate">Final invitation attempt (2 of 2)</p>
+                )
+              )}
             </div>
           </div>
+
+          {isReinvite && (
+            <p className="text-xs leading-relaxed text-slate-600">
+              This is your final invitation to this candidate. If declined again, you will no longer be able to send new
+              invitations in this conversation.
+            </p>
+          )}
 
           <Textarea
             label="Opening message"
