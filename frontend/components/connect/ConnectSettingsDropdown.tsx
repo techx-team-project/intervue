@@ -84,9 +84,11 @@ export default function ConnectSettingsDropdown({ onOpenRules }: ConnectSettings
     }
     const rect = triggerRef.current?.getBoundingClientRect();
     if (!rect) return;
+    const dropdownWidth = 264;
+    const maxLeft = Math.max(12, window.innerWidth - dropdownWidth - 12);
     setPosition({
       top: rect.bottom + 6,
-      left: Math.max(12, rect.right - 260),
+      left: Math.min(Math.max(12, rect.left), maxLeft),
     });
     setIsOpen(true);
   };
@@ -109,10 +111,10 @@ export default function ConnectSettingsDropdown({ onOpenRules }: ConnectSettings
         createPortal(
           <div
             ref={menuRef}
-            style={{ top: position.top, left: position.left, width: 260 }}
-            className="border-outline-variant shadow-elevation-2 fixed z-[60] rounded-xl border bg-white p-2.5"
+            style={{ top: position.top, left: position.left, width: 264 }}
+            className="fixed z-[60] rounded-md border border-slate-200 bg-white p-2 shadow-lg"
           >
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               {/* Notification toggle */}
               <div
                 role="button"
@@ -121,7 +123,7 @@ export default function ConnectSettingsDropdown({ onOpenRules }: ConnectSettings
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') toggleNotif(!receiveNotifications);
                 }}
-                className="hover:bg-surface-container-low flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 transition-colors"
+                className="hover:bg-surface-container-low flex cursor-pointer items-center justify-between rounded-md px-2.5 py-2 transition-colors"
               >
                 <span className="flex items-center gap-2.5 text-sm font-medium text-slate-700">
                   <Bell className="h-4 w-4 text-slate-500" />
@@ -148,7 +150,7 @@ export default function ConnectSettingsDropdown({ onOpenRules }: ConnectSettings
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') toggleSound(!notificationSound);
                 }}
-                className="hover:bg-surface-container-low flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 transition-colors"
+                className="hover:bg-surface-container-low flex cursor-pointer items-center justify-between rounded-md px-2.5 py-2 transition-colors"
               >
                 <span className="flex items-center gap-2.5 text-sm font-medium text-slate-700">
                   <Volume2 className="h-4 w-4 text-slate-500" />
@@ -176,7 +178,7 @@ export default function ConnectSettingsDropdown({ onOpenRules }: ConnectSettings
                       setIsOpen(false);
                       onOpenRules();
                     }}
-                    className="hover:bg-surface-container-low flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-slate-700 transition-colors"
+                    className="hover:bg-surface-container-low flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium text-slate-700 transition-colors"
                   >
                     <FileText className="h-4 w-4 text-slate-500" />
                     Community guidelines
