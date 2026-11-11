@@ -251,6 +251,12 @@ public enum ErrorCode {
             HttpStatus.TOO_MANY_REQUESTS, "You have reached your daily invitation limit!"),
     CONNECTION_ALREADY_EXISTS(
             HttpStatus.CONFLICT, "A connection with this candidate already exists!"),
+    CONNECTION_INVITE_LIMIT_REACHED(
+            HttpStatus.CONFLICT,
+            "You have reached the maximum number of invitations for this candidate!"),
+    CONNECTION_REINVITE_COOLDOWN(
+            HttpStatus.TOO_MANY_REQUESTS,
+            "Please wait 24 hours after a declined invitation before sending a new one!"),
     NOT_ELIGIBLE_TO_CONNECT(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "This candidate has not applied to your company yet!"),
