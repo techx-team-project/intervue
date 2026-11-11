@@ -14,7 +14,11 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
 
     boolean existsByCandidateIdAndCompanyId(Long candidateId, Long companyId);
 
+    long countByCandidateIdAndStatus(Long candidateId, ConnectionStatus status);
+
     Optional<Connection> findByIdAndCandidateId(Long id, Long candidateId);
+
+    Optional<Connection> findByIdAndCompanyId(Long id, Long companyId);
 
     Page<Connection> findByCandidateIdAndStatus(
             Long candidateId, ConnectionStatus status, Pageable pageable);

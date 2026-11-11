@@ -261,7 +261,15 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "This message contains inappropriate content!"),
     CONNECT_MUTED(
             HttpStatus.FORBIDDEN, "You have been temporarily restricted from sending messages!"),
-    REPORT_ALREADY_REVIEWED(HttpStatus.CONFLICT, "This report has already been reviewed!");
+    REPORT_ALREADY_REVIEWED(HttpStatus.CONFLICT, "This report has already been reviewed!"),
+    MESSAGE_EDIT_WINDOW_EXPIRED(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "Messages can only be edited within 15 minutes of sending!"),
+    MESSAGE_NOT_EDITABLE(
+            HttpStatus.UNPROCESSABLE_CONTENT, "Only text and link messages can be edited!"),
+    MESSAGE_ALREADY_RECALLED(HttpStatus.CONFLICT, "This message has already been unsent!"),
+    CONNECTION_NOT_BLOCKED(HttpStatus.CONFLICT, "This conversation is not currently blocked!"),
+    CONNECT_REACTION_INVALID(HttpStatus.BAD_REQUEST, "Unsupported reaction emoji!");
 
     private final HttpStatus status;
     private final String message;
