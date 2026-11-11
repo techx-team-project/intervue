@@ -4,6 +4,7 @@ import CandidateConversationListItem from '@/components/candidate/connect/Candid
 import CandidateInvitationListItem from '@/components/candidate/connect/CandidateInvitationListItem';
 import ConnectSettingsDropdown from '@/components/connect/ConnectSettingsDropdown';
 import ConnectSidebarEmptyState from '@/components/connect/ConnectSidebarEmptyState';
+import { ConnectSidebarListSkeleton } from '@/components/connect/ConnectSkeletons';
 import IntervueConnectLogo from '@/components/connect/IntervueConnectLogo';
 import Spinner from '@/components/common/Spinner';
 import { Input } from '@/components/ui/Input';
@@ -26,10 +27,10 @@ type CandidateConnectSidebarProps = {
   hasMoreConversations?: boolean;
   isLoadingMoreConversations: boolean;
   onLoadMoreConversations: () => void;
-  selectedId: number | null;
+  selectedKey: string | null;
   selectedTab: CandidateConnectTab;
   onSelectTab: (tab: CandidateConnectTab) => void;
-  onSelectConversation: (id: number) => void;
+  onSelectConversation: (publicId: string) => void;
   onOpenRules: () => void;
 };
 
@@ -41,7 +42,7 @@ export default function CandidateConnectSidebar({
   hasMoreConversations,
   isLoadingMoreConversations,
   onLoadMoreConversations,
-  selectedId,
+  selectedKey,
   selectedTab,
   onSelectTab,
   onSelectConversation,
@@ -89,11 +90,11 @@ export default function CandidateConnectSidebar({
     <div
       className={cn(
         'border-outline-variant flex h-full w-full shrink-0 flex-col border-r bg-white md:w-[368px] lg:w-[356px] xl:w-[388px] 2xl:w-[404px]',
-        selectedId !== null && 'hidden md:flex',
+        selectedKey !== null && 'hidden md:flex',
       )}
     >
       {/* Top Header of Sidebar */}
-      <div className="flex h-14 shrink-0 items-center justify-between gap-2 px-4">
+      <div className="flex h-[68px] shrink-0 items-center justify-between gap-2 px-4">
         <IntervueConnectLogo />
         <div className="flex shrink-0 items-center gap-1.5">
           <Link
@@ -196,9 +197,7 @@ export default function CandidateConnectSidebar({
       {/* List Area */}
       <div className="flex-1 overflow-y-auto px-2 py-2">
         {isLoading ? (
-          <div className="flex justify-center py-10">
-            <Spinner />
-          </div>
+          <ConnectSidebarListSkeleton />
         ) : activeList.length === 0 ? (
           <ConnectSidebarEmptyState
             mobileTitle={
@@ -230,16 +229,16 @@ export default function CandidateConnectSidebar({
                   <CandidateConversationListItem
                     key={conversation.id}
                     conversation={conversation}
-                    isActive={conversation.id === selectedId}
-                    onClick={() => onSelectConversation(conversation.id)}
+                    isActive={conversation.publicId === selectedKey}
+                    onClick={() => onSelectConversation(conversation.publicId)}
                   />
                 ))
               : activeList.map((invitation) => (
                   <CandidateInvitationListItem
                     key={invitation.id}
                     invitation={invitation}
-                    isActive={invitation.id === selectedId}
-                    onClick={() => onSelectConversation(invitation.id)}
+                    isActive={invitation.publicId === selectedKey}
+                    onClick={() => onSelectConversation(invitation.publicId)}
                   />
                 ))}
 

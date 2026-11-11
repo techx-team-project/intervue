@@ -1,11 +1,11 @@
 'use client';
 
-import Spinner from '@/components/common/Spinner';
 import CandidateConnectThread from '@/components/candidate/connect/CandidateConnectThread';
 import ConnectEmptyPanel from '@/components/connect/ConnectEmptyPanel';
+import { ConnectThreadSkeleton } from '@/components/connect/ConnectSkeletons';
 import { ROUTES } from '@/constants/routes';
 import {
-  useCandidateConversation,
+  useCandidateConversationByKey,
   useCandidateConversations,
   useCandidateInvitations,
 } from '@/hooks/useCandidateConnect';
@@ -15,35 +15,31 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 
 type CandidateConnectThreadSlotProps = {
-  connectionId: number | null;
+  routeKey: string | null;
 };
 
-export default function CandidateConnectThreadSlot({ connectionId }: CandidateConnectThreadSlotProps) {
+export default function CandidateConnectThreadSlot({ routeKey }: CandidateConnectThreadSlotProps) {
   const router = useRouter();
   const setCandidateTab = useConnectUiStore((s) => s.setCandidateTab);
   const { conversations } = useCandidateConversations();
   const { invitations } = useCandidateInvitations();
-  const { data: fetchedConversation, isLoading, isError } = useCandidateConversation(connectionId);
+  const { data: fetchedConversation, isLoading, isError } = useCandidateConversationByKey(routeKey);
 
   const conversation = useMemo(() => {
-    if (!connectionId) return null;
+    if (!routeKey) return null;
     return (
-      conversations.find((item) => item.id === connectionId) ??
-      invitations.find((item) => item.id === connectionId) ??
+      conversations.find((item) => item.publicId === routeKey) ??
+      invitations.find((item) => item.publicId === routeKey) ??
       fetchedConversation ??
       null
     );
-  }, [connectionId, conversations, invitations, fetchedConversation]);
+  }, [routeKey, conversations, invitations, fetchedConversation]);
 
-  if (connectionId && isLoading && !conversation) {
-    return (
-      <div className="flex flex-1 items-center justify-center bg-white">
-        <Spinner />
-      </div>
-    );
+  if (routeKey && isLoading && !conversation) {
+    return <ConnectThreadSkeleton />;
   }
 
-  if (!connectionId || !conversation || (isError && !conversation)) {
+  if (!routeKey || !conversation || (isError && !conversation)) {
     return (
       <ConnectEmptyPanel
         title="Conversation not found"

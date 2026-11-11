@@ -2,18 +2,19 @@
 
 import CandidateAppliedJobsPanel from '@/components/candidate/connect/CandidateAppliedJobsPanel';
 import CandidateConnectSidebar from '@/components/candidate/connect/CandidateConnectSidebar';
-import Spinner from '@/components/common/Spinner';
+import ConnectThreadProgressBar from '@/components/connect/ConnectThreadProgressBar';
+import ConnectWorkspaceBootLoader from '@/components/connect/ConnectWorkspaceBootLoader';
 import ConnectRulesModal from '@/components/recruiter/connect/ConnectRulesModal';
 import { candidateConversationUrl } from '@/constants/routes';
 import {
-  useCandidateConversation,
+  useCandidateConversationByKey,
   useCandidateConversations,
   useCandidateInvitations,
   useCandidateRulesAck,
 } from '@/hooks/useCandidateConnect';
 import { cn } from '@/lib/utils';
 import { useConnectUiStore } from '@/store/connect-ui.store';
-import { parseConnectRouteId } from '@/utils/connect-chat';
+import { parseConnectRouteKey } from '@/utils/connect-chat';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
@@ -24,12 +25,12 @@ type CandidateConnectViewProps = {
 export default function CandidateConnectView({ children }: CandidateConnectViewProps) {
   const router = useRouter();
   const params = useParams<{ id?: string }>();
-  const selectedId = parseConnectRouteId(params?.id);
+  const selectedKey = parseConnectRouteKey(params?.id);
 
   const selectedTab = useConnectUiStore((s) => s.candidateTab);
   const setSelectedTab = useConnectUiStore((s) => s.setCandidateTab);
   const rightPanelOpen = useConnectUiStore((s) => s.rightPanelOpen);
-  const lastAutoSyncedIdRef = useRef<number | null>(null);
+  const lastAutoSyncedKeyRef = useRef<string | null>(null);
   const [showRules, setShowRules] = useState(false);
 
   const { data: rulesAck, isLoading: isLoadingRules } = useCandidateRulesAck();
@@ -41,38 +42,39 @@ export default function CandidateConnectView({ children }: CandidateConnectViewP
     loadMore: loadMoreConversations,
   } = useCandidateConversations();
   const { invitations, isLoading: isLoadingInvitations } = useCandidateInvitations();
-  const { data: singleConversation } = useCandidateConversation(selectedId);
+  const { data: singleConversation } = useCandidateConversationByKey(selectedKey);
 
   const selectedConversation = useMemo(() => {
-    if (selectedId === null) return null;
+    if (selectedKey === null) return null;
     return (
-      conversations.find((c) => c.id === selectedId) ??
-      invitations.find((i) => i.id === selectedId) ??
+      conversations.find((c) => c.publicId === selectedKey) ??
+      invitations.find((i) => i.publicId === selectedKey) ??
       singleConversation ??
       null
     );
-  }, [selectedId, conversations, invitations, singleConversation]);
+  }, [selectedKey, conversations, invitations, singleConversation]);
 
   // Auto-focus the Invitations tab once when opening a pending request directly (e.g. via deep-link/reload).
   useEffect(() => {
-    if (selectedId === null || !selectedConversation) return;
-    if (lastAutoSyncedIdRef.current === selectedId) return;
+    if (selectedKey === null || !selectedConversation) return;
+    if (lastAutoSyncedKeyRef.current === selectedKey) return;
     if (selectedConversation.status === 'PENDING') {
       useConnectUiStore.getState().setCandidateTab('INVITATIONS');
     }
-    lastAutoSyncedIdRef.current = selectedId;
-  }, [selectedId, selectedConversation]);
+    lastAutoSyncedKeyRef.current = selectedKey;
+  }, [selectedKey, selectedConversation]);
 
-  if (isLoadingRules) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-white">
-        <Spinner />
-      </div>
-    );
-  }
+  const isBootReady = !isLoadingRules && !isLoadingConversations && !isLoadingInvitations;
 
   return (
     <div className="flex h-screen overflow-hidden bg-white">
+      <ConnectWorkspaceBootLoader isDataReady={isBootReady} />
+      <ConnectThreadProgressBar
+        portal="candidate"
+        connectionId={selectedConversation?.id ?? null}
+        connectionKey={selectedKey}
+      />
+
       <CandidateConnectSidebar
         conversations={conversations}
         invitations={invitations}
@@ -81,14 +83,14 @@ export default function CandidateConnectView({ children }: CandidateConnectViewP
         hasMoreConversations={hasMoreConversations}
         isLoadingMoreConversations={isLoadingMoreConversations}
         onLoadMoreConversations={loadMoreConversations}
-        selectedId={selectedId}
+        selectedKey={selectedKey}
         selectedTab={selectedTab}
         onSelectTab={setSelectedTab}
-        onSelectConversation={(id) => router.push(candidateConversationUrl(id))}
+        onSelectConversation={(publicId) => router.push(candidateConversationUrl(publicId))}
         onOpenRules={() => setShowRules(true)}
       />
 
-      <main className={cn('min-w-0 flex-1 flex-col bg-white', selectedId === null ? 'hidden md:flex' : 'flex')}>
+      <main className={cn('min-w-0 flex-1 flex-col bg-white', selectedKey === null ? 'hidden md:flex' : 'flex')}>
         {children}
       </main>
 

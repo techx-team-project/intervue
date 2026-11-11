@@ -2,6 +2,7 @@
 
 import ConnectSettingsDropdown from '@/components/connect/ConnectSettingsDropdown';
 import ConnectSidebarEmptyState from '@/components/connect/ConnectSidebarEmptyState';
+import { ConnectSidebarListSkeleton } from '@/components/connect/ConnectSkeletons';
 import IntervueConnectLogo from '@/components/connect/IntervueConnectLogo';
 import ConversationListItem from '@/components/recruiter/connect/ConversationListItem';
 import Spinner from '@/components/common/Spinner';
@@ -24,8 +25,8 @@ type ConnectSidebarProps = {
   hasMore?: boolean;
   isLoadingMore: boolean;
   onLoadMore: () => void;
-  selectedId: number | null;
-  onSelect: (id: number) => void;
+  selectedKey: string | null;
+  onSelect: (publicId: string) => void;
   onOpenRules: () => void;
   onOpenEligible?: () => void;
 };
@@ -36,7 +37,7 @@ export default function ConnectSidebar({
   hasMore,
   isLoadingMore,
   onLoadMore,
-  selectedId,
+  selectedKey,
   onSelect,
   onOpenRules,
   onOpenEligible,
@@ -65,10 +66,10 @@ export default function ConnectSidebar({
     <div
       className={cn(
         'border-outline-variant flex h-full w-full shrink-0 flex-col border-r bg-white md:w-[368px] lg:w-[356px] xl:w-[388px] 2xl:w-[404px]',
-        selectedId !== null && 'hidden md:flex',
+        selectedKey !== null && 'hidden md:flex',
       )}
     >
-      <div className="flex h-14 shrink-0 items-center justify-between gap-2 px-4">
+      <div className="flex h-[68px] shrink-0 items-center justify-between gap-2 px-4">
         <IntervueConnectLogo />
         <div className="flex shrink-0 items-center gap-1.5">
           {onOpenEligible && (
@@ -141,9 +142,7 @@ export default function ConnectSidebar({
 
       <div className="flex-1 overflow-y-auto px-2 py-2">
         {isLoading ? (
-          <div className="flex justify-center py-10">
-            <Spinner />
-          </div>
+          <ConnectSidebarListSkeleton />
         ) : filtered.length === 0 ? (
           <ConnectSidebarEmptyState
             mobileTitle="No conversations yet..."
@@ -158,8 +157,8 @@ export default function ConnectSidebar({
               <ConversationListItem
                 key={conversation.id}
                 conversation={conversation}
-                isActive={conversation.id === selectedId}
-                onClick={() => onSelect(conversation.id)}
+                isActive={conversation.publicId === selectedKey}
+                onClick={() => onSelect(conversation.publicId)}
               />
             ))}
             <div ref={sentinelRef} />

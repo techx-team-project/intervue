@@ -1,7 +1,7 @@
 import CandidateConnectThreadSlot from '@/components/candidate/connect/CandidateConnectThreadSlot';
-import { parseConnectRouteId } from '@/utils/connect-chat';
+import { parseConnectRouteKey } from '@/utils/connect-chat';
 
 export default async function CandidateConversationDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <CandidateConnectThreadSlot connectionId={parseConnectRouteId(id)} />;
+  return <CandidateConnectThreadSlot routeKey={parseConnectRouteKey(id)} />;
 }

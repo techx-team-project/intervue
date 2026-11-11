@@ -1,37 +1,33 @@
 'use client';
 
-import Spinner from '@/components/common/Spinner';
 import ConnectEmptyPanel from '@/components/connect/ConnectEmptyPanel';
+import { ConnectThreadSkeleton } from '@/components/connect/ConnectSkeletons';
 import ConnectThread from '@/components/recruiter/connect/ConnectThread';
 import { ROUTES } from '@/constants/routes';
-import { useConversations, useRecruiterConversation } from '@/hooks/useRecruiterConnect';
+import { useConversations, useRecruiterConversationByKey } from '@/hooks/useRecruiterConnect';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 
 type ConnectThreadSlotProps = {
-  connectionId: number | null;
+  routeKey: string | null;
 };
 
-export default function ConnectThreadSlot({ connectionId }: ConnectThreadSlotProps) {
+export default function ConnectThreadSlot({ routeKey }: ConnectThreadSlotProps) {
   const router = useRouter();
   const { conversations } = useConversations();
-  const { data: fetchedConversation, isLoading, isError } = useRecruiterConversation(connectionId);
+  const { data: fetchedConversation, isLoading, isError } = useRecruiterConversationByKey(routeKey);
 
   const conversation = useMemo(() => {
-    if (!connectionId) return null;
-    return conversations.find((item) => item.id === connectionId) ?? fetchedConversation ?? null;
-  }, [connectionId, conversations, fetchedConversation]);
+    if (!routeKey) return null;
+    return conversations.find((item) => item.publicId === routeKey) ?? fetchedConversation ?? null;
+  }, [routeKey, conversations, fetchedConversation]);
 
-  if (connectionId && isLoading && !conversation) {
-    return (
-      <div className="flex flex-1 items-center justify-center bg-white">
-        <Spinner />
-      </div>
-    );
+  if (routeKey && isLoading && !conversation) {
+    return <ConnectThreadSkeleton />;
   }
 
-  if (!connectionId || !conversation || (isError && !conversation)) {
+  if (!routeKey || !conversation || (isError && !conversation)) {
     return (
       <ConnectEmptyPanel
         title="Conversation not found"
