@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react';
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'neutral' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  radius?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -27,11 +28,25 @@ const sizeStyles: Record<NonNullable<ButtonProps['size']>, string> = {
   '2xl': 'h-14 px-8 text-base font-semibold gap-2',
 };
 
-type ButtonStyleOptions = Pick<ButtonProps, 'variant' | 'size' | 'className'>;
+const radiusStyles: Record<NonNullable<ButtonProps['radius']>, string> = {
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  full: 'rounded-full',
+};
 
-export function buttonClassName({ variant = 'primary', size = 'md', className }: ButtonStyleOptions = {}): string {
+type ButtonStyleOptions = Pick<ButtonProps, 'variant' | 'size' | 'radius' | 'className'>;
+
+export function buttonClassName({
+  variant = 'primary',
+  size = 'md',
+  radius = 'full',
+  className,
+}: ButtonStyleOptions = {}): string {
   return cn(
-    'state-layer touch-target ease-standard inline-flex cursor-pointer whitespace-nowrap items-center justify-center rounded-full transition-[color,background-color,transform] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed',
+    'state-layer touch-target ease-standard inline-flex cursor-pointer whitespace-nowrap items-center justify-center transition-[color,background-color,transform] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed',
+    radiusStyles[radius],
     variantStyles[variant],
     sizeStyles[size],
     className,
@@ -44,6 +59,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       variant = 'primary',
       size = 'md',
+      radius = 'full',
       isLoading = false,
       leftIcon,
       rightIcon,
@@ -60,7 +76,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={disabled || isLoading}
         className={cn(
-          'state-layer touch-target ease-standard inline-flex cursor-pointer items-center justify-center rounded-full whitespace-nowrap transition-colors duration-150 select-none disabled:cursor-not-allowed',
+          'state-layer touch-target ease-standard inline-flex cursor-pointer items-center justify-center whitespace-nowrap transition-colors duration-150 select-none disabled:cursor-not-allowed',
+          radiusStyles[radius],
           variantStyles[variant],
           sizeStyles[size],
           className,

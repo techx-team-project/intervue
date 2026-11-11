@@ -7,10 +7,28 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   helperText?: string;
   leftIcon?: React.ReactNode;
   rightElement?: React.ReactNode;
+  radius?: 'md' | 'lg' | 'xl' | 'full';
+  focusTone?: 'primary' | 'neutral';
 }
 
+const radiusStyles: Record<NonNullable<InputProps['radius']>, string> = {
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  full: 'rounded-full',
+};
+
+const focusToneStyles: Record<NonNullable<InputProps['focusTone']>, string> = {
+  primary: 'border-outline focus:border-primary focus:ring-2 focus:ring-emerald-600/15 focus:outline-none',
+  neutral:
+    'border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-slate-200/60 focus:outline-none',
+};
+
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, helperText, leftIcon, rightElement, id, ...props }, ref) => {
+  (
+    { className, label, error, helperText, leftIcon, rightElement, radius = 'xl', focusTone = 'primary', id, ...props },
+    ref,
+  ) => {
     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
 
     return (
@@ -32,11 +50,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              'text-on-surface w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm placeholder-slate-400 transition-colors',
-              'focus:border-primary focus:ring-2 focus:ring-emerald-600/15 focus:outline-none',
+              'text-on-surface w-full border bg-white px-3.5 py-2.5 text-sm placeholder-slate-400 transition-colors',
+              radiusStyles[radius],
               leftIcon ? 'pl-10' : 'pl-3.5',
               rightElement ? 'pr-11' : 'pr-3.5',
-              error ? 'border-error focus:border-error focus:ring-rose-500/15' : 'border-outline',
+              error
+                ? 'border-error focus:border-error focus:ring-2 focus:ring-rose-500/15 focus:outline-none'
+                : focusToneStyles[focusTone],
               className,
             )}
             {...props}
