@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { hasBottomBar } from '@/constants/ai-chat';
 import { useSupportChat } from '@/hooks/useSupportChat';
+import { usePathname } from 'next/navigation';
+import React, { useEffect } from 'react';
 import { ChatPanel } from './ChatPanel';
 import { FloatingChatButton } from './FloatingChatButton';
 
@@ -36,6 +37,10 @@ export function SupportChatbot() {
       setChatContext(undefined);
     }
   }, [pathname, setChatContext]);
+
+  if (hasBottomBar(pathname)) {
+    return null;
+  }
 
   return (
     <>

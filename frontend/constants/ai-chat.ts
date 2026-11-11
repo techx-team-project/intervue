@@ -30,5 +30,10 @@ export const AI_CHAT_SESSION_KEY = 'intervue.ai.chat.sessionId';
 
 export function hasBottomBar(pathname: string | null | undefined): boolean {
   if (!pathname) return false;
-  return pathname.startsWith('/recruiter') || pathname.startsWith('/admin') || pathname === '/mascot';
+  return (
+    pathname.startsWith('/recruiter') ||
+    pathname.startsWith('/admin') ||
+    pathname === '/mascot' ||
+    pathname.startsWith('/candidate/conversations')
+  );
 }
