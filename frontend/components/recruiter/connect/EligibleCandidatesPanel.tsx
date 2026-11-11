@@ -31,25 +31,42 @@ export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited
     <div
       className={cn(
         'flex flex-col bg-white',
-        isModal ? 'h-[65vh] w-full' : 'border-outline-variant hidden h-full w-80 shrink-0 border-l lg:flex',
+        isModal
+          ? 'h-[65vh] w-full'
+          : 'border-outline-variant hidden h-full shrink-0 border-l lg:flex lg:w-[356px] xl:w-[388px] 2xl:w-[404px]',
       )}
     >
-      <div className={cn('border-outline-variant border-b', isModal ? 'pb-3' : 'px-4 py-3.5')}>
-        {!isModal && (
-          <>
-            <p className="text-label-md text-on-surface-variant font-bold tracking-wide uppercase">Other Candidates</p>
-            <p className="text-label-sm text-on-surface-variant mt-0.5">Applicants who applied to your job postings</p>
-          </>
-        )}
-        <div className={isModal ? '' : 'mt-2.5'}>
+      {!isModal ? (
+        <div className="shrink-0">
+          <div className="flex h-14 items-center px-4">
+            <p className="text-xs font-bold tracking-wide text-slate-800 uppercase">Other Candidates</p>
+          </div>
+          <div className="border-outline-variant border-b px-4 pt-1 pb-3">
+            <Input
+              radius="full"
+              focusTone="neutral"
+              placeholder="Search candidate..."
+              leftIcon={<Search className="h-4 w-4" />}
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              className="h-9.5 bg-slate-50/70 text-[13px]"
+            />
+            <p className="mt-1.5 px-1 text-[11px] text-slate-400">Applicants who applied to your job postings</p>
+          </div>
+        </div>
+      ) : (
+        <div className="border-outline-variant border-b pb-3">
           <Input
+            radius="full"
+            focusTone="neutral"
             placeholder="Search candidate..."
             leftIcon={<Search className="h-4 w-4" />}
             value={search}
             onChange={(event) => setSearch(event.target.value)}
+            className="h-9.5 bg-slate-50/70 text-[13px]"
           />
         </div>
-      </div>
+      )}
 
       <div className={cn('flex-1 overflow-y-auto py-2', isModal ? '' : 'px-2')}>
         {isLoading ? (
@@ -95,7 +112,7 @@ export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited
       <div className={cn('border-outline-variant border-t', isModal ? 'pt-3' : 'p-3')}>
         <Link
           href={ROUTES.RECRUITER_APPLICATIONS}
-          className="border-outline-variant text-on-surface hover:bg-surface-container-low flex w-full items-center justify-center rounded-xl border py-2.5 text-xs font-semibold transition-colors"
+          className="flex h-10.5 w-full items-center justify-center rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 transition-colors hover:border-slate-400 hover:bg-slate-50"
         >
           Manage applications
         </Link>
