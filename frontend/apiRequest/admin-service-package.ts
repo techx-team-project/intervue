@@ -2,6 +2,7 @@ import { request } from '@/apiRequest/http';
 import type {
   AdminServiceCategory,
   AdminServicePackage,
+  ReorderServiceCategoriesInput,
   SaveServiceCategoryInput,
   SaveServicePackageInput,
   ServicePackageStatus,
@@ -29,11 +30,21 @@ function toQuery(params: AdminServicePackageSearchParams) {
 export const adminServicePackageApi = {
   listCategories: () => request<AdminServiceCategory[]>('/admin/service-categories'),
 
+  getCategory: (id: number) => request<AdminServiceCategory>(`/admin/service-categories/${id}`),
+
   createCategory: (data: SaveServiceCategoryInput) =>
     request<AdminServiceCategory>('/admin/service-categories', { method: 'POST', body: data }),
 
   updateCategory: (id: number, data: SaveServiceCategoryInput) =>
     request<AdminServiceCategory>(`/admin/service-categories/${id}`, { method: 'PUT', body: data }),
+
+  setCategoryActive: (id: number, active: boolean) =>
+    request<AdminServiceCategory>(`/admin/service-categories/${id}/${active ? 'activate' : 'deactivate'}`, {
+      method: 'POST',
+    }),
+
+  reorderCategories: (data: ReorderServiceCategoriesInput) =>
+    request<AdminServiceCategory[]>('/admin/service-categories/reorder', { method: 'PUT', body: data }),
 
   deleteCategory: (id: number) => request<void>(`/admin/service-categories/${id}`, { method: 'DELETE' }),
 

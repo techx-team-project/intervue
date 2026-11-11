@@ -275,12 +275,16 @@ export default function AdminServiceCategoryForm({
               <h3 className="text-navy dark:text-forest-50 text-xs font-bold tracking-wider uppercase">
                 Recruiter section preview
               </h3>
-              {!isActiveValue && (
+              {!isActiveValue ? (
                 <span className="dark:bg-forest-850 dark:text-forest-300 bg-surface-container-low text-on-surface-variant inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold">
                   <EyeOff className="h-3 w-3" />
                   Hidden
                 </span>
-              )}
+              ) : (editingCategory?.activePackageCount ?? 0) === 0 ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-semibold text-amber-700 dark:bg-amber-950/50 dark:text-amber-300">
+                  Needs active package
+                </span>
+              ) : null}
             </div>
 
             <div className="dark:border-forest-800 dark:bg-forest-950/60 border-outline-variant bg-surface-container-low/40 mt-4 rounded-xl border p-4">
@@ -351,7 +355,8 @@ export default function AdminServiceCategoryForm({
                   Linked packages:{' '}
                   <strong className="text-navy dark:text-forest-100 tabular-nums">
                     {editingCategory.packageCount}
-                  </strong>
+                  </strong>{' '}
+                  ({editingCategory.activePackageCount} active)
                 </span>
                 <Link
                   href={`${ROUTES.ADMIN_SERVICE_PACKAGES}?categoryId=${editingCategory.id}`}

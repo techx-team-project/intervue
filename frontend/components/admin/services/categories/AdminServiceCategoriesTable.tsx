@@ -2,6 +2,7 @@
 
 import Switch from '@/components/ui/Switch';
 import { ROUTES } from '@/constants/routes';
+import { CATEGORY_VISIBILITY_META, getCategoryVisibilityState } from '@/lib/admin-service-categories';
 import { cn } from '@/lib/utils';
 import type { AdminServiceCategory } from '@/types/admin-service-package';
 import {
@@ -83,6 +84,7 @@ function SortableCategoryRow({
 
   const showDropLine = isOver && activeId !== null && activeId !== category.id;
   const movingUp = activeIndex > rowIndex;
+  const visibilityMeta = CATEGORY_VISIBILITY_META[getCategoryVisibilityState(category)];
 
   return (
     <tr
@@ -134,6 +136,11 @@ function SortableCategoryRow({
 
       <td className="px-4 py-4 align-middle">
         <span
+          title={
+            category.packageCount > 0
+              ? `${category.activePackageCount} active of ${category.packageCount} total package(s)`
+              : 'No packages yet'
+          }
           className={cn(
             'inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium tabular-nums',
             category.packageCount > 0
@@ -146,7 +153,7 @@ function SortableCategoryRow({
       </td>
 
       <td className="px-4 py-4 align-middle">
-        <div className="inline-flex items-center gap-2.5">
+        <div className="inline-flex items-center gap-2.5" title={visibilityMeta.tooltip}>
           <Switch
             checked={category.isActive}
             onChange={() => onToggleVisibility(category)}
@@ -154,13 +161,8 @@ function SortableCategoryRow({
             size="sm"
             ariaLabel={`Toggle visibility for ${category.name}`}
           />
-          <span
-            className={cn(
-              'text-xs font-semibold',
-              category.isActive ? 'text-emerald-700 dark:text-emerald-300' : 'dark:text-forest-400 text-slate-500',
-            )}
-          >
-            {category.isActive ? 'Visible' : 'Hidden'}
+          <span className={cn('text-xs font-semibold whitespace-nowrap', visibilityMeta.textClass)}>
+            {visibilityMeta.label}
           </span>
         </div>
       </td>
@@ -256,7 +258,7 @@ export default function AdminServiceCategoriesTable({
                   <th className="px-4 py-3.5">Category</th>
                   <th className="w-48 px-4 py-3.5">Suggestion goal</th>
                   <th className="w-32 px-4 py-3.5">Packages</th>
-                  <th className="w-36 px-4 py-3.5">Visibility</th>
+                  <th className="w-44 px-4 py-3.5">Visibility</th>
                   <th className="w-36 py-3.5 pr-5 pl-4 text-right">Actions</th>
                 </tr>
               </thead>

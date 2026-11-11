@@ -60,7 +60,7 @@ export function HideCategoryDialog({ category, isUpdating, onClose, onConfirm }:
       title="Hide this category from recruiters?"
       description={
         category
-          ? `"${category.name}" currently holds ${category.packageCount} ${category.packageCount === 1 ? 'package' : 'packages'}.`
+          ? `"${category.name}" currently has ${category.activePackageCount} active ${category.activePackageCount === 1 ? 'package' : 'packages'} (${category.packageCount} total).`
           : undefined
       }
       className="dark:border-forest-800 dark:bg-forest-900 dark:text-forest-50"

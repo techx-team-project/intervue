@@ -21,7 +21,6 @@ import {
   getSharedActiveNeedMap,
   hasActiveCategoryFilters,
   reorderCategoriesByIds,
-  toCategoryPayload,
   type AdminCategoryFilters,
 } from '@/lib/admin-service-categories';
 import type { AdminServiceCategory } from '@/types/admin-service-package';
@@ -65,6 +64,13 @@ export default function AdminServiceCategoriesView({ initialCategories }: AdminS
 
   const sharedNeedMap = useMemo(() => getSharedActiveNeedMap(categories), [categories]);
   const filteredCategories = useMemo(() => filterAndSortCategories(categories, filters), [categories, filters]);
+  const pendingPackageCategories = useMemo(
+    () =>
+      categories.filter(
+        (category) => category.packageCount === 0 || (category.isActive && category.activePackageCount === 0),
+      ),
+    [categories],
+  );
 
   const canReorder = !hasActiveCategoryFilters(filters);
 
@@ -88,7 +94,7 @@ export default function AdminServiceCategoriesView({ initialCategories }: AdminS
   const applyVisibility = async (category: AdminServiceCategory, nextActive: boolean) => {
     setBusyCategoryId(category.id);
     try {
-      await adminServicePackageApi.updateCategory(category.id, toCategoryPayload(category, { isActive: nextActive }));
+      await adminServicePackageApi.setCategoryActive(category.id, nextActive);
       await refresh();
       toast.success(
         nextActive
@@ -103,7 +109,7 @@ export default function AdminServiceCategoriesView({ initialCategories }: AdminS
   };
 
   const handleToggleVisibility = (category: AdminServiceCategory) => {
-    if (category.isActive && category.packageCount > 0) {
+    if (category.isActive && category.activePackageCount > 0) {
       setHideTarget(category);
       return;
     }
@@ -142,11 +148,10 @@ export default function AdminServiceCategoriesView({ initialCategories }: AdminS
     setIsReordering(true);
 
     try {
-      await Promise.all(
-        result.changed.map((item) =>
-          adminServicePackageApi.updateCategory(item.id, toCategoryPayload(item, { displayOrder: item.displayOrder })),
-        ),
-      );
+      const updated = await adminServicePackageApi.reorderCategories({
+        items: result.changed.map((item) => ({ id: item.id, displayOrder: item.displayOrder })),
+      });
+      setCategories(updated);
       await queryClient.invalidateQueries({ queryKey: serviceCatalogKeys.catalog });
       toast.success('Display order updated.');
     } catch (cause) {
@@ -217,25 +222,47 @@ export default function AdminServiceCategoriesView({ initialCategories }: AdminS
         </div>
       ) : (
         <>
-          <div className="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-l-4 border-amber-200/75 border-l-amber-500 bg-amber-50 px-4 py-3.5 dark:border-amber-800/60 dark:border-l-amber-400 dark:bg-amber-950/35">
-            <div className="flex gap-3">
-              <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-600 dark:text-amber-400" />
-              <div>
+          <div className="rounded-lg border border-l-4 border-amber-200/75 border-l-amber-500 bg-amber-50 px-4 py-3.5 dark:border-amber-800/60 dark:border-l-amber-400 dark:bg-amber-950/35">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="flex gap-3">
+                <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-600 dark:text-amber-400" />
+                <div>
+                  <p className="text-sm font-bold text-amber-900 dark:text-amber-200">
+                    {canReorder ? 'Display order note' : 'Reordering paused'}
+                  </p>
+                  <p className="text-on-surface-variant mt-1 text-sm leading-relaxed dark:text-amber-100/80">
+                    {canReorder
+                      ? 'Drag and drop any row using the handle at the beginning of each row to quickly customize display order.'
+                      : 'Drag-and-drop reordering is paused while search or filters are active. Reset filters to reorder categories.'}
+                  </p>
+                </div>
+              </div>
+              {isReordering && (
+                <span className="inline-flex shrink-0 items-center gap-1.5 self-center rounded-md bg-amber-100/90 px-2.5 py-1 text-xs font-semibold text-amber-900 dark:bg-amber-900/50 dark:text-amber-100">
+                  <Spinner className="h-3.5 w-3.5" />
+                  <span>Saving order...</span>
+                </span>
+              )}
+            </div>
+
+            {pendingPackageCategories.length > 0 && (
+              <div className="mt-2.5 border-t border-amber-200/80 pt-2.5 pl-7.5 dark:border-amber-800/50">
                 <p className="text-sm font-bold text-amber-900 dark:text-amber-200">
-                  {canReorder ? 'Display order note' : 'Reordering paused'}
+                  Waiting for active packages ({pendingPackageCategories.length})
                 </p>
-                <p className="text-on-surface-variant mt-1 text-sm leading-relaxed dark:text-amber-100/80">
-                  {canReorder
-                    ? 'Drag and drop any row using the handle at the beginning of each row to quickly customize display order.'
-                    : 'Drag-and-drop reordering is paused while search or filters are active. Reset filters to reorder categories.'}
+                <p className="text-on-surface-variant mt-0.5 text-sm leading-relaxed dark:text-amber-100/80">
+                  {pendingPackageCategories.map((item) => item.name).join(', ')}{' '}
+                  {pendingPackageCategories.length === 1 ? 'has' : 'have'} no active packages yet, so{' '}
+                  {pendingPackageCategories.length === 1 ? 'it stays' : 'they stay'} hidden from recruiters on the
+                  buy-services page.{' '}
+                  <Link
+                    href={`${ROUTES.ADMIN_SERVICE_PACKAGES}?categoryId=${pendingPackageCategories[0].id}`}
+                    className="font-semibold text-amber-900 underline underline-offset-2 hover:text-amber-700 dark:text-amber-200 dark:hover:text-amber-100"
+                  >
+                    Manage packages →
+                  </Link>
                 </p>
               </div>
-            </div>
-            {isReordering && (
-              <span className="inline-flex shrink-0 items-center gap-1.5 self-center rounded-md bg-amber-100/90 px-2.5 py-1 text-xs font-semibold text-amber-900 dark:bg-amber-900/50 dark:text-amber-100">
-                <Spinner className="h-3.5 w-3.5" />
-                <span>Saving order...</span>
-              </span>
             )}
           </div>
 

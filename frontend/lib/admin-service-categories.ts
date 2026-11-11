@@ -115,3 +115,35 @@ export function reorderCategoriesByIds(
   const changed = reordered.filter((item, idx) => next[idx].displayOrder !== item.displayOrder);
   return { reordered, changed };
 }
+
+export type CategoryVisibilityState = 'visible' | 'pending_packages' | 'hidden';
+
+export const CATEGORY_VISIBILITY_META: Record<
+  CategoryVisibilityState,
+  { label: string; textClass: string; tooltip: string }
+> = {
+  visible: {
+    label: 'Visible',
+    textClass: 'text-emerald-700 dark:text-emerald-300',
+    tooltip: 'Visible on the recruiter buy-services page.',
+  },
+  pending_packages: {
+    label: 'Pending package',
+    textClass: 'text-amber-700 dark:text-amber-300',
+    tooltip:
+      'Visibility is enabled, but this category stays hidden from recruiters until at least 1 active package exists.',
+  },
+  hidden: {
+    label: 'Hidden',
+    textClass: 'text-slate-500 dark:text-forest-400',
+    tooltip: 'Hidden from the recruiter buy-services page.',
+  },
+};
+
+export function getCategoryVisibilityState(
+  category: Pick<AdminServiceCategory, 'isActive' | 'activePackageCount'>,
+): CategoryVisibilityState {
+  if (!category.isActive) return 'hidden';
+  if (category.activePackageCount === 0) return 'pending_packages';
+  return 'visible';
+}

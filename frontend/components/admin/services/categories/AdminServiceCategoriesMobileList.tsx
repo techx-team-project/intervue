@@ -2,6 +2,7 @@
 
 import Switch from '@/components/ui/Switch';
 import { ROUTES } from '@/constants/routes';
+import { CATEGORY_VISIBILITY_META, getCategoryVisibilityState } from '@/lib/admin-service-categories';
 import { cn } from '@/lib/utils';
 import type { AdminServiceCategory } from '@/types/admin-service-package';
 import {
@@ -77,6 +78,8 @@ function SortableMobileCard({
     setDropNodeRef(element);
   };
 
+  const visibilityMeta = CATEGORY_VISIBILITY_META[getCategoryVisibilityState(category)];
+
   return (
     <article
       ref={setCardRef}
@@ -112,7 +115,7 @@ function SortableMobileCard({
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2" title={visibilityMeta.tooltip}>
           <Switch
             checked={category.isActive}
             onChange={() => onToggleVisibility(category)}
@@ -120,13 +123,8 @@ function SortableMobileCard({
             size="sm"
             ariaLabel={`Toggle visibility for ${category.name}`}
           />
-          <span
-            className={cn(
-              'text-xs font-semibold',
-              category.isActive ? 'text-emerald-700 dark:text-emerald-300' : 'dark:text-forest-400 text-slate-500',
-            )}
-          >
-            {category.isActive ? 'Visible' : 'Hidden'}
+          <span className={cn('text-xs font-semibold whitespace-nowrap', visibilityMeta.textClass)}>
+            {visibilityMeta.label}
           </span>
         </div>
       </div>
