@@ -4,6 +4,7 @@ import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,5 +27,16 @@ public class RecruiterCompanyResolver {
 
     public Long requireId(Long recruiterId) {
         return require(recruiterId).id();
+    }
+
+    public Optional<Long> findId(Long recruiterId) {
+        try {
+            return Optional.of(companyService.findMyCompany(recruiterId).id());
+        } catch (AppException cause) {
+            if (cause.getErrorCode() == ErrorCode.NOT_FOUND) {
+                return Optional.empty();
+            }
+            throw cause;
+        }
     }
 }
