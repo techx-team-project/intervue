@@ -18,10 +18,13 @@ type ConnectUiState = {
   atBottomByPortal: Record<ConnectPortal, boolean>;
   candidateTab: CandidateSidebarTab;
   mobileEligibleOpen: boolean;
+  rightPanelOpen: boolean;
   setActiveThread: (portal: ConnectPortal, connectionId: number | null) => void;
   setAtBottom: (portal: ConnectPortal, atBottom: boolean) => void;
   setCandidateTab: (tab: CandidateSidebarTab) => void;
   setMobileEligibleOpen: (open: boolean) => void;
+  setRightPanelOpen: (open: boolean) => void;
+  toggleRightPanel: () => void;
   setTyping: (
     portal: ConnectPortal,
     connectionId: number,
@@ -47,6 +50,7 @@ export const useConnectUiStore = create<ConnectUiState>((set) => ({
   atBottomByPortal: { candidate: true, recruiter: true },
   candidateTab: 'ALL',
   mobileEligibleOpen: false,
+  rightPanelOpen: true,
 
   setActiveThread: (portal, connectionId) =>
     set((state) => ({
@@ -60,6 +64,8 @@ export const useConnectUiStore = create<ConnectUiState>((set) => ({
 
   setCandidateTab: (candidateTab) => set({ candidateTab }),
   setMobileEligibleOpen: (mobileEligibleOpen) => set({ mobileEligibleOpen }),
+  setRightPanelOpen: (rightPanelOpen) => set({ rightPanelOpen }),
+  toggleRightPanel: () => set((state) => ({ rightPanelOpen: !state.rightPanelOpen })),
 
   setTyping: (portal, connectionId, entry, typing) => {
     const tKey = threadKey(portal, connectionId);

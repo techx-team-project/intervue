@@ -1,5 +1,6 @@
 'use client';
 
+import ConnectRightPanelToggle from '@/components/connect/ConnectRightPanelToggle';
 import ConversationActionsMenu from '@/components/recruiter/connect/ConversationActionsMenu';
 import UserAvatar from '@/components/ui/UserAvatar';
 import type { ConnectPortal, ConversationSummary } from '@/types/connect';
@@ -61,14 +62,17 @@ export default function ConnectThreadHeader({
         </div>
       </div>
 
-      <ConversationActionsMenu
-        onBlock={onBlock}
-        onUnblock={onUnblock}
-        isUnblocking={isUnblocking}
-        onReport={onReport}
-        blocked={conversation.status === 'BLOCKED'}
-        canUnblock={canUnblock}
-      />
+      <div className="flex shrink-0 items-center gap-1">
+        <ConversationActionsMenu
+          onBlock={onBlock}
+          onUnblock={onUnblock}
+          isUnblocking={isUnblocking}
+          onReport={onReport}
+          blocked={conversation.status === 'BLOCKED'}
+          canUnblock={canUnblock}
+        />
+        <ConnectRightPanelToggle />
+      </div>
     </div>
   );
 }
