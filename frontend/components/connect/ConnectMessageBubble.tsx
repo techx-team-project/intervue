@@ -382,178 +382,180 @@ export default function ConnectMessageBubble({
                 Message unsent
               </div>
             ) : (
-              <div
-                title={exactTimeTooltip}
-                className={cn(
-                  'relative min-w-0 px-3.5 py-2 text-sm leading-relaxed break-words transition-opacity',
-                  bubbleRounding,
-                  isOwnPrimaryBubble && 'bg-primary text-white',
-                  isColleagueHr && 'border border-emerald-200 bg-emerald-50/90 text-slate-900',
-                  !isRightAligned && 'bg-surface-container-low text-on-surface',
-                  message.optimisticStatus === 'SENDING' && 'opacity-70',
-                )}
-              >
-                {message.replyTo && (
-                  <button
-                    type="button"
-                    onClick={() => onJumpToMessage?.(message.replyTo!.id)}
-                    className={cn(
-                      'mb-2 block w-full cursor-pointer rounded-lg border-l-[3px] px-2.5 py-1.5 text-left transition-colors',
-                      isOwnPrimaryBubble && 'border-white/85 bg-white/15 text-white hover:bg-white/25',
-                      isColleagueHr && 'border-emerald-500 bg-emerald-100/75 text-slate-800 hover:bg-emerald-100',
-                      !isRightAligned &&
-                        'border-primary bg-white/85 text-slate-800 shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:bg-white',
-                    )}
-                  >
-                    <span
+              <div className="relative flex min-w-0 flex-col items-end">
+                <div
+                  title={exactTimeTooltip}
+                  className={cn(
+                    'relative w-full min-w-0 px-3.5 py-2 text-sm leading-relaxed break-words transition-opacity',
+                    bubbleRounding,
+                    isOwnPrimaryBubble && 'bg-primary text-white',
+                    isColleagueHr && 'border border-emerald-200 bg-emerald-50/90 text-slate-900',
+                    !isRightAligned && 'bg-surface-container-low text-on-surface',
+                    message.optimisticStatus === 'SENDING' && 'opacity-70',
+                  )}
+                >
+                  {message.replyTo && (
+                    <button
+                      type="button"
+                      onClick={() => onJumpToMessage?.(message.replyTo!.id)}
                       className={cn(
-                        'block truncate text-xs font-semibold',
-                        isOwnPrimaryBubble ? 'text-white' : isColleagueHr ? 'text-emerald-950' : 'text-slate-900',
+                        'mb-2 block w-full cursor-pointer rounded-lg border-l-[3px] px-2.5 py-1.5 text-left transition-colors',
+                        isOwnPrimaryBubble && 'border-white/85 bg-white/15 text-white hover:bg-white/25',
+                        isColleagueHr && 'border-emerald-500 bg-emerald-100/75 text-slate-800 hover:bg-emerald-100',
+                        !isRightAligned &&
+                          'border-primary bg-white/85 text-slate-800 shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:bg-white',
                       )}
                     >
-                      {replySenderLabel}
-                    </span>
-                    <span
-                      className={cn(
-                        'mt-0.5 line-clamp-2 block text-xs leading-snug',
-                        isOwnPrimaryBubble ? 'text-white/90' : 'text-slate-600',
-                        message.replyTo.recalled && 'italic opacity-75',
-                      )}
-                    >
-                      {message.replyTo.recalled
-                        ? 'Message unsent'
-                        : message.replyTo.body || message.replyTo.attachmentFileName || 'Attachment'}
-                    </span>
-                  </button>
-                )}
-
-                {showImagePreview && (
-                  <button
-                    type="button"
-                    onClick={() => onImageClick(message)}
-                    aria-label="Open image in lightbox"
-                    className="block cursor-zoom-in overflow-hidden rounded-xl"
-                  >
-                    <Image
-                      src={message.attachmentUrl!}
-                      alt={message.attachmentFileName ?? 'Chat image'}
-                      width={320}
-                      height={240}
-                      unoptimized
-                      onError={() => setFailedAttachmentUrl(message.attachmentUrl ?? null)}
-                      className="h-auto max-h-72 w-auto max-w-full rounded-xl object-cover transition-transform duration-150 hover:scale-[1.01]"
-                    />
-                  </button>
-                )}
-
-                {(message.messageType === 'FILE' || (message.messageType === 'IMAGE' && !showImagePreview)) && (
-                  <button
-                    type="button"
-                    onClick={() => onDownloadAttachment(message)}
-                    className={cn(
-                      'flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition-colors',
-                      isOwnPrimaryBubble
-                        ? 'bg-white/15 text-white hover:bg-white/20'
-                        : 'text-on-surface border border-slate-200 bg-white hover:bg-slate-50',
-                    )}
-                  >
-                    <FileText className="h-5 w-5 shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-xs font-medium">{message.attachmentFileName ?? 'Attachment'}</p>
-                      {message.attachmentFileSizeBytes !== undefined && (
-                        <p
-                          className={cn(
-                            'text-[11px]',
-                            isOwnPrimaryBubble ? 'text-white/80' : 'text-on-surface-variant',
-                          )}
-                        >
-                          {formatConnectFileSize(message.attachmentFileSizeBytes)}
-                        </p>
-                      )}
-                    </div>
-                    <Download className="h-4 w-4 shrink-0" />
-                  </button>
-                )}
-
-                {message.body &&
-                  !(
-                    (message.messageType === 'FILE' || message.messageType === 'IMAGE') &&
-                    message.body === message.attachmentFileName
-                  ) && (
-                    <p
-                      className={cn(
-                        'whitespace-pre-wrap',
-                        (message.messageType === 'IMAGE' || message.messageType === 'FILE') && 'mt-2',
-                      )}
-                    >
-                      {renderLinkifiedText(message.body, isOwnPrimaryBubble)}
-                    </p>
+                      <span
+                        className={cn(
+                          'block truncate text-xs font-semibold',
+                          isOwnPrimaryBubble ? 'text-white' : isColleagueHr ? 'text-emerald-950' : 'text-slate-900',
+                        )}
+                      >
+                        {replySenderLabel}
+                      </span>
+                      <span
+                        className={cn(
+                          'mt-0.5 line-clamp-2 block text-xs leading-snug',
+                          isOwnPrimaryBubble ? 'text-white/90' : 'text-slate-600',
+                          message.replyTo.recalled && 'italic opacity-75',
+                        )}
+                      >
+                        {message.replyTo.recalled
+                          ? 'Message unsent'
+                          : message.replyTo.body || message.replyTo.attachmentFileName || 'Attachment'}
+                      </span>
+                    </button>
                   )}
 
-                {hasLinkPreview && message.linkUrl && (
-                  <a
-                    href={message.linkUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      'mt-2 block overflow-hidden rounded-xl border transition-colors',
-                      isOwnPrimaryBubble
-                        ? 'border-white/25 bg-white text-slate-900 hover:bg-slate-50'
-                        : 'border-outline-variant text-on-surface bg-white hover:bg-slate-50',
-                    )}
-                  >
-                    {showLinkThumb && (
+                  {showImagePreview && (
+                    <button
+                      type="button"
+                      onClick={() => onImageClick(message)}
+                      aria-label="Open image in lightbox"
+                      className="block cursor-zoom-in overflow-hidden rounded-xl"
+                    >
                       <Image
-                        src={message.linkImageUrl!}
-                        alt={message.linkTitle ?? 'Link preview'}
+                        src={message.attachmentUrl!}
+                        alt={message.attachmentFileName ?? 'Chat image'}
                         width={320}
-                        height={160}
+                        height={240}
                         unoptimized
-                        onError={() => setFailedPreviewUrl(message.linkImageUrl ?? null)}
-                        className="h-36 w-full object-cover"
+                        onError={() => setFailedAttachmentUrl(message.attachmentUrl ?? null)}
+                        className="h-auto max-h-72 w-auto max-w-full rounded-xl object-cover transition-transform duration-150 hover:scale-[1.01]"
                       />
+                    </button>
+                  )}
+
+                  {(message.messageType === 'FILE' || (message.messageType === 'IMAGE' && !showImagePreview)) && (
+                    <button
+                      type="button"
+                      onClick={() => onDownloadAttachment(message)}
+                      className={cn(
+                        'flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition-colors',
+                        isOwnPrimaryBubble
+                          ? 'bg-white/15 text-white hover:bg-white/20'
+                          : 'text-on-surface border border-slate-200 bg-white hover:bg-slate-50',
+                      )}
+                    >
+                      <FileText className="h-5 w-5 shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-xs font-medium">{message.attachmentFileName ?? 'Attachment'}</p>
+                        {message.attachmentFileSizeBytes !== undefined && (
+                          <p
+                            className={cn(
+                              'text-[11px]',
+                              isOwnPrimaryBubble ? 'text-white/80' : 'text-on-surface-variant',
+                            )}
+                          >
+                            {formatConnectFileSize(message.attachmentFileSizeBytes)}
+                          </p>
+                        )}
+                      </div>
+                      <Download className="h-4 w-4 shrink-0" />
+                    </button>
+                  )}
+
+                  {message.body &&
+                    !(
+                      (message.messageType === 'FILE' || message.messageType === 'IMAGE') &&
+                      message.body === message.attachmentFileName
+                    ) && (
+                      <p
+                        className={cn(
+                          'whitespace-pre-wrap',
+                          (message.messageType === 'IMAGE' || message.messageType === 'FILE') && 'mt-2',
+                        )}
+                      >
+                        {renderLinkifiedText(message.body, isOwnPrimaryBubble)}
+                      </p>
                     )}
-                    <div className="p-2.5">
-                      {message.linkTitle && (
-                        <p className="line-clamp-2 text-xs font-semibold text-slate-900">{message.linkTitle}</p>
+
+                  {hasLinkPreview && message.linkUrl && (
+                    <a
+                      href={message.linkUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        'mt-2 block overflow-hidden rounded-xl border transition-colors',
+                        isOwnPrimaryBubble
+                          ? 'border-white/25 bg-white text-slate-900 hover:bg-slate-50'
+                          : 'border-outline-variant text-on-surface bg-white hover:bg-slate-50',
                       )}
-                      {message.linkDescription && (
-                        <p className="mt-0.5 line-clamp-2 text-[11px] text-slate-500">{message.linkDescription}</p>
+                    >
+                      {showLinkThumb && (
+                        <Image
+                          src={message.linkImageUrl!}
+                          alt={message.linkTitle ?? 'Link preview'}
+                          width={320}
+                          height={160}
+                          unoptimized
+                          onError={() => setFailedPreviewUrl(message.linkImageUrl ?? null)}
+                          className="h-36 w-full object-cover"
+                        />
                       )}
-                      <span className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700">
-                        <ExternalLink className="h-3 w-3 shrink-0" />
-                        <span className="truncate">{safeHostname(message.linkUrl)}</span>
-                      </span>
-                    </div>
-                  </a>
+                      <div className="p-2.5">
+                        {message.linkTitle && (
+                          <p className="line-clamp-2 text-xs font-semibold text-slate-900">{message.linkTitle}</p>
+                        )}
+                        {message.linkDescription && (
+                          <p className="mt-0.5 line-clamp-2 text-[11px] text-slate-500">{message.linkDescription}</p>
+                        )}
+                        <span className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700">
+                          <ExternalLink className="h-3 w-3 shrink-0" />
+                          <span className="truncate">{safeHostname(message.linkUrl)}</span>
+                        </span>
+                      </div>
+                    </a>
+                  )}
+                </div>
+
+                {groupedReactions.length > 0 && (
+                  <div className="relative z-10 -mt-2 mr-1.5 mb-0.5 flex flex-wrap justify-end gap-1">
+                    {groupedReactions.map((item) => (
+                      <button
+                        key={item.emoji}
+                        type="button"
+                        title={item.actors.join(', ')}
+                        onClick={() => onReact(message.id, item.emoji)}
+                        className={cn(
+                          'inline-flex cursor-pointer items-center gap-1 rounded-full border px-1.5 py-0.5 text-[11px] shadow-xs ring-2 ring-white transition-colors',
+                          item.mine
+                            ? 'border-primary/40 bg-emerald-50 font-semibold text-emerald-800'
+                            : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50',
+                        )}
+                      >
+                        <span>{item.emoji}</span>
+                        {item.count > 1 && <span>{item.count}</span>}
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
             )}
 
             {actionsBar}
           </div>
-
-          {groupedReactions.length > 0 && !message.recalled && (
-            <div className={cn('mt-1 flex flex-wrap gap-1', isRightAligned ? 'justify-end' : 'justify-start')}>
-              {groupedReactions.map((item) => (
-                <button
-                  key={item.emoji}
-                  type="button"
-                  title={item.actors.join(', ')}
-                  onClick={() => onReact(message.id, item.emoji)}
-                  className={cn(
-                    'inline-flex cursor-pointer items-center gap-1 rounded-full border px-1.5 py-0.5 text-[11px] transition-colors',
-                    item.mine
-                      ? 'border-primary/40 bg-emerald-50 font-semibold text-emerald-800'
-                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50',
-                  )}
-                >
-                  <span>{item.emoji}</span>
-                  {item.count > 1 && <span>{item.count}</span>}
-                </button>
-              ))}
-            </div>
-          )}
 
           {message.editedAt && !message.recalled && !message.optimisticStatus && (
             <span
