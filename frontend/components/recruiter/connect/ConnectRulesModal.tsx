@@ -43,14 +43,23 @@ export default function ConnectRulesModal({ mode, portal = 'recruiter', onClose 
       onClose={mode === 'view' ? onClose : () => {}}
       showCloseButton={mode === 'view'}
       maxWidth="2xl"
+      radius="md"
       title="InterVue Connect Community Guidelines"
       footer={
         mode === 'gate' ? (
-          <Button onClick={handleAgree} disabled={!agreed} isLoading={acknowledge.isPending} className="w-full">
-            I agree
-          </Button>
+          <div className="flex w-full justify-center">
+            <Button
+              onClick={handleAgree}
+              disabled={!agreed}
+              isLoading={acknowledge.isPending}
+              radius="md"
+              className="min-w-40"
+            >
+              I agree
+            </Button>
+          </div>
         ) : (
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" radius="md" onClick={onClose}>
             Close
           </Button>
         )

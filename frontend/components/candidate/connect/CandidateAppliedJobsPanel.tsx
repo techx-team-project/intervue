@@ -54,13 +54,13 @@ export default function CandidateAppliedJobsPanel({ selectedCompanyId }: Candida
     : allApplications;
 
   return (
-    <div className="border-outline-variant hidden h-full w-80 shrink-0 flex-col border-l bg-white lg:flex">
+    <div className="border-outline-variant hidden h-full shrink-0 flex-col border-l bg-white lg:flex lg:w-[356px] xl:w-[388px] 2xl:w-[404px]">
       {/* Header */}
-      <div className="border-outline-variant border-b px-4 py-3.5">
-        <p className="text-label-md text-on-surface-variant font-bold tracking-wide uppercase">APPLIED JOBS</p>
-        <p className="text-label-sm text-on-surface-variant mt-0.5">
-          {selectedCompanyId ? 'Your applications at this company' : 'Recent job applications'}
-        </p>
+      <div className="flex h-14 shrink-0 items-center justify-between gap-2 px-4">
+        <p className="text-xs font-bold tracking-wide text-slate-800 uppercase">Applied Jobs</p>
+        {selectedCompanyId && (
+          <span className="text-primary text-[11px] font-medium whitespace-nowrap">This company</span>
+        )}
       </div>
 
       {/* List */}
@@ -102,11 +102,11 @@ export default function CandidateAppliedJobsPanel({ selectedCompanyId }: Candida
         )}
       </div>
 
-      {/* Bottom Action Button (Image 2 and 3 style) */}
+      {/* Bottom Action Button */}
       <div className="border-outline-variant border-t p-3">
         <Link
           href={ROUTES.CANDIDATE_SAVED_JOBS}
-          className="border-outline-variant text-on-surface hover:bg-surface-container-low flex w-full items-center justify-center rounded-xl border py-2.5 text-xs font-semibold transition-colors"
+          className="flex h-10.5 w-full items-center justify-center rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 transition-colors hover:border-slate-400 hover:bg-slate-50"
         >
           Manage applied jobs
         </Link>

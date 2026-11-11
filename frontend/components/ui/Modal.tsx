@@ -16,6 +16,7 @@ export interface ModalProps {
   children: React.ReactNode;
   footer?: React.ReactNode;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+  radius?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
   showCloseButton?: boolean;
   className?: string;
 }
@@ -30,6 +31,15 @@ const maxWidthMap = {
   '4xl': 'max-w-4xl',
 };
 
+const radiusMap = {
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  '2xl': 'rounded-2xl',
+  '3xl': 'rounded-3xl',
+};
+
 export function Modal({
   isOpen,
   onClose,
@@ -38,6 +48,7 @@ export function Modal({
   children,
   footer,
   maxWidth = 'md',
+  radius = '3xl',
   showCloseButton = true,
   className,
 }: ModalProps) {
@@ -95,7 +106,8 @@ export function Modal({
         ref={panelRef}
         tabIndex={-1}
         className={cn(
-          'border-outline-variant shadow-elevation-2 relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-3xl border bg-white p-6 transition duration-200 outline-none sm:p-7',
+          'border-outline-variant shadow-elevation-2 relative z-10 max-h-[90vh] w-full overflow-y-auto border bg-white p-6 transition duration-200 outline-none sm:p-7',
+          radiusMap[radius],
           maxWidthMap[maxWidth],
           className,
         )}

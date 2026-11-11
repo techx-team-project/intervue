@@ -88,7 +88,7 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
   }
 
   return (
-    <>
+    <div className="flex items-center gap-2.5 sm:gap-3.5 md:gap-4">
       <div className="relative">
         <button
           type="button"
@@ -154,6 +154,6 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
           />
         )}
       </div>
-    </>
+    </div>
   );
 }

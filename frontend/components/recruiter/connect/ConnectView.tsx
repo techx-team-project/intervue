@@ -26,7 +26,7 @@ export default function ConnectView() {
 
   if (isRulesLoading) {
     return (
-      <div className="flex h-[calc(100vh-10rem)] items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-white">
         <Spinner />
       </div>
     );
@@ -37,54 +37,49 @@ export default function ConnectView() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-5rem)] flex-col bg-slate-50 p-2 sm:p-3">
-      {/* Top Banner Tagline (TopCV style) */}
-      <div className="mb-2 hidden items-center justify-center py-1 text-center md:flex">
-        <p className="text-xs font-semibold text-slate-800">
-          New way to follow your chance. <span className="font-bold text-[#00b14f]">More engage, more success</span>
-        </p>
-      </div>
+    <div className="flex h-screen w-full overflow-hidden bg-white">
+      <ConnectSidebar
+        conversations={conversations}
+        isLoading={isLoading}
+        hasMore={hasMore}
+        isLoadingMore={isLoadingMore}
+        onLoadMore={loadMore}
+        selectedId={selectedId}
+        onSelect={setSelectedId}
+        onOpenRules={() => setRulesViewOpen(true)}
+        onOpenEligible={() => setEligibleModalOpen(true)}
+      />
 
-      {/* Main 3-column Window */}
-      <div className="border-outline-variant flex flex-1 overflow-hidden rounded-2xl border bg-white shadow-xs">
-        <ConnectSidebar
-          conversations={conversations}
-          isLoading={isLoading}
-          hasMore={hasMore}
-          isLoadingMore={isLoadingMore}
-          onLoadMore={loadMore}
-          selectedId={selectedId}
-          onSelect={setSelectedId}
-          onOpenRules={() => setRulesViewOpen(true)}
-          onOpenEligible={() => setEligibleModalOpen(true)}
-        />
-
-        {selectedConversation ? (
-          <ConnectThread conversation={selectedConversation} onBack={() => setSelectedId(null)} />
-        ) : (
-          <div className="hidden flex-1 flex-col items-center justify-center bg-slate-50/40 p-6 md:flex">
+      {selectedConversation ? (
+        <ConnectThread conversation={selectedConversation} onBack={() => setSelectedId(null)} />
+      ) : (
+        <div className="hidden min-w-0 flex-1 flex-col bg-white md:flex">
+          <div className="border-outline-variant flex h-14 shrink-0 items-center border-b px-5">
+            <p className="text-xs font-semibold text-slate-800 sm:text-[13px]">
+              New way to follow your chance. <span className="font-bold text-[#00b14f]">More engage, more success</span>
+            </p>
+          </div>
+          <div className="flex flex-1 flex-col items-center justify-center bg-white p-6">
             <CatEmptyIllustration
-              title="You don't have any conversations..."
+              title={conversations.length > 0 ? 'Select a conversation to start chatting' : 'No conversations yet...'}
               description="Select an applicant on the right to start a conversation."
             />
           </div>
-        )}
+        </div>
+      )}
 
-        <EligibleCandidatesPanel />
+      <EligibleCandidatesPanel />
 
-        {isRulesViewOpen && (
-          <ConnectRulesModal mode="view" portal="recruiter" onClose={() => setRulesViewOpen(false)} />
-        )}
+      {isRulesViewOpen && <ConnectRulesModal mode="view" portal="recruiter" onClose={() => setRulesViewOpen(false)} />}
 
-        <Modal
-          isOpen={isEligibleModalOpen}
-          onClose={() => setEligibleModalOpen(false)}
-          title="Other Candidates"
-          description="Applied to your job postings recently"
-        >
-          <EligibleCandidatesPanel variant="modal" onInvited={() => setEligibleModalOpen(false)} />
-        </Modal>
-      </div>
+      <Modal
+        isOpen={isEligibleModalOpen}
+        onClose={() => setEligibleModalOpen(false)}
+        title="Other Candidates"
+        description="Applied to your job postings recently"
+      >
+        <EligibleCandidatesPanel variant="modal" onInvited={() => setEligibleModalOpen(false)} />
+      </Modal>
     </div>
   );
 }

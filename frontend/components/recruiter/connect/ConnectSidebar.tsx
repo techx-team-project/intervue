@@ -1,7 +1,7 @@
 'use client';
 
-import CatEmptyIllustration from '@/components/connect/CatEmptyIllustration';
 import ConnectSettingsDropdown from '@/components/connect/ConnectSettingsDropdown';
+import ConnectSidebarEmptyState from '@/components/connect/ConnectSidebarEmptyState';
 import IntervueConnectLogo from '@/components/connect/IntervueConnectLogo';
 import ConversationListItem from '@/components/recruiter/connect/ConversationListItem';
 import Spinner from '@/components/common/Spinner';
@@ -64,13 +64,13 @@ export default function ConnectSidebar({
   return (
     <div
       className={cn(
-        'border-outline-variant flex h-full w-full flex-col border-r bg-white md:w-80',
+        'border-outline-variant flex h-full w-full shrink-0 flex-col border-r bg-white md:w-[368px] lg:w-[356px] xl:w-[388px] 2xl:w-[404px]',
         selectedId !== null && 'hidden md:flex',
       )}
     >
-      <div className="border-outline-variant flex items-center justify-between gap-2 border-b px-4 py-3.5">
+      <div className="flex h-14 shrink-0 items-center justify-between gap-2 px-4">
         <IntervueConnectLogo />
-        <div className="flex items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1.5">
           {onOpenEligible && (
             <button
               type="button"
@@ -84,7 +84,7 @@ export default function ConnectSidebar({
           )}
           <Link
             href={ROUTES.RECRUITER_DASHBOARD}
-            className="text-body-sm text-on-surface-variant hover:bg-surface-container-low rounded-full px-2.5 py-1.5 font-semibold transition-colors"
+            className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium whitespace-nowrap text-slate-700 transition-colors hover:bg-slate-200/80"
           >
             Home
           </Link>
@@ -92,43 +92,46 @@ export default function ConnectSidebar({
         </div>
       </div>
 
-      <div className="px-4 pt-3">
+      <div className="px-4 pt-1 pb-3">
         <Input
+          radius="full"
+          focusTone="neutral"
           placeholder="Search candidate name..."
           leftIcon={<Search className="h-4 w-4" />}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
+          className="h-9.5 bg-slate-50/70 text-[13px]"
         />
       </div>
 
       {/* Feedback Card (TopCV Image 2 style) */}
-      <div className="px-4 pt-3">
-        <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
-          <p className="text-xs font-semibold text-slate-800">How is your experience with InterVue Connect?</p>
-          <p className="mt-1 text-[11px] leading-tight text-slate-500">
-            Share your thoughts with our team to help us improve your experience.
+      <div className="px-4">
+        <div className="rounded-lg border border-slate-200/80 bg-white p-4 shadow-[0_2px_10px_rgba(15,23,42,0.06)]">
+          <p className="text-sm leading-relaxed text-slate-600">
+            <span className="font-semibold text-slate-900">How is your experience with InterVue Connect?</span> Share
+            your thoughts with our team to help us improve your experience.
           </p>
           <button
             type="button"
             onClick={() => toast.info('Thank you! Feedback feature is coming soon.')}
-            className="mt-2.5 w-full cursor-pointer rounded-lg bg-blue-50 py-1.5 text-xs font-semibold text-blue-600 transition-colors hover:bg-blue-100"
+            className="mt-3 w-full cursor-pointer rounded-md bg-blue-50 py-2 text-[13.5px] font-semibold text-blue-600 transition-colors hover:bg-blue-100/80"
           >
             Send feedback
           </button>
         </div>
       </div>
 
-      <div className="border-outline-variant mt-3 flex items-center gap-5 border-b px-4">
+      <div className="border-outline-variant mt-3 flex items-center gap-2 border-b px-4">
         {(['ALL', 'UNREAD'] as ConnectTab[]).map((value) => (
           <button
             key={value}
             type="button"
             onClick={() => setTab(value)}
             className={cn(
-              'text-body-md -mb-px border-b-2 px-0.5 py-2.5 font-semibold transition-colors',
+              '-mb-px cursor-pointer border-b-2 px-3 py-2.5 text-[15px] transition-colors sm:text-base',
               tab === value
-                ? 'border-primary text-primary'
-                : 'text-on-surface-variant hover:text-on-surface border-transparent',
+                ? 'border-primary text-primary font-semibold'
+                : 'text-on-surface-variant hover:text-on-surface border-transparent font-medium',
             )}
           >
             {value === 'ALL' ? 'All' : 'Unread'}
@@ -142,12 +145,13 @@ export default function ConnectSidebar({
             <Spinner />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="py-12">
-            <CatEmptyIllustration
-              title="You don't have any conversations..."
-              description={tab === 'UNREAD' ? 'No unread conversations.' : undefined}
-            />
-          </div>
+          <ConnectSidebarEmptyState
+            mobileTitle="No conversations yet..."
+            desktopTitle="No conversations yet"
+            description={
+              tab === 'UNREAD' ? 'No unread conversations.' : 'Conversations with candidates will appear here.'
+            }
+          />
         ) : (
           <div className="space-y-1">
             {filtered.map((conversation) => (

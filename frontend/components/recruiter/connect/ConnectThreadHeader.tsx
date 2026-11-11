@@ -13,7 +13,7 @@ type ConnectThreadHeaderProps = {
 
 export default function ConnectThreadHeader({ conversation, onBlock, onReport, onBack }: ConnectThreadHeaderProps) {
   return (
-    <div className="border-outline-variant flex items-center justify-between gap-3 border-b bg-white px-4 py-3 sm:px-5">
+    <div className="border-outline-variant flex h-14 shrink-0 items-center justify-between gap-3 border-b bg-white px-4 sm:px-5">
       <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
         {onBack && (
           <button
