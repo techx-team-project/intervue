@@ -332,9 +332,12 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | Method | Path | Auth | Notes |
 |---|---|---|---|
 | `GET` | `/recruiter/service-packages` | recruiter | The whole buy-services page in one call: `ServiceCatalogResource { categories: [ServiceCategoryResource] }`. Only active categories that still hold at least one `ACTIVE` package are returned, categories and packages sorted by `displayOrder`. |
-| `GET` | `/recruiter/service-packages/{slug}` | recruiter | `ServicePackageDetailResource`. `404 PACKAGE_NOT_AVAILABLE` when the slug is unknown or the package is not `ACTIVE`. |
-| `GET` | `/admin/service-categories` | admin | `AdminServiceCategoryResource[]` including inactive ones, each with `packageCount`. |
-| `POST` · `PUT` | `/admin/service-categories` · `/{id}` | admin | Body `SaveServiceCategoryRequest`. `409 DUPLICATE_PACKAGE_CODE` when `code` is taken. |
+| `GET` | `/recruiter/service-packages/{slug}` | recruiter | `ServicePackageDetailResource`. `404 PACKAGE_NOT_AVAILABLE` when the slug is unknown, the package is not `ACTIVE`, or its category is inactive. |
+| `GET` | `/admin/service-categories` | admin | `AdminServiceCategoryResource[]` including inactive ones, each with `packageCount` and `activePackageCount`. |
+| `GET` | `/admin/service-categories/{id}` | admin | `AdminServiceCategoryResource`. |
+| `POST` · `PUT` | `/admin/service-categories` · `/{id}` | admin | Body `SaveServiceCategoryRequest` (`needKey` in `REACH \| CONNECT \| HIGHLIGHT \| BRANDING` or omitted). `409 DUPLICATE_SERVICE_CATEGORY_CODE` when `code` is taken; `409 SERVICE_CATEGORY_CODE_LOCKED` if changing `code` while packages exist. |
+| `PUT` | `/admin/service-categories/reorder` | admin | Body `{ items: [{ id, displayOrder }] }`. Updates category display order atomically and returns sorted `AdminServiceCategoryResource[]`. |
+| `POST` | `/admin/service-categories/{id}/activate` · `/deactivate` | admin | Toggles category visibility (`isActive`). When hidden, all packages in that category are unavailable on detail, cart, voucher, and checkout endpoints. |
 | `DELETE` | `/admin/service-categories/{id}` | admin | `409 SERVICE_CATEGORY_IN_USE` while any package still points at it. |
 | `GET` | `/admin/service-packages?query=&categoryId=&status=&page=&size=` | admin | `PageResource<AdminServicePackageResource>`; `query` matches name or code. |
 | `GET` | `/admin/service-packages/{id}` | admin | `AdminServicePackageResource`. |
