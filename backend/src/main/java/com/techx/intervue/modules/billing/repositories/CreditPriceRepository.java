@@ -13,4 +13,6 @@ public interface CreditPriceRepository extends JpaRepository<CreditPrice, Long> 
     List<CreditPrice> findAllByOrderByDisplayOrderAsc();
 
     Optional<CreditPrice> findByEntitlementTypeAndTier(EntitlementType entitlementType, int tier);
+
+    boolean existsByEntitlementTypeAndTier(EntitlementType entitlementType, int tier);
 }

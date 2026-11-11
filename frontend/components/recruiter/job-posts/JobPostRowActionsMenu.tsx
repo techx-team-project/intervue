@@ -2,7 +2,7 @@
 
 import { ROUTES } from '@/constants/routes';
 import type { RecruiterJobPost } from '@/types/recruiter-job';
-import { Copy, Eye, MoreVertical, Pause, Pencil, PlayCircle, Square, Trash2 } from 'lucide-react';
+import { ArrowUpCircle, Copy, Eye, MoreVertical, Pause, Pencil, PlayCircle, Square, Trash2 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -13,6 +13,7 @@ interface JobPostRowActionsMenuProps {
   isPending: boolean;
   onPause: () => void;
   onReopen: () => void;
+  onRetop: () => void;
   onClose: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
@@ -45,6 +46,7 @@ function buildActions(props: JobPostRowActionsMenuProps): MenuAction[] {
   actions.push({ key: 'preview', label: 'Xem trước', icon: Eye, href: `${base}/preview` });
 
   if (job.status === 'PUBLISHED') {
+    actions.push({ key: 'retop', label: 'Đẩy top tin', icon: ArrowUpCircle, onClick: props.onRetop });
     actions.push({ key: 'pause', label: 'Tạm dừng', icon: Pause, onClick: props.onPause });
   }
   if (job.status === 'PAUSED') {

@@ -86,3 +86,18 @@ export interface SaveAdSlotInput {
   active: boolean;
   displayOrder: number;
 }
+
+export interface CreateAdSlotInput {
+  code: string;
+  name: string;
+  placement: 'HOME' | 'JOBS';
+  description?: string | null;
+  width: number;
+  height: number;
+  pricePerWeek: number;
+  servicePackageId?: number | null;
+  houseImageUrl?: string | null;
+  houseTargetUrl?: string | null;
+  active: boolean;
+  displayOrder: number;
+}

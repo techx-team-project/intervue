@@ -35,6 +35,8 @@ export function toCompanyDetail(company: PublicCompanyResource, jobs: PublicJobS
   return {
     id: company.id,
     name: company.tradingName || company.name,
+    featured: company.featured,
+    brandPageActive: company.brandPageActive,
     logo: company.logoUrl,
     size: company.size,
     industry: company.industry,

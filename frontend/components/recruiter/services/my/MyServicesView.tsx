@@ -110,7 +110,11 @@ export default function MyServicesView() {
                     }}
                     className="border-primary text-primary mt-4 inline-flex h-9 w-full cursor-pointer items-center justify-center rounded-lg border bg-white text-sm font-semibold transition hover:bg-emerald-50"
                   >
-                    Áp dụng cho tin
+                    {item.entitlementType === 'JOB_RETOP'
+                      ? 'Đẩy top tin ngay'
+                      : item.entitlementType === 'BRAND_PAGE' || item.entitlementType === 'FEATURED_COMPANY'
+                        ? 'Kích hoạt cho công ty'
+                        : 'Áp dụng cho tin'}
                   </button>
                 ) : (
                   <p className="text-on-surface-variant mt-4 text-xs">
@@ -148,6 +152,8 @@ export default function MyServicesView() {
                         >
                           #{usage.jobId}
                         </Link>
+                      ) : usage.entitlementType === 'BRAND_PAGE' || usage.entitlementType === 'FEATURED_COMPANY' ? (
+                        <span className="text-on-surface-variant font-medium">Toàn doanh nghiệp</span>
                       ) : (
                         '—'
                       )}
@@ -166,6 +172,7 @@ export default function MyServicesView() {
         ))}
 
       <ActivateEntitlementModal
+        key={target?.id ?? 'none'}
         entitlement={target}
         onClose={() => setTarget(null)}
         isBusy={activate.isPending}

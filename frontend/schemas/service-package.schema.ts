@@ -56,27 +56,55 @@ const optionalImageUrlSchema = z
   .max(PACKAGE_FIELD_LIMITS.imageUrl, `Image URL must be at most ${PACKAGE_FIELD_LIMITS.imageUrl} characters.`)
   .refine(isValidImageUrl, 'Enter a valid http(s) URL or upload an image.');
 
-export const packageBenefitSchema = z.object({
-  entitlementType: z.enum(ENTITLEMENT_TYPES),
-  quantity: z
-    .string()
-    .trim()
-    .min(1, 'Quantity is required.')
-    .refine((value) => /^[1-9]\d*$/.test(value), 'Quantity must be at least 1.'),
-  tier: z
-    .string()
-    .trim()
-    .refine((value) => /^[1-5]$/.test(value), 'Tier must be between 1 and 5.'),
-  durationDays: z
-    .string()
-    .trim()
-    .refine((value) => !value || /^[1-9]\d*$/.test(value), 'Duration must be at least 1 day.'),
-  label: z
-    .string()
-    .trim()
-    .min(1, 'Recruiter-facing label is required.')
-    .max(PACKAGE_FIELD_LIMITS.benefitLabel, `Label must be at most ${PACKAGE_FIELD_LIMITS.benefitLabel} characters.`),
-});
+export const DURATION_REQUIRED_ENTITLEMENT_TYPES = new Set<EntitlementType>([
+  'JOB_POST_SLOT',
+  'JOB_BOOST',
+  'JOB_LABEL_URGENT',
+  'JOB_LABEL_HOT',
+  'JOB_HIGHLIGHT',
+  'BRAND_PAGE',
+  'FEATURED_COMPANY',
+  'AD_SLOT_WEEK',
+]);
+
+export const packageBenefitSchema = z
+  .object({
+    entitlementType: z.enum(ENTITLEMENT_TYPES),
+    quantity: z
+      .string()
+      .trim()
+      .min(1, 'Quantity is required.')
+      .refine((value) => /^[1-9]\d*$/.test(value), 'Quantity must be at least 1.'),
+    tier: z
+      .string()
+      .trim()
+      .refine((value) => /^[1-3]$/.test(value), 'Tier must be between 1 and 3.'),
+    durationDays: z
+      .string()
+      .trim()
+      .refine((value) => !value || /^[1-9]\d*$/.test(value), 'Duration must be at least 1 day.'),
+    label: z
+      .string()
+      .trim()
+      .min(1, 'Recruiter-facing label is required.')
+      .max(PACKAGE_FIELD_LIMITS.benefitLabel, `Label must be at most ${PACKAGE_FIELD_LIMITS.benefitLabel} characters.`),
+  })
+  .superRefine((benefit, ctx) => {
+    if (benefit.entitlementType !== 'JOB_BOOST' && benefit.tier !== '1') {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['tier'],
+        message: 'Only JOB_BOOST supports tiers 1–3; other types must use tier 1.',
+      });
+    }
+    if (DURATION_REQUIRED_ENTITLEMENT_TYPES.has(benefit.entitlementType) && !benefit.durationDays.trim()) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['durationDays'],
+        message: 'Duration is required for time-boxed benefits.',
+      });
+    }
+  });
 
 export const packageSectionSchema = z.object({
   heading: z

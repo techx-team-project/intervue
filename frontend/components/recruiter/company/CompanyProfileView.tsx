@@ -1259,18 +1259,25 @@ export function CompanyProfileView() {
                   display, choose photos with a 3:2 ratio (recommended: 1200 × 800 px).
                 </p>
                 {company && (
-                  <p className="text-on-surface-variant pt-1 text-xs">
-                    Đã dùng {allPhotos.length}/{company.photoLimit} ảnh.{' '}
-                    {company.brandPageUntil ? (
-                      <span className="font-semibold text-emerald-700">
-                        Trang thương hiệu đang chạy tới {formatDate(company.brandPageUntil)}.
-                      </span>
-                    ) : (
-                      <Link href={ROUTES.RECRUITER_SERVICES} className="text-primary font-semibold hover:underline">
-                        Mua gói Trang thương hiệu để tăng lên 10 ảnh
-                      </Link>
+                  <div className="text-on-surface-variant space-y-1 pt-1 text-xs">
+                    <p>
+                      Đã dùng {allPhotos.length}/{company.photoLimit} ảnh.{' '}
+                      {company.brandPageUntil ? (
+                        <span className="font-semibold text-emerald-700">
+                          Trang thương hiệu đang chạy tới {formatDate(company.brandPageUntil)}.
+                        </span>
+                      ) : (
+                        <Link href={ROUTES.RECRUITER_SERVICES} className="text-primary font-semibold hover:underline">
+                          Mua gói Trang thương hiệu để tăng lên 10 ảnh
+                        </Link>
+                      )}
+                    </p>
+                    {company.featuredUntil && (
+                      <p className="font-semibold text-amber-700">
+                        Doanh nghiệp nổi bật đang chạy tới {formatDate(company.featuredUntil)}.
+                      </p>
                     )}
-                  </p>
+                  </div>
                 )}
               </div>
 

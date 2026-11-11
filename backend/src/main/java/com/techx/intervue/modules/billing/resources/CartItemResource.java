@@ -1,5 +1,8 @@
 package com.techx.intervue.modules.billing.resources;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public record CartItemResource(
         Long id,
         Long packageId,
@@ -12,4 +15,6 @@ public record CartItemResource(
         Integer quantity,
         Long lineTotal,
         Integer validityDays,
-        Boolean oneTimePerCompany) {}
+        Boolean oneTimePerCompany,
+        Boolean adSlotItem,
+        List<LocalDate> weeks) {}

@@ -6,6 +6,7 @@ import type {
   AdSlotCalendar,
   AdminAdCreative,
   AdCreativeStatus,
+  CreateAdSlotInput,
   SaveAdSlotInput,
   ServedAd,
 } from '@/types/ads';
@@ -34,6 +35,8 @@ export const recruiterAdApi = {
 
 export const adminAdApi = {
   slots: () => request<AdSlot[]>('/admin/ads/slots'),
+
+  createSlot: (data: CreateAdSlotInput) => request<AdSlot>('/admin/ads/slots', { method: 'POST', body: data }),
 
   updateSlot: (id: number, data: SaveAdSlotInput) =>
     request<AdSlot>(`/admin/ads/slots/${id}`, { method: 'PUT', body: data }),

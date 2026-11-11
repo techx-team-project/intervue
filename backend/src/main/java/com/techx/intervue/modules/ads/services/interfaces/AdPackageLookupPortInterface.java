@@ -8,4 +8,15 @@ public interface AdPackageLookupPortInterface {
     Optional<String> slugOf(Long servicePackageId);
 
     boolean isAdPackage(Long servicePackageId);
+
+    boolean existsPackage(Long servicePackageId);
+
+    void syncPrice(Long servicePackageId, Long price);
+
+    Long createBannerPackageForSlot(
+            String slotCode,
+            String slotName,
+            String description,
+            Long pricePerWeek,
+            Integer displayOrder);
 }

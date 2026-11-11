@@ -4,7 +4,11 @@ import { Button } from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import { BOOST_TIER_OPTIONS, ENTITLEMENT_TYPE_OPTIONS } from '@/constants/service-package';
-import type { PackageBenefitFormData, SaveServicePackageFormData } from '@/schemas/service-package.schema';
+import {
+  DURATION_REQUIRED_ENTITLEMENT_TYPES,
+  type PackageBenefitFormData,
+  type SaveServicePackageFormData,
+} from '@/schemas/service-package.schema';
 import type { EntitlementType } from '@/types/service-package';
 import { ArrowDown, ArrowUp, Info, Plus, Trash2 } from 'lucide-react';
 import {
@@ -96,7 +100,9 @@ export default function PackageBenefitsEditor({
         <div className="space-y-3">
           {fields.map((field, index) => {
             const currentType = watchedBenefits?.[index]?.entitlementType ?? field.entitlementType;
+            const currentDuration = watchedBenefits?.[index]?.durationDays ?? field.durationDays;
             const isBoost = currentType === 'JOB_BOOST';
+            const requiresDuration = DURATION_REQUIRED_ENTITLEMENT_TYPES.has(currentType);
             const rowErrors = errors.benefits?.[index];
 
             return (
@@ -151,6 +157,9 @@ export default function PackageBenefitsEditor({
                             if (nextType !== 'JOB_BOOST') {
                               setValue(`benefits.${index}.tier`, '1', { shouldValidate: true });
                             }
+                            if (DURATION_REQUIRED_ENTITLEMENT_TYPES.has(nextType) && !currentDuration?.trim()) {
+                              setValue(`benefits.${index}.durationDays`, '30', { shouldValidate: true });
+                            }
                           }}
                           options={ENTITLEMENT_TYPE_OPTIONS}
                           error={rowErrors?.entitlementType?.message}
@@ -193,10 +202,10 @@ export default function PackageBenefitsEditor({
 
                   <div className="lg:col-span-3">
                     <Input
-                      label="Duration (days)"
+                      label={requiresDuration ? 'Duration (days) *' : 'Duration (days)'}
                       type="number"
                       min={1}
-                      placeholder="Empty = no expiry"
+                      placeholder={requiresDuration ? 'Required (min 1 day)' : 'Empty = no expiry'}
                       {...register(`benefits.${index}.durationDays`)}
                       error={rowErrors?.durationDays?.message}
                       className={CONTROL_DARK_CLASS}

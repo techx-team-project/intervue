@@ -126,6 +126,9 @@ public class Job extends BaseEntity {
     @Column(name = "published_at")
     private Instant publishedAt;
 
+    @Column(name = "retopped_at")
+    private Instant retoppedAt;
+
     @Column(name = "boost_level", nullable = false)
     @Builder.Default
     private Integer boostLevel = 0;

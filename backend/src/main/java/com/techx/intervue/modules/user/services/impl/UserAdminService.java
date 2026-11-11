@@ -531,6 +531,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     SERVICE_PACKAGE_UPDATED,
                     SERVICE_PACKAGE_STATUS_CHANGED,
                     BILLING_SETTINGS_UPDATED,
+                    CREDIT_PRICE_CREATED,
                     CREDIT_PRICE_UPDATED,
                     VOUCHER_CREATED,
                     VOUCHER_UPDATED,
@@ -538,6 +539,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     REFUND_REJECTED,
                     AD_CREATIVE_APPROVED,
                     AD_CREATIVE_REJECTED,
+                    AD_SLOT_CREATED,
                     AD_SLOT_UPDATED,
                     PAYMENT_TRANSACTION_MATCHED,
                     ORDER_MANUAL_REFUND_RESOLVED ->
@@ -617,6 +619,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     SERVICE_PACKAGE_UPDATED,
                     SERVICE_PACKAGE_STATUS_CHANGED,
                     BILLING_SETTINGS_UPDATED,
+                    CREDIT_PRICE_CREATED,
                     CREDIT_PRICE_UPDATED,
                     VOUCHER_CREATED,
                     VOUCHER_UPDATED,
@@ -624,6 +627,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     REFUND_REJECTED,
                     AD_CREATIVE_APPROVED,
                     AD_CREATIVE_REJECTED,
+                    AD_SLOT_CREATED,
                     AD_SLOT_UPDATED,
                     PAYMENT_TRANSACTION_MATCHED,
                     ORDER_MANUAL_REFUND_RESOLVED ->

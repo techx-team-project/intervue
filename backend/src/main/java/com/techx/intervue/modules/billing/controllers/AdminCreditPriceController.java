@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.billing.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.billing.requests.CreateCreditPriceRequest;
 import com.techx.intervue.modules.billing.requests.SaveCreditPriceRequest;
 import com.techx.intervue.modules.billing.resources.CreditPriceResource;
 import com.techx.intervue.modules.billing.services.interfaces.AdminCreditPriceServiceInterface;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,16 @@ public class AdminCreditPriceController extends BaseController {
     @GetMapping
     public ResponseEntity<ApiResource<List<CreditPriceResource>>> list() {
         return ok(creditPriceService.list(), "Credit prices retrieved successfully!");
+    }
+
+    @PostMapping
+    public ResponseEntity<ApiResource<CreditPriceResource>> create(
+            @Valid @RequestBody CreateCreditPriceRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return created(
+                creditPriceService.create(request, actor(principal, httpRequest)),
+                "Credit price created successfully!");
     }
 
     @PutMapping("/{id}")

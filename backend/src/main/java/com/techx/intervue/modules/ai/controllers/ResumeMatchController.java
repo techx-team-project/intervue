@@ -46,7 +46,7 @@ public class ResumeMatchController extends BaseController {
             @Valid @RequestBody ResumeMatchRequest request,
             HttpServletRequest httpRequest) {
         Long userId = principal.getId();
-        String ip = resolveClientIp(httpRequest);
+        String ip = ClientIpResolver.resolve(httpRequest);
 
         return ok(
                 resumeMatchService.analyze(userId, ip, request),
@@ -60,15 +60,7 @@ public class ResumeMatchController extends BaseController {
             HttpServletRequest httpRequest) {
         return ok(
                 applicationResumeMatchService.analyze(
-                        principal.getId(), resolveClientIp(httpRequest), id),
+                        principal.getId(), ClientIpResolver.resolve(httpRequest), id),
                 "Application analyzed with AI successfully!");
-    }
-
-    private String resolveClientIp(HttpServletRequest request) {
-        String forwarded = request.getHeader("X-Forwarded-For");
-        if (forwarded != null && !forwarded.isBlank()) {
-            return forwarded.split(",")[0].trim();
-        }
-        return request.getRemoteAddr();
     }
 }

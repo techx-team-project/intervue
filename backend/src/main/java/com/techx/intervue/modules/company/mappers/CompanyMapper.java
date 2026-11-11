@@ -77,6 +77,8 @@ public class CompanyMapper {
                         .id(company.getId())
                         .name(company.getName())
                         .address(company.getAddress())
+                        .featured(brandingPolicy.isFeatured(company))
+                        .brandPageActive(brandingPolicy.hasBrandPage(company))
                         .photoUrls(
                                 photos.stream()
                                         .map(photo -> imageUrl(photo.getPublicId()))

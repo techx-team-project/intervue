@@ -5,6 +5,7 @@ import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import com.techx.intervue.modules.entitlement.enums.EntitlementUsageStatus;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EntitlementUsageRepository extends JpaRepository<EntitlementUsage, Long> {
@@ -17,6 +18,9 @@ public interface EntitlementUsageRepository extends JpaRepository<EntitlementUsa
 
     boolean existsByJobIdAndEntitlementTypeAndStatus(
             Long jobId, EntitlementType entitlementType, EntitlementUsageStatus status);
+
+    Optional<EntitlementUsage> findFirstByJobIdAndEntitlementTypeOrderByStartedAtDesc(
+            Long jobId, EntitlementType entitlementType);
 
     List<EntitlementUsage> findAllByCompanyIdAndEntitlementTypeOrderByStartedAtDesc(
             Long companyId, EntitlementType entitlementType);

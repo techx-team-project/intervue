@@ -137,6 +137,7 @@ export function summaryToJobPost(summary: RecruiterJobSummaryResource): Recruite
     updatedAt: summary.updatedAt,
     expiresAt: summary.deadline,
     publishedAt: summary.publishedAt,
+    retoppedAt: summary.retoppedAt,
   };
 }
 
@@ -163,5 +164,6 @@ export function resourceToJobPost(job: RecruiterJobResource): RecruiterJobPost {
     updatedAt: job.updatedAt,
     expiresAt: job.deadline,
     publishedAt: job.publishedAt,
+    retoppedAt: job.retoppedAt,
   };
 }

@@ -22,6 +22,8 @@ export interface CompanyDetail {
   photos: string[];
   openJobsCount: number;
   jobs: CompanyJobItem[];
+  featured?: boolean;
+  brandPageActive?: boolean;
 }
 
 export interface PublicCompanyResource {
@@ -38,4 +40,6 @@ export interface PublicCompanyResource {
   benefits?: string;
   logoUrl?: string;
   photoUrls: string[];
+  featured?: boolean;
+  brandPageActive?: boolean;
 }

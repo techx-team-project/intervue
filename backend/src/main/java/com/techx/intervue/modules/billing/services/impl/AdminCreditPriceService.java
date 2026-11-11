@@ -11,6 +11,7 @@ import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.billing.entities.CreditPrice;
 import com.techx.intervue.modules.billing.mappers.CreditPriceMapper;
 import com.techx.intervue.modules.billing.repositories.CreditPriceRepository;
+import com.techx.intervue.modules.billing.requests.CreateCreditPriceRequest;
 import com.techx.intervue.modules.billing.requests.SaveCreditPriceRequest;
 import com.techx.intervue.modules.billing.resources.CreditPriceResource;
 import com.techx.intervue.modules.billing.services.interfaces.AdminCreditPriceServiceInterface;
@@ -37,30 +38,77 @@ public class AdminCreditPriceService implements AdminCreditPriceServiceInterface
 
     @Override
     @Transactional
+    public CreditPriceResource create(CreateCreditPriceRequest request, RequestActor actor) {
+        EntitlementConfigRules.validateCreditPrice(
+                request.entitlementType(), request.tier(), request.durationDays());
+        if (priceRepository.existsByEntitlementTypeAndTier(
+                request.entitlementType(), request.tier())) {
+            throw new AppException(ErrorCode.DUPLICATE_CREDIT_PRICE);
+        }
+
+        CreditPrice price =
+                CreditPrice.builder()
+                        .entitlementType(request.entitlementType())
+                        .tier(request.tier())
+                        .build();
+        applyFields(
+                price,
+                request.creditCost(),
+                request.durationDays(),
+                request.label(),
+                request.active(),
+                request.displayOrder());
+        CreditPrice saved = priceRepository.save(price);
+        audit(saved, AuditAction.CREDIT_PRICE_CREATED, actor);
+        return priceMapper.toResource(saved);
+    }
+
+    @Override
+    @Transactional
     public CreditPriceResource update(Long id, SaveCreditPriceRequest request, RequestActor actor) {
         CreditPrice price =
                 priceRepository
                         .findById(id)
                         .orElseThrow(() -> new AppException(ErrorCode.CREDIT_PRICE_NOT_AVAILABLE));
 
-        price.setCreditCost(request.creditCost());
-        price.setDurationDays(request.durationDays());
-        price.setLabel(request.label());
-        price.setIsActive(request.active());
-        price.setDisplayOrder(request.displayOrder());
+        EntitlementConfigRules.validateCreditPrice(
+                price.getEntitlementType(), price.getTier(), request.durationDays());
+        applyFields(
+                price,
+                request.creditCost(),
+                request.durationDays(),
+                request.label(),
+                request.active(),
+                request.displayOrder());
         CreditPrice saved = priceRepository.save(price);
+        audit(saved, AuditAction.CREDIT_PRICE_UPDATED, actor);
+        return priceMapper.toResource(saved);
+    }
 
+    private void applyFields(
+            CreditPrice price,
+            Integer creditCost,
+            Integer durationDays,
+            String label,
+            Boolean active,
+            Integer displayOrder) {
+        price.setCreditCost(creditCost);
+        price.setDurationDays(durationDays);
+        price.setLabel(label.trim());
+        price.setIsActive(active);
+        price.setDisplayOrder(displayOrder);
+    }
+
+    private void audit(CreditPrice saved, AuditAction action, RequestActor actor) {
         auditLogService.record(
                 AuditEntry.builder()
                         .actorType(AuditActorType.ADMIN)
                         .actorId(actor.userId())
                         .actorEmail(actor.email())
-                        .action(AuditAction.CREDIT_PRICE_UPDATED)
+                        .action(action)
                         .targetType(AuditTargetType.CREDIT_PRICE)
                         .targetId(saved.getId())
                         .detail(saved.getEntitlementType() + " tier " + saved.getTier())
                         .build());
-
-        return priceMapper.toResource(saved);
     }
 }

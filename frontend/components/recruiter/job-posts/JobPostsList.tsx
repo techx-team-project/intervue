@@ -82,6 +82,7 @@ export default function JobPostsList({
               isPending={isPending}
               onPause={() => actions.pauseJob(job.id)}
               onReopen={() => actions.reopenJob(job.id)}
+              onRetop={() => actions.retopJob(job.id)}
               onClose={() =>
                 onConfirm({
                   title: 'Đóng tin tuyển dụng?',

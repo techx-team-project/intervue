@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Briefcase, Building2, Globe, MapPin, Share2, Users } from 'lucide-react';
+import { Award, Briefcase, Building2, Globe, MapPin, Share2, Sparkles, Users } from 'lucide-react';
 import FollowCompanyButton from '@/components/candidate/saved/FollowCompanyButton';
 import type { CompanyDetail } from '@/types/company';
 
@@ -47,6 +47,18 @@ export default function CompanyHeaderCover({ company, activeTab, onTabChange }: 
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-on-surface text-xl font-bold tracking-tight sm:text-2xl">{company.name}</h1>
+                {company.featured && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                    <Award className="h-3.5 w-3.5 text-amber-600" aria-hidden />
+                    Doanh nghiệp nổi bật
+                  </span>
+                )}
+                {company.brandPageActive && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
+                    <Sparkles className="h-3.5 w-3.5 text-emerald-600" aria-hidden />
+                    Brand Page
+                  </span>
+                )}
               </div>
 
               <div className="text-on-surface-variant mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">

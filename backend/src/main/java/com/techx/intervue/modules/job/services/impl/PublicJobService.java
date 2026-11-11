@@ -16,6 +16,7 @@ import com.techx.intervue.modules.job.resources.PublicJobResource;
 import com.techx.intervue.modules.job.resources.PublicJobSummaryResource;
 import com.techx.intervue.modules.job.services.interfaces.PublicJobServiceInterface;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -26,19 +27,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class PublicJobService implements PublicJobServiceInterface {
-
-    // Paid boost outranks recency; ties fall back to the newest job
-    private static final Sort NEWEST_FIRST =
-            Sort.by(Sort.Direction.DESC, "boostLevel")
-                    .and(Sort.by(Sort.Direction.DESC, "publishedAt"))
-                    .and(Sort.by(Sort.Direction.DESC, "id"));
 
     private static final int NEARBY_CANDIDATE_LIMIT = 500;
     private static final int NEARBY_RESULT_LIMIT = 100;
@@ -50,12 +44,12 @@ public class PublicJobService implements PublicJobServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public Page<PublicJobSummaryResource> search(SearchJobsRequest request, Pageable pageable) {
-        Pageable newestFirst =
-                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), NEWEST_FIRST);
+        Pageable unsorted = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         Page<Job> page =
                 jobRepository.findAll(
-                        JobSpecifications.publicListing(request, JobDeadlines.today()),
-                        newestFirst);
+                        JobSpecifications.publicListing(
+                                request, JobDeadlines.today(), Instant.now()),
+                        unsorted);
         Map<Long, String> logos = logosOf(page.getContent());
         return page.map(job -> jobMapper.toPublicSummary(job, logos.get(job.getRecruiterId())));
     }
@@ -74,7 +68,8 @@ public class PublicJobService implements PublicJobServiceInterface {
                         BigDecimal.valueOf(request.lat() + latDelta),
                         BigDecimal.valueOf(request.lng() - lngDelta),
                         BigDecimal.valueOf(request.lng() + lngDelta),
-                        PageRequest.of(0, NEARBY_CANDIDATE_LIMIT, NEWEST_FIRST));
+                        Instant.now(),
+                        PageRequest.of(0, NEARBY_CANDIDATE_LIMIT));
         Map<Long, String> logos = logosOf(candidates);
         return candidates.stream()
                 .map(job -> toNearby(job, request, logos.get(job.getRecruiterId())))

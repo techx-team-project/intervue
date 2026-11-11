@@ -32,7 +32,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { AlertCircle, ArrowLeft, Info, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -112,6 +112,18 @@ export default function AdminServicePackageForm({
 
   const watchedValues = useWatch({ control }) as SaveServicePackageFormData;
   const selectedCategory = categories.find((item) => String(item.id) === String(watchedValues.categoryId));
+
+  const creditBenefitSum = (watchedValues.benefits ?? []).reduce((total, benefit) => {
+    if (benefit?.entitlementType !== 'CREDIT') return total;
+    const qty = Number(benefit.quantity);
+    return Number.isInteger(qty) && qty > 0 ? total + qty : total;
+  }, 0);
+
+  useEffect(() => {
+    if (creditBenefitSum > 0 && watchedValues.bonusCredits !== String(creditBenefitSum)) {
+      setValue('bonusCredits', String(creditBenefitSum), { shouldValidate: true });
+    }
+  }, [creditBenefitSum, setValue, watchedValues.bonusCredits]);
 
   const nameField = register('name');
   const codeField = register('code');
@@ -431,12 +443,21 @@ export default function AdminServicePackageForm({
               />
 
               <Input
-                label="Bonus credits (display metadata)"
+                label={creditBenefitSum > 0 ? 'Bonus credits (synced from CREDIT benefits)' : 'Bonus credits'}
                 type="number"
                 min={0}
-                helperText="Add a CREDIT benefit row below to actually fund credits"
+                readOnly={creditBenefitSum > 0}
+                helperText={
+                  creditBenefitSum > 0
+                    ? `Automatically synced to ${creditBenefitSum} from CREDIT benefit row(s) below`
+                    : 'Or add a CREDIT benefit row below to fund credits automatically'
+                }
                 error={errors.bonusCredits?.message}
-                className={CONTROL_DARK_CLASS}
+                className={
+                  creditBenefitSum > 0
+                    ? 'dark:border-forest-800 dark:bg-forest-900/60 dark:text-forest-400 bg-surface-container-low text-on-surface-variant cursor-not-allowed'
+                    : CONTROL_DARK_CLASS
+                }
                 {...register('bonusCredits')}
               />
 

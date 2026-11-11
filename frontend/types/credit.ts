@@ -37,3 +37,8 @@ export interface SaveCreditPriceInput {
   active: boolean;
   displayOrder: number;
 }
+
+export interface CreateCreditPriceInput extends SaveCreditPriceInput {
+  entitlementType: EntitlementType;
+  tier: number;
+}

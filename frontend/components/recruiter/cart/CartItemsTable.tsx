@@ -59,6 +59,7 @@ export default function CartItemsTable({
           <tbody className="divide-outline-variant divide-y">
             {items.map((item) => {
               const itemTotal = item.unitPrice * item.quantity;
+              const isBannerLocked = Boolean(item.adSlotItem || (item.weeks && item.weeks.length > 0));
               return (
                 <tr
                   key={item.id}
@@ -80,6 +81,18 @@ export default function CartItemsTable({
                     <div className="max-w-md">
                       <h4 className="text-body-md text-on-surface font-bold tracking-tight uppercase">{item.name}</h4>
                       <p className="text-body-sm text-on-surface-variant mt-1.5 leading-relaxed">{item.description}</p>
+                      {item.weeks && item.weeks.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {item.weeks.map((week) => (
+                            <span
+                              key={week}
+                              className="rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800"
+                            >
+                              Tuần {week}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </td>
 
@@ -88,11 +101,11 @@ export default function CartItemsTable({
                   </td>
 
                   <td className="px-3 py-5 align-top whitespace-nowrap">
-                    <div className="flex items-center justify-center">
+                    <div className="flex flex-col items-center">
                       <div className="border-outline-variant inline-flex items-center rounded-sm border bg-white">
                         <button
                           type="button"
-                          disabled={item.quantity <= 1}
+                          disabled={isBannerLocked || item.quantity <= 1}
                           onClick={() => onUpdateQuantity(item.id, -1)}
                           className="bg-surface-container-high text-on-surface-variant hover:bg-surface-container-high flex h-7 w-7 items-center justify-center transition disabled:cursor-not-allowed disabled:opacity-40"
                           aria-label="Decrease quantity"
@@ -102,13 +115,17 @@ export default function CartItemsTable({
                         <span className="text-on-surface w-8 text-center text-xs font-semibold">{item.quantity}</span>
                         <button
                           type="button"
+                          disabled={isBannerLocked}
                           onClick={() => onUpdateQuantity(item.id, 1)}
-                          className="bg-surface-container-high text-on-surface-variant hover:bg-surface-container-high flex h-7 w-7 items-center justify-center transition"
+                          className="bg-surface-container-high text-on-surface-variant hover:bg-surface-container-high flex h-7 w-7 items-center justify-center transition disabled:cursor-not-allowed disabled:opacity-40"
                           aria-label="Increase quantity"
                         >
                           <Plus className="h-3.5 w-3.5" />
                         </button>
                       </div>
+                      {isBannerLocked && (
+                        <span className="text-on-surface-variant mt-1 text-[11px]">Cố định theo tuần đã chọn</span>
+                      )}
                     </div>
                   </td>
 
@@ -150,6 +167,7 @@ export default function CartItemsTable({
 
         {items.map((item) => {
           const itemTotal = item.unitPrice * item.quantity;
+          const isBannerLocked = Boolean(item.adSlotItem || (item.weeks && item.weeks.length > 0));
           return (
             <div key={item.id} className={`p-4 transition ${item.selected ? 'bg-emerald-50/20' : 'bg-white'}`}>
               <div className="flex items-start gap-3">
@@ -174,6 +192,18 @@ export default function CartItemsTable({
                   </div>
 
                   <p className="text-on-surface-variant mt-1 line-clamp-3 text-xs">{item.description}</p>
+                  {item.weeks && item.weeks.length > 0 && (
+                    <div className="mt-1.5 flex flex-wrap gap-1">
+                      {item.weeks.map((week) => (
+                        <span
+                          key={week}
+                          className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-800"
+                        >
+                          Tuần {week}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
                   <div className="border-outline-variant mt-3 flex items-center justify-between border-t pt-2.5">
                     <div>
@@ -186,7 +216,7 @@ export default function CartItemsTable({
                     <div className="border-outline-variant inline-flex items-center rounded-sm border bg-white">
                       <button
                         type="button"
-                        disabled={item.quantity <= 1}
+                        disabled={isBannerLocked || item.quantity <= 1}
                         onClick={() => onUpdateQuantity(item.id, -1)}
                         className="bg-surface-container-high text-on-surface-variant flex h-6 w-6 items-center justify-center disabled:opacity-40"
                       >
@@ -195,8 +225,9 @@ export default function CartItemsTable({
                       <span className="text-on-surface w-6 text-center text-xs font-semibold">{item.quantity}</span>
                       <button
                         type="button"
+                        disabled={isBannerLocked}
                         onClick={() => onUpdateQuantity(item.id, 1)}
-                        className="bg-surface-container-high text-on-surface-variant flex h-6 w-6 items-center justify-center"
+                        className="bg-surface-container-high text-on-surface-variant flex h-6 w-6 items-center justify-center disabled:opacity-40"
                       >
                         <Plus className="h-3 w-3" />
                       </button>

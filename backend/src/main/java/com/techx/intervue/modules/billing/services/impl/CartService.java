@@ -94,6 +94,10 @@ public class CartService implements CartServiceInterface {
         if (!item.getServicePackage().isAvailableInCatalog()) {
             throw new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE);
         }
+        if (!adCartMeta.readWeeks(item.getMetaJson()).isEmpty()
+                || adCartMeta.isAdPackage(item.getServicePackage().getId())) {
+            throw new AppException(ErrorCode.AD_BANNER_QUANTITY_LOCKED);
+        }
         item.setQuantity(request.quantity());
         return toResource(cart);
     }

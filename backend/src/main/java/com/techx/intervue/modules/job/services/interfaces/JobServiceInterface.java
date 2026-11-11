@@ -29,5 +29,7 @@ public interface JobServiceInterface {
 
     JobResource close(Long jobId, Long recruiterId);
 
+    JobResource retop(Long jobId, Long recruiterId);
+
     void delete(Long jobId, Long recruiterId);
 }
