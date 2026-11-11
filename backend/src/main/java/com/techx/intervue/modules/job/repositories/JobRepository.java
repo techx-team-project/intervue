@@ -35,6 +35,13 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
     @EntityGraph(attributePaths = "skills")
     @Query(
             "SELECT j FROM Job j WHERE j.status = :status AND j.deadline >= :today"
+                    + " ORDER BY j.publishedAt DESC, j.id DESC")
+    List<Job> findActiveWithSkills(
+            @Param("status") JobStatus status, @Param("today") LocalDate today, Pageable pageable);
+
+    @EntityGraph(attributePaths = "skills")
+    @Query(
+            "SELECT j FROM Job j WHERE j.status = :status AND j.deadline >= :today"
                     + " AND j.latitude BETWEEN :minLat AND :maxLat"
                     + " AND j.longitude BETWEEN :minLng AND :maxLng")
     List<Job> findPublishedInBounds(
