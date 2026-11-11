@@ -15,10 +15,11 @@ export default function ContentViolationWarningModal({ isOpen, onClose }: Conten
       isOpen={isOpen}
       onClose={onClose}
       maxWidth="md"
+      radius="md"
       title="Message Blocked by Safety Filters"
       description="Your message contains content that does not comply with InterVue Connect community standards."
       footer={
-        <Button onClick={onClose} className="w-full">
+        <Button onClick={onClose} radius="md" className="w-full">
           I understand
         </Button>
       }

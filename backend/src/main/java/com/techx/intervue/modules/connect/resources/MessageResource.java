@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.techx.intervue.modules.connect.enums.ConnectActorType;
 import com.techx.intervue.modules.connect.enums.ConnectMessageType;
 import java.time.Instant;
+import java.util.List;
 import lombok.Builder;
 
 @Builder
@@ -13,6 +14,10 @@ public record MessageResource(
         Long connectionId,
         ConnectActorType senderType,
         Long senderId,
+        String senderName,
+        String clientMessageId,
+        Long replyToMessageId,
+        MessageReplyResource replyTo,
         ConnectMessageType messageType,
         String body,
         String attachmentUrl,
@@ -23,4 +28,7 @@ public record MessageResource(
         String linkTitle,
         String linkDescription,
         String linkImageUrl,
-        Instant createdAt) {}
+        Instant createdAt,
+        Instant editedAt,
+        boolean recalled,
+        List<MessageReactionResource> reactions) {}

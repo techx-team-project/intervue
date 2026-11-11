@@ -24,8 +24,9 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const realm = portal === 'recruiter' ? 'recruiter' : 'candidate';
   const isRecruiter = portal === 'recruiter';
-  const candidateConnectUnread = useCandidateUnreadCount();
-  const recruiterConnectUnread = useConnectUnreadCount();
+  const isSignedIn = status === 'authenticated' && Boolean(user);
+  const candidateConnectUnread = useCandidateUnreadCount(isSignedIn && !isRecruiter);
+  const recruiterConnectUnread = useConnectUnreadCount(isSignedIn && isRecruiter);
   const connectUnread = isRecruiter ? recruiterConnectUnread : candidateConnectUnread;
   const { total: unreadCount } = useUnreadCount(realm, Boolean(user));
   const userMenuRef = useRef<HTMLDivElement>(null);

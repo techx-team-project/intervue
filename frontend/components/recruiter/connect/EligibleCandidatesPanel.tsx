@@ -16,7 +16,7 @@ import { useState } from 'react';
 
 type EligibleCandidatesPanelProps = {
   variant?: 'sidebar' | 'modal';
-  onInvited?: () => void;
+  onInvited?: (connectionId?: number) => void;
 };
 
 export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited }: EligibleCandidatesPanelProps) {
@@ -121,9 +121,9 @@ export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited
       {inviteTarget && (
         <InviteCandidateModal
           prefilledCandidate={inviteTarget}
-          onClose={() => {
+          onClose={(createdConnectionId) => {
             setInviteTarget(null);
-            onInvited?.();
+            onInvited?.(createdConnectionId);
           }}
         />
       )}

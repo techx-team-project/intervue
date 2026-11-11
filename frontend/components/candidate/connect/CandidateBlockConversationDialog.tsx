@@ -32,14 +32,15 @@ export default function CandidateBlockConversationDialog({
       isOpen
       onClose={onClose}
       maxWidth="sm"
+      radius="md"
       title="Block conversation?"
       description="Neither party will be able to send new messages. Existing chat history is preserved and viewable as normal."
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" radius="md" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleConfirm} isLoading={block.isPending}>
+          <Button variant="danger" radius="md" onClick={handleConfirm} isLoading={block.isPending}>
             Block
           </Button>
         </>

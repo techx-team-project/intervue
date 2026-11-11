@@ -4,7 +4,11 @@ import { RECRUITER_NAV_SECTIONS } from '@/constants/recruiter-nav';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
 import { useCompanyVerification } from '@/hooks/useCompanyVerification';
+import { useRecruiterRescheduleCount } from '@/hooks/useInterviews';
 import { useUnreadCount } from '@/hooks/useNotifications';
+import { useReviewCounts } from '@/hooks/useRecruiterApplications';
+import { useRecruiterCartCount } from '@/hooks/useRecruiterCart';
+import { useConnectUnreadCount } from '@/hooks/useRecruiterConnect';
 import { cn } from '@/lib/utils';
 import { HelpCircle, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
@@ -21,7 +25,18 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
   const { user } = useAuth();
   const { profile, company } = useCompanyVerification();
   const { total: unreadNotificationsCount } = useUnreadCount('recruiter');
+  const { data: applicationCounts } = useReviewCounts(undefined, Boolean(company));
+  const rescheduleCount = useRecruiterRescheduleCount(Boolean(company));
+  const unreadMessagesCount = useConnectUnreadCount();
+  const cartCount = useRecruiterCartCount();
 
+  const badgeCounts: Partial<Record<string, number>> = {
+    [ROUTES.RECRUITER_APPLICATIONS]: applicationCounts?.byStatus.APPLIED ?? 0,
+    [ROUTES.RECRUITER_INTERVIEWS]: rescheduleCount,
+    [ROUTES.RECRUITER_MESSAGES]: unreadMessagesCount,
+    [ROUTES.RECRUITER_CART]: cartCount,
+    [ROUTES.RECRUITER_NOTIFICATIONS]: unreadNotificationsCount,
+  };
   const isVerified = profile.canPublish || profile.level === 3;
 
   return (
@@ -94,6 +109,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
           {section.items.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
+            const badgeCount = badgeCounts[item.href] ?? 0;
 
             return (
               <Link
@@ -107,18 +123,21 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
               >
                 <div className={`flex items-center ${isCollapsed ? '' : 'gap-3'}`}>
                   <span
-                    className={`flex shrink-0 items-center justify-center rounded-full transition-colors ${
+                    className={`relative flex shrink-0 items-center justify-center rounded-full transition-colors ${
                       isCollapsed ? 'h-9 w-9' : 'h-8 w-8'
                     } ${isActive ? 'bg-primary/10 text-primary' : 'text-on-surface-variant'}`}
                   >
                     <Icon className={isCollapsed ? 'h-5 w-5' : 'h-4.5 w-4.5'} />
+                    {isCollapsed && badgeCount > 0 && (
+                      <span className="bg-primary absolute top-0.5 right-0.5 h-2 w-2 rounded-full ring-2 ring-white" />
+                    )}
                   </span>
                   {!isCollapsed && <span className={isActive ? 'text-primary' : ''}>{item.label}</span>}
                 </div>
 
-                {!isCollapsed && item.href === ROUTES.RECRUITER_NOTIFICATIONS && unreadNotificationsCount > 0 && (
-                  <span className="bg-primary text-label-sm rounded-full px-2 py-0.5 font-bold text-white shadow-2xs">
-                    {unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount}
+                {!isCollapsed && badgeCount > 0 && (
+                  <span className="bg-primary text-label-sm rounded-full px-2 py-0.5 font-bold text-white tabular-nums shadow-2xs">
+                    {badgeCount > 99 ? '99+' : badgeCount}
                   </span>
                 )}
 

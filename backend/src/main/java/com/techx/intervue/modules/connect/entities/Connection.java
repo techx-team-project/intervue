@@ -74,4 +74,16 @@ public class Connection extends BaseEntity {
 
     @Column(name = "last_message_at")
     private Instant lastMessageAt;
+
+    @Column(name = "candidate_last_read_message_id")
+    private Long candidateLastReadMessageId;
+
+    @Column(name = "candidate_last_read_at")
+    private Instant candidateLastReadAt;
+
+    @Column(name = "recruiter_last_read_message_id")
+    private Long recruiterLastReadMessageId;
+
+    @Column(name = "recruiter_last_read_at")
+    private Instant recruiterLastReadAt;
 }

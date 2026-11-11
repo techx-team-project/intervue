@@ -1,12 +1,18 @@
 'use client';
 
+import { candidateApplicationApi } from '@/apiRequest/candidate-application';
 import Pagination from '@/components/common/Pagination';
 import Spinner from '@/components/common/Spinner';
 import PublicJobCard from '@/components/jobs/PublicJobCard';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { useFollowedCompanies, useSavedJobs } from '@/hooks/useCandidateSaved';
 import { cn } from '@/lib/utils';
+import type { CandidateApplicationStatus } from '@/types/candidate-application';
+import { formatRelativeDay } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
+import { useQuery } from '@tanstack/react-query';
+import { Building2, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import FollowedCompanyCard from './FollowedCompanyCard';
@@ -14,12 +20,29 @@ import SavedJobUnavailableCard from './SavedJobUnavailableCard';
 
 const PAGE_SIZE = 12;
 
-type Tab = 'jobs' | 'companies';
+type Tab = 'jobs' | 'companies' | 'applied';
 
 const TABS: Array<{ value: Tab; label: string }> = [
   { value: 'jobs', label: 'Việc làm đã lưu' },
   { value: 'companies', label: 'Công ty theo dõi' },
+  { value: 'applied', label: 'Việc làm đã ứng tuyển' },
 ];
+
+const APPLICATION_STATUS_META: Record<
+  CandidateApplicationStatus,
+  { label: string; variant: 'default' | 'info' | 'warning' | 'success' | 'danger' }
+> = {
+  DRAFT: { label: 'Bản nháp', variant: 'default' },
+  APPLIED: { label: 'Đã ứng tuyển', variant: 'info' },
+  VIEWED: { label: 'NTD đã xem', variant: 'info' },
+  IN_REVIEW: { label: 'Đang xem xét', variant: 'warning' },
+  INTERVIEW: { label: 'Phỏng vấn', variant: 'warning' },
+  OFFER: { label: 'Đề nghị nhận việc', variant: 'success' },
+  HIRED: { label: 'Đã tuyển', variant: 'success' },
+  REJECTED: { label: 'Chưa phù hợp', variant: 'danger' },
+  WITHDRAWN: { label: 'Đã rút hồ sơ', variant: 'default' },
+  JOB_CLOSED: { label: 'Tin đã đóng', variant: 'default' },
+};
 
 function Feedback({ isLoading, error, onRetry }: { isLoading: boolean; error: unknown; onRetry: () => void }) {
   if (isLoading) {
@@ -123,6 +146,72 @@ function FollowedCompaniesTab() {
   );
 }
 
+function AppliedJobsTab() {
+  const [page, setPage] = useState(1);
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ['candidate-applications', page - 1, PAGE_SIZE],
+    queryFn: () => candidateApplicationApi.list(page - 1, PAGE_SIZE),
+  });
+
+  if (isLoading || isError) return <Feedback isLoading={isLoading} error={error} onRetry={() => refetch()} />;
+  if (!data || data.items.length === 0) {
+    return (
+      <Empty
+        title="Bạn chưa ứng tuyển việc làm nào"
+        hint="Khám phá các vị trí phù hợp và nộp hồ sơ trực tuyến ngay."
+        href="/jobs"
+        cta="Tìm việc làm"
+      />
+    );
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        {data.items.map((app) => {
+          const meta = APPLICATION_STATUS_META[app.status] ?? { label: app.status, variant: 'default' as const };
+          return (
+            <Link
+              key={app.id}
+              href={`/jobs/${app.jobId}`}
+              className="flex flex-col justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition-colors hover:border-emerald-300 hover:bg-emerald-50/20"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold text-slate-900">{app.jobTitle}</p>
+                  <p className="mt-1 flex items-center gap-1.5 truncate text-xs text-slate-500">
+                    <Building2 className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate">{app.companyName}</span>
+                  </p>
+                </div>
+                <Badge variant={meta.variant}>{meta.label}</Badge>
+              </div>
+              <div className="flex items-center justify-between gap-2 border-t border-slate-100 pt-2.5 text-xs text-slate-500">
+                <span className="flex min-w-0 items-center gap-1.5 truncate">
+                  {app.cv?.fileName && (
+                    <>
+                      <FileText className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                      <span className="truncate">{app.cv.fileName}</span>
+                    </>
+                  )}
+                </span>
+                {app.submittedAt && <span className="shrink-0">Nộp {formatRelativeDay(app.submittedAt)}</span>}
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+      <Pagination
+        page={page}
+        pageCount={data.totalPages}
+        totalItems={data.totalItems}
+        pageSize={PAGE_SIZE}
+        onPageChange={setPage}
+      />
+    </div>
+  );
+}
+
 export default function SavedItemsView({ initialTab = 'jobs' }: { initialTab?: Tab }) {
   const [tab, setTab] = useState<Tab>(initialTab);
 
@@ -131,11 +220,11 @@ export default function SavedItemsView({ initialTab = 'jobs' }: { initialTab?: T
       <header>
         <h1 className="text-2xl font-black text-slate-900">Đã lưu và theo dõi</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Xem lại việc làm bạn quan tâm và các công ty bạn muốn nhận tin tuyển dụng mới.
+          Xem lại việc làm bạn quan tâm, vị trí đã ứng tuyển và các công ty bạn theo dõi.
         </p>
       </header>
 
-      <div className="flex gap-2" role="tablist">
+      <div className="flex flex-wrap gap-2" role="tablist">
         {TABS.map((item) => (
           <button
             key={item.value}
@@ -155,7 +244,9 @@ export default function SavedItemsView({ initialTab = 'jobs' }: { initialTab?: T
         ))}
       </div>
 
-      {tab === 'jobs' ? <SavedJobsTab /> : <FollowedCompaniesTab />}
+      {tab === 'jobs' && <SavedJobsTab />}
+      {tab === 'companies' && <FollowedCompaniesTab />}
+      {tab === 'applied' && <AppliedJobsTab />}
     </div>
   );
 }

@@ -17,6 +17,10 @@ export const sendMessageSchema = z.object({
 
 export type SendMessageFormValues = z.infer<typeof sendMessageSchema>;
 
+export const editMessageSchema = sendMessageSchema;
+
+export type EditMessageFormValues = z.infer<typeof editMessageSchema>;
+
 export const reportConversationSchema = z.object({
   reasonCode: z.enum(['SCAM', 'HARASSMENT', 'SPAM', 'INAPPROPRIATE', 'OTHER'], {
     error: 'Please select a reason.',

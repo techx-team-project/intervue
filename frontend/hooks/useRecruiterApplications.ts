@@ -5,6 +5,8 @@ import type { ReviewApplication } from '@/types/application-review';
 import type { CandidateApplicationStatus } from '@/types/candidate-application';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+const APPLICATION_COUNTS_POLL_MS = 30_000;
+
 export const reviewKeys = {
   all: ['recruiter', 'applications'] as const,
   list: (params: ReviewSearchParams) => ['recruiter', 'applications', 'list', params] as const,
@@ -17,17 +19,33 @@ export function useReviewApplicationList(params: ReviewSearchParams) {
     queryKey: reviewKeys.list(params),
     queryFn: () => recruiterApplicationApi.search(params),
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 }
 
-export function useReviewCounts(jobId?: number) {
-  return useQuery({ queryKey: reviewKeys.counts(jobId), queryFn: () => recruiterApplicationApi.counts(jobId) });
+export function useReviewCounts(jobId?: number, enabled = true) {
+  return useQuery({
+    queryKey: reviewKeys.counts(jobId),
+    queryFn: () => recruiterApplicationApi.counts(jobId),
+    enabled,
+    refetchInterval: APPLICATION_COUNTS_POLL_MS,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+  });
 }
 
 export function useReviewApplication(id: number) {
+  const queryClient = useQueryClient();
+
   return useQuery({
     queryKey: reviewKeys.detail(id),
-    queryFn: () => recruiterApplicationApi.open(id),
+    queryFn: async () => {
+      const application = await recruiterApplicationApi.open(id);
+      void queryClient.invalidateQueries({ queryKey: ['recruiter', 'applications', 'counts'] });
+      void queryClient.invalidateQueries({ queryKey: ['recruiter', 'applications', 'list'] });
+      return application;
+    },
     staleTime: 0,
   });
 }

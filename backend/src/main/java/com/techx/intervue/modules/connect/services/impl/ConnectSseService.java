@@ -1,8 +1,6 @@
 package com.techx.intervue.modules.connect.services.impl;
 
 import com.techx.intervue.modules.connect.enums.ConnectActorType;
-import com.techx.intervue.modules.connect.enums.ConnectionStatus;
-import com.techx.intervue.modules.connect.resources.MessageResource;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectSseServiceInterface;
 import java.io.IOException;
 import java.util.List;
@@ -36,33 +34,15 @@ public class ConnectSseService implements ConnectSseServiceInterface {
     }
 
     @Override
-    public void publish(ConnectActorType actorType, Long actorId, MessageResource message) {
-        List<SseEmitter> list = emitters.get(key(actorType, actorId));
+    public void publishEvent(
+            ConnectActorType actorType, Long actorId, String eventName, Object payload) {
+        String targetKey = key(actorType, actorId);
+        List<SseEmitter> list = emitters.get(targetKey);
         if (list == null) {
             return;
         }
         for (SseEmitter emitter : list) {
-            send(
-                    key(actorType, actorId),
-                    emitter,
-                    SseEmitter.event().name("message").data(message));
-        }
-    }
-
-    @Override
-    public void publishStatus(
-            ConnectActorType actorType, Long actorId, Long connectionId, ConnectionStatus status) {
-        List<SseEmitter> list = emitters.get(key(actorType, actorId));
-        if (list == null) {
-            return;
-        }
-        for (SseEmitter emitter : list) {
-            send(
-                    key(actorType, actorId),
-                    emitter,
-                    SseEmitter.event()
-                            .name("status")
-                            .data(Map.of("connectionId", connectionId, "status", status.name())));
+            send(targetKey, emitter, SseEmitter.event().name(eventName).data(payload));
         }
     }
 
@@ -92,6 +72,6 @@ public class ConnectSseService implements ConnectSseServiceInterface {
     }
 
     private String key(ConnectActorType actorType, Long actorId) {
-        return actorType + ":" + actorId;
+        return actorType.name() + ":" + actorId;
     }
 }

@@ -1,28 +1,37 @@
 'use client';
 
 import CandidateAppliedJobsPanel from '@/components/candidate/connect/CandidateAppliedJobsPanel';
-import CandidateConnectSidebar, {
-  type CandidateConnectTab,
-} from '@/components/candidate/connect/CandidateConnectSidebar';
-import CandidateConnectThread from '@/components/candidate/connect/CandidateConnectThread';
-import CatEmptyIllustration from '@/components/connect/CatEmptyIllustration';
-import ConnectRulesModal from '@/components/recruiter/connect/ConnectRulesModal';
+import CandidateConnectSidebar from '@/components/candidate/connect/CandidateConnectSidebar';
 import Spinner from '@/components/common/Spinner';
-import { useConnectStream } from '@/hooks/useConnectStream';
+import ConnectRulesModal from '@/components/recruiter/connect/ConnectRulesModal';
+import { candidateConversationUrl } from '@/constants/routes';
 import {
-  useCandidateConnectInvalidation,
+  useCandidateConversation,
   useCandidateConversations,
   useCandidateInvitations,
   useCandidateRulesAck,
 } from '@/hooks/useCandidateConnect';
-import { useCallback, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { useConnectUiStore } from '@/store/connect-ui.store';
+import { parseConnectRouteId } from '@/utils/connect-chat';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
-export default function CandidateConnectView() {
-  const { data: rulesAck, isLoading: isRulesLoading } = useCandidateRulesAck();
-  const [isRulesViewOpen, setRulesViewOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [selectedTab, setSelectedTab] = useState<CandidateConnectTab>('ALL');
+type CandidateConnectViewProps = {
+  children: ReactNode;
+};
 
+export default function CandidateConnectView({ children }: CandidateConnectViewProps) {
+  const router = useRouter();
+  const params = useParams<{ id?: string }>();
+  const selectedId = parseConnectRouteId(params?.id);
+
+  const selectedTab = useConnectUiStore((s) => s.candidateTab);
+  const setSelectedTab = useConnectUiStore((s) => s.setCandidateTab);
+  const lastAutoSyncedIdRef = useRef<number | null>(null);
+  const [showRules, setShowRules] = useState(false);
+
+  const { data: rulesAck, isLoading: isLoadingRules } = useCandidateRulesAck();
   const {
     conversations,
     isLoading: isLoadingConversations,
@@ -30,28 +39,30 @@ export default function CandidateConnectView() {
     isLoadingMore: isLoadingMoreConversations,
     loadMore: loadMoreConversations,
   } = useCandidateConversations();
-
   const { invitations, isLoading: isLoadingInvitations } = useCandidateInvitations();
+  const { data: singleConversation } = useCandidateConversation(selectedId);
 
-  const invalidate = useCandidateConnectInvalidation();
-  const onStreamMessage = useCallback(() => invalidate(selectedId ?? undefined), [invalidate, selectedId]);
-  useConnectStream('candidate', onStreamMessage, rulesAck?.acknowledged === true);
+  const selectedConversation = useMemo(() => {
+    if (selectedId === null) return null;
+    return (
+      conversations.find((c) => c.id === selectedId) ??
+      invitations.find((i) => i.id === selectedId) ??
+      singleConversation ??
+      null
+    );
+  }, [selectedId, conversations, invitations, singleConversation]);
 
-  const selectedConversation =
-    selectedTab === 'INVITATIONS'
-      ? (invitations.find((invitation) => invitation.id === selectedId) ?? null)
-      : (conversations.find((conversation) => conversation.id === selectedId) ?? null);
+  // Auto-focus the Invitations tab once when opening a pending request directly (e.g. via deep-link/reload).
+  useEffect(() => {
+    if (selectedId === null || !selectedConversation) return;
+    if (lastAutoSyncedIdRef.current === selectedId) return;
+    if (selectedConversation.status === 'PENDING') {
+      useConnectUiStore.getState().setCandidateTab('INVITATIONS');
+    }
+    lastAutoSyncedIdRef.current = selectedId;
+  }, [selectedId, selectedConversation]);
 
-  const handleInvitationAccepted = (connectionId: number) => {
-    setSelectedTab('ALL');
-    setSelectedId(connectionId);
-  };
-
-  const handleInvitationDeclined = () => {
-    setSelectedId(null);
-  };
-
-  if (isRulesLoading) {
+  if (isLoadingRules) {
     return (
       <div className="flex h-screen items-center justify-center bg-white">
         <Spinner />
@@ -59,21 +70,8 @@ export default function CandidateConnectView() {
     );
   }
 
-  if (!rulesAck?.acknowledged) {
-    return <ConnectRulesModal mode="gate" portal="candidate" onClose={() => {}} />;
-  }
-
-  const emptyTitle =
-    selectedTab === 'INVITATIONS'
-      ? invitations.length > 0
-        ? 'Select an invitation to view recruiter message'
-        : 'No invitations yet...'
-      : conversations.length > 0
-        ? 'Select a conversation to start chatting'
-        : 'No conversations yet...';
-
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-white">
+    <div className="flex h-screen overflow-hidden bg-white">
       <CandidateConnectSidebar
         conversations={conversations}
         invitations={invitations}
@@ -84,40 +82,19 @@ export default function CandidateConnectView() {
         onLoadMoreConversations={loadMoreConversations}
         selectedId={selectedId}
         selectedTab={selectedTab}
-        onSelectTab={(tab) => {
-          setSelectedTab(tab);
-          setSelectedId(null);
-        }}
-        onSelectConversation={setSelectedId}
-        onOpenRules={() => setRulesViewOpen(true)}
+        onSelectTab={setSelectedTab}
+        onSelectConversation={(id) => router.push(candidateConversationUrl(id))}
+        onOpenRules={() => setShowRules(true)}
       />
 
-      {selectedConversation ? (
-        <CandidateConnectThread
-          conversation={selectedConversation}
-          onAccepted={handleInvitationAccepted}
-          onDeclined={handleInvitationDeclined}
-          onBack={() => setSelectedId(null)}
-        />
-      ) : (
-        <div className="hidden min-w-0 flex-1 flex-col bg-white md:flex">
-          <div className="border-outline-variant flex h-14 shrink-0 items-center border-b px-5">
-            <p className="text-xs font-semibold text-slate-800 sm:text-[13px]">
-              New way to follow your chance. <span className="font-bold text-[#00b14f]">More engage, more success</span>
-            </p>
-          </div>
-          <div className="flex flex-1 flex-col items-center justify-center bg-white p-6">
-            <CatEmptyIllustration
-              title={emptyTitle}
-              description="Real-time messaging between candidates and verified recruiters."
-            />
-          </div>
-        </div>
-      )}
+      <main className={cn('min-w-0 flex-1 flex-col bg-white', selectedId === null ? 'hidden md:flex' : 'flex')}>
+        {children}
+      </main>
 
       <CandidateAppliedJobsPanel selectedCompanyId={selectedConversation?.companyId} />
 
-      {isRulesViewOpen && <ConnectRulesModal mode="view" portal="candidate" onClose={() => setRulesViewOpen(false)} />}
+      {rulesAck && !rulesAck.acknowledged && <ConnectRulesModal mode="gate" portal="candidate" onClose={() => {}} />}
+      {showRules && <ConnectRulesModal mode="view" portal="candidate" onClose={() => setShowRules(false)} />}
     </div>
   );
 }

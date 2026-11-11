@@ -501,24 +501,32 @@ it needed. Candidate frontend is still to come (wave 6).
 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
-| `POST` | `/connect/conversations/{id}/messages` | both | Body `{ body (max 2000) }`. `messageType` is `LINK` if the text contains a fetchable URL, else `TEXT`. `422 CONNECTION_NOT_ACCEPTED`, `403 CONNECTION_BLOCKED`, `403 CONNECT_MUTED`, `422 MESSAGE_BLOCKED_BY_FILTER` (generic message only — never the matched word). |
-| `POST` | `/connect/conversations/{id}/messages/attachment` | both | `multipart/form-data`: `file` (JPEG/PNG → `IMAGE`, PDF → `FILE`), optional `caption` (screened like a text body). `400 UNSUPPORTED_FILE_TYPE`, `400 FILE_TOO_LARGE`. |
-| `GET` | `/connect/conversations/{id}/messages?page=&size=` | both | Newest first, same convention as every other list. History stays readable even on a `BLOCKED` connection. |
-| `GET` | `/connect/conversations/{id}/messages/{messageId}/attachment` | both | Streams a `FILE`-type attachment through the backend (signed Cloudinary fetch, same pattern as CV/identity documents) — `IMAGE` attachments are served directly via the public `attachmentUrl` in the message instead. `404 NOT_FOUND` if the message isn't a `FILE` attachment of that connection. |
-| `POST` | `/connect/conversations/{id}/block` | both | `ACCEPTED` → `BLOCKED`; idempotent if already blocked. `422 CONNECTION_NOT_ACCEPTED` while still `PENDING`/`DECLINED`. |
+| `GET` | `/connect/conversations/{id}` | both | Fetches a single `ConversationSummaryResource` for deep-link / reload recovery (`peerLastReadMessageId`, `peerLastReadAt`, `blockedByActorType`). |
+| `POST` | `/connect/conversations/{id}/messages` | both | Body `{ body (max 2000), clientMessageId?, replyToMessageId?, suppressLinkPreview? }`. Idempotent on `(connection_id, sender_type, sender_id, clientMessageId)`. `messageType` is `LINK` if the text contains a fetchable URL and `suppressLinkPreview` is not true, else `TEXT`. `422 CONNECTION_NOT_ACCEPTED`, `403 CONNECTION_BLOCKED`, `403 CONNECT_MUTED`, `422 MESSAGE_BLOCKED_BY_FILTER` (generic message only — never the matched word). |
+| `POST` | `/connect/conversations/{id}/messages/attachment` | both | `multipart/form-data`: `file` (JPEG/PNG → `IMAGE`, PDF/DOCX → `FILE`), optional `caption` (screened like a text body), `clientMessageId`, `replyToMessageId`. `400 UNSUPPORTED_FILE_TYPE`, `400 FILE_TOO_LARGE`. |
+| `PATCH` | `/connect/conversations/{id}/messages/{messageId}` | both | Body `{ body (max 2000), suppressLinkPreview? }`. Original sender can edit `TEXT`/`LINK` messages within 15 minutes of `createdAt`, re-running content filter and link preview resolution, setting `editedAt`, and emitting SSE `message_updated`. `422 MESSAGE_EDIT_WINDOW_EXPIRED`, `422 MESSAGE_NOT_EDITABLE`, `409 MESSAGE_ALREADY_RECALLED`. |
+| `POST` | `/connect/conversations/{id}/messages/{messageId}/unsend` | both | Body `{ scope: ME \| EVERYONE }`. `ME` hides the message only for the caller (`connection_message_hides`); `EVERYONE` is allowed anytime for the original sender on non-recalled `ACCEPTED` messages, clearing content/attachments, setting `recalledAt`, and emitting SSE `message_updated`. |
+| `POST` | `/connect/conversations/{id}/messages/{messageId}/reactions` | both | Body `{ emoji }` (`👍`, `❤️`, `😂`, `😮`, `😢`, `🙏`). Toggles or switches the caller's reaction and emits SSE `reaction` (`{ connectionId, messageId, reactions[] }`). `400 CONNECT_REACTION_INVALID`. |
+| `GET` | `/connect/conversations/{id}/messages?beforeId=&page=&size=` | both | Cursor (`beforeId`) + page-based history, newest first, excluding rows hidden for the actor; does **not** clear unread counts on read fetch. History stays readable even on a `BLOCKED` connection. |
+| `GET` | `/connect/conversations/{id}/messages/{messageId}/attachment` | both | Streams a `FILE`-type attachment through the backend (signed Cloudinary fetch, same pattern as CV/identity documents) — `IMAGE` attachments are served directly via the public `attachmentUrl` in the message instead. `404 NOT_FOUND` if hidden, recalled, or not a `FILE` attachment of that connection. |
+| `POST` | `/connect/conversations/{id}/read` | both | Body `{ lastReadMessageId? }`. Advances `candidate_last_read_message_id` / `recruiter_last_read_message_id`, clears Redis unread for the conversation, and emits SSE `read` (`{ connectionId, readerType, readerId, lastReadMessageId, lastReadAt }`). |
+| `POST` | `/connect/conversations/{id}/typing` | both | Body `{ typing: boolean }`. Ephemeral typing indicator push via SSE `typing` (`{ connectionId, actorType, actorId, actorName, typing }`, no DB write). |
+| `POST` | `/connect/conversations/{id}/block` | both | `ACCEPTED` → `BLOCKED`; records `blockedByActorType`/`blockedByActorId` and emits SSE `status`. `422 CONNECTION_NOT_ACCEPTED` while still `PENDING`/`DECLINED`. |
+| `POST` | `/connect/conversations/{id}/unblock` | both | `BLOCKED` → `ACCEPTED` when called by the original blocking side (`blockedByActorType`), emitting SSE `status`. `409 CONNECTION_NOT_BLOCKED`. |
+| `GET` | `/connect/link-preview?url=` | both | Resolves OpenGraph/Twitter/favicon metadata (`title`, `description`, `imageUrl`) using safe 3-hop SSRF-guarded redirects and absolute `absUrl` resolution (`connect:link-preview:v2:` Redis cache). |
 
 - **Content filter runs on every `body`/`caption` before persisting**, against the admin-managed `connect_filter_words` list. A match is never silently dropped: it's recorded in `connect_violations`, counted against a 30-day strike window (3 `MILD` or 1 `SEVERE` → mute), and a `SEVERE` match auto-files a `PENDING` report (`reporter_type = SYSTEM`) into the generic moderation queue — all **before** the request fails with `422 MESSAGE_BLOCKED_BY_FILTER`, so the evidence survives the rejection.
 - **Muting is Connect-only**, not an account ban — `connect_mutes`, first offense 24h, a repeat offense after a mute has expired extends it to 7 days (same row, "extend don't restart").
-- **Link preview** fetches `og:title`/`og:description`/`og:image` (Jsoup, 2s timeout, no redirects followed), guarded against SSRF by resolving the host and rejecting private/loopback/link-local addresses **before** connecting. Cached in Redis 7 days by URL hash, including a cached "no preview" result for dead links.
+- **Link preview** fetches `og:title`/`og:description`/`og:image` (Jsoup, 2s timeout, up to 3 SSRF-validated redirects, `absUrl` relative path resolution, plus `twitter:image` and favicon fallbacks), resolving the host via `PrivateNetworkGuard` before every hop. Cached in Redis 7 days under `connect:link-preview:v2:{sha256}`.
 - **Chat `FILE` (PDF) delivery** requires the Cloudinary account's "Restricted media types" setting to allow authenticated raw delivery — a dashboard/account setting, not a code path; already enabled on this project's account and verified working end to end.
 
 **Real-time, unread counter, report (wave 3)** — same `{candidate|recruiter}` prefix:
 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
-| `GET` | `/connect/stream` | both | `text/event-stream`, no `ApiResource` envelope. Emits `message` (full `MessageResource` JSON) and `status` (`{ connectionId, status }` on `PENDING`/`ACCEPTED`/`BLOCKED`), plus a `:ping` comment every 20s to keep the connection alive through proxies. In-memory emitter registry — **single backend instance only**, no Redis pub/sub fan-out yet. |
+| `GET` | `/connect/stream` | both | `text/event-stream`, no `ApiResource` envelope. Published `@TransactionalEventListener(phase = AFTER_COMMIT)` via `ConnectSseDispatchEvent`: emits `message`, `message_updated` (full `MessageResource` JSON), `reaction` (`ConnectReactionEventPayload`), `read` (`ConnectReadEventPayload`), `typing` (`ConnectTypingEventPayload`), and `status` (`ConnectStatusEventPayload { connectionId, status, blockedByActorType }`), plus a `:ping` comment every 20s to keep the connection alive through proxies. In-memory emitter registry — **single backend instance only**, no Redis pub/sub fan-out yet. |
 | `GET` | `/connect/mute-status` | both | `ConnectMuteStatusResource { muted, expiresAt, reason }`. Returns active Connect mute status for the signed-in actor. |
-| `GET` | `/connect/unread-count` | both | `ConnectUnreadCountResource { total }`. Backed by a Redis hash (`connect:unread:{actorType}:{actorId}`, one field per `connectionId`) — there is no "read" table, this hash is the only record, not a cache. Incremented on every message/attachment the recipient side didn't send; cleared per-connection the moment that connection's `GET .../messages` is called. |
+| `GET` | `/connect/unread-count` | both | `ConnectUnreadCountResource { total, unreadMessages, pendingInvitations }`. Candidate `total` includes `unreadMessages + pendingInvitations`; Recruiter counts unread company messages. Backed by Redis hash `connect:unread:{actorType}:{actorId}` + live pending invitation query, cleared per-connection on explicit `POST .../read`. |
 | `POST` | `/connect/conversations/{id}/report` | both | Body `{ reasonCode, reasonNote (max 1000) }`. Files a `PENDING` row into the generic `moderation` report queue (`reporter_type = CANDIDATE`/`RECRUITER`, the real actor this time, unlike the filter's `SYSTEM` auto-reports). Valid on a connection in **any** status — you often report right when blocking someone. Does **not** change `connections.status`. |
 
 - **Recipient resolution**: a candidate's message pushes to **every active member of the recruiting company** (`findActiveMemberIds`) — matches the shared company-wide mailbox model; a recruiter's message pushes to the one candidate.
@@ -553,7 +561,7 @@ from the wave 1 design during implementation:
 | `GET` | `/candidate/connect/rules-ack` | `ConnectRulesAckResource { acknowledged, acknowledgedAt }`. Candidate's mirror. |
 | `POST` | `/candidate/connect/rules-ack` | Idempotent — acknowledges the rules for candidate. |
 
-- **`ConversationSummaryResource` gained `unreadCount`, `lastMessageAt`, `lastMessagePreview`** — the conversation list needed a last-message preview and a per-row unread flag ("Unread" tab). `unreadCount` reads the same Redis hash wave 3 built (`ConnectUnreadServiceInterface.breakdown`, one `HGETALL`, no schema change); `lastMessageAt`/`lastMessagePreview` come from one extra `findFirstByConnectionIdOrderByCreatedAtDesc` query per connection in the returned page (accepted as a bounded N+1 — page size is capped at 100). `lastMessagePreview` uses English labels (`"Sent an image"`, `"Sent an attachment"`, `"Content has been hidden"`), link title for `LINK`, or truncated body for `TEXT`. Both recruiter and candidate conversation endpoints populate these fields.
+- **`ConversationSummaryResource` fields**: includes `unreadCount`, `lastMessageAt`, `lastMessagePreview`, `blockedByActorType`, `peerLastReadMessageId`, and `peerLastReadAt`. Latest visible previews (excluding rows in `connection_message_hides` for the current actor) are loaded in batch via `findLatestVisibleByConnectionIdsForActor` and use English labels (`"Sent an image"`, `"Sent an attachment"`, `"Message unsent"`, `"Content has been hidden"`), link title for `LINK`, or truncated body for `TEXT`. Both recruiter and candidate conversation endpoints populate these fields.
 
 ## Error codes
 
@@ -662,6 +670,11 @@ from the wave 1 design during implementation:
 | `CONNECTION_NOT_ACCEPTED` | 422 | The connection is still `PENDING`/`DECLINED`, can't message or block yet |
 | `CONNECTION_BLOCKED` | 403 | The conversation has been blocked by one side |
 | `MESSAGE_BLOCKED_BY_FILTER` | 422 | Content filter matched; violation recorded, message not sent |
+| `MESSAGE_EDIT_WINDOW_EXPIRED` | 422 | Message edit attempted past the 15-minute window |
+| `MESSAGE_NOT_EDITABLE` | 422 | Only TEXT and LINK messages can be edited |
+| `MESSAGE_ALREADY_RECALLED` | 409 | Message was already unsent for everyone |
+| `CONNECTION_NOT_BLOCKED` | 409 | Unblock requested on a non-blocked conversation |
+| `CONNECT_REACTION_INVALID` | 400 | Unsupported reaction emoji |
 | `CONNECT_MUTED` | 403 | Temporarily restricted from sending Connect messages; honor the mute's `expiresAt` |
 | `REPORT_ALREADY_REVIEWED` | 409 | The report is not `PENDING` anymore - dismiss/resolve already happened |
 

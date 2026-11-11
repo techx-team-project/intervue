@@ -54,14 +54,15 @@ export default function CandidateReportConversationModal({
     <Modal
       isOpen
       onClose={onClose}
+      radius="md"
       title="Report conversation"
       description="Platform administrators will review your report and take appropriate actions."
       footer={
         <>
-          <Button type="button" variant="ghost" onClick={onClose}>
+          <Button type="button" variant="ghost" radius="md" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit" form={FORM_ID} isLoading={report.isPending}>
+          <Button type="submit" radius="md" form={FORM_ID} isLoading={report.isPending}>
             Submit report
           </Button>
         </>

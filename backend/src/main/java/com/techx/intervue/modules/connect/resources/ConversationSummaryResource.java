@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.connect.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.techx.intervue.modules.connect.enums.ConnectActorType;
 import com.techx.intervue.modules.connect.enums.ConnectionStatus;
 import java.time.Instant;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.Builder;
 public record ConversationSummaryResource(
         Long id,
         ConnectionStatus status,
+        ConnectActorType blockedByActorType,
         Long companyId,
         String companyName,
         Long candidateId,
@@ -18,4 +20,6 @@ public record ConversationSummaryResource(
         Instant respondedAt,
         long unreadCount,
         Instant lastMessageAt,
-        String lastMessagePreview) {}
+        String lastMessagePreview,
+        Long peerLastReadMessageId,
+        Instant peerLastReadAt) {}

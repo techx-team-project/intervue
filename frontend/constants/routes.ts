@@ -102,3 +102,11 @@ export const ROUTES = {
 
 export const REDIRECT_PARAM = 'redirect';
 export const RECRUITER_AREA_PREFIX = '/recruiter';
+
+export function candidateConversationUrl(connectionId: number): string {
+  return `${ROUTES.CANDIDATE_CONVERSATIONS}/c/${connectionId}`;
+}
+
+export function recruiterConversationUrl(connectionId: number): string {
+  return `${ROUTES.RECRUITER_MESSAGES}/c/${connectionId}`;
+}
