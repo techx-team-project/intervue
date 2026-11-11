@@ -5,6 +5,7 @@ import ConnectThreadFrame from '@/components/connect/ConnectThreadFrame';
 import BlockConversationDialog from '@/components/recruiter/connect/BlockConversationDialog';
 import ReportConversationModal from '@/components/recruiter/connect/ReportConversationModal';
 import {
+  useConnectMuteStatus,
   useConversationMessages,
   useEditMessage,
   useMarkConversationRead,
@@ -27,6 +28,7 @@ type ConnectThreadProps = {
 
 export default function ConnectThread({ conversation, onBack }: ConnectThreadProps) {
   const currentUserId = useAuthStore((s) => s.recruiter.user?.id ?? 0);
+  const { data: muteStatus, refetch: refetchMuteStatus } = useConnectMuteStatus();
   const { messages, isLoading, hasOlder, loadOlder, isLoadingOlder } = useConversationMessages(conversation.id);
   const sendMessage = useSendMessage(conversation.id);
   const sendAttachment = useSendAttachment(conversation.id);
@@ -50,6 +52,10 @@ export default function ConnectThread({ conversation, onBack }: ConnectThreadPro
     },
     [sendTypingMutate],
   );
+
+  const handleMuteExpired = useCallback(() => {
+    void refetchMuteStatus();
+  }, [refetchMuteStatus]);
 
   return (
     <ConnectThreadFrame
@@ -78,6 +84,8 @@ export default function ConnectThread({ conversation, onBack }: ConnectThreadPro
       }}
       onFetchLinkPreview={(url) => recruiterConnectApi.linkPreview(url)}
       onBack={onBack}
+      muteStatus={muteStatus}
+      onMuteExpired={handleMuteExpired}
       renderBlockModal={(onClose) => <BlockConversationDialog connectionId={conversation.id} onClose={onClose} />}
       renderReportModal={(onClose) => <ReportConversationModal connectionId={conversation.id} onClose={onClose} />}
     />
