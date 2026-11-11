@@ -9,6 +9,7 @@ AI-assisted IT recruitment platform. Roles: Candidate, Recruiter, Admin (one acc
 
 - `backend/` — Java 25, Spring Boot 4.1, MySQL + Flyway, Redis, JWT.
 - `frontend/` — Next.js 16, React 19, TypeScript, Tailwind 4, Zod.
+- `mobile/` — Flutter, Dart 3.13, BLoC/Cubit, GoRouter, Dio, GetIt, Freezed.
 
 ## Read before coding
 
@@ -19,6 +20,7 @@ AI-assisted IT recruitment platform. Roles: Candidate, Recruiter, Admin (one acc
 | Domain terms | `docs/ai/domain-glossary.md` |
 | Commit & branch rules | `docs/ai/git-commit.md` |
 | Frontend | `docs/ai/frontend-guide.md`, `frontend/AGENTS.md` |
+| Mobile | `docs/ai/mobile-guide.md`, `mobile/AGENTS.md` |
 | API contract | `docs/ai/api-contract.md` |
 | Module-specific rules | `CLAUDE.md` inside the module folder (e.g. `backend/src/main/java/com/techx/intervue/modules/user/CLAUDE.md`) |
 
@@ -47,4 +49,5 @@ AI-assisted IT recruitment platform. Roles: Candidate, Recruiter, Admin (one acc
 docker compose up -d
 cd backend  && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local && ./mvnw test && ./mvnw spotless:apply
 cd frontend && npm run dev && npm run lint && npm run build
+cd mobile   && flutter pub get && flutter analyze && flutter test
 ```

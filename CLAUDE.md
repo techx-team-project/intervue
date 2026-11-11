@@ -9,11 +9,12 @@ Product docs: `README.md`, `docs/product-overview.md`, `docs/candidate-features.
 ```
 backend/    Java 25 · Spring Boot 4.1 · MySQL 8.4 + Flyway · Redis 7.4 · JWT   (backend/CLAUDE.md)
 frontend/   Next.js 16 · React 19 · TypeScript · Tailwind 4 · Zod              (frontend/CLAUDE.md)
+mobile/     Flutter · Dart 3.13 · BLoC · GoRouter · Dio · GetIt · Freezed      (mobile/CLAUDE.md)
 docs/ai/    Long-form AI-facing docs, imported below
 .claude/    Shared Claude Code config: settings, commands, agents, skills, hooks
 ```
 
-Nested `CLAUDE.md` files (`backend/`, `frontend/`, `backend/.../modules/<module>/`) load automatically when you work in those folders.
+Nested `CLAUDE.md` files (`backend/`, `frontend/`, `mobile/`, `backend/.../modules/<module>/`) load automatically when you work in those folders.
 
 ## Imported docs
 
@@ -22,7 +23,7 @@ Nested `CLAUDE.md` files (`backend/`, `frontend/`, `backend/.../modules/<module>
 @docs/ai/domain-glossary.md
 @docs/ai/git-commit.md
 
-Load on demand (not imported): `docs/ai/frontend-guide.md` (frontend work), `docs/ai/api-contract.md` (any API change).
+Load on demand (not imported): `docs/ai/frontend-guide.md` (frontend work), `docs/ai/mobile-guide.md` (mobile work), `docs/ai/api-contract.md` (any API change).
 
 ## Commands
 
@@ -31,6 +32,8 @@ docker compose up -d                              # MySQL + Redis
 cd backend  && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
 cd backend  && ./mvnw test && ./mvnw spotless:apply
 cd frontend && npm run dev | npm run lint | npm run build
+cd mobile   && flutter pub get && flutter run --dart-define-from-file=env/dev.json
+cd mobile   && dart format . && flutter analyze && flutter test
 ```
 
 PowerShell: use `.\mvnw.cmd`. Git Bash: `./mvnw`.
