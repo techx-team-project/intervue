@@ -11,7 +11,7 @@ interface AdminPageHeaderProps {
 // description and the page-level actions.
 export default function AdminPageHeader({ description, count, countLabel, actions }: AdminPageHeaderProps) {
   return (
-    <div className="mb-1 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <p className="dark:text-forest-300 text-body-md text-on-surface-variant min-w-0">
         {description}
         {count !== undefined && (

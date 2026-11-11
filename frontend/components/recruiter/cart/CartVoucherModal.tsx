@@ -1,6 +1,11 @@
 'use client';
 
+import VoucherTicketCard, {
+  ScallopedPercentBadge,
+  renderHighlightedVoucherLabel,
+} from '@/components/recruiter/services/VoucherTicketCard';
 import Modal from '@/components/ui/Modal';
+import { useAvailableRecruiterVouchers } from '@/hooks/useRecruiterVouchers';
 import type { VoucherPreview } from '@/types/voucher';
 import { Check, Tag, Ticket } from 'lucide-react';
 import { useState } from 'react';
@@ -24,13 +29,15 @@ export default function CartVoucherModal({
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isApplying, setIsApplying] = useState(false);
+  const availableVouchers = useAvailableRecruiterVouchers(isOpen);
 
-  const handleApply = async () => {
-    const code = inputCode.trim().toUpperCase();
+  const applySelectedCode = async (rawCode: string) => {
+    const code = rawCode.trim().toUpperCase();
     if (!code) {
       setErrorMessage('Hãy nhập mã ưu đãi.');
       return;
     }
+    setInputCode(code);
     setIsApplying(true);
     const result = await onApplyVoucher(code);
     setIsApplying(false);
@@ -42,6 +49,8 @@ export default function CartVoucherModal({
       setSuccessMessage('');
     }
   };
+
+  const handleApply = () => void applySelectedCode(inputCode);
 
   return (
     <Modal
@@ -103,6 +112,39 @@ export default function CartVoucherModal({
             >
               Gỡ mã
             </button>
+          </div>
+        )}
+
+        {(availableVouchers.data?.length ?? 0) > 0 && (
+          <div className="space-y-2">
+            <p className="text-on-surface text-xs font-bold">Ưu đãi khuyến mãi khả dụng</p>
+            <div className="max-h-52 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent] space-y-2.5 overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-track]:bg-transparent">
+              {availableVouchers.data!.map((item) => {
+                const isActiveCode = appliedVoucher?.code === item.code;
+                return (
+                  <VoucherTicketCard
+                    key={item.code}
+                    disabled={isApplying}
+                    active={isActiveCode}
+                    onClick={() => void applySelectedCode(item.code)}
+                  >
+                    <ScallopedPercentBadge />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[13px] font-medium text-[#009944]">
+                        {renderHighlightedVoucherLabel(item.label)}
+                      </span>
+                      <span className="mt-0.5 block text-[11px] text-[#009944]/80">
+                        <code className="font-mono font-bold text-[#00823a]">{item.code}</code>
+                        {item.minOrderValue > 0 && ` · Đơn từ ${item.minOrderValue.toLocaleString('vi-VN')}đ`}
+                      </span>
+                    </span>
+                    <span className="shrink-0 rounded-full border border-[#00b14f]/30 bg-white px-2.5 py-0.5 text-[11px] font-bold text-[#009944]">
+                      {isActiveCode ? 'Đang dùng' : 'Áp dụng'}
+                    </span>
+                  </VoucherTicketCard>
+                );
+              })}
+            </div>
           </div>
         )}
 

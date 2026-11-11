@@ -11,6 +11,7 @@ import com.techx.intervue.modules.billing.resources.AdminServicePackageResource;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface AdminServiceCatalogServiceInterface {
 
@@ -43,4 +44,8 @@ public interface AdminServiceCatalogServiceInterface {
             Long id, SaveServicePackageRequest request, RequestActor actor);
 
     AdminServicePackageResource setStatus(Long id, ServicePackageStatus status, RequestActor actor);
+
+    UploadedPackageImageResource uploadPackageImage(MultipartFile file);
+
+    record UploadedPackageImageResource(String url, String publicId) {}
 }

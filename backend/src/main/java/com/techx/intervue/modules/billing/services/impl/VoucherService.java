@@ -12,12 +12,16 @@ import com.techx.intervue.modules.billing.repositories.ServicePackageRepository;
 import com.techx.intervue.modules.billing.repositories.VoucherRedemptionRepository;
 import com.techx.intervue.modules.billing.repositories.VoucherRepository;
 import com.techx.intervue.modules.billing.requests.ValidateVoucherRequest;
+import com.techx.intervue.modules.billing.resources.AvailableVoucherResource;
 import com.techx.intervue.modules.billing.resources.VoucherPreviewResource;
 import com.techx.intervue.modules.billing.services.interfaces.VoucherServiceInterface;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +37,58 @@ public class VoucherService implements VoucherServiceInterface {
     private final CartLineReader cartLineReader;
     private final ServicePackageRepository packageRepository;
     private final RecruiterCompanyResolver companyResolver;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AvailableVoucherResource> listAvailable(Long recruiterId) {
+        List<Voucher> active =
+                voucherRepository.findAllAvailable(VoucherStatus.ACTIVE, Instant.now());
+        if (active.isEmpty()) {
+            return List.of();
+        }
+        Optional<Long> companyId = companyResolver.findId(recruiterId);
+        Map<Long, Long> usedByCompany = new HashMap<>();
+        if (companyId.isPresent()) {
+            List<Long> ids = active.stream().map(Voucher::getId).toList();
+            for (Object[] row : redemptionRepository.countByCompanyGrouped(companyId.get(), ids)) {
+                usedByCompany.put(((Number) row[0]).longValue(), ((Number) row[1]).longValue());
+            }
+        }
+
+        return active.stream()
+                .filter(
+                        voucher -> {
+                            long used = usedByCompany.getOrDefault(voucher.getId(), 0L);
+                            return voucher.getPerCompanyLimit() == null
+                                    || used < voucher.getPerCompanyLimit();
+                        })
+                .map(
+                        voucher -> {
+                            long used = usedByCompany.getOrDefault(voucher.getId(), 0L);
+                            Integer remainingTotal =
+                                    voucher.getUsageLimit() == null
+                                            ? null
+                                            : Math.max(
+                                                    0,
+                                                    voucher.getUsageLimit()
+                                                            - voucher.getUsedCount());
+                            return AvailableVoucherResource.builder()
+                                    .code(voucher.getCode())
+                                    .label(voucher.getLabel())
+                                    .description(voucher.getDescription())
+                                    .discountType(voucher.getDiscountType())
+                                    .discountValue(voucher.getDiscountValue())
+                                    .maxDiscount(voucher.getMaxDiscount())
+                                    .minOrderValue(voucher.getMinOrderValue())
+                                    .startsAt(voucher.getStartsAt())
+                                    .endsAt(voucher.getEndsAt())
+                                    .remainingUses(remainingTotal)
+                                    .perCompanyLimit(voucher.getPerCompanyLimit())
+                                    .usedByCompanyCount(used)
+                                    .build();
+                        })
+                .toList();
+    }
 
     @Override
     @Transactional(readOnly = true)

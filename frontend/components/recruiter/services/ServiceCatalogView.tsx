@@ -1,17 +1,20 @@
 'use client';
 
 import Spinner from '@/components/common/Spinner';
+import AdPackageWeeksModal from '@/components/recruiter/services/AdPackageWeeksModal';
 import BackToTopButton from '@/components/recruiter/services/BackToTopButton';
 import ServiceCategorySection from '@/components/recruiter/services/ServiceCategorySection';
 import ServiceImportantNotice from '@/components/recruiter/services/ServiceImportantNotice';
 import ServiceNeedSuggestionModal from '@/components/recruiter/services/ServiceNeedSuggestionModal';
 import { ROUTES } from '@/constants/routes';
 import { SERVICE_CATEGORY_ANCHOR_PREFIX, SERVICE_NEED_OPTIONS, SERVICE_VAT_NOTE } from '@/constants/service-package';
+import { useAdSlots } from '@/hooks/useAds';
 import { useAddToCart } from '@/hooks/useRecruiterCart';
 import { useServiceCatalog } from '@/hooks/useServiceCatalog';
 import { useServiceNeedModal } from '@/hooks/useServiceNeedModal';
 import { cn } from '@/lib/utils';
-import type { ServiceNeedKey } from '@/types/service-package';
+import type { AdSlot } from '@/types/ads';
+import type { ServiceNeedKey, ServicePackageCard as ServicePackageCardType } from '@/types/service-package';
 import { getErrorMessage } from '@/utils/error';
 import { AlertCircle, Check, Sparkles, X } from 'lucide-react';
 import Link from 'next/link';
@@ -24,18 +27,37 @@ type ActionFeedback = {
   message: string;
 };
 
+type AdModalState = {
+  item: ServicePackageCardType;
+  slot: AdSlot;
+  intent: 'cart' | 'buy';
+};
+
 export default function ServiceCatalogView() {
   const { data, isPending, isError, error } = useServiceCatalog();
+  const adSlotsQuery = useAdSlots();
   const { dismissedForever, dismissForever } = useServiceNeedModal();
 
   const [autoModalClosed, setAutoModalClosed] = useState(false);
   const [suggestedNeed, setSuggestedNeed] = useState<ServiceNeedKey | null>(null);
   const [feedback, setFeedback] = useState<ActionFeedback | null>(null);
+  const [pendingTarget, setPendingTarget] = useState<{ packageId: number; action: 'cart' | 'buy' } | null>(null);
+  const [adModal, setAdModal] = useState<AdModalState | null>(null);
 
   const router = useRouter();
   const addToCart = useAddToCart();
 
   const categories = useMemo(() => data?.categories ?? [], [data?.categories]);
+
+  const adSlotsBySlug = useMemo(() => {
+    const map = new Map<string, AdSlot>();
+    for (const slot of adSlotsQuery.data ?? []) {
+      if (slot.active && slot.packageSlug) {
+        map.set(slot.packageSlug, slot);
+      }
+    }
+    return map;
+  }, [adSlotsQuery.data]);
 
   const availableNeedKeys = useMemo(() => {
     const keys = new Set<ServiceNeedKey>();
@@ -82,12 +104,19 @@ export default function ServiceCatalogView() {
     scrollToCategoryCode(matches[0].code);
   };
 
-  const handleAddToCart = (packageId: number, packageName: string) => {
+  const handleAddToCart = (item: ServicePackageCardType) => {
+    const matchedSlot = adSlotsBySlug.get(item.slug);
+    if (matchedSlot) {
+      setAdModal({ item, slot: matchedSlot, intent: 'cart' });
+      return;
+    }
+
+    setPendingTarget({ packageId: item.id, action: 'cart' });
     addToCart.mutate(
-      { packageId, quantity: 1 },
+      { packageId: item.id, quantity: 1 },
       {
         onSuccess: () => {
-          const message = `Đã thêm "${packageName}" vào giỏ hàng.`;
+          const message = `Đã thêm "${item.name}" vào giỏ hàng.`;
           setFeedback({ type: 'success', message });
           toast.success(message);
         },
@@ -96,13 +125,21 @@ export default function ServiceCatalogView() {
           setFeedback({ type: 'error', message });
           toast.error(message);
         },
+        onSettled: () => setPendingTarget(null),
       },
     );
   };
 
-  const handleBuyNow = (packageId: number) => {
+  const handleBuyNow = (item: ServicePackageCardType) => {
+    const matchedSlot = adSlotsBySlug.get(item.slug);
+    if (matchedSlot) {
+      setAdModal({ item, slot: matchedSlot, intent: 'buy' });
+      return;
+    }
+
+    setPendingTarget({ packageId: item.id, action: 'buy' });
     addToCart.mutate(
-      { packageId, quantity: 1 },
+      { packageId: item.id, quantity: 1 },
       {
         onSuccess: () => router.push(ROUTES.RECRUITER_CART),
         onError: (cause) => {
@@ -110,6 +147,7 @@ export default function ServiceCatalogView() {
           setFeedback({ type: 'error', message });
           toast.error(message);
         },
+        onSettled: () => setPendingTarget(null),
       },
     );
   };
@@ -218,10 +256,11 @@ export default function ServiceCatalogView() {
         <ServiceCategorySection
           key={category.id}
           category={category}
-          isBusy={addToCart.isPending}
+          adSlotsBySlug={adSlotsBySlug}
+          pendingTarget={pendingTarget}
           isSuggested={suggestedNeed !== null && category.needKey === suggestedNeed}
-          onAddToCart={(item) => handleAddToCart(item.id, item.name)}
-          onBuyNow={(item) => handleBuyNow(item.id)}
+          onAddToCart={handleAddToCart}
+          onBuyNow={handleBuyNow}
         />
       ))}
 
@@ -237,6 +276,18 @@ export default function ServiceCatalogView() {
           onDismissForever={dismissForever}
           availableNeedKeys={availableNeedKeys}
           allowDismissForever={!dismissedForever}
+        />
+      )}
+
+      {adModal && (
+        <AdPackageWeeksModal
+          key={`${adModal.item.id}-${adModal.intent}`}
+          isOpen
+          onClose={() => setAdModal(null)}
+          slot={adModal.slot}
+          packageItem={adModal.item}
+          intent={adModal.intent}
+          onAddedToCart={(message) => setFeedback({ type: 'success', message })}
         />
       )}
     </div>
