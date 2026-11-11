@@ -1,22 +1,25 @@
 import ServicePackageCard from '@/components/recruiter/services/ServicePackageCard';
 import { SERVICE_CATEGORY_ANCHOR_PREFIX } from '@/constants/service-package';
 import { cn } from '@/lib/utils';
+import type { AdSlot } from '@/types/ads';
 import type { ServiceCategory, ServicePackageCard as ServicePackageCardType } from '@/types/service-package';
 import { Sparkles } from 'lucide-react';
 
 interface ServiceCategorySectionProps {
   category: ServiceCategory;
+  adSlotsBySlug: ReadonlyMap<string, AdSlot>;
   onAddToCart: (item: ServicePackageCardType) => void;
   onBuyNow: (item: ServicePackageCardType) => void;
-  isBusy: boolean;
+  pendingTarget: { packageId: number; action: 'cart' | 'buy' } | null;
   isSuggested?: boolean;
 }
 
 export default function ServiceCategorySection({
   category,
+  adSlotsBySlug,
   onAddToCart,
   onBuyNow,
-  isBusy,
+  pendingTarget,
   isSuggested = false,
 }: ServiceCategorySectionProps) {
   return (
@@ -50,7 +53,15 @@ export default function ServiceCategorySection({
 
       <div className="mt-4 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {category.packages.map((item) => (
-          <ServicePackageCard key={item.id} item={item} onAddToCart={onAddToCart} onBuyNow={onBuyNow} isBusy={isBusy} />
+          <ServicePackageCard
+            key={item.id}
+            item={item}
+            adSlot={adSlotsBySlug.get(item.slug) ?? null}
+            onAddToCart={onAddToCart}
+            onBuyNow={onBuyNow}
+            busyAction={pendingTarget?.packageId === item.id ? pendingTarget.action : null}
+            disableActions={pendingTarget !== null}
+          />
         ))}
       </div>
     </section>

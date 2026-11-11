@@ -32,8 +32,8 @@ export function useRecruiterCartCount() {
 export function useAddToCart() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ packageId, quantity }: { packageId: number; quantity: number }) =>
-      recruiterCartApi.addItem(packageId, quantity),
+    mutationFn: ({ packageId, quantity, weeks }: { packageId: number; quantity: number; weeks?: string[] }) =>
+      recruiterCartApi.addItem(packageId, quantity, weeks),
     onSuccess: (cart) => queryClient.setQueryData(recruiterCartKeys.all, cart),
   });
 }
