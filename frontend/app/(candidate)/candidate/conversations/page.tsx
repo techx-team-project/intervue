@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function CandidateConversationsPage() {
   return (
-    <main className="h-screen w-screen overflow-hidden bg-slate-50">
+    <main className="h-screen w-screen overflow-hidden bg-white">
       <CandidateConnectView />
     </main>
   );
