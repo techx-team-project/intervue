@@ -44,7 +44,8 @@ export function createParticipantConnectApi(base: string) {
     conversations: (page: number, size: number) =>
       request<Page<ConversationSummary>>(`${base}/conversations?${toConnectQuery({ page, size })}`),
 
-    conversation: (connectionId: number) => request<ConversationSummary>(`${base}/conversations/${connectionId}`),
+    conversation: (connectionKey: number | string) =>
+      request<ConversationSummary>(`${base}/conversations/${connectionKey}`),
 
     messages: (connectionId: number, page: number, size: number, beforeId?: number) =>
       request<Page<ConnectMessage>>(

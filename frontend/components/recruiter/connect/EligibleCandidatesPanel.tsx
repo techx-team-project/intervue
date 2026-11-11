@@ -1,7 +1,7 @@
 'use client';
 
+import { ConnectRightPanelSkeleton } from '@/components/connect/ConnectSkeletons';
 import InviteCandidateModal from '@/components/recruiter/connect/InviteCandidateModal';
-import Spinner from '@/components/common/Spinner';
 import { Input } from '@/components/ui/Input';
 import UserAvatar from '@/components/ui/UserAvatar';
 import { ROUTES } from '@/constants/routes';
@@ -16,7 +16,7 @@ import { useState } from 'react';
 
 type EligibleCandidatesPanelProps = {
   variant?: 'sidebar' | 'modal';
-  onInvited?: (connectionId?: number) => void;
+  onInvited?: (createdPublicId?: string) => void;
 };
 
 export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited }: EligibleCandidatesPanelProps) {
@@ -38,7 +38,7 @@ export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited
     >
       {!isModal ? (
         <div className="shrink-0">
-          <div className="flex h-14 items-center px-4">
+          <div className="flex h-[68px] items-center px-4">
             <p className="text-sm font-bold tracking-wide text-slate-800 uppercase">Other Candidates</p>
           </div>
           <div className="border-outline-variant border-b px-4 pt-1 pb-3">
@@ -70,9 +70,7 @@ export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited
 
       <div className={cn('flex-1 overflow-y-auto py-2', isModal ? '' : 'px-2')}>
         {isLoading ? (
-          <div className="flex justify-center py-8">
-            <Spinner />
-          </div>
+          <ConnectRightPanelSkeleton variant="candidates" />
         ) : candidates.length === 0 ? (
           <p className="px-3 py-8 text-center text-sm text-slate-500">No eligible candidates found.</p>
         ) : (
@@ -119,9 +117,9 @@ export default function EligibleCandidatesPanel({ variant = 'sidebar', onInvited
       {inviteTarget && (
         <InviteCandidateModal
           prefilledCandidate={inviteTarget}
-          onClose={(createdConnectionId) => {
+          onClose={(createdPublicId) => {
             setInviteTarget(null);
-            onInvited?.(createdConnectionId);
+            onInvited?.(createdPublicId);
           }}
         />
       )}

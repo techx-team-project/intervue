@@ -1,17 +1,18 @@
 'use client';
 
-import Spinner from '@/components/common/Spinner';
+import ConnectThreadProgressBar from '@/components/connect/ConnectThreadProgressBar';
+import ConnectWorkspaceBootLoader from '@/components/connect/ConnectWorkspaceBootLoader';
 import ConnectRulesModal from '@/components/recruiter/connect/ConnectRulesModal';
 import ConnectSidebar from '@/components/recruiter/connect/ConnectSidebar';
 import EligibleCandidatesPanel from '@/components/recruiter/connect/EligibleCandidatesPanel';
 import Modal from '@/components/ui/Modal';
 import { recruiterConversationUrl } from '@/constants/routes';
-import { useConversations, useRulesAck } from '@/hooks/useRecruiterConnect';
+import { useConversations, useRecruiterConversationByKey, useRulesAck } from '@/hooks/useRecruiterConnect';
 import { cn } from '@/lib/utils';
 import { useConnectUiStore } from '@/store/connect-ui.store';
-import { parseConnectRouteId } from '@/utils/connect-chat';
+import { parseConnectRouteKey } from '@/utils/connect-chat';
 import { useParams, useRouter } from 'next/navigation';
-import { useState, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 
 type ConnectViewProps = {
   children: ReactNode;
@@ -20,7 +21,7 @@ type ConnectViewProps = {
 export default function ConnectView({ children }: ConnectViewProps) {
   const router = useRouter();
   const params = useParams<{ id?: string }>();
-  const selectedId = parseConnectRouteId(params?.id);
+  const selectedKey = parseConnectRouteKey(params?.id);
 
   const [showRules, setShowRules] = useState(false);
   const mobileEligibleOpen = useConnectUiStore((s) => s.mobileEligibleOpen);
@@ -29,30 +30,37 @@ export default function ConnectView({ children }: ConnectViewProps) {
 
   const { data: rulesAck, isLoading: isLoadingRules } = useRulesAck();
   const { conversations, isLoading, hasMore, isLoadingMore, loadMore } = useConversations();
+  const { data: singleConversation } = useRecruiterConversationByKey(selectedKey);
 
-  if (isLoadingRules) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-white">
-        <Spinner />
-      </div>
-    );
-  }
+  const selectedConversation = useMemo(() => {
+    if (selectedKey === null) return null;
+    return conversations.find((c) => c.publicId === selectedKey) ?? singleConversation ?? null;
+  }, [selectedKey, conversations, singleConversation]);
+
+  const isBootReady = !isLoadingRules && !isLoading;
 
   return (
     <div className="flex h-screen overflow-hidden bg-white">
+      <ConnectWorkspaceBootLoader isDataReady={isBootReady} />
+      <ConnectThreadProgressBar
+        portal="recruiter"
+        connectionId={selectedConversation?.id ?? null}
+        connectionKey={selectedKey}
+      />
+
       <ConnectSidebar
         conversations={conversations}
         isLoading={isLoading}
         hasMore={hasMore}
         isLoadingMore={isLoadingMore}
         onLoadMore={loadMore}
-        selectedId={selectedId}
-        onSelect={(id) => router.push(recruiterConversationUrl(id))}
+        selectedKey={selectedKey}
+        onSelect={(publicId) => router.push(recruiterConversationUrl(publicId))}
         onOpenRules={() => setShowRules(true)}
         onOpenEligible={() => setMobileEligibleOpen(true)}
       />
 
-      <main className={cn('min-w-0 flex-1 flex-col bg-white', selectedId === null ? 'hidden md:flex' : 'flex')}>
+      <main className={cn('min-w-0 flex-1 flex-col bg-white', selectedKey === null ? 'hidden md:flex' : 'flex')}>
         {children}
       </main>
 

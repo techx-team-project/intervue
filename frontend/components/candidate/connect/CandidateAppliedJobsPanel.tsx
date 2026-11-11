@@ -1,7 +1,7 @@
 'use client';
 
 import { candidateApplicationApi } from '@/apiRequest/candidate-application';
-import Spinner from '@/components/common/Spinner';
+import { ConnectRightPanelSkeleton } from '@/components/connect/ConnectSkeletons';
 import { Badge } from '@/components/ui/Badge';
 import { ROUTES } from '@/constants/routes';
 import type { CandidateApplication } from '@/types/candidate-application';
@@ -56,7 +56,7 @@ export default function CandidateAppliedJobsPanel({ selectedCompanyId }: Candida
   return (
     <div className="border-outline-variant hidden h-full shrink-0 flex-col border-l bg-white lg:flex lg:w-[356px] xl:w-[388px] 2xl:w-[404px]">
       {/* Header */}
-      <div className="flex h-14 shrink-0 items-center justify-between gap-2 px-4">
+      <div className="flex h-[68px] shrink-0 items-center justify-between gap-2 px-4">
         <p className="text-sm font-bold tracking-wide text-slate-800 uppercase">Applied Jobs</p>
         {selectedCompanyId && (
           <span className="text-primary text-xs font-semibold whitespace-nowrap">This company</span>
@@ -66,9 +66,7 @@ export default function CandidateAppliedJobsPanel({ selectedCompanyId }: Candida
       {/* List */}
       <div className="flex-1 space-y-2 overflow-y-auto p-3">
         {isLoading ? (
-          <div className="flex justify-center py-10">
-            <Spinner />
-          </div>
+          <ConnectRightPanelSkeleton variant="jobs" />
         ) : applications.length === 0 ? (
           <div className="py-10 text-center">
             <Briefcase className="mx-auto h-8 w-8 text-slate-300" />

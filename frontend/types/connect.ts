@@ -22,6 +22,7 @@ export type EligibleCandidate = {
 
 export type Invitation = {
   id: number;
+  publicId: string;
   companyId: number;
   companyName: string;
   openingMessage: string;
@@ -30,6 +31,7 @@ export type Invitation = {
 
 export type ConversationSummary = {
   id: number;
+  publicId: string;
   status: ConnectionStatus;
   blockedByActorType?: ConnectActorType;
   companyId: number;

@@ -13,6 +13,8 @@ export function buildConnectKeys(portal: ConnectPortal) {
   return {
     conversations: ['connect', portal, 'conversations'] as const,
     conversation: (connectionId: number) => ['connect', portal, 'conversation', connectionId] as const,
+    conversationByKeyPrefix: ['connect', portal, 'conversation-key'] as const,
+    conversationByKey: (publicId: string) => ['connect', portal, 'conversation-key', publicId] as const,
     invitations: ['connect', portal, 'invitations'] as const,
     messages: (connectionId: number) => ['connect', portal, 'messages', connectionId] as const,
     unread: ['connect', portal, 'unread'] as const,
@@ -174,6 +176,9 @@ export function patchConversationSummaryInCache(
 ) {
   const keys = buildConnectKeys(portal);
   queryClient.setQueryData<ConversationSummary>(keys.conversation(connectionId), (old) => (old ? updater(old) : old));
+  queryClient.setQueriesData<ConversationSummary>({ queryKey: keys.conversationByKeyPrefix }, (old) =>
+    old && old.id === connectionId ? updater(old) : old,
+  );
   queryClient.setQueryData<ConversationsInfiniteData>(keys.conversations, (old) => {
     if (!old || old.pages.length === 0) return old;
     let found: ConversationSummary | null = null;

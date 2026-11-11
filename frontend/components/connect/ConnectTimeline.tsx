@@ -1,7 +1,7 @@
 'use client';
 
-import Spinner from '@/components/common/Spinner';
 import ConnectMessageBubble from '@/components/connect/ConnectMessageBubble';
+import { ConnectTimelineSkeleton } from '@/components/connect/ConnectSkeletons';
 import ImageLightboxModal from '@/components/connect/ImageLightboxModal';
 import UserAvatar from '@/components/ui/UserAvatar';
 import { useConnectUiStore } from '@/store/connect-ui.store';
@@ -61,6 +61,17 @@ export default function ConnectTimeline({
   const [seenNewestId, setSeenNewestId] = useState<number | null>(null);
   const [highlightedId, setHighlightedId] = useState<number | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [skeletonFloorDone, setSkeletonFloorDone] = useState(!isLoading);
+
+  useEffect(() => {
+    if (skeletonFloorDone) return;
+    const timer = setTimeout(() => {
+      setSkeletonFloorDone(true);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [skeletonFloorDone]);
+
+  const showTimelineSkeleton = (isLoading && messages.length === 0) || !skeletonFloorDone;
 
   const setActiveThread = useConnectUiStore((s) => s.setActiveThread);
   const setAtBottom = useConnectUiStore((s) => s.setAtBottom);
@@ -185,7 +196,7 @@ export default function ConnectTimeline({
 
   useLayoutEffect(() => {
     const el = scrollRef.current;
-    if (!el || isLoading) return;
+    if (!el || isLoading || showTimelineSkeleton) return;
 
     if (!isLoadingOlder && pendingScrollRestoreRef.current) {
       const { scrollHeight, scrollTop } = pendingScrollRestoreRef.current;
@@ -221,6 +232,7 @@ export default function ConnectTimeline({
     messages.length,
     newestMessage,
     portal,
+    showTimelineSkeleton,
   ]);
 
   const handleScroll = () => {
@@ -297,10 +309,8 @@ export default function ConnectTimeline({
 
         {topBanner}
 
-        {isLoading && messages.length === 0 ? (
-          <div className="flex h-40 items-center justify-center">
-            <Spinner />
-          </div>
+        {showTimelineSkeleton ? (
+          <ConnectTimelineSkeleton />
         ) : (
           <div className="flex flex-col pb-2">
             {messages.map((message, index) => {

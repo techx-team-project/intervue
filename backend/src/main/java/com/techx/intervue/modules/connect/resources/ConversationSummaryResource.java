@@ -10,6 +10,7 @@ import lombok.Builder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ConversationSummaryResource(
         Long id,
+        String publicId,
         ConnectionStatus status,
         ConnectActorType blockedByActorType,
         Long companyId,

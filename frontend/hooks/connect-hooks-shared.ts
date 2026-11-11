@@ -63,6 +63,15 @@ export function createParticipantConnectHooks(
     });
   }
 
+  function useConversationByKey(publicId: string | null) {
+    return useQuery({
+      queryKey: keys.conversationByKey(publicId ?? ''),
+      queryFn: () => api.conversation(publicId as string),
+      enabled: Boolean(publicId),
+      retry: false,
+    });
+  }
+
   function useThreadMessages(connectionId: number | null) {
     const query = useInfiniteQuery({
       queryKey: keys.messages(connectionId ?? 0),
@@ -341,6 +350,7 @@ export function createParticipantConnectHooks(
       if (connectionId) {
         void queryClient.invalidateQueries({ queryKey: keys.messages(connectionId) });
         void queryClient.invalidateQueries({ queryKey: keys.conversation(connectionId) });
+        void queryClient.invalidateQueries({ queryKey: keys.conversationByKeyPrefix });
       }
     };
   }
@@ -349,6 +359,7 @@ export function createParticipantConnectHooks(
     keys,
     useConversationsList,
     useSingleConversation,
+    useConversationByKey,
     useThreadMessages,
     useSendTextMessage,
     useSendMediaAttachment,

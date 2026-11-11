@@ -14,7 +14,7 @@ export default function ConnectRightPanelToggle() {
       aria-label={rightPanelOpen ? 'Hide side panel' : 'Show side panel'}
       title={rightPanelOpen ? 'Hide side panel' : 'Show side panel'}
       aria-expanded={rightPanelOpen}
-      className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface hidden h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors lg:inline-flex"
+      className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface hidden h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors lg:inline-flex"
     >
       {rightPanelOpen ? <PanelRightClose className="h-4.5 w-4.5" /> : <PanelRightOpen className="h-4.5 w-4.5" />}
     </button>

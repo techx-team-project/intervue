@@ -70,9 +70,9 @@ public abstract class AbstractParticipantConnectController extends BaseControlle
 
     @GetMapping("/conversations/{id}")
     public ResponseEntity<ApiResource<ConversationSummaryResource>> conversation(
-            @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails principal) {
+            @PathVariable String id, @AuthenticationPrincipal CustomUserDetails principal) {
         return ok(
-                connectionService.getConversation(actorType(), principal.getId(), id),
+                connectionService.getConversationByIdentifier(actorType(), principal.getId(), id),
                 "Conversation retrieved successfully!");
     }
 

@@ -21,7 +21,7 @@ const FORM_ID = 'invite-candidate-form';
 
 type InviteCandidateModalProps = {
   prefilledCandidate: EligibleCandidate;
-  onClose: (createdConnectionId?: number) => void;
+  onClose: (createdPublicId?: string) => void;
 };
 
 export default function InviteCandidateModal({ prefilledCandidate, onClose }: InviteCandidateModalProps) {
@@ -48,7 +48,7 @@ export default function InviteCandidateModal({ prefilledCandidate, onClose }: In
       {
         onSuccess: (created) => {
           toast.success('Invitation sent successfully.');
-          onClose(created?.id);
+          onClose(created?.publicId);
         },
         onError: (error) => {
           if (isApiError(error)) {

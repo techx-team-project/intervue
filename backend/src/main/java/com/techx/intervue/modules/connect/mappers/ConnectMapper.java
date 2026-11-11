@@ -24,6 +24,7 @@ public class ConnectMapper {
     public InvitationResource toInvitation(Connection connection, String openingMessage) {
         return InvitationResource.builder()
                 .id(connection.getId())
+                .publicId(connection.getPublicId())
                 .companyId(connection.getCompanyId())
                 .companyName(connection.getCompanyName())
                 .openingMessage(openingMessage)
@@ -43,6 +44,7 @@ public class ConnectMapper {
         boolean viewerIsCandidate = viewerType == ConnectActorType.CANDIDATE;
         return ConversationSummaryResource.builder()
                 .id(connection.getId())
+                .publicId(connection.getPublicId())
                 .status(connection.getStatus())
                 .blockedByActorType(
                         connection.getStatus() == ConnectionStatus.BLOCKED
