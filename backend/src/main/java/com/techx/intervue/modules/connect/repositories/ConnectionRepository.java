@@ -20,6 +20,8 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
 
     Optional<Connection> findByIdAndCompanyId(Long id, Long companyId);
 
+    Optional<Connection> findByPublicId(String publicId);
+
     Page<Connection> findByCandidateIdAndStatus(
             Long candidateId, ConnectionStatus status, Pageable pageable);
 

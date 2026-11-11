@@ -40,6 +40,9 @@ public interface ConnectionServiceInterface {
     ConversationSummaryResource getConversation(
             ConnectActorType actorType, Long actorId, Long connectionId);
 
+    ConversationSummaryResource getConversationByIdentifier(
+            ConnectActorType actorType, Long actorId, String identifier);
+
     MessageResource sendMessage(
             ConnectActorType actorType,
             Long actorId,

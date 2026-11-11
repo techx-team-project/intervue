@@ -5,4 +5,9 @@ import lombok.Builder;
 
 @Builder
 public record InvitationResource(
-        Long id, Long companyId, String companyName, String openingMessage, Instant invitedAt) {}
+        Long id,
+        String publicId,
+        Long companyId,
+        String companyName,
+        String openingMessage,
+        Instant invitedAt) {}

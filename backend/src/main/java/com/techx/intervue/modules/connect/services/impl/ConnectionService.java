@@ -61,11 +61,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -92,6 +95,10 @@ public class ConnectionService implements ConnectionServiceInterface {
     private static final List<ConnectionStatus> CANDIDATE_VISIBLE_STATUSES =
             List.of(ConnectionStatus.ACCEPTED, ConnectionStatus.BLOCKED);
     private static final Set<String> ALLOWED_REACTIONS = Set.of("👍", "❤️", "😂", "😮", "😢", "🙏");
+    private static final Pattern UUID_PATTERN =
+            Pattern.compile(
+                    "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+    private static final Pattern NUMERIC_ID_PATTERN = Pattern.compile("^\\d{1,19}$");
 
     private final ConnectionRepository connectionRepository;
     private final ConnectionMessageRepository messageRepository;
@@ -139,6 +146,7 @@ public class ConnectionService implements ConnectionServiceInterface {
                     Connection connection =
                             connectionRepository.save(
                                     Connection.builder()
+                                            .publicId(UUID.randomUUID().toString())
                                             .candidateId(candidate.candidateId())
                                             .candidateName(candidate.fullName())
                                             .candidateEmail(candidate.email())
@@ -164,7 +172,8 @@ public class ConnectionService implements ConnectionServiceInterface {
                                     .recipientId(candidate.candidateId())
                                     .type(NotificationType.CONNECT_INVITATION_RECEIVED)
                                     .params(Map.of("companyName", company.name()))
-                                    .actionUrl("/candidate/conversations/c/" + connection.getId())
+                                    .actionUrl(
+                                            "/candidate/conversations/" + connection.getPublicId())
                                     .build());
 
                     eventPublisher.publishEvent(
@@ -191,7 +200,7 @@ public class ConnectionService implements ConnectionServiceInterface {
                         .recipientId(connection.getInitiatedByRecruiterId())
                         .type(NotificationType.CONNECT_INVITATION_ACCEPTED)
                         .params(Map.of("candidateName", connection.getCandidateName()))
-                        .actionUrl("/recruiter/conversations/c/" + connection.getId())
+                        .actionUrl("/recruiter/conversations/" + connection.getPublicId())
                         .build());
 
         eventPublisher.publishEvent(
@@ -339,6 +348,20 @@ public class ConnectionService implements ConnectionServiceInterface {
     public ConversationSummaryResource getConversation(
             ConnectActorType actorType, Long actorId, Long connectionId) {
         Connection connection = requireParticipant(connectionId, actorType, actorId);
+        return buildConversationSummary(connection, actorType, actorId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ConversationSummaryResource getConversationByIdentifier(
+            ConnectActorType actorType, Long actorId, String identifier) {
+        Connection connection = requireParticipantByIdentifier(identifier, actorType, actorId);
+        return buildConversationSummary(connection, actorType, actorId);
+    }
+
+    private ConversationSummaryResource buildConversationSummary(
+            Connection connection, ConnectActorType actorType, Long actorId) {
+        Long connectionId = connection.getId();
         long unreadCount =
                 unreadService.breakdown(actorType, actorId).getOrDefault(connectionId, 0L);
         ConnectionMessage latest =
@@ -1211,6 +1234,35 @@ public class ConnectionService implements ConnectionServiceInterface {
                 connectionRepository
                         .findById(connectionId)
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        ensureOwnership(connection, actorType, actorId);
+        return connection;
+    }
+
+    private Connection requireParticipantByIdentifier(
+            String identifier, ConnectActorType actorType, Long actorId) {
+        String trimmed = identifier == null ? "" : identifier.trim();
+        if (UUID_PATTERN.matcher(trimmed).matches()) {
+            Connection connection =
+                    connectionRepository
+                            .findByPublicId(trimmed.toLowerCase(Locale.ROOT))
+                            .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+            ensureOwnership(connection, actorType, actorId);
+            return connection;
+        }
+        if (NUMERIC_ID_PATTERN.matcher(trimmed).matches()) {
+            try {
+                long numericId = Long.parseLong(trimmed);
+                if (numericId > 0) {
+                    return requireParticipant(numericId, actorType, actorId);
+                }
+            } catch (NumberFormatException ignored) {
+                throw new AppException(ErrorCode.NOT_FOUND);
+            }
+        }
+        throw new AppException(ErrorCode.NOT_FOUND);
+    }
+
+    private void ensureOwnership(Connection connection, ConnectActorType actorType, Long actorId) {
         boolean owns =
                 actorType == ConnectActorType.CANDIDATE
                         ? connection.getCandidateId().equals(actorId)
@@ -1218,7 +1270,6 @@ public class ConnectionService implements ConnectionServiceInterface {
         if (!owns) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
-        return connection;
     }
 
     private Connection requireActiveParticipant(
