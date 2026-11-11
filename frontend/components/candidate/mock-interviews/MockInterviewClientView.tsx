@@ -44,7 +44,7 @@ export default function MockInterviewClientView() {
     <div className="container-topcv space-y-6 py-6">
       <div className="border-b border-slate-200 pb-4">
         <Breadcrumb
-          items={[{ label: 'Ứng viên', href: '/candidate/profile' }, { label: 'Phỏng vấn thử cùng AI' }]}
+          items={[{ label: 'Candidate', href: '/candidate/profile' }, { label: 'AI Mock Interview' }]}
           showHome
           className="mb-3 text-xs"
         />
@@ -56,8 +56,8 @@ export default function MockInterviewClientView() {
               AI Mock Interview
             </h1>
             <p className="mt-1 text-xs text-slate-500">
-              Luyện phỏng vấn thử 1-1 với AI dựa trên CV thật và vị trí mục tiêu của bạn. Nhận điểm số, nhận xét và 3
-              điểm mạnh, 3 điểm cải thiện.
+              Practice 1-on-1 AI mock interviews tailored to your actual resume and target role. Receive scores, STAR
+              feedback, 3 key strengths, and 3 areas for improvement.
             </p>
           </div>
 
@@ -68,7 +68,7 @@ export default function MockInterviewClientView() {
               onClick={() => setActiveTab('HISTORY')}
               leftIcon={<History className="h-4 w-4" />}
             >
-              Lịch sử
+              History
             </Button>
             <Button
               variant="primary"
@@ -76,7 +76,7 @@ export default function MockInterviewClientView() {
               onClick={() => setIsSetupOpen(true)}
               leftIcon={<Sparkles className="h-4 w-4" />}
             >
-              Phỏng vấn mới
+              New Interview
             </Button>
           </div>
         </div>
@@ -113,9 +113,9 @@ export default function MockInterviewClientView() {
           ) : (
             <div className="space-y-3 rounded-3xl border border-slate-200 bg-white p-12 text-center">
               <HelpCircle className="mx-auto h-8 w-8 text-slate-400" />
-              <p className="text-sm font-semibold text-slate-700">Chưa chọn buổi phỏng vấn nào</p>
+              <p className="text-sm font-semibold text-slate-700">No interview session selected</p>
               <Button variant="primary" onClick={() => setIsSetupOpen(true)}>
-                Bắt đầu buổi phỏng vấn mới
+                Start a New Interview
               </Button>
             </div>
           )}

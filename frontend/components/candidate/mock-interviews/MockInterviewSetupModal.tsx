@@ -18,10 +18,26 @@ interface MockInterviewSetupModalProps {
 const SENIORITY_OPTIONS = ['Intern', 'Fresher', 'Junior', 'Middle', 'Senior', 'Lead'];
 
 const FOCUS_AREAS: { value: MockInterviewFocusArea; label: string; desc: string }[] = [
-  { value: 'TECHNICAL', label: 'Kỹ thuật chuyên sâu', desc: 'Đào sâu thuật toán, ngôn ngữ, framework & tối ưu' },
-  { value: 'SYSTEM_DESIGN', label: 'Thiết kế hệ thống', desc: 'Kiến trúc microservices, cơ sở dữ liệu & scaling' },
-  { value: 'BEHAVIORAL', label: 'Tình huống (Behavioral)', desc: 'Xử lý xung đột, quản lý dự án & văn hóa nhóm' },
-  { value: 'MIXED', label: 'Tổng hợp toàn diện', desc: 'Kết hợp kỹ thuật, tư duy kiến trúc và tình huống thực tế' },
+  {
+    value: 'TECHNICAL',
+    label: 'Technical Deep-Dive',
+    desc: 'In-depth algorithms, language syntax, frameworks & optimization',
+  },
+  {
+    value: 'SYSTEM_DESIGN',
+    label: 'System Design & Architecture',
+    desc: 'Microservices, distributed database schemas & scalability',
+  },
+  {
+    value: 'BEHAVIORAL',
+    label: 'Behavioral & Situational',
+    desc: 'Conflict resolution, leadership, project management & teamwork',
+  },
+  {
+    value: 'MIXED',
+    label: 'Comprehensive (Mixed)',
+    desc: 'Balanced blend of coding, architecture, and real-world behavioral scenarios',
+  },
 ];
 
 export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStarted }: MockInterviewSetupModalProps) {
@@ -37,7 +53,7 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!targetRole.trim()) {
-      toast.error('Vui lòng nhập vị trí công việc mục tiêu');
+      toast.error('Please enter your target job role');
       return;
     }
 
@@ -49,11 +65,11 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
         focusArea,
         questionCount,
       });
-      toast.success('Đã khởi tạo buổi phỏng vấn thử thành công!');
+      toast.success('Mock interview started successfully!');
       onClose();
       onSessionStarted(session);
     } catch {
-      toast.error('Không thể bắt đầu buổi phỏng vấn. Vui lòng thử lại.');
+      toast.error('Failed to start mock interview. Please try again.');
     }
   };
 
@@ -66,7 +82,7 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
           <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-lg">
             <Sparkles className="h-4 w-4" />
           </div>
-          <span className="text-navy font-bold">Thiết lập buổi phỏng vấn thử cùng AI</span>
+          <span className="text-navy font-bold">Configure AI Mock Interview</span>
         </div>
       }
       maxWidth="2xl"
@@ -74,11 +90,9 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* CV Selection */}
         <div>
-          <label className="text-navy mb-1.5 block text-xs font-bold">
-            1. Chọn CV làm dữ liệu phỏng vấn (Tùy chọn):
-          </label>
+          <label className="text-navy mb-1.5 block text-xs font-bold">1. Select Resume Context (Optional):</label>
           <p className="mb-2 text-[11px] text-slate-500">
-            AI sẽ đọc kinh nghiệm và kỹ năng trong CV để đặt câu hỏi sát thực tế nhất.
+            AI analyzes your work experience and skills to ask highly realistic questions.
           </p>
 
           {resumes && resumes.length > 0 ? (
@@ -92,7 +106,7 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
                     : 'border-slate-200 bg-white hover:border-slate-300'
                 }`}
               >
-                <span className="font-medium text-slate-700">Dùng hồ sơ tài khoản (Mặc định)</span>
+                <span className="font-medium text-slate-700">Use Profile Information (Default)</span>
                 {selectedResumeId === null && <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />}
               </button>
 
@@ -117,7 +131,7 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
             </div>
           ) : (
             <p className="text-xs text-slate-400 italic">
-              Chưa có CV tải lên. AI sẽ phỏng vấn dựa trên mục tiêu bạn chọn.
+              No uploaded resume found. AI will interview based on your selected target role.
             </p>
           )}
         </div>
@@ -125,19 +139,19 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
         {/* Target Role & Level */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-12">
           <div className="sm:col-span-8">
-            <label className="text-navy mb-1.5 block text-xs font-bold">2. Vị trí công việc mục tiêu:</label>
+            <label className="text-navy mb-1.5 block text-xs font-bold">2. Target Job Role:</label>
             <input
               type="text"
               value={targetRole}
               onChange={(e) => setTargetRole(e.target.value)}
-              placeholder="VD: Senior Java Backend Developer"
+              placeholder="e.g. Senior Java Backend Developer"
               className="text-navy focus:border-primary w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:outline-none"
               required
             />
           </div>
 
           <div className="sm:col-span-4">
-            <label className="text-navy mb-1.5 block text-xs font-bold">Cấp bậc:</label>
+            <label className="text-navy mb-1.5 block text-xs font-bold">Seniority Level:</label>
             <select
               value={seniorityLevel}
               onChange={(e) => setSeniorityLevel(e.target.value)}
@@ -154,7 +168,7 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
 
         {/* Focus Area */}
         <div>
-          <label className="text-navy mb-1.5 block text-xs font-bold">3. Định hướng trọng tâm buổi phỏng vấn:</label>
+          <label className="text-navy mb-1.5 block text-xs font-bold">3. Interview Focus Area:</label>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {FOCUS_AREAS.map((fa) => (
               <button
@@ -177,9 +191,9 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
         {/* Question Count (5 - 10) */}
         <div>
           <div className="mb-1.5 flex items-center justify-between">
-            <label className="text-navy text-xs font-bold">4. Số lượng câu hỏi (5 - 10 câu):</label>
+            <label className="text-navy text-xs font-bold">4. Number of Questions (5 - 10):</label>
             <span className="bg-primary/10 text-primary rounded-full px-2.5 py-0.5 text-xs font-bold">
-              {questionCount} câu hỏi
+              {questionCount} questions
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -199,13 +213,13 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
             ))}
           </div>
           <p className="mt-1 text-[11px] text-slate-400">
-            * Mỗi câu hỏi có tối đa 1 câu hỏi đào sâu (follow-up) từ AI nếu câu trả lời cần làm rõ.
+            * Each question may have up to 1 follow-up question if clarification is needed.
           </p>
         </div>
 
         <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-3">
           <Button variant="outline" type="button" onClick={onClose}>
-            Hủy bỏ
+            Cancel
           </Button>
           <Button
             variant="primary"
@@ -213,7 +227,7 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
             isLoading={startMutation.isPending}
             leftIcon={<Sparkles className="h-4 w-4" />}
           >
-            Bắt đầu phỏng vấn ngay
+            Start Interview Now
           </Button>
         </div>
       </form>

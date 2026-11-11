@@ -101,24 +101,24 @@ export function ChatPanel({
         {context?.jobTitle && (
           <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/70 p-3 text-xs text-emerald-950">
             <p className="font-semibold text-emerald-900">
-              Đang xem: {context.jobTitle} {context.companyName ? `(${context.companyName})` : ''}
+              Viewing: {context.jobTitle} {context.companyName ? `(${context.companyName})` : ''}
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               <button
                 type="button"
                 disabled={isLoading}
-                onClick={() => onSendMessage('So khớp CV của tôi với vị trí này')}
+                onClick={() => onSendMessage('Match my resume to this job')}
                 className="cursor-pointer rounded-lg border border-emerald-300 bg-white px-2.5 py-1 font-medium text-emerald-800 shadow-2xs hover:bg-emerald-100 disabled:opacity-50"
               >
-                🎯 So khớp CV với việc này
+                🎯 Match my resume to this job
               </button>
               <button
                 type="button"
                 disabled={isLoading}
-                onClick={() => onSendMessage('Soạn giúp tôi một bức thư ứng tuyển cho vị trí này')}
+                onClick={() => onSendMessage('Draft a cover letter for this job opening')}
                 className="cursor-pointer rounded-lg border border-emerald-300 bg-white px-2.5 py-1 font-medium text-emerald-800 shadow-2xs hover:bg-emerald-100 disabled:opacity-50"
               >
-                ✍️ Soạn thư ứng tuyển mẫu
+                ✍️ Draft sample cover letter
               </button>
             </div>
           </div>

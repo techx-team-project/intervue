@@ -52,9 +52,9 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
                 {session.seniorityLevel}
               </span>
             </div>
-            <h1 className="text-navy text-2xl font-extrabold sm:text-3xl">Báo cáo kết quả Phỏng vấn thử cùng AI</h1>
+            <h1 className="text-navy text-2xl font-extrabold sm:text-3xl">AI Mock Interview Evaluation Report</h1>
             <p className="text-xs text-slate-500">
-              Bạn đã hoàn thành toàn bộ {session.questionCount} câu hỏi phỏng vấn mô phỏng thực tế.
+              You have completed all {session.questionCount} realistic mock interview questions.
             </p>
           </div>
 
@@ -62,17 +62,17 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
           <div
             className={`flex shrink-0 flex-col items-center justify-center rounded-2xl border px-6 py-4 text-center ${scoreColor}`}
           >
-            <span className="text-xs font-bold tracking-wider uppercase">Điểm tổng kết</span>
+            <span className="text-xs font-bold tracking-wider uppercase">Overall Score</span>
             <div className="my-1 flex items-baseline gap-1">
               <span className="text-3xl font-black sm:text-4xl">{score}</span>
               <span className="text-sm font-semibold opacity-75">/100</span>
             </div>
             <span className="text-[11px] font-semibold">
               {score >= 80
-                ? 'Rất tốt (Sẵn sàng phỏng vấn)'
+                ? 'Excellent (Interview Ready)'
                 : score >= 65
-                  ? 'Khá (Đạt yêu cầu cơ bản)'
-                  : 'Cần ôn luyện thêm'}
+                  ? 'Proficient (Meets Core Requirements)'
+                  : 'Needs Practice'}
             </span>
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
           <div className="mt-6 rounded-2xl border border-slate-100 bg-slate-50 p-5">
             <h3 className="text-navy mb-2 flex items-center gap-2 text-xs font-bold">
               <Sparkles className="text-primary h-4 w-4" />
-              Đánh giá chung từ AI Hiring Lead:
+              Executive Summary from AI Hiring Lead:
             </h3>
             <p className="text-xs leading-relaxed whitespace-pre-wrap text-slate-700">{session.overallFeedback}</p>
           </div>
@@ -95,7 +95,7 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
         <div className="space-y-4 rounded-3xl border border-emerald-200 bg-emerald-50/40 p-6 shadow-xs">
           <div className="flex items-center gap-2 text-emerald-800">
             <Award className="h-5 w-5" />
-            <h3 className="text-sm font-bold">3 Điểm mạnh nổi bật (Strengths)</h3>
+            <h3 className="text-sm font-bold">Top 3 Key Strengths</h3>
           </div>
           <ul className="space-y-3">
             {session.strengths && session.strengths.length > 0 ? (
@@ -109,7 +109,7 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
                 </li>
               ))
             ) : (
-              <li className="text-xs text-slate-400 italic">Không có dữ liệu điểm mạnh</li>
+              <li className="text-xs text-slate-400 italic">No strengths data available</li>
             )}
           </ul>
         </div>
@@ -118,7 +118,7 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
         <div className="space-y-4 rounded-3xl border border-amber-200 bg-amber-50/40 p-6 shadow-xs">
           <div className="flex items-center gap-2 text-amber-800">
             <TrendingUp className="h-5 w-5" />
-            <h3 className="text-sm font-bold">3 Điểm cần cải thiện (Improvements)</h3>
+            <h3 className="text-sm font-bold">Top 3 Areas for Improvement</h3>
           </div>
           <ul className="space-y-3">
             {session.improvements && session.improvements.length > 0 ? (
@@ -132,7 +132,7 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
                 </li>
               ))
             ) : (
-              <li className="text-xs text-slate-400 italic">Không có dữ liệu điểm cải thiện</li>
+              <li className="text-xs text-slate-400 italic">No improvements data available</li>
             )}
           </ul>
         </div>
@@ -142,7 +142,7 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
       <div className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-xs">
         <h3 className="text-navy flex items-center gap-2 text-sm font-bold">
           <History className="text-primary h-4 w-4" />
-          Chi tiết câu hỏi & nhận xét từng câu ({session.questions.length} câu)
+          Question Breakdown & Feedback ({session.questions.length} questions)
         </h3>
 
         <div className="space-y-3 divide-y divide-slate-100">
@@ -167,12 +167,12 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
                         </span>
                         {q.score !== null && q.score !== undefined && (
                           <span className="py-0.2 rounded bg-emerald-50 px-2 text-[11px] font-bold text-emerald-700">
-                            {q.score} điểm
+                            {q.score} pts
                           </span>
                         )}
                         {q.followUpQuestion && (
                           <span className="py-0.2 rounded bg-amber-50 px-2 text-[10px] font-bold text-amber-700">
-                            Có câu hỏi follow-up
+                            Has follow-up
                           </span>
                         )}
                       </div>
@@ -191,10 +191,10 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
                     <div>
                       <p className="mb-1 flex items-center gap-1.5 font-bold text-slate-500">
                         <MessageSquare className="h-3.5 w-3.5" />
-                        Câu trả lời của bạn:
+                        Your Answer:
                       </p>
                       <p className="leading-relaxed whitespace-pre-wrap text-slate-800">
-                        {q.candidateAnswer || 'Chưa có câu trả lời'}
+                        {q.candidateAnswer || 'No answer submitted'}
                       </p>
                     </div>
 
@@ -203,12 +203,12 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
                       <div className="space-y-1.5 rounded-xl border border-amber-200 bg-amber-50/50 p-3">
                         <p className="flex items-center gap-1.5 text-[11px] font-bold text-amber-900">
                           <HelpCircle className="h-3.5 w-3.5" />
-                          Câu hỏi đào sâu (Follow-up):
+                          Follow-up Question:
                         </p>
                         <p className="text-navy font-medium">{q.followUpQuestion}</p>
                         {q.followUpAnswer && (
                           <div className="border-t border-amber-200/50 pt-1.5">
-                            <p className="text-[11px] font-semibold text-slate-500">Trả lời follow-up:</p>
+                            <p className="text-[11px] font-semibold text-slate-500">Follow-up response:</p>
                             <p className="text-slate-800">{q.followUpAnswer}</p>
                           </div>
                         )}
@@ -220,7 +220,7 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
                       <div className="border-primary/20 bg-primary/5 space-y-1 rounded-xl border p-3">
                         <p className="text-navy flex items-center gap-1.5 font-bold">
                           <Sparkles className="text-primary h-3.5 w-3.5" />
-                          Nhận xét của AI:
+                          AI Assessment:
                         </p>
                         <p className="leading-relaxed text-slate-700">{q.feedback}</p>
                       </div>
@@ -231,7 +231,7 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
                       <div className="space-y-1 rounded-xl border border-emerald-200 bg-emerald-50/50 p-3">
                         <p className="flex items-center gap-1.5 font-bold text-emerald-800">
                           <Lightbulb className="h-3.5 w-3.5" />
-                          Gợi ý câu trả lời chuẩn:
+                          Model Answer / Recommendation:
                         </p>
                         <p className="leading-relaxed text-slate-600 italic">{q.idealAnswer}</p>
                       </div>
@@ -247,10 +247,10 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
       {/* Footer Navigation */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
         <Button variant="outline" onClick={onViewHistory} leftIcon={<History className="h-4 w-4" />}>
-          Xem lịch sử các buổi phỏng vấn
+          View Interview History
         </Button>
         <Button variant="primary" onClick={onStartNew} leftIcon={<RefreshCw className="h-4 w-4" />}>
-          Bắt đầu buổi phỏng vấn mới
+          Start a New Interview
         </Button>
       </div>
     </div>
