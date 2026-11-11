@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import AdminCommandPalette from './AdminCommandPalette';
 import AdminMobileNavDrawer from './AdminMobileNavDrawer';
 import AdminPageBar from './AdminPageBar';
+import { AdminPageBarProvider } from './AdminPageBarContext';
 import AdminSidebar from './AdminSidebar';
 import AdminTopBar from './AdminTopBar';
 
@@ -172,9 +173,11 @@ export default function AdminShell({ children, queueCounts, account, permissions
         />
 
         <main className="min-w-0 flex-1">
-          <AdminPageBar permissions={permissions} />
+          <AdminPageBarProvider>
+            <AdminPageBar permissions={permissions} />
 
-          <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8">{children}</div>
+            <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8">{children}</div>
+          </AdminPageBarProvider>
         </main>
       </div>
 

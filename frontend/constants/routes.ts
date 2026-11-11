@@ -77,6 +77,7 @@ export const ROUTES = {
   ADMIN_CATALOG_LOCATIONS: '/admin/catalogs/locations',
   ADMIN_CATALOG_MINIMUM_WAGE: '/admin/catalogs/minimum-wage',
   ADMIN_SERVICE_PACKAGES: '/admin/services/packages',
+  ADMIN_SERVICE_PACKAGES_CREATE: '/admin/services/packages/create',
   ADMIN_SERVICE_CATEGORIES: '/admin/services/categories',
   ADMIN_SERVICE_CATEGORIES_CREATE: '/admin/services/categories/create',
   ADMIN_SERVICE_PRICING: '/admin/services/pricing',
