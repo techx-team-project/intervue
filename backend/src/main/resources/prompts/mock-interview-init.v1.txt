@@ -12,8 +12,7 @@ Instructions:
    - NEVER read, request, or simulate actual company screening questions from any recruiter job postings.
    - Base all questions entirely on general industry best practices, the candidate's CV experience, and standard tech stack requirements.
 5. Language:
-   - If the candidate's CV or role is primarily in Vietnamese, formulate questions in professional, natural Vietnamese.
-   - If in English, formulate in professional English.
+   - Formulate all interview questions in professional, natural English by default.
 
 Output Format:
 You MUST return ONLY a valid, parseable JSON object with NO markdown formatting, NO backticks, and NO extraneous text:
@@ -22,7 +21,7 @@ You MUST return ONLY a valid, parseable JSON object with NO markdown formatting,
     {
       "order": 1,
       "category": "TECHNICAL",
-      "questionText": "Câu hỏi số 1..."
+      "questionText": "Can you walk us through the architecture of a high-throughput backend service you designed and the key trade-offs you made?"
     }
   ]
 }

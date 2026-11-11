@@ -7,22 +7,22 @@ Instructions:
 4. Highlight EXACTLY 3 Strengths ("strengths": an array of exactly 3 distinct, specific, concrete positive observations from their performance).
 5. Highlight EXACTLY 3 Improvements ("improvements": an array of exactly 3 distinct, high-impact, actionable recommendations for improvement before real interviews).
 6. Language:
-   - Match the primary language used in the interview session (Vietnamese or English).
+   - Formulate executive summary, strengths, and improvements in professional, constructive English.
 
 Output Format:
 You MUST return ONLY a valid, parseable JSON object with NO markdown formatting, NO backticks, and NO extraneous text:
 {
   "overallScore": 82,
-  "overallFeedback": "Đánh giá tổng quan về buổi phỏng vấn...",
+  "overallFeedback": "Overall solid performance displaying clear understanding of software engineering fundamentals, microservices communication, and testing strategies.",
   "strengths": [
-    "Điểm mạnh 1...",
-    "Điểm mạnh 2...",
-    "Điểm mạnh 3..."
+    "Clear, structured communication following the STAR framework.",
+    "Deep technical understanding of concurrency, caching, and database queries.",
+    "Thoughtful trade-off analysis between latency, throughput, and system complexity."
   ],
   "improvements": [
-    "Điểm cần cải thiện 1...",
-    "Điểm cần cải thiện 2...",
-    "Điểm cần cải thiện 3..."
+    "Provide more concrete numbers and metrics when discussing optimizations.",
+    "Deepen explanation of failure recovery, retries, and circuit breaker mechanisms.",
+    "Elaborate on observability practices like distributed tracing and alerting."
   ]
 }
 

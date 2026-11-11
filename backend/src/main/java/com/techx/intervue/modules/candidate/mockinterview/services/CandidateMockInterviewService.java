@@ -72,7 +72,12 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
         CandidateProfile profile =
                 profileRepository
                         .findByUserId(candidateId)
-                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+                        .orElseGet(
+                                () ->
+                                        profileRepository.save(
+                                                CandidateProfile.builder()
+                                                        .userId(candidateId)
+                                                        .build()));
 
         Long resumeId = request.resumeId();
         String cvText = "";
@@ -418,7 +423,7 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
             int average = scoredCount > 0 ? (totalScore / scoredCount) : 75;
             interview.setOverallScore(average);
             interview.setOverallFeedback(
-                    "Buổi phỏng vấn đã hoàn thành. Ứng viên đã trả lời đầy đủ các câu hỏi theo yêu cầu.");
+                    "The interview session has been completed. The candidate answered all required questions.");
             try {
                 interview.setStrengthsJson(
                         objectMapper.writeValueAsString(
@@ -475,27 +480,27 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
                     new GeneratedQuestion(
                             1,
                             "TECHNICAL",
-                            "Hãy giới thiệu về bản thân và dự án kỹ thuật tiêu biểu nhất mà bạn từng tham gia."));
+                            "Please introduce yourself and walk us through the most impactful technical project you have worked on."));
             questions.add(
                     new GeneratedQuestion(
                             2,
                             "TECHNICAL",
-                            "Trong dự án đó, bạn đã giải quyết bài toán kỹ thuật phức tạp nhất bằng cách nào?"));
+                            "In that project, what was the most complex technical challenge you encountered, and how did you resolve it?"));
             questions.add(
                     new GeneratedQuestion(
                             3,
                             "TECHNICAL",
-                            "Bạn tối ưu hiệu năng và đảm bảo tính sẵn sàng cao của hệ thống như thế nào?"));
+                            "How do you approach performance optimization and ensure high availability in your backend/system architecture?"));
             questions.add(
                     new GeneratedQuestion(
                             4,
                             "SYSTEM_DESIGN",
-                            "Hãy thiết kế một dịch vụ xử lý dữ liệu lớn với yêu cầu độ trễ thấp và bảo mật cao."));
+                            "How would you design a scalable service required to handle high-throughput traffic with low latency and strong security?"));
             questions.add(
                     new GeneratedQuestion(
                             5,
                             "BEHAVIORAL",
-                            "Khi gặp bất đồng ý kiến về giải pháp kiến trúc với đồng nghiệp, bạn xử lý ra sao?"));
+                            "Tell me about a time you had a technical disagreement with a teammate or stakeholder. How did you handle it?"));
         }
 
         return questions;
@@ -514,7 +519,9 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
                             ? root.get("followUpQuestion").asText()
                             : null;
             String feedback =
-                    root.has("feedback") ? root.get("feedback").asText() : "Câu trả lời khá tốt.";
+                    root.has("feedback")
+                            ? root.get("feedback").asText()
+                            : "Good answer with solid foundational reasoning.";
             String ideal = root.has("idealAnswer") ? root.get("idealAnswer").asText() : "";
 
             return new AnswerEvaluation(score, needsFollowUp, followUp, feedback, ideal);
@@ -524,8 +531,8 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
                     75,
                     false,
                     null,
-                    "Câu trả lời đạt yêu cầu cơ bản.",
-                    "Cần nêu rõ các số liệu và giải pháp cụ thể hơn.");
+                    "The answer meets fundamental requirements.",
+                    "Structure your response with concrete metrics and clear engineering trade-offs.");
         }
     }
 
@@ -537,7 +544,7 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
         String feedback =
                 root.has("overallFeedback")
                         ? root.get("overallFeedback").asText()
-                        : "Hoàn thành buổi phỏng vấn.";
+                        : "Successfully completed the mock interview session.";
 
         List<String> strengths = new ArrayList<>();
         if (root.has("strengths") && root.get("strengths").isArray()) {
@@ -546,7 +553,7 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
             }
         }
         while (strengths.size() < 3) {
-            strengths.add("Thể hiện được kiến thức nền tảng vững chắc trong lĩnh vực chuyên môn.");
+            strengths.add("Demonstrates solid core engineering fundamentals in the target domain.");
         }
         if (strengths.size() > 3) {
             strengths = strengths.subList(0, 3);
@@ -560,7 +567,7 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
         }
         while (improvements.size() < 3) {
             improvements.add(
-                    "Cần luyện tập trình bày có cấu trúc và bổ sung các ví dụ đo lường kết quả thực tế.");
+                    "Practice structured communication and incorporate measurable impact metrics.");
         }
         if (improvements.size() > 3) {
             improvements = improvements.subList(0, 3);
