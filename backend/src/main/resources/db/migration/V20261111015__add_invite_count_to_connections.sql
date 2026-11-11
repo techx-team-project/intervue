@@ -1,0 +1,3 @@
+ALTER TABLE connections
+  ADD COLUMN invite_count INT UNSIGNED NOT NULL DEFAULT 1 AFTER status;
+

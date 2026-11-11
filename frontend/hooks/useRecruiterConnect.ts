@@ -51,11 +51,16 @@ export function useSendInvitation() {
       recruiterConnectApi.sendInvitation(candidateId, message),
     onSuccess: (created) => {
       void queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.conversations });
+      void queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.conversation(created.id) });
+      void queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.conversationByKeyPrefix });
+      void queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.messages(created.id) });
       void queryClient.invalidateQueries({ queryKey: ['connect', 'recruiter', 'eligible-candidates'] });
       postConnectBroadcast({ type: 'INVALIDATE', portal: 'recruiter', connectionId: created.id });
     },
     onError: () => {
       void queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.muteStatus });
+      void queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.conversations });
+      void queryClient.invalidateQueries({ queryKey: recruiterConnectKeys.conversationByKeyPrefix });
     },
   });
 }

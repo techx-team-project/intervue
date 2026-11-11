@@ -28,7 +28,6 @@ import com.techx.intervue.modules.connect.requests.SendInvitationRequest;
 import com.techx.intervue.modules.connect.requests.SendMessageRequest;
 import com.techx.intervue.modules.connect.resources.ConnectReactionEventPayload;
 import com.techx.intervue.modules.connect.resources.ConnectReadEventPayload;
-import com.techx.intervue.modules.connect.resources.ConnectStatusEventPayload;
 import com.techx.intervue.modules.connect.resources.ConnectTypingEventPayload;
 import com.techx.intervue.modules.connect.resources.ConversationSummaryResource;
 import com.techx.intervue.modules.connect.resources.EligibleCandidateResource;
@@ -91,7 +90,11 @@ public class ConnectionService implements ConnectionServiceInterface {
     private static final Duration EDIT_WINDOW = Duration.ofMinutes(15);
     private static final Sort NEWEST_FIRST = Sort.by(Sort.Order.desc("id"));
     private static final List<ConnectionStatus> RECRUITER_VISIBLE_STATUSES =
-            List.of(ConnectionStatus.PENDING, ConnectionStatus.ACCEPTED, ConnectionStatus.BLOCKED);
+            List.of(
+                    ConnectionStatus.PENDING,
+                    ConnectionStatus.ACCEPTED,
+                    ConnectionStatus.DECLINED,
+                    ConnectionStatus.BLOCKED);
     private static final List<ConnectionStatus> CANDIDATE_VISIBLE_STATUSES =
             List.of(ConnectionStatus.ACCEPTED, ConnectionStatus.BLOCKED);
     private static final Set<String> ALLOWED_REACTIONS = Set.of("👍", "❤️", "😂", "😮", "😢", "🙏");
@@ -125,13 +128,20 @@ public class ConnectionService implements ConnectionServiceInterface {
         if (moderationService.isMuted(ConnectActorType.RECRUITER, recruiterId)) {
             throw new AppException(ErrorCode.CONNECT_MUTED);
         }
-        moderationService.screen(ConnectActorType.RECRUITER, recruiterId, null, request.message());
 
         Long companyId = companyScope.companyIdOf(recruiterId);
-        if (connectionRepository.existsByCandidateIdAndCompanyId(
-                request.candidateId(), companyId)) {
-            throw new AppException(ErrorCode.CONNECTION_ALREADY_EXISTS);
-        }
+        Optional<Connection> existing =
+                connectionRepository.findByCandidateIdAndCompanyId(
+                        request.candidateId(), companyId);
+        moderationService.screen(
+                ConnectActorType.RECRUITER,
+                recruiterId,
+                existing.map(Connection::getId).orElse(null),
+                request.message());
+
+        Instant checkTime = Instant.now();
+        existing.ifPresent(connection -> validateInviteAllowance(connection, checkTime));
+
         EligibleCandidate candidate =
                 eligibilityPort
                         .findCandidateSummary(request.candidateId(), companyId)
@@ -139,24 +149,23 @@ public class ConnectionService implements ConnectionServiceInterface {
 
         return transactionTemplate.execute(
                 status -> {
+                    Instant now = Instant.now();
+                    Optional<Connection> locked =
+                            connectionRepository.findForUpdateByCandidateIdAndCompanyId(
+                                    request.candidateId(), companyId);
+                    locked.ifPresent(connection -> validateInviteAllowance(connection, now));
+
                     quotaService.reserve(recruiterId);
                     CompanySummaryResource company = companyService.findSummary(companyId);
 
-                    Instant now = Instant.now();
                     Connection connection =
-                            connectionRepository.save(
-                                    Connection.builder()
-                                            .publicId(UUID.randomUUID().toString())
-                                            .candidateId(candidate.candidateId())
-                                            .candidateName(candidate.fullName())
-                                            .candidateEmail(candidate.email())
-                                            .companyId(companyId)
-                                            .companyName(company.name())
-                                            .initiatedByRecruiterId(recruiterId)
-                                            .status(ConnectionStatus.PENDING)
-                                            .invitedAt(now)
-                                            .lastMessageAt(now)
-                                            .build());
+                            saveOrReopenConnection(
+                                    locked.orElse(null),
+                                    candidate,
+                                    company,
+                                    companyId,
+                                    recruiterId,
+                                    now);
                     messageRepository.save(
                             ConnectionMessage.builder()
                                     .connectionId(connection.getId())
@@ -180,11 +189,60 @@ public class ConnectionService implements ConnectionServiceInterface {
                             new ConnectSseDispatchEvent(
                                     allParticipants(connection),
                                     "status",
-                                    new ConnectStatusEventPayload(
-                                            connection.getId(), ConnectionStatus.PENDING, null)));
+                                    mapper.toStatusEventPayload(connection)));
 
                     return mapper.toInvitation(connection, request.message());
                 });
+    }
+
+    private Connection saveOrReopenConnection(
+            Connection existing,
+            EligibleCandidate candidate,
+            CompanySummaryResource company,
+            Long companyId,
+            Long recruiterId,
+            Instant now) {
+        if (existing != null) {
+            existing.setInitiatedByRecruiterId(recruiterId);
+            existing.setStatus(ConnectionStatus.PENDING);
+            existing.setInviteCount(existing.getInviteCount() + 1);
+            existing.setInvitedAt(now);
+            existing.setRespondedAt(null);
+            existing.setLastMessageAt(now);
+            return connectionRepository.save(existing);
+        }
+        try {
+            return connectionRepository.saveAndFlush(
+                    Connection.builder()
+                            .publicId(UUID.randomUUID().toString())
+                            .candidateId(candidate.candidateId())
+                            .candidateName(candidate.fullName())
+                            .candidateEmail(candidate.email())
+                            .companyId(companyId)
+                            .companyName(company.name())
+                            .initiatedByRecruiterId(recruiterId)
+                            .status(ConnectionStatus.PENDING)
+                            .inviteCount(1)
+                            .invitedAt(now)
+                            .lastMessageAt(now)
+                            .build());
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException(ErrorCode.CONNECTION_ALREADY_EXISTS);
+        }
+    }
+
+    private void validateInviteAllowance(Connection connection, Instant now) {
+        if (connection.getStatus() != ConnectionStatus.DECLINED) {
+            throw new AppException(ErrorCode.CONNECTION_ALREADY_EXISTS);
+        }
+        if (connection.hasReachedInviteLimit()) {
+            throw new AppException(ErrorCode.CONNECTION_INVITE_LIMIT_REACHED);
+        }
+        Instant availableAt = connection.reinviteAvailableAt();
+        if (availableAt != null && now.isBefore(availableAt)) {
+            long retryAfter = Math.max(1L, Duration.between(now, availableAt).getSeconds());
+            throw AppException.rateLimited(ErrorCode.CONNECTION_REINVITE_COOLDOWN, retryAfter);
+        }
     }
 
     @Override
@@ -207,8 +265,7 @@ public class ConnectionService implements ConnectionServiceInterface {
                 new ConnectSseDispatchEvent(
                         allParticipants(connection),
                         "status",
-                        new ConnectStatusEventPayload(
-                                connection.getId(), ConnectionStatus.ACCEPTED, null)));
+                        mapper.toStatusEventPayload(connection)));
     }
 
     @Override
@@ -217,13 +274,22 @@ public class ConnectionService implements ConnectionServiceInterface {
         Connection connection = requirePending(connectionId, candidateId);
         connection.setStatus(ConnectionStatus.DECLINED);
         connection.setRespondedAt(Instant.now());
+        unreadService.clear(ConnectActorType.CANDIDATE, candidateId, connectionId);
+
+        notificationPublisher.publish(
+                NotificationCommand.builder()
+                        .recipientType(RecipientType.RECRUITER)
+                        .recipientId(connection.getInitiatedByRecruiterId())
+                        .type(NotificationType.CONNECT_INVITATION_DECLINED)
+                        .params(Map.of("candidateName", connection.getCandidateName()))
+                        .actionUrl("/recruiter/conversations/" + connection.getPublicId())
+                        .build());
 
         eventPublisher.publishEvent(
                 new ConnectSseDispatchEvent(
                         allParticipants(connection),
                         "status",
-                        new ConnectStatusEventPayload(
-                                connection.getId(), ConnectionStatus.DECLINED, null)));
+                        mapper.toStatusEventPayload(connection)));
     }
 
     @Override
@@ -920,8 +986,7 @@ public class ConnectionService implements ConnectionServiceInterface {
                 new ConnectSseDispatchEvent(
                         allParticipants(connection),
                         "status",
-                        new ConnectStatusEventPayload(
-                                connection.getId(), ConnectionStatus.BLOCKED, actorType)));
+                        mapper.toStatusEventPayload(connection)));
     }
 
     @Override
@@ -943,8 +1008,7 @@ public class ConnectionService implements ConnectionServiceInterface {
                 new ConnectSseDispatchEvent(
                         allParticipants(connection),
                         "status",
-                        new ConnectStatusEventPayload(
-                                connection.getId(), ConnectionStatus.ACCEPTED, null)));
+                        mapper.toStatusEventPayload(connection)));
     }
 
     @Override

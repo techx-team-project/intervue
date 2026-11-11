@@ -486,11 +486,11 @@ it needed. Candidate frontend is still to come (wave 6).
 | Method | Path | Auth | Notes |
 |---|---|---|---|
 | `GET` | `/recruiter/connect/eligible-candidates?search=` | recruiter | Candidates who have at least one non-draft `Application` to the recruiter's company and have no `connection` with it yet. `EligibleCandidateResource { candidateId, fullName, email, jobTitle, submittedAt }`. |
-| `POST` | `/recruiter/connect/invitations` | recruiter | Body `{ candidateId, message (max 1000) }`. Screened via content filter & mute check before reserving quota. Creates a `PENDING` connection plus its opening message, charges the daily quota, notifies the candidate (`CONNECT_INVITATION_RECEIVED`) and emits SSE `status` (`PENDING`). `403 CONNECT_MUTED`, `409 CONNECTION_ALREADY_EXISTS`, `422 MESSAGE_BLOCKED_BY_FILTER`, `422 NOT_ELIGIBLE_TO_CONNECT`, `429 CONNECTION_QUOTA_EXCEEDED`. |
-| `GET` | `/recruiter/connect/conversations` | recruiter | Company-wide, `PENDING` + `ACCEPTED` + `BLOCKED`, paged by `lastMessageAt` descending. |
+| `POST` | `/recruiter/connect/invitations` | recruiter | Body `{ candidateId, message (max 1000) }`. Screened via content filter & mute check before reserving quota. Creates a `PENDING` connection (or re-opens a `DECLINED` connection up to `2` total invites per pair after a `24h` cooldown from `respondedAt`) plus its opening message, charges the daily quota, notifies the candidate (`CONNECT_INVITATION_RECEIVED`) and emits SSE `status` (`PENDING`). `403 CONNECT_MUTED`, `409 CONNECTION_ALREADY_EXISTS` (if `PENDING`/`ACCEPTED`/`BLOCKED`), `409 CONNECTION_INVITE_LIMIT_REACHED`, `422 MESSAGE_BLOCKED_BY_FILTER`, `422 NOT_ELIGIBLE_TO_CONNECT`, `429 CONNECTION_QUOTA_EXCEEDED`, `429 CONNECTION_REINVITE_COOLDOWN` (`Retry-After`). |
+| `GET` | `/recruiter/connect/conversations` | recruiter | Company-wide, `PENDING` + `ACCEPTED` + `DECLINED` + `BLOCKED`, paged by `lastMessageAt` descending. |
 | `GET` | `/candidate/connect/invitations` | candidate | Own `PENDING` invitations, each with the opening message. |
 | `POST` | `/candidate/connect/invitations/{id}/accept` | candidate | `PENDING` to `ACCEPTED`; notifies the inviting recruiter (`CONNECT_INVITATION_ACCEPTED`). `404 NOT_FOUND` if not owned or not `PENDING`. |
-| `POST` | `/candidate/connect/invitations/{id}/decline` | candidate | `PENDING` to `DECLINED`. The pair is locked — a recruiter cannot invite the same candidate again in v1. |
+| `POST` | `/candidate/connect/invitations/{id}/decline` | candidate | `PENDING` to `DECLINED`; clears candidate unread, notifies the inviting recruiter (`CONNECT_INVITATION_DECLINED`), and emits SSE `status` (`DECLINED` with `inviteCount`, `maxInvites`, `reinviteAvailableAt`). After the first decline, recruiters may re-invite once after `24h`; the second decline locks the pair. |
 | `GET` | `/candidate/connect/conversations` | candidate | Own `ACCEPTED` + `BLOCKED` connections, paged by `lastMessageAt` descending. |
 
 - **Quota**: 100 new invitations per calendar day (Asia/Ho_Chi_Minh), counted **per recruiter**, not per company. Declining later does not refund it.
@@ -524,7 +524,7 @@ it needed. Candidate frontend is still to come (wave 6).
 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
-| `GET` | `/connect/stream` | both | `text/event-stream`, no `ApiResource` envelope. Published `@TransactionalEventListener(phase = AFTER_COMMIT)` via `ConnectSseDispatchEvent`: emits `message`, `message_updated` (full `MessageResource` JSON), `reaction` (`ConnectReactionEventPayload`), `read` (`ConnectReadEventPayload`), `typing` (`ConnectTypingEventPayload`), and `status` (`ConnectStatusEventPayload { connectionId, status, blockedByActorType }`), plus a `:ping` comment every 20s to keep the connection alive through proxies. In-memory emitter registry — **single backend instance only**, no Redis pub/sub fan-out yet. |
+| `GET` | `/connect/stream` | both | `text/event-stream`, no `ApiResource` envelope. Published `@TransactionalEventListener(phase = AFTER_COMMIT)` via `ConnectSseDispatchEvent`: emits `message`, `message_updated` (full `MessageResource` JSON), `reaction` (`ConnectReactionEventPayload`), `read` (`ConnectReadEventPayload`), `typing` (`ConnectTypingEventPayload`), and `status` (`ConnectStatusEventPayload { connectionId, status, blockedByActorType, invitedAt, respondedAt, inviteCount, maxInvites, reinviteAvailableAt }`), plus a `:ping` comment every 20s to keep the connection alive through proxies. In-memory emitter registry — **single backend instance only**, no Redis pub/sub fan-out yet. |
 | `GET` | `/connect/mute-status` | both | `ConnectMuteStatusResource { muted, expiresAt, reason }`. Returns active Connect mute status for the signed-in actor. |
 | `GET` | `/connect/unread-count` | both | `ConnectUnreadCountResource { total, unreadMessages, pendingInvitations }`. Candidate `total` includes `unreadMessages + pendingInvitations`; Recruiter counts unread company messages. Backed by Redis hash `connect:unread:{actorType}:{actorId}` + live pending invitation query, cleared per-connection on explicit `POST .../read`. |
 | `POST` | `/connect/conversations/{id}/report` | both | Body `{ reasonCode, reasonNote (max 1000) }`. Files a `PENDING` row into the generic `moderation` report queue (`reporter_type = CANDIDATE`/`RECRUITER`, the real actor this time, unlike the filter's `SYSTEM` auto-reports). Valid on a connection in **any** status — you often report right when blocking someone. Does **not** change `connections.status`. |
@@ -665,7 +665,9 @@ from the wave 1 design during implementation:
 | `TAX_LOOKUP_BUSY` | 429 | The registry lookup is rate limited; honor `Retry-After` |
 | `TAX_LOOKUP_UNAVAILABLE` | 503 | The registry lookup is not reachable right now |
 | `CONNECTION_QUOTA_EXCEEDED` | 429 | Recruiter's 100 new Connect invitations/day reached; honor `Retry-After` |
+| `CONNECTION_REINVITE_COOLDOWN` | 429 | Re-invite attempted within 24h cooldown after candidate declined; honor `Retry-After` |
 | `CONNECTION_ALREADY_EXISTS` | 409 | A connection already exists for this candidate + company pair |
+| `CONNECTION_INVITE_LIMIT_REACHED` | 409 | Maximum Connect invitation attempts (2) reached for this candidate + company pair |
 | `NOT_ELIGIBLE_TO_CONNECT` | 422 | Candidate has no `Application` to the recruiter's company yet |
 | `CONNECTION_NOT_ACCEPTED` | 422 | The connection is still `PENDING`/`DECLINED`, can't message or block yet |
 | `CONNECTION_BLOCKED` | 403 | The conversation has been blocked by one side |

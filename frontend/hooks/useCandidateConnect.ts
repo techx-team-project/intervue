@@ -64,6 +64,7 @@ export function useAcceptInvitation() {
       void queryClient.invalidateQueries({ queryKey: candidateConnectKeys.invitations });
       void queryClient.invalidateQueries({ queryKey: candidateConnectKeys.conversations });
       void queryClient.invalidateQueries({ queryKey: candidateConnectKeys.conversation(connectionId) });
+      void queryClient.invalidateQueries({ queryKey: candidateConnectKeys.conversationByKeyPrefix });
       void queryClient.invalidateQueries({ queryKey: candidateConnectKeys.unread });
       postConnectBroadcast({ type: 'INVALIDATE', portal: 'candidate', connectionId });
     },
@@ -83,6 +84,7 @@ export function useDeclineInvitation() {
       void queryClient.invalidateQueries({ queryKey: candidateConnectKeys.invitations });
       void queryClient.invalidateQueries({ queryKey: candidateConnectKeys.conversations });
       void queryClient.invalidateQueries({ queryKey: candidateConnectKeys.conversation(connectionId) });
+      void queryClient.invalidateQueries({ queryKey: candidateConnectKeys.conversationByKeyPrefix });
       void queryClient.invalidateQueries({ queryKey: candidateConnectKeys.unread });
       postConnectBroadcast({ type: 'INVALIDATE', portal: 'candidate', connectionId });
     },

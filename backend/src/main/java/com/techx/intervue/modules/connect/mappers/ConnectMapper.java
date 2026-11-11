@@ -7,6 +7,7 @@ import com.techx.intervue.modules.connect.entities.ConnectionMessageReaction;
 import com.techx.intervue.modules.connect.enums.ConnectActorType;
 import com.techx.intervue.modules.connect.enums.ConnectionStatus;
 import com.techx.intervue.modules.connect.resources.ConnectFilterWordResource;
+import com.techx.intervue.modules.connect.resources.ConnectStatusEventPayload;
 import com.techx.intervue.modules.connect.resources.ConversationSummaryResource;
 import com.techx.intervue.modules.connect.resources.InvitationResource;
 import com.techx.intervue.modules.connect.resources.MessageReactionResource;
@@ -29,6 +30,22 @@ public class ConnectMapper {
                 .companyName(connection.getCompanyName())
                 .openingMessage(openingMessage)
                 .invitedAt(connection.getInvitedAt())
+                .build();
+    }
+
+    public ConnectStatusEventPayload toStatusEventPayload(Connection connection) {
+        return ConnectStatusEventPayload.builder()
+                .connectionId(connection.getId())
+                .status(connection.getStatus())
+                .blockedByActorType(
+                        connection.getStatus() == ConnectionStatus.BLOCKED
+                                ? connection.getBlockedByActorType()
+                                : null)
+                .invitedAt(connection.getInvitedAt())
+                .respondedAt(connection.getRespondedAt())
+                .inviteCount(connection.getInviteCount())
+                .maxInvites(Connection.MAX_INVITES_PER_PAIR)
+                .reinviteAvailableAt(connection.reinviteAvailableAt())
                 .build();
     }
 
@@ -56,6 +73,9 @@ public class ConnectMapper {
                 .candidateName(connection.getCandidateName())
                 .invitedAt(connection.getInvitedAt())
                 .respondedAt(connection.getRespondedAt())
+                .inviteCount(connection.getInviteCount())
+                .maxInvites(Connection.MAX_INVITES_PER_PAIR)
+                .reinviteAvailableAt(connection.reinviteAvailableAt())
                 .unreadCount(unreadCount)
                 .lastMessageAt(latestMessage == null ? null : latestMessage.getCreatedAt())
                 .lastMessagePreview(

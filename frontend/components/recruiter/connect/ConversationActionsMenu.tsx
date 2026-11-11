@@ -10,6 +10,7 @@ type ConversationActionsMenuProps = {
   isUnblocking?: boolean;
   onReport: () => void;
   blocked: boolean;
+  canBlock?: boolean;
   canUnblock?: boolean;
 };
 
@@ -23,6 +24,7 @@ export default function ConversationActionsMenu({
   isUnblocking = false,
   onReport,
   blocked,
+  canBlock = true,
   canUnblock = false,
 }: ConversationActionsMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -96,7 +98,7 @@ export default function ConversationActionsMenu({
             style={{ top: position.top, left: position.left, width: MENU_WIDTH }}
             className="border-outline-variant shadow-elevation-2 fixed z-[60] overflow-hidden rounded-lg border bg-white py-1"
           >
-            {!blocked && (
+            {canBlock && !blocked && (
               <button
                 type="button"
                 role="menuitem"
