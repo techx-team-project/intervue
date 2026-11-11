@@ -1,6 +1,7 @@
 'use client';
 
 import { refreshSession } from '@/apiRequest/http';
+import ConnectRealtimeBridge from '@/components/connect/ConnectRealtimeBridge';
 import { getActivePortal } from '@/lib/auth-portal';
 import { useAuthStore } from '@/store/auth.store';
 import { ReactNode, useEffect } from 'react';
@@ -18,5 +19,10 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       .catch(() => useAuthStore.getState().clearSession(portal));
   }, []);
 
-  return children;
+  return (
+    <>
+      <ConnectRealtimeBridge />
+      {children}
+    </>
+  );
 }
