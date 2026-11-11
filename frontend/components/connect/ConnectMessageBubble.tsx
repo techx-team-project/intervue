@@ -143,6 +143,11 @@ export default function ConnectMessageBubble({
         prevMessage.senderId !== currentUserId));
 
   const senderLabelText = isExactSelf ? 'You' : message.senderName || peerName;
+  const isReplyToSelf =
+    message.replyTo &&
+    message.replyTo.senderType === currentActorType &&
+    (portal === 'candidate' || message.replyTo.senderId === currentUserId);
+  const replySenderLabel = isReplyToSelf ? 'You' : message.replyTo?.senderName || peerName;
   const canEdit = canEditConnectMessage(message, isExactSelf);
   const isOptimistic = Boolean(message.optimisticStatus);
   const exactTimeTooltip = formatConnectExactTime(message.createdAt);
@@ -333,7 +338,7 @@ export default function ConnectMessageBubble({
         'group flex w-full flex-col transition-colors duration-300',
         clusteredPrev ? 'mt-0.5' : 'mt-3',
         isRightAligned ? 'items-end' : 'items-start',
-        isHighlighted && '-mx-1 rounded-xl bg-amber-50/80 p-1 ring-2 ring-amber-300/80',
+        isHighlighted && '-mx-2 rounded-xl bg-slate-100/90 px-2 py-1.5 ring-1 ring-slate-200/80',
       )}
     >
       {showSenderLabel && (
@@ -364,31 +369,8 @@ export default function ConnectMessageBubble({
             <div className="w-7 shrink-0" />
           ))}
 
-        <div className={cn('flex flex-col', isRightAligned ? 'items-end' : 'items-start')}>
-          {message.replyTo && !message.recalled && (
-            <button
-              type="button"
-              onClick={() => onJumpToMessage?.(message.replyTo!.id)}
-              className={cn(
-                'mb-1 flex max-w-xs cursor-pointer items-center gap-1.5 rounded-xl border px-2.5 py-1 text-left text-[11px] transition-colors',
-                isRightAligned
-                  ? 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'
-                  : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50',
-              )}
-            >
-              <Reply className="h-3 w-3 shrink-0 text-slate-400" />
-              <div className="min-w-0">
-                <span className="font-semibold text-slate-700">{message.replyTo.senderName}: </span>
-                <span className="truncate italic">
-                  {message.replyTo.recalled
-                    ? 'Message unsent'
-                    : message.replyTo.body || message.replyTo.attachmentFileName || 'Attachment'}
-                </span>
-              </div>
-            </button>
-          )}
-
-          <div className={cn('flex items-center gap-1.5', isRightAligned ? 'flex-row-reverse' : 'flex-row')}>
+        <div className={cn('flex min-w-0 flex-col', isRightAligned ? 'items-end' : 'items-start')}>
+          <div className={cn('flex min-w-0 items-center gap-1.5', isRightAligned ? 'flex-row-reverse' : 'flex-row')}>
             {message.recalled ? (
               <div
                 title={exactTimeTooltip}
@@ -403,7 +385,7 @@ export default function ConnectMessageBubble({
               <div
                 title={exactTimeTooltip}
                 className={cn(
-                  'relative px-3.5 py-2 text-sm leading-relaxed break-words transition-opacity',
+                  'relative min-w-0 px-3.5 py-2 text-sm leading-relaxed break-words transition-opacity',
                   bubbleRounding,
                   isOwnPrimaryBubble && 'bg-primary text-white',
                   isColleagueHr && 'border border-emerald-200 bg-emerald-50/90 text-slate-900',
@@ -411,6 +393,40 @@ export default function ConnectMessageBubble({
                   message.optimisticStatus === 'SENDING' && 'opacity-70',
                 )}
               >
+                {message.replyTo && (
+                  <button
+                    type="button"
+                    onClick={() => onJumpToMessage?.(message.replyTo!.id)}
+                    className={cn(
+                      'mb-2 block w-full cursor-pointer rounded-lg border-l-[3px] px-2.5 py-1.5 text-left transition-colors',
+                      isOwnPrimaryBubble && 'border-white/85 bg-white/15 text-white hover:bg-white/25',
+                      isColleagueHr && 'border-emerald-500 bg-emerald-100/75 text-slate-800 hover:bg-emerald-100',
+                      !isRightAligned &&
+                        'border-primary bg-white/85 text-slate-800 shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:bg-white',
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'block truncate text-xs font-semibold',
+                        isOwnPrimaryBubble ? 'text-white' : isColleagueHr ? 'text-emerald-950' : 'text-slate-900',
+                      )}
+                    >
+                      {replySenderLabel}
+                    </span>
+                    <span
+                      className={cn(
+                        'mt-0.5 line-clamp-2 block text-xs leading-snug',
+                        isOwnPrimaryBubble ? 'text-white/90' : 'text-slate-600',
+                        message.replyTo.recalled && 'italic opacity-75',
+                      )}
+                    >
+                      {message.replyTo.recalled
+                        ? 'Message unsent'
+                        : message.replyTo.body || message.replyTo.attachmentFileName || 'Attachment'}
+                    </span>
+                  </button>
+                )}
+
                 {showImagePreview && (
                   <button
                     type="button"
