@@ -3,9 +3,19 @@
 import NotificationDropdown from '@/components/common/NotificationDropdown';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
+import { useConnectUnreadCount } from '@/hooks/useRecruiterConnect';
 import { useUnreadCount } from '@/hooks/useNotifications';
 import { useRecruiterCartCount } from '@/hooks/useRecruiterCart';
-import { Bell, ChevronDown, Menu, PanelLeftClose, PanelLeftOpen, Plus, ShoppingCart } from 'lucide-react';
+import {
+  Bell,
+  ChevronDown,
+  Menu,
+  MessageSquare,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Plus,
+  ShoppingCart,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -25,6 +35,7 @@ export default function RecruiterHeader({
   const { user } = useAuth();
   const cartCount = useRecruiterCartCount();
   const { total: unreadCount } = useUnreadCount('recruiter');
+  const connectUnreadCount = useConnectUnreadCount();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -110,6 +121,19 @@ export default function RecruiterHeader({
               onClose={() => setIsNotificationOpen(false)}
             />
           </div>
+
+          <Link
+            href={ROUTES.RECRUITER_MESSAGES}
+            title="InterVue Connect"
+            className="bg-surface-container-high text-on-surface hover:bg-surface-container-high relative flex h-10 w-10 items-center justify-center rounded-full transition-colors sm:h-9.5 sm:w-9.5"
+          >
+            <MessageSquare className="h-4.5 w-4.5" />
+            {connectUnreadCount > 0 && (
+              <span className="text-label-sm absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 font-bold text-white shadow-xs">
+                {connectUnreadCount > 99 ? '99+' : connectUnreadCount}
+              </span>
+            )}
+          </Link>
 
           <Link
             href={ROUTES.RECRUITER_CART}

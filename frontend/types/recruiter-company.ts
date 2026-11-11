@@ -92,6 +92,9 @@ export interface CompanyResource {
   logoUrl?: string;
   photos: CompanyPhotoResource[];
   profileComplete: boolean;
+  photoLimit: number;
+  brandPageUntil?: string;
+  featuredUntil?: string;
   missingFields: string[];
   createdAt: string;
   updatedAt: string;

@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,4 +35,10 @@ public class Company extends BaseEntity {
 
     @Column(length = 500)
     private String address;
+
+    @Column(name = "featured_until")
+    private Instant featuredUntil;
+
+    @Column(name = "brand_page_until")
+    private Instant brandPageUntil;
 }

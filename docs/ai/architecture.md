@@ -1,6 +1,6 @@
 # Backend Architecture (Spring Boot)
 
-Audience: developers and AI agents. Major architectural changes may only be authorized by GitHub account `hoangtuanqn` (see root `CLAUDE.md`, Architecture governance); update this file in the same task when they happen.
+Audience: developers and AI agents. Major architectural changes may only be authorized by the GitHub accounts `hoangtuanqn` or `maaitlunghau` (see root `CLAUDE.md`, Architecture governance); update this file in the same task when they happen.
 
 Audience: developers and AI agents. Describes the **target architecture**; "Current" notes mark where the code differs today.
 Origin: adapted from `hoangtuanqn/spring-boot-ecommerce-api` (layered + JWT + RBAC + Redis), then changed for a recruitment domain — see [Deviations](#9-deviations-from-the-ecommerce-base).
@@ -35,8 +35,15 @@ com.techx.intervue
    ├─ ai/             CV feedback, mock interview, matching, cover letter, chatbot (RAG)
    ├─ notification/   in-app, email, push
    ├─ content/        blog, FAQ
+   ├─ billing/        service catalog, cart, orders, payments (SePay), vouchers, invoices
+   ├─ entitlement/    what a company owns and may consume (quota ledger)
+   ├─ ads/            ad slots, weekly bookings, creatives, serving, metrics
    └─ admin/          moderation, verification review, reports
 ```
+
+Money and rights are separate modules on purpose: `billing` owns payment, `entitlement` owns what a
+company may consume. The dependency is one-way — `billing`, `job` and `ai` may depend on
+`entitlement`; `entitlement` never imports a peer module.
 
 Each module:
 

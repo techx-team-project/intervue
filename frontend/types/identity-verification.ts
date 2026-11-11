@@ -7,11 +7,13 @@ export interface IdentityVerificationResource {
   rejectReason?: string;
   attemptsLeft: number;
   canSubmit: boolean;
+  canRequestManualReview: boolean;
   required: boolean;
   fullName?: string;
   idNumberLast4?: string;
   submittedAt?: string;
   reviewedAt?: string;
+  manualReviewRequestedAt?: string;
 }
 
 export interface AdminIdentityVerificationResource {
@@ -28,4 +30,5 @@ export interface AdminIdentityVerificationResource {
   attemptLimit: number;
   submittedAt: string;
   reviewedAt?: string;
+  manualReviewRequestedAt?: string;
 }

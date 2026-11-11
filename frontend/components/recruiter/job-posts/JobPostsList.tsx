@@ -4,10 +4,12 @@ import Switch from '@/components/ui/Switch';
 import { JOB_FORM_ARRANGEMENT_OPTIONS, JOB_FORM_LEVEL_OPTIONS, getJobExpiryDetails } from '@/constants/recruiter-job';
 import { ROUTES } from '@/constants/routes';
 import type { useJobPostActions } from '@/hooks/useJobPostActions';
+import { JOB_HIGHLIGHT_LABEL, JOB_HIGHLIGHT_STYLE } from '@/constants/job-highlight';
+import { cn } from '@/lib/utils';
 import type { JobSalary, RecruiterJobPost } from '@/types/recruiter-job';
 import { formatDate } from '@/utils/datetime';
 import { optionLabel } from '@/utils/recruiter-job';
-import { MapPin } from 'lucide-react';
+import { Flame, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import JobPostRowActionsMenu from './JobPostRowActionsMenu';
 import JobPostStatusBadge from './JobPostStatusBadge';
@@ -140,6 +142,22 @@ export default function JobPostsList({
               </div>
 
               <div className="flex items-center gap-2">
+                {job.highlightLabel && (
+                  <span
+                    className={cn(
+                      'rounded px-1.5 py-0.5 text-[11px] font-extrabold',
+                      JOB_HIGHLIGHT_STYLE[job.highlightLabel],
+                    )}
+                  >
+                    {JOB_HIGHLIGHT_LABEL[job.highlightLabel]}
+                  </span>
+                )}
+                {(job.boostLevel ?? 0) > 0 && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-700">
+                    <Flame className="h-3 w-3" />
+                    Boost {job.boostLevel}
+                  </span>
+                )}
                 <JobPostStatusBadge status={job.status} />
                 {canToggle && (
                   <Switch

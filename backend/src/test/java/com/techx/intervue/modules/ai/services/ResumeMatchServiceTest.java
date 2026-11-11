@@ -20,8 +20,8 @@ import com.techx.intervue.modules.ai.services.impl.CandidatePrivacySanitizer;
 import com.techx.intervue.modules.ai.services.impl.ResumeMatchService;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
+import com.techx.intervue.modules.ai.services.interfaces.ResumeMatchQuotaServiceInterface;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,6 +37,8 @@ class ResumeMatchServiceTest {
 
     @Mock private PromptServiceInterface promptService;
 
+    @Mock private ResumeMatchQuotaServiceInterface quotaService;
+
     private CandidatePrivacySanitizer privacySanitizer;
     private ObjectMapper objectMapper;
     private ResumeMatchService service;
@@ -47,7 +49,11 @@ class ResumeMatchServiceTest {
         objectMapper = new ObjectMapper();
         service =
                 new ResumeMatchService(
-                        aiGatewayService, promptService, privacySanitizer, objectMapper);
+                        aiGatewayService,
+                        promptService,
+                        privacySanitizer,
+                        quotaService,
+                        objectMapper);
     }
 
     @Test
@@ -128,9 +134,7 @@ class ResumeMatchServiceTest {
                         rawData,
                         null);
 
-        CompletableFuture<ResumeMatchResult> future =
-                service.analyzeAsync(1L, "127.0.0.1", request);
-        ResumeMatchResult result = future.get();
+        ResumeMatchResult result = service.analyze(1L, "127.0.0.1", request);
 
         // 1. Per-requirement evidence
         assertThat(result.requirements()).hasSize(2);

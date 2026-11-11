@@ -15,6 +15,8 @@ public interface RecruiterServiceInterface {
 
     void requestAccountDeletion(Long recruiterId);
 
+    void suspend(Long recruiterId, String reason);
+
     RecruiterResource cancelAccountDeletion(Long recruiterId);
 
     int purgeExpiredPendingDeletions();

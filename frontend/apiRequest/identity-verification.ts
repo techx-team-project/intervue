@@ -19,6 +19,9 @@ export interface IdentitySubmitPayload {
 export const identityVerificationApi = {
   status: () => request<IdentityVerificationResource>('/candidate/identity-verification'),
 
+  requestManualReview: () =>
+    request<IdentityVerificationResource>('/candidate/identity-verification/manual-review', { method: 'POST' }),
+
   submit: (payload: IdentitySubmitPayload) => {
     const body = new FormData();
     body.append('fullName', payload.fullName.trim());

@@ -10,6 +10,7 @@ import { getErrorMessage } from '@/utils/error';
 import { ArrowLeft, Download, ExternalLink, FileText, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import ReviewAiMatchPanel from './ReviewAiMatchPanel';
 import ReviewHistoryTimeline from './ReviewHistoryTimeline';
 import ReviewInterviewPanel from './ReviewInterviewPanel';
 import ReviewNotesPanel from './ReviewNotesPanel';
@@ -161,6 +162,8 @@ export default function ReviewApplicationDetailView({ applicationId }: { applica
               </dl>
             </section>
           )}
+
+          <ReviewAiMatchPanel application={application} />
         </div>
 
         <aside className="space-y-5 lg:col-span-4">

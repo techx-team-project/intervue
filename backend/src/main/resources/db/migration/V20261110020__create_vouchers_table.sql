@@ -1,0 +1,20 @@
+CREATE TABLE vouchers (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(40) NOT NULL,
+    label VARCHAR(150) NOT NULL,
+    description VARCHAR(500) NULL,
+    discount_type VARCHAR(20) NOT NULL,
+    discount_value BIGINT UNSIGNED NOT NULL,
+    max_discount BIGINT UNSIGNED NULL,
+    min_order_value BIGINT UNSIGNED NOT NULL DEFAULT 0,
+    starts_at TIMESTAMP NULL,
+    ends_at TIMESTAMP NULL,
+    usage_limit INT UNSIGNED NULL,
+    used_count INT UNSIGNED NOT NULL DEFAULT 0,
+    per_company_limit INT UNSIGNED NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    CONSTRAINT uq_vouchers_code UNIQUE (code),
+    INDEX idx_vouchers_status_ends (status, ends_at)
+);

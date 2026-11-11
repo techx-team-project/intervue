@@ -9,9 +9,11 @@ import {
   ClipboardList,
   KeyRound,
   LayoutDashboard,
+  Megaphone,
   MessageSquare,
   Receipt,
   ShieldCheck,
+  PackageOpen,
   ShoppingBag,
   ShoppingCart,
   Smartphone,
@@ -45,7 +47,7 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
       { label: 'Saved candidates', href: ROUTES.RECRUITER_CANDIDATES_SAVED, icon: Bookmark },
       { label: 'Candidate search', href: ROUTES.RECRUITER_CANDIDATES, icon: Users, comingSoon: true },
       { label: 'Interviews', href: ROUTES.RECRUITER_INTERVIEWS, icon: CalendarClock },
-      { label: 'Messages', href: ROUTES.RECRUITER_MESSAGES, icon: MessageSquare, comingSoon: true },
+      { label: 'Messages', href: ROUTES.RECRUITER_MESSAGES, icon: MessageSquare },
     ],
   },
   {
@@ -63,9 +65,12 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
   {
     title: 'Services',
     items: [
-      { label: 'Service packages', href: ROUTES.RECRUITER_SERVICES, icon: ShoppingBag, comingSoon: true },
+      { label: 'Service packages', href: ROUTES.RECRUITER_SERVICES, icon: ShoppingBag },
+      { label: 'My services', href: ROUTES.RECRUITER_SERVICES_MY, icon: PackageOpen },
+      { label: 'Banner ads', href: ROUTES.RECRUITER_ADS, icon: Megaphone },
       { label: 'Cart', href: ROUTES.RECRUITER_CART, icon: ShoppingCart },
-      { label: 'Transaction history', href: ROUTES.RECRUITER_SERVICES_TRANSACTIONS, icon: Receipt, comingSoon: true },
+      { label: 'Orders', href: ROUTES.RECRUITER_ORDERS, icon: Receipt },
+      { label: 'Transaction history', href: ROUTES.RECRUITER_SERVICES_TRANSACTIONS, icon: Receipt },
     ],
   },
   {

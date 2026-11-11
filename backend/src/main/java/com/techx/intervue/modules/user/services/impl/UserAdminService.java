@@ -520,8 +520,28 @@ public class UserAdminService implements UserAdminServiceInterface {
             case JOB_HIDDEN, JOB_RESTORED -> "moderation";
             case IDENTITY_VERIFICATION_APPROVED,
                     IDENTITY_VERIFICATION_REJECTED,
-                    IDENTITY_VERIFICATION_ATTEMPTS_GRANTED ->
+                    IDENTITY_VERIFICATION_ATTEMPTS_GRANTED,
+                    IDENTITY_DOCUMENT_VIEWED ->
                     "identity";
+            case SERVICE_CATEGORY_CREATED,
+                    SERVICE_CATEGORY_UPDATED,
+                    SERVICE_CATEGORY_DELETED,
+                    SERVICE_PACKAGE_CREATED,
+                    SERVICE_PACKAGE_UPDATED,
+                    SERVICE_PACKAGE_STATUS_CHANGED,
+                    BILLING_SETTINGS_UPDATED,
+                    CREDIT_PRICE_UPDATED,
+                    VOUCHER_CREATED,
+                    VOUCHER_UPDATED,
+                    REFUND_APPROVED,
+                    REFUND_REJECTED,
+                    AD_CREATIVE_APPROVED,
+                    AD_CREATIVE_REJECTED,
+                    AD_SLOT_UPDATED,
+                    PAYMENT_TRANSACTION_MATCHED,
+                    ORDER_MANUAL_REFUND_RESOLVED ->
+                    "billing";
+            case REPORT_DISMISSED, REPORT_RESOLVED -> "moderation";
         };
     }
 
@@ -587,6 +607,30 @@ public class UserAdminService implements UserAdminServiceInterface {
             case IDENTITY_VERIFICATION_REJECTED -> "Identity verification rejected";
             case IDENTITY_VERIFICATION_ATTEMPTS_GRANTED ->
                     "Additional identity verification attempts granted";
+            case IDENTITY_DOCUMENT_VIEWED -> "Identity document viewed by an admin";
+            case SERVICE_CATEGORY_CREATED,
+                    SERVICE_CATEGORY_UPDATED,
+                    SERVICE_CATEGORY_DELETED,
+                    SERVICE_PACKAGE_CREATED,
+                    SERVICE_PACKAGE_UPDATED,
+                    SERVICE_PACKAGE_STATUS_CHANGED,
+                    BILLING_SETTINGS_UPDATED,
+                    CREDIT_PRICE_UPDATED,
+                    VOUCHER_CREATED,
+                    VOUCHER_UPDATED,
+                    REFUND_APPROVED,
+                    REFUND_REJECTED,
+                    AD_CREATIVE_APPROVED,
+                    AD_CREATIVE_REJECTED,
+                    AD_SLOT_UPDATED,
+                    PAYMENT_TRANSACTION_MATCHED,
+                    ORDER_MANUAL_REFUND_RESOLVED ->
+                    detail != null && !detail.isBlank() ? detail : "Service catalog activity";
+            case REPORT_DISMISSED -> "Report dismissed";
+            case REPORT_RESOLVED ->
+                    detail != null && !detail.isBlank()
+                            ? "Report resolved: " + detail
+                            : "Report resolved";
         };
     }
 

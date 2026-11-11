@@ -1,10 +1,12 @@
 package com.techx.intervue.modules.job.services.impl;
 
+import com.techx.intervue.config.BillingProperties;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
+import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
 import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.entities.Skill;
 import com.techx.intervue.modules.job.enums.JobStatus;
@@ -23,10 +25,12 @@ import com.techx.intervue.modules.job.resources.JobSummaryResource;
 import com.techx.intervue.modules.job.services.interfaces.JobApplicationLookupInterface;
 import com.techx.intervue.modules.job.services.interfaces.JobServiceInterface;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -53,6 +57,8 @@ public class JobService implements JobServiceInterface {
     private final ApplicationEventPublisher eventPublisher;
     private final CompanyServiceInterface companyService;
     private final CompanyVerificationServiceInterface companyVerificationService;
+    private final EntitlementServiceInterface entitlementService;
+    private final BillingProperties billingProperties;
 
     @Override
     @Transactional
@@ -120,6 +126,7 @@ public class JobService implements JobServiceInterface {
         Job job = requireOwned(jobId, recruiterId);
         requireStatus(job, Set.of(JobStatus.DRAFT));
         JobResource published = goLive(job, recruiterId);
+        consumeJobSlot(job, recruiterId);
         eventPublisher.publishEvent(
                 new JobPublishedEvent(
                         job.getId(),
@@ -181,6 +188,24 @@ public class JobService implements JobServiceInterface {
             throw new AppException(ErrorCode.SCREENING_QUESTIONS_LOCKED);
         }
         jobMapper.replaceScreeningQuestions(job, questions);
+    }
+
+    // A slot is spent only on the first publish; resuming a paused job must not cost another one.
+    private void consumeJobSlot(Job job, Long recruiterId) {
+        Optional<Integer> durationDays =
+                entitlementService.consumeJobSlot(job.getCompanyId(), job.getId(), recruiterId);
+        if (durationDays.isEmpty()) {
+            if (billingProperties.requiresJobSlot()) {
+                throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
+            }
+            return;
+        }
+        // Rejecting rolls the whole publish back, which returns the slot we just took
+        LocalDate latestAllowed = JobDeadlines.today().plusDays(durationDays.get());
+        if (job.getDeadline() != null && job.getDeadline().isAfter(latestAllowed)) {
+            throw AppException.validation(
+                    "deadline", "The package you bought runs until " + latestAllowed);
+        }
     }
 
     private JobResource goLive(Job job, Long recruiterId) {

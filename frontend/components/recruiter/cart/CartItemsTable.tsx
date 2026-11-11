@@ -7,9 +7,9 @@ interface CartItemsTableProps {
   items: RecruiterCartItem[];
   isAllSelected: boolean;
   onToggleSelectAll: () => void;
-  onToggleSelect: (id: string) => void;
-  onUpdateQuantity: (id: string, delta: number) => void;
-  onRemoveItem: (id: string) => void;
+  onToggleSelect: (id: number) => void;
+  onUpdateQuantity: (id: number, delta: number) => void;
+  onRemoveItem: (id: number) => void;
 }
 
 export default function CartItemsTable({

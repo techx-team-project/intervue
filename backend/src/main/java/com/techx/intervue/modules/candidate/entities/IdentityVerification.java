@@ -46,10 +46,10 @@ public class IdentityVerification extends BaseEntity {
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 
-    @Column(name = "id_number_hash", nullable = false, length = 64)
+    @Column(name = "id_number_hash", nullable = false, columnDefinition = "CHAR(64)")
     private String idNumberHash;
 
-    @Column(name = "id_number_last4", nullable = false, length = 4)
+    @Column(name = "id_number_last4", nullable = false, columnDefinition = "CHAR(4)")
     private String idNumberLast4;
 
     @Column(name = "front_public_id", nullable = false)
@@ -79,6 +79,9 @@ public class IdentityVerification extends BaseEntity {
     @Column(name = "attempt_limit", nullable = false)
     @Builder.Default
     private int attemptLimit = DEFAULT_ATTEMPT_LIMIT;
+
+    @Column(name = "manual_review_requested_at")
+    private Instant manualReviewRequestedAt;
 
     public int attemptsLeft() {
         return Math.max(attemptLimit - rejectionCount, 0);

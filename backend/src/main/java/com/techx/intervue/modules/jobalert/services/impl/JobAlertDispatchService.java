@@ -3,6 +3,8 @@ package com.techx.intervue.modules.jobalert.services.impl;
 import com.techx.intervue.config.AppProperties;
 import com.techx.intervue.modules.ai.resources.JobSearchResult;
 import com.techx.intervue.modules.ai.services.interfaces.JobSearchServiceInterface;
+import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
+import com.techx.intervue.modules.job.services.interfaces.PublicJobServiceInterface;
 import com.techx.intervue.modules.jobalert.entities.JobAlert;
 import com.techx.intervue.modules.jobalert.entities.JobAlertDelivery;
 import com.techx.intervue.modules.jobalert.enums.AlertFrequency;
@@ -17,6 +19,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,8 +37,12 @@ import org.springframework.web.util.HtmlUtils;
 @RequiredArgsConstructor
 public class JobAlertDispatchService implements JobAlertDispatchServiceInterface {
 
+    private static final int MAX_JOBS_PER_EMAIL = 5;
+
     private final JobAlertRepository alertRepository;
     private final JobAlertDeliveryRepository deliveryRepository;
+    private final EntitlementServiceInterface entitlementService;
+    private final PublicJobServiceInterface publicJobService;
     private final UserRepository userRepository;
     private final JobSearchServiceInterface jobSearchService;
     private final MailServiceInterface mailService;
@@ -86,7 +95,7 @@ public class JobAlertDispatchService implements JobAlertDispatchServiceInterface
             return false;
         }
 
-        List<JobSearchResult> finalJobs = jobsToSend.stream().limit(5).toList();
+        List<JobSearchResult> finalJobs = pickWithPaidPriority(jobsToSend);
         String cardsHtml = renderJobCards(finalJobs);
 
         String frontendUrl =
@@ -149,6 +158,60 @@ public class JobAlertDispatchService implements JobAlertDispatchServiceInterface
         eventPublisher.publishEvent(
                 new JobAlertMatchedEvent(alert.getId(), alert.getUserId(), finalJobs.size()));
         return true;
+    }
+
+    /**
+     * The email has only {@value #MAX_JOBS_PER_EMAIL} slots. Companies holding an alert-priority
+     * slot take the front of the queue, and one slot is spent for each job that actually ships.
+     */
+    private List<JobSearchResult> pickWithPaidPriority(List<JobSearchResult> candidates) {
+        Map<String, Long> companyIdByJob = companyIdsOf(candidates);
+        Set<Long> prioritised =
+                entitlementService.companiesWithAlertPush(new HashSet<>(companyIdByJob.values()));
+
+        List<JobSearchResult> ordered =
+                candidates.stream()
+                        .sorted(
+                                Comparator.comparing(
+                                        (JobSearchResult job) ->
+                                                prioritised.contains(companyIdByJob.get(job.id()))
+                                                        ? 0
+                                                        : 1))
+                        .toList();
+
+        List<JobSearchResult> picked = ordered.stream().limit(MAX_JOBS_PER_EMAIL).toList();
+        for (JobSearchResult job : picked) {
+            Long companyId = companyIdByJob.get(job.id());
+            if (companyId != null && prioritised.contains(companyId)) {
+                entitlementService.consumeAlertPush(companyId, toJobId(job.id()));
+            }
+        }
+        return picked;
+    }
+
+    private Map<String, Long> companyIdsOf(List<JobSearchResult> candidates) {
+        Map<Long, String> rawIds = new LinkedHashMap<>();
+        for (JobSearchResult job : candidates) {
+            Long jobId = toJobId(job.id());
+            if (jobId != null) {
+                rawIds.put(jobId, job.id());
+            }
+        }
+        if (rawIds.isEmpty()) {
+            return Map.of();
+        }
+        Map<Long, Long> companyByJobId = publicJobService.findCompanyIdsByJobIds(rawIds.keySet());
+        Map<String, Long> result = new LinkedHashMap<>();
+        companyByJobId.forEach((jobId, companyId) -> result.put(rawIds.get(jobId), companyId));
+        return result;
+    }
+
+    private Long toJobId(String rawId) {
+        try {
+            return Long.valueOf(rawId);
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
     }
 
     private String renderJobCards(List<JobSearchResult> jobs) {

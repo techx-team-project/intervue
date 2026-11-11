@@ -126,6 +126,7 @@ export default function AdminIdentityVerificationView() {
                     </p>
                   </div>
                   <Badge variant={STATUS_BADGE[item.status].variant}>{STATUS_BADGE[item.status].label}</Badge>
+                  {item.manualReviewRequestedAt && <Badge variant="warning">Yêu cầu duyệt thủ công</Badge>}
                 </button>
               </li>
             ))}

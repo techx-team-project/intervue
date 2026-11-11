@@ -2,6 +2,7 @@ import { ROUTES } from '@/constants/routes';
 import type { AdminNavSection } from '@/types/admin';
 import {
   BadgeCheck,
+  Megaphone,
   Bell,
   Building2,
   FileText,
@@ -65,7 +66,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: Flag,
         queue: 'reports',
         permission: 'moderation.reports',
-        comingSoon: true,
+        comingSoon: false,
       },
       {
         label: 'Support tickets',
@@ -135,13 +136,25 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             label: 'Service packages',
             href: ROUTES.ADMIN_SERVICE_PACKAGES,
             permission: 'services.manage',
-            comingSoon: true,
+            comingSoon: false,
           },
           {
-            label: 'Pricing & quotas',
+            label: 'Service categories',
+            href: ROUTES.ADMIN_SERVICE_CATEGORIES,
+            permission: 'services.manage',
+            comingSoon: false,
+          },
+          {
+            label: 'Credit prices',
             href: ROUTES.ADMIN_SERVICE_PRICING,
             permission: 'services.manage',
-            comingSoon: true,
+            comingSoon: false,
+          },
+          {
+            label: 'Vouchers',
+            href: ROUTES.ADMIN_SERVICE_VOUCHERS,
+            permission: 'services.manage',
+            comingSoon: false,
           },
           {
             label: 'Education codes',
@@ -152,30 +165,48 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         ],
       },
       {
+        label: 'Ads',
+        icon: Megaphone,
+        children: [
+          { label: 'Ad slots', href: ROUTES.ADMIN_ADS_SLOTS, permission: 'services.manage', comingSoon: false },
+          {
+            label: 'Banner artwork',
+            href: ROUTES.ADMIN_ADS_CREATIVES,
+            permission: 'services.manage',
+            comingSoon: false,
+          },
+        ],
+      },
+      {
         label: 'Finance',
         icon: Wallet,
         children: [
-          { label: 'Orders', href: ROUTES.ADMIN_FINANCE_ORDERS, permission: 'finance.manage', comingSoon: true },
+          { label: 'Orders', href: ROUTES.ADMIN_FINANCE_ORDERS, permission: 'finance.manage', comingSoon: false },
           {
             label: 'Transactions',
             href: ROUTES.ADMIN_FINANCE_TRANSACTIONS,
             queue: 'unmatchedTransactions',
             permission: 'finance.manage',
-            comingSoon: true,
+            comingSoon: false,
           },
-          { label: 'Refunds', href: ROUTES.ADMIN_FINANCE_REFUNDS, permission: 'finance.manage', comingSoon: true },
           {
-            label: 'VAT invoices',
-            href: ROUTES.ADMIN_FINANCE_VAT_INVOICES,
-            queue: 'vatInvoices',
+            label: 'Payment settings',
+            href: ROUTES.ADMIN_FINANCE_SETTINGS,
             permission: 'finance.manage',
-            comingSoon: true,
+            comingSoon: false,
+          },
+          { label: 'Refunds', href: ROUTES.ADMIN_FINANCE_REFUNDS, permission: 'finance.manage', comingSoon: false },
+          {
+            label: 'Invoices',
+            href: ROUTES.ADMIN_FINANCE_VAT_INVOICES,
+            permission: 'finance.manage',
+            comingSoon: false,
           },
           {
             label: 'Revenue reports',
             href: ROUTES.ADMIN_FINANCE_REVENUE,
             permission: 'finance.manage',
-            comingSoon: true,
+            comingSoon: false,
           },
         ],
       },

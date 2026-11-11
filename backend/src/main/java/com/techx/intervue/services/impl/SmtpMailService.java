@@ -10,6 +10,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -55,6 +56,33 @@ public class SmtpMailService implements MailServiceInterface {
             mailSender.send(message);
         } catch (MessagingException | MailException | IOException e) {
             log.error("Failed to send '{}' email: {}", template, e.getMessage());
+        }
+    }
+
+    @Override
+    public void sendHtmlWithAttachment(
+            String to,
+            String subject,
+            String template,
+            Map<String, String> variables,
+            String attachmentFilename,
+            byte[] attachmentBytes,
+            String attachmentContentType) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper =
+                    new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+            helper.setFrom(fromAddress, appProperties.mailFromName());
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(render(template, variables, Map.of()), true);
+            helper.addAttachment(
+                    attachmentFilename,
+                    new ByteArrayResource(attachmentBytes),
+                    attachmentContentType);
+            mailSender.send(message);
+        } catch (MessagingException | MailException | IOException e) {
+            log.error("Failed to send '{}' email with attachment: {}", template, e.getMessage());
         }
     }
 

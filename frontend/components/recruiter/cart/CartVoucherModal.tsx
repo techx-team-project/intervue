@@ -1,18 +1,16 @@
 'use client';
 
 import Modal from '@/components/ui/Modal';
-import { AVAILABLE_VOUCHERS } from '@/mocks/recruiter-cart.mock';
-import type { DiscountVoucher } from '@/types/recruiter-cart';
+import type { VoucherPreview } from '@/types/voucher';
 import { Check, Tag, Ticket } from 'lucide-react';
 import { useState } from 'react';
 
 interface CartVoucherModalProps {
   isOpen: boolean;
   onClose: () => void;
-  appliedVoucher: DiscountVoucher | null;
-  onApplyVoucher: (code: string) => { success: boolean; message: string };
+  appliedVoucher: VoucherPreview | null;
+  onApplyVoucher: (code: string) => Promise<{ success: boolean; message: string }>;
   onRemoveVoucher: () => void;
-  subtotal: number;
 }
 
 export default function CartVoucherModal({
@@ -21,28 +19,26 @@ export default function CartVoucherModal({
   appliedVoucher,
   onApplyVoucher,
   onRemoveVoucher,
-  subtotal,
 }: CartVoucherModalProps) {
   const [inputCode, setInputCode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [isApplying, setIsApplying] = useState(false);
 
-  const handleApply = (codeToApply?: string) => {
-    const code = (codeToApply || inputCode).trim().toUpperCase();
+  const handleApply = async () => {
+    const code = inputCode.trim().toUpperCase();
     if (!code) {
-      setErrorMessage('Please enter a coupon code.');
+      setErrorMessage('Hãy nhập mã ưu đãi.');
       return;
     }
-    const res = onApplyVoucher(code);
-    if (res.success) {
-      setSuccessMessage(res.message);
+    setIsApplying(true);
+    const result = await onApplyVoucher(code);
+    setIsApplying(false);
+    if (result.success) {
+      setSuccessMessage(result.message);
       setErrorMessage('');
-      setTimeout(() => {
-        onClose();
-        setSuccessMessage('');
-      }, 700);
     } else {
-      setErrorMessage(res.message);
+      setErrorMessage(result.message);
       setSuccessMessage('');
     }
   };
@@ -55,10 +51,10 @@ export default function CartVoucherModal({
       title={
         <div className="flex items-center gap-2">
           <Ticket className="text-primary h-5 w-5" />
-          <span className="text-on-surface font-bold">Select coupon</span>
+          <span className="text-on-surface font-bold">Mã ưu đãi</span>
         </div>
       }
-      description="Apply promotional discounts to save on your hiring services"
+      description="Nhập mã ưu đãi để giảm chi phí dịch vụ tuyển dụng"
     >
       <div className="space-y-4 py-2">
         {/* Manual code input */}
@@ -72,16 +68,17 @@ export default function CartVoucherModal({
                 setInputCode(e.target.value.toUpperCase());
                 setErrorMessage('');
               }}
-              placeholder="Enter coupon code (e.g. INTERVUE10)"
+              placeholder="Nhập mã ưu đãi"
               className="border-outline text-on-surface placeholder:text-outline focus:border-primary w-full rounded-lg border py-2.5 pr-3 pl-9.5 text-sm font-semibold tracking-wider uppercase placeholder:font-normal placeholder:tracking-normal placeholder:normal-case focus:ring-2 focus:ring-[#00b14f]/20 focus:outline-hidden"
             />
           </div>
           <button
             type="button"
-            onClick={() => handleApply()}
-            className="bg-primary hover:bg-primary cursor-pointer rounded-lg px-5 py-2.5 text-sm font-bold text-white transition"
+            onClick={handleApply}
+            disabled={isApplying}
+            className="bg-primary hover:bg-primary cursor-pointer rounded-lg px-5 py-2.5 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Apply
+            {isApplying ? 'Đang kiểm tra…' : 'Áp dụng'}
           </button>
         </div>
 
@@ -95,8 +92,8 @@ export default function CartVoucherModal({
                 <Check className="h-3 w-3 stroke-[3]" />
               </span>
               <span className="text-emerald-900">
-                Active coupon: <strong className="font-bold text-emerald-800">{appliedVoucher.code}</strong> (
-                {appliedVoucher.label})
+                Đang áp dụng <strong className="font-bold text-emerald-800">{appliedVoucher.code}</strong> —{' '}
+                {appliedVoucher.label}, giảm {appliedVoucher.discountAmount.toLocaleString('vi-VN')}đ
               </span>
             </div>
             <button
@@ -104,65 +101,15 @@ export default function CartVoucherModal({
               onClick={onRemoveVoucher}
               className="cursor-pointer font-semibold text-rose-600 hover:underline"
             >
-              Remove
+              Gỡ mã
             </button>
           </div>
         )}
 
-        {/* Available coupons list */}
-        <div className="border-outline-variant border-t pt-3">
-          <p className="text-outline mb-2.5 text-xs font-bold tracking-wider uppercase">Available for you</p>
-
-          <div className="space-y-2.5">
-            {AVAILABLE_VOUCHERS.map((voucher) => {
-              const isApplied = appliedVoucher?.code === voucher.code;
-              const isEligible = !voucher.minOrderValue || subtotal >= voucher.minOrderValue;
-
-              return (
-                <div
-                  key={voucher.code}
-                  className={`flex items-start justify-between rounded-xl border p-3.5 transition ${
-                    isApplied
-                      ? 'border-primary bg-emerald-50/40 ring-1 ring-[#00b14f]'
-                      : isEligible
-                        ? 'border-outline-variant hover:border-primary/50 bg-white'
-                        : 'border-outline-variant bg-surface-container-low/60 opacity-60'
-                  }`}
-                >
-                  <div className="flex-1 pr-3">
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-bold tracking-wider text-emerald-800">
-                        {voucher.code}
-                      </span>
-                      <span className="text-on-surface text-xs font-bold">{voucher.label}</span>
-                    </div>
-                    <p className="text-on-surface-variant mt-1 text-xs">{voucher.description}</p>
-                    {voucher.minOrderValue && (
-                      <p className="text-label-sm text-outline mt-1">
-                        Min. order: {voucher.minOrderValue.toLocaleString('vi-VN')} VND
-                      </p>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    disabled={!isEligible || isApplied}
-                    onClick={() => handleApply(voucher.code)}
-                    className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
-                      isApplied
-                        ? 'bg-emerald-600 text-white'
-                        : isEligible
-                          ? 'border-primary text-primary hover:bg-primary cursor-pointer border hover:text-white'
-                          : 'border-outline-variant text-outline cursor-not-allowed border'
-                    }`}
-                  >
-                    {isApplied ? 'Applied' : 'Apply'}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <p className="text-on-surface-variant text-xs leading-relaxed">
+          Mã ưu đãi được phát riêng theo chương trình. Mức giảm tính trên giá trị các dịch vụ bạn đang chọn, VAT tính
+          sau khi đã giảm.
+        </p>
       </div>
     </Modal>
   );

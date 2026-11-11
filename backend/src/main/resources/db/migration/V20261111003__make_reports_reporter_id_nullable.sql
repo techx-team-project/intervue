@@ -1,0 +1,1 @@
+ALTER TABLE reports MODIFY reporter_id BIGINT UNSIGNED NULL;

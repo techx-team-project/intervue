@@ -3,10 +3,12 @@ package com.techx.intervue.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.filters.JwtAuthFilter;
+import com.techx.intervue.filters.RateLimitFilter;
 import com.techx.intervue.filters.TraceIdFilter;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
+import com.techx.intervue.services.interfaces.RateLimitServiceInterface;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -35,6 +37,7 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final JwtAuthFilter jwtAuthFilter;
     private final TraceIdFilter traceIdFilter;
+    private final RateLimitServiceInterface rateLimitService;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -82,6 +85,10 @@ public class SecurityConfig {
                                         .requestMatchers("/api/v1/blogs/**")
                                         .permitAll()
                                         .requestMatchers("/api/v1/job-alerts/**")
+                                        .permitAll()
+                                        // Banners are served to guests, so the slot and the click
+                                        // counter have to answer without a token
+                                        .requestMatchers("/api/v1/ads/slots/**")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.GET, "/api/v1/skills")
                                         .permitAll()
@@ -141,7 +148,9 @@ public class SecurityConfig {
                 // UsernamePasswordAuthenticationFilter.class (chạy nma ko làm gì)
                 // cần phải có 2 tham số
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(traceIdFilter, JwtAuthFilter.class);
+                .addFilterBefore(traceIdFilter, JwtAuthFilter.class)
+                .addFilterAfter(
+                        new RateLimitFilter(rateLimitService, objectMapper), JwtAuthFilter.class);
 
         return http.build();
     }

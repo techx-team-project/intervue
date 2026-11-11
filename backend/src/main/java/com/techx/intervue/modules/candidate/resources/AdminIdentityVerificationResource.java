@@ -21,4 +21,5 @@ public record AdminIdentityVerificationResource(
         int rejectionCount,
         int attemptLimit,
         Instant submittedAt,
-        Instant reviewedAt) {}
+        Instant reviewedAt,
+        Instant manualReviewRequestedAt) {}

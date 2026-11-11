@@ -203,7 +203,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | `GET` | `/admin/jobs/{id}` | admin | Full `JobResource`; `404` for a draft. |
 | `POST` | `/admin/jobs/{id}/hide` | admin | Body `{ reason }` (required, max 500). `PUBLISHED` or `PAUSED` to `HIDDEN_BY_ADMIN`; anything else is `422 INVALID_STATUS_TRANSITION`. Stores `hiddenReason`, `hiddenAt`, writes an audit entry (`JOB_HIDDEN`) and notifies the recruiter (`JOB_HIDDEN_BY_ADMIN`, mandatory). A hidden job is not `PUBLISHED`, so it leaves public search and detail. |
 | `POST` | `/admin/jobs/{id}/restore` | admin | `HIDDEN_BY_ADMIN` to `PUBLISHED`, or to `EXPIRED` when the deadline has passed. Clears the hidden fields, audits `JOB_RESTORED` and notifies the recruiter. |
-| `GET` | `/jobs?q=&city=&contractType=&workingArrangement=&level=&skillIds=&salaryFrom=&currency=&page=&size=` | public | `PageResource<PublicJobSummaryResource>` of `PUBLISHED` jobs whose deadline is today or later, newest first (client sort is ignored). `q` matches title or company name; `companyId` limits to one company; `city` is an exact match; `skillIds` matches any of up to 10; `salaryFrom` keeps non-negotiable jobs whose maximum is at least that amount in `currency` (default `VND`). Item: `{ id, title, company: { id, name, logoUrl? }, level, contractType, workingArrangement, city, salary, skills, deadline, publishedAt }`. |
+| `GET` | `/jobs?q=&city=&contractType=&workingArrangement=&level=&skillIds=&salaryFrom=&currency=&page=&size=` | public | `PageResource<PublicJobSummaryResource>` of `PUBLISHED` jobs whose deadline is today or later, ordered by **paid boost level first, then newest** (client sort is ignored). `q` matches title or company name; `companyId` limits to one company; `city` is an exact match; `skillIds` matches any of up to 10; `salaryFrom` keeps non-negotiable jobs whose maximum is at least that amount in `currency` (default `VND`). Item: `{ id, title, company: { id, name, logoUrl? }, level, contractType, workingArrangement, city, salary, skills, deadline, publishedAt, boostLevel, highlightLabel, highlighted }`. `highlightLabel` is `URGENT` or `HOT` and renders as a badge; `highlighted` tints the card. All three come from entitlements the company activated. |
 | `GET` | `/jobs/nearby?lat=&lng=&radiusKm=` | public | `NearbyJobResource[] { job: PublicJobSummaryResource, address?, latitude, longitude, distanceKm }` for `PUBLISHED`, not-expired jobs that have coordinates within `radiusKm` (1-100, default 10) of the point, nearest first, max 100. `400 VALIDATION_FAILED` for missing or out-of-range `lat` (-90..90) / `lng` (-180..180). |
 | `GET` | `/jobs/{id}` | public | `PublicJobResource` (summary fields plus `location`, `description`, `requirements`, `benefits`, `openings`, and `company.address`). `404 NOT_FOUND` unless the job is `PUBLISHED` and not past its deadline. Also returns `screening: { questionCount, requiredCount, estimatedMinutes }` so candidates see the effort before applying; the questions themselves are not public. |
 
@@ -310,11 +310,240 @@ Candidates submit a national ID and a portrait; an admin reviews them by hand (n
 | `GET` | `/admin/identity-verifications?status=&q=&page=&size=` | admin | Paged `AdminIdentityVerificationResource { id, userId, userEmail, fullName, dateOfBirth, idNumberLast4, status, idNumberUsedByAnotherAccount, rejectReason?, rejectionCount, attemptLimit, submittedAt, reviewedAt? }`. Pending items are oldest first, others newest first. `q` matches name or last 4 digits. |
 | `GET` | `/admin/identity-verifications/{id}` | admin | One item. |
 | `GET` | `/admin/identity-verifications/{id}/documents/{FRONT\|BACK\|SELFIE}` | admin | Streams the image inline. |
+| `POST` | `/candidate/identity-verification/manual-review` | candidate | After every attempt was rejected, asks an admin to look at the case once. Returns the status with `manualReviewRequestedAt`; notifies admins. `422 IDENTITY_MANUAL_REVIEW_UNAVAILABLE`, `409 IDENTITY_MANUAL_REVIEW_ALREADY_REQUESTED`. Granting attempts or resubmitting clears the request. |
 | `POST` | `/admin/identity-verifications/{id}/approve` | admin | `PENDING` to `APPROVED`; notifies the candidate (`IDENTITY_VERIFIED`) and writes an audit entry. `409 IDENTITY_NUMBER_ALREADY_USED` when another account already holds the same approved ID number. |
 | `POST` | `/admin/identity-verifications/{id}/reject` | admin | Body `{ reason }` (required, max 500). `PENDING` to `REJECTED`, counts one attempt, notifies the candidate (`IDENTITY_REJECTED`). |
 | `POST` | `/admin/identity-verifications/{id}/grant-attempts` | admin | Adds 3 attempts to a rejected candidate who used all 5. |
 
 Anything other than the stated source status returns `422 INVALID_STATUS_TRANSITION`.
+
+## Service catalog (billing)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/service-packages` | recruiter | The whole buy-services page in one call: `ServiceCatalogResource { categories: [ServiceCategoryResource] }`. Only active categories that still hold at least one `ACTIVE` package are returned, categories and packages sorted by `displayOrder`. |
+| `GET` | `/recruiter/service-packages/{slug}` | recruiter | `ServicePackageDetailResource`. `404 PACKAGE_NOT_AVAILABLE` when the slug is unknown or the package is not `ACTIVE`. |
+| `GET` | `/admin/service-categories` | admin | `AdminServiceCategoryResource[]` including inactive ones, each with `packageCount`. |
+| `POST` · `PUT` | `/admin/service-categories` · `/{id}` | admin | Body `SaveServiceCategoryRequest`. `409 DUPLICATE_PACKAGE_CODE` when `code` is taken. |
+| `DELETE` | `/admin/service-categories/{id}` | admin | `409 SERVICE_CATEGORY_IN_USE` while any package still points at it. |
+| `GET` | `/admin/service-packages?query=&categoryId=&status=&page=&size=` | admin | `PageResource<AdminServicePackageResource>`; `query` matches name or code. |
+| `GET` | `/admin/service-packages/{id}` | admin | `AdminServicePackageResource`. |
+| `POST` · `PUT` | `/admin/service-packages` · `/{id}` | admin | Body `SaveServicePackageRequest`. `benefits` and `sections` are a **full replace**; omit them to clear. `409 DUPLICATE_PACKAGE_CODE` when `code` or `slug` is taken. |
+| `POST` | `/admin/service-packages/{id}/activate` · `/deactivate` | admin | Packages are never deleted; a non-`ACTIVE` package disappears from the recruiter catalog. |
+
+- `ServiceCategoryResource`: `{ id, code, name, headline, description, needKey, packages: [ServicePackageCardResource] }`. `needKey` is what the "suggest a package" modal maps a recruiter's chosen need onto (`REACH`, `CONNECT`, `HIGHLIGHT`, `BRANDING`); it is data, never hard-coded in the frontend.
+- `ServicePackageCardResource`: `{ id, code, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, validityDays, bonusCredits, oneTimePerCompany, benefits }`. `badge` is `NONE`, `NEW` or `SPECIAL_OFFER`. `price` is an integer amount of `currency` (`VND`), **excluding VAT** — the UI shows it with the red asterisk.
+- `ServicePackageDetailResource` adds `heroImageUrl`, `categoryCode`, `categoryName`, `categoryHeadline` and `sections: [{ heading, iconName, accentColor, body, imageUrl }]`, where `body` is markdown.
+- `ServicePackageBenefitResource`: `{ entitlementType, quantity, tier, durationDays, label }`. `tier` is how strong the right is (used today by `JOB_BOOST` for search ranking). `entitlementType` is the machine-readable right a purchase grants (`JOB_POST_SLOT`, `JOB_BOOST`, `JOB_LABEL_URGENT`, `JOB_LABEL_HOT`, `JOB_HIGHLIGHT`, `JOB_RETOP`, `JOB_ALERT_PUSH`, `AI_RESUME_MATCH`, `AI_JD_GENERATE`, `BRAND_PAGE`, `FEATURED_COMPANY`, `AD_SLOT_WEEK`, `CREDIT`); `label` is the Vietnamese line shown on the card.
+- `SaveServicePackageRequest`: `{ categoryId, code, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, heroImageUrl, validityDays, bonusCredits, oneTimePerCompany, status, displayOrder, benefits: [{ entitlementType, quantity, durationDays, label }], sections: [{ heading, iconName, accentColor, body, imageUrl }] }`. `code` is `^[A-Z0-9_]+$`, `slug` is `^[a-z0-9-]+$`.
+- Every admin write is audited (`SERVICE_CATEGORY_*`, `SERVICE_PACKAGE_*`).
+
+## Cart and orders (billing)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/cart` | recruiter | `CartResource`. The cart belongs to the **recruiter**, not the company; it is created on first access. |
+| `POST` | `/recruiter/cart/items` | recruiter | Body `{ packageId, quantity }` (1-99). Adding a package already in the cart increases its quantity (capped at 99). Max 20 distinct items → `422 CART_ITEM_LIMIT_EXCEEDED`. `404 PACKAGE_NOT_AVAILABLE` for a non-`ACTIVE` package. |
+| `PATCH` | `/recruiter/cart/items/{id}` | recruiter | Body `{ quantity }`. `404 NOT_FOUND` for another recruiter's cart item. |
+| `DELETE` | `/recruiter/cart/items/{id}` · `/recruiter/cart` | recruiter | Remove one line, or empty the cart. |
+| `GET` | `/recruiter/orders?page=&size=` | recruiter | `PageResource<OrderSummaryResource>` of the **company's** orders, newest first — every recruiter of the company sees them all. |
+| `GET` | `/recruiter/orders/{code}` | recruiter | `OrderResource`. `404 NOT_FOUND` for another company's order. |
+| `POST` | `/recruiter/orders` | recruiter | Checkout. Send `packageId` (+ optional `quantity`) to buy one package without touching the cart. Otherwise the cart is used: `cartItemIds` buys only those lines and leaves the rest in the cart, omitting it buys everything. |
+| `POST` | `/recruiter/orders/{code}/cancel` | recruiter | Only the recruiter who created the order may cancel it (`403 FORBIDDEN` otherwise), and only while `PENDING_PAYMENT` or `UNDERPAID` (`422 ORDER_NOT_PAYABLE`). |
+
+- `CartResource`: `{ items, subtotal, vatRate, vatAmount, totalAmount, currency }`. `CartItemResource`: `{ id, packageId, code, slug, name, shortDescription, unitPrice, currency, quantity, lineTotal, validityDays, oneTimePerCompany }`.
+- `CheckoutRequest`: `{ packageId?, quantity?, cartItemIds?, invoiceType: BUSINESS | PERSONAL, taxId?, companyName?, companyAddress?, fullName?, identityNumber?, personalAddress?, recipientEmail, termsAccepted }`. A `BUSINESS` invoice requires `taxId` and `companyName`; a `PERSONAL` invoice requires `fullName`; `termsAccepted` must be true. All three surface as `400 VALIDATION_FAILED`.
+- **Money:** `totalAmount = (subtotal − discountAmount) + vatAmount`, where `vatAmount` is the VAT rate applied to the amount **after** discount and rounded `HALF_UP` to whole đồng. Catalog prices exclude VAT; the order stores all five figures plus the `vatRate` used, so changing the rate later never alters an existing order.
+- **Ownership:** an order belongs to `company_id` and records `purchased_by_recruiter_id`. A recruiter with no company gets `403 NOT_COMPANY_MEMBER` on checkout and on every order read.
+- **Order codes** are `IVO` + 8 characters from `ABCDEFGHJKLMNPQRSTUVWXYZ23456789` (0/O and 1/I omitted because customers retype the code into the bank transfer note).
+- **Guards:** a repeated submit with the same total within 2 minutes returns the existing pending order instead of creating a second one — this runs *before* the purchase rules, so a retried click never surfaces `TRIAL_ALREADY_USED`. A company may hold at most 3 `PENDING_PAYMENT` orders (`422 TOO_MANY_PENDING_ORDERS`). A package flagged `oneTimePerCompany` cannot be bought twice (`422 TRIAL_ALREADY_USED`).
+- Orders expire after `billing_settings.order_expire_hours` (default 72). A scheduler every 10 minutes moves overdue `PENDING_PAYMENT` orders to `EXPIRED`.
+- `billing_settings` is a single row holding `vat_rate`, `order_expire_hours`, `order_code_prefix` and `max_pending_orders`.
+
+## Payments (SePay)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/orders/{code}/payment` | recruiter | `OrderPaymentResource`. When the bank account is not configured yet it returns `configured: false` with every bank field `null` — the endpoint never fails for that reason. |
+| `GET` · `PUT` | `/admin/payments/settings` | admin | `BillingSettingsResource` / `SaveBillingSettingsRequest`. `apiTokenConfigured` is read-only and reports whether `SEPAY_API_TOKEN` is present in the server environment. |
+| `GET` | `/admin/payments/transactions?status=&page=&size=` | admin | `PageResource<PaymentTransactionResource>`, newest first. `status` is `MATCHED` or `UNMATCHED`. |
+| `POST` | `/admin/payments/transactions/{id}/match` | admin | Body `{ orderCode, note? }`. Links an `UNMATCHED` transfer to an order by hand. `409 TRANSACTION_ALREADY_MATCHED`, `422 ORDER_NOT_PAYABLE`. |
+| `POST` | `/admin/payments/sync` | admin | Runs reconciliation immediately and returns `PaymentSyncResultResource { at, ok, message, fetched, created, matched }`. Never throws for a misconfiguration; it answers `ok: false` with the reason. |
+
+- `OrderPaymentResource`: `{ orderCode, status, totalAmount, paidAmount, currency, expiresAt, configured, bankCode, accountNumber, accountName, transferContent, qrUrl }`. `transferContent` is the order code — the recruiter must keep it intact for automatic matching. `qrUrl` points at `qr.sepay.vn` and carries the **outstanding** amount, so a top-up QR after a short payment is already correct.
+- **Reconciliation** polls `https://my.sepay.vn/userapi/transactions/list` (no webhook). It is off until `billing_settings.payment_sync_enabled` is true, a bank account is saved and `SEPAY_API_TOKEN` is set.
+- **Matching:** the transfer content is upper-cased and stripped of whitespace, then matched against `PREFIX[A-Z0-9]{8}`. Unknown code → the transfer is stored `UNMATCHED` for an admin to resolve.
+- **Amount rules:** received totals at or above the order total mark it `PAID` (any overage is recorded in the transaction note); less marks it `UNDERPAID` and the order stays open until its expiry so the recruiter can top up with the same content.
+- `payment_transactions.sepay_id` is `UNIQUE`: the same bank transfer can never be credited twice, even if two reconciliation runs overlap.
+- **Notifications:** `ORDER_CREATED` goes to every active recruiter of the company, `ORDER_PAID` to the whole company, `ORDER_UNDERPAID` to the buyer.
+
+## Entitlements (what a company owns)
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/entitlements` | recruiter | `EntitlementResource[]` — the company's stock, newest purchase first. `activatable` says whether the recruiter applies it to a job by hand. |
+| `GET` | `/recruiter/entitlements/active` | recruiter | `EntitlementUsageResource[]` — what is running right now and when each ends. |
+| `POST` | `/recruiter/entitlements/{id}/activate` | recruiter | Body `{ jobId }`. Applies one unit to a published job of the company. **Irreversible.** |
+
+- `EntitlementResource`: `{ id, entitlementType, label, totalQuantity, remainingQuantity, tier, durationDays, status, activationDeadline, purchasedByRecruiterId, activatable, purchasedAt }`. `status` is `AVAILABLE`, `CONSUMED` or `EXPIRED`.
+- **Grant:** a paid order is turned into entitlements in the same transaction that records the payment, then the order moves to `FULFILLED`. One row per benefit line, `quantity = benefit quantity × order item quantity`.
+- **Clock:** `durationDays` starts at **activation**, not at payment. Unused stock dies at `activationDeadline` (12 months after purchase).
+- **Activatable on a job:** `JOB_BOOST`, `JOB_LABEL_URGENT`, `JOB_LABEL_HOT`, `JOB_HIGHLIGHT`. The target must be a `PUBLISHED` job of the same company and must not already carry the same service (`422 ADDON_REQUIRES_ACTIVE_JOB`). Anything else answers `422 ENTITLEMENT_NOT_ACTIVATABLE`.
+- **Job slots** are not activated by hand: publishing a job consumes one `JOB_POST_SLOT` automatically, oldest-deadline first. Resuming a paused job never costs a second slot. When `billing.require-job-slot` is `false` (the default) publishing still succeeds without stock; set `BILLING_REQUIRE_JOB_SLOT=true` to make a slot mandatory (`422 ENTITLEMENT_EXHAUSTED`).
+- **Concurrency:** stock is decremented with one conditional `UPDATE ... WHERE remaining_quantity >= ?`, so two publishes racing for the last slot cannot both win.
+- **Expiry:** an hourly job ends usages whose window has passed and clears the matching job effect. **The job stays published** — only the paid display effect stops. Unused stock past its deadline flips to `EXPIRED`.
+- `jobs` gained `boost_level`, `boost_expires_at`, `highlight_label`, `highlight_label_expires_at`, `highlighted` and `highlight_expires_at`, plus an index on `(status, boost_level, published_at)` for ranking.
+- `service_package_benefits.tier` and `company_entitlements.tier` carry the boost strength (3 for `PRO_MAX_PLUS`, 2 for `PRO_MAX`/`PRO_TRIAL`, 1 for `ECO_PLUS`/`STANDARD_COMBO`).
+
+## AI resume match quota
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `POST` | `/recruiter/ai/resume-match` | recruiter | Moved out of `/ai/**`: `SecurityConfig` denies recruiter tokens outside `/api/v1/recruiter/**`, so the old path answered `403` for everyone. |
+| `POST` | `/recruiter/ai/applications/{id}/resume-match` | recruiter | No body. The server resolves job title, requirements (one per line of `jobs.requirements`, max 25) and CV text from the application itself, so the client cannot invent requirements. `404` when the application is not in the recruiter's company, `422 JOB_REQUIREMENTS_MISSING` / `CV_TEXT_NOT_READABLE`. |
+| `GET` | `/recruiter/ai/resume-match/quota` | recruiter | `{ freeUsedThisMonth, freeLimit, freeRemaining, paidRemaining, totalRemaining, resetAt }`. |
+
+- **Free tier plus top-up.** Each company gets `ai.quota.resume-match-free-per-month` analyses a month (default 30, Redis key `ai:quota:resume_match:{companyId}:{yyyy-MM}`, resets at the first of the month Vietnam time). Beyond that, one `AI_RESUME_MATCH` entitlement unit is spent per analysis. With neither left the call answers `422 AI_USER_QUOTA_EXCEEDED`.
+- Quota is **checked before** the model call and **spent after** it succeeds, so a failed analysis never costs a paid unit. The existing per-user daily AI quota (`ai.quota.user-per-day`) still applies on top and covers the gap between check and spend.
+- These controllers are **synchronous**. Returning `CompletableFuture` made Spring Security re-evaluate the `ASYNC` dispatch without a `SecurityContext`, which answered `401` even when the analysis had succeeded and the quota had already been spent.
+
+## Paid company branding
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/companies/featured?limit=` | public | `FeaturedCompanyResource[]` `{ id, name, logoUrl, industry }` — companies whose `featured_until` is still in the future, newest window first. Max `limit` 20. |
+
+- `GET /recruiter/company` now also returns `photoLimit`, `brandPageUntil`, `featuredUntil`. The limit is **3 photos** on the free tier and **10** while a `BRAND_PAGE` window is open; `addPhotos` enforces the same number.
+- `FEATURED_COMPANY` and `BRAND_PAGE` are activated **on the company**, so `POST /recruiter/entitlements/{id}/activate` accepts an empty body for them. Buying again while a window is open **extends** it instead of restarting it.
+- The home page lists featured companies first and fills the remaining slots from recent job posts, so the section never looks empty before anyone has bought the slot.
+
+## Credits, vouchers, invoices and refunds
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/credits` | recruiter | `{ balance, nearestExpiryAt, prices[] }`. Credits live in `company_entitlements` as type `CREDIT`, so there is no second ledger. |
+| `POST` | `/recruiter/credits/convert` | recruiter | `{ entitlementType, tier, quantity }` spends credits and grants the service with `source_order_item_id = null`. `422 INSUFFICIENT_CREDITS`, `404 CREDIT_PRICE_NOT_AVAILABLE`. |
+| `GET`/`PUT` | `/admin/credit-prices[/{id}]` | admin | What one unit of each service costs in credits. Audited as `CREDIT_PRICE_UPDATED`. |
+| `POST` | `/recruiter/vouchers/validate` | recruiter | `{ code, cartItemIds[] }` or `{ code, packageId, quantity }` → the discount preview. |
+| `GET`/`POST`/`PUT` | `/admin/vouchers[/{id}]` | admin | The code is never rewritten after creation, so a voucher already handed out keeps working. |
+| `GET` | `/recruiter/orders/{code}/invoice` | recruiter | Metadata. `422 INVOICE_NOT_ISSUED_YET` until the order is paid. |
+| `GET` | `/recruiter/orders/{code}/invoice/pdf` | recruiter | The document itself, `application/pdf`. |
+| `GET` | `/admin/invoices`, `/admin/invoices/{id}/pdf` | admin | Every issued document. |
+| `GET`/`POST` | `/recruiter/orders/{code}/refund` | recruiter | `GET` quotes what would come back; `POST` submits `{ reason }`. |
+| `GET` | `/admin/refunds` | admin | Optional `?status=PENDING\|APPROVED\|REJECTED`. |
+| `POST` | `/admin/refunds/{id}/approve`, `/reject` | admin | `{ approvedAmount?, adminNote? }`. Audited as `REFUND_APPROVED` / `REFUND_REJECTED`. |
+| `GET` | `/admin/orders` | admin | Filters `code`, `status`, `companyId`, `from`, `to`; paginated. |
+| `GET` | `/admin/orders/{code}` | admin | One order with its lines. |
+| `GET` | `/admin/orders/revenue` | admin | `{ collectedTotal, refundedTotal, netTotal, pendingTotal, paidOrderCount, ordersByStatus, byMonth, byPackage }`. |
+
+- **Credits expire after 12 months.** No new mechanism: `EntitlementService.ACTIVATION_WINDOW` is already 365 days and `EntitlementExpiryScheduler` flips a lot to `EXPIRED` past its deadline.
+- **Vouchers:** VAT is charged on the amount **after** the discount. `voucher_redemptions.order_id` is UNIQUE, so one order carries one voucher and can never claim it twice. Cancelling or expiring an order releases the redemption and decrements `used_count`. **A refund does not release it** — the buyer did use the offer and did receive the services; only the part never activated comes back as money.
+- **Invoices** are issued inside the same transaction that grants the entitlements, so a paid order can never end up without one. The number is derived from the key (`INV-{year}-{id}`), which needs no lock; a gap only means a rolled-back order. The document is rendered on demand from the stored snapshot, never saved to disk. It is an **internal record**, not an e-invoice carrying a tax authority code — that needs a registered business, a digital certificate and a provider contract.
+- **Revenue is counted, never estimated.** `collectedTotal` sums `paid_amount` over every order that money reached — including refunded ones, because the money did arrive — while `refundedTotal` sums the **approved** refund amounts, so `netTotal` is what the platform actually still holds. `pendingTotal` is what open orders still owe. Months with no collection simply do not appear.
+- **Refunds return only what was never activated.** A line that delivered several benefits shares its value across them by unit count, because a benefit carries no price of its own; the result is then scaled by `subtotal_after_discount / subtotal` so a discounted order cannot be over-refunded. Approving revokes the untouched units (`EntitlementStatus.REVOKED`) and leaves anything already running on a job alone. **The system never moves money** — SePay's user API has no payout; an admin makes the transfer by hand and records the amount.
+
+## Banner advertising
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/ads/slots/{code}` | **public** | The banner running this ISO week, the house ad when nobody bought it, or `null` when the slot has neither. Counts an impression in Redis. |
+| `POST` | `/ads/slots/{code}/click` | **public** | One click per IP per slot per minute is counted; the rest are dropped. |
+| `GET` | `/recruiter/ads/slots` | recruiter | Every slot on sale with its size and weekly price. |
+| `GET` | `/recruiter/ads/slots/{code}/calendar?weeks=` | recruiter | Which weeks are free, and which are already the caller's. |
+| `GET` | `/recruiter/ads/bookings` | recruiter | The company's weeks with artwork status and totals. |
+| `POST` | `/recruiter/ads/bookings/{id}/creative` | recruiter | `multipart/form-data`: `file` plus a `data` part `{ targetUrl, altText }`. |
+| `GET`/`PUT` | `/admin/ads/slots[/{id}]` | admin | Price, description, house ad and whether the slot is on sale. Audited as `AD_SLOT_UPDATED`. |
+| `GET` | `/admin/ads/creatives?status=` | admin | Artwork queue. |
+| `POST` | `/admin/ads/creatives/{id}/approve`, `/reject` | admin | Audited as `AD_CREATIVE_APPROVED` / `AD_CREATIVE_REJECTED`. |
+
+- **Inventory is whole ISO weeks**, never arbitrary date ranges. That turns overlap checking into `UNIQUE (ad_slot_id, week_start)` and lets the database settle a tie between two buyers instead of application locking. The current week is never on sale — it is already running.
+- **Weeks are held the moment the order is placed** (`RESERVED`), become `BOOKED` when the money arrives, and are deleted when the order is cancelled or expires. A row is deleted rather than flagged because a `RELEASED` row would keep holding the unique key. An `UNDERPAID` order keeps its hold until the order itself expires — the buyer did send real money.
+- **A banner is bought through the normal cart**, so it shares one checkout, VAT, voucher, invoice and refund path with every other package. The chosen weeks ride along in `cart_items.meta_json` / `order_items.meta_json`; quantity must equal the number of weeks.
+- **Nothing goes live unreviewed.** Every upload, including a replacement, returns to `PENDING`. A week whose artwork is not approved in time shows the house ad and is **not** extended.
+- **Views never touch the database.** Impressions and clicks accumulate in Redis and a job flushes them into `ad_metrics` every five minutes.
+
+## InterVue Connect
+
+Chat between a Candidate and a company's Recruiters (`modules/connect`). A `connection` is one per
+`(candidate, company)` pair, not per job. Wave 1 built the invitation lifecycle; wave 2 added free
+messaging, attachments, link preview, block and the content filter; wave 3 added real-time delivery,
+the unread counter and the human-facing report endpoint; wave 4 added the admin report queue,
+hide-content and lock-account; wave 5 (below) is the recruiter frontend plus the two backend additions
+it needed. Candidate frontend is still to come (wave 6).
+
+**Lifecycle (wave 1)**
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/recruiter/connect/eligible-candidates?search=` | recruiter | Candidates who have at least one non-draft `Application` to the recruiter's company and have no `connection` with it yet. `EligibleCandidateResource { candidateId, fullName, email, jobTitle, submittedAt }`. |
+| `POST` | `/recruiter/connect/invitations` | recruiter | Body `{ candidateId, message (max 1000) }`. Screened via content filter & mute check before reserving quota. Creates a `PENDING` connection plus its opening message, charges the daily quota, notifies the candidate (`CONNECT_INVITATION_RECEIVED`) and emits SSE `status` (`PENDING`). `403 CONNECT_MUTED`, `409 CONNECTION_ALREADY_EXISTS`, `422 MESSAGE_BLOCKED_BY_FILTER`, `422 NOT_ELIGIBLE_TO_CONNECT`, `429 CONNECTION_QUOTA_EXCEEDED`. |
+| `GET` | `/recruiter/connect/conversations` | recruiter | Company-wide, `PENDING` + `ACCEPTED` + `BLOCKED`, paged by `lastMessageAt` descending. |
+| `GET` | `/candidate/connect/invitations` | candidate | Own `PENDING` invitations, each with the opening message. |
+| `POST` | `/candidate/connect/invitations/{id}/accept` | candidate | `PENDING` to `ACCEPTED`; notifies the inviting recruiter (`CONNECT_INVITATION_ACCEPTED`). `404 NOT_FOUND` if not owned or not `PENDING`. |
+| `POST` | `/candidate/connect/invitations/{id}/decline` | candidate | `PENDING` to `DECLINED`. The pair is locked — a recruiter cannot invite the same candidate again in v1. |
+| `GET` | `/candidate/connect/conversations` | candidate | Own `ACCEPTED` + `BLOCKED` connections, paged by `lastMessageAt` descending. |
+
+- **Quota**: 100 new invitations per calendar day (Asia/Ho_Chi_Minh), counted **per recruiter**, not per company. Declining later does not refund it.
+- **Eligibility is a port**: `connect` depends on `CandidateEligibilityPortInterface`, implemented in `application` off the existing `Application` rows (already carry `candidateName`/`candidateEmail`, no call into `candidate` needed). A Candidate Search module can plug in as a second source later without touching `connect`.
+- **Ownership checks return `404`**, never a connect-specific error code, matching the IDOR pattern used everywhere else.
+
+**Messaging, attachments, link preview, block (wave 2)** — same `{candidate|recruiter}` prefix as above:
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `POST` | `/connect/conversations/{id}/messages` | both | Body `{ body (max 2000) }`. `messageType` is `LINK` if the text contains a fetchable URL, else `TEXT`. `422 CONNECTION_NOT_ACCEPTED`, `403 CONNECTION_BLOCKED`, `403 CONNECT_MUTED`, `422 MESSAGE_BLOCKED_BY_FILTER` (generic message only — never the matched word). |
+| `POST` | `/connect/conversations/{id}/messages/attachment` | both | `multipart/form-data`: `file` (JPEG/PNG → `IMAGE`, PDF → `FILE`), optional `caption` (screened like a text body). `400 UNSUPPORTED_FILE_TYPE`, `400 FILE_TOO_LARGE`. |
+| `GET` | `/connect/conversations/{id}/messages?page=&size=` | both | Newest first, same convention as every other list. History stays readable even on a `BLOCKED` connection. |
+| `GET` | `/connect/conversations/{id}/messages/{messageId}/attachment` | both | Streams a `FILE`-type attachment through the backend (signed Cloudinary fetch, same pattern as CV/identity documents) — `IMAGE` attachments are served directly via the public `attachmentUrl` in the message instead. `404 NOT_FOUND` if the message isn't a `FILE` attachment of that connection. |
+| `POST` | `/connect/conversations/{id}/block` | both | `ACCEPTED` → `BLOCKED`; idempotent if already blocked. `422 CONNECTION_NOT_ACCEPTED` while still `PENDING`/`DECLINED`. |
+
+- **Content filter runs on every `body`/`caption` before persisting**, against the admin-managed `connect_filter_words` list. A match is never silently dropped: it's recorded in `connect_violations`, counted against a 30-day strike window (3 `MILD` or 1 `SEVERE` → mute), and a `SEVERE` match auto-files a `PENDING` report (`reporter_type = SYSTEM`) into the generic moderation queue — all **before** the request fails with `422 MESSAGE_BLOCKED_BY_FILTER`, so the evidence survives the rejection.
+- **Muting is Connect-only**, not an account ban — `connect_mutes`, first offense 24h, a repeat offense after a mute has expired extends it to 7 days (same row, "extend don't restart").
+- **Link preview** fetches `og:title`/`og:description`/`og:image` (Jsoup, 2s timeout, no redirects followed), guarded against SSRF by resolving the host and rejecting private/loopback/link-local addresses **before** connecting. Cached in Redis 7 days by URL hash, including a cached "no preview" result for dead links.
+- **Chat `FILE` (PDF) delivery** requires the Cloudinary account's "Restricted media types" setting to allow authenticated raw delivery — a dashboard/account setting, not a code path; already enabled on this project's account and verified working end to end.
+
+**Real-time, unread counter, report (wave 3)** — same `{candidate|recruiter}` prefix:
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| `GET` | `/connect/stream` | both | `text/event-stream`, no `ApiResource` envelope. Emits `message` (full `MessageResource` JSON) and `status` (`{ connectionId, status }` on `PENDING`/`ACCEPTED`/`BLOCKED`), plus a `:ping` comment every 20s to keep the connection alive through proxies. In-memory emitter registry — **single backend instance only**, no Redis pub/sub fan-out yet. |
+| `GET` | `/connect/mute-status` | both | `ConnectMuteStatusResource { muted, expiresAt, reason }`. Returns active Connect mute status for the signed-in actor. |
+| `GET` | `/connect/unread-count` | both | `ConnectUnreadCountResource { total }`. Backed by a Redis hash (`connect:unread:{actorType}:{actorId}`, one field per `connectionId`) — there is no "read" table, this hash is the only record, not a cache. Incremented on every message/attachment the recipient side didn't send; cleared per-connection the moment that connection's `GET .../messages` is called. |
+| `POST` | `/connect/conversations/{id}/report` | both | Body `{ reasonCode, reasonNote (max 1000) }`. Files a `PENDING` row into the generic `moderation` report queue (`reporter_type = CANDIDATE`/`RECRUITER`, the real actor this time, unlike the filter's `SYSTEM` auto-reports). Valid on a connection in **any** status — you often report right when blocking someone. Does **not** change `connections.status`. |
+
+- **Recipient resolution**: a candidate's message pushes to **every active member of the recruiting company** (`findActiveMemberIds`) — matches the shared company-wide mailbox model; a recruiter's message pushes to the one candidate.
+- **This is the first real-time push infra in the project** — notification delivery (`frontend/hooks/useNotifications.ts`) is plain 60s polling, not SSE. Connect's channel is independent of it on purpose (different domain, per the original design table).
+
+**Admin report queue (wave 4)** — `modules/moderation`, `@PreAuthorize("hasRole('ADMIN')")`:
+
+| Method | Path | Notes |
+|---|---|---|
+| `GET` | `/admin/reports?targetType=&status=&page=&size=` | Both filters optional (`Specification`, never string-concatenated). `AdminReportSummaryResource` per row. |
+| `GET` | `/admin/reports/{id}` | `AdminReportDetailResource` — the report's own fields only (reporter, target, reason, status, admin note, reviewed by/at). No embedded conversation content. |
+| `GET` | `/admin/connect/conversations/{id}/messages?page=&size=` | **Separate endpoint, inside `connect`** (not `moderation` — `moderation` never imports `connect`). Full, **never-redacted** history regardless of block/hide state, so admin can actually read what happened before deciding. `404 NOT_FOUND` if the connection doesn't exist. |
+| `POST` | `/admin/reports/{id}/dismiss` | Body `{ note? }`. `status` → `DISMISSED`. `404 NOT_FOUND`, `409 REPORT_ALREADY_REVIEWED` if not `PENDING`. |
+| `POST` | `/admin/reports/{id}/resolve` | Body `{ action: NONE\|HIDE_CONTENT\|LOCK_ACCOUNT, note?, lockActorType?, lockActorId? }`. `status` → `ACTION_TAKEN`. Same `404`/`409` as dismiss. |
+| `GET` | `/admin/connect/filter-words?page=&size=` | Paged list of automated content filter rules and screening patterns. |
+| `POST` | `/admin/connect/filter-words` | Body `{ pattern, regex, severity: MILD\|SEVERE, active, note? }`. Creates a filter rule. |
+| `PUT` | `/admin/connect/filter-words/{id}` | Updates pattern, regex flag, severity, active state, or note. |
+| `DELETE` | `/admin/connect/filter-words/{id}` | Deletes a filter rule. |
+| `PATCH` | `/admin/connect/filter-words/{id}/toggle` | Toggles the active status of a filter rule. |
+
+- **`HIDE_CONTENT`** sets `connections.content_hidden_at` (via a `moderation → connect` port, same declare-in-consumer/implement-in-owner shape as `entitlement`↔`job`/`company`). From that point, `GET .../messages` for the **candidate and recruiter** on that connection returns every message with `body`/attachment/link fields stripped to `null` — only `id`/`senderType`/`senderId`/`messageType`/`createdAt` survive. The admin endpoint above is the one exception, by design.
+- **`LOCK_ACCOUNT` resolves the offender automatically if `lockActorId` is omitted** (for `SYSTEM` reports via the note's actor tag, or for human `CONVERSATION` reports by picking the reported participant), while still allowing admins to override `lockActorType` (`CANDIDATE`/`RECRUITER`) and `lockActorId` explicitly. `CANDIDATE` reuses the existing ban flow (`UserAdminServiceInterface.restrict`, a real `UserRestriction` row, session killed, user notified). `RECRUITER` calls the **first-ever** `RecruiterServiceInterface.suspend(...)` — sets `RecruiterStatus.SUSPENDED`, kills the session, revokes refresh tokens; `RecruiterAuthService`'s existing `ensureSignInAllowed` check now actually rejects login for the first time (that enum value existed with nothing that ever set it). No restriction-history table or un-suspend path for recruiters yet — deliberately out of scope, same minimal-fix spirit as the gap note that asked for this.
+- **Every dismiss/resolve notifies the reporter** (`REPORT_DISMISSED`/`REPORT_RESOLVED`, resolved from the report's own `reporterType` — no cross-module lookup) and writes one `AuditAction.REPORT_DISMISSED`/`REPORT_RESOLVED` entry (`AuditTargetType.REPORT`, detail = the action taken).
+
+**Recruiter frontend (wave 5)** — two small additive backend changes the UI needed, both found missing
+from the wave 1 design during implementation:
+
+| Method | Path | Notes |
+|---|---|---|
+| `GET` | `/recruiter/connect/rules-ack` | `ConnectRulesAckResource { acknowledged, acknowledgedAt }`. Per-account, backed by `connect_rules_acknowledgements` (`UNIQUE(actor_type, actor_id)`). |
+| `POST` | `/recruiter/connect/rules-ack` | Idempotent — acknowledging twice keeps the first `acknowledgedAt`. |
+| `GET` | `/candidate/connect/rules-ack` | `ConnectRulesAckResource { acknowledged, acknowledgedAt }`. Candidate's mirror. |
+| `POST` | `/candidate/connect/rules-ack` | Idempotent — acknowledges the rules for candidate. |
+
+- **`ConversationSummaryResource` gained `unreadCount`, `lastMessageAt`, `lastMessagePreview`** — the conversation list needed a last-message preview and a per-row unread flag ("Unread" tab). `unreadCount` reads the same Redis hash wave 3 built (`ConnectUnreadServiceInterface.breakdown`, one `HGETALL`, no schema change); `lastMessageAt`/`lastMessagePreview` come from one extra `findFirstByConnectionIdOrderByCreatedAtDesc` query per connection in the returned page (accepted as a bounded N+1 — page size is capped at 100). `lastMessagePreview` uses English labels (`"Sent an image"`, `"Sent an attachment"`, `"Content has been hidden"`), link title for `LINK`, or truncated body for `TEXT`. Both recruiter and candidate conversation endpoints populate these fields.
 
 ## Error codes
 
@@ -329,6 +558,44 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `FORBIDDEN` | 403 | Role/ownership failure |
 | `NOT_FOUND` | 404 | |
 | `METHOD_NOT_ALLOWED` | 405 | The HTTP method is not supported by this endpoint |
+| `JOB_REQUIREMENTS_MISSING` | 422 | The job has no requirement lines, so there is nothing for the AI to match against |
+| `CV_TEXT_NOT_READABLE` | 422 | The CV attached to the application could not be read as text (scanned image, corrupt file) |
+| `PACKAGE_NOT_AVAILABLE` | 404 | Unknown slug/id, or the service package is not `ACTIVE` |
+| `INSUFFICIENT_CREDITS` | 422 | The company does not hold enough credits for this exchange |
+| `AD_SLOT_NOT_FOUND` | 404 | Unknown or inactive advertising slot |
+| `AD_SLOT_UNAVAILABLE` | 409 | Another buyer took one of the chosen weeks first |
+| `AD_WEEKS_REQUIRED` | 422 | A banner line was submitted without any week |
+| `AD_BOOKING_NOT_READY` | 422 | Artwork can only be uploaded once the order is paid |
+| `AD_CREATIVE_ALREADY_REVIEWED` | 409 | The artwork was already approved or rejected |
+| `CREDIT_PRICE_NOT_AVAILABLE` | 404 | No active credit price for that service and tier |
+| `VOUCHER_NOT_FOUND` | 404 | Unknown code |
+| `VOUCHER_NOT_USABLE` | 422 | Inactive, not started yet, or past its end date |
+| `VOUCHER_EXHAUSTED` | 422 | The total redemption limit is used up |
+| `VOUCHER_ALREADY_USED` | 422 | The company hit its per-company limit |
+| `VOUCHER_MIN_ORDER_NOT_MET` | 422 | The order is below the voucher's minimum |
+| `DUPLICATE_VOUCHER_CODE` | 409 | A voucher already uses this code |
+| `INVOICE_NOT_ISSUED_YET` | 422 | The order has not been paid, so no document exists |
+| `ORDER_NOT_REFUNDABLE` | 422 | Only a `PAID` or `FULFILLED` order can be refunded |
+| `REFUND_ALREADY_REQUESTED` | 409 | This order already has a refund request |
+| `REFUND_ALREADY_REVIEWED` | 409 | The request was already approved or rejected |
+| `NOTHING_LEFT_TO_REFUND` | 422 | Every service on the order has been activated |
+| `DUPLICATE_PACKAGE_CODE` | 409 | A service category or package already uses this `code`/`slug` |
+| `SERVICE_CATEGORY_IN_USE` | 409 | The category still has packages and cannot be deleted |
+| `BILLING_NOT_CONFIGURED` | 503 | `billing_settings` has no row |
+| `CART_EMPTY` | 422 | Checkout with nothing to buy |
+| `CART_ITEM_LIMIT_EXCEEDED` | 422 | More than 20 distinct packages in the cart |
+| `TOO_MANY_PENDING_ORDERS` | 422 | The company already holds the maximum unpaid orders |
+| `ORDER_NOT_PAYABLE` | 422 | The order is not in a state that allows this action |
+| `ORDER_EXPIRED` | 422 | The payment window has closed |
+| `TRIAL_ALREADY_USED` | 422 | A one-time-per-company package was bought before |
+| `PAYMENT_NOT_CONFIGURED` | 503 | `SEPAY_API_TOKEN` or the bank account is missing |
+| `PAYMENT_PROVIDER_ERROR` | 502 | SePay answered with an error or an unexpected payload |
+| `PAYMENT_SYNC_RUNNING` | 409 | A reconciliation run is already in progress |
+| `TRANSACTION_ALREADY_MATCHED` | 409 | The bank transfer is already linked to an order |
+| `ENTITLEMENT_EXHAUSTED` | 422 | No units of this service remain |
+| `ENTITLEMENT_EXPIRED` | 422 | The activation deadline has passed |
+| `ENTITLEMENT_NOT_ACTIVATABLE` | 422 | This service is consumed automatically, not applied by hand |
+| `ADDON_REQUIRES_ACTIVE_JOB` | 422 | Target is not a published job of the company, or already has this service |
 | `UNSUPPORTED_MEDIA_TYPE` | 415 | The request `Content-Type` is not supported by this endpoint |
 | `INTERVIEW_ALREADY_SCHEDULED` | 409 | The application already has an active interview |
 | `SAVED_LIMIT_REACHED` | 409 | The candidate already saved or follows the maximum number of items |
@@ -350,6 +617,8 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `IDENTITY_ALREADY_VERIFIED` | 409 | The candidate is already verified |
 | `IDENTITY_REVIEW_PENDING` | 409 | A submission is already awaiting review |
 | `IDENTITY_ATTEMPTS_EXHAUSTED` | 422 | All 5 attempts were rejected; an admin must grant more |
+| `IDENTITY_MANUAL_REVIEW_UNAVAILABLE` | 422 | A manual review can be requested only after all attempts were rejected |
+| `IDENTITY_MANUAL_REVIEW_ALREADY_REQUESTED` | 409 | A manual review request is already waiting |
 | `IDENTITY_UNDER_MINIMUM_AGE` | 422 | Date of birth shows the candidate is under 16 |
 | `IDENTITY_NUMBER_ALREADY_USED` | 409 | The ID number is already approved on another account |
 | `RESUME_LIMIT_REACHED` | 409 | The candidate already has the maximum number of CVs |
@@ -364,7 +633,7 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `OAUTH_ACCOUNT_NOT_FOUND` | 404 | No account for this provider identity and the terms were not accepted; send the user to `/register` |
 | `SOCIAL_LOGIN_NOT_ALLOWED` | 403 | The matching account holds the `ADMIN` role; admins sign in only through `/admin/login` |
 | `PASSWORD_NOT_SET` | 422 | The action needs a password and the account has none (change email, disable 2FA, grant `ADMIN`); set one first with `POST /users/me/change-password` |
-| `RATE_LIMITED` | 429 | Honor `Retry-After` |
+| `RATE_LIMITED` | 429 | Honor `Retry-After`. Global `RateLimitFilter`: 10/min per IP on login, register, forgot/reset-password and verify-2fa; 20/min per account on `/ai/**`; 300/min per account or IP on `/api/**` |
 | `AI_USER_QUOTA_EXCEEDED` | 429 | Daily AI limit per user reached; honor `Retry-After` |
 | `AI_IP_QUOTA_EXCEEDED` | 429 | Hourly AI limit per IP reached; honor `Retry-After` |
 | `AI_NOT_CONFIGURED` | 503 | AI provider key missing or rejected |
@@ -377,6 +646,14 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `TAX_CODE_NOT_FOUND` | 422 | The tax code was not found in the national business registry |
 | `TAX_LOOKUP_BUSY` | 429 | The registry lookup is rate limited; honor `Retry-After` |
 | `TAX_LOOKUP_UNAVAILABLE` | 503 | The registry lookup is not reachable right now |
+| `CONNECTION_QUOTA_EXCEEDED` | 429 | Recruiter's 100 new Connect invitations/day reached; honor `Retry-After` |
+| `CONNECTION_ALREADY_EXISTS` | 409 | A connection already exists for this candidate + company pair |
+| `NOT_ELIGIBLE_TO_CONNECT` | 422 | Candidate has no `Application` to the recruiter's company yet |
+| `CONNECTION_NOT_ACCEPTED` | 422 | The connection is still `PENDING`/`DECLINED`, can't message or block yet |
+| `CONNECTION_BLOCKED` | 403 | The conversation has been blocked by one side |
+| `MESSAGE_BLOCKED_BY_FILTER` | 422 | Content filter matched; violation recorded, message not sent |
+| `CONNECT_MUTED` | 403 | Temporarily restricted from sending Connect messages; honor the mute's `expiresAt` |
+| `REPORT_ALREADY_REVIEWED` | 409 | The report is not `PENDING` anymore - dismiss/resolve already happened |
 
 ## Recruiter Account
 

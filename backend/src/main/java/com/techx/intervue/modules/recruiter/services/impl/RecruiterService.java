@@ -85,6 +85,20 @@ public class RecruiterService implements RecruiterServiceInterface {
     }
 
     @Override
+    @Transactional
+    public void suspend(Long recruiterId, String reason) {
+        Recruiter recruiter = requireRecruiter(recruiterId);
+        if (recruiter.getStatus() == RecruiterStatus.SUSPENDED) {
+            return;
+        }
+        recruiter.setStatus(RecruiterStatus.SUSPENDED);
+        recruiterRepository.save(recruiter);
+
+        refreshTokenRepository.revokeAllByRecruiterId(recruiterId, Instant.now(), reason);
+        sessionCache.evict(recruiterId);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<RecruiterResource> findByIds(Collection<Long> recruiterIds) {
         if (recruiterIds == null || recruiterIds.isEmpty()) {

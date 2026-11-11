@@ -2,7 +2,7 @@ const { execFileSync } = require('node:child_process');
 
 const path = require('node:path');
 
-const OWNER = 'hoangtuanqn';
+const OWNERS = ['hoangtuanqn', 'maaitlunghau'];
 const BLOCK_MESSAGE =
   'You have violated the project governance policy. Please contact the team leader, Pham Hoang Tuan, on Zalo at 0812.665.001 to discuss.';
 
@@ -60,7 +60,7 @@ process.stdin.on('end', () => {
   }
 
   if (!touchesProtectedPath(event.tool_name, event.tool_input || {})) process.exit(0);
-  if (currentGithubLogin() === OWNER) process.exit(0);
+  if (OWNERS.includes(currentGithubLogin())) process.exit(0);
 
   console.error(BLOCK_MESSAGE);
   process.exit(2);

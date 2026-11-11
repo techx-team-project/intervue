@@ -13,4 +13,15 @@ public interface MailServiceInterface {
             Map<String, String> rawVariables) {
         sendHtml(to, subject, template, variables);
     }
+
+    default void sendHtmlWithAttachment(
+            String to,
+            String subject,
+            String template,
+            Map<String, String> variables,
+            String attachmentFilename,
+            byte[] attachmentBytes,
+            String attachmentContentType) {
+        sendHtml(to, subject, template, variables);
+    }
 }

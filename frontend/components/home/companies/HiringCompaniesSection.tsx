@@ -4,6 +4,7 @@ import EmptyState from '@/components/common/EmptyState';
 import CompanyLogo from '@/components/jobs/CompanyLogo';
 import Reveal from '@/components/ui/Reveal';
 import Skeleton from '@/components/ui/Skeleton';
+import { useFeaturedCompanies } from '@/hooks/useFeaturedCompanies';
 import { usePublicJobs } from '@/hooks/usePublicJobs';
 import type { PublicJobCompany } from '@/types/public-job';
 import { ArrowUpRight, WifiOff } from 'lucide-react';
@@ -13,7 +14,7 @@ import SectionHeader from '../SectionHeader';
 const SAMPLE_SIZE = 30;
 const COMPANY_COUNT = 8;
 
-type CompanyEntry = { company: PublicJobCompany; jobCount: number };
+type CompanyEntry = { company: PublicJobCompany; jobCount: number; featured?: boolean };
 
 function groupCompanies(companies: PublicJobCompany[]): CompanyEntry[] {
   const byId = new Map<number, CompanyEntry>();
@@ -27,7 +28,19 @@ function groupCompanies(companies: PublicJobCompany[]): CompanyEntry[] {
 
 export default function HiringCompaniesSection() {
   const query = usePublicJobs({ size: SAMPLE_SIZE });
-  const entries = groupCompanies((query.data?.items ?? []).map((job) => job.company));
+  const featured = useFeaturedCompanies(COMPANY_COUNT);
+
+  // Companies that paid for the Featured slot take the front; the rest fills from recent job posts
+  const paid: CompanyEntry[] = (featured.data ?? []).map((company) => ({
+    company: { id: company.id, name: company.name, logoUrl: company.logoUrl ?? undefined },
+    jobCount: 0,
+    featured: true,
+  }));
+  const paidIds = new Set(paid.map((entry) => entry.company.id));
+  const organic = groupCompanies((query.data?.items ?? []).map((job) => job.company)).filter(
+    (entry) => !paidIds.has(entry.company.id),
+  );
+  const entries = [...paid, ...organic].slice(0, COMPANY_COUNT);
 
   if (!query.isLoading && !query.isError && entries.length === 0) return null;
 
@@ -61,7 +74,7 @@ export default function HiringCompaniesSection() {
         ) : (
           <Reveal delay={1}>
             <ul className="expanded:grid-cols-4 medium:grid-cols-2 grid grid-cols-1 gap-4">
-              {entries.map(({ company, jobCount }) => (
+              {entries.map(({ company, jobCount, featured }) => (
                 <li key={company.id}>
                   <Link
                     href={`/companies/${company.id}`}
@@ -69,13 +82,22 @@ export default function HiringCompaniesSection() {
                   >
                     <div className="flex items-start justify-between">
                       <CompanyLogo name={company.name} src={company.logoUrl} className="h-16 w-16 rounded-2xl" />
-                      <ArrowUpRight
-                        className="text-outline ease-standard group-hover:text-primary h-5 w-5 transition-all duration-300"
-                        aria-hidden
-                      />
+                      <span className="flex items-center gap-2">
+                        {featured && (
+                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800">
+                            Nổi bật
+                          </span>
+                        )}
+                        <ArrowUpRight
+                          className="text-outline ease-standard group-hover:text-primary h-5 w-5 transition-all duration-300"
+                          aria-hidden
+                        />
+                      </span>
                     </div>
                     <p className="text-title-md text-on-surface line-clamp-2 font-bold uppercase">{company.name}</p>
-                    <p className="text-body-md text-primary mt-auto font-semibold">{jobCount} new jobs</p>
+                    {jobCount > 0 && (
+                      <p className="text-body-md text-primary mt-auto font-semibold">{jobCount} new jobs</p>
+                    )}
                   </Link>
                 </li>
               ))}

@@ -55,6 +55,9 @@ export default function AdminIdentityReviewModal({ item, onClose }: AdminIdentit
           <Row label="Gửi lúc" value={formatDateTime(item.submittedAt)} />
           <Row label="Số lần bị từ chối" value={`${item.rejectionCount}/${item.attemptLimit}`} />
           {item.rejectReason && <Row label="Lý do từ chối" value={item.rejectReason} />}
+          {item.manualReviewRequestedAt && (
+            <Row label="Yêu cầu duyệt thủ công" value={formatDateTime(item.manualReviewRequestedAt)} />
+          )}
         </dl>
 
         <div className="grid gap-3 sm:grid-cols-3">

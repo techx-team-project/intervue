@@ -77,6 +77,7 @@ ai:
   quota:
     user-per-day: 30
     ip-per-hour: 10
+    resume-match-free-per-month: ${AI_RESUME_MATCH_FREE_PER_MONTH:30}
 
 storage:
   cloudinary-url: ${CLOUDINARY_URL:}
@@ -95,6 +96,24 @@ oauth:
     client-id: ${GOOGLE_CLIENT_ID:}
     client-secret: ${GOOGLE_CLIENT_SECRET:}
 
+billing:
+  require-job-slot: ${BILLING_REQUIRE_JOB_SLOT:false}
+  seller:
+    name: ${BILLING_SELLER_NAME:InterVue}
+    tax-code: ${BILLING_SELLER_TAX_CODE:}
+    address: ${BILLING_SELLER_ADDRESS:}
+    email: ${BILLING_SELLER_EMAIL:}
+    phone: ${BILLING_SELLER_PHONE:}
+
+sepay:
+  base-url: https://my.sepay.vn
+  qr-base-url: https://qr.sepay.vn
+  api-token: ${SEPAY_API_TOKEN:}
+  timeout: 15s
+  sync:
+    cron: "0 */2 * * * *"
+    limit: 100
+
 sms:
   esms:
     base-url: https://rest.esms.vn
@@ -105,7 +124,7 @@ sms:
     timeout: 10s
 
 jwt:
-  secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
+  secret: ${JWT_SECRET}
   expiration: 900000
   issuer: InterVue
   refresh-token-ttl-days: 14
@@ -124,11 +143,18 @@ auth:
   resend-max-attempts: 100
   resend-window: 15m
 
+jwt:
+  secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
+
 seed:
   accounts:
     admin:
       email: local.admin@intervue.test
       name: Local Admin
+      roles: [ADMIN]
+    admin2:
+      email: local.admin2@intervue.test
+      name: Local Admin 2
       roles: [ADMIN]
     candidate:
       email: local.candidate@intervue.test

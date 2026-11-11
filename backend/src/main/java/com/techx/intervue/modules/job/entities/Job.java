@@ -126,6 +126,26 @@ public class Job extends BaseEntity {
     @Column(name = "published_at")
     private Instant publishedAt;
 
+    @Column(name = "boost_level", nullable = false)
+    @Builder.Default
+    private Integer boostLevel = 0;
+
+    @Column(name = "boost_expires_at")
+    private Instant boostExpiresAt;
+
+    @Column(name = "highlight_label", length = 20)
+    private String highlightLabel;
+
+    @Column(name = "highlight_label_expires_at")
+    private Instant highlightLabelExpiresAt;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean highlighted = false;
+
+    @Column(name = "highlight_expires_at")
+    private Instant highlightExpiresAt;
+
     @Column(name = "hidden_reason", length = 500)
     private String hiddenReason;
 

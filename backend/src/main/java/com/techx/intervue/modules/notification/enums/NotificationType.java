@@ -37,7 +37,24 @@ public enum NotificationType {
     IDENTITY_VERIFIED(NotificationCategory.ACCOUNT, NotificationSeverity.INFO, true),
     IDENTITY_REJECTED(NotificationCategory.ACCOUNT, NotificationSeverity.WARNING, true),
     ADMIN_REVIEW_QUEUE_ITEM(NotificationCategory.MODERATION, NotificationSeverity.INFO, false),
-    ANNOUNCEMENT(NotificationCategory.SYSTEM, NotificationSeverity.INFO, false);
+    ANNOUNCEMENT(NotificationCategory.SYSTEM, NotificationSeverity.INFO, false),
+    ORDER_CREATED(NotificationCategory.COMPANY, NotificationSeverity.INFO, true),
+    ORDER_PAID(NotificationCategory.COMPANY, NotificationSeverity.SUCCESS, true),
+    ORDER_UNDERPAID(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
+    ORDER_EXPIRED_UNDERPAID(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
+    ORDER_EXPIRED_WITH_PAYMENT(
+            NotificationCategory.MODERATION, NotificationSeverity.WARNING, false),
+    AD_CREATIVE_APPROVED(NotificationCategory.COMPANY, NotificationSeverity.SUCCESS, true),
+    AD_CREATIVE_REJECTED(NotificationCategory.COMPANY, NotificationSeverity.DANGER, true),
+    AD_WEEK_STARTING_SOON_NO_CREATIVE(
+            NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
+    REFUND_APPROVED(NotificationCategory.COMPANY, NotificationSeverity.SUCCESS, true),
+    REFUND_REJECTED(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
+    CONNECT_INVITATION_RECEIVED(NotificationCategory.CONNECTIONS, NotificationSeverity.INFO, false),
+    CONNECT_INVITATION_ACCEPTED(
+            NotificationCategory.CONNECTIONS, NotificationSeverity.SUCCESS, false),
+    REPORT_DISMISSED(NotificationCategory.MODERATION, NotificationSeverity.INFO, false),
+    REPORT_RESOLVED(NotificationCategory.MODERATION, NotificationSeverity.INFO, false);
 
     private final NotificationCategory category;
     private final NotificationSeverity severity;

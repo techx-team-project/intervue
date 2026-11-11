@@ -87,9 +87,10 @@ public class IdentityVerificationAdminService implements IdentityVerificationAdm
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public StoredDocumentContent readDocument(Long id, DocumentSide side) {
+    @Transactional
+    public StoredDocumentContent readDocument(Long id, DocumentSide side, RequestActor actor) {
         IdentityVerification verification = require(id);
+        audit(actor, AuditAction.IDENTITY_DOCUMENT_VIEWED, verification, side.name());
         String publicId =
                 switch (side) {
                     case FRONT -> verification.getFrontPublicId();
@@ -149,6 +150,7 @@ public class IdentityVerificationAdminService implements IdentityVerificationAdm
             throw new AppException(ErrorCode.INVALID_STATUS_TRANSITION);
         }
         verification.setAttemptLimit(verification.getAttemptLimit() + GRANTED_ATTEMPTS);
+        verification.setManualReviewRequestedAt(null);
         audit(
                 actor,
                 AuditAction.IDENTITY_VERIFICATION_ATTEMPTS_GRANTED,
@@ -199,6 +201,7 @@ public class IdentityVerificationAdminService implements IdentityVerificationAdm
                 .attemptLimit(verification.getAttemptLimit())
                 .submittedAt(verification.getSubmittedAt())
                 .reviewedAt(verification.getReviewedAt())
+                .manualReviewRequestedAt(verification.getManualReviewRequestedAt())
                 .build();
     }
 

@@ -48,11 +48,34 @@ export interface CoverLetterApiResponse {
   notice: string;
 }
 
+export interface ResumeMatchQuota {
+  freeUsedThisMonth: number;
+  freeLimit: number;
+  freeRemaining: number;
+  paidRemaining: number;
+  totalRemaining: number;
+  resetAt: string;
+}
+
 export async function requestResumeMatch(payload: ResumeMatchApiPayload): Promise<ResumeMatchApiResponse> {
-  return request<ResumeMatchApiResponse>('/ai/resume-match', {
+  return request<ResumeMatchApiResponse>('/recruiter/ai/resume-match', {
     method: 'POST',
     body: payload,
-    auth: false,
+    auth: true,
+  });
+}
+
+export async function analyzeApplicationResume(applicationId: number): Promise<ResumeMatchApiResponse> {
+  return request<ResumeMatchApiResponse>(`/recruiter/ai/applications/${applicationId}/resume-match`, {
+    method: 'POST',
+    auth: true,
+  });
+}
+
+export async function getResumeMatchQuota(): Promise<ResumeMatchQuota> {
+  return request<ResumeMatchQuota>('/recruiter/ai/resume-match/quota', {
+    method: 'GET',
+    auth: true,
   });
 }
 
