@@ -2,8 +2,8 @@
 
 import CandidateConversationListItem from '@/components/candidate/connect/CandidateConversationListItem';
 import CandidateInvitationListItem from '@/components/candidate/connect/CandidateInvitationListItem';
-import CatEmptyIllustration from '@/components/connect/CatEmptyIllustration';
 import ConnectSettingsDropdown from '@/components/connect/ConnectSettingsDropdown';
+import ConnectSidebarEmptyState from '@/components/connect/ConnectSidebarEmptyState';
 import IntervueConnectLogo from '@/components/connect/IntervueConnectLogo';
 import Spinner from '@/components/common/Spinner';
 import { Input } from '@/components/ui/Input';
@@ -12,7 +12,7 @@ import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useInView } from '@/hooks/useInView';
 import { cn } from '@/lib/utils';
 import type { ConversationSummary } from '@/types/connect';
-import { Search, Sparkles } from 'lucide-react';
+import { MessageCircleMore, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -88,17 +88,17 @@ export default function CandidateConnectSidebar({
   return (
     <div
       className={cn(
-        'border-outline-variant flex h-full w-full flex-col border-r bg-white md:w-80',
+        'border-outline-variant flex h-full w-full shrink-0 flex-col border-r bg-white md:w-[368px] lg:w-[356px] xl:w-[388px] 2xl:w-[404px]',
         selectedId !== null && 'hidden md:flex',
       )}
     >
       {/* Top Header of Sidebar */}
-      <div className="border-outline-variant flex items-center justify-between gap-2 border-b px-4 py-3.5">
+      <div className="flex h-14 shrink-0 items-center justify-between gap-2 px-4">
         <IntervueConnectLogo />
-        <div className="flex items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1.5">
           <Link
             href={ROUTES.HOME}
-            className="text-body-sm text-on-surface-variant hover:bg-surface-container-low rounded-full px-2.5 py-1.5 font-semibold transition-colors"
+            className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium whitespace-nowrap text-slate-700 transition-colors hover:bg-slate-200/80"
           >
             Home
           </Link>
@@ -107,25 +107,28 @@ export default function CandidateConnectSidebar({
       </div>
 
       {/* Search Bar */}
-      <div className="px-4 pt-3">
+      <div className="px-4 pt-1 pb-3">
         <Input
+          radius="full"
+          focusTone="neutral"
           placeholder="Search company, recruiter..."
           leftIcon={<Search className="h-4 w-4" />}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
+          className="h-9.5 bg-slate-50/70 text-[13px]"
         />
       </div>
 
-      {/* Promo Banner Card (Image 3 style) */}
-      <div className="px-4 pt-3">
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 p-3 text-white shadow-xs">
-          <div className="flex items-start gap-2.5">
-            <div className="rounded-lg bg-white/20 p-1.5">
-              <Sparkles className="h-4 w-4 text-emerald-200" />
+      {/* Connect Info Card */}
+      <div className="px-4">
+        <div className="rounded-lg border border-emerald-200/80 bg-gradient-to-br from-emerald-50/85 via-white to-teal-50/40 p-4 shadow-[0_2px_10px_rgba(16,185,129,0.06)]">
+          <div className="flex items-start gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-100/80 text-emerald-700">
+              <MessageCircleMore className="h-5 w-5" />
             </div>
-            <div>
-              <p className="text-xs font-bold">InterVue Connect</p>
-              <p className="mt-0.5 text-[11px] leading-tight text-emerald-100">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-slate-900">InterVue Connect</p>
+              <p className="mt-1 text-[13px] leading-relaxed text-slate-600">
                 Chat directly with recruiters and schedule interviews faster.
               </p>
             </div>
@@ -134,15 +137,15 @@ export default function CandidateConnectSidebar({
       </div>
 
       {/* Navigation Tabs */}
-      <div className="border-outline-variant mt-3 flex items-center gap-4 border-b px-4">
+      <div className="border-outline-variant mt-3 flex items-center gap-3 border-b px-4 sm:gap-4">
         <button
           type="button"
           onClick={() => onSelectTab('ALL')}
           className={cn(
-            'text-body-md -mb-px flex items-center gap-1.5 border-b-2 px-0.5 py-2.5 font-semibold transition-colors',
+            '-mb-px flex cursor-pointer items-center gap-1.5 border-b-2 px-1.5 py-2.5 text-[15px] transition-colors sm:text-base',
             selectedTab === 'ALL'
-              ? 'border-primary text-primary'
-              : 'text-on-surface-variant hover:text-on-surface border-transparent',
+              ? 'border-primary text-primary font-semibold'
+              : 'text-on-surface-variant hover:text-on-surface border-transparent font-medium',
           )}
         >
           <span>All</span>
@@ -157,10 +160,10 @@ export default function CandidateConnectSidebar({
           type="button"
           onClick={() => onSelectTab('UNREAD')}
           className={cn(
-            'text-body-md -mb-px flex items-center gap-1.5 border-b-2 px-0.5 py-2.5 font-semibold transition-colors',
+            '-mb-px flex cursor-pointer items-center gap-1.5 border-b-2 px-1.5 py-2.5 text-[15px] transition-colors sm:text-base',
             selectedTab === 'UNREAD'
-              ? 'border-primary text-primary'
-              : 'text-on-surface-variant hover:text-on-surface border-transparent',
+              ? 'border-primary text-primary font-semibold'
+              : 'text-on-surface-variant hover:text-on-surface border-transparent font-medium',
           )}
         >
           <span>Unread</span>
@@ -175,10 +178,10 @@ export default function CandidateConnectSidebar({
           type="button"
           onClick={() => onSelectTab('INVITATIONS')}
           className={cn(
-            'text-body-md -mb-px flex items-center gap-1.5 border-b-2 px-0.5 py-2.5 font-semibold transition-colors',
+            '-mb-px flex cursor-pointer items-center gap-1.5 border-b-2 px-1.5 py-2.5 text-[15px] transition-colors sm:text-base',
             selectedTab === 'INVITATIONS'
-              ? 'border-primary text-primary'
-              : 'text-on-surface-variant hover:text-on-surface border-transparent',
+              ? 'border-primary text-primary font-semibold'
+              : 'text-on-surface-variant hover:text-on-surface border-transparent font-medium',
           )}
         >
           <span>Invitations</span>
@@ -197,24 +200,29 @@ export default function CandidateConnectSidebar({
             <Spinner />
           </div>
         ) : activeList.length === 0 ? (
-          <div className="py-12">
-            <CatEmptyIllustration
-              title={
-                selectedTab === 'INVITATIONS'
-                  ? 'No invitations yet...'
-                  : selectedTab === 'UNREAD'
-                    ? 'No unread conversations'
-                    : 'No conversations yet...'
-              }
-              description={
-                selectedTab === 'INVITATIONS'
-                  ? 'Chat invitations from recruiters will arrive here.'
-                  : selectedTab === 'UNREAD'
-                    ? 'All conversations have been read.'
-                    : 'Companies you connect with will appear here.'
-              }
-            />
-          </div>
+          <ConnectSidebarEmptyState
+            mobileTitle={
+              selectedTab === 'INVITATIONS'
+                ? 'No invitations yet...'
+                : selectedTab === 'UNREAD'
+                  ? 'No unread conversations'
+                  : 'No conversations yet...'
+            }
+            desktopTitle={
+              selectedTab === 'INVITATIONS'
+                ? 'No invitations yet'
+                : selectedTab === 'UNREAD'
+                  ? 'No unread conversations'
+                  : 'No conversations yet'
+            }
+            description={
+              selectedTab === 'INVITATIONS'
+                ? 'Chat invitations from recruiters will arrive here.'
+                : selectedTab === 'UNREAD'
+                  ? 'All conversations have been read.'
+                  : 'Companies you connect with will appear here.'
+            }
+          />
         ) : (
           <div className="space-y-1">
             {selectedTab !== 'INVITATIONS'
