@@ -69,6 +69,7 @@ export default function ConnectThreadHeader({
           isUnblocking={isUnblocking}
           onReport={onReport}
           blocked={conversation.status === 'BLOCKED'}
+          canBlock={conversation.status === 'ACCEPTED'}
           canUnblock={canUnblock}
         />
         <ConnectRightPanelToggle />
