@@ -86,6 +86,9 @@ public class JobService implements JobServiceInterface {
         applyScreeningQuestions(job, request);
         if (job.getStatus() != JobStatus.DRAFT) {
             publishRules.assertComplete(job);
+            entitlementService
+                    .jobSlotExpiresAt(job.getId())
+                    .ifPresent(endsAt -> assertDeadlineWithinSlot(job.getDeadline(), endsAt));
         }
         return jobMapper.toResource(job);
     }
@@ -125,8 +128,9 @@ public class JobService implements JobServiceInterface {
     public JobResource publish(Long jobId, Long recruiterId) {
         Job job = requireOwned(jobId, recruiterId);
         requireStatus(job, Set.of(JobStatus.DRAFT));
-        JobResource published = goLive(job, recruiterId);
+        assertReadyToGoLive(job, recruiterId);
         consumeJobSlot(job, recruiterId);
+        JobResource published = markLive(job);
         eventPublisher.publishEvent(
                 new JobPublishedEvent(
                         job.getId(),
@@ -141,7 +145,33 @@ public class JobService implements JobServiceInterface {
     public JobResource resume(Long jobId, Long recruiterId) {
         Job job = requireOwned(jobId, recruiterId);
         requireStatus(job, Set.of(JobStatus.PAUSED));
-        return goLive(job, recruiterId);
+        assertReadyToGoLive(job, recruiterId);
+        entitlementService
+                .jobSlotExpiresAt(job.getId())
+                .ifPresent(
+                        endsAt -> {
+                            if (endsAt.isBefore(Instant.now())) {
+                                throw new AppException(ErrorCode.ENTITLEMENT_EXPIRED);
+                            }
+                            assertDeadlineWithinSlot(job.getDeadline(), endsAt);
+                        });
+        return markLive(job);
+    }
+
+    @Override
+    @Transactional
+    public JobResource retop(Long jobId, Long recruiterId) {
+        Job job = requireOwned(jobId, recruiterId);
+        if (job.getStatus() != JobStatus.PUBLISHED
+                || (job.getDeadline() != null
+                        && job.getDeadline().isBefore(JobDeadlines.today()))) {
+            throw new AppException(ErrorCode.JOB_MUST_BE_PUBLISHED);
+        }
+        if (!entitlementService.consumeRetop(job.getCompanyId(), job.getId(), recruiterId)) {
+            throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
+        }
+        job.setRetoppedAt(Instant.now());
+        return jobMapper.toResource(job);
     }
 
     @Override
@@ -208,15 +238,28 @@ public class JobService implements JobServiceInterface {
         }
     }
 
-    private JobResource goLive(Job job, Long recruiterId) {
+    private void assertReadyToGoLive(Job job, Long recruiterId) {
         companyVerificationService.assertCanPublish(recruiterId);
         publishRules.assertComplete(job);
         statusPolicy.requireTransition(job.getStatus(), JobStatus.PUBLISHED);
+    }
+
+    private JobResource markLive(Job job) {
         job.setStatus(JobStatus.PUBLISHED);
         if (job.getPublishedAt() == null) {
             job.setPublishedAt(Instant.now());
         }
         return jobMapper.toResource(job);
+    }
+
+    private void assertDeadlineWithinSlot(LocalDate deadline, Instant slotEndsAt) {
+        if (deadline != null && slotEndsAt != null) {
+            LocalDate latestAllowed = JobDeadlines.toBusinessDate(slotEndsAt);
+            if (deadline.isAfter(latestAllowed)) {
+                throw AppException.validation(
+                        "deadline", "The package you bought runs until " + latestAllowed);
+            }
+        }
     }
 
     private void requireStatus(Job job, Set<JobStatus> allowed) {

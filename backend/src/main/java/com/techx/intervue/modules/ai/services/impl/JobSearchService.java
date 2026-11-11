@@ -185,7 +185,7 @@ public class JobSearchService implements JobSearchServiceInterface {
 
     @Override
     public List<JobSearchResult> search(String keyword, String level, String location, int limit) {
-        int maxResults = Math.min(Math.max(1, limit), 5);
+        int maxResults = Math.min(Math.max(1, limit), 20);
 
         if (publicJobService != null) {
             try {

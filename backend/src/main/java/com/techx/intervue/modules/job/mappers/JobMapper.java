@@ -16,6 +16,7 @@ import com.techx.intervue.modules.job.resources.PublicJobSummaryResource;
 import com.techx.intervue.modules.job.resources.ScreeningQuestionResource;
 import com.techx.intervue.modules.job.resources.ScreeningSummaryResource;
 import com.techx.intervue.modules.job.resources.SkillResource;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -56,6 +57,10 @@ public class JobMapper {
     }
 
     public JobResource toResource(Job job) {
+        Instant now = Instant.now();
+        int boostLevel = effectiveBoostLevel(job, now);
+        String highlightLabel = effectiveHighlightLabel(job, now);
+        boolean highlighted = effectiveHighlighted(job, now);
         return JobResource.builder()
                 .id(job.getId())
                 .title(job.getTitle())
@@ -80,20 +85,23 @@ public class JobMapper {
                 .openings(job.getOpenings())
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
+                .retoppedAt(job.getRetoppedAt())
                 .hiddenReason(job.getHiddenReason())
                 .hiddenAt(job.getHiddenAt())
-                .boostLevel(job.getBoostLevel())
-                .boostExpiresAt(job.getBoostExpiresAt())
-                .highlightLabel(job.getHighlightLabel())
-                .highlightLabelExpiresAt(job.getHighlightLabelExpiresAt())
-                .highlighted(job.getHighlighted())
-                .highlightExpiresAt(job.getHighlightExpiresAt())
+                .boostLevel(boostLevel)
+                .boostExpiresAt(boostLevel > 0 ? job.getBoostExpiresAt() : null)
+                .highlightLabel(highlightLabel)
+                .highlightLabelExpiresAt(
+                        highlightLabel != null ? job.getHighlightLabelExpiresAt() : null)
+                .highlighted(highlighted)
+                .highlightExpiresAt(highlighted ? job.getHighlightExpiresAt() : null)
                 .createdAt(job.getCreatedAt())
                 .updatedAt(job.getUpdatedAt())
                 .build();
     }
 
     public JobSummaryResource toSummary(Job job) {
+        Instant now = Instant.now();
         return JobSummaryResource.builder()
                 .id(job.getId())
                 .title(job.getTitle())
@@ -106,8 +114,9 @@ public class JobMapper {
                 .openings(job.getOpenings())
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
-                .boostLevel(job.getBoostLevel())
-                .highlightLabel(job.getHighlightLabel())
+                .retoppedAt(job.getRetoppedAt())
+                .boostLevel(effectiveBoostLevel(job, now))
+                .highlightLabel(effectiveHighlightLabel(job, now))
                 .updatedAt(job.getUpdatedAt())
                 .build();
     }
@@ -130,6 +139,7 @@ public class JobMapper {
     }
 
     public PublicJobSummaryResource toPublicSummary(Job job, String logoUrl) {
+        Instant now = Instant.now();
         return PublicJobSummaryResource.builder()
                 .id(job.getId())
                 .title(job.getTitle())
@@ -142,13 +152,14 @@ public class JobMapper {
                 .skills(toSkills(job))
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
-                .boostLevel(job.getBoostLevel())
-                .highlightLabel(job.getHighlightLabel())
-                .highlighted(job.getHighlighted())
+                .boostLevel(effectiveBoostLevel(job, now))
+                .highlightLabel(effectiveHighlightLabel(job, now))
+                .highlighted(effectiveHighlighted(job, now))
                 .build();
     }
 
     public PublicJobResource toPublicResource(Job job, String logoUrl, String companyAddress) {
+        Instant now = Instant.now();
         return PublicJobResource.builder()
                 .id(job.getId())
                 .title(job.getTitle())
@@ -171,7 +182,35 @@ public class JobMapper {
                 .screening(toScreeningSummary(job))
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
+                .boostLevel(effectiveBoostLevel(job, now))
+                .highlightLabel(effectiveHighlightLabel(job, now))
+                .highlighted(effectiveHighlighted(job, now))
                 .build();
+    }
+
+    private int effectiveBoostLevel(Job job, Instant now) {
+        if (job.getBoostLevel() == null || job.getBoostLevel() <= 0) {
+            return 0;
+        }
+        return job.getBoostExpiresAt() == null || job.getBoostExpiresAt().isAfter(now)
+                ? job.getBoostLevel()
+                : 0;
+    }
+
+    private String effectiveHighlightLabel(Job job, Instant now) {
+        if (job.getHighlightLabel() == null) {
+            return null;
+        }
+        return job.getHighlightLabelExpiresAt() == null
+                        || job.getHighlightLabelExpiresAt().isAfter(now)
+                ? job.getHighlightLabel()
+                : null;
+    }
+
+    private boolean effectiveHighlighted(Job job, Instant now) {
+        return Boolean.TRUE.equals(job.getHighlighted())
+                && (job.getHighlightExpiresAt() == null
+                        || job.getHighlightExpiresAt().isAfter(now));
     }
 
     private PublicJobCompanyResource toPublicCompany(

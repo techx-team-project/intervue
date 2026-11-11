@@ -34,6 +34,7 @@ public record JobResource(
         int openings,
         LocalDate deadline,
         Instant publishedAt,
+        Instant retoppedAt,
         String hiddenReason,
         Instant hiddenAt,
         Integer boostLevel,

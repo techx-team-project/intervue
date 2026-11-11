@@ -252,6 +252,14 @@ public enum ErrorCode {
     JOB_DEADLINE_EXCEEDS_PACKAGE(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "The deadline is later than the package you bought allows!"),
+    JOB_LABEL_CONFLICT(
+            HttpStatus.CONFLICT,
+            "This job already has an active highlight label; wait until it expires before applying another!"),
+    JOB_MUST_BE_PUBLISHED(
+            HttpStatus.UNPROCESSABLE_CONTENT, "Only published jobs can be pushed to the top!"),
+    AD_BANNER_QUANTITY_LOCKED(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "Banner slot duration cannot be changed from the cart!"),
     CONNECTION_QUOTA_EXCEEDED(
             HttpStatus.TOO_MANY_REQUESTS, "You have reached your daily invitation limit!"),
     CONNECTION_ALREADY_EXISTS(

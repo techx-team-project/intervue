@@ -15,9 +15,11 @@ public interface JobBoostPortInterface {
 
     void applyHighlight(Long jobId, Instant expiresAt);
 
+    void applyRetop(Long jobId, Instant retoppedAt);
+
     void clearExpiredBoost(Long jobId);
 
-    void clearExpiredLabel(Long jobId);
+    void clearExpiredLabel(Long jobId, String expectedLabel);
 
     void clearExpiredHighlight(Long jobId);
 }

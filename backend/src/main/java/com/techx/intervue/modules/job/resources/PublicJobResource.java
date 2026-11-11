@@ -27,4 +27,7 @@ public record PublicJobResource(
         int openings,
         ScreeningSummaryResource screening,
         LocalDate deadline,
-        Instant publishedAt) {}
+        Instant publishedAt,
+        Integer boostLevel,
+        String highlightLabel,
+        Boolean highlighted) {}

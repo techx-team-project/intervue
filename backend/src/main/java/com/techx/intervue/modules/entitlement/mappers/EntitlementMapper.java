@@ -16,7 +16,8 @@ public class EntitlementMapper {
                     EntitlementType.JOB_BOOST,
                     EntitlementType.JOB_LABEL_URGENT,
                     EntitlementType.JOB_LABEL_HOT,
-                    EntitlementType.JOB_HIGHLIGHT);
+                    EntitlementType.JOB_HIGHLIGHT,
+                    EntitlementType.JOB_RETOP);
 
     public static final Set<EntitlementType> ACTIVATABLE_ON_COMPANY =
             Set.of(EntitlementType.BRAND_PAGE, EntitlementType.FEATURED_COMPANY);

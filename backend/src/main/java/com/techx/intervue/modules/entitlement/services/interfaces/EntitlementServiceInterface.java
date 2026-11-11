@@ -22,6 +22,12 @@ public interface EntitlementServiceInterface {
     /** Returns the duration the consumed slot allows, or empty when no slot was available. */
     Optional<Integer> consumeJobSlot(Long companyId, Long jobId, Long recruiterId);
 
+    /** Returns when the consumed job slot usage expires for the given job, if recorded. */
+    Optional<Instant> jobSlotExpiresAt(Long jobId);
+
+    /** Spends one retop unit against the given job and records an ended usage entry. */
+    boolean consumeRetop(Long companyId, Long jobId, Long recruiterId);
+
     /** Companies from the given set that still hold an unused alert-priority slot. */
     Set<Long> companiesWithAlertPush(Collection<Long> companyIds);
 

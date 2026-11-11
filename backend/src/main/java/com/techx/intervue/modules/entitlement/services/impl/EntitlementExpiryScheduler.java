@@ -22,7 +22,7 @@ public class EntitlementExpiryScheduler {
     private final EntitlementUsageRepository usageRepository;
     private final JobBoostPortInterface jobBoostPort;
 
-    @Scheduled(cron = "0 15 * * * *", zone = "Asia/Ho_Chi_Minh")
+    @Scheduled(cron = "0 * * * * *", zone = "Asia/Ho_Chi_Minh")
     @Transactional
     public void endExpiredUsages() {
         Instant now = Instant.now();
@@ -37,8 +37,8 @@ public class EntitlementExpiryScheduler {
             // The job stays published; only the paid-for display effect ends
             switch (usage.getEntitlementType()) {
                 case JOB_BOOST -> jobBoostPort.clearExpiredBoost(usage.getJobId());
-                case JOB_LABEL_URGENT, JOB_LABEL_HOT ->
-                        jobBoostPort.clearExpiredLabel(usage.getJobId());
+                case JOB_LABEL_URGENT -> jobBoostPort.clearExpiredLabel(usage.getJobId(), "URGENT");
+                case JOB_LABEL_HOT -> jobBoostPort.clearExpiredLabel(usage.getJobId(), "HOT");
                 case JOB_HIGHLIGHT -> jobBoostPort.clearExpiredHighlight(usage.getJobId());
                 default -> {}
             }

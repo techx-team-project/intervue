@@ -24,6 +24,10 @@ public class JobBoostAdapter implements JobBoostPortInterface {
                 .findById(jobId)
                 .filter(job -> job.getCompanyId().equals(companyId))
                 .filter(job -> job.getStatus() == JobStatus.PUBLISHED)
+                .filter(
+                        job ->
+                                job.getDeadline() == null
+                                        || !job.getDeadline().isBefore(JobDeadlines.today()))
                 .isPresent();
     }
 
@@ -62,34 +66,55 @@ public class JobBoostAdapter implements JobBoostPortInterface {
 
     @Override
     @Transactional
+    public void applyRetop(Long jobId, Instant retoppedAt) {
+        apply(jobId, job -> job.setRetoppedAt(retoppedAt));
+    }
+
+    @Override
+    @Transactional
     public void clearExpiredBoost(Long jobId) {
+        Instant now = Instant.now();
         apply(
                 jobId,
                 job -> {
-                    job.setBoostLevel(0);
-                    job.setBoostExpiresAt(null);
+                    if (job.getBoostExpiresAt() == null || !job.getBoostExpiresAt().isAfter(now)) {
+                        job.setBoostLevel(0);
+                        job.setBoostExpiresAt(null);
+                    }
                 });
     }
 
     @Override
     @Transactional
-    public void clearExpiredLabel(Long jobId) {
+    public void clearExpiredLabel(Long jobId, String expectedLabel) {
+        Instant now = Instant.now();
         apply(
                 jobId,
                 job -> {
-                    job.setHighlightLabel(null);
-                    job.setHighlightLabelExpiresAt(null);
+                    boolean matchesLabel =
+                            expectedLabel == null || expectedLabel.equals(job.getHighlightLabel());
+                    boolean isExpired =
+                            job.getHighlightLabelExpiresAt() == null
+                                    || !job.getHighlightLabelExpiresAt().isAfter(now);
+                    if (matchesLabel && isExpired) {
+                        job.setHighlightLabel(null);
+                        job.setHighlightLabelExpiresAt(null);
+                    }
                 });
     }
 
     @Override
     @Transactional
     public void clearExpiredHighlight(Long jobId) {
+        Instant now = Instant.now();
         apply(
                 jobId,
                 job -> {
-                    job.setHighlighted(false);
-                    job.setHighlightExpiresAt(null);
+                    if (job.getHighlightExpiresAt() == null
+                            || !job.getHighlightExpiresAt().isAfter(now)) {
+                        job.setHighlighted(false);
+                        job.setHighlightExpiresAt(null);
+                    }
                 });
     }
 

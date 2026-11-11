@@ -65,8 +65,23 @@ public class EntitlementService implements EntitlementServiceInterface {
     @Override
     @Transactional
     public Optional<Integer> consumeJobSlot(Long companyId, Long jobId, Long recruiterId) {
-        return spend(companyId, EntitlementType.JOB_POST_SLOT, jobId, recruiterId)
-                .map(CompanyEntitlement::getDurationDays);
+        return spend(companyId, EntitlementType.JOB_POST_SLOT, jobId, recruiterId, false)
+                .map(lot -> lot.getDurationDays() != null ? lot.getDurationDays() : 30);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Instant> jobSlotExpiresAt(Long jobId) {
+        return usageRepository
+                .findFirstByJobIdAndEntitlementTypeOrderByStartedAtDesc(
+                        jobId, EntitlementType.JOB_POST_SLOT)
+                .map(EntitlementUsage::getEndsAt);
+    }
+
+    @Override
+    @Transactional
+    public boolean consumeRetop(Long companyId, Long jobId, Long recruiterId) {
+        return spend(companyId, EntitlementType.JOB_RETOP, jobId, recruiterId, true).isPresent();
     }
 
     @Override
@@ -75,10 +90,16 @@ public class EntitlementService implements EntitlementServiceInterface {
         if (companyIds.isEmpty()) {
             return Set.of();
         }
+        Instant now = Instant.now();
         return entitlementRepository
                 .findAllByCompanyIdInAndEntitlementTypeAndStatus(
                         companyIds, EntitlementType.JOB_ALERT_PUSH, EntitlementStatus.AVAILABLE)
                 .stream()
+                .filter(
+                        lot ->
+                                lot.getRemainingQuantity() > 0
+                                        && (lot.getActivationDeadline() == null
+                                                || lot.getActivationDeadline().isAfter(now)))
                 .map(CompanyEntitlement::getCompanyId)
                 .collect(Collectors.toSet());
     }
@@ -86,16 +107,13 @@ public class EntitlementService implements EntitlementServiceInterface {
     @Override
     @Transactional
     public boolean consumeAlertPush(Long companyId, Long jobId) {
-        return spend(companyId, EntitlementType.JOB_ALERT_PUSH, jobId, null).isPresent();
+        return spend(companyId, EntitlementType.JOB_ALERT_PUSH, jobId, null, true).isPresent();
     }
 
     @Override
     @Transactional(readOnly = true)
     public int remainingOf(Long companyId, EntitlementType type) {
-        return entitlementRepository
-                .findAllByCompanyIdAndEntitlementTypeAndStatusOrderByActivationDeadlineAsc(
-                        companyId, type, EntitlementStatus.AVAILABLE)
-                .stream()
+        return entitlementRepository.findUsableLots(companyId, type, Instant.now()).stream()
                 .mapToInt(CompanyEntitlement::getRemainingQuantity)
                 .sum();
     }
@@ -103,10 +121,7 @@ public class EntitlementService implements EntitlementServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public Optional<Instant> nearestExpiryOf(Long companyId, EntitlementType type) {
-        return entitlementRepository
-                .findAllByCompanyIdAndEntitlementTypeAndStatusOrderByActivationDeadlineAsc(
-                        companyId, type, EntitlementStatus.AVAILABLE)
-                .stream()
+        return entitlementRepository.findUsableLots(companyId, type, Instant.now()).stream()
                 .map(CompanyEntitlement::getActivationDeadline)
                 .findFirst();
     }
@@ -114,7 +129,7 @@ public class EntitlementService implements EntitlementServiceInterface {
     @Override
     @Transactional
     public boolean consumeUnit(Long companyId, EntitlementType type) {
-        return spend(companyId, type, null, null).isPresent();
+        return spend(companyId, type, null, null, true).isPresent();
     }
 
     @Override
@@ -158,16 +173,15 @@ public class EntitlementService implements EntitlementServiceInterface {
             throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
         }
 
+        Instant now = Instant.now();
         int left = amount;
         for (CompanyEntitlement candidate :
-                entitlementRepository
-                        .findAllByCompanyIdAndEntitlementTypeAndStatusOrderByActivationDeadlineAsc(
-                                companyId, type, EntitlementStatus.AVAILABLE)) {
+                entitlementRepository.findUsableLots(companyId, type, now)) {
             if (left == 0) {
                 break;
             }
             int take = Math.min(left, candidate.getRemainingQuantity());
-            if (entitlementRepository.consume(candidate.getId(), take) == 0) {
+            if (entitlementRepository.consume(candidate.getId(), take, now) == 0) {
                 continue;
             }
             usageRepository.save(
@@ -177,7 +191,8 @@ public class EntitlementService implements EntitlementServiceInterface {
                             .entitlementType(type)
                             .quantity(take)
                             .note(note)
-                            .startedAt(Instant.now())
+                            .startedAt(now)
+                            .endsAt(now)
                             .status(EntitlementUsageStatus.ENDED)
                             .build());
             left -= take;
@@ -221,10 +236,11 @@ public class EntitlementService implements EntitlementServiceInterface {
     @Override
     @Transactional
     public void consumeFromOrderItem(Long sourceOrderItemId, int amount) {
+        Instant now = Instant.now();
         CompanyEntitlement entitlement =
                 entitlementRepository.findBySourceOrderItemId(sourceOrderItemId).orElse(null);
         if (entitlement == null
-                || entitlementRepository.consume(entitlement.getId(), amount) == 0) {
+                || entitlementRepository.consume(entitlement.getId(), amount, now) == 0) {
             log.warn(
                     "Could not consume {} unit(s) from order item {}: lot missing or exhausted",
                     amount,
@@ -237,23 +253,24 @@ public class EntitlementService implements EntitlementServiceInterface {
                         .companyId(entitlement.getCompanyId())
                         .entitlementType(entitlement.getEntitlementType())
                         .quantity(amount)
-                        .startedAt(Instant.now())
+                        .startedAt(now)
+                        .endsAt(now)
                         .status(EntitlementUsageStatus.ENDED)
                         .build());
     }
 
     // Nearest activation deadline first, so stock that would expire soonest is used up first
     private Optional<CompanyEntitlement> spend(
-            Long companyId, EntitlementType type, Long jobId, Long recruiterId) {
+            Long companyId, EntitlementType type, Long jobId, Long recruiterId, boolean instant) {
+        Instant now = Instant.now();
         List<CompanyEntitlement> candidates =
-                entitlementRepository
-                        .findAllByCompanyIdAndEntitlementTypeAndStatusOrderByActivationDeadlineAsc(
-                                companyId, type, EntitlementStatus.AVAILABLE);
+                entitlementRepository.findUsableLots(companyId, type, now);
 
         for (CompanyEntitlement candidate : candidates) {
-            if (entitlementRepository.consume(candidate.getId(), 1) == 0) {
+            if (entitlementRepository.consume(candidate.getId(), 1, now) == 0) {
                 continue;
             }
+            Instant endsAt = instant ? now : endsAt(candidate.getDurationDays());
             usageRepository.save(
                     EntitlementUsage.builder()
                             .entitlementId(candidate.getId())
@@ -262,9 +279,12 @@ public class EntitlementService implements EntitlementServiceInterface {
                             .jobId(jobId)
                             .quantity(1)
                             .activatedByRecruiterId(recruiterId)
-                            .startedAt(Instant.now())
-                            .endsAt(endsAt(candidate.getDurationDays()))
-                            .status(EntitlementUsageStatus.ACTIVE)
+                            .startedAt(now)
+                            .endsAt(endsAt)
+                            .status(
+                                    instant
+                                            ? EntitlementUsageStatus.ENDED
+                                            : EntitlementUsageStatus.ACTIVE)
                             .build());
             return Optional.of(candidate);
         }

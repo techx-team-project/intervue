@@ -19,4 +19,6 @@ public record PublicCompanyResource(
         String description,
         String benefits,
         String logoUrl,
-        List<String> photoUrls) {}
+        List<String> photoUrls,
+        Boolean featured,
+        Boolean brandPageActive) {}

@@ -12,4 +12,8 @@ final class JobDeadlines {
     static LocalDate today() {
         return LocalDate.now(BUSINESS_ZONE);
     }
+
+    static LocalDate toBusinessDate(java.time.Instant instant) {
+        return instant.atZone(BUSINESS_ZONE).toLocalDate();
+    }
 }
