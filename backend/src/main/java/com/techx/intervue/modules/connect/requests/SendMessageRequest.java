@@ -3,4 +3,8 @@ package com.techx.intervue.modules.connect.requests;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record SendMessageRequest(@NotBlank @Size(max = 2000) String body) {}
+public record SendMessageRequest(
+        @NotBlank @Size(max = 2000) String body,
+        @Size(max = 64) String clientMessageId,
+        Long replyToMessageId,
+        Boolean suppressLinkPreview) {}
