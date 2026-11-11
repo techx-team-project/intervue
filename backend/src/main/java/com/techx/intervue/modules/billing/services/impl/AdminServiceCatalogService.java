@@ -5,6 +5,9 @@ import com.techx.intervue.common.audit.enums.AuditActorType;
 import com.techx.intervue.common.audit.enums.AuditTargetType;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface;
 import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterface.AuditEntry;
+import com.techx.intervue.common.storage.StorageServiceInterface;
+import com.techx.intervue.common.storage.StorageTarget;
+import com.techx.intervue.common.storage.StoredFile;
 import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
@@ -41,6 +44,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +56,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
     private final ServicePackageSectionRepository sectionRepository;
     private final ServicePackageMapper mapper;
     private final AuditLogServiceInterface auditLogService;
+    private final StorageServiceInterface storageService;
 
     @Override
     @Transactional(readOnly = true)
@@ -256,6 +261,14 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 id,
                 status.name());
         return toResource(servicePackage);
+    }
+
+    @Override
+    public UploadedPackageImageResource uploadPackageImage(MultipartFile file) {
+        StoredFile stored =
+                storageService.upload(file, StorageTarget.IMAGE, "service-packages/images");
+        String url = storageService.publicImageUrl(stored.publicId());
+        return new UploadedPackageImageResource(url, stored.publicId());
     }
 
     private void replaceChildren(ServicePackage servicePackage, SaveServicePackageRequest request) {
