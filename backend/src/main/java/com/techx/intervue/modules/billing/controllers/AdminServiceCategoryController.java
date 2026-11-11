@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.billing.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.billing.requests.ReorderServiceCategoriesRequest;
 import com.techx.intervue.modules.billing.requests.SaveServiceCategoryRequest;
 import com.techx.intervue.modules.billing.resources.AdminServiceCategoryResource;
 import com.techx.intervue.modules.billing.services.interfaces.AdminServiceCatalogServiceInterface;
@@ -37,6 +38,13 @@ public class AdminServiceCategoryController extends BaseController {
                 "Service categories retrieved successfully!");
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResource<AdminServiceCategoryResource>> detail(@PathVariable Long id) {
+        return ok(
+                adminServiceCatalogService.getCategory(id),
+                "Service category retrieved successfully!");
+    }
+
     @PostMapping
     public ResponseEntity<ApiResource<AdminServiceCategoryResource>> create(
             @Valid @RequestBody SaveServiceCategoryRequest body,
@@ -56,6 +64,36 @@ public class AdminServiceCategoryController extends BaseController {
         return ok(
                 adminServiceCatalogService.updateCategory(id, body, actor(principal, request)),
                 "Service category updated successfully!");
+    }
+
+    @PutMapping("/reorder")
+    public ResponseEntity<ApiResource<List<AdminServiceCategoryResource>>> reorder(
+            @Valid @RequestBody ReorderServiceCategoriesRequest body,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest request) {
+        return ok(
+                adminServiceCatalogService.reorderCategories(body, actor(principal, request)),
+                "Service categories reordered successfully!");
+    }
+
+    @PostMapping("/{id}/activate")
+    public ResponseEntity<ApiResource<AdminServiceCategoryResource>> activate(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest request) {
+        return ok(
+                adminServiceCatalogService.setCategoryActive(id, true, actor(principal, request)),
+                "Service category enabled successfully!");
+    }
+
+    @PostMapping("/{id}/deactivate")
+    public ResponseEntity<ApiResource<AdminServiceCategoryResource>> deactivate(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest request) {
+        return ok(
+                adminServiceCatalogService.setCategoryActive(id, false, actor(principal, request)),
+                "Service category hidden successfully!");
     }
 
     @DeleteMapping("/{id}")

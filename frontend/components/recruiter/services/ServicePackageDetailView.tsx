@@ -3,28 +3,35 @@
 import Spinner from '@/components/common/Spinner';
 import { MarkdownRenderer } from '@/components/support-chat/MarkdownRenderer';
 import { NumberStepper } from '@/components/ui/NumberStepper';
-import { SERVICE_VAT_NOTE } from '@/constants/service-package';
 import { ROUTES } from '@/constants/routes';
+import { SERVICE_CATEGORY_ANCHOR_PREFIX, SERVICE_VAT_NOTE } from '@/constants/service-package';
 import { useAddToCart } from '@/hooks/useRecruiterCart';
 import { useServicePackage } from '@/hooks/useServiceCatalog';
-import { formatServicePrice } from '@/utils/service-package';
 import { isApiError } from '@/lib/api-error';
+import { cn } from '@/lib/utils';
 import { getErrorMessage } from '@/utils/error';
+import { formatServicePrice } from '@/utils/service-package';
 import { AlertCircle, ArrowLeft, Check, CheckCircle2, Clock, Gift, ShoppingCart, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface ServicePackageDetailViewProps {
   slug: string;
 }
+
+type ActionFeedback = {
+  type: 'success' | 'error';
+  message: string;
+};
 
 const DEFAULT_ACCENT = '#16a34a';
 
 export default function ServicePackageDetailView({ slug }: ServicePackageDetailViewProps) {
   const { data, isPending, isError, error } = useServicePackage(slug);
   const [quantity, setQuantity] = useState(1);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<ActionFeedback | null>(null);
   const router = useRouter();
   const addToCart = useAddToCart();
 
@@ -39,12 +46,14 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
   if (isError || !data) {
     const notFound = isApiError(error) && error.code === 'PACKAGE_NOT_AVAILABLE';
     return (
-      <div className="border-outline-variant rounded-xl border border-dashed px-6 py-16 text-center">
+      <div className="border-outline-variant rounded-xl border border-dashed bg-white px-6 py-16 text-center">
         <AlertCircle className="text-on-surface-variant mx-auto h-8 w-8" />
         <p className="text-on-surface mt-3 text-base font-bold">
           {notFound ? 'Không tìm thấy gói dịch vụ' : 'Không tải được gói dịch vụ'}
         </p>
-        <p className="text-on-surface-variant mt-1 text-sm">{getErrorMessage(error)}</p>
+        <p className="text-on-surface-variant mt-1 text-sm">
+          {notFound ? 'Gói dịch vụ này hiện đã ngừng mở bán hoặc danh mục đã tạm ẩn.' : getErrorMessage(error)}
+        </p>
         <Link
           href={ROUTES.RECRUITER_SERVICES}
           className="bg-primary mt-5 inline-flex h-10 items-center justify-center rounded-lg px-6 text-sm font-semibold text-white transition hover:brightness-95"
@@ -56,24 +65,37 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
   }
 
   const accent = data.accentColor ?? DEFAULT_ACCENT;
+  const backToCategoryHref = `${ROUTES.RECRUITER_SERVICES}#${SERVICE_CATEGORY_ANCHOR_PREFIX}${data.categoryCode}`;
 
   return (
     <div className="space-y-6 pb-20">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <Link
-          href={ROUTES.RECRUITER_SERVICES}
-          className="border-outline-variant text-on-surface-variant hover:bg-surface-container-low inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-sm font-medium transition"
+          href={backToCategoryHref}
+          className="border-outline-variant text-on-surface-variant hover:bg-surface-container-low inline-flex h-9 items-center gap-1.5 rounded-full border bg-white px-3.5 text-sm font-medium transition"
         >
           <ArrowLeft className="h-4 w-4" />
           Quay lại
         </Link>
         <h1 className="text-on-surface text-lg font-bold sm:text-xl">Chi tiết dịch vụ</h1>
+        <Link
+          href={backToCategoryHref}
+          className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 transition hover:bg-emerald-100"
+        >
+          {data.categoryName}
+        </Link>
       </div>
 
       <section className="border-outline-variant relative overflow-hidden rounded-xl border bg-gradient-to-r from-emerald-50 via-emerald-50/40 to-white">
         <div className="grid items-center gap-6 p-7 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div>
-            <p className="text-on-surface-variant text-sm font-semibold">{data.categoryHeadline}</p>
+            <p className="text-on-surface-variant text-sm font-semibold">
+              <Link href={backToCategoryHref} className="text-primary hover:underline">
+                {data.categoryName}
+              </Link>
+              <span className="text-outline mx-1.5">|</span>
+              <span>{data.categoryHeadline}</span>
+            </p>
             <p className="text-on-surface mt-1.5 text-3xl font-extrabold tracking-wide">{data.name}</p>
             {data.shortDescription && (
               <p className="text-on-surface-variant mt-3 flex items-start gap-2 text-sm leading-relaxed">
@@ -94,20 +116,34 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
         </div>
       </section>
 
-      {notice && (
-        <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-900">
+      {feedback && (
+        <div
+          role={feedback.type === 'error' ? 'alert' : 'status'}
+          className={cn(
+            'flex items-center justify-between rounded-lg border px-4 py-3 text-sm font-semibold',
+            feedback.type === 'success'
+              ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
+              : 'border-rose-200 bg-rose-50 text-rose-800',
+          )}
+        >
           <span className="flex items-center gap-2">
-            <Check className="h-4 w-4 text-emerald-600" />
-            {notice}
+            {feedback.type === 'success' ? (
+              <Check className="h-4 w-4 shrink-0 text-emerald-600" />
+            ) : (
+              <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+            )}
+            {feedback.message}
           </span>
           <span className="flex items-center gap-3">
-            <Link href={ROUTES.RECRUITER_CART} className="text-primary font-bold hover:underline">
-              Xem giỏ hàng
-            </Link>
+            {feedback.type === 'success' && (
+              <Link href={ROUTES.RECRUITER_CART} className="text-primary font-bold hover:underline">
+                Xem giỏ hàng
+              </Link>
+            )}
             <button
               type="button"
-              onClick={() => setNotice(null)}
-              className="cursor-pointer text-emerald-600 transition hover:text-emerald-800"
+              onClick={() => setFeedback(null)}
+              className="cursor-pointer opacity-70 transition hover:opacity-100"
               aria-label="Đóng thông báo"
             >
               <X className="h-4 w-4" />
@@ -201,8 +237,16 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                   addToCart.mutate(
                     { packageId: data.id, quantity },
                     {
-                      onSuccess: () => setNotice(`Đã thêm "${data.name}" vào giỏ hàng.`),
-                      onError: (cause) => setNotice(getErrorMessage(cause)),
+                      onSuccess: () => {
+                        const message = `Đã thêm "${data.name}" vào giỏ hàng.`;
+                        setFeedback({ type: 'success', message });
+                        toast.success(message);
+                      },
+                      onError: (cause) => {
+                        const message = getErrorMessage(cause);
+                        setFeedback({ type: 'error', message });
+                        toast.error(message);
+                      },
                     },
                   )
                 }
@@ -219,7 +263,11 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                     { packageId: data.id, quantity },
                     {
                       onSuccess: () => router.push(ROUTES.RECRUITER_CART),
-                      onError: (cause) => setNotice(getErrorMessage(cause)),
+                      onError: (cause) => {
+                        const message = getErrorMessage(cause);
+                        setFeedback({ type: 'error', message });
+                        toast.error(message);
+                      },
                     },
                   )
                 }

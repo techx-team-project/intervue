@@ -12,6 +12,44 @@ export const SERVICE_NEED_OPTIONS: { key: ServiceNeedKey; label: string }[] = [
   },
 ];
 
+export const SERVICE_NEED_ADMIN_META: Record<
+  ServiceNeedKey,
+  { label: string; shortLabel: string; summary: string; recruiterChoice: string }
+> = {
+  REACH: {
+    label: 'Candidate reach & ads',
+    shortLabel: 'Candidate reach',
+    summary: 'Scrolls recruiters looking for broader candidate visibility to this section',
+    recruiterChoice: 'Hỗ trợ quảng cáo và tăng lượt tiếp cận với ứng viên',
+  },
+  CONNECT: {
+    label: 'Flexible credits & tools',
+    shortLabel: 'Flexible credits',
+    summary: 'Scrolls recruiters choosing flexible credit utilities across hiring stages',
+    recruiterChoice: 'Linh hoạt chọn tiện ích theo từng giai đoạn tuyển dụng',
+  },
+  HIGHLIGHT: {
+    label: 'Job post highlight',
+    shortLabel: 'Job highlight',
+    summary: 'Scrolls recruiters looking to boost job visibility with badges and highlights',
+    recruiterChoice: 'Làm nổi bật tin tuyển dụng để tăng hiệu quả với ứng viên',
+  },
+  BRANDING: {
+    label: 'Employer branding',
+    shortLabel: 'Employer branding',
+    summary: 'Scrolls recruiters focused on building employer brand presence',
+    recruiterChoice: 'Xây dựng hình ảnh thương hiệu tuyển dụng uy tín, nâng cao hiệu quả hoạt động tuyển dụng',
+  },
+};
+
+export const SERVICE_NEED_ADMIN_SELECT_OPTIONS: { value: string; label: string }[] = [
+  { value: '', label: 'None (excluded from suggestion modal)' },
+  ...(Object.keys(SERVICE_NEED_ADMIN_META) as ServiceNeedKey[]).map((key) => ({
+    value: key,
+    label: `${key} — ${SERVICE_NEED_ADMIN_META[key].label}`,
+  })),
+];
+
 export const SERVICE_NEED_MODAL_COPY = {
   title: 'Gợi ý gói dịch vụ phù hợp',
   description: 'Hãy chọn một trong các nhu cầu bên dưới để chúng tôi có thể giúp bạn đưa ra gợi ý chính xác nhất nhé.',

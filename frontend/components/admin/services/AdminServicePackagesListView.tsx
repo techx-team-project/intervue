@@ -17,6 +17,7 @@ import { useCallback, useState } from 'react';
 interface AdminServicePackagesListViewProps {
   initialPage: Page<AdminServicePackage> | undefined;
   categories: AdminServiceCategory[];
+  initialCategoryId?: string;
 }
 
 const PAGE_SIZE = 20;
@@ -28,10 +29,14 @@ const STATUS_OPTIONS = [
   { value: 'INACTIVE', label: 'Inactive' },
 ];
 
-export default function AdminServicePackagesListView({ initialPage, categories }: AdminServicePackagesListViewProps) {
+export default function AdminServicePackagesListView({
+  initialPage,
+  categories,
+  initialCategoryId = '',
+}: AdminServicePackagesListViewProps) {
   const [result, setResult] = useState<Page<AdminServicePackage> | undefined>(initialPage);
   const [query, setQuery] = useState('');
-  const [categoryId, setCategoryId] = useState('');
+  const [categoryId, setCategoryId] = useState(initialCategoryId);
   const [status, setStatus] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isBusy, setIsBusy] = useState(false);
@@ -67,7 +72,10 @@ export default function AdminServicePackagesListView({ initialPage, categories }
 
   const categoryOptions = [
     { value: '', label: 'All categories' },
-    ...categories.map((category) => ({ value: String(category.id), label: category.code })),
+    ...categories.map((category) => ({
+      value: String(category.id),
+      label: `${category.name} (${category.code})${category.isActive ? '' : ' — Hidden'}`,
+    })),
   ];
 
   return (

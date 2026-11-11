@@ -1,5 +1,6 @@
 import AdminServicePackagesPageClient from '@/components/admin/services/AdminServicePackagesPageClient';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Service Packages | InterVue Admin',
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminServicePackagesPage() {
-  return <AdminServicePackagesPageClient />;
+  return (
+    <Suspense fallback={null}>
+      <AdminServicePackagesPageClient />
+    </Suspense>
+  );
 }

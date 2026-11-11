@@ -64,7 +64,9 @@ function toOptionalText(value: string): string | null {
 export default function AdminServicePackageForm({ categories, initial }: AdminServicePackageFormProps) {
   const router = useRouter();
 
-  const [categoryId, setCategoryId] = useState(String(initial?.categoryId ?? categories[0]?.id ?? ''));
+  const defaultCategoryId =
+    initial?.categoryId ?? categories.find((category) => category.isActive)?.id ?? categories[0]?.id ?? '';
+  const [categoryId, setCategoryId] = useState(String(defaultCategoryId));
   const [code, setCode] = useState(initial?.code ?? '');
   const [slug, setSlug] = useState(initial?.slug ?? '');
   const [name, setName] = useState(initial?.name ?? '');
@@ -178,7 +180,10 @@ export default function AdminServicePackageForm({ categories, initial }: AdminSe
           label="Category"
           value={categoryId}
           onChange={(event) => setCategoryId(event.target.value)}
-          options={categories.map((category) => ({ value: String(category.id), label: category.code }))}
+          options={categories.map((category) => ({
+            value: String(category.id),
+            label: `${category.name} (${category.code})${category.isActive ? '' : ' — Hidden'}`,
+          }))}
           required
         />
         <Input label="Name" value={name} onChange={(event) => setName(event.target.value)} required />

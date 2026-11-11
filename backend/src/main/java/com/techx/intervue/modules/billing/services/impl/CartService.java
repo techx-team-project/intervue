@@ -6,7 +6,6 @@ import com.techx.intervue.modules.billing.entities.BillingSettings;
 import com.techx.intervue.modules.billing.entities.Cart;
 import com.techx.intervue.modules.billing.entities.CartItem;
 import com.techx.intervue.modules.billing.entities.ServicePackage;
-import com.techx.intervue.modules.billing.enums.ServicePackageStatus;
 import com.techx.intervue.modules.billing.mappers.CartMapper;
 import com.techx.intervue.modules.billing.repositories.CartItemRepository;
 import com.techx.intervue.modules.billing.repositories.CartRepository;
@@ -92,6 +91,9 @@ public class CartService implements CartServiceInterface {
                 cartItemRepository
                         .findByIdAndCartId(itemId, cart.getId())
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        if (!item.getServicePackage().isAvailableInCatalog()) {
+            throw new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE);
+        }
         item.setQuantity(request.quantity());
         return toResource(cart);
     }
@@ -130,7 +132,7 @@ public class CartService implements CartServiceInterface {
                 packageRepository
                         .findById(packageId)
                         .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE));
-        if (servicePackage.getStatus() != ServicePackageStatus.ACTIVE) {
+        if (!servicePackage.isAvailableInCatalog()) {
             throw new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE);
         }
         return servicePackage;

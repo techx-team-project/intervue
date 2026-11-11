@@ -12,6 +12,8 @@ interface ServiceNeedSuggestionModalProps {
   onClose: () => void;
   onConfirm: (need: ServiceNeedKey) => void;
   onDismissForever: () => void;
+  availableNeedKeys?: Set<ServiceNeedKey>;
+  allowDismissForever?: boolean;
 }
 
 export default function ServiceNeedSuggestionModal({
@@ -19,18 +21,20 @@ export default function ServiceNeedSuggestionModal({
   onClose,
   onConfirm,
   onDismissForever,
+  availableNeedKeys,
+  allowDismissForever = true,
 }: ServiceNeedSuggestionModalProps) {
   const [selected, setSelected] = useState<ServiceNeedKey | null>(null);
   const [neverShowAgain, setNeverShowAgain] = useState(false);
 
   const handleConfirm = () => {
     if (!selected) return;
-    if (neverShowAgain) onDismissForever();
+    if (allowDismissForever && neverShowAgain) onDismissForever();
     onConfirm(selected);
   };
 
   const handleClose = () => {
-    if (neverShowAgain) onDismissForever();
+    if (allowDismissForever && neverShowAgain) onDismissForever();
     onClose();
   };
 
@@ -41,22 +45,35 @@ export default function ServiceNeedSuggestionModal({
       <div className="mt-5 grid items-center gap-6 sm:grid-cols-[minmax(0,1fr)_200px]">
         <fieldset className="space-y-1">
           <legend className="sr-only">{SERVICE_NEED_MODAL_COPY.title}</legend>
-          {SERVICE_NEED_OPTIONS.map((option) => (
-            <label
-              key={option.key}
-              className="hover:bg-surface-container-low flex cursor-pointer items-start gap-3 rounded-lg p-2.5 transition"
-            >
-              <input
-                type="radio"
-                name="service-need"
-                value={option.key}
-                checked={selected === option.key}
-                onChange={() => setSelected(option.key)}
-                className="accent-primary mt-0.5 h-4.5 w-4.5 cursor-pointer"
-              />
-              <span className="text-on-surface text-sm leading-relaxed">{option.label}</span>
-            </label>
-          ))}
+          {SERVICE_NEED_OPTIONS.map((option) => {
+            const isAvailable = !availableNeedKeys || availableNeedKeys.has(option.key);
+
+            return (
+              <label
+                key={option.key}
+                className={cn(
+                  'flex items-start gap-3 rounded-lg p-2.5 transition',
+                  isAvailable ? 'hover:bg-surface-container-low cursor-pointer' : 'cursor-not-allowed opacity-50',
+                )}
+              >
+                <input
+                  type="radio"
+                  name="service-need"
+                  value={option.key}
+                  disabled={!isAvailable}
+                  checked={selected === option.key}
+                  onChange={() => setSelected(option.key)}
+                  className="accent-primary mt-0.5 h-4.5 w-4.5 cursor-pointer disabled:cursor-not-allowed"
+                />
+                <span className="text-on-surface text-sm leading-relaxed">
+                  {option.label}
+                  {!isAvailable && (
+                    <span className="text-on-surface-variant ml-1.5 text-xs italic">(hiện chưa có gói mở bán)</span>
+                  )}
+                </span>
+              </label>
+            );
+          })}
         </fieldset>
 
         <Image
@@ -69,15 +86,19 @@ export default function ServiceNeedSuggestionModal({
       </div>
 
       <div className="border-outline-variant mt-5 flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
-        <label className="flex cursor-pointer items-center gap-2.5">
-          <input
-            type="checkbox"
-            checked={neverShowAgain}
-            onChange={(event) => setNeverShowAgain(event.target.checked)}
-            className="accent-primary h-4 w-4 cursor-pointer"
-          />
-          <span className="text-on-surface text-sm">{SERVICE_NEED_MODAL_COPY.dismissLabel}</span>
-        </label>
+        {allowDismissForever ? (
+          <label className="flex cursor-pointer items-center gap-2.5">
+            <input
+              type="checkbox"
+              checked={neverShowAgain}
+              onChange={(event) => setNeverShowAgain(event.target.checked)}
+              className="accent-primary h-4 w-4 cursor-pointer"
+            />
+            <span className="text-on-surface text-sm">{SERVICE_NEED_MODAL_COPY.dismissLabel}</span>
+          </label>
+        ) : (
+          <span />
+        )}
 
         <button
           type="button"

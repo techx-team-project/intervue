@@ -14,6 +14,7 @@ import com.techx.intervue.modules.billing.resources.ServicePackageCardResource;
 import com.techx.intervue.modules.billing.resources.ServicePackageDetailResource;
 import com.techx.intervue.modules.billing.resources.ServicePackageSectionResource;
 import java.util.List;
+import java.util.Locale;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,13 +23,22 @@ public class ServicePackageMapper {
     private static final String DEFAULT_CURRENCY = "VND";
 
     public void apply(ServiceCategory category, SaveServiceCategoryRequest request) {
-        category.setCode(request.code().trim());
+        category.setCode(request.code().trim().toUpperCase(Locale.ROOT));
         category.setName(request.name().trim());
         category.setHeadline(request.headline().trim());
-        category.setDescription(request.description());
-        category.setNeedKey(request.needKey());
+        category.setDescription(trimToNull(request.description()));
+        String needKey = trimToNull(request.needKey());
+        category.setNeedKey(needKey == null ? null : needKey.toUpperCase(Locale.ROOT));
         category.setDisplayOrder(request.displayOrder());
         category.setIsActive(request.isActive());
+    }
+
+    private String trimToNull(String value) {
+        if (value == null) {
+            return null;
+        }
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 
     public void apply(
@@ -133,7 +143,7 @@ public class ServicePackageMapper {
     }
 
     public AdminServiceCategoryResource toAdminCategoryResource(
-            ServiceCategory category, long packageCount) {
+            ServiceCategory category, long packageCount, long activePackageCount) {
         return new AdminServiceCategoryResource(
                 category.getId(),
                 category.getCode(),
@@ -143,7 +153,8 @@ public class ServicePackageMapper {
                 category.getNeedKey(),
                 category.getDisplayOrder(),
                 category.getIsActive(),
-                packageCount);
+                packageCount,
+                activePackageCount);
     }
 
     public AdminServicePackageResource toAdminPackageResource(

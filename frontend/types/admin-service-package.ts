@@ -18,6 +18,11 @@ export interface AdminServiceCategory {
   displayOrder: number;
   isActive: boolean;
   packageCount: number;
+  activePackageCount: number;
+}
+
+export interface ReorderServiceCategoriesInput {
+  items: { id: number; displayOrder: number }[];
 }
 
 export interface AdminServicePackage {

@@ -17,8 +17,10 @@ import com.techx.intervue.modules.billing.mappers.ServicePackageMapper;
 import com.techx.intervue.modules.billing.repositories.ServiceCategoryRepository;
 import com.techx.intervue.modules.billing.repositories.ServicePackageBenefitRepository;
 import com.techx.intervue.modules.billing.repositories.ServicePackageRepository;
+import com.techx.intervue.modules.billing.repositories.ServicePackageRepository.CategoryPackageCounts;
 import com.techx.intervue.modules.billing.repositories.ServicePackageSectionRepository;
 import com.techx.intervue.modules.billing.requests.AdminSearchServicePackagesRequest;
+import com.techx.intervue.modules.billing.requests.ReorderServiceCategoriesRequest;
 import com.techx.intervue.modules.billing.requests.SaveServiceCategoryRequest;
 import com.techx.intervue.modules.billing.requests.SaveServicePackageRequest;
 import com.techx.intervue.modules.billing.resources.AdminServiceCategoryResource;
@@ -26,8 +28,12 @@ import com.techx.intervue.modules.billing.resources.AdminServicePackageResource;
 import com.techx.intervue.modules.billing.services.interfaces.AdminServiceCatalogServiceInterface;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,21 +56,35 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
     @Override
     @Transactional(readOnly = true)
     public List<AdminServiceCategoryResource> listCategories() {
+        Map<Long, CategoryPackageCounts> countsByCategory =
+                packageRepository.countPackagesByCategory(ServicePackageStatus.ACTIVE).stream()
+                        .collect(
+                                Collectors.toMap(
+                                        CategoryPackageCounts::getCategoryId, Function.identity()));
         return categoryRepository.findAllByOrderByDisplayOrderAsc().stream()
                 .map(
-                        category ->
-                                mapper.toAdminCategoryResource(
-                                        category,
-                                        packageRepository.countByCategoryId(category.getId())))
+                        category -> {
+                            CategoryPackageCounts counts = countsByCategory.get(category.getId());
+                            long total = counts == null ? 0L : counts.getTotalCount();
+                            long active = counts == null ? 0L : counts.getActiveCount();
+                            return mapper.toAdminCategoryResource(category, total, active);
+                        })
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AdminServiceCategoryResource getCategory(Long id) {
+        return toCategoryResource(requireCategory(id));
     }
 
     @Override
     @Transactional
     public AdminServiceCategoryResource createCategory(
             SaveServiceCategoryRequest request, RequestActor actor) {
-        if (categoryRepository.existsByCode(request.code())) {
-            throw new AppException(ErrorCode.DUPLICATE_PACKAGE_CODE);
+        String normalizedCode = request.code().trim().toUpperCase(Locale.ROOT);
+        if (categoryRepository.existsByCode(normalizedCode)) {
+            throw new AppException(ErrorCode.DUPLICATE_SERVICE_CATEGORY_CODE);
         }
         ServiceCategory category = new ServiceCategory();
         mapper.apply(category, request);
@@ -75,7 +95,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 AuditTargetType.SERVICE_CATEGORY,
                 saved.getId(),
                 saved.getCode());
-        return mapper.toAdminCategoryResource(saved, 0L);
+        return mapper.toAdminCategoryResource(saved, 0L, 0L);
     }
 
     @Override
@@ -83,8 +103,13 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
     public AdminServiceCategoryResource updateCategory(
             Long id, SaveServiceCategoryRequest request, RequestActor actor) {
         ServiceCategory category = requireCategory(id);
-        if (categoryRepository.existsByCodeAndIdNot(request.code(), id)) {
-            throw new AppException(ErrorCode.DUPLICATE_PACKAGE_CODE);
+        String normalizedCode = request.code().trim().toUpperCase(Locale.ROOT);
+        if (!normalizedCode.equals(category.getCode())
+                && packageRepository.countByCategoryId(id) > 0) {
+            throw new AppException(ErrorCode.SERVICE_CATEGORY_CODE_LOCKED);
+        }
+        if (categoryRepository.existsByCodeAndIdNot(normalizedCode, id)) {
+            throw new AppException(ErrorCode.DUPLICATE_SERVICE_CATEGORY_CODE);
         }
         mapper.apply(category, request);
         audit(
@@ -93,7 +118,51 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 AuditTargetType.SERVICE_CATEGORY,
                 id,
                 category.getCode());
-        return mapper.toAdminCategoryResource(category, packageRepository.countByCategoryId(id));
+        return toCategoryResource(category);
+    }
+
+    @Override
+    @Transactional
+    public AdminServiceCategoryResource setCategoryActive(
+            Long id, boolean active, RequestActor actor) {
+        ServiceCategory category = requireCategory(id);
+        category.setIsActive(active);
+        audit(
+                actor,
+                AuditAction.SERVICE_CATEGORY_UPDATED,
+                AuditTargetType.SERVICE_CATEGORY,
+                id,
+                category.getCode() + (active ? " -> VISIBLE" : " -> HIDDEN"));
+        return toCategoryResource(category);
+    }
+
+    @Override
+    @Transactional
+    public List<AdminServiceCategoryResource> reorderCategories(
+            ReorderServiceCategoriesRequest request, RequestActor actor) {
+        Set<Long> uniqueIds = new HashSet<>();
+        for (ReorderServiceCategoriesRequest.Item item : request.items()) {
+            if (!uniqueIds.add(item.id())) {
+                throw AppException.validation("items", "Duplicate category id in reorder request.");
+            }
+        }
+        Map<Long, ServiceCategory> byId =
+                categoryRepository.findAllById(uniqueIds).stream()
+                        .collect(Collectors.toMap(ServiceCategory::getId, Function.identity()));
+        if (byId.size() != uniqueIds.size()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        for (ReorderServiceCategoriesRequest.Item item : request.items()) {
+            byId.get(item.id()).setDisplayOrder(item.displayOrder());
+        }
+        categoryRepository.flush();
+        audit(
+                actor,
+                AuditAction.SERVICE_CATEGORY_REORDERED,
+                AuditTargetType.SERVICE_CATEGORY,
+                null,
+                "Reordered " + request.items().size() + " service categories");
+        return listCategories();
     }
 
     @Override
@@ -282,6 +351,16 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                         packages.stream().map(ServicePackage::getId).toList())
                 .stream()
                 .collect(Collectors.groupingBy(item -> item.getServicePackage().getId()));
+    }
+
+    private AdminServiceCategoryResource toCategoryResource(ServiceCategory category) {
+        long total = packageRepository.countByCategoryId(category.getId());
+        long active =
+                total == 0
+                        ? 0L
+                        : packageRepository.countByCategoryIdAndStatus(
+                                category.getId(), ServicePackageStatus.ACTIVE);
+        return mapper.toAdminCategoryResource(category, total, active);
     }
 
     private ServiceCategory requireCategory(Long id) {

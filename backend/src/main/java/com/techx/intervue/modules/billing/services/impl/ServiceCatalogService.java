@@ -36,7 +36,7 @@ public class ServiceCatalogService implements ServiceCatalogServiceInterface {
     @Transactional(readOnly = true)
     public ServiceCatalogResource getCatalog() {
         List<ServicePackage> packages =
-                packageRepository.findAllByStatusOrderByDisplayOrderAsc(
+                packageRepository.findAllByStatusAndCategoryIsActiveTrueOrderByDisplayOrderAsc(
                         ServicePackageStatus.ACTIVE);
         Map<Long, List<ServicePackageBenefit>> benefitsByPackage = loadBenefits(packages);
 
@@ -72,6 +72,9 @@ public class ServiceCatalogService implements ServiceCatalogServiceInterface {
                 packageRepository
                         .findBySlugAndStatus(slug, ServicePackageStatus.ACTIVE)
                         .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE));
+        if (!servicePackage.isAvailableInCatalog()) {
+            throw new AppException(ErrorCode.PACKAGE_NOT_AVAILABLE);
+        }
         return mapper.toDetailResource(
                 servicePackage,
                 benefitRepository.findAllByServicePackageIdOrderByDisplayOrderAsc(

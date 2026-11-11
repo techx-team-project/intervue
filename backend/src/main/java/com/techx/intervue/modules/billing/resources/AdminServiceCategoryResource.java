@@ -9,4 +9,5 @@ public record AdminServiceCategoryResource(
         String needKey,
         Integer displayOrder,
         Boolean isActive,
-        Long packageCount) {}
+        Long packageCount,
+        Long activePackageCount) {}
