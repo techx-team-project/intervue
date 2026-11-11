@@ -9,6 +9,7 @@ import FeaturedJobsSection from '@/components/home/featured-jobs/FeaturedJobsSec
 import HomeHero from '@/components/home/hero/HomeHero';
 import HowItWorksSection from '@/components/home/how-it-works/HowItWorksSection';
 import MarketPulse from '@/components/home/pulse/MarketPulse';
+import RecommendedJobsSection from '@/components/jobs/recommendations/RecommendedJobsSection';
 
 export default function Home() {
   return (
@@ -25,6 +26,9 @@ export default function Home() {
         <HomeHero />
         <AdSlot code="HOME_TOP" className="mx-auto w-full max-w-[1200px] px-4 pt-6" />
         <MarketPulse />
+        <div className="container-page pt-12 pb-4">
+          <RecommendedJobsSection limit={6} />
+        </div>
         <FeaturedJobsSection />
         <TopCategoriesSection />
         <HowItWorksSection />

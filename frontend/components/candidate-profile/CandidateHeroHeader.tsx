@@ -5,7 +5,7 @@ import UserAvatar from '@/components/ui/UserAvatar';
 import { JOB_SEARCH_STATUS_OPTIONS, optionLabel } from '@/constants/candidate-profile';
 import { cn } from '@/lib/utils';
 import type { CandidateProfileResponse, JobSearchStatus } from '@/types/candidate-profile';
-import { Edit3, MapPin } from 'lucide-react';
+import { Edit3, MapPin, Sparkles } from 'lucide-react';
 import CandidateContactBar from './CandidateContactBar';
 import CandidateImageControls from './CandidateImageControls';
 
@@ -18,9 +18,10 @@ const STATUS_STYLES: Record<JobSearchStatus, string> = {
 type CandidateHeroHeaderProps = {
   profile: CandidateProfileResponse;
   onEdit: () => void;
+  onOpenAiCv?: () => void;
 };
 
-export default function CandidateHeroHeader({ profile, onEdit }: CandidateHeroHeaderProps) {
+export default function CandidateHeroHeader({ profile, onEdit, onOpenAiCv }: CandidateHeroHeaderProps) {
   const statusLabel = optionLabel(JOB_SEARCH_STATUS_OPTIONS, profile.jobSearchStatus);
 
   return (
@@ -64,9 +65,23 @@ export default function CandidateHeroHeader({ profile, onEdit }: CandidateHeroHe
             />
           </div>
 
-          <Button type="button" variant="outline" size="sm" onClick={onEdit} leftIcon={<Edit3 className="h-4 w-4" />}>
-            Edit profile
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            {onOpenAiCv && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onOpenAiCv}
+                leftIcon={<Sparkles className="text-primary h-4 w-4" />}
+                className="border-primary/40 bg-primary-light/50 text-primary hover:bg-primary-light font-semibold"
+              >
+                Cập nhật từ CV bằng AI
+              </Button>
+            )}
+            <Button type="button" variant="outline" size="sm" onClick={onEdit} leftIcon={<Edit3 className="h-4 w-4" />}>
+              Edit profile
+            </Button>
+          </div>
         </div>
 
         <div className="mt-4 min-w-0 space-y-1">

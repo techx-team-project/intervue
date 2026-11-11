@@ -5,6 +5,15 @@ export interface CvReviewComment {
   fix: string;
 }
 
+export interface JobRequirementMatch {
+  requirement: string;
+  status: 'MATCH' | 'PARTIAL' | 'MISSING' | string;
+  cvEvidence: string;
+  explanation: string;
+  fitScore: number;
+  improvementTip: string;
+}
+
 export interface CvReviewResult {
   id?: number;
   candidateProfileId?: number;
@@ -16,6 +25,17 @@ export interface CvReviewResult {
   promptVersion: string;
   fromCache: boolean;
   createdAt?: string;
+  reviewLevel?: number;
+  jobId?: number;
+  jobTitle?: string;
+  companyName?: string;
+  jobFitScore?: number;
+  requirementMatches?: JobRequirementMatch[];
+  keyStrengths?: string[];
+  gapAnalysis?: string[];
+  tailoringTips?: string[];
+  chargedCredits?: number;
+  refunded?: boolean;
 }
 
 export interface CvReviewQuota {
@@ -29,4 +49,29 @@ export interface CvReviewRequest {
   resumeId?: number;
   cvText?: string;
   targetPosition?: string;
+  jobId?: number;
+  level?: number;
+}
+
+export interface CandidateCreditTransaction {
+  id: number;
+  amount: number;
+  balanceAfter: number;
+  type: 'CHARGE' | 'REFUND' | 'TOPUP' | 'INITIAL_GRANT';
+  feature: string;
+  referenceId?: string;
+  description: string;
+  createdAt: string;
+}
+
+export interface CandidateCreditSummary {
+  candidateId: number;
+  currentBalance: number;
+  totalCharged: number;
+  totalRefunded: number;
+  recentTransactions: CandidateCreditTransaction[];
+}
+
+export interface TopupCreditsRequest {
+  amount: number;
 }

@@ -5,11 +5,10 @@ import Breadcrumb from '@/components/ui/Breadcrumb';
 import Button from '@/components/ui/Button';
 import { useCandidateProfile } from '@/hooks/useCandidateProfile';
 import { getErrorMessage } from '@/utils/error';
-import { FileText } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import CandidateAboutSection from './CandidateAboutSection';
 import CandidateCertificationSection from './CandidateCertificationSection';
-import CandidateComingSoonSection from './CandidateComingSoonSection';
 import CandidateEditModal from './CandidateEditModal';
 import CandidateEducationSection from './CandidateEducationSection';
 import CandidateExperienceSection from './CandidateExperienceSection';
@@ -18,10 +17,12 @@ import CandidateJobPreferencesSidebar from './CandidateJobPreferencesSidebar';
 import CandidateLanguageSection from './CandidateLanguageSection';
 import CandidateProjectSection from './CandidateProjectSection';
 import CandidateSkillSection from './CandidateSkillSection';
+import AiCvProfileModal from './AiCvProfileModal';
 
 export default function CandidateProfileView() {
   const { data: profile, isPending, isError, error, refetch, isRefetching } = useCandidateProfile();
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isAiCvModalOpen, setIsAiCvModalOpen] = useState(false);
 
   if (isPending) {
     return (
@@ -53,7 +54,7 @@ export default function CandidateProfileView() {
       </div>
 
       <div className="container-page space-y-6 pt-5">
-        <CandidateHeroHeader profile={profile} onEdit={openEdit} />
+        <CandidateHeroHeader profile={profile} onEdit={openEdit} onOpenAiCv={() => setIsAiCvModalOpen(true)} />
 
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
           <div className="space-y-6 lg:col-span-8">
@@ -68,16 +69,41 @@ export default function CandidateProfileView() {
 
           <div className="space-y-6 lg:col-span-4">
             <CandidateJobPreferencesSidebar profile={profile} onEdit={openEdit} />
-            <CandidateComingSoonSection
-              title="Attached CVs"
-              description="Upload and manage your CVs here soon."
-              icon={FileText}
-            />
+            <div className="border-primary/20 from-primary/5 rounded-3xl border bg-gradient-to-br via-white to-emerald-50/40 p-6 shadow-xs">
+              <div className="flex items-center gap-3">
+                <div className="bg-primary flex h-10 w-10 items-center justify-center rounded-2xl text-white shadow-xs">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-navy text-sm font-bold">Đồng bộ hồ sơ từ CV</h3>
+                  <p className="text-on-surface-variant text-xs">Tiết kiệm thời gian với AI</p>
+                </div>
+              </div>
+              <p className="mt-3 text-xs leading-relaxed text-slate-600">
+                Tải lên hoặc chọn CV đã có. AI sẽ đọc nội dung, trích xuất kinh nghiệm, kỹ năng và học vấn để cập nhật
+                vào hồ sơ của bạn.
+              </p>
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                className="mt-4 w-full"
+                leftIcon={<Sparkles className="h-4 w-4" />}
+                onClick={() => setIsAiCvModalOpen(true)}
+              >
+                Quét CV cập nhật hồ sơ
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       <CandidateEditModal profile={profile} isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} />
+      <AiCvProfileModal
+        isOpen={isAiCvModalOpen}
+        onClose={() => setIsAiCvModalOpen(false)}
+        onOpenManualEdit={openEdit}
+      />
     </div>
   );
 }

@@ -2,13 +2,26 @@ package com.techx.intervue.modules.ai.services.impl;
 
 import com.techx.intervue.modules.ai.resources.JobSearchResult;
 import com.techx.intervue.modules.ai.services.interfaces.JobSearchServiceInterface;
+import com.techx.intervue.modules.job.enums.JobLevel;
+import com.techx.intervue.modules.job.requests.SearchJobsRequest;
+import com.techx.intervue.modules.job.resources.PublicJobSummaryResource;
+import com.techx.intervue.modules.job.resources.SkillResource;
+import com.techx.intervue.modules.job.services.interfaces.PublicJobServiceInterface;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class JobSearchService implements JobSearchServiceInterface {
+
+    private final PublicJobServiceInterface publicJobService;
 
     private static final List<JobSearchResult> CATALOG =
             List.of(
@@ -161,9 +174,109 @@ public class JobSearchService implements JobSearchServiceInterface {
                             "Phát triển hệ thống Server Game Multiplayer thời gian thực cho hàng trăm nghìn người chơi đồng thời.",
                             "/jobs/501"));
 
+    @Autowired
+    public JobSearchService(@Nullable PublicJobServiceInterface publicJobService) {
+        this.publicJobService = publicJobService;
+    }
+
+    public JobSearchService() {
+        this(null);
+    }
+
     @Override
     public List<JobSearchResult> search(String keyword, String level, String location, int limit) {
         int maxResults = Math.min(Math.max(1, limit), 5);
+
+        if (publicJobService != null) {
+            try {
+                JobLevel jobLevel = parseLevel(level);
+                String q = (keyword != null && !keyword.isBlank()) ? keyword.trim() : null;
+                String city = (location != null && !location.isBlank()) ? location.trim() : null;
+
+                SearchJobsRequest request =
+                        new SearchJobsRequest(
+                                q, city, null, null, null, jobLevel, null, null, null);
+                Page<PublicJobSummaryResource> page =
+                        publicJobService.search(request, PageRequest.of(0, maxResults));
+
+                if (page != null && page.hasContent() && !page.getContent().isEmpty()) {
+                    return page.getContent().stream().map(this::toSearchResult).toList();
+                }
+            } catch (Exception ex) {
+                log.warn(
+                        "Database job search encountered an error, falling back: {}",
+                        ex.getMessage());
+            }
+        }
+
+        return searchCatalogFallback(keyword, level, location, maxResults);
+    }
+
+    private JobSearchResult toSearchResult(PublicJobSummaryResource job) {
+        String salaryText = "Thỏa thuận";
+        if (job.salary() != null) {
+            if (job.salary().negotiable()) {
+                salaryText = "Lương thỏa thuận";
+            } else if (job.salary().min() != null && job.salary().max() != null) {
+                salaryText =
+                        String.format(
+                                "%,d - %,d %s",
+                                job.salary().min(),
+                                job.salary().max(),
+                                job.salary().currency() != null ? job.salary().currency() : "VND");
+            } else if (job.salary().min() != null) {
+                salaryText =
+                        String.format(
+                                "Từ %,d %s",
+                                job.salary().min(),
+                                job.salary().currency() != null ? job.salary().currency() : "VND");
+            }
+        }
+
+        List<String> skills =
+                job.skills() != null
+                        ? job.skills().stream().map(SkillResource::name).toList()
+                        : List.of();
+
+        String companyName =
+                job.company() != null && job.company().name() != null
+                        ? job.company().name()
+                        : "Doanh nghiệp đối tác";
+
+        return new JobSearchResult(
+                String.valueOf(job.id()),
+                job.title(),
+                companyName,
+                salaryText,
+                job.city() != null ? job.city() : "Toàn quốc",
+                job.level() != null ? job.level().name() : "Mọi cấp bậc",
+                skills,
+                "Tin tuyển dụng đang mở tại "
+                        + companyName
+                        + ". Xem chi tiết yêu cầu để ứng tuyển.",
+                "/jobs/" + job.id());
+    }
+
+    private JobLevel parseLevel(String level) {
+        if (level == null || level.isBlank()) {
+            return null;
+        }
+        String clean = level.trim().toUpperCase(Locale.ROOT);
+        try {
+            return JobLevel.valueOf(clean);
+        } catch (IllegalArgumentException ex) {
+            return switch (clean) {
+                case "FRESHER", "INTERNSHIP" -> JobLevel.INTERN;
+                case "JUNIOR DEVELOPER" -> JobLevel.JUNIOR;
+                case "MIDDLE", "MID-LEVEL" -> JobLevel.MID;
+                case "TECH LEAD", "TEAM LEAD" -> JobLevel.LEAD;
+                default -> null;
+            };
+        }
+    }
+
+    private List<JobSearchResult> searchCatalogFallback(
+            String keyword, String level, String location, int maxResults) {
         if ((keyword == null || keyword.isBlank())
                 && (location == null || location.isBlank())
                 && (level == null || level.isBlank())) {

@@ -2,13 +2,27 @@ package com.techx.intervue.modules.ai.services.impl;
 
 import com.techx.intervue.modules.ai.resources.CompanySearchResult;
 import com.techx.intervue.modules.ai.services.interfaces.CompanySearchServiceInterface;
+import com.techx.intervue.modules.company.requests.SearchCompaniesRequest;
+import com.techx.intervue.modules.company.resources.CompanySummaryResource;
+import com.techx.intervue.modules.company.resources.PublicCompanyResource;
+import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
+import com.techx.intervue.modules.job.repositories.JobRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class CompanySearchService implements CompanySearchServiceInterface {
+
+    private final CompanyServiceInterface companyService;
+    private final JobRepository jobRepository;
 
     private static final List<CompanySearchResult> CATALOG =
             List.of(
@@ -131,8 +145,95 @@ public class CompanySearchService implements CompanySearchServiceInterface {
                                     "Đào tạo chuyên sâu về PLC và SCADA"),
                             "/companies/237340"));
 
+    @Autowired
+    public CompanySearchService(
+            @Nullable CompanyServiceInterface companyService,
+            @Nullable JobRepository jobRepository) {
+        this.companyService = companyService;
+        this.jobRepository = jobRepository;
+    }
+
+    public CompanySearchService() {
+        this(null, null);
+    }
+
     @Override
     public List<CompanySearchResult> search(
+            String keyword, String industry, String location, int limit) {
+        int maxResults = Math.min(Math.max(1, limit), 5);
+
+        if (companyService != null) {
+            try {
+                Page<CompanySummaryResource> page =
+                        companyService.search(
+                                new SearchCompaniesRequest(keyword), PageRequest.of(0, maxResults));
+
+                if (page != null && page.hasContent() && !page.getContent().isEmpty()) {
+                    List<CompanySearchResult> results = new ArrayList<>();
+                    for (CompanySummaryResource summary : page.getContent()) {
+                        results.add(toSearchResult(summary));
+                    }
+                    return results;
+                }
+            } catch (Exception ex) {
+                log.warn(
+                        "Database company search failed, falling back to catalog: {}",
+                        ex.getMessage());
+            }
+        }
+
+        return searchCatalogFallback(keyword, industry, location, maxResults);
+    }
+
+    private CompanySearchResult toSearchResult(CompanySummaryResource summary) {
+        PublicCompanyResource detail = null;
+        try {
+            detail = companyService.findPublic(summary.id());
+        } catch (Exception ignored) {
+        }
+
+        String industry =
+                detail != null && detail.industry() != null
+                        ? detail.industry()
+                        : "Công nghệ & Dịch vụ";
+        String size = detail != null && detail.size() != null ? detail.size() : "Đang cập nhật";
+        String website = detail != null && detail.website() != null ? detail.website() : "";
+        String address = summary.address() != null ? summary.address() : "Việt Nam";
+
+        List<String> highlights = new ArrayList<>();
+        if (detail != null && detail.benefits() != null && !detail.benefits().isBlank()) {
+            highlights.add(detail.benefits());
+        } else {
+            highlights.add("Môi trường làm việc chuyên nghiệp");
+            highlights.add("Chế độ đãi ngộ cạnh tranh");
+        }
+
+        int openJobs = 0;
+        if (jobRepository != null) {
+            try {
+                openJobs =
+                        (int)
+                                jobRepository.countByStatusForRecruiter(summary.id()).stream()
+                                        .mapToLong(sc -> sc.getTotal())
+                                        .sum();
+            } catch (Exception ignored) {
+            }
+        }
+
+        return new CompanySearchResult(
+                String.valueOf(summary.id()),
+                summary.name(),
+                industry,
+                size,
+                address,
+                website,
+                true,
+                openJobs,
+                highlights,
+                "/companies/" + summary.id());
+    }
+
+    private List<CompanySearchResult> searchCatalogFallback(
             String keyword, String industry, String location, int limit) {
         if (keyword == null || keyword.isBlank()) {
             return CATALOG.stream().limit(Math.max(1, limit)).toList();

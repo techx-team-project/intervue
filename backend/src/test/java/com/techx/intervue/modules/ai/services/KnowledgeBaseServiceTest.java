@@ -48,7 +48,15 @@ class KnowledgeBaseServiceTest {
 
         assertThat(chunks).isNotEmpty();
         assertThat(chunks.stream().map(KnowledgeChunk::documentName).distinct())
-                .contains("cv.md", "account_security.md", "faq.md");
+                .contains(
+                        "cv.md",
+                        "account_security.md",
+                        "faq.md",
+                        "identity_verification.md",
+                        "interview_scheduling.md",
+                        "jobs_and_search.md",
+                        "ai_features.md",
+                        "recruiter_guide.md");
 
         boolean has2fa =
                 chunks.stream()
@@ -58,6 +66,22 @@ class KnowledgeBaseServiceTest {
                                                 && c.heading()
                                                         .contains("Two-Factor Authentication"));
         assertThat(has2fa).isTrue();
+
+        boolean hasEkyc =
+                chunks.stream()
+                        .anyMatch(
+                                c ->
+                                        c.documentName().equals("identity_verification.md")
+                                                && c.heading().contains("Identity Verification"));
+        assertThat(hasEkyc).isTrue();
+
+        boolean hasAiProfileSync =
+                chunks.stream()
+                        .anyMatch(
+                                c ->
+                                        c.documentName().equals("ai_features.md")
+                                                && c.heading().contains("AI Profile Sync"));
+        assertThat(hasAiProfileSync).isTrue();
     }
 
     @Test

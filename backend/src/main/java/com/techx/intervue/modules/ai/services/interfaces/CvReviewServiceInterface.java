@@ -11,7 +11,12 @@ public interface CvReviewServiceInterface {
     CvReviewResult reviewCv(Long candidateUserId, String ip, CvReviewRequest request);
 
     CvReviewResult reviewUploadedPdf(
-            Long candidateUserId, String ip, MultipartFile file, String targetPosition);
+            Long candidateUserId, String ip, MultipartFile file, String targetPosition, Long jobId);
+
+    default CvReviewResult reviewUploadedPdf(
+            Long candidateUserId, String ip, MultipartFile file, String targetPosition) {
+        return reviewUploadedPdf(candidateUserId, ip, file, targetPosition, null);
+    }
 
     CvReviewResult getReviewById(Long candidateUserId, Long reviewId);
 

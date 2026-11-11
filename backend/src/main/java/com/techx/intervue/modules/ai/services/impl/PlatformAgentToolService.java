@@ -21,6 +21,8 @@ public class PlatformAgentToolService implements PlatformAgentToolServiceInterfa
     public static final String TOOL_GET_COMPANY_INFO = "get_company_info";
     public static final String TOOL_GET_MY_APPLICATIONS = "get_my_applications";
     public static final String TOOL_GET_PLATFORM_GUIDE = "get_platform_guide";
+    public static final String TOOL_MATCH_MY_CV = "match_my_cv";
+    public static final String TOOL_DRAFT_COVER_LETTER = "draft_cover_letter";
 
     public static final String ALIAS_SEARCH_KNOWLEDGE = "search_knowledge_base";
     public static final String ALIAS_SEARCH_COMPANIES = "search_companies";
@@ -35,7 +37,9 @@ public class PlatformAgentToolService implements PlatformAgentToolServiceInterfa
                         TOOL_SEARCH_JOBS,
                         TOOL_GET_COMPANY_INFO,
                         TOOL_GET_MY_APPLICATIONS,
-                        TOOL_GET_PLATFORM_GUIDE);
+                        TOOL_GET_PLATFORM_GUIDE,
+                        TOOL_MATCH_MY_CV,
+                        TOOL_DRAFT_COVER_LETTER);
 
         List<AiToolDefinition> definitions = new ArrayList<>();
         for (String name : canonicalOrder) {

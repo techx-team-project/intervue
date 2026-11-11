@@ -1,13 +1,41 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { useSupportChat } from '@/hooks/useSupportChat';
 import { ChatPanel } from './ChatPanel';
 import { FloatingChatButton } from './FloatingChatButton';
 
 export function SupportChatbot() {
-  const { isOpen, setIsOpen, messages, isLoading, robotState, remainingQuota, error, sendMessage, resetSession } =
-    useSupportChat();
+  const pathname = usePathname();
+  const {
+    isOpen,
+    setIsOpen,
+    messages,
+    isLoading,
+    robotState,
+    remainingQuota,
+    error,
+    chatContext,
+    setChatContext,
+    sendMessage,
+    resetSession,
+  } = useSupportChat();
+
+  useEffect(() => {
+    if (!pathname) return;
+    const jobMatch = pathname.match(/^\/jobs\/(\d+)/);
+    if (jobMatch) {
+      const jobId = Number(jobMatch[1]);
+      setChatContext({
+        pageType: 'JOB_DETAIL',
+        entityId: jobId,
+        jobTitle: `Tin tuyển dụng #${jobId}`,
+      });
+    } else {
+      setChatContext(undefined);
+    }
+  }, [pathname, setChatContext]);
 
   return (
     <>
@@ -23,6 +51,7 @@ export function SupportChatbot() {
         messages={messages}
         isLoading={isLoading}
         remainingQuota={remainingQuota}
+        context={chatContext}
         error={error}
         onSendMessage={sendMessage}
         onResetSession={resetSession}

@@ -4,7 +4,7 @@ import type { RobotHeadState } from '@/components/mascot/MascotCore';
 import { AI_CHAT_SESSION_KEY, DEFAULT_GREETING } from '@/constants/ai-chat';
 import { ERROR_MESSAGES, FALLBACK_ERROR_MESSAGE } from '@/constants/error-messages';
 import { isApiError } from '@/lib/api-error';
-import type { ChatMessage } from '@/types/ai-chat';
+import type { ChatContext, ChatMessage } from '@/types/ai-chat';
 
 const INITIAL_GREETING_MESSAGE: ChatMessage = {
   id: 'msg-initial-greeting',
@@ -37,6 +37,7 @@ export function useSupportChat() {
   const [robotState, setRobotState] = useState<RobotHeadState>('idle');
   const [remainingQuota, setRemainingQuota] = useState<number | null>(null);
   const [sessionId, setSessionId] = useState<string>(getInitialSessionId);
+  const [chatContext, setChatContext] = useState<ChatContext | undefined>(undefined);
   const [error, setError] = useState<{
     message: string;
     retryAfter?: number | null;
@@ -55,7 +56,7 @@ export function useSupportChat() {
   }, []);
 
   const sendMessage = useCallback(
-    async (text: string) => {
+    async (text: string, faqCode?: string, overrideContext?: ChatContext) => {
       const trimmed = text.trim();
       if (!trimmed || isLoading) return;
 
@@ -78,9 +79,12 @@ export function useSupportChat() {
           setSessionId(activeSession);
         }
 
+        const effectiveContext = overrideContext || chatContext;
         const response = await aiChatApi.chat({
           message: trimmed,
           sessionId: activeSession || undefined,
+          faqCode: faqCode || undefined,
+          context: effectiveContext || undefined,
         });
 
         const botMessage: ChatMessage = {
@@ -115,7 +119,7 @@ export function useSupportChat() {
         setIsLoading(false);
       }
     },
-    [isLoading, sessionId],
+    [isLoading, sessionId, chatContext],
   );
 
   return {
@@ -126,6 +130,8 @@ export function useSupportChat() {
     robotState,
     remainingQuota,
     error,
+    chatContext,
+    setChatContext,
     sendMessage,
     resetSession,
   };

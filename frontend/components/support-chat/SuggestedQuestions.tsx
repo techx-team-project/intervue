@@ -5,7 +5,7 @@ import { Sparkles } from 'lucide-react';
 import { SUGGESTED_QUESTIONS } from '@/constants/ai-chat';
 
 interface SuggestedQuestionsProps {
-  onSelect: (question: string) => void;
+  onSelect: (question: string, faqCode?: string) => void;
   disabled?: boolean;
 }
 
@@ -22,7 +22,7 @@ export function SuggestedQuestions({ onSelect, disabled = false }: SuggestedQues
             key={item.id}
             type="button"
             disabled={disabled}
-            onClick={() => onSelect(item.question)}
+            onClick={() => onSelect(item.question, item.id)}
             className="flex cursor-pointer items-center justify-between rounded-xl border border-emerald-100/90 bg-white px-3 py-2 text-left text-xs font-medium text-slate-700 shadow-2xs transition-all hover:border-emerald-300 hover:bg-emerald-50/70 hover:text-emerald-900 active:scale-98 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span>{item.question}</span>
