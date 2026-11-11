@@ -33,7 +33,6 @@ import com.techx.intervue.modules.billing.services.interfaces.AdminServiceCatalo
 import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -52,17 +51,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class AdminServiceCatalogService implements AdminServiceCatalogServiceInterface {
-
-    private static final Set<EntitlementType> DURATION_REQUIRED_TYPES =
-            EnumSet.of(
-                    EntitlementType.JOB_POST_SLOT,
-                    EntitlementType.JOB_BOOST,
-                    EntitlementType.JOB_LABEL_URGENT,
-                    EntitlementType.JOB_LABEL_HOT,
-                    EntitlementType.JOB_HIGHLIGHT,
-                    EntitlementType.BRAND_PAGE,
-                    EntitlementType.FEATURED_COMPANY,
-                    EntitlementType.AD_SLOT_WEEK);
 
     private final ServiceCategoryRepository categoryRepository;
     private final ServicePackageRepository packageRepository;
@@ -304,14 +292,12 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 request.benefits() == null ? List.of() : request.benefits();
         for (int index = 0; index < requestedBenefits.size(); index++) {
             SaveServicePackageRequest.Benefit benefit = requestedBenefits.get(index);
-            int normalizedTier =
-                    benefit.entitlementType() == EntitlementType.JOB_BOOST ? benefit.tier() : 1;
             benefits.add(
                     ServicePackageBenefit.builder()
                             .servicePackage(servicePackage)
                             .entitlementType(benefit.entitlementType())
                             .quantity(benefit.quantity())
-                            .tier(normalizedTier)
+                            .tier(benefit.tier())
                             .durationDays(benefit.durationDays())
                             .label(benefit.label().trim())
                             .displayOrder(index)
@@ -406,12 +392,8 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
         }
         for (int i = 0; i < benefits.size(); i++) {
             SaveServicePackageRequest.Benefit benefit = benefits.get(i);
-            if (DURATION_REQUIRED_TYPES.contains(benefit.entitlementType())
-                    && (benefit.durationDays() == null || benefit.durationDays() < 1)) {
-                throw AppException.validation(
-                        "benefits[" + i + "].durationDays",
-                        "Duration in days is required for " + benefit.entitlementType().name());
-            }
+            EntitlementConfigRules.validateBenefit(
+                    i, benefit.entitlementType(), benefit.tier(), benefit.durationDays());
         }
     }
 
