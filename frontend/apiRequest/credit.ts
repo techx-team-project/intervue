@@ -1,6 +1,7 @@
 import { request } from '@/apiRequest/http';
 import type {
   ConvertCreditsInput,
+  CreateCreditPriceInput,
   CreditLedgerEntry,
   CreditPrice,
   CreditWallet,
@@ -18,6 +19,9 @@ export const creditApi = {
 
 export const adminCreditPriceApi = {
   list: () => request<CreditPrice[]>('/admin/credit-prices'),
+
+  create: (data: CreateCreditPriceInput) =>
+    request<CreditPrice>('/admin/credit-prices', { method: 'POST', body: data }),
 
   update: (id: number, data: SaveCreditPriceInput) =>
     request<CreditPrice>(`/admin/credit-prices/${id}`, { method: 'PUT', body: data }),

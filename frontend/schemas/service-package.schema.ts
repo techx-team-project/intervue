@@ -90,6 +90,13 @@ export const packageBenefitSchema = z
       .max(PACKAGE_FIELD_LIMITS.benefitLabel, `Label must be at most ${PACKAGE_FIELD_LIMITS.benefitLabel} characters.`),
   })
   .superRefine((benefit, ctx) => {
+    if (benefit.entitlementType !== 'JOB_BOOST' && benefit.tier !== '1') {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['tier'],
+        message: 'Only JOB_BOOST supports tiers 1–3; other types must use tier 1.',
+      });
+    }
     if (DURATION_REQUIRED_ENTITLEMENT_TYPES.has(benefit.entitlementType) && !benefit.durationDays.trim()) {
       ctx.addIssue({
         code: 'custom',

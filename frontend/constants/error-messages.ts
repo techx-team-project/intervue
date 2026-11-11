@@ -43,6 +43,7 @@ export const ERROR_MESSAGES: Record<string, string> = {
   ADDON_REQUIRES_ACTIVE_JOB: 'Choose a published job from your company to apply this service to.',
   INSUFFICIENT_CREDITS: 'Insufficient Credits for this action.',
   CREDIT_PRICE_NOT_AVAILABLE: 'Credit pricing is not available for this feature right now.',
+  DUPLICATE_CREDIT_PRICE: 'A credit price for this entitlement type and tier already exists.',
   AD_BOOKING_NOT_READY: 'The banner slot is only editable once the order is paid.',
   AD_CREATIVE_ALREADY_REVIEWED: 'This artwork was already approved or rejected.',
   AD_CREATIVE_WRONG_SIZE: 'The artwork does not match the size this slot requires.',
