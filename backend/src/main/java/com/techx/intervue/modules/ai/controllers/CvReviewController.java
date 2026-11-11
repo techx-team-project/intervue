@@ -47,10 +47,12 @@ public class CvReviewController extends BaseController {
             @AuthenticationPrincipal CustomUserDetails principal,
             @RequestPart("file") MultipartFile file,
             @RequestParam(value = "targetPosition", required = false) String targetPosition,
+            @RequestParam(value = "jobId", required = false) Long jobId,
             HttpServletRequest servletRequest) {
         String ip = servletRequest.getRemoteAddr();
         CvReviewResult result =
-                cvReviewService.reviewUploadedPdf(principal.getId(), ip, file, targetPosition);
+                cvReviewService.reviewUploadedPdf(
+                        principal.getId(), ip, file, targetPosition, jobId);
         return ok(result, "CV review completed successfully!");
     }
 

@@ -12,5 +12,9 @@ public interface AiCvReviewRepository extends JpaRepository<AiCvReview, Long> {
     Optional<AiCvReview> findFirstByCandidateProfileIdAndFileHashOrderByCreatedAtDesc(
             Long candidateProfileId, String fileHash);
 
+    Optional<AiCvReview>
+            findFirstByCandidateProfileIdAndFileHashAndJobIdAndReviewLevelOrderByCreatedAtDesc(
+                    Long candidateProfileId, String fileHash, Long jobId, Integer reviewLevel);
+
     List<AiCvReview> findByCandidateProfileIdOrderByCreatedAtDesc(Long candidateProfileId);
 }

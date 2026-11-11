@@ -15,4 +15,15 @@ public record CvReviewResult(
         String modelVersion,
         String promptVersion,
         boolean fromCache,
-        Instant createdAt) {}
+        Instant createdAt,
+        Integer reviewLevel,
+        Long jobId,
+        String jobTitle,
+        String companyName,
+        Integer jobFitScore,
+        List<JobRequirementMatch> requirementMatches,
+        List<String> keyStrengths,
+        List<String> gapAnalysis,
+        List<String> tailoringTips,
+        Integer chargedCredits,
+        boolean refunded) {}

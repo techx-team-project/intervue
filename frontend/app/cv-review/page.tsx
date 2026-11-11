@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import Header from '@/components/common/Header';
 import Footer from '@/components/common/Footer';
@@ -14,7 +15,9 @@ export default function CvReviewPage() {
     <div className="flex min-h-screen flex-col bg-[#f4f5f5]">
       <Header />
       <main className="container-topcv flex-1">
-        <CvReviewClientView />
+        <Suspense fallback={<div className="py-12 text-center text-sm text-slate-500">Đang tải...</div>}>
+          <CvReviewClientView />
+        </Suspense>
       </main>
       <Footer />
     </div>

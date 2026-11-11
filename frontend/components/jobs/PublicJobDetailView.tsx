@@ -8,7 +8,7 @@ import type { PublicJobResource } from '@/types/public-job';
 import { formatDate } from '@/utils/datetime';
 import { formatSalary } from '@/utils/public-company';
 import { deadlineLabel, jobFacts, textLines } from '@/utils/public-job';
-import { Clock, FileQuestion, MapPin, Send, Users } from 'lucide-react';
+import { Clock, FileQuestion, MapPin, Send, Sparkles, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import CandidateApplyModal from './apply/CandidateApplyModal';
@@ -75,6 +75,13 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
           <Button size="2xl" leftIcon={<Send className="h-4 w-4" />} onClick={() => setIsApplyOpen(true)}>
             Apply now
           </Button>
+          <Link
+            href={`/cv-review?jobId=${job.id}&level=3`}
+            className="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-white/20"
+          >
+            <Sparkles className="h-4 w-4 text-emerald-300" />
+            Check CV fit (AI)
+          </Link>
           <SaveJobButton
             jobId={job.id}
             variant="labeled"
@@ -114,10 +121,17 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
               </section>
             )}
 
-            <div className="border-primary/30 rounded-2xl border bg-emerald-50/60 p-5 text-center">
+            <div className="border-primary/30 flex flex-wrap items-center justify-center gap-3 rounded-2xl border bg-emerald-50/60 p-5 text-center">
               <Button leftIcon={<Send className="h-4 w-4" />} onClick={() => setIsApplyOpen(true)}>
                 Apply for this position
               </Button>
+              <Link
+                href={`/cv-review?jobId=${job.id}&level=3`}
+                className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-4 py-2.5 text-sm font-bold text-emerald-800 shadow-sm transition hover:bg-emerald-50"
+              >
+                <Sparkles className="h-4 w-4 text-emerald-600" />
+                Kiểm tra độ khớp CV (AI)
+              </Link>
             </div>
           </div>
 

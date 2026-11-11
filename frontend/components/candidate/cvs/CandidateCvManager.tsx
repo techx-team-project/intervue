@@ -4,12 +4,13 @@ import { candidateCvApi } from '@/apiRequest/candidate-cv';
 import Spinner from '@/components/common/Spinner';
 import { Button } from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
+import AiCvProfileModal from '@/components/candidate-profile/AiCvProfileModal';
 import { MAX_RESUMES } from '@/constants/candidate-application';
 import { useCandidateCvMutations, useCandidateCvs } from '@/hooks/useCandidateCvs';
 import type { CandidateResume } from '@/types/candidate-application';
 import { formatDate } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
-import { Download, FileText, Pencil, Star, Trash2, Upload } from 'lucide-react';
+import { Download, FileText, Pencil, Sparkles, Star, Trash2, Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -26,6 +27,8 @@ export default function CandidateCvManager() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [draftName, setDraftName] = useState('');
   const [deleting, setDeleting] = useState<CandidateResume | null>(null);
+  const [aiModalResumeId, setAiModalResumeId] = useState<number | null>(null);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
 
   const canUpload = (resumes?.length ?? 0) < MAX_RESUMES;
   const fail = (cause: unknown) => toast.error(getErrorMessage(cause));
@@ -174,6 +177,19 @@ export default function CandidateCvManager() {
                 >
                   <Download className="h-4 w-4" />
                 </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  aria-label="Cập nhật hồ sơ bằng AI"
+                  title="Cập nhật hồ sơ bằng AI từ CV này"
+                  className="text-primary hover:bg-primary-light"
+                  onClick={() => {
+                    setAiModalResumeId(resume.id);
+                    setIsAiModalOpen(true);
+                  }}
+                >
+                  <Sparkles className="h-4 w-4" />
+                </Button>
                 <Button variant="ghost" size="sm" aria-label="Xóa" title="Xóa" onClick={() => setDeleting(resume)}>
                   <Trash2 className="h-4 w-4 text-rose-500" />
                 </Button>
@@ -208,6 +224,15 @@ export default function CandidateCvManager() {
       >
         <p className="text-sm text-slate-600">Các hồ sơ đã nộp vẫn giữ bản sao CV riêng và không bị ảnh hưởng.</p>
       </Modal>
+
+      <AiCvProfileModal
+        isOpen={isAiModalOpen}
+        onClose={() => {
+          setIsAiModalOpen(false);
+          setAiModalResumeId(null);
+        }}
+        initialResumeId={aiModalResumeId}
+      />
     </div>
   );
 }

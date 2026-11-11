@@ -14,6 +14,7 @@ import {
   TrendingUp,
   UserCheck,
 } from 'lucide-react';
+import RecommendedJobsSection from '@/components/jobs/recommendations/RecommendedJobsSection';
 
 export default function AccountOverviewView() {
   const [isJobSeeking, setIsJobSeeking] = useState(false);
@@ -194,6 +195,12 @@ export default function AccountOverviewView() {
           </div>
         </div>
       </div>
+
+      {isJobRecommendation && (
+        <div className="border-outline-variant rounded-2xl border bg-white p-6 shadow-xs sm:p-7">
+          <RecommendedJobsSection limit={6} showViewAll={true} />
+        </div>
+      )}
 
       <div className="border-outline-variant rounded-2xl border bg-white p-6 shadow-xs sm:p-7">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">

@@ -95,16 +95,22 @@ export async function requestCvReview(payload: CvReviewRequest): Promise<CvRevie
   });
 }
 
-export async function uploadCvForReview(file: File, targetPosition?: string): Promise<CvReviewResult> {
+export async function uploadCvForReview(file: File, targetPosition?: string, jobId?: number): Promise<CvReviewResult> {
   const formData = new FormData();
   formData.append('file', file);
   if (targetPosition) {
     formData.append('targetPosition', targetPosition);
   }
+  if (jobId) {
+    formData.append('jobId', String(jobId));
+  }
 
-  const endpoint = targetPosition
-    ? `/ai/cv-reviews/upload?targetPosition=${encodeURIComponent(targetPosition)}`
-    : '/ai/cv-reviews/upload';
+  const params = new URLSearchParams();
+  if (targetPosition) params.append('targetPosition', targetPosition);
+  if (jobId) params.append('jobId', String(jobId));
+
+  const query = params.toString() ? `?${params.toString()}` : '';
+  const endpoint = `/ai/cv-reviews/upload${query}`;
 
   return request<CvReviewResult>(endpoint, {
     method: 'POST',
