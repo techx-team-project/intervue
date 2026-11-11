@@ -34,6 +34,12 @@ public class CandidateProfileLookup {
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
     }
 
+    public CandidateProfile requireByProfileId(Long profileId) {
+        return profileRepository
+                .findById(profileId)
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+    }
+
     public void checkLimit(long existing, int max) {
         if (existing >= max) {
             throw new AppException(ErrorCode.PROFILE_SECTION_LIMIT_REACHED);
