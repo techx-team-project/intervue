@@ -187,22 +187,22 @@ public class JobSeedStep implements DemoSeedStep {
             negotiable ? null : (usd ? 2000L : baseSalary),
             negotiable ? null : (usd ? 3500L : (long) (baseSalary * 1.5)),
             negotiable ? null : (usd ? "USD" : "VND"),
-            "Chúng tôi đang tìm "
+            "We are looking for a "
                     + title
-                    + " tham gia xây dựng sản phẩm cho hàng triệu người dùng.\n"
-                    + "Bạn sẽ làm việc cùng đội ngũ kỹ sư giàu kinh nghiệm, tham gia thiết kế,"
-                    + " phát triển và vận hành hệ thống.",
+                    + " to build products used by millions of people.\n"
+                    + "You will work with an experienced engineering team on the design,"
+                    + " development and operation of our systems.",
             skillNames.stream()
-                            .map(name -> "- Kinh nghiệm với " + name)
+                            .map(name -> "- Experience with " + name)
                             .collect(Collectors.joining("\n"))
-                    + "\n- Tư duy giải quyết vấn đề, giao tiếp tốt",
-            "- Lương tháng 13 và thưởng theo hiệu quả\n- Bảo hiểm sức khỏe, du lịch hằng năm\n"
-                    + "- Ngân sách đào tạo và chứng chỉ",
+                    + "\n- Problem-solving mindset and good communication",
+            "- 13th-month salary and performance bonus\n- Health insurance and annual trip\n"
+                    + "- Training and certification budget",
             withQuestions ? "CV_AND_QUESTIONS" : "CV_ONLY",
             random.between(1, 5),
             deadline,
             "DRAFT".equals(status) ? null : createdAt,
-            hidden ? "Nội dung tin đăng chưa phù hợp quy định" : null,
+            hidden ? "The job post does not meet our content policy" : null,
             hidden ? random.now().minusDays(1) : null,
             hidden ? adminId : null,
             createdAt,

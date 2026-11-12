@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, ListFilter, SearchX, WifiOff } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import FeaturedJobCard from './FeaturedJobCard';
+import HomeJobCard from '../HomeJobCard';
 
 const FEATURED_COUNT = 9;
 const STAGGER_CLASSES = [
@@ -124,7 +124,7 @@ export default function FeaturedJobsSection() {
         {query.isLoading ? (
           <div className="expanded:grid-cols-3 medium:grid-cols-2 grid grid-cols-1 gap-5">
             {Array.from({ length: FEATURED_COUNT }, (_, index) => (
-              <Skeleton key={index} className="h-52 w-full rounded-2xl" />
+              <Skeleton key={index} className="h-28 w-full rounded-xl" />
             ))}
           </div>
         ) : query.isError ? (
@@ -150,7 +150,7 @@ export default function FeaturedJobsSection() {
           <ul key={`${city}-${page}`} className="expanded:grid-cols-3 medium:grid-cols-2 grid grid-cols-1 gap-5">
             {jobs.map((job, index) => (
               <li key={job.id} className={`animate-fade-in-up ${STAGGER_CLASSES[index % STAGGER_CLASSES.length]}`}>
-                <FeaturedJobCard job={job} />
+                <HomeJobCard job={job} />
               </li>
             ))}
           </ul>

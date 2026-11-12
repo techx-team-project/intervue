@@ -70,6 +70,7 @@ public class CompanySeedStep implements DemoSeedStep {
                     "address",
                     "description",
                     "benefits",
+                    "logo_public_id",
                     "created_at",
                     "updated_at");
 
@@ -127,8 +128,7 @@ public class CompanySeedStep implements DemoSeedStep {
             long recruiterId = recruiterIds.next();
             long memberId = memberIds.next();
             String address =
-                    "Số "
-                            + random.between(1, 300)
+                    random.between(1, 300)
                             + " "
                             + random.pick(DemoSeedData.COMPANY_STREETS)
                             + ", "
@@ -137,7 +137,7 @@ public class CompanySeedStep implements DemoSeedStep {
             companies.add(
                     new Object[] {
                         companyId,
-                        "CÔNG TY TNHH " + company.tradingName().toUpperCase(Locale.ROOT),
+                        company.tradingName().toUpperCase(Locale.ROOT) + " CO., LTD",
                         String.format("09%08d", companyId),
                         address,
                         createdAt,
@@ -230,10 +230,11 @@ public class CompanySeedStep implements DemoSeedStep {
             "0281234" + random.between(1000, 9999),
             address,
             company.tradingName()
-                    + " là doanh nghiệp công nghệ hoạt động trong lĩnh vực "
+                    + " is a technology company in the "
                     + company.industry().toLowerCase(Locale.ROOT)
-                    + ", đang mở rộng đội ngũ kỹ sư tại Việt Nam.",
-            "Lương tháng 13, bảo hiểm đầy đủ, thưởng dự án, làm việc linh hoạt, đào tạo nội bộ.",
+                    + " space, growing its engineering team in Vietnam.",
+            "13th-month salary, full insurance, project bonuses, flexible working, internal training.",
+            company.logoFile(),
             createdAt,
             createdAt
         };
@@ -255,7 +256,7 @@ public class CompanySeedStep implements DemoSeedStep {
             "BUSINESS_LICENSE",
             approved ? "APPROVED" : "PENDING_REVIEW",
             "demo/business-license-" + id,
-            "giay-phep-kinh-doanh.pdf",
+            "business-license.pdf",
             random.between(150_000, 900_000),
             "application/pdf",
             SeedText.sha256("business-document-" + id),
