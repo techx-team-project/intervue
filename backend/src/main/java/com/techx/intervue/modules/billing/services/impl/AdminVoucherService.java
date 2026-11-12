@@ -40,6 +40,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminVoucherService implements AdminVoucherServiceInterface {
 
     private static final long MAX_PERCENTAGE = 100L;
+    private static final Sort DEFAULT_SORT =
+            Sort.by(Sort.Order.desc("createdAt"), Sort.Order.desc("id"));
+    private static final Set<String> ALLOWED_SORT_FIELDS =
+            Set.of(
+                    "id",
+                    "code",
+                    "label",
+                    "discountValue",
+                    "minOrderValue",
+                    "startsAt",
+                    "endsAt",
+                    "usageLimit",
+                    "usedCount",
+                    "status",
+                    "createdAt",
+                    "updatedAt");
 
     private final VoucherRepository voucherRepository;
     private final ServicePackageRepository packageRepository;
@@ -53,13 +69,15 @@ public class AdminVoucherService implements AdminVoucherServiceInterface {
             VoucherStatus status,
             VoucherDiscountType discountType,
             Pageable pageable) {
+        List<Sort.Order> safeOrders =
+                pageable.getSort().stream()
+                        .filter(order -> ALLOWED_SORT_FIELDS.contains(order.getProperty()))
+                        .toList();
         Pageable resolvedPageable =
-                pageable.getSort().isSorted()
-                        ? pageable
-                        : PageRequest.of(
-                                pageable.getPageNumber(),
-                                pageable.getPageSize(),
-                                Sort.by(Sort.Order.desc("createdAt"), Sort.Order.desc("id")));
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        safeOrders.isEmpty() ? DEFAULT_SORT : Sort.by(safeOrders));
         Specification<Voucher> spec = toSpecification(keyword, status, discountType);
         Page<Voucher> page = voucherRepository.findAll(spec, resolvedPageable);
         List<Long> ids = page.getContent().stream().map(Voucher::getId).toList();
@@ -187,6 +205,12 @@ public class AdminVoucherService implements AdminVoucherServiceInterface {
                 && request.endsAt() != null
                 && !request.endsAt().isAfter(request.startsAt())) {
             throw AppException.validation("endsAt", "End time must be after start time");
+        }
+        if (request.perCompanyLimit() != null
+                && request.usageLimit() != null
+                && request.perCompanyLimit() > request.usageLimit()) {
+            throw AppException.validation(
+                    "perCompanyLimit", "Per-company limit cannot exceed total redemption limit");
         }
         if (existing != null
                 && request.usageLimit() != null
