@@ -1,17 +1,25 @@
 package com.techx.intervue.modules.billing.entities;
 
 import com.techx.intervue.common.entities.BaseEntity;
+import com.techx.intervue.modules.billing.enums.VoucherAccentColor;
 import com.techx.intervue.modules.billing.enums.VoucherDiscountType;
 import com.techx.intervue.modules.billing.enums.VoucherStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +47,26 @@ public class Voucher extends BaseEntity {
 
     @Column(length = 500)
     private String description;
+
+    @Column(name = "ribbon_label", length = 40)
+    private String ribbonLabel;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "accent_color", nullable = false, length = 20)
+    @Builder.Default
+    private VoucherAccentColor accentColor = VoucherAccentColor.EMERALD;
+
+    @Column(name = "conditions_json", columnDefinition = "TEXT")
+    private String conditionsJson;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "voucher_applicable_packages",
+            joinColumns = @JoinColumn(name = "voucher_id"),
+            inverseJoinColumns = @JoinColumn(name = "package_id"))
+    @OrderBy("displayOrder ASC, id ASC")
+    @Builder.Default
+    private Set<ServicePackage> applicablePackages = new LinkedHashSet<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "discount_type", nullable = false, length = 20)
