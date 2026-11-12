@@ -8,9 +8,9 @@ import com.techx.intervue.common.audit.services.interfaces.AuditLogServiceInterf
 import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.resources.JobResource;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -32,12 +32,16 @@ public class JobActivityRecorder {
                         .build());
     }
 
-    public String changedFields(JobResource before, JobResource after) {
+    public List<String> changedFieldNames(JobResource before, JobResource after) {
         Map<String, Object> previous = snapshot(before);
         Map<String, Object> current = snapshot(after);
         return previous.keySet().stream()
                 .filter(field -> !Objects.equals(previous.get(field), current.get(field)))
-                .collect(Collectors.joining(", "));
+                .toList();
+    }
+
+    public String changedFields(JobResource before, JobResource after) {
+        return String.join(", ", changedFieldNames(before, after));
     }
 
     private Map<String, Object> snapshot(JobResource job) {

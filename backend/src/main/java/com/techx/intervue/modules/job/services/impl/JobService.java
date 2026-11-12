@@ -15,6 +15,7 @@ import com.techx.intervue.modules.job.entities.Skill;
 import com.techx.intervue.modules.job.enums.JobStatus;
 import com.techx.intervue.modules.job.events.JobClosedEvent;
 import com.techx.intervue.modules.job.events.JobPublishedEvent;
+import com.techx.intervue.modules.job.events.JobTermsChangedEvent;
 import com.techx.intervue.modules.job.mappers.JobMapper;
 import com.techx.intervue.modules.job.repositories.JobRepository;
 import com.techx.intervue.modules.job.repositories.JobRepository.StatusCount;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -54,6 +56,13 @@ public class JobService implements JobServiceInterface {
     private static final Set<JobStatus> CLOSABLE = Set.of(JobStatus.PUBLISHED, JobStatus.PAUSED);
     private static final Set<JobStatus> RENEWABLE = Set.of(JobStatus.CLOSED, JobStatus.EXPIRED);
     private static final Duration FREE_REOPEN_WINDOW = Duration.ofDays(7);
+    private static final Map<String, String> APPLICANT_FACING_FIELDS =
+            Map.of(
+                    "title", "job title",
+                    "salary", "salary",
+                    "location", "location",
+                    "contractType", "contract type",
+                    "workingArrangement", "working arrangement");
 
     private final JobRepository jobRepository;
     private final SkillRepository skillRepository;
@@ -109,9 +118,11 @@ public class JobService implements JobServiceInterface {
             contentScreener.flagForReview(job);
         }
         JobResource after = jobMapper.toResource(job);
-        String changed = activityRecorder.changedFields(before, after);
-        if (job.getStatus() != JobStatus.DRAFT && !changed.isEmpty()) {
-            activityRecorder.record(recruiterId, AuditAction.JOB_UPDATED, job, changed);
+        List<String> changedFields = activityRecorder.changedFieldNames(before, after);
+        if (job.getStatus() != JobStatus.DRAFT && !changedFields.isEmpty()) {
+            activityRecorder.record(
+                    recruiterId, AuditAction.JOB_UPDATED, job, String.join(", ", changedFields));
+            announceApplicantFacingChanges(job, changedFields);
         }
         return after;
     }
@@ -328,6 +339,17 @@ public class JobService implements JobServiceInterface {
             job.setPublishedAt(Instant.now());
         }
         return jobMapper.toResource(job);
+    }
+
+    private void announceApplicantFacingChanges(Job job, List<String> changedFields) {
+        String changes =
+                changedFields.stream()
+                        .filter(APPLICANT_FACING_FIELDS::containsKey)
+                        .map(APPLICANT_FACING_FIELDS::get)
+                        .collect(Collectors.joining(", "));
+        if (!changes.isEmpty()) {
+            eventPublisher.publishEvent(new JobTermsChangedEvent(job.getId(), changes));
+        }
     }
 
     private Duration pausedDuration(Job job) {
