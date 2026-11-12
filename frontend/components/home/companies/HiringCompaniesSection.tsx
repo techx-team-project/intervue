@@ -8,10 +8,12 @@ import { usePublicJobs } from '@/hooks/usePublicJobs';
 import type { PublicJobCompany, PublicJobSummaryResource } from '@/types/public-job';
 import { WifiOff } from 'lucide-react';
 import SectionHeader from '../SectionHeader';
-import HiringCompanyCard from './HiringCompanyCard';
+import HomeJobCard from '../HomeJobCard';
 
 const SAMPLE_SIZE = 30;
 const COMPANY_COUNT = 6;
+const MAX_JOBS_PER_COMPANY = 2;
+const CARD_COUNT = 9;
 const GRID_CLASS = 'expanded:grid-cols-3 medium:grid-cols-2 grid grid-cols-1 gap-5';
 
 type CompanyEntry = { company: PublicJobCompany; jobs: PublicJobSummaryResource[]; featured?: boolean };
@@ -41,8 +43,9 @@ export default function HiringCompaniesSection() {
   }));
   const paidIds = new Set(paid.map((entry) => entry.company.id));
   const entries = [...paid, ...grouped.filter((entry) => !paidIds.has(entry.company.id))].slice(0, COMPANY_COUNT);
+  const cards = entries.flatMap((entry) => entry.jobs.slice(0, MAX_JOBS_PER_COMPANY)).slice(0, CARD_COUNT);
 
-  if (!query.isLoading && !query.isError && entries.length === 0) return null;
+  if (!query.isLoading && !query.isError && cards.length === 0) return null;
 
   return (
     <section id="top-companies" aria-labelledby="companies-title" className="bg-surface-container-low py-24">
@@ -59,8 +62,8 @@ export default function HiringCompaniesSection() {
 
         {query.isLoading ? (
           <div className={GRID_CLASS}>
-            {Array.from({ length: COMPANY_COUNT }, (_, index) => (
-              <Skeleton key={index} className="h-72 w-full rounded-2xl" />
+            {Array.from({ length: CARD_COUNT }, (_, index) => (
+              <Skeleton key={index} className="h-28 w-full rounded-xl" />
             ))}
           </div>
         ) : query.isError ? (
@@ -75,9 +78,9 @@ export default function HiringCompaniesSection() {
         ) : (
           <Reveal delay={1}>
             <ul className={GRID_CLASS}>
-              {entries.map(({ company, jobs, featured }) => (
-                <li key={company.id}>
-                  <HiringCompanyCard company={company} jobs={jobs} featured={featured} />
+              {cards.map((job) => (
+                <li key={job.id}>
+                  <HomeJobCard job={job} companyFirst />
                 </li>
               ))}
             </ul>
