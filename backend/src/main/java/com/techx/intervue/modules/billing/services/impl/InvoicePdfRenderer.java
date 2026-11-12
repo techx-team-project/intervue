@@ -3,7 +3,6 @@ package com.techx.intervue.modules.billing.services.impl;
 import com.techx.intervue.config.BillingProperties;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
-import com.techx.intervue.modules.billing.entities.Invoice;
 import com.techx.intervue.modules.billing.entities.OrderItem;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,6 +23,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -35,8 +35,6 @@ public class InvoicePdfRenderer {
     private static final ZoneId VIETNAM = ZoneId.of("Asia/Ho_Chi_Minh");
     private static final DateTimeFormatter ISSUED_AT =
             DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm", Locale.ENGLISH);
-    private static final String NOTICE =
-            "Internal record only. This is not an electronic invoice carrying a tax authority code.";
 
     private static final float MARGIN = 50f;
     private static final float LINE = 15f;
@@ -48,10 +46,12 @@ public class InvoicePdfRenderer {
     private static final float[] INK_MUTED = {0.42f, 0.45f, 0.50f};
     private static final float[] INK_RULE = {0.85f, 0.87f, 0.89f};
     private static final float[] INK_ACCENT = {0.02f, 0.59f, 0.41f};
+    private static final String LOGO_RESOURCE = "branding/intervue-logo.png";
+    private static final float LOGO_WIDTH = 110f;
 
     private final BillingProperties billingProperties;
 
-    public byte[] render(Invoice invoice, List<OrderItem> items, String orderCode) {
+    public byte[] render(OrderDocumentView view, List<OrderItem> items) {
         try (PDDocument document = new PDDocument();
                 ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             PDPage page = new PDPage(PDRectangle.A4);
@@ -59,39 +59,54 @@ public class InvoicePdfRenderer {
 
             PDFont regular = load(document, "fonts/NotoSans-Regular.ttf");
             PDFont bold = load(document, "fonts/NotoSans-Bold.ttf");
+            PDImageXObject logo = loadLogo(document);
 
             try (PDPageContentStream content = new PDPageContentStream(document, page)) {
-                float y = header(content, bold, regular, invoice, orderCode, PAGE_TOP);
-                y = parties(content, bold, regular, invoice, y);
-                y = table(content, bold, regular, invoice, items, y);
-                totals(content, bold, regular, invoice, y);
-                footer(content, regular);
+                float y = header(content, bold, regular, view, logo, PAGE_TOP);
+                y = parties(content, bold, regular, view, y);
+                y = table(content, bold, regular, view, items, y);
+                totals(content, bold, regular, view, y);
+                footer(content, regular, view);
             }
 
             document.save(output);
             return output.toByteArray();
         } catch (IOException cause) {
-            log.warn("Could not render invoice {}", invoice.getNumber(), cause);
+            log.warn("Could not render document for order {}", view.orderCode(), cause);
             throw new AppException(ErrorCode.INVOICE_RENDER_FAILED);
         }
     }
 
+    // Logo top-left, title block top-right — a real invoice number or a long status line never
+    // collides with the logo, no matter how wide either one is
     private float header(
             PDPageContentStream content,
             PDFont bold,
             PDFont regular,
-            Invoice invoice,
-            String orderCode,
+            OrderDocumentView view,
+            PDImageXObject logo,
             float y)
             throws IOException {
-        colour(content, INK_ACCENT);
-        write(content, bold, 24, MARGIN, y - 6, "INVOICE");
-        colour(content, null);
+        float logoHeight = LOGO_WIDTH * logo.getHeight() / logo.getWidth();
+        content.drawImage(logo, MARGIN, y - logoHeight - 4, LOGO_WIDTH, logoHeight);
 
-        float metaY = y - 2;
-        writeRight(content, bold, 11, RIGHT, metaY, invoice.getNumber());
-        metaY -= LINE;
-        muted(content, regular, 9, RIGHT, metaY, "Order " + orderCode, true);
+        float metaY = y - 4;
+        colour(content, INK_ACCENT);
+        writeRight(content, bold, 20, RIGHT, metaY, view.documentTitle());
+        colour(content, null);
+        metaY -= LINE * 1.7f;
+
+        if (view.statusLabel() != null) {
+            colour(content, view.statusColor());
+            writeRight(content, bold, 10, RIGHT, metaY, view.statusLabel());
+            colour(content, null);
+            metaY -= LINE * 1.2f;
+        }
+        if (view.documentNumber() != null && !view.documentNumber().isBlank()) {
+            writeRight(content, bold, 11, RIGHT, metaY, view.documentNumber());
+            metaY -= LINE;
+        }
+        muted(content, regular, 9, RIGHT, metaY, "Order " + view.orderCode(), true);
         metaY -= LINE;
         muted(
                 content,
@@ -99,16 +114,20 @@ public class InvoicePdfRenderer {
                 9,
                 RIGHT,
                 metaY,
-                "Issued " + ISSUED_AT.format(invoice.getIssuedAt().atZone(VIETNAM)),
+                "Issued " + ISSUED_AT.format(view.issuedAt().atZone(VIETNAM)),
                 true);
 
-        y -= LINE * 2.6f;
-        rule(content, y);
-        return y - LINE * 1.6f;
+        float bottom = Math.min(y - logoHeight - LINE * 0.6f, metaY - LINE * 0.6f);
+        rule(content, bottom);
+        return bottom - LINE * 1.6f;
     }
 
     private float parties(
-            PDPageContentStream content, PDFont bold, PDFont regular, Invoice invoice, float y)
+            PDPageContentStream content,
+            PDFont bold,
+            PDFont regular,
+            OrderDocumentView view,
+            float y)
             throws IOException {
         BillingProperties.Seller seller = billingProperties.seller();
         List<String> from = new ArrayList<>();
@@ -119,10 +138,10 @@ public class InvoicePdfRenderer {
         add(from, seller.phone());
 
         List<String> to = new ArrayList<>();
-        add(to, invoice.getBuyerName());
-        add(to, labelled("Tax code: ", invoice.getBuyerTaxId()));
-        add(to, invoice.getBuyerAddress());
-        add(to, invoice.getRecipientEmail());
+        add(to, view.buyerName());
+        add(to, labelled("Tax code: ", view.buyerTaxId()));
+        add(to, view.buyerAddress());
+        add(to, view.recipientEmail());
 
         float columnTwo = MARGIN + 270;
         muted(content, bold, 9, MARGIN, y, "FROM", false);
@@ -147,7 +166,7 @@ public class InvoicePdfRenderer {
             PDPageContentStream content,
             PDFont bold,
             PDFont regular,
-            Invoice invoice,
+            OrderDocumentView view,
             List<OrderItem> items,
             float y)
             throws IOException {
@@ -176,14 +195,8 @@ public class InvoicePdfRenderer {
                     10,
                     COLUMN_UNIT_RIGHT,
                     y,
-                    money(item.getUnitPrice(), invoice.getCurrency()));
-            writeRight(
-                    content,
-                    regular,
-                    10,
-                    RIGHT,
-                    y,
-                    money(item.getLineTotal(), invoice.getCurrency()));
+                    money(item.getUnitPrice(), view.currency()));
+            writeRight(content, regular, 10, RIGHT, y, money(item.getLineTotal(), view.currency()));
             y -= LINE * 1.3f;
         }
 
@@ -193,49 +206,56 @@ public class InvoicePdfRenderer {
     }
 
     private void totals(
-            PDPageContentStream content, PDFont bold, PDFont regular, Invoice invoice, float y)
+            PDPageContentStream content,
+            PDFont bold,
+            PDFont regular,
+            OrderDocumentView view,
+            float y)
             throws IOException {
         float labelX = MARGIN + 300;
-        String currency = invoice.getCurrency();
+        String currency = view.currency();
 
         muted(content, regular, 10, labelX, y, "Subtotal", false);
-        writeRight(content, regular, 10, RIGHT, y, money(invoice.getSubtotal(), currency));
+        writeRight(content, regular, 10, RIGHT, y, money(view.subtotal(), currency));
         y -= LINE * 1.2f;
 
-        if (invoice.getDiscountAmount() > 0) {
+        if (view.discountAmount() > 0) {
             muted(content, regular, 10, labelX, y, "Discount", false);
             writeRight(
-                    content,
-                    regular,
-                    10,
-                    RIGHT,
-                    y,
-                    "-" + money(invoice.getDiscountAmount(), currency));
+                    content, regular, 10, RIGHT, y, "-" + money(view.discountAmount(), currency));
             y -= LINE * 1.2f;
         }
 
-        int vatPercent = invoice.getVatRate().multiply(BigDecimal.valueOf(100)).intValue();
+        int vatPercent = view.vatRate().multiply(BigDecimal.valueOf(100)).intValue();
         muted(content, regular, 10, labelX, y, "VAT " + vatPercent + "%", false);
-        writeRight(content, regular, 10, RIGHT, y, money(invoice.getVatAmount(), currency));
+        writeRight(content, regular, 10, RIGHT, y, money(view.vatAmount(), currency));
         y -= LINE * 1.1f;
 
         rule(content, y, labelX);
         y -= LINE * 1.3f;
 
-        write(content, bold, 12, labelX, y, "Total paid");
+        write(content, bold, 12, labelX, y, view.totalsLabel());
         colour(content, INK_ACCENT);
-        writeRight(content, bold, 12, RIGHT, y, money(invoice.getTotalAmount(), currency));
+        writeRight(content, bold, 12, RIGHT, y, money(view.totalAmount(), currency));
         colour(content, null);
     }
 
-    private void footer(PDPageContentStream content, PDFont regular) throws IOException {
+    private void footer(PDPageContentStream content, PDFont regular, OrderDocumentView view)
+            throws IOException {
         rule(content, MARGIN + LINE * 2.2f);
-        muted(content, regular, 8.5f, MARGIN, MARGIN + LINE, NOTICE, false);
+        muted(content, regular, 8.5f, MARGIN, MARGIN + LINE, view.notice(), false);
     }
 
     private PDFont load(PDDocument document, String path) throws IOException {
         try (InputStream stream = new ClassPathResource(path).getInputStream()) {
             return PDType0Font.load(document, stream);
+        }
+    }
+
+    private PDImageXObject loadLogo(PDDocument document) throws IOException {
+        try (InputStream stream = new ClassPathResource(LOGO_RESOURCE).getInputStream()) {
+            return PDImageXObject.createFromByteArray(
+                    document, stream.readAllBytes(), "intervue-logo");
         }
     }
 
