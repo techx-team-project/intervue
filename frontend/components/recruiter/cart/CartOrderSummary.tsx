@@ -2,8 +2,9 @@
 
 import Modal from '@/components/ui/Modal';
 import type { BusinessInvoiceInfo, InvoiceType, PersonalInvoiceInfo } from '@/types/recruiter-cart';
+import { isInvoiceInfoComplete } from '@/utils/cart-invoice';
 import type { VoucherPreview } from '@/types/voucher';
-import { FileText, Info, Receipt, Tag, Ticket } from 'lucide-react';
+import { ChevronDown, ChevronUp, FileText, Receipt, SquarePen, Tag, Ticket } from 'lucide-react';
 import { useState } from 'react';
 
 interface CartOrderSummaryProps {
@@ -15,16 +16,15 @@ interface CartOrderSummaryProps {
   appliedVoucher: VoucherPreview | null;
   onOpenVoucherModal: () => void;
   invoiceType: InvoiceType | null;
-  onSelectInvoiceType: (type: InvoiceType) => void;
+  onOpenInvoiceModal: (type: InvoiceType) => void;
   businessInvoice: BusinessInvoiceInfo;
   personalInvoice: PersonalInvoiceInfo;
-  onUpdateBusinessInvoice: (data: Partial<BusinessInvoiceInfo>) => void;
-  onUpdatePersonalInvoice: (data: Partial<PersonalInvoiceInfo>) => void;
   termsAccepted: boolean;
   onToggleTerms: (accepted: boolean) => void;
   onSubmitOrder: () => void;
   selectedCount: number;
   hasItems: boolean;
+  isSubmitting?: boolean;
 }
 
 export default function CartOrderSummary({
@@ -36,21 +36,21 @@ export default function CartOrderSummary({
   appliedVoucher,
   onOpenVoucherModal,
   invoiceType,
-  onSelectInvoiceType,
+  onOpenInvoiceModal,
   businessInvoice,
   personalInvoice,
-  onUpdateBusinessInvoice,
-  onUpdatePersonalInvoice,
   termsAccepted,
   onToggleTerms,
   onSubmitOrder,
   selectedCount,
   hasItems,
+  isSubmitting = false,
 }: CartOrderSummaryProps) {
-  const [isEditingInvoice, setIsEditingInvoice] = useState(false);
+  const [isInvoiceExpanded, setIsInvoiceExpanded] = useState(true);
   const [showTermsModal, setShowTermsModal] = useState(false);
 
-  const canSubmit = selectedCount > 0 && !!invoiceType && termsAccepted;
+  const invoiceComplete = isInvoiceInfoComplete(invoiceType, businessInvoice, personalInvoice);
+  const canSubmit = selectedCount > 0 && invoiceComplete && termsAccepted && !isSubmitting;
 
   return (
     <>
@@ -119,23 +119,6 @@ export default function CartOrderSummary({
               {totalAmount > 0 ? `${totalAmount.toLocaleString('vi-VN')} VND` : '0 VND'}
             </span>
           </div>
-
-          {totalAmount > 0 && (
-            <div className="mt-3.5 flex items-center justify-between rounded-lg border border-amber-200/80 bg-[#fffbeb] px-3.5 py-2.5 text-xs">
-              <span className="text-on-surface flex items-center gap-1.5 font-medium">
-                <span>InterVue Points earned</span>
-                <span title="Reward points for recruiters to redeem gifts and upgrades">
-                  <Info className="text-outline h-3.5 w-3.5" />
-                </span>
-              </span>
-              <span className="text-primary inline-flex items-center gap-1 font-bold">
-                <span>+{Math.max(1, Math.round(totalAmount / 100000))}</span>
-                <span className="text-label-sm flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 font-bold text-amber-900">
-                  IP
-                </span>
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Invoice selection */}
@@ -150,156 +133,191 @@ export default function CartOrderSummary({
             Please choose an invoice type to proceed with checkout
           </p>
 
-          <div className="mt-3 space-y-2">
+          <div className="mt-3 space-y-2.5">
             {/* Enterprise invoice */}
-            <label
-              onClick={() => onSelectInvoiceType('business')}
-              className={`text-body-md flex cursor-pointer items-center justify-between rounded-lg border p-3 transition ${
+            <div
+              className={`rounded-lg border transition ${
                 invoiceType === 'business'
-                  ? 'border-primary bg-primary-light ring-1 ring-[#00b14f]'
-                  : 'border-outline-variant hover:border-outline'
+                  ? 'border-primary bg-primary-light/35 ring-1 ring-[#00b14f]'
+                  : 'border-outline-variant hover:border-outline bg-white'
               }`}
             >
-              <div className="flex items-center gap-2.5">
-                <input
-                  type="radio"
-                  name="invoiceType"
-                  checked={invoiceType === 'business'}
-                  onChange={() => onSelectInvoiceType('business')}
-                  className="text-primary h-4 w-4 focus:ring-[#00b14f]"
-                />
-                <span className="text-on-surface font-semibold">Corporate e-invoice</span>
-              </div>
-              {invoiceType === 'business' && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsEditingInvoice((prev) => !prev);
-                  }}
-                  className="text-primary text-xs font-semibold hover:underline"
-                >
-                  {isEditingInvoice ? 'Collapse' : 'Details'}
-                </button>
-              )}
-            </label>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsInvoiceExpanded(true);
+                  onOpenInvoiceModal('business');
+                }}
+                className="text-body-md flex w-full cursor-pointer items-center justify-between p-3 text-left"
+              >
+                <span className="flex items-center gap-2.5">
+                  <span
+                    className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
+                      invoiceType === 'business' ? 'border-primary' : 'border-outline'
+                    }`}
+                  >
+                    {invoiceType === 'business' && <span className="bg-primary h-2 w-2 rounded-full" />}
+                  </span>
+                  <span className="text-on-surface font-semibold">Corporate e-invoice</span>
+                </span>
+              </button>
 
-            {/* Business invoice details form */}
-            {invoiceType === 'business' && isEditingInvoice && (
-              <div className="border-outline-variant bg-surface-container-low/60 space-y-2 rounded-lg border p-3 text-xs">
-                <div>
-                  <label className="text-on-surface-variant font-medium">Tax ID</label>
-                  <input
-                    type="text"
-                    value={businessInvoice.taxId}
-                    onChange={(e) => onUpdateBusinessInvoice({ taxId: e.target.value })}
-                    className="border-outline text-on-surface focus:border-primary mt-1 w-full rounded border bg-white px-2.5 py-1.5 text-xs focus:outline-hidden"
-                  />
+              {invoiceType === 'business' && invoiceComplete && (
+                <div className="border-primary/20 border-t px-3 pt-2.5 pb-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-on-surface text-xs font-bold">Thông tin xuất hóa đơn điện tử</span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => onOpenInvoiceModal('business')}
+                        className="text-primary hover:bg-primary/10 cursor-pointer rounded p-1 transition"
+                        aria-label="Chỉnh sửa thông tin hóa đơn doanh nghiệp"
+                        title="Chỉnh sửa thông tin"
+                      >
+                        <SquarePen className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsInvoiceExpanded((prev) => !prev)}
+                        className="text-on-surface-variant hover:bg-surface-container-high cursor-pointer rounded p-1 transition"
+                        aria-label={isInvoiceExpanded ? 'Thu gọn thông tin hóa đơn' : 'Mở rộng thông tin hóa đơn'}
+                        aria-expanded={isInvoiceExpanded}
+                      >
+                        {isInvoiceExpanded ? (
+                          <ChevronUp className="h-3.5 w-3.5" />
+                        ) : (
+                          <ChevronDown className="h-3.5 w-3.5" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {isInvoiceExpanded && (
+                    <dl className="mt-2.5 space-y-1.5 text-xs">
+                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                        <dt className="text-on-surface-variant">Mã số thuế</dt>
+                        <dd className="text-on-surface truncate font-medium" title={businessInvoice.taxId}>
+                          {businessInvoice.taxId}
+                        </dd>
+                      </div>
+                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                        <dt className="text-on-surface-variant">Tên công ty</dt>
+                        <dd className="text-on-surface truncate font-medium" title={businessInvoice.companyName}>
+                          {businessInvoice.companyName}
+                        </dd>
+                      </div>
+                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                        <dt className="text-on-surface-variant">Địa chỉ</dt>
+                        <dd className="text-on-surface truncate font-medium" title={businessInvoice.companyAddress}>
+                          {businessInvoice.companyAddress}
+                        </dd>
+                      </div>
+                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                        <dt className="text-on-surface-variant">Email nhận hóa đơn điện tử</dt>
+                        <dd className="text-on-surface truncate font-medium" title={businessInvoice.recipientEmail}>
+                          {businessInvoice.recipientEmail}
+                        </dd>
+                      </div>
+                    </dl>
+                  )}
                 </div>
-                <div>
-                  <label className="text-on-surface-variant font-medium">Company name</label>
-                  <input
-                    type="text"
-                    value={businessInvoice.companyName}
-                    onChange={(e) => onUpdateBusinessInvoice({ companyName: e.target.value })}
-                    className="border-outline text-on-surface focus:border-primary mt-1 w-full rounded border bg-white px-2.5 py-1.5 text-xs focus:outline-hidden"
-                  />
-                </div>
-                <div>
-                  <label className="text-on-surface-variant font-medium">Billing address</label>
-                  <input
-                    type="text"
-                    value={businessInvoice.companyAddress}
-                    onChange={(e) => onUpdateBusinessInvoice({ companyAddress: e.target.value })}
-                    className="border-outline text-on-surface focus:border-primary mt-1 w-full rounded border bg-white px-2.5 py-1.5 text-xs focus:outline-hidden"
-                  />
-                </div>
-                <div>
-                  <label className="text-on-surface-variant font-medium">E-invoice recipient email</label>
-                  <input
-                    type="email"
-                    value={businessInvoice.recipientEmail}
-                    onChange={(e) => onUpdateBusinessInvoice({ recipientEmail: e.target.value })}
-                    className="border-outline text-on-surface focus:border-primary mt-1 w-full rounded border bg-white px-2.5 py-1.5 text-xs focus:outline-hidden"
-                  />
-                </div>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Personal invoice */}
-            <label
-              onClick={() => onSelectInvoiceType('personal')}
-              className={`text-body-md flex cursor-pointer items-center justify-between rounded-lg border p-3 transition ${
+            <div
+              className={`rounded-lg border transition ${
                 invoiceType === 'personal'
-                  ? 'border-primary bg-primary-light ring-1 ring-[#00b14f]'
-                  : 'border-outline-variant hover:border-outline'
+                  ? 'border-primary bg-primary-light/35 ring-1 ring-[#00b14f]'
+                  : 'border-outline-variant hover:border-outline bg-white'
               }`}
             >
-              <div className="flex items-center gap-2.5">
-                <input
-                  type="radio"
-                  name="invoiceType"
-                  checked={invoiceType === 'personal'}
-                  onChange={() => onSelectInvoiceType('personal')}
-                  className="text-primary h-4 w-4 focus:ring-[#00b14f]"
-                />
-                <span className="text-on-surface font-semibold">Individual invoice</span>
-              </div>
-              {invoiceType === 'personal' && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsEditingInvoice((prev) => !prev);
-                  }}
-                  className="text-primary text-xs font-semibold hover:underline"
-                >
-                  {isEditingInvoice ? 'Collapse' : 'Details'}
-                </button>
-              )}
-            </label>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsInvoiceExpanded(true);
+                  onOpenInvoiceModal('personal');
+                }}
+                className="text-body-md flex w-full cursor-pointer items-center justify-between p-3 text-left"
+              >
+                <span className="flex items-center gap-2.5">
+                  <span
+                    className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
+                      invoiceType === 'personal' ? 'border-primary' : 'border-outline'
+                    }`}
+                  >
+                    {invoiceType === 'personal' && <span className="bg-primary h-2 w-2 rounded-full" />}
+                  </span>
+                  <span className="text-on-surface font-semibold">Individual invoice</span>
+                </span>
+              </button>
 
-            {/* Personal invoice details form */}
-            {invoiceType === 'personal' && isEditingInvoice && (
-              <div className="border-outline-variant bg-surface-container-low/60 space-y-2 rounded-lg border p-3 text-xs">
-                <div>
-                  <label className="text-on-surface-variant font-medium">Full name</label>
-                  <input
-                    type="text"
-                    value={personalInvoice.fullName}
-                    onChange={(e) => onUpdatePersonalInvoice({ fullName: e.target.value })}
-                    className="border-outline text-on-surface focus:border-primary mt-1 w-full rounded border bg-white px-2.5 py-1.5 text-xs focus:outline-hidden"
-                  />
+              {invoiceType === 'personal' && invoiceComplete && (
+                <div className="border-primary/20 border-t px-3 pt-2.5 pb-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-on-surface text-xs font-bold">Thông tin xuất hóa đơn điện tử</span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => onOpenInvoiceModal('personal')}
+                        className="text-primary hover:bg-primary/10 cursor-pointer rounded p-1 transition"
+                        aria-label="Chỉnh sửa thông tin hóa đơn cá nhân"
+                        title="Chỉnh sửa thông tin"
+                      >
+                        <SquarePen className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsInvoiceExpanded((prev) => !prev)}
+                        className="text-on-surface-variant hover:bg-surface-container-high cursor-pointer rounded p-1 transition"
+                        aria-label={isInvoiceExpanded ? 'Thu gọn thông tin hóa đơn' : 'Mở rộng thông tin hóa đơn'}
+                        aria-expanded={isInvoiceExpanded}
+                      >
+                        {isInvoiceExpanded ? (
+                          <ChevronUp className="h-3.5 w-3.5" />
+                        ) : (
+                          <ChevronDown className="h-3.5 w-3.5" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {isInvoiceExpanded && (
+                    <dl className="mt-2.5 space-y-1.5 text-xs">
+                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                        <dt className="text-on-surface-variant">
+                          {personalInvoice.personalDocumentType === 'passport' ? 'Số hộ chiếu' : 'Số CCCD'}
+                        </dt>
+                        <dd
+                          className="text-on-surface truncate font-medium"
+                          title={personalInvoice.taxOrIdentityNumber}
+                        >
+                          {personalInvoice.taxOrIdentityNumber}
+                        </dd>
+                      </div>
+                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                        <dt className="text-on-surface-variant">Họ và tên</dt>
+                        <dd className="text-on-surface truncate font-medium" title={personalInvoice.fullName}>
+                          {personalInvoice.fullName}
+                        </dd>
+                      </div>
+                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                        <dt className="text-on-surface-variant">Địa chỉ</dt>
+                        <dd className="text-on-surface truncate font-medium" title={personalInvoice.personalAddress}>
+                          {personalInvoice.personalAddress}
+                        </dd>
+                      </div>
+                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                        <dt className="text-on-surface-variant">Email nhận hóa đơn điện tử</dt>
+                        <dd className="text-on-surface truncate font-medium" title={personalInvoice.recipientEmail}>
+                          {personalInvoice.recipientEmail}
+                        </dd>
+                      </div>
+                    </dl>
+                  )}
                 </div>
-                <div>
-                  <label className="text-on-surface-variant font-medium">Personal Tax ID / ID card number</label>
-                  <input
-                    type="text"
-                    value={personalInvoice.taxOrIdentityNumber}
-                    onChange={(e) => onUpdatePersonalInvoice({ taxOrIdentityNumber: e.target.value })}
-                    className="border-outline text-on-surface focus:border-primary mt-1 w-full rounded border bg-white px-2.5 py-1.5 text-xs focus:outline-hidden"
-                  />
-                </div>
-                <div>
-                  <label className="text-on-surface-variant font-medium">Personal address</label>
-                  <input
-                    type="text"
-                    value={personalInvoice.personalAddress}
-                    onChange={(e) => onUpdatePersonalInvoice({ personalAddress: e.target.value })}
-                    className="border-outline text-on-surface focus:border-primary mt-1 w-full rounded border bg-white px-2.5 py-1.5 text-xs focus:outline-hidden"
-                  />
-                </div>
-                <div>
-                  <label className="text-on-surface-variant font-medium">Recipient email</label>
-                  <input
-                    type="email"
-                    value={personalInvoice.recipientEmail}
-                    onChange={(e) => onUpdatePersonalInvoice({ recipientEmail: e.target.value })}
-                    className="border-outline text-on-surface focus:border-primary mt-1 w-full rounded border bg-white px-2.5 py-1.5 text-xs focus:outline-hidden"
-                  />
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
@@ -335,18 +353,18 @@ export default function CartOrderSummary({
             type="button"
             disabled={!canSubmit}
             onClick={onSubmitOrder}
-            className="bg-primary hover:bg-primary disabled:bg-primary/40 w-full rounded-lg py-3 text-center text-sm font-bold text-white transition disabled:cursor-not-allowed"
+            className="bg-primary hover:bg-primary disabled:bg-primary/40 w-full cursor-pointer rounded-lg py-3 text-center text-sm font-bold text-white transition disabled:cursor-not-allowed"
           >
-            Place order
+            {isSubmitting ? 'Đang tạo đơn hàng...' : 'Place order'}
           </button>
 
-          {!canSubmit && hasItems && (
+          {!canSubmit && hasItems && !isSubmitting && (
             <p className="text-label-sm text-outline mt-2 text-center">
               {selectedCount === 0
-                ? 'Please select at least 1 service'
-                : !invoiceType
-                  ? 'Please select an invoice type'
-                  : 'Please agree to the Terms of Service'}
+                ? 'Vui lòng chọn ít nhất 1 dịch vụ'
+                : !invoiceType || !invoiceComplete
+                  ? 'Vui lòng chọn và điền đầy đủ thông tin xuất hóa đơn'
+                  : 'Vui lòng đồng ý với Điều khoản dịch vụ'}
             </p>
           )}
         </div>
