@@ -6,11 +6,12 @@ import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.ai.requests.AiToolDefinition;
 import com.techx.intervue.modules.ai.resources.CandidateApplicationResult;
+import com.techx.intervue.modules.ai.resources.JobSearchResult;
 import com.techx.intervue.modules.ai.resources.ToolExecutionResult;
-import com.techx.intervue.modules.ai.services.impl.JobSearchService;
 import com.techx.intervue.modules.ai.services.impl.PlatformAgentToolService;
 import com.techx.intervue.modules.ai.services.interfaces.CandidateApplicationServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.CompanySearchServiceInterface;
+import com.techx.intervue.modules.ai.services.interfaces.JobSearchServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.KnowledgeBaseServiceInterface;
 import com.techx.intervue.modules.ai.tools.ChatToolRegistry;
 import com.techx.intervue.modules.ai.tools.GetCompanyInfoTool;
@@ -28,13 +29,14 @@ class PlatformAgentToolServiceTest {
     private ChatToolRegistry registry;
     private PlatformAgentToolService service;
     private CandidateApplicationServiceInterface candidateApplicationService;
+    private JobSearchServiceInterface jobSearchService;
     private CompanySearchServiceInterface companySearchService;
     private KnowledgeBaseServiceInterface knowledgeBaseService;
 
     @BeforeEach
     void setUp() {
         registry = new ChatToolRegistry();
-        JobSearchService jobSearchService = new JobSearchService();
+        jobSearchService = mock(JobSearchServiceInterface.class);
         companySearchService = mock(CompanySearchServiceInterface.class);
         candidateApplicationService = mock(CandidateApplicationServiceInterface.class);
         knowledgeBaseService = mock(KnowledgeBaseServiceInterface.class);
@@ -64,8 +66,22 @@ class PlatformAgentToolServiceTest {
     }
 
     @Test
-    @DisplayName("Executing 'search_jobs' for remote Java jobs in HCM returns real jobs")
+    @DisplayName("Executing 'search_jobs' returns jobs from the job search service")
     void searchJobsToolExecution() {
+        when(jobSearchService.search("Java", null, "Ho Chi Minh City", null, 10))
+                .thenReturn(
+                        List.of(
+                                new JobSearchResult(
+                                        "201",
+                                        "Senior Java Backend Engineer",
+                                        "Acme",
+                                        "30,000,000 - 55,000,000 VND",
+                                        "Ho Chi Minh City",
+                                        "SENIOR",
+                                        List.of("Java"),
+                                        "Tin tuyển dụng đang mở tại Acme.",
+                                        "/jobs/201")));
+
         ToolExecutionResult result =
                 service.execute(
                         "search_jobs",
@@ -75,7 +91,7 @@ class PlatformAgentToolServiceTest {
                                 "location", "Ho Chi Minh City"));
 
         assertThat(result.isSuccess()).isTrue();
-        assertThat(result.content()).contains("Senior Java Backend Engineer (Remote - TP. HCM)");
+        assertThat(result.content()).contains("Senior Java Backend Engineer");
         assertThat(result.content()).contains("/jobs/201");
     }
 

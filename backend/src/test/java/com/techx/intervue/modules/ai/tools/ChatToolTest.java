@@ -9,11 +9,12 @@ import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.ai.resources.CandidateApplicationResult;
 import com.techx.intervue.modules.ai.resources.CompanySearchResult;
+import com.techx.intervue.modules.ai.resources.JobSearchResult;
 import com.techx.intervue.modules.ai.resources.KnowledgeMatch;
 import com.techx.intervue.modules.ai.resources.ToolExecutionResult;
-import com.techx.intervue.modules.ai.services.impl.JobSearchService;
 import com.techx.intervue.modules.ai.services.interfaces.CandidateApplicationServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.CompanySearchServiceInterface;
+import com.techx.intervue.modules.ai.services.interfaces.JobSearchServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.KnowledgeBaseServiceInterface;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ import org.junit.jupiter.api.Test;
 class ChatToolTest {
 
     private ChatToolRegistry registry;
-    private JobSearchService jobSearchService;
+    private JobSearchServiceInterface jobSearchService;
     private CompanySearchServiceInterface companySearchService;
     private CandidateApplicationServiceInterface candidateApplicationService;
     private KnowledgeBaseServiceInterface knowledgeBaseService;
@@ -32,7 +33,7 @@ class ChatToolTest {
     @BeforeEach
     void setUp() {
         registry = new ChatToolRegistry();
-        jobSearchService = new JobSearchService();
+        jobSearchService = mock(JobSearchServiceInterface.class);
         companySearchService = mock(CompanySearchServiceInterface.class);
         candidateApplicationService = mock(CandidateApplicationServiceInterface.class);
         knowledgeBaseService = mock(KnowledgeBaseServiceInterface.class);
@@ -57,44 +58,120 @@ class ChatToolTest {
     }
 
     @Test
-    @DisplayName("Find remote Java jobs in Ho Chi Minh City returns real jobs")
-    void searchJobsShouldReturnRealRemoteJavaJobsInHcm() {
+    @DisplayName("SearchJobsTool formats jobs returned by the job search service")
+    void searchJobsShouldFormatServiceResults() {
+        when(jobSearchService.search("Java", null, "Ho Chi Minh City", null, 10))
+                .thenReturn(
+                        List.of(
+                                new JobSearchResult(
+                                        "201",
+                                        "Senior Java Backend Engineer",
+                                        "Acme",
+                                        "30,000,000 - 55,000,000 VND",
+                                        "Ho Chi Minh City",
+                                        "SENIOR",
+                                        List.of("Java", "Spring Boot"),
+                                        "Tin tuyển dụng đang mở tại Acme.",
+                                        "/jobs/201")));
         SearchJobsTool tool = new SearchJobsTool(jobSearchService, registry);
 
-        // Case 1: Separate keyword and location
-        ToolExecutionResult result1 =
-                tool.execute(
-                        null,
-                        Map.of(
-                                "keyword", "Java",
-                                "location", "Ho Chi Minh City"));
+        ToolExecutionResult result =
+                tool.execute(null, Map.of("keyword", "Java", "location", "Ho Chi Minh City"));
 
-        assertThat(result1.isSuccess()).isTrue();
-        assertThat(result1.content()).contains("<job_search_results>");
-        assertThat(result1.content()).contains("Senior Java Backend Engineer (Remote - TP. HCM)");
-        assertThat(result1.content())
-                .contains("Java Software Engineer (Microservices / Cloud - Remote)");
-        assertThat(result1.content()).contains("/jobs/201");
-        assertThat(result1.content()).contains("/jobs/202");
-
-        // Case 2: Full query as keyword
-        ToolExecutionResult result2 =
-                tool.execute(null, Map.of("keyword", "Find remote Java jobs in Ho Chi Minh City"));
-
-        assertThat(result2.isSuccess()).isTrue();
-        assertThat(result2.content()).contains("Senior Java Backend Engineer (Remote - TP. HCM)");
-        assertThat(result2.content()).contains("/jobs/201");
+        assertThat(result.isSuccess()).isTrue();
+        assertThat(result.content()).contains("<job_search_results>");
+        assertThat(result.content()).contains("Senior Java Backend Engineer");
+        assertThat(result.content()).contains("/jobs/201");
     }
 
     @Test
-    @DisplayName("SearchJobsTool returns error when keyword is missing")
-    void searchJobsShouldReturnErrorWhenKeywordMissing() {
+    @DisplayName("SearchJobsTool points to the jobs page when nothing matches")
+    void searchJobsShouldPointToJobsPageWhenEmpty() {
+        when(jobSearchService.search("Cobol", null, null, null, 10)).thenReturn(List.of());
         SearchJobsTool tool = new SearchJobsTool(jobSearchService, registry);
-        ToolExecutionResult result = tool.execute(null, Map.of());
 
-        assertThat(result.isSuccess()).isFalse();
-        assertThat(result.error()).isTrue();
-        assertThat(result.content()).contains("Missing required argument: keyword");
+        ToolExecutionResult result = tool.execute(null, Map.of("keyword", "Cobol"));
+
+        assertThat(result.isSuccess()).isTrue();
+        assertThat(result.content()).contains("Không tìm thấy việc làm IT phù hợp");
+        assertThat(result.content()).contains("(/jobs)");
+    }
+
+    @Test
+    @DisplayName("SearchJobsTool appends a see-more link when the result cap is reached")
+    void searchJobsShouldAppendSeeMoreLinkWhenCapReached() {
+        List<JobSearchResult> tenJobs =
+                java.util.stream.IntStream.rangeClosed(1, 10)
+                        .mapToObj(
+                                i ->
+                                        new JobSearchResult(
+                                                String.valueOf(i),
+                                                "Job " + i,
+                                                "Acme",
+                                                "Lương thỏa thuận",
+                                                "Hà Nội",
+                                                "MID",
+                                                List.of("Java"),
+                                                "Tin tuyển dụng đang mở tại Acme.",
+                                                "/jobs/" + i))
+                        .toList();
+        when(jobSearchService.search("Java", null, "Hà Nội", "newest", 10)).thenReturn(tenJobs);
+        SearchJobsTool tool = new SearchJobsTool(jobSearchService, registry);
+
+        ToolExecutionResult result =
+                tool.execute(
+                        null, Map.of("keyword", "Java", "location", "Hà Nội", "sort", "newest"));
+
+        assertThat(result.content())
+                .contains("[Xem thêm việc làm](/jobs?q=Java&city=H%C3%A0+N%E1%BB%99i&sort=NEWEST)");
+    }
+
+    @Test
+    @DisplayName("SearchJobsTool omits the see-more link when fewer results than the cap")
+    void searchJobsShouldOmitSeeMoreLinkWhenBelowCap() {
+        when(jobSearchService.search("Java", null, null, null, 10))
+                .thenReturn(
+                        List.of(
+                                new JobSearchResult(
+                                        "1",
+                                        "Job 1",
+                                        "Acme",
+                                        "Lương thỏa thuận",
+                                        "Hà Nội",
+                                        "MID",
+                                        List.of("Java"),
+                                        "Tin tuyển dụng đang mở tại Acme.",
+                                        "/jobs/1")));
+        SearchJobsTool tool = new SearchJobsTool(jobSearchService, registry);
+
+        ToolExecutionResult result = tool.execute(null, Map.of("keyword", "Java"));
+
+        assertThat(result.content()).doesNotContain("Xem thêm việc làm");
+    }
+
+    @Test
+    @DisplayName("SearchJobsTool searches without a keyword and forwards the sort")
+    void searchJobsShouldWorkWithoutKeywordAndForwardSort() {
+        when(jobSearchService.search(null, null, null, "NEWEST", 10))
+                .thenReturn(
+                        List.of(
+                                new JobSearchResult(
+                                        "450",
+                                        "Java Developer",
+                                        "Techcombank",
+                                        "Lương thỏa thuận",
+                                        "Hà Nội",
+                                        "MID",
+                                        List.of("Java"),
+                                        "Tin tuyển dụng đang mở tại Techcombank.",
+                                        "/jobs/450")));
+        SearchJobsTool tool = new SearchJobsTool(jobSearchService, registry);
+
+        ToolExecutionResult result = tool.execute(null, Map.of("sort", "NEWEST"));
+
+        assertThat(result.isSuccess()).isTrue();
+        assertThat(result.content()).contains("Java Developer");
+        assertThat(result.content()).contains("/jobs/450");
     }
 
     @Test
@@ -142,7 +219,7 @@ class ChatToolTest {
     @Test
     @DisplayName("GetCompanyInfoTool returns company details with deep links")
     void getCompanyInfoReturnsDetails() {
-        when(companySearchService.search("TechX", null, null, 3))
+        when(companySearchService.search("TechX", null, null, 10))
                 .thenReturn(
                         List.of(
                                 new CompanySearchResult(
@@ -152,7 +229,6 @@ class ChatToolTest {
                                         "150 - 300 nhân viên",
                                         "Hà Nội",
                                         "https://techx.com",
-                                        true,
                                         12,
                                         List.of("Lương tháng 13", "Bảo hiểm PVI"),
                                         "/companies/1")));

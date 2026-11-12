@@ -8,11 +8,9 @@ import com.techx.intervue.modules.ai.requests.EmbeddingInputType;
 import com.techx.intervue.modules.ai.requests.EmbeddingRequest;
 import com.techx.intervue.modules.ai.resources.AiUsage;
 import com.techx.intervue.modules.ai.resources.EmbeddingResult;
-import java.time.Duration;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.retry.RetryPolicy;
 import org.springframework.core.retry.RetryTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
@@ -25,7 +23,6 @@ public class GeminiEmbeddingClient implements EmbeddingClient {
 
     private static final String API_KEY_HEADER = "x-goog-api-key";
     private static final int MAX_INPUTS = 100;
-    private static final Duration RETRY_DELAY = Duration.ofMillis(500);
 
     private final RestClient restClient;
     private final AiProperties.Gemini gemini;
@@ -37,14 +34,7 @@ public class GeminiEmbeddingClient implements EmbeddingClient {
         this.restClient = restClient;
         this.gemini = properties.gemini();
         this.config = properties.embedding();
-        this.retryTemplate =
-                new RetryTemplate(
-                        RetryPolicy.builder()
-                                .maxRetries(gemini.maxRetries())
-                                .delay(RETRY_DELAY)
-                                .multiplier(2)
-                                .predicate(GeminiEmbeddingClient::isTransient)
-                                .build());
+        this.retryTemplate = AiProviderErrors.retryTemplate(gemini.maxRetries());
     }
 
     @Override
@@ -123,13 +113,6 @@ public class GeminiEmbeddingClient implements EmbeddingClient {
             array[i] = values.get(i);
         }
         return array;
-    }
-
-    private static boolean isTransient(Throwable failure) {
-        if (failure instanceof RestClientResponseException ex) {
-            return AiProviderErrors.isRetryableStatus(ex.getStatusCode().value());
-        }
-        return failure instanceof ResourceAccessException;
     }
 
     private record BatchRequest(List<EmbedRequest> requests) {}

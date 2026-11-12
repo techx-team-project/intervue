@@ -5,5 +5,6 @@ import java.util.List;
 
 public interface JobSearchServiceInterface {
 
-    List<JobSearchResult> search(String keyword, String level, String location, int limit);
+    List<JobSearchResult> search(
+            String keyword, String level, String location, String sort, int limit);
 }

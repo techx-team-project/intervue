@@ -76,7 +76,7 @@ public class JobAlertDispatchService implements JobAlertDispatchServiceInterface
 
         List<JobSearchResult> searchResults =
                 jobSearchService.search(
-                        alert.getKeyword(), alert.getCareerLevel(), alert.getCity(), 12);
+                        alert.getKeyword(), alert.getCareerLevel(), alert.getCity(), null, 12);
 
         Set<String> deliveredIds = deliveryRepository.findJobIdsByAlertId(alert.getId());
 
