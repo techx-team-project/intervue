@@ -58,7 +58,7 @@ const SERVER_FIELD_MAP: Record<string, Path<JobPostFormData>> = {
 
 function normaliseServerField(field: string): string {
   const mapped = SERVER_FIELD_MAP[field] ?? field;
-  return mapped.replace(/\[(\d+)\]/g, '.$1');
+  return mapped.replace(/\[(\d+)\]/g, '.$1').replace(/^(hiringSteps\.\d+)$/, '$1.title');
 }
 
 function stepOfField(field: string): number {

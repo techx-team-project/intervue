@@ -5,6 +5,7 @@ import { Button, buttonClassName } from '@/components/ui/Button';
 import type { PublicJobResource } from '@/types/public-job';
 import { MapPin, Send, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import ReportJobButton from './ReportJobButton';
 
 type JobDetailSidebarProps = {
   job: PublicJobResource;
@@ -47,6 +48,10 @@ export default function JobDetailSidebar({ job, onApply }: JobDetailSidebarProps
             {address}
           </p>
         )}
+
+        <div className="border-outline-variant border-t pt-4">
+          <ReportJobButton jobId={job.id} />
+        </div>
       </div>
 
       <div className="bg-surface border-outline-variant rounded-2xl border p-6">

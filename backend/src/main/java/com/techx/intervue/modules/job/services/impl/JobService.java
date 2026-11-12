@@ -52,6 +52,7 @@ public class JobService implements JobServiceInterface {
     private final JobMapper jobMapper;
     private final JobStatusPolicy statusPolicy;
     private final JobPublishRules publishRules;
+    private final JobContentScreener contentScreener;
     private final ScreeningQuestionRules screeningRules;
     private final JobApplicationLookupInterface applicationLookup;
     private final ApplicationEventPublisher eventPublisher;
@@ -86,9 +87,11 @@ public class JobService implements JobServiceInterface {
         applyScreeningQuestions(job, request);
         if (job.getStatus() != JobStatus.DRAFT) {
             publishRules.assertComplete(job);
+            contentScreener.assertAllowed(job);
             entitlementService
                     .jobSlotExpiresAt(job.getId())
                     .ifPresent(endsAt -> assertDeadlineWithinSlot(job.getDeadline(), endsAt));
+            contentScreener.flagForReview(job);
         }
         return jobMapper.toResource(job);
     }
@@ -131,6 +134,7 @@ public class JobService implements JobServiceInterface {
         assertReadyToGoLive(job, recruiterId);
         consumeJobSlot(job, recruiterId);
         JobResource published = markLive(job);
+        contentScreener.flagForReview(job);
         eventPublisher.publishEvent(
                 new JobPublishedEvent(
                         job.getId(),
@@ -241,6 +245,7 @@ public class JobService implements JobServiceInterface {
     private void assertReadyToGoLive(Job job, Long recruiterId) {
         companyVerificationService.assertCanPublish(recruiterId);
         publishRules.assertComplete(job);
+        contentScreener.assertAllowed(job);
         statusPolicy.requireTransition(job.getStatus(), JobStatus.PUBLISHED);
     }
 

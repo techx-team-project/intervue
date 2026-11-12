@@ -6,6 +6,7 @@ export type ReporterType = 'CANDIDATE' | 'RECRUITER' | 'SYSTEM';
 export type ReportTargetType = 'CONVERSATION' | 'JOB_POST' | 'CANDIDATE';
 export type ReportStatus = 'PENDING' | 'DISMISSED' | 'ACTION_TAKEN';
 export type ReportResolveAction = 'NONE' | 'HIDE_CONTENT' | 'LOCK_ACCOUNT';
+export type FilterScope = 'CONNECT' | 'JOB';
 
 export interface AdminReportSummary {
   id: number;
@@ -47,6 +48,7 @@ export interface AdminResolveReportPayload {
 export interface ConnectFilterWord {
   id: number;
   pattern: string;
+  scope: FilterScope;
   regex: boolean;
   severity: ConnectFilterSeverity;
   active: boolean;
@@ -57,6 +59,7 @@ export interface ConnectFilterWord {
 
 export interface CreateFilterWordPayload {
   pattern: string;
+  scope?: FilterScope;
   regex: boolean;
   severity: ConnectFilterSeverity;
   active: boolean;

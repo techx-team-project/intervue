@@ -2,6 +2,7 @@ package com.techx.intervue.modules.connect.entities;
 
 import com.techx.intervue.common.entities.BaseEntity;
 import com.techx.intervue.modules.connect.enums.ConnectFilterSeverity;
+import com.techx.intervue.modules.connect.enums.FilterScope;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,6 +39,11 @@ public class ConnectFilterWord extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     private ConnectFilterSeverity severity;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    @Builder.Default
+    private FilterScope scope = FilterScope.CONNECT;
 
     @Column(name = "is_active", nullable = false)
     private boolean active;

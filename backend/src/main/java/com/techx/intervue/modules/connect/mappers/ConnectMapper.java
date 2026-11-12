@@ -237,6 +237,7 @@ public class ConnectMapper {
         return ConnectFilterWordResource.builder()
                 .id(entity.getId())
                 .pattern(entity.getPattern())
+                .scope(entity.getScope())
                 .regex(entity.isRegex())
                 .severity(entity.getSeverity())
                 .active(entity.isActive())

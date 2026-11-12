@@ -21,6 +21,9 @@ public interface ReportServiceInterface {
             ReportReasonCode reasonCode,
             String reasonNote);
 
+    boolean existsPending(
+            ReportTargetType targetType, Long targetId, ReporterType reporterType, Long reporterId);
+
     Page<AdminReportSummaryResource> search(
             ReportTargetType targetType, ReportStatus status, Pageable pageable);
 

@@ -287,6 +287,7 @@ public enum ErrorCode {
     CONNECT_MUTED(
             HttpStatus.FORBIDDEN, "You have been temporarily restricted from sending messages!"),
     REPORT_ALREADY_REVIEWED(HttpStatus.CONFLICT, "This report has already been reviewed!"),
+    REPORT_ALREADY_FILED(HttpStatus.CONFLICT, "You have already reported this job!"),
     MESSAGE_EDIT_WINDOW_EXPIRED(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "Messages can only be edited within 15 minutes of sending!"),
