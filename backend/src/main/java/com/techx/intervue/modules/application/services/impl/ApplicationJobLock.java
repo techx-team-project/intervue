@@ -3,6 +3,8 @@ package com.techx.intervue.modules.application.services.impl;
 import com.techx.intervue.modules.application.enums.ApplicationStatus;
 import com.techx.intervue.modules.application.repositories.ApplicationRepository;
 import com.techx.intervue.modules.job.services.interfaces.JobApplicationLookupInterface;
+import java.time.Instant;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,5 +17,10 @@ public class ApplicationJobLock implements JobApplicationLookupInterface {
     @Override
     public boolean hasApplications(Long jobId) {
         return applicationRepository.existsByJobIdAndStatusNot(jobId, ApplicationStatus.DRAFT);
+    }
+
+    @Override
+    public List<Instant> submittedSince(Long jobId, Instant since) {
+        return applicationRepository.findSubmissionTimes(jobId, ApplicationStatus.DRAFT, since);
     }
 }

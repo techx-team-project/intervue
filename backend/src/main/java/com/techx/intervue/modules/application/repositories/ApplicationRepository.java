@@ -45,6 +45,14 @@ public interface ApplicationRepository
     boolean existsByJobIdAndStatusNot(Long jobId, ApplicationStatus status);
 
     @Query(
+            "SELECT a.submittedAt FROM Application a WHERE a.jobId = :jobId"
+                    + " AND a.status <> :excluded AND a.submittedAt >= :since")
+    List<Instant> findSubmissionTimes(
+            @Param("jobId") Long jobId,
+            @Param("excluded") ApplicationStatus excluded,
+            @Param("since") Instant since);
+
+    @Query(
             """
                 SELECT a.candidateId AS candidateId,
                        a.candidateName AS candidateName,
