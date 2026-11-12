@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CompanyProfileCompleteness {
 
-    private static final int MIN_DESCRIPTION_LENGTH = 200;
+    static final int MIN_DESCRIPTION_LENGTH = 200;
 
     public List<String> missingFields(CompanyProfile profile) {
         List<String> missing = new ArrayList<>();
