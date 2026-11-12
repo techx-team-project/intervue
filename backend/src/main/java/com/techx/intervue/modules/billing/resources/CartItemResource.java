@@ -6,7 +6,6 @@ import java.util.List;
 public record CartItemResource(
         Long id,
         Long packageId,
-        String code,
         String slug,
         String name,
         String shortDescription,

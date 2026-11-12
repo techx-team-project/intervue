@@ -5,7 +5,6 @@ import java.util.List;
 
 public record ServicePackageDetailResource(
         Long id,
-        String code,
         String slug,
         String name,
         String shortDescription,

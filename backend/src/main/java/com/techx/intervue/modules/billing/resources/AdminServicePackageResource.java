@@ -8,7 +8,6 @@ public record AdminServicePackageResource(
         Long id,
         Long categoryId,
         String categoryCode,
-        String code,
         String slug,
         String name,
         String shortDescription,

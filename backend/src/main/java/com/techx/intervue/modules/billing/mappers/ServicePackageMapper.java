@@ -46,7 +46,6 @@ public class ServicePackageMapper {
             SaveServicePackageRequest request,
             ServiceCategory category) {
         servicePackage.setCategory(category);
-        servicePackage.setCode(request.code().trim());
         servicePackage.setSlug(request.slug().trim());
         servicePackage.setName(request.name().trim());
         servicePackage.setShortDescription(request.shortDescription());
@@ -88,7 +87,6 @@ public class ServicePackageMapper {
             ServicePackage servicePackage, List<ServicePackageBenefit> benefits) {
         return new ServicePackageCardResource(
                 servicePackage.getId(),
-                servicePackage.getCode(),
                 servicePackage.getSlug(),
                 servicePackage.getName(),
                 servicePackage.getShortDescription(),
@@ -122,7 +120,6 @@ public class ServicePackageMapper {
         ServiceCategory category = servicePackage.getCategory();
         return new ServicePackageDetailResource(
                 servicePackage.getId(),
-                servicePackage.getCode(),
                 servicePackage.getSlug(),
                 servicePackage.getName(),
                 servicePackage.getShortDescription(),
@@ -166,7 +163,6 @@ public class ServicePackageMapper {
                 servicePackage.getId(),
                 category.getId(),
                 category.getCode(),
-                servicePackage.getCode(),
                 servicePackage.getSlug(),
                 servicePackage.getName(),
                 servicePackage.getShortDescription(),

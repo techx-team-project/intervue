@@ -6,7 +6,6 @@ import java.util.List;
 public record OrderItemResource(
         Long id,
         Long packageId,
-        String packageCode,
         String packageName,
         Long unitPrice,
         Integer quantity,

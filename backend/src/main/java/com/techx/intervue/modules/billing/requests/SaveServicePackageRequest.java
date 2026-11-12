@@ -16,7 +16,6 @@ import java.util.List;
 
 public record SaveServicePackageRequest(
         @NotNull Long categoryId,
-        @NotBlank @Size(max = 50) @Pattern(regexp = "^[A-Z0-9_]+$") String code,
         @NotBlank @Size(max = 120) @Pattern(regexp = "^[a-z0-9-]+$") String slug,
         @NotBlank @Size(max = 150) String name,
         @Size(max = 1000) String shortDescription,

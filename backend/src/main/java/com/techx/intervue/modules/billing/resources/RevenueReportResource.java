@@ -19,6 +19,5 @@ public record RevenueReportResource(
 
     public record MonthlyRevenue(String month, Long collected, Integer orderCount) {}
 
-    public record PackageRevenue(
-            String packageCode, String packageName, Integer quantity, Long collected) {}
+    public record PackageRevenue(String packageName, Integer quantity, Long collected) {}
 }

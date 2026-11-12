@@ -5,7 +5,6 @@ import java.util.List;
 
 public record ServicePackageCardResource(
         Long id,
-        String code,
         String slug,
         String name,
         String shortDescription,
