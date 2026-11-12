@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { Bot, User } from 'lucide-react';
 import { MarkdownRenderer } from './MarkdownRenderer';
-import { SourceLinks } from './SourceLinks';
 import type { ChatMessage } from '@/types/ai-chat';
 
 interface ChatMessageItemProps {
@@ -74,7 +73,6 @@ export function ChatMessageItem({ message, isLatest = false }: ChatMessageItemPr
           {!isComplete && (
             <span className="ml-1 inline-block h-3.5 w-1.5 animate-pulse rounded-xs bg-emerald-500 align-middle" />
           )}
-          {isComplete && message.sources && message.sources.length > 0 && <SourceLinks sources={message.sources} />}
         </div>
       </div>
     </div>
