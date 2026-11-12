@@ -46,25 +46,29 @@ public class OrderFulfillmentService {
                     creditBenefitPerUnit += benefit.quantity();
                 }
                 grants.add(
-                        new EntitlementGrant(
+                        EntitlementGrant.fromOrderItem(
                                 item.getId(),
                                 benefit.entitlementType(),
                                 benefit.quantity() * item.getQuantity(),
                                 benefit.tier(),
                                 benefit.durationDays(),
-                                benefit.label()));
+                                benefit.label(),
+                                item.getValidityDays(),
+                                false));
             }
             int bonusCredits = item.getBonusCredits() == null ? 0 : item.getBonusCredits();
             int extraCredits = Math.max(0, bonusCredits - creditBenefitPerUnit);
             if (extraCredits > 0) {
                 grants.add(
-                        new EntitlementGrant(
+                        EntitlementGrant.fromOrderItem(
                                 item.getId(),
                                 EntitlementType.CREDIT,
                                 extraCredits * item.getQuantity(),
                                 1,
                                 null,
-                                "Quà tặng credits kèm gói " + item.getPackageName()));
+                                "Quà tặng credits kèm gói " + item.getPackageName(),
+                                item.getValidityDays(),
+                                true));
             }
         }
 

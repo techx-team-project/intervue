@@ -52,6 +52,9 @@ public class EntitlementUsage extends BaseEntity {
     @Column(length = 255)
     private String note;
 
+    @Column(name = "batch_key", length = 64)
+    private String batchKey;
+
     @Column(name = "activated_by_recruiter_id")
     private Long activatedByRecruiterId;
 

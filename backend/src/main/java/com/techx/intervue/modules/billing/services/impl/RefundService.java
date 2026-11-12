@@ -9,11 +9,13 @@ import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.ads.services.interfaces.AdBookingServiceInterface;
+import com.techx.intervue.modules.billing.entities.CreditPrice;
 import com.techx.intervue.modules.billing.entities.Order;
 import com.techx.intervue.modules.billing.entities.OrderItem;
 import com.techx.intervue.modules.billing.entities.RefundRequest;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
 import com.techx.intervue.modules.billing.enums.RefundStatus;
+import com.techx.intervue.modules.billing.repositories.CreditPriceRepository;
 import com.techx.intervue.modules.billing.repositories.OrderItemRepository;
 import com.techx.intervue.modules.billing.repositories.OrderRepository;
 import com.techx.intervue.modules.billing.repositories.RefundRequestRepository;
@@ -22,6 +24,7 @@ import com.techx.intervue.modules.billing.requests.ReviewRefundRequest;
 import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
 import com.techx.intervue.modules.billing.services.interfaces.RefundServiceInterface;
+import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface.UnusedUnits;
 import java.math.BigDecimal;
@@ -50,6 +53,7 @@ public class RefundService implements RefundServiceInterface {
     private final RefundRequestRepository refundRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final CreditPriceRepository creditPriceRepository;
     private final EntitlementServiceInterface entitlementService;
     private final AdBookingServiceInterface adBookingService;
     private final RecruiterCompanyResolver companyResolver;
@@ -184,28 +188,26 @@ public class RefundService implements RefundServiceInterface {
         }
         Map<Long, OrderItem> byId =
                 items.stream().collect(Collectors.toMap(OrderItem::getId, Function.identity()));
+        Map<String, Integer> unitWeights = loadUnitWeights();
 
-        Map<Long, long[]> perItem = new HashMap<>();
+        Map<Long, ItemRefundAccumulator> perItem = new HashMap<>();
         for (UnusedUnits unused : entitlementService.unusedFromOrderItems(byId.keySet())) {
-            long[] counters =
-                    perItem.computeIfAbsent(unused.sourceOrderItemId(), key -> new long[2]);
-            counters[0] += unused.remainingQuantity();
-            counters[1] += unused.totalQuantity();
+            long weight = weightOf(unused.type(), unused.tier(), unitWeights);
+            perItem.computeIfAbsent(unused.sourceOrderItemId(), key -> new ItemRefundAccumulator())
+                    .add(unused, weight);
         }
 
         BigDecimal unusedValue = BigDecimal.ZERO;
-        for (Map.Entry<Long, long[]> entry : perItem.entrySet()) {
+        for (Map.Entry<Long, ItemRefundAccumulator> entry : perItem.entrySet()) {
             OrderItem item = byId.get(entry.getKey());
-            long remaining = entry.getValue()[0];
-            long total = entry.getValue()[1];
-            if (item == null || total == 0 || remaining == 0) {
+            if (item == null) {
                 continue;
             }
-            unusedValue =
-                    unusedValue.add(
-                            BigDecimal.valueOf(item.getLineTotal())
-                                    .multiply(BigDecimal.valueOf(remaining))
-                                    .divide(BigDecimal.valueOf(total), 4, RoundingMode.HALF_UP));
+            BigDecimal ratio = entry.getValue().refundableRatio();
+            if (ratio.signum() == 0) {
+                continue;
+            }
+            unusedValue = unusedValue.add(BigDecimal.valueOf(item.getLineTotal()).multiply(ratio));
         }
         if (unusedValue.signum() == 0) {
             return 0L;
@@ -215,6 +217,59 @@ public class RefundService implements RefundServiceInterface {
                 .multiply(BigDecimal.valueOf(order.getSubtotalAfterDiscount()))
                 .divide(BigDecimal.valueOf(order.getSubtotal()), 0, RoundingMode.HALF_UP)
                 .longValueExact();
+    }
+
+    private Map<String, Integer> loadUnitWeights() {
+        Map<String, Integer> weights = new HashMap<>();
+        for (CreditPrice price : creditPriceRepository.findAll()) {
+            weights.put(
+                    weightKey(price.getEntitlementType(), price.getTier()), price.getCreditCost());
+        }
+        return weights;
+    }
+
+    private static long weightOf(EntitlementType type, int tier, Map<String, Integer> unitWeights) {
+        if (type == EntitlementType.CREDIT) {
+            return 1L;
+        }
+        Integer weight = unitWeights.get(weightKey(type, tier));
+        if (weight == null && tier != 1) {
+            weight = unitWeights.get(weightKey(type, 1));
+        }
+        return weight != null && weight > 0 ? weight : 1L;
+    }
+
+    private static String weightKey(EntitlementType type, int tier) {
+        return type.name() + ":" + tier;
+    }
+
+    private static final class ItemRefundAccumulator {
+        private boolean hasCoreLots;
+        private long coreWeightedRemaining;
+        private long totalWeightedRemaining;
+        private long totalWeightedQuantity;
+
+        void add(UnusedUnits lot, long weight) {
+            long weightedTotal = (long) lot.totalQuantity() * weight;
+            long weightedRem = (long) lot.remainingQuantity() * weight;
+            totalWeightedQuantity += weightedTotal;
+            totalWeightedRemaining += weightedRem;
+            if (!lot.bonus()) {
+                hasCoreLots = true;
+                coreWeightedRemaining += weightedRem;
+            }
+        }
+
+        BigDecimal refundableRatio() {
+            if (totalWeightedQuantity == 0 || totalWeightedRemaining == 0) {
+                return BigDecimal.ZERO;
+            }
+            if (hasCoreLots && coreWeightedRemaining == 0) {
+                return BigDecimal.ZERO;
+            }
+            return BigDecimal.valueOf(totalWeightedRemaining)
+                    .divide(BigDecimal.valueOf(totalWeightedQuantity), 6, RoundingMode.HALF_UP);
+        }
     }
 
     private List<Long> itemIdsOf(Order order) {

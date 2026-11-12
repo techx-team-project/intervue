@@ -56,6 +56,10 @@ public class CompanyEntitlement extends BaseEntity {
     @Column(name = "duration_days")
     private Integer durationDays;
 
+    @Column(name = "is_bonus", nullable = false)
+    @Builder.Default
+    private boolean bonus = false;
+
     @Column(nullable = false)
     @Builder.Default
     private Integer tier = 1;
@@ -65,6 +69,6 @@ public class CompanyEntitlement extends BaseEntity {
     @Builder.Default
     private EntitlementStatus status = EntitlementStatus.AVAILABLE;
 
-    @Column(name = "activation_deadline", nullable = false)
+    @Column(name = "activation_deadline")
     private Instant activationDeadline;
 }

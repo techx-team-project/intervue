@@ -7,9 +7,11 @@ import com.techx.intervue.modules.billing.resources.CreditWalletResource;
 import com.techx.intervue.modules.billing.services.interfaces.CreditServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
+import com.techx.intervue.resources.PageResource;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,9 +38,12 @@ public class RecruiterCreditController extends BaseController {
     }
 
     @GetMapping("/ledger")
-    public ResponseEntity<ApiResource<List<CreditLedgerEntryResource>>> ledger(
-            @AuthenticationPrincipal CustomUserDetails principal) {
-        return ok(creditService.ledger(principal.getId()), "Credit ledger retrieved successfully!");
+    public ResponseEntity<ApiResource<PageResource<CreditLedgerEntryResource>>> ledger(
+            @AuthenticationPrincipal CustomUserDetails principal,
+            @PageableDefault(size = 20) Pageable pageable) {
+        return page(
+                creditService.ledger(principal.getId(), pageable),
+                "Credit ledger retrieved successfully!");
     }
 
     @PostMapping("/convert")

@@ -1,11 +1,15 @@
 package com.techx.intervue.modules.entitlement.services.interfaces;
 
+import com.techx.intervue.modules.entitlement.enums.EntitlementStatus;
 import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface EntitlementServiceInterface {
 
@@ -15,7 +19,43 @@ public interface EntitlementServiceInterface {
             Integer quantity,
             Integer tier,
             Integer durationDays,
-            String label) {}
+            String label,
+            Integer packageValidityDays,
+            Instant explicitDeadline,
+            boolean bonus) {
+
+        public static EntitlementGrant fromOrderItem(
+                Long sourceOrderItemId,
+                EntitlementType type,
+                Integer quantity,
+                Integer tier,
+                Integer durationDays,
+                String label,
+                Integer packageValidityDays,
+                boolean bonus) {
+            return new EntitlementGrant(
+                    sourceOrderItemId,
+                    type,
+                    quantity,
+                    tier,
+                    durationDays,
+                    label,
+                    packageValidityDays,
+                    null,
+                    bonus);
+        }
+
+        public static EntitlementGrant direct(
+                EntitlementType type,
+                Integer quantity,
+                Integer tier,
+                Integer durationDays,
+                String label,
+                Instant explicitDeadline) {
+            return new EntitlementGrant(
+                    null, type, quantity, tier, durationDays, label, null, explicitDeadline, false);
+        }
+    }
 
     void grant(Long companyId, Long recruiterId, List<EntitlementGrant> grants);
 
@@ -37,40 +77,72 @@ public interface EntitlementServiceInterface {
     /** Units of a type the company still holds, without spending anything. */
     int remainingOf(Long companyId, EntitlementType type);
 
-    /** When the soonest-expiring lot of a type runs out, or empty when the company holds none. */
+    /** When the soonest-expiring lot of a type runs out, or empty when none is time-limited. */
     Optional<Instant> nearestExpiryOf(Long companyId, EntitlementType type);
 
     /** Spends one unit of a type not tied to a job; false when the company had none left. */
     boolean consumeUnit(Long companyId, EntitlementType type);
 
+    record ConsumeResult(Instant earliestDeadline, String batchKey) {}
+
     /**
-     * Spends several units at once, drawing across lots when one lot is too small. Throws
-     * ENTITLEMENT_EXHAUSTED instead of returning, so a draw that cannot complete rolls back rather
-     * than leaving part of the stock consumed. {@code note} records what the draw was for (e.g. the
-     * credit conversion's target package) so the usage ledger can show it; pass null if there is
-     * nothing more specific than the entitlement type itself.
+     * Spends several units FIFO by earliest expiry across lots. Returns the earliest non-null
+     * deadline among touched lots (null when all consumed lots have no expiry) and the shared batch
+     * key recorded in the usage ledger.
      */
-    void consumeUnits(Long companyId, EntitlementType type, int amount, String note);
+    ConsumeResult consumeUnits(
+            Long companyId, EntitlementType type, int amount, String note, Long actorUserId);
 
     /**
      * Consumes from the exact lot one order line produced, instead of drawing FIFO across the
-     * company's whole stock. Used when consumption must track a single booking rather than being
-     * fungible (e.g. a banner week), so the refund calculation for other order lines of the same
-     * company stays unaffected.
+     * company's whole stock.
      */
     void consumeFromOrderItem(Long sourceOrderItemId, int amount);
 
     /** What an order line delivered and how much of it is still untouched. */
-    record UnusedUnits(Long sourceOrderItemId, int totalQuantity, int remainingQuantity) {}
+    record UnusedUnits(
+            Long sourceOrderItemId,
+            EntitlementType type,
+            int tier,
+            boolean bonus,
+            int totalQuantity,
+            int remainingQuantity) {}
 
     List<UnusedUnits> unusedFromOrderItems(Collection<Long> orderItemIds);
 
     /** Takes back the units of those order lines that were never activated. */
     void revokeUnusedFromOrderItems(Collection<Long> orderItemIds);
 
-    /** One statement line: a grant received (credit) or a usage spent (debit). */
-    record LedgerEntry(boolean credit, int quantity, String label, Instant at) {}
+    /** One statement line: a grant received (credit) or a usage/expiry/revocation (debit). */
+    record LedgerEntry(boolean credit, int quantity, String label, Instant at, Long actorUserId) {}
 
-    /** Every grant and usage of a type for a company, newest first. */
-    List<LedgerEntry> ledgerOf(Long companyId, EntitlementType type);
+    /** Every grant and usage/expiry of a type for a company, newest first. */
+    Page<LedgerEntry> ledgerOf(Long companyId, EntitlementType type, Pageable pageable);
+
+    record CompanyStockSummary(
+            Long companyId,
+            long availableBalance,
+            long lifetimeGranted,
+            long lifetimeSpent,
+            long expiredBalance,
+            Instant nearestExpiry) {}
+
+    Map<Long, CompanyStockSummary> summarizeStockByCompanyIds(
+            Collection<Long> companyIds, EntitlementType type);
+
+    record EntitlementLotView(
+            Long id,
+            Long sourceOrderItemId,
+            EntitlementType type,
+            String label,
+            int totalQuantity,
+            int remainingQuantity,
+            int tier,
+            Integer durationDays,
+            boolean bonus,
+            EntitlementStatus status,
+            Instant activationDeadline,
+            Instant createdAt) {}
+
+    List<EntitlementLotView> lotsOf(Long companyId, EntitlementType type);
 }
