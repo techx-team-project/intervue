@@ -75,7 +75,8 @@ public class JobSeedStep implements DemoSeedStep {
                     "highlight_label",
                     "highlight_label_expires_at",
                     "highlighted",
-                    "highlight_expires_at");
+                    "highlight_expires_at",
+                    "approved_at");
 
     private static final List<String> QUESTION_COLUMNS =
             List.of(
@@ -243,7 +244,8 @@ public class JobSeedStep implements DemoSeedStep {
             promotion.label(),
             promotion.label() == null ? null : promotionEnd,
             promotion.highlighted(),
-            promotion.highlighted() ? promotionEnd : null
+            promotion.highlighted() ? promotionEnd : null,
+            "DRAFT".equals(status) ? null : createdAt
         };
     }
 
