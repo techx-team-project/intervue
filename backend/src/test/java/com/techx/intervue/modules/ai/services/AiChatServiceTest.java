@@ -28,6 +28,7 @@ import com.techx.intervue.modules.ai.resources.PromptTemplate;
 import com.techx.intervue.modules.ai.resources.ToolExecutionResult;
 import com.techx.intervue.modules.ai.resources.UserChatResponse;
 import com.techx.intervue.modules.ai.services.impl.AiChatService;
+import com.techx.intervue.modules.ai.services.impl.SmallTalkService;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.KnowledgeBaseServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PlatformAgentToolServiceInterface;
@@ -73,7 +74,8 @@ class AiChatServiceTest {
                         promptService,
                         agentToolService,
                         redis,
-                        objectMapper);
+                        objectMapper,
+                        new SmallTalkService());
     }
 
     @Test
@@ -129,7 +131,7 @@ class AiChatServiceTest {
 
         AiContentBlock.ToolUse toolUse =
                 new AiContentBlock.ToolUse("call-1", "get_my_applications", Map.of());
-        AiChatMessage assistantMsg = new AiChatMessage(AiRole.ASSISTANT, List.of(toolUse), null);
+        AiChatMessage assistantMsg = new AiChatMessage(AiRole.ASSISTANT, List.of(toolUse));
 
         AiChatResult firstTurnResult =
                 new AiChatResult(
@@ -183,8 +185,7 @@ class AiChatServiceTest {
                                 "c3", "get_platform_guide", Map.of("query", "cv")),
                         new AiContentBlock.ToolUse("c4", "get_my_applications", Map.of()));
 
-        AiChatMessage assistantMsg =
-                new AiChatMessage(AiRole.ASSISTANT, List.copyOf(fourCalls), null);
+        AiChatMessage assistantMsg = new AiChatMessage(AiRole.ASSISTANT, List.copyOf(fourCalls));
 
         AiChatResult firstTurnResult =
                 new AiChatResult(
@@ -232,7 +233,7 @@ class AiChatServiceTest {
         when(aiGatewayService.chat(any(AiCallContext.class), any(AiChatRequest.class)))
                 .thenThrow(AppException.rateLimited(ErrorCode.RATE_LIMITED, 3600));
 
-        UserChatRequest request = new UserChatRequest("Hello", "sess-123");
+        UserChatRequest request = new UserChatRequest("How do I reset my password?", "sess-123");
 
         assertThatThrownBy(() -> service.chat(null, "127.0.0.1", request))
                 .isInstanceOf(AppException.class)

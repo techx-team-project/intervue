@@ -123,7 +123,7 @@ public class OpenAiMessageMapper {
                 new OpenAiFunction(definition.name(), definition.description(), parameters));
     }
 
-    // Tool schemas are written with Gemini's upper-case type names; JSON Schema needs lower-case.
+    // Tool schemas declare upper-case type names; JSON Schema needs lower-case.
     @SuppressWarnings("unchecked")
     private Object lowerCaseTypes(Object node) {
         if (node instanceof Map<?, ?> map) {
@@ -180,7 +180,7 @@ public class OpenAiMessageMapper {
                                 response.usage().promptTokens(),
                                 response.usage().completionTokens())
                         : new AiUsage(0, 0);
-        AiChatMessage assistantMessage = new AiChatMessage(AiRole.ASSISTANT, blocks, null);
+        AiChatMessage assistantMessage = new AiChatMessage(AiRole.ASSISTANT, blocks);
         return new AiChatResult(
                 text,
                 toolCalls,

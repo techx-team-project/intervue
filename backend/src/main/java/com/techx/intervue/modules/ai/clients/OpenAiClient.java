@@ -5,7 +5,6 @@ import com.techx.intervue.modules.ai.requests.AiChatRequest;
 import com.techx.intervue.modules.ai.resources.AiChatResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.retry.RetryTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,6 @@ import org.springframework.web.client.RestClientResponseException;
 
 @Slf4j
 @Component
-@ConditionalOnProperty(name = "ai.provider", havingValue = "openai")
 public class OpenAiClient implements AiClient {
 
     private final RestClient restClient;
