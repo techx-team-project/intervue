@@ -9,9 +9,9 @@ import { AlertCircle, Receipt } from 'lucide-react';
 import { useState } from 'react';
 
 const REFUND_STATUS_LABEL: Record<string, string> = {
-  PENDING: 'Đang chờ duyệt',
-  APPROVED: 'Đã duyệt hoàn tiền',
-  REJECTED: 'Đã từ chối',
+  PENDING: 'Pending review',
+  APPROVED: 'Refund approved',
+  REJECTED: 'Rejected',
 };
 
 const REFUND_STATUS_STYLE: Record<string, string> = {
@@ -21,8 +21,8 @@ const REFUND_STATUS_STYLE: Record<string, string> = {
 };
 
 const PAYMENT_STATUS_LABEL: Record<string, string> = {
-  MATCHED: 'Đã khớp với đơn',
-  UNMATCHED: 'Chưa khớp đơn nào',
+  MATCHED: 'Matched to an order',
+  UNMATCHED: 'Not matched to any order',
 };
 
 const PAYMENT_STATUS_STYLE: Record<string, string> = {
@@ -64,7 +64,7 @@ function PaymentsTab() {
     );
   }
   if (isError) return <ErrorState error={error} />;
-  if (data.items.length === 0) return <EmptyState label="Chưa có giao dịch chuyển khoản nào" />;
+  if (data.items.length === 0) return <EmptyState label="No bank transfers yet" />;
 
   return (
     <div className="space-y-4">
@@ -73,11 +73,11 @@ function PaymentsTab() {
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead>
               <tr className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant border-b text-xs font-semibold tracking-wider uppercase">
-                <th className="py-3.5 pr-4 pl-6">Thời điểm</th>
-                <th className="px-4 py-3.5">Nội dung chuyển khoản</th>
-                <th className="px-4 py-3.5 text-right">Số tiền</th>
-                <th className="px-4 py-3.5">Đơn khớp</th>
-                <th className="py-3.5 pr-6 pl-4 text-center">Trạng thái</th>
+                <th className="py-3.5 pr-4 pl-6">Time</th>
+                <th className="px-4 py-3.5">Transfer description</th>
+                <th className="px-4 py-3.5 text-right">Amount</th>
+                <th className="px-4 py-3.5">Matched order</th>
+                <th className="py-3.5 pr-6 pl-4 text-center">Status</th>
               </tr>
             </thead>
             <tbody className="divide-outline-variant divide-y">
@@ -137,7 +137,7 @@ function RefundsTab() {
     );
   }
   if (isError) return <ErrorState error={error} />;
-  if (data.items.length === 0) return <EmptyState label="Chưa có yêu cầu hoàn tiền nào" />;
+  if (data.items.length === 0) return <EmptyState label="No refund requests yet" />;
 
   return (
     <div className="space-y-4">
@@ -146,11 +146,11 @@ function RefundsTab() {
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead>
               <tr className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant border-b text-xs font-semibold tracking-wider uppercase">
-                <th className="py-3.5 pr-4 pl-6">Đơn hàng</th>
-                <th className="px-4 py-3.5">Lý do</th>
-                <th className="px-4 py-3.5 text-right">Số tiền xin hoàn</th>
-                <th className="px-4 py-3.5 text-right">Số tiền đã duyệt</th>
-                <th className="py-3.5 pr-6 pl-4 text-center">Trạng thái</th>
+                <th className="py-3.5 pr-4 pl-6">Order</th>
+                <th className="px-4 py-3.5">Reason</th>
+                <th className="px-4 py-3.5 text-right">Requested refund</th>
+                <th className="px-4 py-3.5 text-right">Approved amount</th>
+                <th className="py-3.5 pr-6 pl-4 text-center">Status</th>
               </tr>
             </thead>
             <tbody className="divide-outline-variant divide-y">
@@ -206,7 +206,7 @@ export default function RecruiterTransactionsView() {
             tab === 'payments' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low'
           }`}
         >
-          Thanh toán
+          Payments
         </button>
         <button
           type="button"
@@ -215,7 +215,7 @@ export default function RecruiterTransactionsView() {
             tab === 'refunds' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low'
           }`}
         >
-          Hoàn tiền
+          Refunds
         </button>
       </div>
 

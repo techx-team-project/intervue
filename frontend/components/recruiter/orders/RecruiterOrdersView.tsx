@@ -40,12 +40,12 @@ export default function RecruiterOrdersView() {
         <div className="bg-surface-container-high text-outline flex h-12 w-12 items-center justify-center rounded-xl">
           <Receipt className="h-6 w-6" />
         </div>
-        <h4 className="text-on-surface mt-3 text-sm font-bold">Chưa có đơn hàng nào</h4>
+        <h4 className="text-on-surface mt-3 text-sm font-bold">No orders yet</h4>
         <Link
           href={ROUTES.RECRUITER_SERVICES}
           className="bg-primary mt-5 inline-flex h-10 items-center justify-center rounded-lg px-6 text-sm font-semibold text-white transition hover:brightness-95"
         >
-          Xem các gói dịch vụ
+          Browse service packages
         </Link>
       </div>
     );
@@ -65,12 +65,12 @@ export default function RecruiterOrdersView() {
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead>
               <tr className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant border-b text-xs font-semibold tracking-wider uppercase">
-                <th className="py-3.5 pr-4 pl-6">Mã đơn</th>
-                <th className="px-4 py-3.5 text-center">Số dịch vụ</th>
-                <th className="px-4 py-3.5 text-right">Tổng tiền</th>
-                <th className="px-4 py-3.5 text-center">Trạng thái</th>
-                <th className="px-4 py-3.5">Ngày tạo</th>
-                <th className="py-3.5 pr-6 pl-4 text-right">Thao tác</th>
+                <th className="py-3.5 pr-4 pl-6">Order code</th>
+                <th className="px-4 py-3.5 text-center">Services</th>
+                <th className="px-4 py-3.5 text-right">Total</th>
+                <th className="px-4 py-3.5 text-center">Status</th>
+                <th className="px-4 py-3.5">Created</th>
+                <th className="py-3.5 pr-6 pl-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-outline-variant divide-y">
@@ -109,7 +109,7 @@ export default function RecruiterOrdersView() {
                         }}
                         className="cursor-pointer text-xs font-semibold text-rose-600 hover:underline disabled:opacity-50"
                       >
-                        Huỷ đơn
+                        Cancel order
                       </button>
                     )}
                   </td>

@@ -37,9 +37,9 @@ interface JobPostsListProps {
 }
 
 function salaryText(salary: JobSalary) {
-  if (salary.negotiable) return 'Thỏa thuận';
+  if (salary.negotiable) return 'Negotiable';
   if (salary.min == null || salary.max == null) return '—';
-  const unit = salary.currency === 'USD' ? 'USD' : 'triệu';
+  const unit = salary.currency === 'USD' ? 'USD' : 'million';
   const divisor = salary.currency === 'USD' ? 1 : 1_000_000;
   return `${salary.min / divisor} – ${salary.max / divisor} ${unit}`;
 }
@@ -65,13 +65,13 @@ export default function JobPostsList({
           type="checkbox"
           checked={isAllSelected && jobs.length > 0}
           onChange={onSelectAll}
-          aria-label="Chọn tất cả tin trong trang"
+          aria-label="Select all job posts on this page"
           className="border-outline h-4 w-4 cursor-pointer rounded text-emerald-600 focus:ring-emerald-500"
         />
-        <span>Tin tuyển dụng</span>
-        <span>Trạng thái</span>
-        <span>Mức lương</span>
-        <span>Hạn nộp</span>
+        <span>Job post</span>
+        <span>Status</span>
+        <span>Salary</span>
+        <span>Deadline</span>
         <span />
       </div>
 
@@ -91,8 +91,8 @@ export default function JobPostsList({
               onRetop={() => actions.retopJob(job.id)}
               onClose={() =>
                 onConfirm({
-                  title: 'Đóng tin tuyển dụng?',
-                  message: `Tin "${job.title}" sẽ ngừng nhận hồ sơ. Bạn có thể gia hạn để đăng lại sau.`,
+                  title: 'Close this job post?',
+                  message: `"${job.title}" will stop accepting applications. You can renew it later to repost.`,
                   run: () => actions.closeJob(job.id),
                 })
               }
@@ -102,8 +102,8 @@ export default function JobPostsList({
               onStats={() => onStats(job)}
               onDelete={() =>
                 onConfirm({
-                  title: 'Xóa bản nháp?',
-                  message: `Bản nháp "${job.title}" sẽ bị xóa vĩnh viễn.`,
+                  title: 'Delete this draft?',
+                  message: `The draft "${job.title}" will be permanently deleted.`,
                   run: () => actions.deleteJob(job.id),
                 })
               }
@@ -121,7 +121,7 @@ export default function JobPostsList({
                 type="checkbox"
                 checked={isSelected}
                 onChange={() => onToggleSelect(job.id)}
-                aria-label={`Chọn tin ${job.title}`}
+                aria-label={`Select ${job.title}`}
                 className="border-outline hidden h-4 w-4 cursor-pointer rounded text-emerald-600 focus:ring-emerald-500 lg:block"
               />
 
@@ -175,7 +175,7 @@ export default function JobPostsList({
                     onChange={() => actions.toggleJobStatus(job.id, job.status)}
                     size="sm"
                     disabled={isPending}
-                    ariaLabel={job.status === 'PUBLISHED' ? 'Tạm dừng tin' : 'Mở lại tin'}
+                    ariaLabel={job.status === 'PUBLISHED' ? 'Pause job post' : 'Reopen job post'}
                   />
                 )}
               </div>

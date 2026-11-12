@@ -69,7 +69,7 @@ export default function RecruiterCartView() {
     try {
       const preview = await voucherApi.validate({ code, cartItemIds: selectedItems.map((item) => item.id) });
       setVoucher(preview);
-      return { success: true, message: `Đã áp mã, giảm ${preview.discountAmount.toLocaleString('vi-VN')}đ.` };
+      return { success: true, message: `Voucher applied, ${preview.discountAmount.toLocaleString('vi-VN')}đ off.` };
     } catch (cause) {
       setVoucher(null);
       return { success: false, message: getErrorMessage(cause) };
@@ -83,15 +83,15 @@ export default function RecruiterCartView() {
   const handleSubmitOrder = () => {
     setErrorMessage(null);
     if (selectedItems.length === 0) {
-      setErrorMessage('Chọn ít nhất một dịch vụ trong giỏ để đặt hàng.');
+      setErrorMessage('Select at least one service in your cart to place an order.');
       return;
     }
     if (!invoiceType) {
-      setErrorMessage('Chọn loại hoá đơn (Doanh nghiệp hoặc Cá nhân).');
+      setErrorMessage('Select an invoice type (Business or Personal).');
       return;
     }
     if (!termsAccepted) {
-      setErrorMessage('Vui lòng đồng ý với Điều khoản dịch vụ của InterVue.');
+      setErrorMessage('Please agree to the InterVue Terms of Service.');
       return;
     }
 
@@ -145,7 +145,7 @@ export default function RecruiterCartView() {
 
   return (
     <div className="space-y-5 pb-16">
-      <h1 className="text-on-surface text-xl font-bold sm:text-2xl">Giỏ hàng ({items.length})</h1>
+      <h1 className="text-on-surface text-xl font-bold sm:text-2xl">Cart ({items.length})</h1>
 
       <CartNoticeBanner />
 
@@ -219,7 +219,7 @@ export default function RecruiterCartView() {
             <Check className="h-4 w-4 stroke-[2.5]" />
           </div>
           <span className="text-on-surface font-medium">
-            Đã xoá <strong className="font-bold">&quot;{undoDeletedItem.name}&quot;</strong> khỏi giỏ hàng.
+            Removed <strong className="font-bold">&quot;{undoDeletedItem.name}&quot;</strong> from your cart.
           </span>
           <div className="flex items-center gap-2 pl-2">
             <button
@@ -228,13 +228,13 @@ export default function RecruiterCartView() {
               className="bg-primary-light text-primary-deep hover:bg-primary-tag inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 font-bold transition active:scale-95"
             >
               <Undo2 className="h-3.5 w-3.5" />
-              Hoàn tác
+              Undo
             </button>
             <button
               type="button"
               onClick={clearUndo}
               className="text-outline hover:bg-surface-container-high hover:text-on-surface-variant cursor-pointer rounded-full p-1 transition"
-              aria-label="Đóng"
+              aria-label="Close"
             >
               <X className="h-4 w-4" />
             </button>

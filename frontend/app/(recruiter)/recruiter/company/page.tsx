@@ -2,9 +2,9 @@ import { CompanyProfileView } from '@/components/recruiter/company/CompanyProfil
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Cập nhật thông tin công ty | InterVue',
+  title: 'Update Company Information | InterVue',
   description:
-    'Quản lý thông tin pháp nhân, hồ sơ doanh nghiệp và phúc lợi nhân viên trên nền tảng tuyển dụng InterVue.',
+    'Manage legal entity details, company profile and employee benefits on the InterVue recruitment platform.',
 };
 
 export default function CompanyProfilePage() {

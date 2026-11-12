@@ -13,10 +13,10 @@ import { useState } from 'react';
 const PAGE_SIZE = 10;
 
 const ACTOR_LABELS: Record<JobHistoryEntry['actorType'], string> = {
-  RECRUITER: 'Bạn',
-  ADMIN: 'Quản trị viên',
-  SYSTEM: 'Hệ thống',
-  USER: 'Người dùng',
+  RECRUITER: 'You',
+  ADMIN: 'Administrator',
+  SYSTEM: 'System',
+  USER: 'User',
 };
 
 function describe(entry: JobHistoryEntry): string | undefined {
@@ -50,14 +50,14 @@ export default function JobHistoryModal({ job, onClose }: JobHistoryModalProps) 
     <Modal
       isOpen={job !== null}
       onClose={close}
-      title="Lịch sử hoạt động"
+      title="Activity history"
       description={job?.title}
       maxWidth="md"
       footer={
         totalPages > 1 ? (
           <div className="flex items-center justify-between">
             <Button variant="ghost" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
-              Trang trước
+              Previous page
             </Button>
             <span className="text-on-surface-variant text-xs">
               {page + 1}/{totalPages}
@@ -76,7 +76,7 @@ export default function JobHistoryModal({ job, onClose }: JobHistoryModalProps) 
       ) : error ? (
         <p className="py-6 text-center text-sm font-semibold text-rose-600">{getErrorMessage(error)}</p>
       ) : entries.length === 0 ? (
-        <p className="text-on-surface-variant py-6 text-center text-sm">Chưa có hoạt động nào được ghi lại.</p>
+        <p className="text-on-surface-variant py-6 text-center text-sm">No activity has been recorded yet.</p>
       ) : (
         <ol className="border-outline-variant ml-2 space-y-5 border-l pl-5">
           {entries.map((entry, index) => {

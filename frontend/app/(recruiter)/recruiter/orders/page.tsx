@@ -3,14 +3,14 @@ import RecruiterOrdersView from '@/components/recruiter/orders/RecruiterOrdersVi
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Đơn hàng | InterVue Recruiter',
-  description: 'Theo dõi đơn hàng dịch vụ tuyển dụng của doanh nghiệp',
+  title: 'Orders | InterVue Recruiter',
+  description: "Track your company's recruitment service orders",
 };
 
 export default function RecruiterOrdersPage() {
   return (
     <>
-      <PageHeader title="Đơn hàng" description="Toàn bộ đơn hàng dịch vụ của doanh nghiệp bạn" />
+      <PageHeader title="Orders" description="All service orders for your company" />
       <RecruiterOrdersView />
     </>
   );

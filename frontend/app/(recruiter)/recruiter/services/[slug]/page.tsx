@@ -2,8 +2,8 @@ import ServicePackageDetailView from '@/components/recruiter/services/ServicePac
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Chi tiết dịch vụ | InterVue Recruiter',
-  description: 'Thông tin chi tiết gói dịch vụ tuyển dụng của InterVue',
+  title: 'Service Details | InterVue Recruiter',
+  description: 'Details of an InterVue recruitment service package',
 };
 
 type ServicePackageDetailPageProps = { params: Promise<{ slug: string }> };

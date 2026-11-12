@@ -34,7 +34,7 @@ export default function CartVoucherModal({
   const applySelectedCode = async (rawCode: string) => {
     const code = rawCode.trim().toUpperCase();
     if (!code) {
-      setErrorMessage('Hãy nhập mã ưu đãi.');
+      setErrorMessage('Enter a voucher code.');
       return;
     }
     setInputCode(code);
@@ -60,10 +60,10 @@ export default function CartVoucherModal({
       title={
         <div className="flex items-center gap-2">
           <Ticket className="text-primary h-5 w-5" />
-          <span className="text-on-surface font-bold">Mã ưu đãi</span>
+          <span className="text-on-surface font-bold">Voucher</span>
         </div>
       }
-      description="Nhập mã ưu đãi để giảm chi phí dịch vụ tuyển dụng"
+      description="Enter a voucher code to reduce your recruitment service costs"
     >
       <div className="space-y-4 py-2">
         {/* Manual code input */}
@@ -77,7 +77,7 @@ export default function CartVoucherModal({
                 setInputCode(e.target.value.toUpperCase());
                 setErrorMessage('');
               }}
-              placeholder="Nhập mã ưu đãi"
+              placeholder="Enter voucher code"
               className="border-outline text-on-surface placeholder:text-outline focus:border-primary w-full rounded-lg border py-2.5 pr-3 pl-9.5 text-sm font-semibold tracking-wider uppercase placeholder:font-normal placeholder:tracking-normal placeholder:normal-case focus:ring-2 focus:ring-[#00b14f]/20 focus:outline-hidden"
             />
           </div>
@@ -87,7 +87,7 @@ export default function CartVoucherModal({
             disabled={isApplying}
             className="bg-primary hover:bg-primary cursor-pointer rounded-lg px-5 py-2.5 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isApplying ? 'Đang kiểm tra…' : 'Áp dụng'}
+            {isApplying ? 'Checking…' : 'Apply'}
           </button>
         </div>
 
@@ -101,8 +101,8 @@ export default function CartVoucherModal({
                 <Check className="h-3 w-3 stroke-[3]" />
               </span>
               <span className="text-emerald-900">
-                Đang áp dụng <strong className="font-bold text-emerald-800">{appliedVoucher.code}</strong> —{' '}
-                {appliedVoucher.label}, giảm {appliedVoucher.discountAmount.toLocaleString('vi-VN')}đ
+                Applied <strong className="font-bold text-emerald-800">{appliedVoucher.code}</strong> —{' '}
+                {appliedVoucher.label}, {appliedVoucher.discountAmount.toLocaleString('vi-VN')}đ off
               </span>
             </div>
             <button
@@ -110,14 +110,14 @@ export default function CartVoucherModal({
               onClick={onRemoveVoucher}
               className="cursor-pointer font-semibold text-rose-600 hover:underline"
             >
-              Gỡ mã
+              Remove
             </button>
           </div>
         )}
 
         {(availableVouchers.data?.length ?? 0) > 0 && (
           <div className="space-y-2">
-            <p className="text-on-surface text-xs font-bold">Ưu đãi khuyến mãi khả dụng</p>
+            <p className="text-on-surface text-xs font-bold">Available vouchers</p>
             <div className="max-h-52 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent] space-y-2.5 overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-track]:bg-transparent">
               {availableVouchers.data!.map((item) => {
                 const isActiveCode = appliedVoucher?.code === item.code;
@@ -135,16 +135,16 @@ export default function CartVoucherModal({
                       </span>
                       <span className="mt-0.5 block text-[11px] text-[#009944]/80">
                         <code className="font-mono font-bold text-[#00823a]">{item.code}</code>
-                        {item.minOrderValue > 0 && ` · Đơn từ ${item.minOrderValue.toLocaleString('vi-VN')}đ`}
+                        {item.minOrderValue > 0 && ` · Min. order ${item.minOrderValue.toLocaleString('vi-VN')}đ`}
                         {item.applicablePackages.length > 0 &&
-                          ` · Áp dụng ${item.applicablePackages.length} gói (${item.applicablePackages
+                          ` · Applies to ${item.applicablePackages.length} packages (${item.applicablePackages
                             .slice(0, 2)
                             .map((pkg) => pkg.name)
                             .join(', ')}${item.applicablePackages.length > 2 ? '…' : ''})`}
                       </span>
                     </span>
                     <span className="shrink-0 rounded-full border border-[#00b14f]/30 bg-white px-2.5 py-0.5 text-[11px] font-bold text-[#009944]">
-                      {isActiveCode ? 'Đang dùng' : 'Áp dụng'}
+                      {isActiveCode ? 'In use' : 'Apply'}
                     </span>
                   </VoucherTicketCard>
                 );
@@ -154,8 +154,8 @@ export default function CartVoucherModal({
         )}
 
         <p className="text-on-surface-variant text-xs leading-relaxed">
-          Mã ưu đãi được phát riêng theo chương trình. Mức giảm tính trên giá trị các dịch vụ bạn đang chọn, VAT tính
-          sau khi đã giảm.
+          Vouchers are issued per promotion. The discount applies to the value of the services you selected, and VAT is
+          calculated after the discount.
         </p>
       </div>
     </Modal>

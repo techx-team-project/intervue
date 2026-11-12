@@ -2,12 +2,12 @@ import { REVIEW_STATUS_META } from '@/constants/application-review';
 import type { ReviewApplicationHistoryEntry } from '@/types/application-review';
 import { formatDateTime } from '@/utils/datetime';
 
-const ACTOR_LABELS = { CANDIDATE: 'Ứng viên', RECRUITER: 'Nhà tuyển dụng', SYSTEM: 'Hệ thống' } as const;
+const ACTOR_LABELS = { CANDIDATE: 'Candidate', RECRUITER: 'Recruiter', SYSTEM: 'System' } as const;
 
 export default function ReviewHistoryTimeline({ history }: { history: ReviewApplicationHistoryEntry[] }) {
   return (
     <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs">
-      <h3 className="text-sm font-bold text-slate-900">Lịch sử xử lý</h3>
+      <h3 className="text-sm font-bold text-slate-900">Activity history</h3>
       <ol className="space-y-3 border-l-2 border-slate-100 pl-4">
         {[...history].reverse().map((entry, index) => (
           <li key={`${entry.at}-${index}`} className="relative text-xs">

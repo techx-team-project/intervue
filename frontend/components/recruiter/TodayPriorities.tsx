@@ -9,10 +9,10 @@ interface TodayPrioritiesProps {
 export default function TodayPriorities({ items }: TodayPrioritiesProps) {
   return (
     <section className="border-outline-variant flex h-full flex-col rounded-xl border bg-white p-6">
-      <h2 className="text-navy text-body-lg font-bold">Cần xử lý hôm nay</h2>
+      <h2 className="text-navy text-body-lg font-bold">Needs attention today</h2>
 
       {items.length === 0 ? (
-        <p className="text-body-md text-on-surface-variant mt-4">Hôm nay chưa có việc gấp nào.</p>
+        <p className="text-body-md text-on-surface-variant mt-4">Nothing urgent today.</p>
       ) : (
         <ul className="divide-outline-variant mt-3 flex-1 divide-y">
           {items.map((item) => {

@@ -6,28 +6,28 @@ const MOCK_JOBS = [
     badgeClass: 'bg-emerald-600 text-white',
     title: 'Senior Backend Java',
     company: 'InterVue Tech',
-    salary: 'Tới 50 triệu',
+    salary: 'Up to 50M',
   },
   {
     badge: 'NX',
     badgeClass: 'bg-sky-600 text-white',
     title: 'Frontend Next.js Dev',
     company: 'TechX Studio',
-    salary: 'Tới 45 triệu',
+    salary: 'Up to 45M',
   },
   {
     badge: 'AI',
     badgeClass: 'bg-violet-600 text-white',
     title: 'AI / ML Engineer',
     company: 'VietAI Labs',
-    salary: 'Tới 65 triệu',
+    salary: 'Up to 65M',
   },
   {
     badge: 'DV',
     badgeClass: 'bg-amber-600 text-white',
     title: 'Lead DevOps Cloud',
     company: 'CloudScale VN',
-    salary: 'Thỏa thuận',
+    salary: 'Negotiable',
   },
 ] as const;
 
@@ -46,17 +46,17 @@ export default function ServicePackageHeroArtwork() {
             <div className="flex items-center gap-2.5">
               <Image src="/intervue-logo.png" alt="" width={72} height={20} className="h-3.5 w-auto object-contain" />
               <div className="hidden items-center gap-2 text-[6.5px] font-semibold text-slate-500 lg:flex">
-                <span className="text-[#00b14f]">Việc làm</span>
-                <span>CV &amp; Hồ sơ</span>
-                <span>Công ty</span>
+                <span className="text-[#00b14f]">Jobs</span>
+                <span>CVs &amp; Profiles</span>
+                <span>Companies</span>
                 <span>AI Interview</span>
               </div>
             </div>
-            <span className="rounded-full bg-[#00b14f] px-2 py-0.5 text-[6px] font-bold text-white">Đăng tin</span>
+            <span className="rounded-full bg-[#00b14f] px-2 py-0.5 text-[6px] font-bold text-white">Post a job</span>
           </div>
 
           <p className="truncate px-3 pt-1.5 text-[6.5px] font-medium text-slate-500">
-            Tìm việc làm IT nhanh 24h, kết nối ứng viên chất lượng cao
+            Find IT jobs fast, connect with top candidates
           </p>
 
           <div className="relative mx-3 mt-1 overflow-hidden rounded-lg bg-[linear-gradient(115deg,#0f172a_0%,#064e3b_52%,#00b14f_100%)] px-3 py-2 text-white">
@@ -66,24 +66,22 @@ export default function ServicePackageHeroArtwork() {
                 <span className="inline-block rounded bg-emerald-400/20 px-1.5 py-0.5 text-[5.5px] font-bold tracking-wider text-emerald-200 uppercase">
                   InterVue Smart Hiring
                 </span>
-                <p className="truncate text-[9.5px] leading-tight font-extrabold tracking-tight">
-                  TUYỂN DỤNG NHÂN SỰ IT
-                </p>
+                <p className="truncate text-[9.5px] leading-tight font-extrabold tracking-tight">IT RECRUITMENT</p>
                 <p className="truncate text-[6px] font-medium text-emerald-100/90">
-                  Tiếp cận 100.000+ lập trình viên · Sàng lọc CV AI
+                  Reach 100,000+ developers · AI CV screening
                 </p>
               </div>
               <span className="shrink-0 rounded-md bg-amber-400 px-2 py-1 text-[6px] font-extrabold text-amber-950 shadow-2xs">
-                NỔI BẬT
+                FEATURED
               </span>
             </div>
           </div>
 
           <div className="mt-1.5 flex-1 bg-slate-50/80 px-3 py-2">
             <div className="flex items-center justify-between">
-              <span className="text-[7.5px] font-extrabold text-slate-800">Việc làm tốt nhất</span>
+              <span className="text-[7.5px] font-extrabold text-slate-800">Best jobs</span>
               <span className="rounded-full bg-emerald-100 px-1.5 py-0.5 text-[5.5px] font-bold text-emerald-700">
-                Đề xuất bởi AI
+                Recommended by AI
               </span>
             </div>
 

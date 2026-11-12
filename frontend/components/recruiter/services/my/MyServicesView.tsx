@@ -52,7 +52,7 @@ export default function MyServicesView() {
         {(
           [
             ['stock', `Trong kho (${available.length})`],
-            ['active', `Đang chạy (${running.length})`],
+            ['active', `Running (${running.length})`],
           ] as [Tab, string][]
         ).map(([key, label]) => (
           <button
@@ -81,8 +81,8 @@ export default function MyServicesView() {
       {tab === 'stock' &&
         (available.length === 0 ? (
           <EmptyState
-            title="Kho dịch vụ đang trống"
-            hint="Dịch vụ sẽ xuất hiện ở đây ngay sau khi đơn hàng được thanh toán."
+            title="Your service inventory is empty"
+            hint="Services will appear here right after an order is paid."
           />
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
@@ -92,12 +92,12 @@ export default function MyServicesView() {
                   <div>
                     <p className="text-on-surface font-bold">{item.label}</p>
                     <p className="text-on-surface-variant mt-0.5 text-xs">
-                      Còn {item.remainingQuantity} / {item.totalQuantity}
-                      {item.durationDays ? ` · hiệu lực ${item.durationDays} ngày` : ''}
+                      {item.remainingQuantity} / {item.totalQuantity} left
+                      {item.durationDays ? ` · valid for ${item.durationDays} days` : ''}
                     </p>
                   </div>
                   <span className="text-on-surface-variant shrink-0 text-xs">
-                    Hạn kích hoạt {new Date(item.activationDeadline).toLocaleDateString('vi-VN')}
+                    Activate by {new Date(item.activationDeadline).toLocaleDateString('vi-VN')}
                   </span>
                 </div>
 
@@ -111,14 +111,14 @@ export default function MyServicesView() {
                     className="border-primary text-primary mt-4 inline-flex h-9 w-full cursor-pointer items-center justify-center rounded-lg border bg-white text-sm font-semibold transition hover:bg-emerald-50"
                   >
                     {item.entitlementType === 'JOB_RETOP'
-                      ? 'Đẩy top tin ngay'
+                      ? 'Boost a job now'
                       : item.entitlementType === 'BRAND_PAGE' || item.entitlementType === 'FEATURED_COMPANY'
-                        ? 'Kích hoạt cho công ty'
-                        : 'Áp dụng cho tin'}
+                        ? 'Activate for company'
+                        : 'Apply to a job'}
                   </button>
                 ) : (
                   <p className="text-on-surface-variant mt-4 text-xs">
-                    Dịch vụ này được trừ tự động khi bạn sử dụng tính năng tương ứng.
+                    This service is deducted automatically when you use the related feature.
                   </p>
                 )}
               </article>
@@ -128,16 +128,16 @@ export default function MyServicesView() {
 
       {tab === 'active' &&
         (running.length === 0 ? (
-          <EmptyState title="Chưa có dịch vụ nào đang chạy" hint="Áp dụng một dịch vụ trong kho để bắt đầu." />
+          <EmptyState title="No services running" hint="Apply a service from your inventory to get started." />
         ) : (
           <div className="border-outline-variant overflow-hidden rounded-2xl border bg-white shadow-2xs">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant border-b text-xs font-semibold tracking-wider uppercase">
-                  <th className="py-3 pr-4 pl-5">Dịch vụ</th>
-                  <th className="px-4 py-3">Tin áp dụng</th>
-                  <th className="px-4 py-3">Bắt đầu</th>
-                  <th className="py-3 pr-5 pl-4">Kết thúc</th>
+                  <th className="py-3 pr-4 pl-5">Service</th>
+                  <th className="px-4 py-3">Applied job</th>
+                  <th className="px-4 py-3">Start</th>
+                  <th className="py-3 pr-5 pl-4">End</th>
                 </tr>
               </thead>
               <tbody className="divide-outline-variant divide-y">
@@ -153,7 +153,7 @@ export default function MyServicesView() {
                           #{usage.jobId}
                         </Link>
                       ) : usage.entitlementType === 'BRAND_PAGE' || usage.entitlementType === 'FEATURED_COMPANY' ? (
-                        <span className="text-on-surface-variant font-medium">Toàn doanh nghiệp</span>
+                        <span className="text-on-surface-variant font-medium">Whole company</span>
                       ) : (
                         '—'
                       )}
@@ -162,7 +162,7 @@ export default function MyServicesView() {
                       {new Date(usage.startedAt).toLocaleDateString('vi-VN')}
                     </td>
                     <td className="text-on-surface-variant py-3 pr-5 pl-4">
-                      {usage.endsAt ? new Date(usage.endsAt).toLocaleDateString('vi-VN') : 'Không giới hạn'}
+                      {usage.endsAt ? new Date(usage.endsAt).toLocaleDateString('vi-VN') : 'Unlimited'}
                     </td>
                   </tr>
                 ))}
@@ -183,7 +183,7 @@ export default function MyServicesView() {
             {
               onSuccess: () => {
                 setTarget(null);
-                setNotice('Đã kích hoạt dịch vụ.');
+                setNotice('Service activated.');
               },
               onError: (cause) => setModalError(getErrorMessage(cause)),
             },
@@ -206,7 +206,7 @@ function EmptyState({ title, hint }: { title: string; hint: string }) {
         href={ROUTES.RECRUITER_SERVICES}
         className="bg-primary mt-5 inline-flex h-10 items-center justify-center rounded-lg px-6 text-sm font-semibold text-white transition hover:brightness-95"
       >
-        Xem các gói dịch vụ
+        View service packages
       </Link>
     </div>
   );

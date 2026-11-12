@@ -6,7 +6,7 @@ import { JOB_MAX_HIRING_STEPS, type JobPostFormData } from '@/schemas/job.schema
 import { Plus, Trash2 } from 'lucide-react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-const SUGGESTED_STEPS = ['Sàng lọc hồ sơ', 'Phỏng vấn kỹ thuật', 'Phỏng vấn HR', 'Offer'];
+const SUGGESTED_STEPS = ['Application screening', 'Technical interview', 'HR interview', 'Offer'];
 
 export default function HiringStepsEditor() {
   const {
@@ -24,7 +24,7 @@ export default function HiringStepsEditor() {
     <div className="space-y-3">
       {fields.length === 0 ? (
         <p className="border-outline text-on-surface-variant rounded-xl border border-dashed px-4 py-6 text-center text-xs">
-          Chưa có bước nào. Ứng viên sẽ không thấy quy trình tuyển dụng của bạn.
+          No steps yet. Candidates will not see your hiring process.
         </p>
       ) : (
         <ol className="space-y-2">
@@ -35,8 +35,8 @@ export default function HiringStepsEditor() {
               </span>
               <div className="flex-1">
                 <Input
-                  placeholder="Ví dụ: Phỏng vấn kỹ thuật"
-                  aria-label={`Bước ${index + 1}`}
+                  placeholder="e.g. Technical interview"
+                  aria-label={`Step ${index + 1}`}
                   error={errors.hiringSteps?.[index]?.title?.message}
                   {...register(`hiringSteps.${index}.title`)}
                 />
@@ -45,7 +45,7 @@ export default function HiringStepsEditor() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                aria-label={`Xóa bước ${index + 1}`}
+                aria-label={`Remove step ${index + 1}`}
                 onClick={() => remove(index)}
               >
                 <Trash2 className="h-4 w-4" />
@@ -77,7 +77,7 @@ export default function HiringStepsEditor() {
           leftIcon={<Plus className="h-3.5 w-3.5" />}
           onClick={() => append({ title: '' })}
         >
-          Bước khác
+          Another step
         </Button>
         <span className="text-body-sm text-on-surface-variant ml-auto">
           {fields.length}/{JOB_MAX_HIRING_STEPS}

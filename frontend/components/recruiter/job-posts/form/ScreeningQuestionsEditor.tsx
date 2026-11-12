@@ -15,8 +15,8 @@ import { Plus, Trash2 } from 'lucide-react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 const TYPE_OPTIONS: Array<{ value: ScreeningQuestionFormData['type']; label: string }> = [
-  { value: 'SHORT_TEXT', label: 'Trả lời ngắn' },
-  { value: 'CHOICE', label: 'Chọn đáp án' },
+  { value: 'SHORT_TEXT', label: 'Short answer' },
+  { value: 'CHOICE', label: 'Multiple choice' },
 ];
 
 const NEW_QUESTION: ScreeningQuestionFormData = { type: 'SHORT_TEXT', prompt: '', required: false, options: [] };
@@ -36,7 +36,7 @@ export default function ScreeningQuestionsEditor() {
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
         <p className="text-on-surface-variant text-xs">
-          Ứng viên trả lời khi nộp hồ sơ. Tối đa {SCREENING_MAX_QUESTIONS} câu — càng ít càng nhiều người ứng tuyển.
+          Candidates answer when applying. Up to {SCREENING_MAX_QUESTIONS} questions — the fewer, the more people apply.
         </p>
         <span className="text-on-surface-variant shrink-0 text-xs font-semibold">
           {fields.length}/{SCREENING_MAX_QUESTIONS}
@@ -45,7 +45,7 @@ export default function ScreeningQuestionsEditor() {
 
       {fields.length === 0 ? (
         <p className="border-outline text-on-surface-variant rounded-xl border border-dashed px-4 py-6 text-center text-xs">
-          Chưa có câu hỏi nào. Ứng viên chỉ cần nộp CV.
+          No questions yet. Candidates only need to submit a CV.
         </p>
       ) : (
         <ul className="space-y-3">
@@ -60,8 +60,8 @@ export default function ScreeningQuestionsEditor() {
                   </span>
                   <div className="flex-1">
                     <Input
-                      placeholder="Ví dụ: Bạn có bao nhiêu năm kinh nghiệm với React?"
-                      aria-label={`Câu hỏi ${index + 1}`}
+                      placeholder="e.g. How many years of experience do you have with React?"
+                      aria-label={`Question ${index + 1}`}
                       error={itemErrors?.prompt?.message}
                       {...register(`screeningQuestions.${index}.prompt`)}
                     />
@@ -70,7 +70,7 @@ export default function ScreeningQuestionsEditor() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    aria-label={`Xóa câu hỏi ${index + 1}`}
+                    aria-label={`Remove question ${index + 1}`}
                     onClick={() => remove(index)}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -84,7 +84,7 @@ export default function ScreeningQuestionsEditor() {
                     render={({ field: typeField }) => (
                       <div
                         role="radiogroup"
-                        aria-label="Loại câu hỏi"
+                        aria-label="Question type"
                         className="bg-surface-container-high flex gap-1 rounded-lg p-0.5"
                       >
                         {TYPE_OPTIONS.map((option) => (
@@ -112,10 +112,10 @@ export default function ScreeningQuestionsEditor() {
                     name={`screeningQuestions.${index}.required`}
                     render={({ field: requiredField }) => (
                       <label className="text-on-surface-variant flex items-center gap-2 text-xs font-semibold">
-                        Bắt buộc
+                        Required
                         <Switch
                           size="sm"
-                          ariaLabel={`Bắt buộc trả lời câu ${index + 1}`}
+                          ariaLabel={`Answer required for question ${index + 1}`}
                           checked={requiredField.value}
                           onChange={requiredField.onChange}
                         />
@@ -134,8 +134,8 @@ export default function ScreeningQuestionsEditor() {
                           value={optionsField.value}
                           onChange={optionsField.onChange}
                           maxTags={SCREENING_MAX_OPTIONS}
-                          placeholder="Nhập đáp án rồi nhấn Enter"
-                          helperText="2-6 đáp án khác nhau"
+                          placeholder="Type an answer and press Enter"
+                          helperText="2-6 distinct answers"
                           error={itemErrors?.options?.message}
                         />
                       )}
@@ -158,7 +158,7 @@ export default function ScreeningQuestionsEditor() {
         disabled={fields.length >= SCREENING_MAX_QUESTIONS}
         onClick={() => append({ ...NEW_QUESTION, options: [] })}
       >
-        Thêm câu hỏi
+        Add question
       </Button>
     </div>
   );

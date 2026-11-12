@@ -8,13 +8,13 @@ export default function CartEmptyState() {
       <div className="bg-surface-container-high text-outline flex h-12 w-12 items-center justify-center rounded-2xl">
         <ShoppingCart className="h-6 w-6" />
       </div>
-      <h4 className="text-on-surface mt-3 text-sm font-bold">Giỏ hàng đang trống</h4>
-      <p className="text-on-surface-variant mt-1 text-xs">Chọn gói dịch vụ phù hợp để bắt đầu.</p>
+      <h4 className="text-on-surface mt-3 text-sm font-bold">Your cart is empty</h4>
+      <p className="text-on-surface-variant mt-1 text-xs">Choose a service package to get started.</p>
       <Link
         href={ROUTES.RECRUITER_SERVICES}
         className="bg-primary mt-5 inline-flex h-10 items-center justify-center rounded-lg px-6 text-sm font-semibold text-white transition hover:brightness-95"
       >
-        Xem các gói dịch vụ
+        Browse service packages
       </Link>
     </div>
   );

@@ -13,12 +13,12 @@ export default function PipelineFunnelCard({ stages }: PipelineFunnelCardProps) 
   return (
     <section className="border-outline-variant flex h-full flex-col rounded-xl border bg-white p-6">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-navy text-body-lg font-bold">Phễu tuyển dụng</h2>
+        <h2 className="text-navy text-body-lg font-bold">Hiring funnel</h2>
         <Link
           href={ROUTES.RECRUITER_APPLICATIONS}
           className="text-primary text-body-sm inline-flex items-center gap-1 font-semibold hover:underline"
         >
-          Xem chi tiết
+          View details
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>

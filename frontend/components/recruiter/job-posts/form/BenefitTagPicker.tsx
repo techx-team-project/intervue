@@ -42,7 +42,7 @@ export default function BenefitTagPicker({ value, onChange }: BenefitTagPickerPr
         })}
       </div>
       <p className="text-body-sm text-on-surface-variant">
-        Đã chọn {value.length}/{JOB_MAX_BENEFIT_TAGS}
+        Selected {value.length}/{JOB_MAX_BENEFIT_TAGS}
       </p>
     </div>
   );

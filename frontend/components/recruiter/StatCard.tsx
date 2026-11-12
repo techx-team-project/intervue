@@ -24,7 +24,7 @@ export default function StatCard({ label, value, trendPercent, trendDirection, s
           }`}
         >
           <TrendIcon className="h-3.5 w-3.5" />
-          {trendPercent}% so với tuần trước
+          {trendPercent}% vs. last week
         </p>
       )}
     </div>

@@ -3,8 +3,8 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Mã ưu đãi | InterVue Recruiter',
-  description: 'Kho mã ưu đãi dịch vụ tuyển dụng dành cho doanh nghiệp.',
+  title: 'Vouchers | InterVue Recruiter',
+  description: 'Recruitment service vouchers available to your company.',
 };
 
 export default function RecruiterVouchersPage() {

@@ -103,7 +103,7 @@ export default function CartOrderSummary({
               }`}
             >
               <Tag className="h-3.5 w-3.5" />
-              <span>{appliedVoucher ? appliedVoucher.code : 'Chọn mã ưu đãi'}</span>
+              <span>{appliedVoucher ? appliedVoucher.code : 'Select a voucher'}</span>
             </button>
           </div>
         </div>

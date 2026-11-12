@@ -26,6 +26,6 @@ export function formatRemaining(seconds: number): string {
   const hours = Math.floor((seconds % 86400) / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const rest = seconds % 60;
-  if (days > 0) return `${days} ngày : ${hours} giờ : ${minutes} phút`;
+  if (days > 0) return `${days}d : ${hours}h : ${minutes}m`;
   return `${String(hours).padStart(2, '0')} : ${String(minutes).padStart(2, '0')} : ${String(rest).padStart(2, '0')}`;
 }

@@ -196,9 +196,9 @@ function DocumentPreviewModal({ isOpen, onClose, documentId, fileName, target = 
 
   const targetLabel =
     target === 'identity-back'
-      ? 'Citizen ID Card (Back Side / Mặt sau)'
+      ? 'Citizen ID Card (Back Side)'
       : target === 'identity'
-        ? 'Citizen ID Card (Front Side / Mặt trước)'
+        ? 'Citizen ID Card (Front Side)'
         : 'Legal Verification Document';
 
   return (
@@ -375,8 +375,8 @@ function LoaPreparationGuideModal({ isOpen, onClose }: LoaPreparationGuideModalP
               <h4 className="text-on-surface font-bold">Sign &amp; Apply Official Enterprise Red Seal</h4>
               <p className="text-on-surface-variant text-xs">
                 <strong>Print out the document on paper.</strong> The company Legal Representative (Director / CEO) must
-                sign with full name, and the enterprise must stamp its official legal round red seal (dấu tròn pháp nhân
-                mộc đỏ) across the signature.
+                sign with full name, and the enterprise must stamp its official legal round red seal across the
+                signature.
               </p>
             </div>
           </div>
@@ -672,9 +672,7 @@ function DocumentDropzone({
         {/* Right Column: Illustration Thumbnail */}
         {!compact && illustrationSrc && (
           <div className="flex flex-col items-center justify-start space-y-2 lg:col-span-4">
-            <p className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">
-              Illustration (Minh họa)
-            </p>
+            <p className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">Illustration</p>
 
             <div className="border-outline-variant/90 overflow-hidden rounded-xl border bg-white p-2 shadow-2xs">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1528,7 +1526,7 @@ export function BusinessLicenseView() {
                     <div>
                       <div className="mb-2 flex items-center justify-between">
                         <label className="text-on-surface block text-xs font-bold">
-                          1. Official Letter of Authorization (Bản scan Giấy ủy quyền có mộc đỏ){' '}
+                          1. Official Letter of Authorization (scan with red company seal){' '}
                           <span className="text-rose-500">*</span>
                         </label>
                         <button
@@ -1567,7 +1565,6 @@ export function BusinessLicenseView() {
                       />
                     </div>
 
-                    {/* Sub-box 2: Identity Documents (Citizen ID / CCCD 2 mặt) with CCCD Illustration */}
                     <div className="border-outline-variant/80 border-t pt-5">
                       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                         {/* Left Column (8 cols): Vertically stacked Front side & Back side slots */}
@@ -1586,7 +1583,7 @@ export function BusinessLicenseView() {
                           {/* Front Side Slot */}
                           <div className="border-outline-variant rounded-xl border bg-white p-4">
                             <DocumentDropzone
-                              label="CCCD Mặt trước (Front Side) / Passport Photo Page"
+                              label="Citizen ID Front Side / Passport Photo Page"
                               required
                               compact
                               file={idCardFrontFile}
@@ -1603,7 +1600,7 @@ export function BusinessLicenseView() {
                           {/* Back Side Slot */}
                           <div className="border-outline-variant rounded-xl border bg-white p-4">
                             <DocumentDropzone
-                              label="CCCD Mặt sau (Back Side)"
+                              label="Citizen ID Back Side"
                               required={false}
                               compact
                               file={idCardBackFile}
@@ -1621,7 +1618,7 @@ export function BusinessLicenseView() {
                         {/* Right Column (4 cols): Illustration of CCCD */}
                         <div className="flex flex-col items-center justify-start space-y-2 pt-6 lg:col-span-4">
                           <p className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">
-                            Illustration (Minh họa)
+                            Illustration
                           </p>
                           <div className="border-outline-variant/90 overflow-hidden rounded-xl border bg-white p-3 shadow-2xs">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1697,7 +1694,7 @@ export function BusinessLicenseView() {
 
             <div className="text-on-surface-variant mt-4 space-y-4 text-xs leading-relaxed sm:text-sm">
               <div className="border-outline-variant bg-surface-container-low/50 rounded-xl border p-4">
-                <h4 className="text-on-surface font-bold">1. Enterprise Registration Certificate (ERC / Giấy ĐKKD)</h4>
+                <h4 className="text-on-surface font-bold">1. Enterprise Registration Certificate (ERC)</h4>
                 <ul className="text-on-surface-variant mt-2 list-disc space-y-1 pl-4 text-xs">
                   <li>Applicable to enterprise founders and legal representatives.</li>
                   <li>

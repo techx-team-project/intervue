@@ -32,8 +32,8 @@ export default function JobPostsFilterBar({ search, onSearchChange, sort, onSort
         <Input
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
-          placeholder="Tìm theo tiêu đề tin…"
-          aria-label="Tìm tin tuyển dụng"
+          placeholder="Search by job title…"
+          aria-label="Search job posts"
           leftIcon={<Search className="h-4 w-4" />}
         />
       </div>
@@ -41,7 +41,7 @@ export default function JobPostsFilterBar({ search, onSearchChange, sort, onSort
         <Select
           value={sort}
           onChange={(event) => onSortChange(event.target.value as RecruiterJobSort)}
-          aria-label="Sắp xếp"
+          aria-label="Sort"
           options={JOB_SORT_OPTIONS.map(({ value, label }) => ({ value, label }))}
         />
       </div>

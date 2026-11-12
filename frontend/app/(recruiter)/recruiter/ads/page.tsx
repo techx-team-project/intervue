@@ -2,8 +2,8 @@ import RecruiterAdsView from '@/components/recruiter/ads/RecruiterAdsView';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Quảng cáo banner | InterVue',
-  description: 'Đặt chỗ banner theo tuần và quản lý ảnh quảng cáo của doanh nghiệp.',
+  title: 'Banner ads | InterVue',
+  description: "Book banner slots by week and manage your company's ad creatives.",
 };
 
 export default function RecruiterAdsPage() {

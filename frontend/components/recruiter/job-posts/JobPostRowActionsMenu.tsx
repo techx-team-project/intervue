@@ -57,32 +57,32 @@ function buildActions(props: JobPostRowActionsMenuProps): MenuAction[] {
   const actions: MenuAction[] = [];
 
   if (EDITABLE_STATUSES.has(job.status)) {
-    actions.push({ key: 'edit', label: 'Chỉnh sửa', icon: Pencil, href: `${base}/edit` });
+    actions.push({ key: 'edit', label: 'Edit', icon: Pencil, href: `${base}/edit` });
   }
-  actions.push({ key: 'preview', label: 'Xem trước', icon: Eye, href: `${base}/preview` });
+  actions.push({ key: 'preview', label: 'Preview', icon: Eye, href: `${base}/preview` });
   if (job.status !== 'DRAFT') {
-    actions.push({ key: 'stats', label: 'Thống kê', icon: BarChart3, onClick: props.onStats });
+    actions.push({ key: 'stats', label: 'Statistics', icon: BarChart3, onClick: props.onStats });
   }
 
   if (job.status === 'PUBLISHED') {
-    actions.push({ key: 'retop', label: 'Đẩy top tin', icon: ArrowUpCircle, onClick: props.onRetop });
-    actions.push({ key: 'pause', label: 'Tạm dừng', icon: Pause, onClick: props.onPause });
+    actions.push({ key: 'retop', label: 'Boost job post', icon: ArrowUpCircle, onClick: props.onRetop });
+    actions.push({ key: 'pause', label: 'Pause', icon: Pause, onClick: props.onPause });
   }
   if (job.status === 'PAUSED') {
-    actions.push({ key: 'reopen', label: 'Mở lại', icon: PlayCircle, onClick: props.onReopen });
+    actions.push({ key: 'reopen', label: 'Reopen', icon: PlayCircle, onClick: props.onReopen });
   }
   if (job.status === 'PUBLISHED' || job.status === 'PAUSED') {
-    actions.push({ key: 'close', label: 'Đóng tin', icon: Square, onClick: props.onClose, tone: 'danger' });
+    actions.push({ key: 'close', label: 'Close job post', icon: Square, onClick: props.onClose, tone: 'danger' });
   }
 
   if (job.status === 'CLOSED' || job.status === 'EXPIRED') {
-    actions.push({ key: 'renew', label: 'Gia hạn / Đăng lại', icon: RefreshCw, onClick: props.onRenew });
+    actions.push({ key: 'renew', label: 'Renew / Repost', icon: RefreshCw, onClick: props.onRenew });
   }
-  actions.push({ key: 'duplicate', label: 'Nhân bản', icon: Copy, onClick: props.onDuplicate });
-  actions.push({ key: 'history', label: 'Lịch sử', icon: History, onClick: props.onHistory });
+  actions.push({ key: 'duplicate', label: 'Duplicate', icon: Copy, onClick: props.onDuplicate });
+  actions.push({ key: 'history', label: 'History', icon: History, onClick: props.onHistory });
 
   if (job.status === 'DRAFT') {
-    actions.push({ key: 'delete', label: 'Xóa bản nháp', icon: Trash2, onClick: props.onDelete, tone: 'danger' });
+    actions.push({ key: 'delete', label: 'Delete draft', icon: Trash2, onClick: props.onDelete, tone: 'danger' });
   }
   return actions;
 }
@@ -141,7 +141,7 @@ export default function JobPostRowActionsMenu(props: JobPostRowActionsMenuProps)
         type="button"
         disabled={isPending}
         onClick={toggleMenu}
-        aria-label="Thao tác"
+        aria-label="Actions"
         aria-expanded={isOpen}
         className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-40"
       >

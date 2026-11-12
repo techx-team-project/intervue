@@ -36,12 +36,12 @@ export default function AdWeekPicker({ weeks, selected, onToggle }: AdWeekPicker
             >
               <span>
                 <span className="font-semibold">{formatDate(week.weekStart)}</span>
-                <span className="text-on-surface-variant block text-xs">đến {formatDate(week.weekEnd)}</span>
+                <span className="text-on-surface-variant block text-xs">to {formatDate(week.weekEnd)}</span>
               </span>
               {disabled ? (
                 <span className="text-on-surface-variant flex items-center gap-1 text-xs">
                   <Lock className="h-3.5 w-3.5" aria-hidden />
-                  {week.mine ? 'Của bạn' : 'Đã bán'}
+                  {week.mine ? 'Yours' : 'Sold'}
                 </span>
               ) : (
                 isSelected && <Check className="h-4 w-4 text-emerald-700" aria-hidden />

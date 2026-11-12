@@ -40,7 +40,7 @@ export default function ReviewInterviewPanel({ applicationId, applicationStatus 
     const target = form?.interview;
     const options = {
       onSuccess: () => {
-        toast.success(target ? 'Đã cập nhật và gửi lại lịch cho ứng viên.' : 'Đã gửi lời mời phỏng vấn.');
+        toast.success(target ? 'Interview updated and resent to the candidate.' : 'Interview invitation sent.');
         setForm(null);
       },
       onError: (error: unknown) => toast.error(getErrorMessage(error)),
@@ -51,7 +51,7 @@ export default function ReviewInterviewPanel({ applicationId, applicationStatus 
 
   const accept = (interview: Interview) =>
     acceptProposal.mutate(interview.id, {
-      onSuccess: () => toast.success('Đã đồng ý giờ ứng viên đề xuất.'),
+      onSuccess: () => toast.success("Candidate's proposed time accepted."),
       onError: (error) => toast.error(getErrorMessage(error)),
     });
 
@@ -61,7 +61,7 @@ export default function ReviewInterviewPanel({ applicationId, applicationStatus 
       { id: cancelling.id, reason: reason.trim() || undefined },
       {
         onSuccess: () => {
-          toast.success('Đã huỷ lịch phỏng vấn.');
+          toast.success('Interview cancelled.');
           setCancelling(null);
           setReason('');
         },
@@ -73,10 +73,10 @@ export default function ReviewInterviewPanel({ applicationId, applicationStatus 
   return (
     <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-sm font-bold text-slate-900">Lịch phỏng vấn</h3>
+        <h3 className="text-sm font-bold text-slate-900">Interviews</h3>
         {canSchedule && (
           <Button size="sm" leftIcon={<CalendarPlus className="h-4 w-4" />} onClick={() => setForm({})}>
-            Mời phỏng vấn
+            Invite to interview
           </Button>
         )}
       </div>
@@ -94,10 +94,10 @@ export default function ReviewInterviewPanel({ applicationId, applicationStatus 
                 {active && (
                   <div className="flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => setForm({ interview })}>
-                      Sửa lịch
+                      Edit schedule
                     </Button>
                     <Button size="sm" variant="ghost" onClick={() => setCancelling(interview)}>
-                      Huỷ lịch
+                      Cancel interview
                     </Button>
                   </div>
                 )}
@@ -107,26 +107,28 @@ export default function ReviewInterviewPanel({ applicationId, applicationStatus 
               {interview.status === 'RESCHEDULE_REQUESTED' && interview.proposedStartsAt && (
                 <div className="space-y-2 rounded-lg bg-amber-50 p-3 text-[13px] text-amber-900">
                   <p>
-                    Ứng viên bận và đề xuất:{' '}
+                    Candidate is unavailable and proposed:{' '}
                     <span className="font-bold">{formatInterviewMoment(interview.proposedStartsAt)}</span>
                   </p>
-                  {interview.candidateMessage && <p>Lời nhắn: {interview.candidateMessage}</p>}
+                  {interview.candidateMessage && <p>Message: {interview.candidateMessage}</p>}
                   <div className="flex flex-wrap gap-2">
                     <Button size="sm" isLoading={acceptProposal.isPending} onClick={() => accept(interview)}>
-                      Đồng ý giờ mới
+                      Accept new time
                     </Button>
                     <Button size="sm" variant="outline" onClick={() => setForm({ interview })}>
-                      Chọn giờ khác
+                      Pick another time
                     </Button>
                   </div>
                 </div>
               )}
 
               {interview.status === 'DECLINED' && interview.candidateMessage && (
-                <p className="text-xs text-slate-600">Lý do ứng viên từ chối: {interview.candidateMessage}</p>
+                <p className="text-xs text-slate-600">
+                  Candidate&apos;s reason for declining: {interview.candidateMessage}
+                </p>
               )}
               {interview.status === 'CANCELLED' && interview.cancelReason && (
-                <p className="text-xs text-slate-600">Lý do huỷ: {interview.cancelReason}</p>
+                <p className="text-xs text-slate-600">Cancellation reason: {interview.cancelReason}</p>
               )}
             </li>
           );
@@ -148,21 +150,21 @@ export default function ReviewInterviewPanel({ applicationId, applicationStatus 
         isOpen={cancelling !== null}
         onClose={() => setCancelling(null)}
         maxWidth="md"
-        title="Huỷ lịch phỏng vấn?"
-        description="Ứng viên sẽ nhận thông báo và email về việc huỷ lịch."
+        title="Cancel this interview?"
+        description="The candidate will be notified by app and email about the cancellation."
         footer={
           <div className="flex justify-end gap-2">
             <Button variant="ghost" onClick={() => setCancelling(null)}>
-              Giữ lịch
+              Keep interview
             </Button>
             <Button variant="danger" isLoading={cancel.isPending} onClick={confirmCancel}>
-              Huỷ lịch
+              Cancel interview
             </Button>
           </div>
         }
       >
         <Textarea
-          label="Lý do gửi cho ứng viên (không bắt buộc)"
+          label="Reason sent to the candidate (optional)"
           value={reason}
           rows={3}
           maxLength={500}

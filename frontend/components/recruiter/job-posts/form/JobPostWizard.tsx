@@ -136,7 +136,7 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
     setBusy(true);
     try {
       await persist();
-      toast.success('Đã lưu bản nháp.');
+      toast.success('Draft saved.');
     } catch (error) {
       showServerError(error);
     } finally {
@@ -149,7 +149,7 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
     try {
       const id = await persist();
       if (!isLive) await mutations.publish.mutateAsync(id);
-      toast.success(isLive ? 'Đã cập nhật tin tuyển dụng.' : 'Đã đăng tin tuyển dụng.');
+      toast.success(isLive ? 'Job post updated.' : 'Job post published.');
       router.push(ROUTES.RECRUITER_JOBS);
     } catch (error) {
       showServerError(error);
@@ -192,7 +192,7 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
                 leftIcon={<ArrowLeft className="h-4 w-4" />}
                 onClick={() => setStep(step - 1)}
               >
-                Quay lại
+                Back
               </Button>
 
               <div className="flex items-center gap-2">
@@ -204,17 +204,17 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
                     leftIcon={<Save className="h-4 w-4" />}
                     onClick={handleSaveDraft}
                   >
-                    Lưu nháp
+                    Save draft
                   </Button>
                 )}
                 {/* Distinct keys stop the click that reaches the last step from also submitting the form */}
                 {step < LAST_STEP ? (
                   <Button key="next" type="button" rightIcon={<ArrowRight className="h-4 w-4" />} onClick={handleNext}>
-                    Tiếp tục
+                    Continue
                   </Button>
                 ) : (
                   <Button key="submit" type="submit" isLoading={busy} leftIcon={<SendHorizontal className="h-4 w-4" />}>
-                    {isLive ? 'Lưu thay đổi' : 'Đăng tin'}
+                    {isLive ? 'Save changes' : 'Publish'}
                   </Button>
                 )}
               </div>
@@ -230,21 +230,21 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
       <Modal
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        title="Đăng tin tuyển dụng?"
-        description="Tin sẽ hiển thị ngay cho ứng viên sau khi đăng."
+        title="Post this job?"
+        description="The post will be visible to candidates immediately after publishing."
         maxWidth="sm"
         footer={
           <div className="flex justify-end gap-2">
             <Button variant="ghost" disabled={busy} onClick={() => setConfirmOpen(false)}>
-              Xem lại
+              Review
             </Button>
             <Button isLoading={busy} onClick={publish}>
-              Đăng tin
+              Publish
             </Button>
           </div>
         }
       >
-        <p className="text-on-surface-variant text-sm">Bạn vẫn có thể chỉnh sửa hoặc đóng tin sau khi đăng.</p>
+        <p className="text-on-surface-variant text-sm">You can still edit or close the post after publishing.</p>
       </Modal>
     </FormProvider>
   );

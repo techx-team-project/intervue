@@ -61,10 +61,10 @@ export default function ReviewApplicationDetailView({ applicationId }: { applica
         <p className="text-sm font-semibold text-slate-700">{getErrorMessage(error)}</p>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => refetch()}>
-            Thử lại
+            Try again
           </Button>
           <Link href={ROUTES.RECRUITER_APPLICATIONS}>
-            <Button variant="ghost">Về danh sách</Button>
+            <Button variant="ghost">Back to list</Button>
           </Link>
         </div>
       </div>
@@ -78,7 +78,7 @@ export default function ReviewApplicationDetailView({ applicationId }: { applica
         className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800"
       >
         <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
-        Danh sách hồ sơ
+        Applications list
       </Link>
 
       <header className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs">
@@ -92,8 +92,8 @@ export default function ReviewApplicationDetailView({ applicationId }: { applica
                 <Mail className="h-3.5 w-3.5" aria-hidden />
                 {application.candidateEmail}
               </span>
-              <span>Ứng tuyển: {application.jobTitle}</span>
-              {application.submittedAt && <span>Nộp ngày {formatDate(application.submittedAt)}</span>}
+              <span>Applied for: {application.jobTitle}</span>
+              {application.submittedAt && <span>Submitted on {formatDate(application.submittedAt)}</span>}
             </p>
           </div>
           <ReviewStatusBadge status={application.status} />
@@ -131,18 +131,18 @@ export default function ReviewApplicationDetailView({ applicationId }: { applica
                     leftIcon={<Download className="h-3.5 w-3.5" />}
                     onClick={downloadCv}
                   >
-                    Tải xuống
+                    Download
                   </Button>
                 </div>
               </div>
             ) : (
-              <p className="text-xs text-slate-500">Hồ sơ này chưa có CV.</p>
+              <p className="text-xs text-slate-500">This application has no CV.</p>
             )}
           </section>
 
           {application.coverLetter && (
             <section className="space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs">
-              <h3 className="text-sm font-bold text-slate-900">Thư giới thiệu</h3>
+              <h3 className="text-sm font-bold text-slate-900">Cover letter</h3>
               <p className="text-[13.5px] leading-relaxed whitespace-pre-line text-slate-700">
                 {application.coverLetter}
               </p>
@@ -151,7 +151,7 @@ export default function ReviewApplicationDetailView({ applicationId }: { applica
 
           {application.answers.length > 0 && (
             <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs">
-              <h3 className="text-sm font-bold text-slate-900">Trả lời câu hỏi sàng lọc</h3>
+              <h3 className="text-sm font-bold text-slate-900">Screening answers</h3>
               <dl className="space-y-3">
                 {application.answers.map((answer) => (
                   <div key={answer.questionId}>

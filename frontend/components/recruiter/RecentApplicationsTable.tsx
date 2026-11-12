@@ -11,14 +11,14 @@ const STATUS_META: Record<
   RecentApplicationStatus,
   { label: string; variant: 'default' | 'success' | 'warning' | 'danger' | 'info' }
 > = {
-  APPLIED: { label: 'Mới', variant: 'info' },
-  IN_REVIEW: { label: 'Đang xem xét', variant: 'warning' },
-  INTERVIEW: { label: 'Phỏng vấn', variant: 'info' },
-  OFFER: { label: 'Đã gửi offer', variant: 'success' },
-  HIRED: { label: 'Đã tuyển', variant: 'success' },
-  REJECTED: { label: 'Từ chối', variant: 'danger' },
-  WITHDRAWN: { label: 'Đã rút', variant: 'default' },
-  NO_AGREEMENT: { label: 'Không thống nhất', variant: 'default' },
+  APPLIED: { label: 'New', variant: 'info' },
+  IN_REVIEW: { label: 'In review', variant: 'warning' },
+  INTERVIEW: { label: 'Interview', variant: 'info' },
+  OFFER: { label: 'Offer sent', variant: 'success' },
+  HIRED: { label: 'Hired', variant: 'success' },
+  REJECTED: { label: 'Rejected', variant: 'danger' },
+  WITHDRAWN: { label: 'Withdrawn', variant: 'default' },
+  NO_AGREEMENT: { label: 'No agreement', variant: 'default' },
 };
 
 const dateFormatter = new Intl.DateTimeFormat('vi-VN', {
@@ -32,22 +32,22 @@ export default function RecentApplicationsTable({ applications }: RecentApplicat
   return (
     <section className="border-outline-variant rounded-xl border bg-white p-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-navy text-body-lg font-bold">Hồ sơ mới nhất</h2>
+        <h2 className="text-navy text-body-lg font-bold">Latest applications</h2>
         <Link href={ROUTES.RECRUITER_APPLICATIONS} className="text-primary text-body-sm font-semibold hover:underline">
-          Xem tất cả
+          View all
         </Link>
       </div>
 
       {applications.length === 0 ? (
-        <p className="text-body-md text-on-surface-variant mt-4">Chưa có hồ sơ ứng tuyển nào.</p>
+        <p className="text-body-md text-on-surface-variant mt-4">No applications yet.</p>
       ) : (
         <div className="mt-5 overflow-x-auto">
           <div className="min-w-150">
             <div className="border-outline-variant text-label-sm text-outline grid grid-cols-[2fr_2fr_1fr_1fr] gap-4 border-b px-2.5 pb-2.5 font-semibold tracking-wide uppercase">
-              <span>Ứng viên</span>
-              <span>Vị trí</span>
-              <span>Trạng thái</span>
-              <span className="text-right">Nộp lúc</span>
+              <span>Candidate</span>
+              <span>Position</span>
+              <span>Status</span>
+              <span className="text-right">Applied at</span>
             </div>
 
             <div className="divide-y divide-[#f1f5f9]">

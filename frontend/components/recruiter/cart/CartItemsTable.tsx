@@ -88,7 +88,7 @@ export default function CartItemsTable({
                               key={week}
                               className="bg-primary-light text-primary-deep rounded-md px-2 py-0.5 text-[11px] font-semibold"
                             >
-                              Tuần {week}
+                              Week {week}
                             </span>
                           ))}
                         </div>
@@ -124,7 +124,7 @@ export default function CartItemsTable({
                         </button>
                       </div>
                       {isBannerLocked && (
-                        <span className="text-on-surface-variant mt-1 text-[11px]">Cố định theo tuần đã chọn</span>
+                        <span className="text-on-surface-variant mt-1 text-[11px]">Fixed for the selected weeks</span>
                       )}
                     </div>
                   </td>
@@ -199,7 +199,7 @@ export default function CartItemsTable({
                           key={week}
                           className="bg-primary-light text-primary-deep rounded px-1.5 py-0.5 text-[10px] font-semibold"
                         >
-                          Tuần {week}
+                          Week {week}
                         </span>
                       ))}
                     </div>

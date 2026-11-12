@@ -57,7 +57,7 @@ export default function AdPackageWeeksModal({
 
   const handleSubmit = () => {
     if (selected.length === 0) {
-      setSubmitError('Vui lòng chọn ít nhất 1 tuần hiển thị.');
+      setSubmitError('Please select at least 1 display week.');
       return;
     }
 
@@ -73,7 +73,7 @@ export default function AdPackageWeeksModal({
             router.push(ROUTES.RECRUITER_CART);
             return;
           }
-          const message = `Đã thêm "${packageItem.name}" (${weeks.length} tuần) vào giỏ hàng.`;
+          const message = `Added "${packageItem.name}" (${weeks.length} weeks) to your cart.`;
           onAddedToCart(message);
           toast.success(message);
         },
@@ -96,24 +96,24 @@ export default function AdPackageWeeksModal({
       title={
         <div className="flex items-center gap-2">
           <CalendarDays className="text-primary h-5 w-5 shrink-0" aria-hidden />
-          <span>Chọn tuần hiển thị · {packageItem.name}</span>
+          <span>Select display weeks · {packageItem.name}</span>
         </div>
       }
-      description={`${slot.name} (${slot.width}×${slot.height}px) · ${formatServicePrice(packageItem.price, packageItem.currency)} / tuần`}
+      description={`${slot.name} (${slot.width}×${slot.height}px) · ${formatServicePrice(packageItem.price, packageItem.currency)} / week`}
       footer={
         <div className="flex w-full flex-wrap items-center justify-between gap-3">
           <p className="text-on-surface-variant text-sm">
-            Đã chọn <strong className="text-on-surface">{selected.length}</strong> tuần
+            <strong className="text-on-surface">{selected.length}</strong> weeks selected
             {selected.length > 0 && (
               <>
                 {' · '}
-                <strong className="text-primary">{formatServicePrice(total, packageItem.currency)}</strong> (chưa VAT)
+                <strong className="text-primary">{formatServicePrice(total, packageItem.currency)}</strong> (excl. VAT)
               </>
             )}
           </p>
           <div className="flex items-center gap-2">
             <Button variant="neutral" size="md" radius="lg" onClick={onClose} disabled={addToCart.isPending}>
-              Đóng
+              Close
             </Button>
             <Button
               variant="primary"
@@ -124,7 +124,7 @@ export default function AdPackageWeeksModal({
               isLoading={addToCart.isPending}
               onClick={handleSubmit}
             >
-              {intent === 'buy' ? 'Tiếp tục thanh toán' : 'Thêm vào giỏ hàng'}
+              {intent === 'buy' ? 'Continue to payment' : 'Add to cart'}
             </Button>
           </div>
         </div>
@@ -132,8 +132,8 @@ export default function AdPackageWeeksModal({
     >
       <div className="space-y-4">
         <div className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant rounded-xl border px-3.5 py-2.5 text-xs leading-relaxed">
-          Mỗi vị trí chỉ bán cho <strong>1 doanh nghiệp mỗi tuần</strong>. Tuần đặt được giữ chỗ ngay khi tạo đơn và
-          kích hoạt hiển thị sau khi đơn được thanh toán.
+          Each slot is sold to <strong>only 1 company per week</strong>. Booked weeks are reserved as soon as the order
+          is created and go live once the order is paid.
         </div>
 
         {submitError && (
@@ -153,7 +153,7 @@ export default function AdPackageWeeksModal({
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" aria-hidden />
               <span>
                 {isNoCompanyError
-                  ? 'Bạn cần liên kết hoặc hoàn thiện hồ sơ doanh nghiệp trước khi chọn lịch hiển thị banner.'
+                  ? 'You need to link or complete your company profile before choosing a banner schedule.'
                   : getErrorMessage(calendar.error)}
               </span>
             </p>
@@ -164,14 +164,14 @@ export default function AdPackageWeeksModal({
                   onClick={onClose}
                   className="bg-primary inline-flex h-8 items-center rounded-lg px-3.5 text-xs font-semibold text-white transition hover:brightness-95"
                 >
-                  Liên kết doanh nghiệp
+                  Link company
                 </Link>
                 <Link
                   href={ROUTES.RECRUITER_ONBOARDING}
                   onClick={onClose}
                   className="border-outline-variant text-on-surface hover:bg-surface-container-low inline-flex h-8 items-center rounded-lg border bg-white px-3.5 text-xs font-semibold transition"
                 >
-                  Hoàn tất thiết lập
+                  Complete setup
                 </Link>
               </div>
             )}

@@ -81,14 +81,14 @@ export default function ServicePackageVouchersCard({ vouchers }: ServicePackageV
       window.clearTimeout(copyTimerRef.current);
     }
     copyTimerRef.current = window.setTimeout(() => setCopiedCode(null), 2000);
-    toast.success(`Đã sao chép mã ưu đãi ${code}. Dùng mã này tại bước Giỏ hàng / Thanh toán.`);
+    toast.success(`Copied offer code ${code}. Use it at the Cart / Checkout step.`);
   };
 
   return (
-    <section aria-label="Ưu đãi khuyến mãi">
+    <section aria-label="Promotions">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-on-surface border-l-[3px] border-[#00b14f] pl-2.5 text-[15px] leading-tight font-bold">
-          Ưu đãi khuyến mãi
+          Promotions
         </h3>
         {countdown && (
           <span
@@ -130,9 +130,11 @@ export default function ServicePackageVouchersCard({ vouchers }: ServicePackageV
               {isExpanded && (
                 <div className="mt-1.5 rounded-lg border border-[#00b14f]/40 bg-[#f7fef9] px-4 py-3.5 shadow-2xs">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-[13px] font-bold text-slate-800">Điều kiện áp dụng:</p>
+                    <p className="text-[13px] font-bold text-slate-800">Terms and conditions:</p>
                     {itemCountdown && (
-                      <span className="text-[11px] font-semibold text-slate-500 tabular-nums">Còn {itemCountdown}</span>
+                      <span className="text-[11px] font-semibold text-slate-500 tabular-nums">
+                        {itemCountdown} left
+                      </span>
                     )}
                   </div>
 
@@ -150,7 +152,7 @@ export default function ServicePackageVouchersCard({ vouchers }: ServicePackageV
 
                   <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[#00b14f]/15 pt-2.5">
                     <span className="text-xs text-slate-600">
-                      Mã áp dụng:{' '}
+                      Code:{' '}
                       <code className="rounded bg-[#dcfce7] px-2 py-0.5 font-mono font-bold text-[#00823a]">
                         {voucher.code}
                       </code>
@@ -163,12 +165,12 @@ export default function ServicePackageVouchersCard({ vouchers }: ServicePackageV
                       {isCopied ? (
                         <>
                           <Check className="h-3.5 w-3.5 stroke-[2.5]" />
-                          Đã sao chép
+                          Copied
                         </>
                       ) : (
                         <>
                           <Copy className="h-3.5 w-3.5" />
-                          Sao chép mã
+                          Copy code
                         </>
                       )}
                     </button>

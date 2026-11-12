@@ -108,8 +108,8 @@ export default function RecruiterVouchersView() {
   return (
     <div className="space-y-5 pb-16">
       <PageHeader
-        title="Mã ưu đãi"
-        description="Danh sách mã giảm giá và lịch sử sử dụng ưu đãi mua dịch vụ của doanh nghiệp"
+        title="Vouchers"
+        description="Discount codes and voucher usage history for your company's service purchases"
       />
 
       <div className="border-outline-variant rounded-xl border bg-white p-5 sm:p-6">
@@ -128,7 +128,7 @@ export default function RecruiterVouchersView() {
             )}
           >
             <TicketCheck className="h-4 w-4" />
-            <span>Có hiệu lực</span>
+            <span>Active</span>
             {availableQuery.data && (
               <span
                 className={cn(
@@ -154,7 +154,7 @@ export default function RecruiterVouchersView() {
             )}
           >
             <History className="h-4 w-4" />
-            <span>Đã sử dụng</span>
+            <span>Used</span>
             {usedQuery.data && (
               <span
                 className={cn(
@@ -182,21 +182,21 @@ export default function RecruiterVouchersView() {
           <div className="flex min-h-[430px] flex-col items-center justify-center px-4 py-12 text-center">
             <Image
               src="/images/recruiter/empty-vouchers.png"
-              alt="Bạn chưa có mã ưu đãi nào"
+              alt="You have no vouchers"
               width={440}
               height={330}
               className="h-auto w-[340px] max-w-full object-contain select-none sm:w-[440px]"
               priority
             />
             <p className="text-on-surface mt-5 text-[15px] font-medium">
-              {activeTab === 'used' ? 'Bạn chưa sử dụng mã ưu đãi nào' : 'Bạn chưa có mã ưu đãi nào'}
+              {activeTab === 'used' ? 'You have not used any vouchers' : 'You have no vouchers'}
             </p>
             {activeTab === 'available' && (
               <Link
                 href={ROUTES.RECRUITER_SERVICES}
                 className="mt-4 inline-flex h-9 items-center justify-center rounded-md border border-[#00b14f]/35 bg-[#f0fdf5] px-4 text-xs font-bold text-[#008f3f] transition hover:bg-[#dcfce7]"
               >
-                Khám phá gói dịch vụ
+                Explore service packages
               </Link>
             )}
           </div>

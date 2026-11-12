@@ -188,8 +188,8 @@ function buildApplication(seed: ApplicationSeed): RecruiterApplication {
       aiProcessedCandidateData: true,
       requirementMatches: buildRequirementMatches(job?.requirements, seed.matchedEvidence),
       questionsToAsk: seed.askMoreAbout ?? [
-        'Bạn có thể chia sẻ sâu hơn về dự án thực tế gần nhất?',
-        'Cách bạn xử lý bài toán hiệu năng cao trong dự án là gì?',
+        'Can you share more detail about your most recent real-world project?',
+        'How do you approach high-performance problems in a project?',
       ],
     },
     internalNotes: (seed.internalNotes ?? []).map((content, index) => ({

@@ -1,14 +1,14 @@
 import type { RecruiterOrderStatus } from '@/types/recruiter-order';
 
 export const ORDER_STATUS_LABEL: Record<RecruiterOrderStatus, string> = {
-  PENDING_PAYMENT: 'Chờ thanh toán',
-  UNDERPAID: 'Thiếu tiền',
-  PAID: 'Đã thanh toán',
-  FULFILLED: 'Đã kích hoạt',
-  EXPIRED: 'Hết hạn',
-  CANCELLED: 'Đã huỷ',
-  REFUND_REQUESTED: 'Chờ hoàn tiền',
-  REFUNDED: 'Đã hoàn tiền',
+  PENDING_PAYMENT: 'Awaiting payment',
+  UNDERPAID: 'Underpaid',
+  PAID: 'Paid',
+  FULFILLED: 'Activated',
+  EXPIRED: 'Expired',
+  CANCELLED: 'Cancelled',
+  REFUND_REQUESTED: 'Refund pending',
+  REFUNDED: 'Refunded',
 };
 
 export const ORDER_STATUS_STYLE: Record<RecruiterOrderStatus, string> = {

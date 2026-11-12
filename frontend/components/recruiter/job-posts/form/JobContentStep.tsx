@@ -19,21 +19,21 @@ type ContentField = 'description' | 'requirements' | 'benefits';
 const TABS: Array<{ field: ContentField; label: string; hint: string; placeholder: string }> = [
   {
     field: 'description',
-    label: 'Mô tả công việc',
-    hint: 'Tối thiểu 50 ký tự',
-    placeholder: 'Nhiệm vụ chính, sản phẩm và đội nhóm mà ứng viên sẽ tham gia…',
+    label: 'Job description',
+    hint: 'Minimum 50 characters',
+    placeholder: 'Main responsibilities, the product and the team the candidate will join…',
   },
   {
     field: 'requirements',
-    label: 'Yêu cầu',
-    hint: 'Tối thiểu 20 ký tự',
-    placeholder: 'Kinh nghiệm, kỹ năng và bằng cấp cần có…',
+    label: 'Requirements',
+    hint: 'Minimum 20 characters',
+    placeholder: 'Required experience, skills and qualifications…',
   },
   {
     field: 'benefits',
-    label: 'Phúc lợi',
-    hint: 'Không bắt buộc',
-    placeholder: 'Lương thưởng, bảo hiểm, môi trường làm việc…',
+    label: 'Benefits',
+    hint: 'Optional',
+    placeholder: 'Compensation, insurance, work environment…',
   },
 ];
 
@@ -61,10 +61,10 @@ export default function JobContentStep() {
 
   return (
     <div className="space-y-5">
-      <FormSection title="Nội dung tin">
+      <FormSection title="Post content">
         <div className="border-outline-variant bg-surface-container-low flex flex-wrap items-center justify-between gap-2 rounded-lg border px-3.5 py-2.5">
           <p className="text-on-surface-variant text-xs font-medium">
-            Cần soạn nhanh Mô tả, Yêu cầu và Quyền lợi theo chuẩn IT?
+            Need to quickly draft the Description, Requirements and Benefits to IT standards?
           </p>
           <Button
             type="button"
@@ -73,11 +73,11 @@ export default function JobContentStep() {
             leftIcon={<Sparkles className="h-3.5 w-3.5" />}
             onClick={() => setAiModalOpen(true)}
           >
-            Tạo JD bằng AI
+            Generate JD with AI
           </Button>
         </div>
 
-        <div role="tablist" aria-label="Nội dung tin tuyển dụng" className="border-outline-variant flex gap-1 border-b">
+        <div role="tablist" aria-label="Job post content" className="border-outline-variant flex gap-1 border-b">
           {TABS.map((item) => {
             const hasError = Boolean(errors[item.field]);
             const filled = watch(item.field).trim().length > 0;
@@ -127,7 +127,7 @@ export default function JobContentStep() {
         />
       </FormSection>
 
-      <FormSection title="Phúc lợi nổi bật" description="Hiển thị dạng thẻ trên trang chi tiết việc làm.">
+      <FormSection title="Featured benefits" description="Shown as tags on the job detail page.">
         <Controller
           control={control}
           name="benefitTags"
@@ -135,11 +135,11 @@ export default function JobContentStep() {
         />
       </FormSection>
 
-      <FormSection title="Quy trình tuyển dụng" description="Ứng viên biết trước các vòng sẽ trải qua.">
+      <FormSection title="Hiring process" description="Candidates know the rounds ahead of time.">
         <HiringStepsEditor />
       </FormSection>
 
-      <FormSection title="Câu hỏi sàng lọc">
+      <FormSection title="Screening questions">
         <ScreeningQuestionsEditor />
       </FormSection>
 
@@ -160,7 +160,7 @@ export default function JobContentStep() {
           applyField('requirements', result.requirements);
           applyField('benefits', result.benefits);
           setAiModalOpen(false);
-          toast.success('Đã điền nội dung JD từ AI.');
+          toast.success('JD content filled in from AI.');
         }}
       />
     </div>

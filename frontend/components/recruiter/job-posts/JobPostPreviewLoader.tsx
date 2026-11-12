@@ -29,7 +29,7 @@ export default function JobPostPreviewLoader({ jobId }: JobPostPreviewLoaderProp
       <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center gap-3 text-center">
         <p className="text-on-surface text-sm font-semibold">{getErrorMessage(error)}</p>
         <Link href={ROUTES.RECRUITER_JOBS}>
-          <Button variant="outline">Về danh sách tin</Button>
+          <Button variant="outline">Back to job posts</Button>
         </Link>
       </div>
     );

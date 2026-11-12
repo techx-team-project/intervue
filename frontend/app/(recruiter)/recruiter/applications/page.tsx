@@ -6,8 +6,8 @@ export default function RecruiterApplicationsPage() {
   return (
     <>
       <PageHeader
-        title="Hồ sơ ứng tuyển"
-        description="Xem, đánh giá và cập nhật trạng thái hồ sơ ứng viên nộp vào công ty bạn."
+        title="Applications"
+        description="Review, evaluate and update the status of applications submitted to your company."
       />
       <Suspense>
         <ReviewApplicationsView />

@@ -20,8 +20,8 @@ export default function ServicePackageBadges({ badge, bonusCredits = 0 }: Servic
 
   const tooltipText =
     bonusCredits > 0
-      ? `Ưu đãi đặc biệt: tặng thêm ${bonusCredits.toLocaleString('vi-VN')} credits khi kích hoạt gói.`
-      : 'Gói đang được áp dụng chính sách ưu đãi đặc biệt từ InterVue.';
+      ? `Special offer: get ${bonusCredits.toLocaleString('vi-VN')} bonus credits when you activate the package.`
+      : 'This package has a special InterVue promotion applied.';
 
   return (
     <span className="group relative inline-flex items-center">

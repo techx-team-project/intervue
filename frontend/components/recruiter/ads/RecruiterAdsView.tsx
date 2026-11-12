@@ -19,9 +19,9 @@ import { useState } from 'react';
 const WEEKS_AHEAD = 12;
 
 const CREATIVE_LABEL: Record<string, string> = {
-  PENDING: 'Chờ duyệt',
-  APPROVED: 'Đã duyệt',
-  REJECTED: 'Bị từ chối',
+  PENDING: 'Pending review',
+  APPROVED: 'Approved',
+  REJECTED: 'Rejected',
 };
 
 export default function RecruiterAdsView() {
@@ -76,7 +76,7 @@ export default function RecruiterAdsView() {
       const packageId = await resolvePackageId(slot.packageSlug);
       await recruiterCartApi.addItem(packageId, selected.length, [...selected].sort());
       setSelected([]);
-      setNotice('Đã thêm vào giỏ. Vào giỏ hàng để thanh toán và giữ chỗ các tuần này.');
+      setNotice('Added to cart. Go to your cart to pay and reserve these weeks.');
     } catch (cause) {
       setError(getErrorMessage(cause));
     } finally {
@@ -89,11 +89,11 @@ export default function RecruiterAdsView() {
       <div>
         <h1 className="text-on-surface flex items-center gap-2 text-xl font-bold">
           <Megaphone className="text-primary h-5 w-5" aria-hidden />
-          Quảng cáo banner
+          Banner ads
         </h1>
         <p className="text-on-surface-variant mt-1 text-sm">
-          Mỗi vị trí chỉ bán cho <strong>một doanh nghiệp mỗi tuần</strong>. Chỗ được giữ ngay khi bạn đặt đơn và chỉ
-          thành của bạn khi đơn được thanh toán.
+          Each slot is sold to <strong>one company per week</strong>. The slot is held as soon as you place an order and
+          becomes yours once the order is paid.
         </p>
       </div>
 
@@ -102,7 +102,7 @@ export default function RecruiterAdsView() {
           <Check className="text-primary h-4 w-4 shrink-0" aria-hidden />
           {notice}
           <Link href={ROUTES.RECRUITER_CART} className="ml-auto underline">
-            Tới giỏ hàng
+            Go to cart
           </Link>
         </div>
       )}
@@ -129,7 +129,7 @@ export default function RecruiterAdsView() {
           >
             {item.name}
             <span className="text-on-surface-variant block text-xs font-normal">
-              {item.width}×{item.height} · {formatServicePrice(item.pricePerWeek, 'VND')}/tuần
+              {item.width}×{item.height} · {formatServicePrice(item.pricePerWeek, 'VND')}/week
             </span>
           </button>
         ))}
@@ -148,7 +148,7 @@ export default function RecruiterAdsView() {
                 <p className="text-on-surface-variant mt-0.5 text-xs">{slot.description}</p>
               </div>
               <p className="text-on-surface text-sm font-semibold">
-                {formatServicePrice(slot.pricePerWeek, 'VND')} / tuần
+                {formatServicePrice(slot.pricePerWeek, 'VND')} / week
               </p>
             </div>
 
@@ -158,11 +158,11 @@ export default function RecruiterAdsView() {
 
             <div className="border-outline-variant mt-5 flex flex-wrap items-center justify-between gap-3 border-t pt-4">
               <p className="text-on-surface-variant text-sm">
-                Đã chọn <strong className="text-on-surface">{selected.length}</strong> tuần ·{' '}
-                <strong className="text-on-surface">{formatServicePrice(total, 'VND')}</strong> chưa gồm VAT
+                Selected <strong className="text-on-surface">{selected.length}</strong> weeks ·{' '}
+                <strong className="text-on-surface">{formatServicePrice(total, 'VND')}</strong> excl. VAT
               </p>
               <Button disabled={selected.length === 0} isLoading={isAdding} onClick={addToCart}>
-                Thêm vào giỏ
+                Add to cart
               </Button>
             </div>
           </>
@@ -170,12 +170,12 @@ export default function RecruiterAdsView() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-on-surface text-base font-bold">Lịch chạy của bạn</h2>
+        <h2 className="text-on-surface text-base font-bold">Your schedule</h2>
         {bookings.isPending ? (
           <Spinner />
         ) : (bookings.data ?? []).length === 0 ? (
           <div className="border-outline-variant text-on-surface-variant rounded-xl border border-dashed px-4 py-10 text-center text-sm">
-            Bạn chưa đặt tuần banner nào.
+            You have not booked any banner weeks yet.
           </div>
         ) : (
           <ul className="space-y-3">
@@ -187,19 +187,19 @@ export default function RecruiterAdsView() {
                       {booking.slotName}
                       {booking.running && (
                         <span className="bg-primary-light text-primary-deep ml-2 rounded-full px-2 py-0.5 text-xs font-bold">
-                          Đang chạy
+                          Running
                         </span>
                       )}
                     </p>
                     <p className="text-on-surface-variant text-xs">
                       {formatDate(booking.weekStart)} → {formatDate(booking.weekEnd)} ·{' '}
-                      {booking.status === 'RESERVED' ? 'Đang giữ chỗ, chờ thanh toán' : 'Đã thanh toán'}
+                      {booking.status === 'RESERVED' ? 'Reserved, awaiting payment' : 'Paid'}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
                     <p className="text-on-surface-variant text-xs">
-                      {booking.impressions.toLocaleString('vi-VN')} lượt xem · {booking.clicks.toLocaleString('vi-VN')}{' '}
-                      lượt bấm
+                      {booking.impressions.toLocaleString('vi-VN')} views · {booking.clicks.toLocaleString('vi-VN')}{' '}
+                      clicks
                     </p>
                     {booking.status === 'BOOKED' && (
                       <Button
@@ -208,7 +208,7 @@ export default function RecruiterAdsView() {
                         leftIcon={<ImageUp className="h-4 w-4" aria-hidden />}
                         onClick={() => setTarget(booking)}
                       >
-                        {booking.creativeStatus ? 'Đổi ảnh' : 'Tải ảnh'}
+                        {booking.creativeStatus ? 'Change image' : 'Upload image'}
                       </Button>
                     )}
                   </div>
@@ -216,7 +216,7 @@ export default function RecruiterAdsView() {
 
                 {booking.creativeStatus && (
                   <p className="text-on-surface-variant mt-2 text-xs">
-                    Ảnh: {CREATIVE_LABEL[booking.creativeStatus]}
+                    Image: {CREATIVE_LABEL[booking.creativeStatus]}
                     {booking.rejectionReason && <span className="text-rose-600"> — {booking.rejectionReason}</span>}
                   </p>
                 )}
@@ -232,7 +232,7 @@ export default function RecruiterAdsView() {
 }
 
 async function resolvePackageId(slug: string | null): Promise<number> {
-  if (!slug) throw new Error('Vị trí này chưa gắn gói dịch vụ, vui lòng liên hệ InterVue.');
+  if (!slug) throw new Error('This slot is not linked to a service package, please contact InterVue.');
   const { servicePackageApi } = await import('@/apiRequest/service-package');
   const detail = await servicePackageApi.getBySlug(slug);
   return detail.id;

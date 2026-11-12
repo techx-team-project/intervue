@@ -124,7 +124,7 @@ export default function JobPostsListView() {
         <div className="flex flex-col items-center gap-3 rounded-xl border border-rose-200 bg-rose-50 px-6 py-12 text-center">
           <p className="text-sm font-semibold text-rose-700">{getErrorMessage(listQuery.error)}</p>
           <Button variant="outline" size="sm" onClick={() => listQuery.refetch()}>
-            Thử lại
+            Try again
           </Button>
         </div>
       ) : jobs.length === 0 ? (
@@ -134,9 +134,9 @@ export default function JobPostsListView() {
               <div className="bg-surface-container-high text-outline flex h-14 w-14 items-center justify-center rounded-xl">
                 <SearchX className="h-7 w-7" />
               </div>
-              <h3 className="text-navy text-base font-bold">Không tìm thấy tin phù hợp</h3>
+              <h3 className="text-navy text-base font-bold">No matching job posts found</h3>
               <p className="text-on-surface-variant max-w-md text-xs">
-                Thử đổi từ khóa tìm kiếm hoặc chuyển sang nhóm khác.
+                Try a different keyword or switch to another group.
               </p>
               <Button
                 variant="outline"
@@ -147,7 +147,7 @@ export default function JobPostsListView() {
                   setPage(1);
                 }}
               >
-                Xóa bộ lọc
+                Clear filters
               </Button>
             </>
           ) : (
@@ -155,12 +155,12 @@ export default function JobPostsListView() {
               <div className="bg-primary-light text-primary flex h-14 w-14 items-center justify-center rounded-xl">
                 <FilePlus className="h-7 w-7" />
               </div>
-              <h3 className="text-navy text-base font-bold">Bạn chưa có tin tuyển dụng nào</h3>
+              <h3 className="text-navy text-base font-bold">You have no job posts yet</h3>
               <p className="text-on-surface-variant max-w-md text-xs">
-                Đăng tin đầu tiên để bắt đầu tiếp cận ứng viên IT chất lượng trên InterVue.
+                Post your first job to start reaching quality IT candidates on InterVue.
               </p>
               <Link href={ROUTES.RECRUITER_JOBS_CREATE} className="mt-2">
-                <Button leftIcon={<Plus className="h-4 w-4" />}>Đăng tin</Button>
+                <Button leftIcon={<Plus className="h-4 w-4" />}>Post a job</Button>
               </Link>
             </>
           )}
@@ -200,8 +200,8 @@ export default function JobPostsListView() {
         onPauseSelected={() => runBulk(actions.bulkPauseJobs)}
         onCloseSelected={() =>
           setConfirm({
-            title: 'Đóng các tin đã chọn?',
-            message: `${selectedIds.size} tin sẽ ngừng nhận hồ sơ. Bạn có thể gia hạn để đăng lại sau.`,
+            title: 'Close the selected job posts?',
+            message: `${selectedIds.size} job post(s) will stop accepting applications. You can renew them later to repost.`,
             run: () => runBulk(actions.bulkCloseJobs),
           })
         }
@@ -221,10 +221,10 @@ export default function JobPostsListView() {
         footer={
           <div className="flex justify-end gap-2">
             <Button variant="ghost" onClick={() => setConfirm(null)}>
-              Hủy
+              Cancel
             </Button>
             <Button variant="danger" onClick={handleConfirm}>
-              Xác nhận
+              Confirm
             </Button>
           </div>
         }

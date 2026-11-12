@@ -59,7 +59,7 @@ export default function SkillPicker({ value, onChange, error }: SkillPickerProps
     <div ref={containerRef} className="w-full space-y-1.5">
       <div className="flex items-baseline justify-between">
         <label htmlFor={`${listId}-input`} className="text-on-surface block text-sm font-semibold">
-          Kỹ năng yêu cầu
+          Required skills
         </label>
         <span className="text-outline text-xs">
           {value.length}/{JOB_MAX_SKILLS}
@@ -77,7 +77,7 @@ export default function SkillPicker({ value, onChange, error }: SkillPickerProps
               <button
                 type="button"
                 onClick={() => removeSkill(skill.id)}
-                aria-label={`Bỏ kỹ năng ${skill.name}`}
+                aria-label={`Remove skill ${skill.name}`}
                 className="flex h-5 w-5 items-center justify-center rounded-full hover:bg-emerald-100"
               >
                 <X className="h-3 w-3" />
@@ -98,7 +98,7 @@ export default function SkillPicker({ value, onChange, error }: SkillPickerProps
           autoComplete="off"
           value={query}
           disabled={isFull}
-          placeholder={isFull ? 'Đã đạt số kỹ năng tối đa' : 'Gõ để tìm kỹ năng, ví dụ: Java, React…'}
+          placeholder={isFull ? 'Maximum number of skills reached' : 'Type to search skills, e.g. Java, React…'}
           onChange={(event) => {
             setQuery(event.target.value);
             setOpen(true);
@@ -120,7 +120,7 @@ export default function SkillPicker({ value, onChange, error }: SkillPickerProps
           >
             {options.length === 0 ? (
               <li className="text-on-surface-variant px-3.5 py-3 text-sm">
-                {isFetching ? 'Đang tìm…' : 'Không có kỹ năng phù hợp.'}
+                {isFetching ? 'Searching…' : 'No matching skills.'}
               </li>
             ) : (
               options.map((skill) => (
