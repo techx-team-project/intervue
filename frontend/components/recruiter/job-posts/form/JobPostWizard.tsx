@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import JobBasicsStep from './JobBasicsStep';
 import JobDemoTools from './JobDemoTools';
 import JobContentStep from './JobContentStep';
+import JobFormSidebar from './JobFormSidebar';
 import JobFormStepper, { JOB_FORM_STEPS } from './JobFormStepper';
 import JobReviewStep from './JobReviewStep';
 
@@ -27,17 +28,20 @@ const STEP_FIELDS: Array<Array<Path<JobPostFormData>>> = [
   [
     'title',
     'level',
+    'jobRole',
     'contractType',
     'workingArrangement',
     'city',
     'address',
     'salaryMin',
     'salaryMax',
+    'experienceMinYears',
+    'experienceMaxYears',
     'skills',
     'deadline',
     'openings',
   ],
-  ['description', 'requirements', 'benefits', 'screeningQuestions'],
+  ['description', 'requirements', 'benefits', 'benefitTags', 'hiringSteps', 'screeningQuestions'],
   [],
 ];
 
@@ -46,6 +50,9 @@ const SERVER_FIELD_MAP: Record<string, Path<JobPostFormData>> = {
   'location.address': 'address',
   'salary.min': 'salaryMin',
   'salary.max': 'salaryMax',
+  'salary.basis': 'salaryBasis',
+  'experience.minYears': 'experienceMinYears',
+  'experience.maxYears': 'experienceMaxYears',
   skillIds: 'skills',
 };
 
@@ -55,7 +62,8 @@ function normaliseServerField(field: string): string {
 }
 
 function stepOfField(field: string): number {
-  if (field.startsWith('screeningQuestions')) return 1;
+  if (field.startsWith('screeningQuestions') || field.startsWith('hiringSteps') || field.startsWith('benefitTags'))
+    return 1;
   const index = STEP_FIELDS.findIndex((fields) => fields.includes(field as Path<JobPostFormData>));
   return index === -1 ? 0 : index;
 }
@@ -155,50 +163,55 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(handleValid, handleInvalid)} className="mx-auto max-w-3xl space-y-5" noValidate>
-        {process.env.NODE_ENV !== 'production' && <JobDemoTools />}
+      <form onSubmit={form.handleSubmit(handleValid, handleInvalid)} className="mx-auto max-w-6xl" noValidate>
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_17rem]">
+          <div className="min-w-0 space-y-5">
+            {process.env.NODE_ENV !== 'production' && <JobDemoTools />}
 
-        <JobFormStepper current={step} reached={reached} onSelect={setStep} />
+            <JobFormStepper current={step} reached={reached} onSelect={setStep} />
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:p-6">
-          <h2 className="mb-4 text-base font-bold text-slate-900">{JOB_FORM_STEPS[step]}</h2>
-          {step === 0 && <JobBasicsStep />}
-          {step === 1 && <JobContentStep />}
-          {step === LAST_STEP && <JobReviewStep onEdit={setStep} />}
-        </div>
+            {step === 0 && <JobBasicsStep />}
+            {step === 1 && <JobContentStep />}
+            {step === LAST_STEP && <JobReviewStep onEdit={setStep} />}
 
-        <div className="sticky bottom-0 -mx-1 flex items-center justify-between gap-3 border-t border-slate-200 bg-white/90 px-1 py-3 backdrop-blur">
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={step === 0 || busy}
-            leftIcon={<ArrowLeft className="h-4 w-4" />}
-            onClick={() => setStep(step - 1)}
-          >
-            Quay lại
-          </Button>
-
-          <div className="flex items-center gap-2">
-            {!isLive && (
+            <div className="border-outline-variant sticky bottom-0 -mx-1 flex items-center justify-between gap-3 border-t bg-white/90 px-1 py-3 backdrop-blur">
               <Button
                 type="button"
-                variant="outline"
-                disabled={busy}
-                leftIcon={<Save className="h-4 w-4" />}
-                onClick={handleSaveDraft}
+                variant="ghost"
+                disabled={step === 0 || busy}
+                leftIcon={<ArrowLeft className="h-4 w-4" />}
+                onClick={() => setStep(step - 1)}
               >
-                Lưu nháp
+                Quay lại
               </Button>
-            )}
-            {step < LAST_STEP ? (
-              <Button type="button" rightIcon={<ArrowRight className="h-4 w-4" />} onClick={handleNext}>
-                Tiếp tục
-              </Button>
-            ) : (
-              <Button type="submit" isLoading={busy} leftIcon={<SendHorizontal className="h-4 w-4" />}>
-                {isLive ? 'Lưu thay đổi' : 'Đăng tin'}
-              </Button>
-            )}
+
+              <div className="flex items-center gap-2">
+                {!isLive && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={busy}
+                    leftIcon={<Save className="h-4 w-4" />}
+                    onClick={handleSaveDraft}
+                  >
+                    Lưu nháp
+                  </Button>
+                )}
+                {step < LAST_STEP ? (
+                  <Button type="button" rightIcon={<ArrowRight className="h-4 w-4" />} onClick={handleNext}>
+                    Tiếp tục
+                  </Button>
+                ) : (
+                  <Button type="submit" isLoading={busy} leftIcon={<SendHorizontal className="h-4 w-4" />}>
+                    {isLive ? 'Lưu thay đổi' : 'Đăng tin'}
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="hidden lg:block">
+            <JobFormSidebar />
           </div>
         </div>
       </form>

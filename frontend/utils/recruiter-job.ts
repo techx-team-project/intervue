@@ -35,6 +35,9 @@ export function emptyFormValues(): JobPostFormData {
   return {
     title: '',
     level: 'JUNIOR',
+    jobRole: undefined,
+    experienceMinYears: undefined,
+    experienceMaxYears: undefined,
     contractType: 'FULL_TIME',
     workingArrangement: 'HYBRID',
     city: '',
@@ -45,10 +48,13 @@ export function emptyFormValues(): JobPostFormData {
     salaryMin: undefined,
     salaryMax: undefined,
     currency: 'VND',
+    salaryBasis: 'GROSS',
     skills: [],
     description: '',
     requirements: '',
     benefits: '',
+    benefitTags: [],
+    hiringSteps: [],
     deadline: defaultDeadline(),
     openings: 1,
     screeningQuestions: [],
@@ -61,6 +67,9 @@ export function toFormValues(job: RecruiterJobResource): JobPostFormData {
   return {
     title: job.title,
     level: job.level ?? defaults.level,
+    jobRole: job.jobRole,
+    experienceMinYears: job.experience?.minYears ?? undefined,
+    experienceMaxYears: job.experience?.maxYears ?? undefined,
     contractType: job.contractType ?? defaults.contractType,
     workingArrangement: job.workingArrangement ?? defaults.workingArrangement,
     city: job.location.city ?? '',
@@ -71,10 +80,13 @@ export function toFormValues(job: RecruiterJobResource): JobPostFormData {
     salaryMin: toDisplayAmount(job.salary.min, currency),
     salaryMax: toDisplayAmount(job.salary.max, currency),
     currency,
+    salaryBasis: job.salary.basis ?? defaults.salaryBasis,
     skills: job.skills.map((skill) => ({ id: skill.id, name: skill.name })),
     description: job.description ?? '',
     requirements: job.requirements ?? '',
     benefits: job.benefits ?? '',
+    benefitTags: job.benefitTags,
+    hiringSteps: job.hiringSteps.map((title) => ({ title })),
     deadline: job.deadline ?? defaults.deadline,
     openings: job.openings,
     screeningQuestions: job.screeningQuestions.map((question) => ({
@@ -91,6 +103,11 @@ export function toSaveRequest(values: JobPostFormData): SaveJobRequest {
   return {
     title: values.title.trim(),
     level: values.level,
+    jobRole: values.jobRole,
+    experience:
+      values.experienceMinYears === undefined && values.experienceMaxYears === undefined
+        ? undefined
+        : { minYears: values.experienceMinYears, maxYears: values.experienceMaxYears },
     contractType: values.contractType,
     workingArrangement: values.workingArrangement,
     location: {
@@ -104,11 +121,14 @@ export function toSaveRequest(values: JobPostFormData): SaveJobRequest {
       min: negotiable ? undefined : toStoredAmount(values.salaryMin, values.currency),
       max: negotiable ? undefined : toStoredAmount(values.salaryMax, values.currency),
       currency: negotiable ? undefined : values.currency,
+      basis: negotiable ? undefined : values.salaryBasis,
     },
     skillIds: values.skills.map((skill) => skill.id),
     description: values.description.trim(),
     requirements: values.requirements.trim(),
     benefits: values.benefits.trim(),
+    benefitTags: values.benefitTags,
+    hiringSteps: values.hiringSteps.map((step) => step.title.trim()),
     deadline: values.deadline || undefined,
     openings: values.openings,
     screeningQuestions: values.screeningQuestions.map((question) => ({

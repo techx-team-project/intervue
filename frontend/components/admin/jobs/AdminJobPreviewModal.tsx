@@ -4,7 +4,13 @@ import Spinner from '@/components/common/Spinner';
 import JobPostStatusBadge from '@/components/recruiter/job-posts/JobPostStatusBadge';
 import { Button } from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
-import { JOB_ARRANGEMENT_LABELS, JOB_CONTRACT_LABELS, JOB_LEVEL_LABELS } from '@/constants/recruiter-job';
+import {
+  JOB_ARRANGEMENT_LABELS,
+  JOB_BENEFIT_TAG_LABELS,
+  JOB_CONTRACT_LABELS,
+  JOB_LEVEL_LABELS,
+  JOB_ROLE_LABELS,
+} from '@/constants/recruiter-job';
 import { useAdminJob } from '@/hooks/useAdminJobs';
 import { getErrorMessage } from '@/utils/error';
 import { formatSalary } from '@/utils/public-company';
@@ -53,6 +59,7 @@ export default function AdminJobPreviewModal({ jobId, onClose }: AdminJobPreview
             <JobPostStatusBadge status={job.status} />
             <span className="text-on-surface font-semibold">{job.companyName}</span>
             {job.location.city && <span>· {job.location.city}</span>}
+            {job.jobRole && <span>· {JOB_ROLE_LABELS[job.jobRole]}</span>}
             {job.level && <span>· {JOB_LEVEL_LABELS[job.level]}</span>}
             {job.contractType && <span>· {JOB_CONTRACT_LABELS[job.contractType]}</span>}
             {job.workingArrangement && <span>· {JOB_ARRANGEMENT_LABELS[job.workingArrangement]}</span>}
@@ -81,6 +88,12 @@ export default function AdminJobPreviewModal({ jobId, onClose }: AdminJobPreview
           <Block title="Description" text={job.description} />
           <Block title="Requirements" text={job.requirements} />
           <Block title="Benefits" text={job.benefits} />
+          {job.benefitTags.length > 0 && (
+            <p className="text-on-surface-variant text-xs">
+              {job.benefitTags.map((tag) => JOB_BENEFIT_TAG_LABELS[tag]).join(' · ')}
+            </p>
+          )}
+          {job.hiringSteps.length > 0 && <Block title="Hiring process" text={job.hiringSteps.join(' → ')} />}
         </div>
       )}
     </Modal>

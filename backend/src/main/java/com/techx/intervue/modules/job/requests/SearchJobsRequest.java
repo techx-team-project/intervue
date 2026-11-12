@@ -2,6 +2,7 @@ package com.techx.intervue.modules.job.requests;
 
 import com.techx.intervue.modules.job.enums.ContractType;
 import com.techx.intervue.modules.job.enums.JobLevel;
+import com.techx.intervue.modules.job.enums.JobRole;
 import com.techx.intervue.modules.job.enums.JobSort;
 import com.techx.intervue.modules.job.enums.SalaryCurrency;
 import com.techx.intervue.modules.job.enums.WorkingArrangement;
@@ -23,7 +24,9 @@ public record SearchJobsRequest(
         @PositiveOrZero Long salaryFrom,
         SalaryCurrency currency,
         @Min(1) @Max(90) Integer postedWithinDays,
-        JobSort sort) {
+        JobSort sort,
+        JobRole jobRole,
+        @Min(0) @Max(30) Integer experienceYears) {
 
     public SearchJobsRequest(
             String q,
@@ -45,6 +48,8 @@ public record SearchJobsRequest(
                 skillIds,
                 salaryFrom,
                 currency,
+                null,
+                null,
                 null,
                 null);
     }

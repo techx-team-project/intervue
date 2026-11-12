@@ -14,7 +14,9 @@ import JobApplySteps from './detail/JobApplySteps';
 import JobCompensationSection from './detail/JobCompensationSection';
 import JobDetailHeader from './detail/JobDetailHeader';
 import JobDetailNav, { type JobDetailNavItem } from './detail/JobDetailNav';
+import JobBenefitTags from './detail/JobBenefitTags';
 import JobDetailSection from './detail/JobDetailSection';
+import JobHiringProcessSection from './detail/JobHiringProcessSection';
 import JobDetailSidebar from './detail/JobDetailSidebar';
 import JobLocationSection from './detail/JobLocationSection';
 import JobOverviewSection from './detail/JobOverviewSection';
@@ -41,7 +43,8 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
     description.length > 0 && { id: 'description', label: 'Description' },
     (requirements.length > 0 || job.skills.length > 0) && { id: 'requirements', label: 'Requirements' },
     { id: 'compensation', label: 'Compensation' },
-    benefits.length > 0 && { id: 'benefits', label: 'Benefits' },
+    (benefits.length > 0 || job.benefitTags.length > 0) && { id: 'benefits', label: 'Benefits' },
+    job.hiringSteps.length > 0 && { id: 'process', label: 'Hiring process' },
     { id: 'location', label: 'Location & schedule' },
     hasRelated && { id: 'related', label: 'Related jobs' },
   ].filter((item): item is JobDetailNavItem => Boolean(item));
@@ -77,8 +80,11 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
             )}
           </JobDetailSection>
           <JobCompensationSection job={job} similar={related.similar} index="04" />
-          <JobDetailSection id="benefits" title="Benefits" index="05" lines={benefits} />
-          <JobLocationSection job={job} index="06" />
+          <JobDetailSection id="benefits" title="Benefits" index="05" lines={benefits}>
+            <JobBenefitTags tags={job.benefitTags} hasLines={benefits.length > 0} />
+          </JobDetailSection>
+          <JobHiringProcessSection steps={job.hiringSteps} index="06" />
+          <JobLocationSection job={job} index="07" />
           <JobApplySteps job={job} />
           <RelatedJobsSection
             job={job}

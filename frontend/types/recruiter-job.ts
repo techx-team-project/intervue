@@ -8,6 +8,34 @@ export type JobLevel = 'INTERN' | 'JUNIOR' | 'MID' | 'SENIOR' | 'LEAD';
 
 export type SalaryCurrency = 'VND' | 'USD';
 
+export type SalaryBasis = 'GROSS' | 'NET';
+
+export type JobRole =
+  | 'BACKEND'
+  | 'FRONTEND'
+  | 'FULLSTACK'
+  | 'MOBILE'
+  | 'DEVOPS'
+  | 'QA'
+  | 'DATA_AI'
+  | 'BA'
+  | 'PM'
+  | 'UIUX'
+  | 'SECURITY'
+  | 'OTHER';
+
+export type JobBenefitTag =
+  | 'HEALTH_INSURANCE'
+  | 'BONUS_13TH_MONTH'
+  | 'PERFORMANCE_BONUS'
+  | 'LAPTOP'
+  | 'TRAINING'
+  | 'TEAM_BUILDING'
+  | 'FLEXIBLE_HOURS'
+  | 'REMOTE_DAYS'
+  | 'ANNUAL_LEAVE'
+  | 'MEALS';
+
 export type ScreeningQuestionType = 'CHOICE' | 'SHORT_TEXT';
 
 export type SkillGroup = 'CORE' | 'AI_DATA' | 'TOOLS_DEVOPS' | 'SOFT_SKILLS';
@@ -17,6 +45,12 @@ export interface JobSalary {
   min?: number | null;
   max?: number | null;
   currency?: SalaryCurrency | null;
+  basis?: SalaryBasis | null;
+}
+
+export interface JobExperience {
+  minYears?: number | null;
+  maxYears?: number | null;
 }
 
 export interface JobLocation {
@@ -71,6 +105,8 @@ export interface RecruiterJobResource {
   status: JobStatus;
   companyName: string;
   level?: JobLevel;
+  jobRole?: JobRole;
+  experience?: JobExperience;
   contractType?: ContractType;
   workingArrangement?: WorkingArrangement;
   location: JobLocation;
@@ -79,6 +115,8 @@ export interface RecruiterJobResource {
   description?: string;
   requirements?: string;
   benefits?: string;
+  benefitTags: JobBenefitTag[];
+  hiringSteps: string[];
   screeningQuestions: ScreeningQuestionResource[];
   openings: number;
   deadline?: string;
@@ -104,14 +142,18 @@ export interface RecruiterJobCounts {
 export interface SaveJobRequest {
   title: string;
   level?: JobLevel;
+  jobRole?: JobRole;
+  experience?: { minYears?: number; maxYears?: number };
   contractType?: ContractType;
   workingArrangement?: WorkingArrangement;
   location: { city?: string; address?: string; latitude?: number; longitude?: number };
-  salary: { negotiable: boolean; min?: number; max?: number; currency?: SalaryCurrency };
+  salary: { negotiable: boolean; min?: number; max?: number; currency?: SalaryCurrency; basis?: SalaryBasis };
   skillIds: number[];
   description?: string;
   requirements?: string;
   benefits?: string;
+  benefitTags?: JobBenefitTag[];
+  hiringSteps?: string[];
   deadline?: string;
   openings: number;
   screeningQuestions?: SaveScreeningQuestion[];

@@ -5,6 +5,7 @@ import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.entities.JobScreeningQuestion;
 import com.techx.intervue.modules.job.entities.Skill;
 import com.techx.intervue.modules.job.enums.ApplicationMode;
+import com.techx.intervue.modules.job.enums.JobBenefitTag;
 import com.techx.intervue.modules.job.enums.ScreeningQuestionType;
 import com.techx.intervue.modules.job.requests.SaveJobRequest;
 import com.techx.intervue.modules.job.resources.AdminJobSummaryResource;
@@ -20,8 +21,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +41,11 @@ public class JobMapper {
     public void apply(Job job, SaveJobRequest request, Set<Skill> skills) {
         job.setTitle(request.title().trim());
         job.setLevel(request.level());
+        job.setJobRole(request.jobRole());
+        job.setExperienceMinYears(
+                request.experience() == null ? null : request.experience().minYears());
+        job.setExperienceMaxYears(
+                request.experience() == null ? null : request.experience().maxYears());
         job.setContractType(request.contractType());
         job.setWorkingArrangement(request.workingArrangement());
         job.setCity(
@@ -51,6 +60,8 @@ public class JobMapper {
         job.setDescription(Texts.blankToNull(request.description()));
         job.setRequirements(Texts.blankToNull(request.requirements()));
         job.setBenefits(Texts.blankToNull(request.benefits()));
+        job.setBenefitTags(distinctTags(request.benefitTags()));
+        job.setHiringSteps(cleanSteps(request.hiringSteps()));
         job.setDeadline(request.deadline());
         job.setOpenings(request.openings() == null ? 1 : request.openings());
         job.setSkills(new HashSet<>(skills));
@@ -67,6 +78,8 @@ public class JobMapper {
                 .status(job.getStatus())
                 .companyName(job.getCompanyName())
                 .level(job.getLevel())
+                .jobRole(job.getJobRole())
+                .experience(toExperience(job))
                 .contractType(job.getContractType())
                 .workingArrangement(job.getWorkingArrangement())
                 .location(
@@ -80,6 +93,8 @@ public class JobMapper {
                 .description(job.getDescription())
                 .requirements(job.getRequirements())
                 .benefits(job.getBenefits())
+                .benefitTags(job.getBenefitTags())
+                .hiringSteps(job.getHiringSteps())
                 .applicationMode(job.getApplicationMode())
                 .screeningQuestions(toQuestions(job))
                 .openings(job.getOpenings())
@@ -145,6 +160,7 @@ public class JobMapper {
                 .title(job.getTitle())
                 .company(toPublicCompany(job, logoUrl, null))
                 .level(job.getLevel())
+                .jobRole(job.getJobRole())
                 .contractType(job.getContractType())
                 .workingArrangement(job.getWorkingArrangement())
                 .city(job.getCity())
@@ -165,6 +181,8 @@ public class JobMapper {
                 .title(job.getTitle())
                 .company(toPublicCompany(job, logoUrl, companyAddress))
                 .level(job.getLevel())
+                .jobRole(job.getJobRole())
+                .experience(toExperience(job))
                 .contractType(job.getContractType())
                 .workingArrangement(job.getWorkingArrangement())
                 .location(
@@ -178,6 +196,8 @@ public class JobMapper {
                 .description(job.getDescription())
                 .requirements(job.getRequirements())
                 .benefits(job.getBenefits())
+                .benefitTags(job.getBenefitTags())
+                .hiringSteps(job.getHiringSteps())
                 .openings(job.getOpenings())
                 .screening(toScreeningSummary(job))
                 .deadline(job.getDeadline())
@@ -300,12 +320,34 @@ public class JobMapper {
             job.setSalaryMin(null);
             job.setSalaryMax(null);
             job.setSalaryCurrency(null);
+            job.setSalaryBasis(null);
             return;
         }
         job.setSalaryNegotiable(salary.negotiable());
         job.setSalaryMin(salary.negotiable() ? null : salary.min());
         job.setSalaryMax(salary.negotiable() ? null : salary.max());
         job.setSalaryCurrency(salary.negotiable() ? null : salary.currency());
+        job.setSalaryBasis(salary.negotiable() ? null : salary.basis());
+    }
+
+    private List<JobBenefitTag> distinctTags(List<JobBenefitTag> tags) {
+        return tags == null ? new ArrayList<>() : new ArrayList<>(new LinkedHashSet<>(tags));
+    }
+
+    private List<String> cleanSteps(List<String> steps) {
+        return steps == null
+                ? new ArrayList<>()
+                : steps.stream()
+                        .map(Texts::blankToNull)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private JobResource.Experience toExperience(Job job) {
+        if (job.getExperienceMinYears() == null && job.getExperienceMaxYears() == null) {
+            return null;
+        }
+        return new JobResource.Experience(job.getExperienceMinYears(), job.getExperienceMaxYears());
     }
 
     private JobResource.Salary toSalary(Job job) {
@@ -313,6 +355,7 @@ public class JobMapper {
                 job.isSalaryNegotiable(),
                 job.getSalaryMin(),
                 job.getSalaryMax(),
-                job.getSalaryCurrency());
+                job.getSalaryCurrency(),
+                job.getSalaryBasis());
     }
 }

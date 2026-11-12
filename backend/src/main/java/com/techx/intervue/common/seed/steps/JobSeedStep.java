@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -62,7 +63,13 @@ public class JobSeedStep implements DemoSeedStep {
                     "hidden_at",
                     "hidden_by",
                     "created_at",
-                    "updated_at");
+                    "updated_at",
+                    "job_role",
+                    "experience_min_years",
+                    "experience_max_years",
+                    "salary_basis",
+                    "benefit_tags",
+                    "hiring_steps");
 
     private static final List<String> QUESTION_COLUMNS =
             List.of(
@@ -75,6 +82,24 @@ public class JobSeedStep implements DemoSeedStep {
                     "options",
                     "created_at",
                     "updated_at");
+
+    private static final List<String> BENEFIT_TAGS =
+            List.of(
+                    "HEALTH_INSURANCE",
+                    "BONUS_13TH_MONTH",
+                    "PERFORMANCE_BONUS",
+                    "LAPTOP",
+                    "TRAINING",
+                    "TEAM_BUILDING",
+                    "FLEXIBLE_HOURS",
+                    "REMOTE_DAYS",
+                    "ANNUAL_LEAVE",
+                    "MEALS");
+
+    private static final int BENEFIT_TAG_COUNT = 5;
+
+    private static final List<String> HIRING_STEPS =
+            List.of("CV screening", "Technical interview", "HR interview", "Offer");
 
     private static final List<String> WORKING_ARRANGEMENTS =
             List.of("ON_SITE", "HYBRID", "HYBRID", "REMOTE", "FLEXIBLE");
@@ -206,7 +231,13 @@ public class JobSeedStep implements DemoSeedStep {
             hidden ? random.now().minusDays(1) : null,
             hidden ? adminId : null,
             createdAt,
-            createdAt
+            createdAt,
+            spec.role(),
+            experienceMinYears(spec.level()),
+            experienceMaxYears(spec.level()),
+            negotiable ? null : (index % 4 == 0 ? "NET" : "GROSS"),
+            jsonArray(benefitTags(index)),
+            jsonArray(HIRING_STEPS)
         };
     }
 
@@ -227,6 +258,38 @@ public class JobSeedStep implements DemoSeedStep {
         return spec.title().contains("Part-time") ? "PART_TIME" : "FULL_TIME";
     }
 
+    private int experienceMinYears(String level) {
+        return switch (level) {
+            case "INTERN", "JUNIOR" -> 0;
+            case "MID" -> 2;
+            case "SENIOR" -> 4;
+            default -> 6;
+        };
+    }
+
+    private int experienceMaxYears(String level) {
+        return switch (level) {
+            case "INTERN" -> 1;
+            case "JUNIOR" -> 2;
+            case "MID" -> 4;
+            case "SENIOR" -> 8;
+            default -> 12;
+        };
+    }
+
+    private List<String> benefitTags(int index) {
+        int start = index % BENEFIT_TAGS.size();
+        return IntStream.range(0, BENEFIT_TAG_COUNT)
+                .mapToObj(offset -> BENEFIT_TAGS.get((start + offset) % BENEFIT_TAGS.size()))
+                .toList();
+    }
+
+    private String jsonArray(List<String> values) {
+        return values.stream()
+                .map(value -> "\"" + value + "\"")
+                .collect(Collectors.joining(",", "[", "]"));
+    }
+
     private long baseSalary(String level) {
         return switch (level) {
             case "INTERN" -> 5_000_000L;
@@ -243,12 +306,7 @@ public class JobSeedStep implements DemoSeedStep {
             int position,
             ScreeningQuestion question,
             LocalDateTime createdAt) {
-        String options =
-                question.options().isEmpty()
-                        ? null
-                        : question.options().stream()
-                                .map(option -> "\"" + option + "\"")
-                                .collect(Collectors.joining(",", "[", "]"));
+        String options = question.options().isEmpty() ? null : jsonArray(question.options());
         return new Object[] {
             id,
             jobId,

@@ -3,8 +3,11 @@ package com.techx.intervue.modules.job.entities;
 import com.techx.intervue.common.entities.BaseEntity;
 import com.techx.intervue.modules.job.enums.ApplicationMode;
 import com.techx.intervue.modules.job.enums.ContractType;
+import com.techx.intervue.modules.job.enums.JobBenefitTag;
 import com.techx.intervue.modules.job.enums.JobLevel;
+import com.techx.intervue.modules.job.enums.JobRole;
 import com.techx.intervue.modules.job.enums.JobStatus;
+import com.techx.intervue.modules.job.enums.SalaryBasis;
 import com.techx.intervue.modules.job.enums.SalaryCurrency;
 import com.techx.intervue.modules.job.enums.WorkingArrangement;
 import jakarta.persistence.CascadeType;
@@ -35,6 +38,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Getter
@@ -71,6 +76,16 @@ public class Job extends BaseEntity {
     private JobLevel level;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "job_role", length = 20)
+    private JobRole jobRole;
+
+    @Column(name = "experience_min_years")
+    private Integer experienceMinYears;
+
+    @Column(name = "experience_max_years")
+    private Integer experienceMaxYears;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "contract_type", length = 20)
     private ContractType contractType;
 
@@ -103,6 +118,10 @@ public class Job extends BaseEntity {
     @Column(name = "salary_currency", length = 3)
     private SalaryCurrency salaryCurrency;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "salary_basis", length = 10)
+    private SalaryBasis salaryBasis;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
@@ -111,6 +130,16 @@ public class Job extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String benefits;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "benefit_tags", columnDefinition = "JSON", nullable = false)
+    @Builder.Default
+    private List<JobBenefitTag> benefitTags = new ArrayList<>();
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "hiring_steps", columnDefinition = "JSON", nullable = false)
+    @Builder.Default
+    private List<String> hiringSteps = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "application_mode", nullable = false, length = 20)

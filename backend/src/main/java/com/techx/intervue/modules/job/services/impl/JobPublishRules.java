@@ -18,6 +18,9 @@ public class JobPublishRules {
         if (job.getLevel() == null) {
             problems.add(problem("level", "Choose a level"));
         }
+        if (job.getJobRole() == null) {
+            problems.add(problem("jobRole", "Choose a job role"));
+        }
         if (job.getContractType() == null) {
             problems.add(problem("contractType", "Choose a contract type"));
         }
@@ -61,6 +64,9 @@ public class JobPublishRules {
         }
         if (job.getSalaryMin() == null || job.getSalaryMax() == null) {
             return List.of(problem("salary.max", "Enter a salary range or mark it as negotiable"));
+        }
+        if (job.getSalaryBasis() == null) {
+            return List.of(problem("salary.basis", "Choose gross or net"));
         }
         if (job.getSalaryMin() > job.getSalaryMax()) {
             return List.of(problem("salary.min", "Minimum salary must not exceed the maximum"));

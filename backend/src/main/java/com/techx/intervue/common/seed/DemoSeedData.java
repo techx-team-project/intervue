@@ -25,7 +25,7 @@ public final class DemoSeedData {
 
     public record CandidateRole(String title, List<String> skills) {}
 
-    public record JobSpec(String title, String level, List<String> skills) {}
+    public record JobSpec(String title, String level, String role, List<String> skills) {}
 
     public record City(String name, double latitude, double longitude) {}
 
@@ -291,74 +291,127 @@ public final class DemoSeedData {
                     new JobSpec(
                             "Senior Java Backend Developer",
                             "SENIOR",
+                            "BACKEND",
                             List.of("Java", "Spring Boot", "MySQL", "Redis", "Docker")),
                     new JobSpec(
                             "Java Developer",
                             "JUNIOR",
+                            "BACKEND",
                             List.of("Java", "Spring Boot", "SQL", "Git")),
                     new JobSpec(
                             "Fullstack Developer (React/Node.js)",
                             "MID",
+                            "FULLSTACK",
                             List.of("React", "Node.js", "TypeScript", "MongoDB")),
                     new JobSpec(
                             "Frontend Developer (React)",
                             "MID",
+                            "FRONTEND",
                             List.of("React", "TypeScript", "Jest")),
                     new JobSpec(
                             "Next.js Frontend Engineer",
                             "JUNIOR",
+                            "FRONTEND",
                             List.of("Next.js", "React", "TypeScript")),
                     new JobSpec(
-                            "Flutter Mobile Developer", "MID", List.of("Flutter", "Git", "Agile")),
+                            "Flutter Mobile Developer",
+                            "MID",
+                            "MOBILE",
+                            List.of("Flutter", "Git", "Agile")),
                     new JobSpec(
-                            "React Native Developer", "MID", List.of("React Native", "TypeScript")),
-                    new JobSpec("iOS Developer (Swift)", "SENIOR", List.of("Swift", "Git")),
-                    new JobSpec("Android Developer (Kotlin)", "MID", List.of("Kotlin", "Git")),
+                            "React Native Developer",
+                            "MID",
+                            "MOBILE",
+                            List.of("React Native", "TypeScript")),
+                    new JobSpec(
+                            "iOS Developer (Swift)", "SENIOR", "MOBILE", List.of("Swift", "Git")),
+                    new JobSpec(
+                            "Android Developer (Kotlin)",
+                            "MID",
+                            "MOBILE",
+                            List.of("Kotlin", "Git")),
                     new JobSpec(
                             "DevOps Engineer",
                             "MID",
+                            "DEVOPS",
                             List.of("Docker", "Kubernetes", "AWS", "CI/CD", "Linux")),
                     new JobSpec(
                             "Cloud Engineer (AWS)",
                             "SENIOR",
+                            "DEVOPS",
                             List.of("AWS", "Kubernetes", "Linux")),
-                    new JobSpec("Data Engineer", "MID", List.of("Python", "SQL", "Docker")),
-                    new JobSpec("Data Analyst", "JUNIOR", List.of("SQL", "Power BI", "Tableau")),
+                    new JobSpec(
+                            "Data Engineer", "MID", "DATA_AI", List.of("Python", "SQL", "Docker")),
+                    new JobSpec(
+                            "Data Analyst",
+                            "JUNIOR",
+                            "DATA_AI",
+                            List.of("SQL", "Power BI", "Tableau")),
                     new JobSpec(
                             "Machine Learning Engineer",
                             "SENIOR",
+                            "DATA_AI",
                             List.of("Python", "Machine Learning", "TensorFlow")),
                     new JobSpec(
-                            "AI Research Intern", "INTERN", List.of("Python", "Machine Learning")),
+                            "AI Research Intern",
+                            "INTERN",
+                            "DATA_AI",
+                            List.of("Python", "Machine Learning")),
                     new JobSpec(
-                            "QA Automation Engineer", "MID", List.of("Selenium", "Jest", "Agile")),
-                    new JobSpec("Manual Tester", "JUNIOR", List.of("Agile", "Scrum", "English")),
-                    new JobSpec("UI/UX Designer", "MID", List.of("Figma", "English")),
-                    new JobSpec(".NET Backend Developer", "MID", List.of(".NET", "C#", "SQL")),
+                            "QA Automation Engineer",
+                            "MID",
+                            "QA",
+                            List.of("Selenium", "Jest", "Agile")),
                     new JobSpec(
-                            "PHP Laravel Developer", "JUNIOR", List.of("PHP", "Laravel", "MySQL")),
+                            "Manual Tester", "JUNIOR", "QA", List.of("Agile", "Scrum", "English")),
+                    new JobSpec("UI/UX Designer", "MID", "UIUX", List.of("Figma", "English")),
+                    new JobSpec(
+                            ".NET Backend Developer",
+                            "MID",
+                            "BACKEND",
+                            List.of(".NET", "C#", "SQL")),
+                    new JobSpec(
+                            "PHP Laravel Developer",
+                            "JUNIOR",
+                            "BACKEND",
+                            List.of("PHP", "Laravel", "MySQL")),
                     new JobSpec(
                             "Go Backend Engineer",
                             "SENIOR",
+                            "BACKEND",
                             List.of("Go", "PostgreSQL", "Redis", "Docker")),
                     new JobSpec(
                             "Python Backend Developer",
                             "MID",
+                            "BACKEND",
                             List.of("Python", "PostgreSQL", "Docker")),
                     new JobSpec(
                             "Tech Lead (Backend)",
                             "LEAD",
+                            "BACKEND",
                             List.of("Java", "Spring Boot", "AWS", "Agile")),
                     new JobSpec(
-                            "Engineering Manager", "LEAD", List.of("Agile", "Scrum", "English")),
+                            "Engineering Manager",
+                            "LEAD",
+                            "PM",
+                            List.of("Agile", "Scrum", "English")),
                     new JobSpec(
-                            "Software Engineer Intern", "INTERN", List.of("Git", "SQL", "English")),
+                            "Software Engineer Intern",
+                            "INTERN",
+                            "OTHER",
+                            List.of("Git", "SQL", "English")),
                     new JobSpec(
                             "Part-time Web Developer",
                             "JUNIOR",
+                            "FULLSTACK",
                             List.of("React", "Node.js", "Git")),
-                    new JobSpec("Security Engineer", "SENIOR", List.of("Linux", "AWS", "Docker")),
-                    new JobSpec("Business Analyst", "MID", List.of("SQL", "Agile", "English")));
+                    new JobSpec(
+                            "Security Engineer",
+                            "SENIOR",
+                            "SECURITY",
+                            List.of("Linux", "AWS", "Docker")),
+                    new JobSpec(
+                            "Business Analyst", "MID", "BA", List.of("SQL", "Agile", "English")));
 
     public static final List<City> CITIES =
             List.of(

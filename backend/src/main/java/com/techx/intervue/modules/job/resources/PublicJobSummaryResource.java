@@ -3,6 +3,7 @@ package com.techx.intervue.modules.job.resources;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.techx.intervue.modules.job.enums.ContractType;
 import com.techx.intervue.modules.job.enums.JobLevel;
+import com.techx.intervue.modules.job.enums.JobRole;
 import com.techx.intervue.modules.job.enums.WorkingArrangement;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ public record PublicJobSummaryResource(
         String title,
         PublicJobCompanyResource company,
         JobLevel level,
+        JobRole jobRole,
         ContractType contractType,
         WorkingArrangement workingArrangement,
         String city,

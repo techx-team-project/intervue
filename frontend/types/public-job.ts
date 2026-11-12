@@ -1,4 +1,13 @@
-import type { ContractType, JobLevel, JobSalary, SkillResource, WorkingArrangement } from '@/types/recruiter-job';
+import type {
+  ContractType,
+  JobBenefitTag,
+  JobExperience,
+  JobLevel,
+  JobRole,
+  JobSalary,
+  SkillResource,
+  WorkingArrangement,
+} from '@/types/recruiter-job';
 
 export interface PublicJobCompany {
   id: number;
@@ -11,6 +20,7 @@ export interface PublicJobSummaryResource {
   title: string;
   company: PublicJobCompany;
   level?: JobLevel;
+  jobRole?: JobRole;
   contractType?: ContractType;
   workingArrangement?: WorkingArrangement;
   city?: string;
@@ -46,6 +56,8 @@ export interface PublicJobResource {
   title: string;
   company: PublicJobCompanyDetail;
   level?: JobLevel;
+  jobRole?: JobRole;
+  experience?: JobExperience;
   contractType?: ContractType;
   workingArrangement?: WorkingArrangement;
   location: { city?: string; address?: string; latitude?: number; longitude?: number };
@@ -54,6 +66,8 @@ export interface PublicJobResource {
   description?: string;
   requirements?: string;
   benefits?: string;
+  benefitTags: JobBenefitTag[];
+  hiringSteps: string[];
   openings: number;
   screening: ScreeningSummary;
   deadline?: string;

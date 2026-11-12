@@ -3,8 +3,11 @@ package com.techx.intervue.modules.job.resources;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.techx.intervue.modules.job.enums.ApplicationMode;
 import com.techx.intervue.modules.job.enums.ContractType;
+import com.techx.intervue.modules.job.enums.JobBenefitTag;
 import com.techx.intervue.modules.job.enums.JobLevel;
+import com.techx.intervue.modules.job.enums.JobRole;
 import com.techx.intervue.modules.job.enums.JobStatus;
+import com.techx.intervue.modules.job.enums.SalaryBasis;
 import com.techx.intervue.modules.job.enums.SalaryCurrency;
 import com.techx.intervue.modules.job.enums.WorkingArrangement;
 import java.math.BigDecimal;
@@ -21,6 +24,8 @@ public record JobResource(
         JobStatus status,
         String companyName,
         JobLevel level,
+        JobRole jobRole,
+        Experience experience,
         ContractType contractType,
         WorkingArrangement workingArrangement,
         Location location,
@@ -29,6 +34,8 @@ public record JobResource(
         String description,
         String requirements,
         String benefits,
+        List<JobBenefitTag> benefitTags,
+        List<String> hiringSteps,
         ApplicationMode applicationMode,
         List<ScreeningQuestionResource> screeningQuestions,
         int openings,
@@ -49,5 +56,8 @@ public record JobResource(
     public record Location(
             String city, String address, BigDecimal latitude, BigDecimal longitude) {}
 
-    public record Salary(boolean negotiable, Long min, Long max, SalaryCurrency currency) {}
+    public record Salary(
+            boolean negotiable, Long min, Long max, SalaryCurrency currency, SalaryBasis basis) {}
+
+    public record Experience(Integer minYears, Integer maxYears) {}
 }

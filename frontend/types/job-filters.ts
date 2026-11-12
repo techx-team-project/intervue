@@ -2,6 +2,8 @@ export interface PublicJobFilters {
   q: string;
   city: string;
   level: string;
+  jobRole: string;
+  experienceYears: string;
   contractType: string;
   workingArrangement: string;
   salaryFrom: string;
