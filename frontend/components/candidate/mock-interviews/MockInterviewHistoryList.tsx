@@ -13,7 +13,7 @@ interface MockInterviewHistoryListProps {
 }
 
 export default function MockInterviewHistoryList({ onSelectSession, onStartNew }: MockInterviewHistoryListProps) {
-  const { data: history, isLoading, isError, refetch } = useMockInterviewHistory();
+  const { data: history, isLoading, isFetching, isError, refetch } = useMockInterviewHistory();
 
   if (isLoading) {
     return (
@@ -57,7 +57,9 @@ export default function MockInterviewHistoryList({ onSelectSession, onStartNew }
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-navy text-sm font-bold">Saved Interview History ({history.length})</h3>
+        <h3 className="text-navy flex items-center gap-2 text-sm font-bold">
+          Saved Interview History ({history.length}){isFetching && <Spinner className="h-4 w-4" />}
+        </h3>
         <Button variant="primary" size="sm" onClick={onStartNew} leftIcon={<Sparkles className="h-4 w-4" />}>
           New Interview
         </Button>

@@ -9,7 +9,6 @@ import lombok.Builder;
 
 @Builder
 public record StartMockInterviewRequest(
-        Long resumeId,
         @NotBlank(message = "Vị trí mục tiêu không được để trống") String targetRole,
         @NotBlank(message = "Cấp bậc không được để trống") String seniorityLevel,
         @NotNull(message = "Định hướng phỏng vấn không được để trống")

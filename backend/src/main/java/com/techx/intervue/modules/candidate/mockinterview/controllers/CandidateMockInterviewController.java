@@ -15,15 +15,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/candidate/mock-interviews")
@@ -33,14 +37,15 @@ public class CandidateMockInterviewController extends BaseController {
 
     private final CandidateMockInterviewServiceInterface mockInterviewService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResource<MockInterviewDetailResource>> startSession(
-            @Valid @RequestBody StartMockInterviewRequest request,
+            @Valid @ModelAttribute StartMockInterviewRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile cvFile,
             @AuthenticationPrincipal CustomUserDetails principal,
             HttpServletRequest servletRequest) {
         String ip = IpHelper.getClientIp(servletRequest);
         return ok(
-                mockInterviewService.startSession(principal.getId(), request, ip),
+                mockInterviewService.startSession(principal.getId(), request, cvFile, ip),
                 "Mock interview session started successfully!");
     }
 

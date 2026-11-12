@@ -30,13 +30,15 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
     setExpandedQuestions((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const score = session.overallScore ?? 75;
+  const score = session.overallScore ?? null;
   const scoreColor =
-    score >= 80
-      ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
-      : score >= 65
-        ? 'text-blue-700 bg-blue-50 border-blue-200'
-        : 'text-amber-700 bg-amber-50 border-amber-200';
+    score === null
+      ? 'text-slate-700 bg-slate-50 border-slate-200'
+      : score >= 80
+        ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+        : score >= 65
+          ? 'text-blue-700 bg-blue-50 border-blue-200'
+          : 'text-amber-700 bg-amber-50 border-amber-200';
 
   return (
     <div className="space-y-6">
@@ -64,15 +66,17 @@ export default function MockInterviewResultView({ session, onStartNew, onViewHis
           >
             <span className="text-xs font-bold tracking-wider uppercase">Overall Score</span>
             <div className="my-1 flex items-baseline gap-1">
-              <span className="text-3xl font-black sm:text-4xl">{score}</span>
+              <span className="text-3xl font-black sm:text-4xl">{score ?? '—'}</span>
               <span className="text-sm font-semibold opacity-75">/100</span>
             </div>
             <span className="text-[11px] font-semibold">
-              {score >= 80
-                ? 'Excellent (Interview Ready)'
-                : score >= 65
-                  ? 'Proficient (Meets Core Requirements)'
-                  : 'Needs Practice'}
+              {score === null
+                ? 'Score unavailable'
+                : score >= 80
+                  ? 'Excellent (Interview Ready)'
+                  : score >= 65
+                    ? 'Proficient (Meets Core Requirements)'
+                    : 'Needs Practice'}
             </span>
           </div>
         </div>

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,8 +18,6 @@ import com.techx.intervue.modules.ai.resources.PromptTemplate;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.CandidatePrivacySanitizerInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
-import com.techx.intervue.modules.candidate.entities.CandidateProfile;
-import com.techx.intervue.modules.candidate.entities.CandidateResume;
 import com.techx.intervue.modules.candidate.mockinterview.entities.AiMockInterview;
 import com.techx.intervue.modules.candidate.mockinterview.entities.AiMockInterviewQuestion;
 import com.techx.intervue.modules.candidate.mockinterview.enums.MockInterviewFocusArea;
@@ -30,13 +29,10 @@ import com.techx.intervue.modules.candidate.mockinterview.requests.SubmitMockAns
 import com.techx.intervue.modules.candidate.mockinterview.requests.SubmitMockFollowUpRequest;
 import com.techx.intervue.modules.candidate.mockinterview.resources.MockInterviewDetailResource;
 import com.techx.intervue.modules.candidate.mockinterview.resources.SubmitAnswerResultResource;
-import com.techx.intervue.modules.candidate.repositories.CandidateProfileRepository;
-import com.techx.intervue.modules.candidate.repositories.CandidateResumeRepository;
 import com.techx.intervue.modules.candidate.resources.CvTextExtractionResult;
-import com.techx.intervue.modules.candidate.services.interfaces.CandidateResumeServiceInterface;
-import com.techx.intervue.modules.candidate.services.interfaces.CandidateResumeServiceInterface.ResumeContent;
 import com.techx.intervue.modules.candidate.services.interfaces.CvTextExtractorServiceInterface;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,15 +41,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class AiMockInterviewServiceTest {
 
     @Mock private AiMockInterviewRepository interviewRepository;
     @Mock private AiMockInterviewQuestionRepository questionRepository;
-    @Mock private CandidateProfileRepository profileRepository;
-    @Mock private CandidateResumeRepository resumeRepository;
-    @Mock private CandidateResumeServiceInterface resumeService;
     @Mock private CvTextExtractorServiceInterface cvTextExtractorService;
     @Mock private CandidatePrivacySanitizerInterface privacySanitizer;
     @Mock private AiGatewayServiceInterface aiGatewayService;
@@ -69,30 +66,21 @@ class AiMockInterviewServiceTest {
                 new CandidateMockInterviewService(
                         interviewRepository,
                         questionRepository,
-                        profileRepository,
-                        resumeRepository,
-                        resumeService,
                         cvTextExtractorService,
                         privacySanitizer,
                         aiGatewayService,
                         promptService,
-                        objectMapper);
+                        objectMapper,
+                        new TransactionTemplate(mock(PlatformTransactionManager.class)));
     }
 
     @Test
     @DisplayName("Should start session with 5 to 10 questions and sanitize candidate CV")
     void shouldStartSessionWithQuestions() {
         Long candidateId = 1L;
-        CandidateProfile profile = CandidateProfile.builder().id(10L).headline("Java Dev").build();
-        when(profileRepository.findByUserId(candidateId)).thenReturn(Optional.of(profile));
-
-        CandidateResume resume =
-                CandidateResume.builder().id(100L).candidateProfile(profile).build();
-        when(resumeRepository.findByIdAndCandidateProfileId(100L, 10L))
-                .thenReturn(Optional.of(resume));
-        when(resumeService.download(100L, candidateId))
-                .thenReturn(new ResumeContent("cv.pdf", "application/pdf", new byte[] {1, 2}));
-        when(cvTextExtractorService.extractText(any(byte[].class)))
+        MultipartFile cvFile =
+                new MockMultipartFile("file", "cv.pdf", "application/pdf", new byte[] {1, 2});
+        when(cvTextExtractorService.extractText(any(MultipartFile.class)))
                 .thenReturn(CvTextExtractionResult.readable("hash", "Raw CV content", 1, false));
         when(privacySanitizer.sanitizeCandidateData(eq(null), anyString()))
                 .thenReturn("Sanitized CV without screening questions or PII");
@@ -139,7 +127,6 @@ class AiMockInterviewServiceTest {
 
         StartMockInterviewRequest request =
                 StartMockInterviewRequest.builder()
-                        .resumeId(100L)
                         .targetRole("Senior Java Engineer")
                         .seniorityLevel("Senior")
                         .focusArea(MockInterviewFocusArea.TECHNICAL)
@@ -147,7 +134,7 @@ class AiMockInterviewServiceTest {
                         .build();
 
         MockInterviewDetailResource result =
-                service.startSession(candidateId, request, "127.0.0.1");
+                service.startSession(candidateId, request, cvFile, "127.0.0.1");
 
         assertThat(result).isNotNull();
         assertThat(result.targetRole()).isEqualTo("Senior Java Engineer");
@@ -185,8 +172,16 @@ class AiMockInterviewServiceTest {
                         .category("TECHNICAL")
                         .questionText("Explain Java Memory Model")
                         .build();
-        when(questionRepository.findByIdAndMockInterviewId(questionId, sessionId))
-                .thenReturn(Optional.of(q1));
+        AiMockInterviewQuestion q2 =
+                AiMockInterviewQuestion.builder()
+                        .id(2L)
+                        .mockInterview(interview)
+                        .questionOrder(2)
+                        .category("TECHNICAL")
+                        .questionText("Question 2")
+                        .build();
+        when(questionRepository.findAllByMockInterviewIdOrderByQuestionOrderAsc(sessionId))
+                .thenReturn(List.of(q1, q2));
 
         when(promptService.load(eq("mock-interview-evaluate"), eq(1)))
                 .thenReturn(new PromptTemplate("mock-interview-evaluate.v1", 1, "Prompt"));
@@ -248,16 +243,6 @@ class AiMockInterviewServiceTest {
                                 "gemini-3.8-flash",
                                 null));
 
-        AiMockInterviewQuestion q2 =
-                AiMockInterviewQuestion.builder()
-                        .id(2L)
-                        .mockInterview(interview)
-                        .questionOrder(2)
-                        .category("TECHNICAL")
-                        .questionText("Question 2")
-                        .build();
-        when(questionRepository.findAllByMockInterviewIdOrderByQuestionOrderAsc(sessionId))
-                .thenReturn(List.of(q1, q2));
         when(interviewRepository.save(any(AiMockInterview.class))).thenReturn(interview);
 
         SubmitAnswerResultResource followUpResult =
@@ -306,9 +291,6 @@ class AiMockInterviewServiceTest {
                         .category("BEHAVIORAL")
                         .questionText("Handling conflict")
                         .build();
-        when(questionRepository.findByIdAndMockInterviewId(questionId, sessionId))
-                .thenReturn(Optional.of(q5));
-
         when(promptService.load(eq("mock-interview-evaluate"), eq(1)))
                 .thenReturn(new PromptTemplate("mock-interview-evaluate.v1", 1, "Prompt"));
         when(promptService.load(eq("mock-interview-summary"), eq(1)))
@@ -361,8 +343,20 @@ class AiMockInterviewServiceTest {
                                 null));
 
         when(interviewRepository.save(any(AiMockInterview.class))).thenReturn(interview);
+        List<AiMockInterviewQuestion> allQuestions = new ArrayList<>();
+        for (long order = 1; order < 5; order++) {
+            allQuestions.add(
+                    AiMockInterviewQuestion.builder()
+                            .id(order)
+                            .mockInterview(interview)
+                            .questionOrder((int) order)
+                            .category("TECHNICAL")
+                            .questionText("Question " + order)
+                            .build());
+        }
+        allQuestions.add(q5);
         when(questionRepository.findAllByMockInterviewIdOrderByQuestionOrderAsc(sessionId))
-                .thenReturn(List.of(q5));
+                .thenReturn(allQuestions);
 
         SubmitAnswerResultResource result =
                 service.submitAnswer(
