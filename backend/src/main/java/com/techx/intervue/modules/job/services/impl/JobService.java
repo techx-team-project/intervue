@@ -1,6 +1,6 @@
 package com.techx.intervue.modules.job.services.impl;
 
-import com.techx.intervue.config.BillingProperties;
+import com.techx.intervue.common.policy.FreeQuotaPolicyInterface;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.resources.CompanyResource;
@@ -58,7 +58,7 @@ public class JobService implements JobServiceInterface {
     private final CompanyServiceInterface companyService;
     private final CompanyVerificationServiceInterface companyVerificationService;
     private final EntitlementServiceInterface entitlementService;
-    private final BillingProperties billingProperties;
+    private final FreeQuotaPolicyInterface freeQuotaPolicy;
 
     @Override
     @Transactional
@@ -225,7 +225,7 @@ public class JobService implements JobServiceInterface {
         Optional<Integer> durationDays =
                 entitlementService.consumeJobSlot(job.getCompanyId(), job.getId(), recruiterId);
         if (durationDays.isEmpty()) {
-            if (billingProperties.requiresJobSlot()) {
+            if (freeQuotaPolicy.current().requireJobSlot()) {
                 throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
             }
             return;

@@ -8,6 +8,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.techx.intervue.common.policy.FreeQuotaPolicyInterface;
+import com.techx.intervue.common.policy.FreeQuotaValues;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.ai.resources.CvReviewQuotaResource;
@@ -24,6 +26,7 @@ class CvReviewQuotaServiceTest {
 
     private StringRedisTemplate redis;
     private ValueOperations<String, String> valueOperations;
+    private FreeQuotaPolicyInterface freeQuotaPolicy;
     private CvReviewQuotaService quotaService;
 
     @BeforeEach
@@ -31,8 +34,10 @@ class CvReviewQuotaServiceTest {
     void setUp() {
         redis = mock(StringRedisTemplate.class);
         valueOperations = mock(ValueOperations.class);
+        freeQuotaPolicy = mock(FreeQuotaPolicyInterface.class);
+        when(freeQuotaPolicy.current()).thenReturn(FreeQuotaValues.DEFAULTS);
         when(redis.opsForValue()).thenReturn(valueOperations);
-        quotaService = new CvReviewQuotaService(redis);
+        quotaService = new CvReviewQuotaService(redis, freeQuotaPolicy);
     }
 
     @Test

@@ -1,6 +1,6 @@
 package com.techx.intervue.modules.ai.services.impl;
 
-import com.techx.intervue.config.AiProperties;
+import com.techx.intervue.common.policy.FreeQuotaPolicyInterface;
 import com.techx.intervue.modules.ai.resources.ResumeMatchQuotaResource;
 import com.techx.intervue.modules.ai.services.interfaces.ResumeMatchQuotaServiceInterface;
 import com.techx.intervue.modules.entitlement.enums.EntitlementType;
@@ -13,7 +13,7 @@ public class ResumeMatchQuotaService implements ResumeMatchQuotaServiceInterface
 
     private static final String KEY_PREFIX = "ai:quota:resume_match:";
 
-    private final AiProperties aiProperties;
+    private final FreeQuotaPolicyInterface freeQuotaPolicy;
     private final CompanyMonthlyAiQuotaSupport quotaSupport;
 
     @Override
@@ -23,7 +23,7 @@ public class ResumeMatchQuotaService implements ResumeMatchQuotaServiceInterface
                         recruiterUserId,
                         KEY_PREFIX,
                         EntitlementType.AI_RESUME_MATCH,
-                        aiProperties.quota().resumeMatchFreePerMonth());
+                        freeQuotaPolicy.current().aiResumeMatchFreePerMonth());
         return ResumeMatchQuotaResource.builder()
                 .freeUsedThisMonth(snapshot.freeUsedThisMonth())
                 .freeLimit(snapshot.freeLimit())
@@ -40,7 +40,7 @@ public class ResumeMatchQuotaService implements ResumeMatchQuotaServiceInterface
                 recruiterUserId,
                 KEY_PREFIX,
                 EntitlementType.AI_RESUME_MATCH,
-                aiProperties.quota().resumeMatchFreePerMonth());
+                freeQuotaPolicy.current().aiResumeMatchFreePerMonth());
     }
 
     // Checked before the model call and spent after it succeeds, so a failed analysis never
@@ -51,6 +51,6 @@ public class ResumeMatchQuotaService implements ResumeMatchQuotaServiceInterface
                 recruiterUserId,
                 KEY_PREFIX,
                 EntitlementType.AI_RESUME_MATCH,
-                aiProperties.quota().resumeMatchFreePerMonth());
+                freeQuotaPolicy.current().aiResumeMatchFreePerMonth());
     }
 }

@@ -1,6 +1,6 @@
 package com.techx.intervue.modules.ai.services.impl;
 
-import com.techx.intervue.config.AiProperties;
+import com.techx.intervue.common.policy.FreeQuotaPolicyInterface;
 import com.techx.intervue.modules.ai.resources.JdGenerateQuotaResource;
 import com.techx.intervue.modules.ai.services.interfaces.JdGenerateQuotaServiceInterface;
 import com.techx.intervue.modules.entitlement.enums.EntitlementType;
@@ -13,7 +13,7 @@ public class JdGenerateQuotaService implements JdGenerateQuotaServiceInterface {
 
     private static final String KEY_PREFIX = "ai:quota:jd_generate:";
 
-    private final AiProperties aiProperties;
+    private final FreeQuotaPolicyInterface freeQuotaPolicy;
     private final CompanyMonthlyAiQuotaSupport quotaSupport;
 
     @Override
@@ -23,7 +23,7 @@ public class JdGenerateQuotaService implements JdGenerateQuotaServiceInterface {
                         recruiterUserId,
                         KEY_PREFIX,
                         EntitlementType.AI_JD_GENERATE,
-                        aiProperties.quota().jdGenerateFreePerMonth());
+                        freeQuotaPolicy.current().aiJdGenerateFreePerMonth());
         return JdGenerateQuotaResource.builder()
                 .freeUsedThisMonth(snapshot.freeUsedThisMonth())
                 .freeLimit(snapshot.freeLimit())
@@ -40,7 +40,7 @@ public class JdGenerateQuotaService implements JdGenerateQuotaServiceInterface {
                 recruiterUserId,
                 KEY_PREFIX,
                 EntitlementType.AI_JD_GENERATE,
-                aiProperties.quota().jdGenerateFreePerMonth());
+                freeQuotaPolicy.current().aiJdGenerateFreePerMonth());
     }
 
     @Override
@@ -49,6 +49,6 @@ public class JdGenerateQuotaService implements JdGenerateQuotaServiceInterface {
                 recruiterUserId,
                 KEY_PREFIX,
                 EntitlementType.AI_JD_GENERATE,
-                aiProperties.quota().jdGenerateFreePerMonth());
+                freeQuotaPolicy.current().aiJdGenerateFreePerMonth());
     }
 }

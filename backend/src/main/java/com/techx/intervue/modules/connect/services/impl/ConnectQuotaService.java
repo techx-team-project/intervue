@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.connect.services.impl;
 
+import com.techx.intervue.common.policy.FreeQuotaPolicyInterface;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectQuotaServiceInterface;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class ConnectQuotaService implements ConnectQuotaServiceInterface {
 
     private static final String PREFIX = "connect:quota:invite:";
-    private static final int MAX_DAILY_INVITES = 100;
     private static final ZoneId VIETNAM_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
 
     private static final RedisScript<Long> RESERVE =
@@ -37,9 +37,11 @@ public class ConnectQuotaService implements ConnectQuotaServiceInterface {
                     Long.class);
 
     private final StringRedisTemplate redis;
+    private final FreeQuotaPolicyInterface freeQuotaPolicy;
 
     @Override
     public void reserve(Long recruiterId) {
+        int dailyLimit = freeQuotaPolicy.current().connectDailyInviteLimit();
         ZonedDateTime now = ZonedDateTime.now(VIETNAM_ZONE);
         String key = PREFIX + recruiterId + ":" + now.toLocalDate();
         long secondsToMidnight =
@@ -49,7 +51,7 @@ public class ConnectQuotaService implements ConnectQuotaServiceInterface {
                 redis.execute(
                         RESERVE,
                         List.of(key),
-                        String.valueOf(MAX_DAILY_INVITES),
+                        String.valueOf(dailyLimit),
                         String.valueOf(secondsToMidnight));
         if (retryAfterSeconds != null && retryAfterSeconds > 0) {
             throw AppException.rateLimited(ErrorCode.CONNECTION_QUOTA_EXCEEDED, retryAfterSeconds);
