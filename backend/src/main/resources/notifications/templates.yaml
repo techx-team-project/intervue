@@ -112,6 +112,15 @@ templates:
       Nếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ bộ phận hỗ trợ.
     actionLabel: "Xem tin tuyển dụng"
 
+  JOB_HIDDEN_FOR_APPLICANT:
+    title: "The {jobTitle} job is no longer visible"
+    summary: "{companyName}'s {jobTitle} posting was hidden by an administrator."
+    body: |
+      The **{jobTitle}** posting at **{companyName}** was hidden by an InterVue administrator.
+
+      Your application is kept as it is, but new applications are no longer accepted for this posting.
+    actionLabel: "View my applications"
+
   JOB_RESTORED_BY_ADMIN:
     title: "Tin tuyển dụng {jobTitle} đã được khôi phục"
     summary: "Tin {jobTitle} đã được quản trị viên khôi phục."

@@ -18,6 +18,8 @@ public enum NotificationType {
     FOLLOWED_COMPANY_NEW_JOB(NotificationCategory.JOBS, NotificationSeverity.INFO, false),
     JOB_HIDDEN_BY_ADMIN(NotificationCategory.JOBS, NotificationSeverity.DANGER, true),
     JOB_RESTORED_BY_ADMIN(NotificationCategory.JOBS, NotificationSeverity.SUCCESS, false),
+    JOB_HIDDEN_FOR_APPLICANT(
+            NotificationCategory.APPLICATIONS, NotificationSeverity.WARNING, false),
     APPLICATION_RECEIVED(NotificationCategory.APPLICATIONS, NotificationSeverity.INFO, false),
     APPLICATION_STATUS_CHANGED(NotificationCategory.APPLICATIONS, NotificationSeverity.INFO, false),
     APPLICATION_WITHDRAWN(NotificationCategory.APPLICATIONS, NotificationSeverity.INFO, false),
