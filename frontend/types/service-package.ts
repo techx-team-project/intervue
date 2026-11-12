@@ -2,11 +2,8 @@ export type ServicePackageBadge = 'NONE' | 'NEW' | 'SPECIAL_OFFER';
 
 export type EntitlementType =
   | 'JOB_POST_SLOT'
-  | 'JOB_BOOST'
-  | 'JOB_LABEL_URGENT'
   | 'JOB_LABEL_HOT'
   | 'JOB_HIGHLIGHT'
-  | 'JOB_RETOP'
   | 'JOB_ALERT_PUSH'
   | 'AI_RESUME_MATCH'
   | 'AI_JD_GENERATE'
@@ -19,7 +16,6 @@ export type ServiceNeedKey = 'REACH' | 'HIGHLIGHT' | 'BRANDING';
 export interface ServicePackageBenefit {
   entitlementType: EntitlementType;
   quantity: number;
-  tier: number;
   durationDays: number | null;
   label: string;
 }

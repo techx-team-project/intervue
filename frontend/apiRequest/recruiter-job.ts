@@ -52,8 +52,6 @@ export const recruiterJobApi = {
 
   close: (id: number) => request<RecruiterJobResource>(`/recruiter/jobs/${id}/close`, { method: 'POST' }),
 
-  retop: (id: number) => request<RecruiterJobResource>(`/recruiter/jobs/${id}/retop`, { method: 'POST' }),
-
   renew: (id: number, deadline: string) =>
     request<RecruiterJobResource>(`/recruiter/jobs/${id}/renew`, { method: 'POST', body: { deadline } }),
 

@@ -27,7 +27,6 @@ export default function ActivateEntitlementModal({
   error,
 }: ActivateEntitlementModalProps) {
   const onCompany = entitlement !== null && COMPANY_LEVEL.includes(entitlement.entitlementType);
-  const isRetop = entitlement?.entitlementType === 'JOB_RETOP';
   const { data } = useRecruiterJobList({ status: 'PUBLISHED', page: 0, size: 100 });
   const [jobId, setJobId] = useState('');
 
@@ -36,11 +35,7 @@ export default function ActivateEntitlementModal({
     ...(data?.items ?? []).map((job) => ({ value: String(job.id), label: job.title })),
   ];
 
-  const modalTitle = onCompany
-    ? 'Activate service for the company'
-    : isRetop
-      ? 'Boost job to top'
-      : 'Apply service to a job';
+  const modalTitle = onCompany ? 'Activate service for the company' : 'Apply service to a job';
 
   return (
     <Modal isOpen={entitlement !== null} onClose={onClose} title={modalTitle} maxWidth="lg">
@@ -75,15 +70,7 @@ export default function ActivateEntitlementModal({
           <div className="mt-4 flex gap-3 rounded-lg border-l-4 border-amber-400 bg-amber-50 px-4 py-3">
             <AlertTriangle className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-600" />
             <p className="text-sm leading-relaxed text-amber-900">
-              {isRetop ? (
-                <>
-                  The selected job moves to the top of the list immediately and <strong>uses 1 boost</strong>.
-                </>
-              ) : (
-                <>
-                  Once applied it <strong>cannot be removed</strong>. The validity period starts now.
-                </>
-              )}
+              Once applied it <strong>cannot be removed</strong>. The validity period starts now.
             </p>
           </div>
 
@@ -98,7 +85,7 @@ export default function ActivateEntitlementModal({
               disabled={!onCompany && !jobId}
               isLoading={isBusy}
             >
-              {isRetop ? 'Boost now' : 'Confirm'}
+              Confirm
             </Button>
           </div>
         </>

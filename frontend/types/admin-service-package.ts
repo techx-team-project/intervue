@@ -74,7 +74,6 @@ export interface SaveServicePackageInput {
   benefits: {
     entitlementType: EntitlementType;
     quantity: number;
-    tier: number;
     durationDays?: number | null;
     label: string;
   }[];

@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import type { JobSalary, RecruiterJobPost } from '@/types/recruiter-job';
 import { formatDate } from '@/utils/datetime';
 import { optionLabel } from '@/utils/recruiter-job';
-import { Flame, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import JobPostRowActionsMenu from './JobPostRowActionsMenu';
 import JobPostStatusBadge from './JobPostStatusBadge';
@@ -90,7 +90,6 @@ export default function JobPostsList({
               isPending={isPending}
               onPause={() => actions.pauseJob(job.id)}
               onReopen={() => actions.reopenJob(job.id)}
-              onRetop={() => actions.retopJob(job.id)}
               onClose={() =>
                 onConfirm({
                   title: 'Close this job post?',
@@ -163,12 +162,6 @@ export default function JobPostsList({
                     )}
                   >
                     {JOB_HIGHLIGHT_LABEL[job.highlightLabel]}
-                  </span>
-                )}
-                {(job.boostLevel ?? 0) > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-700">
-                    <Flame className="h-3 w-3" />
-                    Boost {job.boostLevel}
                   </span>
                 )}
                 <JobPostStatusBadge status={job.status} />

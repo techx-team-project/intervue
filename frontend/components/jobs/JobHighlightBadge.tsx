@@ -2,7 +2,7 @@ import { JOB_HIGHLIGHT_LABEL, JOB_HIGHLIGHT_STYLE } from '@/constants/job-highli
 import { cn } from '@/lib/utils';
 
 type JobHighlightBadgeProps = {
-  label: 'URGENT' | 'HOT';
+  label: 'HOT';
 };
 
 export default function JobHighlightBadge({ label }: JobHighlightBadgeProps) {

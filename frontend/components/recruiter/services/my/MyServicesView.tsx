@@ -107,11 +107,9 @@ export default function MyServicesView() {
                     }}
                     className="border-primary text-primary mt-4 inline-flex h-9 w-full cursor-pointer items-center justify-center rounded-lg border bg-white text-sm font-semibold transition hover:bg-emerald-50"
                   >
-                    {item.entitlementType === 'JOB_RETOP'
-                      ? 'Boost a job now'
-                      : item.entitlementType === 'BRAND_PAGE' || item.entitlementType === 'FEATURED_COMPANY'
-                        ? 'Activate for company'
-                        : 'Apply to a job'}
+                    {item.entitlementType === 'BRAND_PAGE' || item.entitlementType === 'FEATURED_COMPANY'
+                      ? 'Activate for company'
+                      : 'Apply to a job'}
                   </button>
                 ) : (
                   <p className="text-on-surface-variant mt-4 text-xs">

@@ -16,11 +16,8 @@ export const PACKAGE_FIELD_LIMITS = {
 
 export const ENTITLEMENT_TYPES = [
   'JOB_POST_SLOT',
-  'JOB_BOOST',
-  'JOB_LABEL_URGENT',
   'JOB_LABEL_HOT',
   'JOB_HIGHLIGHT',
-  'JOB_RETOP',
   'JOB_ALERT_PUSH',
   'AI_RESUME_MATCH',
   'AI_JD_GENERATE',
@@ -56,8 +53,6 @@ const optionalImageUrlSchema = z
 
 export const DURATION_REQUIRED_ENTITLEMENT_TYPES = new Set<EntitlementType>([
   'JOB_POST_SLOT',
-  'JOB_BOOST',
-  'JOB_LABEL_URGENT',
   'JOB_LABEL_HOT',
   'JOB_HIGHLIGHT',
   'BRAND_PAGE',
@@ -73,10 +68,6 @@ export const packageBenefitSchema = z
       .trim()
       .min(1, 'Quantity is required.')
       .refine((value) => /^[1-9]\d*$/.test(value), 'Quantity must be at least 1.'),
-    tier: z
-      .string()
-      .trim()
-      .refine((value) => /^[1-3]$/.test(value), 'Tier must be between 1 and 3.'),
     durationDays: z
       .string()
       .trim()
@@ -88,13 +79,6 @@ export const packageBenefitSchema = z
       .max(PACKAGE_FIELD_LIMITS.benefitLabel, `Label must be at most ${PACKAGE_FIELD_LIMITS.benefitLabel} characters.`),
   })
   .superRefine((benefit, ctx) => {
-    if (benefit.entitlementType !== 'JOB_BOOST' && benefit.tier !== '1') {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['tier'],
-        message: 'Only JOB_BOOST supports tiers 1–3; other types must use tier 1.',
-      });
-    }
     if (DURATION_REQUIRED_ENTITLEMENT_TYPES.has(benefit.entitlementType) && !benefit.durationDays.trim()) {
       ctx.addIssue({
         code: 'custom',
@@ -213,7 +197,6 @@ export function toPackageFormDefaults(
       initial?.benefits.map((benefit) => ({
         entitlementType: benefit.entitlementType,
         quantity: String(benefit.quantity),
-        tier: String(benefit.tier ?? 1),
         durationDays: benefit.durationDays ? String(benefit.durationDays) : '',
         label: benefit.label,
       })) ?? [],
@@ -247,7 +230,6 @@ export function toSaveServicePackagePayload(values: SaveServicePackageFormData):
     benefits: values.benefits.map((benefit) => ({
       entitlementType: benefit.entitlementType,
       quantity: Number(benefit.quantity),
-      tier: benefit.entitlementType === 'JOB_BOOST' ? Number(benefit.tier) : 1,
       durationDays: benefit.durationDays.trim() ? Number(benefit.durationDays) : null,
       label: benefit.label.trim(),
     })),
@@ -302,28 +284,18 @@ export function buildSamplePackageFormData({
       {
         entitlementType: 'JOB_POST_SLOT',
         quantity: '3',
-        tier: '1',
         durationDays: '30',
         label: '03 tin tuyển dụng hiển thị trong 30 ngày',
       },
       {
-        entitlementType: 'JOB_BOOST',
-        quantity: '3',
-        tier: '2',
-        durationDays: '30',
-        label: 'Vị trí hiển thị ưu tiên cấp 2 trong danh sách việc làm',
-      },
-      {
         entitlementType: 'JOB_LABEL_HOT',
         quantity: '2',
-        tier: '1',
         durationDays: '7',
         label: 'Gắn nhãn HOT thu hút ứng viên cho 02 tin trong 7 ngày',
       },
       {
         entitlementType: 'AI_RESUME_MATCH',
         quantity: '200',
-        tier: '1',
         durationDays: '',
         label: '200 lượt AI phân tích và đối chiếu CV ứng viên',
       },
