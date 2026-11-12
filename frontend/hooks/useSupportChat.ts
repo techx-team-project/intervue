@@ -90,7 +90,6 @@ export function useSupportChat() {
           id: generateId('bot'),
           role: 'assistant',
           content: response.answer,
-          sources: response.sources,
           createdAt: Date.now(),
         };
 

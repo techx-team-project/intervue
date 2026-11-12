@@ -9,7 +9,6 @@ public record CompanySearchResult(
         String size,
         String address,
         String website,
-        boolean isVerified,
         int openJobsCount,
         List<String> highlights,
         String detailUrl) {}

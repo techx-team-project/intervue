@@ -4,15 +4,43 @@ import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import java.net.SocketTimeoutException;
 import java.net.http.HttpTimeoutException;
+import java.time.Duration;
+import org.springframework.core.retry.RetryPolicy;
+import org.springframework.core.retry.RetryTemplate;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
 
 public final class AiProviderErrors {
+
+    private static final Duration RETRY_DELAY = Duration.ofMillis(500);
 
     private AiProviderErrors() {}
 
     public static void requireApiKey(String apiKey) {
-        if (apiKey == null || apiKey.isBlank()) {
+        requireConfigured(apiKey);
+    }
+
+    public static void requireConfigured(String value) {
+        if (value == null || value.isBlank()) {
             throw new AppException(ErrorCode.AI_NOT_CONFIGURED);
         }
+    }
+
+    public static RetryTemplate retryTemplate(int maxRetries) {
+        return new RetryTemplate(
+                RetryPolicy.builder()
+                        .maxRetries(maxRetries)
+                        .delay(RETRY_DELAY)
+                        .multiplier(2)
+                        .predicate(AiProviderErrors::isTransient)
+                        .build());
+    }
+
+    public static boolean isTransient(Throwable failure) {
+        if (failure instanceof RestClientResponseException ex) {
+            return isRetryableStatus(ex.getStatusCode().value());
+        }
+        return failure instanceof ResourceAccessException;
     }
 
     public static AppException fromStatus(int status) {

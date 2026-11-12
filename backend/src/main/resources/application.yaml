@@ -64,11 +64,19 @@ auth:
   phone-otp-max-attempts: 3
 
 ai:
+  provider: ${AI_PROVIDER:gemini}
   gemini:
     api-key: ${GEMINI_API_KEY:}
     base-url: https://generativelanguage.googleapis.com/v1beta
     model: gemini-3.5-flash-lite
     max-tokens: 4096
+    timeout: 60s
+    max-retries: 2
+  openai:
+    api-key: ${OPENAI_API_KEY:}
+    base-url: https://api.openai.com/v1
+    model: ${OPENAI_MODEL:}
+    max-tokens: 8192
     timeout: 60s
     max-retries: 2
   embedding:

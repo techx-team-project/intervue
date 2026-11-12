@@ -178,7 +178,7 @@ public class AiChatService implements AiChatServiceInterface {
                 if (totalToolCalls >= maxToolCalls) {
                     toolResults.add(
                             new AiContentBlock.ToolResult(
-                                    call.name(),
+                                    call.id(),
                                     "Đã đạt giới hạn tối đa 3 lần gọi công cụ cho một câu trả lời.",
                                     true));
                     continue;
@@ -191,7 +191,7 @@ public class AiChatService implements AiChatServiceInterface {
                 }
                 toolResults.add(
                         new AiContentBlock.ToolResult(
-                                call.name(), execResult.content(), execResult.error()));
+                                call.id(), execResult.content(), execResult.error()));
             }
 
             messages.add(AiChatMessage.toolResults(toolResults));
