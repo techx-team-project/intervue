@@ -7,10 +7,12 @@ import com.techx.intervue.modules.job.requests.SearchRecruiterJobsRequest;
 import com.techx.intervue.modules.job.resources.JobHistoryResource;
 import com.techx.intervue.modules.job.resources.JobQuotaResource;
 import com.techx.intervue.modules.job.resources.JobResource;
+import com.techx.intervue.modules.job.resources.JobStatsResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.resources.JobSummaryResource;
 import com.techx.intervue.modules.job.services.interfaces.JobHistoryServiceInterface;
 import com.techx.intervue.modules.job.services.interfaces.JobServiceInterface;
+import com.techx.intervue.modules.job.services.interfaces.JobStatsServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,6 +40,7 @@ public class RecruiterJobController extends BaseController {
 
     private final JobServiceInterface jobService;
     private final JobHistoryServiceInterface jobHistoryService;
+    private final JobStatsServiceInterface jobStatsService;
 
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<JobSummaryResource>>> search(
@@ -118,6 +122,16 @@ public class RecruiterJobController extends BaseController {
             @Valid @RequestBody RenewJobRequest request,
             @AuthenticationPrincipal CustomUserDetails principal) {
         return ok(jobService.renew(id, request, principal.getId()), "Job renewed successfully!");
+    }
+
+    @GetMapping("/{id}/stats")
+    public ResponseEntity<ApiResource<JobStatsResource>> stats(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "30") int days,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                jobStatsService.stats(id, days, principal.getId()),
+                "Job stats retrieved successfully!");
     }
 
     @GetMapping("/{id}/history")

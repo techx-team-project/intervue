@@ -47,4 +47,6 @@ export const publicJobApi = {
     request<NearbyJobResource[]>(`/jobs/nearby?lat=${params.lat}&lng=${params.lng}&radiusKm=${params.radiusKm}`),
 
   get: (id: number) => request<PublicJobResource>(`/jobs/${id}`),
+
+  recordView: (id: number) => request<null>(`/jobs/${id}/view`, { method: 'POST' }),
 };

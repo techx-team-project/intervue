@@ -3,6 +3,7 @@ import type { Page } from '@/types/api';
 import type {
   JobHistoryEntry,
   JobQuota,
+  JobStats,
   JobStatus,
   RecruiterJobCounts,
   RecruiterJobResource,
@@ -59,6 +60,8 @@ export const recruiterJobApi = {
     request<Page<JobHistoryEntry>>(`/recruiter/jobs/${id}/history?page=${page}&size=${size}`),
 
   quota: () => request<JobQuota>('/recruiter/jobs/quota'),
+
+  stats: (id: number, days: number) => request<JobStats>(`/recruiter/jobs/${id}/stats?days=${days}`),
 
   remove: (id: number) => request<null>(`/recruiter/jobs/${id}`, { method: 'DELETE' }),
 };

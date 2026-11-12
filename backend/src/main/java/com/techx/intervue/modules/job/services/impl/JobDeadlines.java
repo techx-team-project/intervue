@@ -9,6 +9,10 @@ final class JobDeadlines {
 
     private JobDeadlines() {}
 
+    static ZoneId zone() {
+        return BUSINESS_ZONE;
+    }
+
     static LocalDate today() {
         return LocalDate.now(BUSINESS_ZONE);
     }

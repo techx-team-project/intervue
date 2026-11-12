@@ -15,6 +15,7 @@ import JobCompensationSection from './detail/JobCompensationSection';
 import JobDetailHeader from './detail/JobDetailHeader';
 import JobDetailNav, { type JobDetailNavItem } from './detail/JobDetailNav';
 import JobBenefitTags from './detail/JobBenefitTags';
+import JobViewTracker from './detail/JobViewTracker';
 import JobDetailSection from './detail/JobDetailSection';
 import JobHiringProcessSection from './detail/JobHiringProcessSection';
 import JobDetailSidebar from './detail/JobDetailSidebar';
@@ -51,6 +52,7 @@ export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
 
   return (
     <>
+      <JobViewTracker jobId={job.id} />
       <nav aria-label="Breadcrumb" className="bg-primary-deeper">
         <div className="container-page text-body-sm flex items-center gap-1.5 py-3.5 text-white/60">
           <Link href="/" className="hover:text-white">
