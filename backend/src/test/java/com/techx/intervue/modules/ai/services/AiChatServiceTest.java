@@ -131,7 +131,7 @@ class AiChatServiceTest {
 
         AiContentBlock.ToolUse toolUse =
                 new AiContentBlock.ToolUse("call-1", "get_my_applications", Map.of());
-        AiChatMessage assistantMsg = new AiChatMessage(AiRole.ASSISTANT, List.of(toolUse), null);
+        AiChatMessage assistantMsg = new AiChatMessage(AiRole.ASSISTANT, List.of(toolUse));
 
         AiChatResult firstTurnResult =
                 new AiChatResult(
@@ -185,8 +185,7 @@ class AiChatServiceTest {
                                 "c3", "get_platform_guide", Map.of("query", "cv")),
                         new AiContentBlock.ToolUse("c4", "get_my_applications", Map.of()));
 
-        AiChatMessage assistantMsg =
-                new AiChatMessage(AiRole.ASSISTANT, List.copyOf(fourCalls), null);
+        AiChatMessage assistantMsg = new AiChatMessage(AiRole.ASSISTANT, List.copyOf(fourCalls));
 
         AiChatResult firstTurnResult =
                 new AiChatResult(

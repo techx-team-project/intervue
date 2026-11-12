@@ -2,6 +2,9 @@ spring:
   application:
     name: intervue
 
+  config:
+    import: optional:file:../.env[.properties],optional:file:./.env[.properties]
+
   datasource:
     url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE:intervue_db}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: ${MYSQL_USER:intervue}
@@ -64,12 +67,9 @@ auth:
   phone-otp-max-attempts: 3
 
 ai:
-  provider: ${AI_PROVIDER:gemini}
   gemini:
     api-key: ${GEMINI_API_KEY:}
     base-url: https://generativelanguage.googleapis.com/v1beta
-    model: gemini-3.5-flash-lite
-    max-tokens: 4096
     timeout: 60s
     max-retries: 2
   openai:

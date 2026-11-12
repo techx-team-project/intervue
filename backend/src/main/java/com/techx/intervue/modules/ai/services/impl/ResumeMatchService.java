@@ -76,7 +76,7 @@ public class ResumeMatchService implements ResumeMatchServiceInterface {
                 parsed.experienceSummary(),
                 parsed.requirements(),
                 parsed.questionsToAsk(),
-                result.model() != null ? result.model() : "gemini-2.5-flash",
+                result.model(),
                 PROMPT_VERSION_TAG,
                 true,
                 Instant.now(),

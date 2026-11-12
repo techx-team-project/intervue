@@ -140,7 +140,7 @@ public class AiChatService implements AiChatServiceInterface {
             }
         }
 
-        // Tier 3: Full RAG + Agent ReAct loop with Gemini LLM
+        // Tier 3: Full RAG + Agent ReAct loop with the LLM
         List<KnowledgeMatch> matches =
                 knowledgeBaseService.retrieve(request.message(), TOP_K_CHUNKS, MIN_SCORE_THRESHOLD);
 
@@ -274,8 +274,7 @@ public class AiChatService implements AiChatServiceInterface {
                 AiRole role =
                         "model".equalsIgnoreCase(entry.role()) ? AiRole.ASSISTANT : AiRole.USER;
                 messages.add(
-                        new AiChatMessage(
-                                role, List.of(new AiContentBlock.Text(entry.text())), null));
+                        new AiChatMessage(role, List.of(new AiContentBlock.Text(entry.text()))));
             }
             return messages;
         } catch (Exception ex) {

@@ -455,8 +455,7 @@ class ChatbotFixedQuestionsTest {
             AiContentBlock.ToolUse toolCall =
                     new AiContentBlock.ToolUse(
                             "call-" + q.id(), toolName, Map.of("param", "value"));
-            AiChatMessage assistantMsg =
-                    new AiChatMessage(AiRole.ASSISTANT, List.of(toolCall), null);
+            AiChatMessage assistantMsg = new AiChatMessage(AiRole.ASSISTANT, List.of(toolCall));
 
             AiChatResult turn1 =
                     new AiChatResult(
