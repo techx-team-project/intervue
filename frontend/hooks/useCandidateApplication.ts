@@ -1,10 +1,27 @@
 'use client';
 
 import { candidateApplicationApi } from '@/apiRequest/candidate-application';
+import { useIsCandidate } from '@/hooks/useCandidateSaved';
 import type { SaveApplicationPayload } from '@/types/candidate-application';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const formKey = (jobId: number) => ['candidate', 'application-form', jobId] as const;
+
+export const appliedJobIdsKey = ['candidate', 'applied-job-ids'] as const;
+
+export function useAppliedJobIds() {
+  const enabled = useIsCandidate();
+  return useQuery({
+    queryKey: appliedJobIdsKey,
+    queryFn: candidateApplicationApi.appliedJobIds,
+    enabled,
+    staleTime: 60_000,
+  });
+}
+
+export function useHasApplied(jobId: number): boolean {
+  return useAppliedJobIds().data?.includes(jobId) ?? false;
+}
 
 export function useApplyForm(jobId: number, enabled: boolean) {
   return useQuery({
@@ -17,7 +34,10 @@ export function useApplyForm(jobId: number, enabled: boolean) {
 
 export function useApplicationMutations(jobId: number) {
   const queryClient = useQueryClient();
-  const refresh = () => queryClient.invalidateQueries({ queryKey: formKey(jobId) });
+  const refresh = () => {
+    void queryClient.invalidateQueries({ queryKey: appliedJobIdsKey });
+    return queryClient.invalidateQueries({ queryKey: formKey(jobId) });
+  };
 
   const saveDraft = useMutation({
     mutationFn: (payload: SaveApplicationPayload) => candidateApplicationApi.saveDraft(payload),

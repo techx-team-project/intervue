@@ -27,8 +27,10 @@ import com.techx.intervue.modules.notification.services.interfaces.NotificationP
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface.NotificationCommand;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import java.time.Instant;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
@@ -200,6 +202,13 @@ public class ApplicationService implements ApplicationServiceInterface {
         }
         cvSnapshots.discard(previousCopy);
         return result;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> findAppliedJobIds(Long candidateId) {
+        return applicationRepository.findJobIdsByCandidateIdAndStatusNotIn(
+                candidateId, EnumSet.of(ApplicationStatus.DRAFT, ApplicationStatus.WITHDRAWN));
     }
 
     @Override
