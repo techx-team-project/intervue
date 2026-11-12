@@ -39,6 +39,11 @@ export function useAdminJobModeration() {
     onSuccess: refresh,
   });
   const restore = useMutation({ mutationFn: (id: number) => adminJobApi.restore(id), onSuccess: refresh });
+  const approve = useMutation({ mutationFn: (id: number) => adminJobApi.approve(id), onSuccess: refresh });
+  const reject = useMutation({
+    mutationFn: ({ id, reason }: { id: number; reason: string }) => adminJobApi.reject(id, reason),
+    onSuccess: refresh,
+  });
 
-  return { hide, restore };
+  return { hide, restore, approve, reject };
 }

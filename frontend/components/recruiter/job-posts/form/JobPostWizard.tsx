@@ -149,8 +149,14 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
     setBusy(true);
     try {
       const id = await persist();
-      if (!isLive) await mutations.publish.mutateAsync(id);
-      toast.success(isLive ? 'Job post updated.' : 'Job post published.');
+      const result = isLive ? null : await mutations.publish.mutateAsync(id);
+      toast.success(
+        isLive
+          ? 'Job post updated.'
+          : result?.status === 'PENDING_REVIEW'
+            ? 'Job post submitted. It goes live once an admin approves it.'
+            : 'Job post published.',
+      );
       router.push(ROUTES.RECRUITER_JOBS);
     } catch (error) {
       showServerError(error);

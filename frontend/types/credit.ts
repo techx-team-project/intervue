@@ -53,6 +53,7 @@ export interface FreeQuotaSettings {
   requireJobSlot: boolean;
   jobFreeActiveLimit: number;
   jobFreeMaxDays: number;
+  jobReviewFirstCount: number;
   updatedAt: string | null;
 }
 
