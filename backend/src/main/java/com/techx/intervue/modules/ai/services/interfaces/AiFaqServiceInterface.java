@@ -5,10 +5,9 @@ import java.util.Optional;
 
 public interface AiFaqServiceInterface {
 
-    Optional<UserChatResponse> findByCode(String code, int remainingQuota);
+    Optional<UserChatResponse> findByCode(String code);
 
-    Optional<UserChatResponse> findSemanticMatch(
-            String query, double minThreshold, int remainingQuota);
+    Optional<UserChatResponse> findSemanticMatch(String query, double minThreshold);
 
     void reloadCache();
 }

@@ -63,7 +63,7 @@ public class AiGatewayService implements AiGatewayServiceInterface {
             Supplier<T> call,
             Function<T, AiUsage> usageOf) {
         if (context.chargeQuota()) {
-            quotaService.reserve(context.userId(), context.ip());
+            quotaService.reserve(context.userId());
         }
         long startedAt = System.nanoTime();
         try {
@@ -77,7 +77,7 @@ public class AiGatewayService implements AiGatewayServiceInterface {
             return result;
         } catch (RuntimeException ex) {
             if (context.chargeQuota()) {
-                quotaService.release(context.userId(), context.ip());
+                quotaService.release(context.userId());
             }
             usageLog.recordFailure(
                     context.feature(), model, promptVersion, errorCodeOf(ex), elapsed(startedAt));

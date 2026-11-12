@@ -50,7 +50,7 @@ public class AiResponseCacheService implements AiResponseCacheServiceInterface {
     private final ObjectMapper objectMapper;
 
     @Override
-    public Optional<UserChatResponse> get(String message, int remainingQuota) {
+    public Optional<UserChatResponse> get(String message) {
         if (message == null || message.isBlank() || isLikelyPrivate(message)) {
             return Optional.empty();
         }
@@ -64,8 +64,7 @@ public class AiResponseCacheService implements AiResponseCacheServiceInterface {
 
             CachedResponse cached = objectMapper.readValue(rawJson, CachedResponse.class);
             log.info("Cross-user public cache HIT for query hash: {}", cacheKey);
-            return Optional.of(
-                    new UserChatResponse(cached.answer(), cached.sources(), remainingQuota));
+            return Optional.of(new UserChatResponse(cached.answer(), cached.sources()));
         } catch (Exception ex) {
             log.warn("Failed to read cross-user cache: {}", ex.getMessage());
             return Optional.empty();

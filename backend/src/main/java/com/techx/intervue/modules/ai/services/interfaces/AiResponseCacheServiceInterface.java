@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface AiResponseCacheServiceInterface {
 
-    Optional<UserChatResponse> get(String message, int remainingQuota);
+    Optional<UserChatResponse> get(String message);
 
     void put(
             String message,

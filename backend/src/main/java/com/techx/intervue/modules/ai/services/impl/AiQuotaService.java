@@ -18,7 +18,6 @@ public class AiQuotaService implements AiQuotaServiceInterface {
 
     private static final String PREFIX = "ai:quota:";
     private static final Duration USER_WINDOW = Duration.ofDays(1);
-    private static final Duration IP_WINDOW = Duration.ofHours(1);
 
     private static final RedisScript<Long> RESERVE =
             new DefaultRedisScript<>(
@@ -50,71 +49,24 @@ public class AiQuotaService implements AiQuotaServiceInterface {
     private final AiProperties properties;
 
     @Override
-    public void reserve(Long userId, String ip) {
-        if (userId == null) {
-            reserveIp(ip);
-            return;
-        }
-        reserveSlot(
-                userKey(userId),
-                properties.quota().userPerDay(),
-                USER_WINDOW,
-                ErrorCode.AI_USER_QUOTA_EXCEEDED);
-    }
-
-    @Override
-    public void release(Long userId, String ip) {
-        if (userId != null) {
-            releaseSlot(userKey(userId));
-        } else {
-            releaseSlot(ipKey(ip));
-        }
-    }
-
-    @Override
-    public int getRemaining(Long userId, String ip) {
-        if (userId != null) {
-            String userKey = userKey(userId);
-            String val = redis.opsForValue().get(userKey);
-            int used = val != null ? Integer.parseInt(val) : 0;
-            return Math.max(0, properties.quota().userPerDay() - used);
-        } else {
-            String ipKey = ipKey(ip);
-            String val = redis.opsForValue().get(ipKey);
-            int used = val != null ? Integer.parseInt(val) : 0;
-            return Math.max(0, properties.quota().ipPerHour() - used);
-        }
-    }
-
-    private void reserveIp(String ip) {
-        reserveSlot(
-                ipKey(ip),
-                properties.quota().ipPerHour(),
-                IP_WINDOW,
-                ErrorCode.AI_IP_QUOTA_EXCEEDED);
-    }
-
-    private void reserveSlot(String key, int limit, Duration window, ErrorCode exceededCode) {
+    public void reserve(Long userId) {
         Long retryAfterSeconds =
                 redis.execute(
                         RESERVE,
-                        List.of(key),
-                        String.valueOf(limit),
-                        String.valueOf(window.toSeconds()));
+                        List.of(userKey(userId)),
+                        String.valueOf(properties.quota().userPerDay()),
+                        String.valueOf(USER_WINDOW.toSeconds()));
         if (retryAfterSeconds != null && retryAfterSeconds > 0) {
-            throw AppException.rateLimited(exceededCode, retryAfterSeconds);
+            throw AppException.rateLimited(ErrorCode.AI_USER_QUOTA_EXCEEDED, retryAfterSeconds);
         }
     }
 
-    private void releaseSlot(String key) {
-        redis.execute(RELEASE, List.of(key));
+    @Override
+    public void release(Long userId) {
+        redis.execute(RELEASE, List.of(userKey(userId)));
     }
 
     private String userKey(Long userId) {
         return PREFIX + "user:" + userId;
-    }
-
-    private String ipKey(String ip) {
-        return PREFIX + "ip:" + ip;
     }
 }

@@ -43,7 +43,7 @@ public class AiFaqService implements AiFaqServiceInterface {
     }
 
     @Override
-    public Optional<UserChatResponse> findByCode(String code, int remainingQuota) {
+    public Optional<UserChatResponse> findByCode(String code) {
         if (code == null || code.isBlank()) {
             return Optional.empty();
         }
@@ -56,13 +56,11 @@ public class AiFaqService implements AiFaqServiceInterface {
                         faq ->
                                 new UserChatResponse(
                                         faq.answer(),
-                                        List.of("Hệ thống FAQ InterVue - " + faq.question()),
-                                        remainingQuota));
+                                        List.of("Hệ thống FAQ InterVue - " + faq.question())));
     }
 
     @Override
-    public Optional<UserChatResponse> findSemanticMatch(
-            String query, double minThreshold, int remainingQuota) {
+    public Optional<UserChatResponse> findSemanticMatch(String query, double minThreshold) {
         if (query == null || query.isBlank() || memoryCache.isEmpty()) {
             return Optional.empty();
         }
@@ -87,8 +85,7 @@ public class AiFaqService implements AiFaqServiceInterface {
                                             scored.faq().answer(),
                                             List.of(
                                                     "Hệ thống FAQ InterVue - "
-                                                            + scored.faq().question()),
-                                            remainingQuota));
+                                                            + scored.faq().question())));
         } catch (Exception ex) {
             log.warn("Semantic FAQ match failed, falling back to RAG: {}", ex.getMessage());
             return Optional.empty();

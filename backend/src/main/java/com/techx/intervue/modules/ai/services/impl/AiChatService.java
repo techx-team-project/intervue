@@ -19,7 +19,6 @@ import com.techx.intervue.modules.ai.resources.UserChatResponse;
 import com.techx.intervue.modules.ai.services.interfaces.AiChatServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.AiFaqServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
-import com.techx.intervue.modules.ai.services.interfaces.AiQuotaServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.AiResponseCacheServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.KnowledgeBaseServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PlatformAgentToolServiceInterface;
@@ -52,7 +51,6 @@ public class AiChatService implements AiChatServiceInterface {
 
     private final AiGatewayServiceInterface aiGatewayService;
     private final KnowledgeBaseServiceInterface knowledgeBaseService;
-    private final AiQuotaServiceInterface quotaService;
     private final PromptServiceInterface promptService;
     private final PlatformAgentToolServiceInterface agentToolService;
     private final StringRedisTemplate redis;
@@ -64,7 +62,6 @@ public class AiChatService implements AiChatServiceInterface {
     public AiChatService(
             AiGatewayServiceInterface aiGatewayService,
             KnowledgeBaseServiceInterface knowledgeBaseService,
-            AiQuotaServiceInterface quotaService,
             PromptServiceInterface promptService,
             PlatformAgentToolServiceInterface agentToolService,
             StringRedisTemplate redis,
@@ -73,7 +70,6 @@ public class AiChatService implements AiChatServiceInterface {
             @Nullable AiResponseCacheServiceInterface responseCache) {
         this.aiGatewayService = aiGatewayService;
         this.knowledgeBaseService = knowledgeBaseService;
-        this.quotaService = quotaService;
         this.promptService = promptService;
         this.agentToolService = agentToolService;
         this.redis = redis;
@@ -85,7 +81,6 @@ public class AiChatService implements AiChatServiceInterface {
     public AiChatService(
             AiGatewayServiceInterface aiGatewayService,
             KnowledgeBaseServiceInterface knowledgeBaseService,
-            AiQuotaServiceInterface quotaService,
             PromptServiceInterface promptService,
             PlatformAgentToolServiceInterface agentToolService,
             StringRedisTemplate redis,
@@ -93,7 +88,6 @@ public class AiChatService implements AiChatServiceInterface {
         this(
                 aiGatewayService,
                 knowledgeBaseService,
-                quotaService,
                 promptService,
                 agentToolService,
                 redis,
@@ -105,12 +99,11 @@ public class AiChatService implements AiChatServiceInterface {
     @Override
     public UserChatResponse chat(Long userId, String ip, UserChatRequest request) {
         String historyKey = buildHistoryKey(userId, ip, request.sessionId());
-        int remainingQuota = quotaService.getRemaining(userId, ip);
 
         if (faqService != null) {
             // Tier 1: Direct FAQ Code Match (From Chip click or explicit faqCode)
             if (request.faqCode() != null && !request.faqCode().isBlank()) {
-                var directMatch = faqService.findByCode(request.faqCode(), remainingQuota);
+                var directMatch = faqService.findByCode(request.faqCode());
                 if (directMatch.isPresent()) {
                     saveHistory(historyKey, request.message(), directMatch.get().answer());
                     return directMatch.get();
@@ -119,8 +112,7 @@ public class AiChatService implements AiChatServiceInterface {
 
             // Tier 2: Semantic FAQ Match (Cosine similarity >= 0.88 against FAQ index)
             var semanticMatch =
-                    faqService.findSemanticMatch(
-                            request.message(), FAQ_SEMANTIC_MATCH_THRESHOLD, remainingQuota);
+                    faqService.findSemanticMatch(request.message(), FAQ_SEMANTIC_MATCH_THRESHOLD);
             if (semanticMatch.isPresent()) {
                 saveHistory(historyKey, request.message(), semanticMatch.get().answer());
                 return semanticMatch.get();
@@ -129,7 +121,7 @@ public class AiChatService implements AiChatServiceInterface {
 
         // Tier 2.5: Cross-User Public Response Cache Check
         if (responseCache != null) {
-            var cached = responseCache.get(request.message(), remainingQuota);
+            var cached = responseCache.get(request.message());
             if (cached.isPresent()) {
                 saveHistory(historyKey, request.message(), cached.get().answer());
                 return cached.get();
@@ -155,7 +147,7 @@ public class AiChatService implements AiChatServiceInterface {
 
         List<AiToolDefinition> tools = agentToolService.getAvailableTools();
 
-        AiCallContext callContext = new AiCallContext(FEATURE_NAME, userId, ip, true);
+        AiCallContext callContext = new AiCallContext(FEATURE_NAME, userId, ip, false);
         AiChatRequest chatRequest = new AiChatRequest(systemPrompt, messages, tools);
         AiChatResult result = aiGatewayService.chat(callContext, chatRequest);
 
@@ -204,18 +196,14 @@ public class AiChatService implements AiChatServiceInterface {
 
             messages.add(AiChatMessage.toolResults(toolResults));
 
-            AiCallContext followUpContext = new AiCallContext(FEATURE_NAME, userId, ip, false);
             AiChatRequest followUpRequest = new AiChatRequest(systemPrompt, messages, tools);
-            result = aiGatewayService.chat(followUpContext, followUpRequest);
+            result = aiGatewayService.chat(callContext, followUpRequest);
         }
 
         saveHistory(historyKey, request.message(), result.text());
 
-        remainingQuota = quotaService.getRemaining(userId, ip);
-
         UserChatResponse finalResponse =
-                new UserChatResponse(
-                        result.text(), new ArrayList<>(aggregatedSources), remainingQuota);
+                new UserChatResponse(result.text(), new ArrayList<>(aggregatedSources));
 
         if (responseCache != null && !calledPrivateTool) {
             responseCache.put(request.message(), finalResponse, false, calledJobTool);
