@@ -69,48 +69,26 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
     @Transactional
     public MockInterviewDetailResource startSession(
             Long candidateId, StartMockInterviewRequest request, String ip) {
-        CandidateProfile profile =
-                profileRepository
-                        .findByUserId(candidateId)
-                        .orElseGet(
-                                () ->
-                                        profileRepository.save(
-                                                CandidateProfile.builder()
-                                                        .userId(candidateId)
-                                                        .build()));
-
         Long resumeId = request.resumeId();
         String cvText = "";
 
+        Optional<CandidateProfile> profileOpt = profileRepository.findByUserId(candidateId);
+
         if (resumeId != null) {
+            CandidateProfile profile =
+                    profileOpt.orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
             CandidateResume resume =
                     resumeRepository
                             .findByIdAndCandidateProfileId(resumeId, profile.getId())
                             .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-            try {
-                byte[] bytes = resumeService.download(resume.getId(), candidateId).bytes();
-                var extraction = cvTextExtractorService.extractText(bytes);
-                if (extraction.readable() && extraction.text() != null) {
-                    cvText = extraction.text();
-                }
-            } catch (Exception e) {
-                log.warn(
-                        "Could not extract CV text from resumeId {}: {}", resumeId, e.getMessage());
-            }
-        } else {
+            cvText = extractResumeText(resume.getId(), candidateId);
+        } else if (profileOpt.isPresent()) {
             Optional<CandidateResume> defaultResume =
-                    resumeRepository.findByCandidateProfileIdAndIsDefaultTrue(profile.getId());
+                    resumeRepository.findByCandidateProfileIdAndIsDefaultTrue(
+                            profileOpt.get().getId());
             if (defaultResume.isPresent()) {
                 resumeId = defaultResume.get().getId();
-                try {
-                    byte[] bytes = resumeService.download(resumeId, candidateId).bytes();
-                    var extraction = cvTextExtractorService.extractText(bytes);
-                    if (extraction.readable() && extraction.text() != null) {
-                        cvText = extraction.text();
-                    }
-                } catch (Exception e) {
-                    log.warn("Could not extract text from default resume: {}", e.getMessage());
-                }
+                cvText = extractResumeText(resumeId, candidateId);
             }
         }
 
@@ -665,6 +643,19 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
         } catch (Exception ex) {
             return List.of();
         }
+    }
+
+    private String extractResumeText(Long resumeId, Long candidateId) {
+        try {
+            byte[] bytes = resumeService.download(resumeId, candidateId).bytes();
+            var extraction = cvTextExtractorService.extractText(bytes);
+            if (extraction.readable() && extraction.text() != null) {
+                return extraction.text();
+            }
+        } catch (Exception e) {
+            log.warn("Could not extract CV text from resumeId {}: {}", resumeId, e.getMessage());
+        }
+        return "";
     }
 
     private record GeneratedQuestion(int order, String category, String questionText) {}
