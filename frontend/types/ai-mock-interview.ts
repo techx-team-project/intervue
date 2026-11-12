@@ -3,7 +3,6 @@ export type MockInterviewStatus = 'IN_PROGRESS' | 'COMPLETED' | 'ABANDONED';
 export type MockInterviewFocusArea = 'TECHNICAL' | 'BEHAVIORAL' | 'SYSTEM_DESIGN' | 'MIXED';
 
 export interface StartMockInterviewRequest {
-  resumeId?: number | null;
   targetRole: string;
   seniorityLevel: string;
   focusArea: MockInterviewFocusArea;
@@ -49,7 +48,6 @@ export interface MockInterviewSummaryResource {
 export interface MockInterviewDetailResource {
   id: number;
   candidateId: number;
-  resumeId?: number | null;
   targetRole: string;
   seniorityLevel: string;
   focusArea: MockInterviewFocusArea;

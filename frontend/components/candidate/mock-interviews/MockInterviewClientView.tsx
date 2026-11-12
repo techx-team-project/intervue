@@ -4,7 +4,8 @@ import { useState } from 'react';
 import Spinner from '@/components/common/Spinner';
 import Button from '@/components/ui/Button';
 import Breadcrumb from '@/components/ui/Breadcrumb';
-import { useMockInterviewDetail } from '@/hooks/useAiMockInterview';
+import { MOCK_INTERVIEWS_QUERY_KEY, useMockInterviewDetail } from '@/hooks/useAiMockInterview';
+import { useQueryClient } from '@tanstack/react-query';
 import type { MockInterviewDetailResource } from '@/types/ai-mock-interview';
 import MockInterviewSetupModal from './MockInterviewSetupModal';
 import MockInterviewRoom from './MockInterviewRoom';
@@ -17,17 +18,17 @@ export default function MockInterviewClientView() {
   const [activeSessionId, setActiveSessionId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'ROOM' | 'RESULT' | 'HISTORY'>('HISTORY');
 
+  const queryClient = useQueryClient();
   const { data: sessionDetail, isLoading: isSessionLoading } = useMockInterviewDetail(activeSessionId);
+
+  const handleOpenHistory = () => {
+    setActiveTab('HISTORY');
+    queryClient.invalidateQueries({ queryKey: MOCK_INTERVIEWS_QUERY_KEY });
+  };
 
   const handleSessionStarted = (newSession: MockInterviewDetailResource) => {
     setActiveSessionId(newSession.id);
     setActiveTab('ROOM');
-  };
-
-  const handleSessionUpdated = (updatedSession: MockInterviewDetailResource) => {
-    if (updatedSession.status === 'COMPLETED') {
-      setActiveTab('RESULT');
-    }
   };
 
   const handleFinish = (completedSession: MockInterviewDetailResource) => {
@@ -65,7 +66,8 @@ export default function MockInterviewClientView() {
             <Button
               variant={activeTab === 'HISTORY' ? 'primary' : 'outline'}
               size="sm"
-              onClick={() => setActiveTab('HISTORY')}
+              onClick={handleOpenHistory}
+              aria-current={activeTab === 'HISTORY' ? 'page' : undefined}
               leftIcon={<History className="h-4 w-4" />}
             >
               History
@@ -101,14 +103,10 @@ export default function MockInterviewClientView() {
               <MockInterviewResultView
                 session={sessionDetail}
                 onStartNew={() => setIsSetupOpen(true)}
-                onViewHistory={() => setActiveTab('HISTORY')}
+                onViewHistory={handleOpenHistory}
               />
             ) : (
-              <MockInterviewRoom
-                session={sessionDetail}
-                onSessionUpdated={handleSessionUpdated}
-                onFinish={handleFinish}
-              />
+              <MockInterviewRoom session={sessionDetail} onFinish={handleFinish} />
             )
           ) : (
             <div className="space-y-3 rounded-3xl border border-slate-200 bg-white p-12 text-center">
