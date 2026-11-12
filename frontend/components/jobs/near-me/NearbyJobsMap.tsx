@@ -66,7 +66,7 @@ export default function NearbyJobsMap({
       center={[origin.lat, origin.lng]}
       zoom={ORIGIN_ZOOM_BY_RADIUS(radiusKm)}
       scrollWheelZoom
-      className="h-full min-h-96 w-full rounded-2xl"
+      className="h-full min-h-80 w-full"
     >
       <TileLayer url={MAP_TILE_URL} attribution={MAP_ATTRIBUTION} />
       <ClickToMoveOrigin onOriginChange={onOriginChange} />
@@ -74,7 +74,7 @@ export default function NearbyJobsMap({
       <Circle
         center={[origin.lat, origin.lng]}
         radius={radiusKm * METERS_PER_KM}
-        pathOptions={{ color: '#16a34a', weight: 1, fillOpacity: 0.06 }}
+        pathOptions={{ color: '#00b14f', weight: 1, fillOpacity: 0.06 }}
       />
       <Marker position={[origin.lat, origin.lng]} icon={originPinIcon} interactive={false} />
       {jobs.map((item) => (
@@ -89,9 +89,9 @@ export default function NearbyJobsMap({
               <Link href={`/jobs/${item.job.id}`} className="text-primary text-sm font-bold hover:underline">
                 {item.job.title}
               </Link>
-              <p className="text-xs text-slate-600">{item.job.company.name}</p>
-              <p className="text-xs text-slate-600">
-                {formatSalary(item.job.salary)} · cách {item.distanceKm} km
+              <p className="text-on-surface-variant text-xs">{item.job.company.name}</p>
+              <p className="text-on-surface-variant text-xs">
+                {formatSalary(item.job.salary)} · {item.distanceKm} km away
               </p>
             </div>
           </Popup>

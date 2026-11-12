@@ -1,190 +1,170 @@
 'use client';
 
 import { geocodeAddress } from '@/apiRequest/geocoding';
-import Spinner from '@/components/common/Spinner';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonClassName } from '@/components/ui/Button';
+import Skeleton from '@/components/ui/Skeleton';
+import FilterChipGroup from '@/components/jobs/listing/FilterChipGroup';
+import JobQuickView from '@/components/jobs/listing/JobQuickView';
 import { MAP_DEFAULT_CENTER, NEARBY_DEFAULT_RADIUS_KM, NEARBY_RADIUS_OPTIONS } from '@/constants/map';
 import { useNearbyJobs } from '@/hooks/useNearbyJobs';
-import { cn } from '@/lib/utils';
-import { formatSalary } from '@/utils/public-company';
+import type { PublicJobSummaryResource } from '@/types/public-job';
 import { getErrorMessage } from '@/utils/error';
-import { LocateFixed, Search } from 'lucide-react';
+import { MapPinOff } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { type FormEvent, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
+import NearbyJobCard from './NearbyJobCard';
 import type { MapOrigin } from './NearbyJobsMap';
+import NearbySearchBar from './NearbySearchBar';
 
 const NearbyJobsMap = dynamic(() => import('./NearbyJobsMap'), {
   ssr: false,
-  loading: () => <div className="bg-surface-container-low h-full min-h-96 w-full animate-pulse rounded-2xl" />,
+  loading: () => <Skeleton className="h-full min-h-80 w-full rounded-2xl" />,
 });
+
+const RADIUS_CHOICES = NEARBY_RADIUS_OPTIONS.map((value) => ({ value: String(value), label: `${value} km` }));
+const SKELETON_COUNT = 4;
+const COORDINATE_DIGITS = 5;
+const LOCATE_TIMEOUT_MS = 10_000;
 
 export default function NearbyJobsView() {
   const [origin, setOrigin] = useState<MapOrigin>({ ...MAP_DEFAULT_CENTER });
   const [radiusKm, setRadiusKm] = useState<number>(NEARBY_DEFAULT_RADIUS_KM);
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
-  const [locating, setLocating] = useState(false);
+  const [quickViewJob, setQuickViewJob] = useState<PublicJobSummaryResource | null>(null);
   const [address, setAddress] = useState('');
-  const [searching, setSearching] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
   const { data: jobs = [], isLoading, isError, error, refetch } = useNearbyJobs({ ...origin, radiusKm });
+  const closeQuickView = useCallback(() => setQuickViewJob(null), []);
 
   const moveOrigin = (next: MapOrigin) => {
     setSelectedJobId(null);
-    setOrigin({ lat: Number(next.lat.toFixed(5)), lng: Number(next.lng.toFixed(5)) });
+    setOrigin({ lat: Number(next.lat.toFixed(COORDINATE_DIGITS)), lng: Number(next.lng.toFixed(COORDINATE_DIGITS)) });
   };
 
-  const searchAddress = async (event: FormEvent) => {
-    event.preventDefault();
+  const searchAddress = async () => {
     const query = address.trim();
     if (!query) return;
-    setSearching(true);
+    setIsSearching(true);
     try {
       const result = await geocodeAddress(query);
       if (result) moveOrigin(result);
-      else toast.info('Không tìm thấy địa chỉ này. Hãy thử nhập cụ thể hơn hoặc bấm lên bản đồ.');
+      else toast.info('We could not find that address. Try a more specific one or click the map.');
     } catch {
-      toast.error('Không tìm được địa chỉ lúc này. Bạn hãy bấm trực tiếp lên bản đồ.');
+      toast.error('Address search is unavailable right now. Please click the map instead.');
     } finally {
-      setSearching(false);
+      setIsSearching(false);
     }
   };
 
   const locateMe = () => {
     if (!navigator.geolocation) {
-      toast.info('Trình duyệt không hỗ trợ định vị. Bạn hãy bấm lên bản đồ để chọn vị trí.');
+      toast.info('Your browser does not support location. Click the map to pick a spot.');
       return;
     }
-    setLocating(true);
+    setIsLocating(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         moveOrigin({ lat: position.coords.latitude, lng: position.coords.longitude });
-        setLocating(false);
+        setIsLocating(false);
       },
       () => {
-        setLocating(false);
-        toast.info('Không lấy được vị trí của bạn. Hãy cho phép định vị hoặc bấm lên bản đồ để chọn.');
+        setIsLocating(false);
+        toast.info('We could not get your location. Allow location access or click the map to pick a spot.');
       },
-      { enableHighAccuracy: false, timeout: 10000 },
+      { enableHighAccuracy: false, timeout: LOCATE_TIMEOUT_MS },
     );
   };
 
   return (
-    <div className="container-page space-y-4 py-8">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-black text-slate-900">Việc làm gần tôi</h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Nhập địa chỉ, bấm “Vị trí của tôi” hoặc bấm lên bản đồ để chọn nơi bạn muốn tìm việc quanh đó.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <form onSubmit={searchAddress} className="flex gap-1.5" role="search">
-            <input
-              type="search"
-              value={address}
-              onChange={(event) => setAddress(event.target.value)}
-              placeholder="Nhập địa chỉ, quận, thành phố..."
-              aria-label="Địa chỉ cần tìm việc quanh đó"
-              maxLength={200}
-              className="focus:border-primary h-9 w-56 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none sm:w-72"
-            />
-            <Button type="submit" size="sm" disabled={searching || !address.trim()}>
-              <Search className="h-4 w-4" aria-hidden /> {searching ? 'Đang tìm...' : 'Tìm'}
-            </Button>
-          </form>
-          <Button type="button" variant="outline" size="sm" disabled={locating} onClick={locateMe}>
-            <LocateFixed className="h-4 w-4" aria-hidden /> {locating ? 'Đang định vị...' : 'Vị trí của tôi'}
-          </Button>
-          <div className="flex gap-1.5" role="group" aria-label="Bán kính tìm kiếm">
-            {NEARBY_RADIUS_OPTIONS.map((value) => (
-              <button
-                key={value}
-                type="button"
-                aria-pressed={radiusKm === value}
-                onClick={() => setRadiusKm(value)}
-                className={cn(
-                  'cursor-pointer rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
-                  radiusKm === value
-                    ? 'border-primary bg-primary text-white'
-                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50',
-                )}
-              >
-                {value} km
-              </button>
-            ))}
+    <>
+      <NearbySearchBar
+        address={address}
+        isSearching={isSearching}
+        isLocating={isLocating}
+        onAddressChange={setAddress}
+        onSearch={searchAddress}
+        onLocate={locateMe}
+      />
+
+      <div className="container-page space-y-4 py-8">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 id="nearby-results-title" className="font-display text-title-lg text-on-surface font-bold">
+              {isLoading ? 'Searching…' : `${jobs.length} ${jobs.length === 1 ? 'job' : 'jobs'} within ${radiusKm} km`}
+            </h2>
+            <p className="text-body-md text-on-surface-variant mt-0.5">
+              Click anywhere on the map to move the search center.
+            </p>
           </div>
-        </div>
-      </header>
-
-      <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
-        <section
-          aria-label="Danh sách việc làm gần bạn"
-          className="order-2 space-y-2 lg:order-1 lg:max-h-[34rem] lg:overflow-y-auto"
-        >
-          {isLoading && (
-            <div className="flex justify-center py-10">
-              <Spinner />
-            </div>
-          )}
-          {isError && (
-            <div className="space-y-3 py-8 text-center">
-              <p className="text-sm font-semibold text-slate-700">{getErrorMessage(error)}</p>
-              <Button variant="outline" onClick={() => refetch()}>
-                Thử lại
-              </Button>
-            </div>
-          )}
-          {!isLoading && !isError && jobs.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-10 text-center">
-              <p className="text-sm font-semibold text-slate-700">Chưa có tin nào trong bán kính {radiusKm} km</p>
-              <p className="mt-1 text-xs text-slate-500">Thử tăng bán kính hoặc chọn một vị trí khác trên bản đồ.</p>
-              <Link href="/jobs" className="mt-4 inline-block">
-                <Button size="sm">Xem tất cả việc làm</Button>
-              </Link>
-            </div>
-          )}
-          {jobs.map((item) => (
-            <article
-              key={item.job.id}
-              className={cn(
-                'rounded-xl border bg-white p-3 transition-colors',
-                item.job.id === selectedJobId ? 'border-primary bg-primary-light' : 'border-transparent',
-              )}
-            >
-              <button
-                type="button"
-                onClick={() => setSelectedJobId(item.job.id)}
-                className="block w-full cursor-pointer text-left"
-              >
-                <p className="line-clamp-2 text-sm font-bold text-slate-900">{item.job.title}</p>
-                <p className="mt-0.5 truncate text-xs text-slate-600">{item.job.company.name}</p>
-                <p className="mt-1 text-xs text-slate-500">
-                  {formatSalary(item.job.salary)} · cách {item.distanceKm} km
-                </p>
-                {item.address && <p className="mt-0.5 truncate text-xs text-slate-400">{item.address}</p>}
-              </button>
-              <Link
-                href={`/jobs/${item.job.id}`}
-                className="text-primary mt-1 inline-block text-xs font-semibold hover:underline"
-              >
-                Xem chi tiết
-              </Link>
-            </article>
-          ))}
-        </section>
-
-        <div className="order-1 h-[28rem] lg:order-2 lg:h-[34rem]">
-          <NearbyJobsMap
-            origin={origin}
-            radiusKm={radiusKm}
-            jobs={jobs}
-            selectedJobId={selectedJobId}
-            onSelect={setSelectedJobId}
-            onOriginChange={moveOrigin}
+          <FilterChipGroup
+            ariaLabel="Search radius"
+            allowClear={false}
+            options={RADIUS_CHOICES}
+            value={String(radiusKm)}
+            onChange={(value) => setRadiusKm(Number(value))}
           />
         </div>
+
+        <div className="grid gap-4 lg:grid-cols-[26rem_minmax(0,1fr)]">
+          <section
+            aria-labelledby="nearby-results-title"
+            className="scrollbar-on-hover order-2 space-y-3 lg:order-1 lg:max-h-[calc(100dvh-15rem)] lg:overflow-y-auto lg:pr-1"
+          >
+            {isLoading &&
+              Array.from({ length: SKELETON_COUNT }, (_, index) => (
+                <Skeleton key={index} className="h-36 w-full rounded-2xl" />
+              ))}
+
+            {isError && (
+              <div className="border-error/30 bg-error/10 flex flex-col items-center gap-3 rounded-2xl border px-6 py-10 text-center">
+                <p className="text-error text-sm font-semibold">{getErrorMessage(error)}</p>
+                <Button variant="outline" size="sm" onClick={() => refetch()}>
+                  Try again
+                </Button>
+              </div>
+            )}
+
+            {!isLoading && !isError && jobs.length === 0 && (
+              <div className="bg-surface border-outline-variant flex flex-col items-center gap-3 rounded-2xl border px-6 py-12 text-center">
+                <MapPinOff className="text-outline h-9 w-9" aria-hidden />
+                <p className="text-title-md text-on-surface font-semibold">No jobs within {radiusKm} km</p>
+                <p className="text-body-md text-on-surface-variant max-w-xs">
+                  Try a bigger radius or pick another spot on the map.
+                </p>
+                <Link href="/jobs" className={buttonClassName({ variant: 'outline', size: 'md' })}>
+                  Browse all jobs
+                </Link>
+              </div>
+            )}
+
+            {jobs.map((item) => (
+              <NearbyJobCard
+                key={item.job.id}
+                item={item}
+                isSelected={item.job.id === selectedJobId}
+                onSelect={setSelectedJobId}
+                onQuickView={setQuickViewJob}
+              />
+            ))}
+          </section>
+
+          <div className="border-outline-variant order-1 h-80 overflow-hidden rounded-2xl border lg:sticky lg:top-24 lg:order-2 lg:h-[calc(100dvh-15rem)]">
+            <NearbyJobsMap
+              origin={origin}
+              radiusKm={radiusKm}
+              jobs={jobs}
+              selectedJobId={selectedJobId}
+              onSelect={setSelectedJobId}
+              onOriginChange={moveOrigin}
+            />
+          </div>
+        </div>
       </div>
-    </div>
+
+      <JobQuickView job={quickViewJob} onClose={closeQuickView} />
+    </>
   );
 }
