@@ -98,7 +98,7 @@ export default function RecruiterVouchersView() {
         description="Danh sách mã giảm giá và lịch sử sử dụng ưu đãi mua dịch vụ của doanh nghiệp"
       />
 
-      <div className="border-outline-variant rounded-xl border bg-white p-5 shadow-2xs sm:p-6">
+      <div className="border-outline-variant rounded-xl border bg-white p-5 sm:p-6">
         {/* TopCV-style pill tab strip */}
         <div className="flex flex-wrap items-center gap-2.5 border-b border-slate-100 pb-5" role="tablist">
           <button
