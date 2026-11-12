@@ -7,11 +7,12 @@ import com.techx.intervue.modules.candidate.mockinterview.resources.MockIntervie
 import com.techx.intervue.modules.candidate.mockinterview.resources.MockInterviewSummaryResource;
 import com.techx.intervue.modules.candidate.mockinterview.resources.SubmitAnswerResultResource;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface CandidateMockInterviewServiceInterface {
 
     MockInterviewDetailResource startSession(
-            Long candidateId, StartMockInterviewRequest request, String ip);
+            Long candidateId, StartMockInterviewRequest request, MultipartFile cvFile, String ip);
 
     List<MockInterviewSummaryResource> listHistory(Long candidateId);
 

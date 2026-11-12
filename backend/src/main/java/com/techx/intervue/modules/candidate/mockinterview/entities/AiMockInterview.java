@@ -39,9 +39,6 @@ public class AiMockInterview extends BaseEntity {
     @Column(name = "candidate_id", nullable = false)
     private Long candidateId;
 
-    @Column(name = "resume_id")
-    private Long resumeId;
-
     @Column(name = "target_role", nullable = false, length = 150)
     private String targetRole;
 
