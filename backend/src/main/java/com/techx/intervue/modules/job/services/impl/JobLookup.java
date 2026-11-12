@@ -7,6 +7,7 @@ import com.techx.intervue.modules.job.enums.JobStatus;
 import com.techx.intervue.modules.job.repositories.JobRepository;
 import com.techx.intervue.modules.job.services.interfaces.JobLookupInterface;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class JobLookup implements JobLookupInterface {
+
+    private static final Set<JobStatus> HIDDEN_FROM_APPLICANTS =
+            Set.of(JobStatus.DRAFT, JobStatus.PENDING_REVIEW);
 
     private final JobRepository jobRepository;
 
@@ -23,7 +27,7 @@ public class JobLookup implements JobLookupInterface {
         Job job =
                 jobRepository
                         .findWithScreeningQuestionsById(jobId)
-                        .filter(found -> found.getStatus() != JobStatus.DRAFT)
+                        .filter(found -> !HIDDEN_FROM_APPLICANTS.contains(found.getStatus()))
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         boolean open =
                 job.getStatus() == JobStatus.PUBLISHED

@@ -522,6 +522,9 @@ public class UserAdminService implements UserAdminServiceInterface {
                     JOB_CREATED,
                     JOB_UPDATED,
                     JOB_PUBLISHED,
+                    JOB_SUBMITTED,
+                    JOB_APPROVED,
+                    JOB_REJECTED,
                     JOB_PAUSED,
                     JOB_RESUMED,
                     JOB_CLOSED,
@@ -620,6 +623,9 @@ public class UserAdminService implements UserAdminServiceInterface {
             case JOB_CREATED -> "Job created";
             case JOB_UPDATED -> "Job updated";
             case JOB_PUBLISHED -> "Job published";
+            case JOB_SUBMITTED -> "Job submitted for review";
+            case JOB_APPROVED -> "Job approved by an admin";
+            case JOB_REJECTED -> "Job rejected by an admin";
             case JOB_PAUSED -> "Job paused";
             case JOB_RESUMED -> "Job resumed";
             case JOB_CLOSED -> "Job closed";

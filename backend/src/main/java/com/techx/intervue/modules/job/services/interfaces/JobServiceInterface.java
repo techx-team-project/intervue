@@ -28,6 +28,8 @@ public interface JobServiceInterface {
 
     JobResource publish(Long jobId, Long recruiterId);
 
+    JobResource publishApproved(Long jobId);
+
     JobResource pause(Long jobId, Long recruiterId);
 
     JobResource resume(Long jobId, Long recruiterId);
