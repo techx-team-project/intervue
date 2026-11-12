@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,9 +96,10 @@ public class VoucherService implements VoucherServiceInterface {
     @Transactional(readOnly = true)
     public Page<AvailableVoucherResource> listAvailableWallet(Long recruiterId, Pageable pageable) {
         Long companyId = companyResolver.findId(recruiterId).orElse(null);
+        Pageable sanitized = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         Page<Voucher> page =
                 voucherRepository.findAvailablePage(
-                        VoucherStatus.ACTIVE, Instant.now(), companyId, pageable);
+                        VoucherStatus.ACTIVE, Instant.now(), companyId, sanitized);
         List<Long> voucherIds = page.getContent().stream().map(Voucher::getId).toList();
         Map<Long, Long> usedByCompany = countUsedByCompany(companyId, voucherIds);
         Map<Long, List<VoucherPackageSummaryResource>> packagesByVoucher =
@@ -118,9 +120,10 @@ public class VoucherService implements VoucherServiceInterface {
         if (companyId.isEmpty()) {
             return Page.empty(pageable);
         }
+        Pageable sanitized = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         Page<Object[]> page =
                 redemptionRepository.findUsedByCompany(
-                        companyId.get(), EXCLUDED_USED_ORDER_STATUSES, pageable);
+                        companyId.get(), EXCLUDED_USED_ORDER_STATUSES, sanitized);
         List<Long> voucherIds =
                 page.getContent().stream()
                         .map(row -> ((Voucher) row[1]).getId())
@@ -170,27 +173,13 @@ public class VoucherService implements VoucherServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
-    public AppliedVoucher apply(String code, List<BillableLine> lines, Long companyId) {
+    public AppliedVoucher previewForCheckout(String code, List<BillableLine> lines) {
         Voucher voucher =
                 voucherRepository
                         .findByCodeWithPackages(code.trim().toUpperCase())
                         .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
 
-        Instant now = Instant.now();
-        if (voucher.getStatus() != VoucherStatus.ACTIVE
-                || (voucher.getStartsAt() != null && voucher.getStartsAt().isAfter(now))
-                || (voucher.getEndsAt() != null && voucher.getEndsAt().isBefore(now))) {
-            throw new AppException(ErrorCode.VOUCHER_NOT_USABLE);
-        }
-        if (voucher.getUsageLimit() != null && voucher.getUsedCount() >= voucher.getUsageLimit()) {
-            throw new AppException(ErrorCode.VOUCHER_EXHAUSTED);
-        }
-        if (voucher.getPerCompanyLimit() != null
-                && redemptionRepository.countByVoucherIdAndCompanyId(voucher.getId(), companyId)
-                        >= voucher.getPerCompanyLimit()) {
-            throw new AppException(ErrorCode.VOUCHER_ALREADY_USED);
-        }
-
+        assertWithinActiveWindow(voucher);
         long eligibleSubtotal = computeEligibleSubtotal(voucher, lines);
         if (eligibleSubtotal < voucher.getMinOrderValue()) {
             throw new AppException(ErrorCode.VOUCHER_MIN_ORDER_NOT_MET);
@@ -200,26 +189,54 @@ public class VoucherService implements VoucherServiceInterface {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public void assertUsableForCompany(Voucher voucher, Long companyId) {
+        if (voucher.getUsageLimit() != null && voucher.getUsedCount() >= voucher.getUsageLimit()) {
+            throw new AppException(ErrorCode.VOUCHER_EXHAUSTED);
+        }
+        if (voucher.getPerCompanyLimit() != null
+                && redemptionRepository.countByVoucherIdAndCompanyId(voucher.getId(), companyId)
+                        >= voucher.getPerCompanyLimit()) {
+            throw new AppException(ErrorCode.VOUCHER_ALREADY_USED);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AppliedVoucher apply(String code, List<BillableLine> lines, Long companyId) {
+        AppliedVoucher applied = previewForCheckout(code, lines);
+        assertUsableForCompany(applied.voucher(), companyId);
+        return applied;
+    }
+
+    @Override
     @Transactional
     public void claim(AppliedVoucher applied, Long orderId, Long companyId) {
-        Voucher voucher = applied.voucher();
-        if (voucherRepository.claim(voucher.getId()) == 0) {
+        Voucher lockedVoucher =
+                voucherRepository
+                        .findByIdForUpdate(applied.voucher().getId())
+                        .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+        assertWithinActiveWindow(lockedVoucher);
+
+        // Lock company redemptions with a current read so concurrent checkouts cannot slip past
+        // perCompanyLimit under MySQL REPEATABLE_READ MVCC snapshots.
+        if (lockedVoucher.getPerCompanyLimit() != null
+                && redemptionRepository
+                                .findIdsForCompanyUpdate(lockedVoucher.getId(), companyId)
+                                .size()
+                        >= lockedVoucher.getPerCompanyLimit()) {
+            throw new AppException(ErrorCode.VOUCHER_ALREADY_USED);
+        }
+        if (voucherRepository.claim(lockedVoucher.getId()) == 0) {
             throw new AppException(ErrorCode.VOUCHER_EXHAUSTED);
         }
         redemptionRepository.saveAndFlush(
                 VoucherRedemption.builder()
-                        .voucherId(voucher.getId())
+                        .voucherId(lockedVoucher.getId())
                         .orderId(orderId)
                         .companyId(companyId)
                         .discountAmount(applied.discountAmount())
                         .build());
-
-        // Counted again after the write: two checkouts racing would both have read the old count
-        if (voucher.getPerCompanyLimit() != null
-                && redemptionRepository.countByVoucherIdAndCompanyId(voucher.getId(), companyId)
-                        > voucher.getPerCompanyLimit()) {
-            throw new AppException(ErrorCode.VOUCHER_ALREADY_USED);
-        }
     }
 
     @Override
@@ -229,9 +246,19 @@ public class VoucherService implements VoucherServiceInterface {
                 .findByOrderId(orderId)
                 .ifPresent(
                         redemption -> {
-                            voucherRepository.release(redemption.getVoucherId());
-                            redemptionRepository.delete(redemption);
+                            if (redemptionRepository.deleteByOrderIdAtomic(orderId) > 0) {
+                                voucherRepository.release(redemption.getVoucherId());
+                            }
                         });
+    }
+
+    private void assertWithinActiveWindow(Voucher voucher) {
+        Instant now = Instant.now();
+        if (voucher.getStatus() != VoucherStatus.ACTIVE
+                || (voucher.getStartsAt() != null && voucher.getStartsAt().isAfter(now))
+                || (voucher.getEndsAt() != null && !voucher.getEndsAt().isAfter(now))) {
+            throw new AppException(ErrorCode.VOUCHER_NOT_USABLE);
+        }
     }
 
     private Map<Long, Long> countUsedByCompany(Long companyId, Collection<Long> voucherIds) {
