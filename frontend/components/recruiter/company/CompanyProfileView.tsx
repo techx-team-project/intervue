@@ -46,7 +46,7 @@ export interface MarketCompany {
   avatarBg: string;
 }
 
-const BG_COLORS = ['bg-emerald-600', 'bg-blue-600', 'bg-slate-700', 'bg-amber-600', 'bg-teal-600', 'bg-purple-600'];
+const BG_COLORS = ['bg-primary', 'bg-blue-600', 'bg-slate-700', 'bg-amber-600', 'bg-teal-600', 'bg-purple-600'];
 
 function toMarketCompany(c: CompanySummaryResource, idx = 0): MarketCompany {
   const initials =
@@ -397,7 +397,7 @@ export function CompanyProfileView() {
                   <div
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
                       activeTab === 'search'
-                        ? 'text-primary bg-emerald-50'
+                        ? 'text-primary bg-primary-light'
                         : 'bg-surface-container-high/80 text-on-surface-variant'
                     }`}
                   >
@@ -431,7 +431,7 @@ export function CompanyProfileView() {
                   <div
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
                       activeTab === 'create'
-                        ? 'text-primary bg-emerald-50'
+                        ? 'text-primary bg-primary-light'
                         : 'bg-surface-container-high/80 text-on-surface-variant'
                     }`}
                   >
@@ -469,13 +469,13 @@ export function CompanyProfileView() {
                         setCurrentPage(1);
                       }}
                       placeholder="Company name, commercial name, or tax ID..."
-                      className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white pr-4 pl-10 text-xs placeholder-slate-400 transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                      className="border-outline text-on-surface focus:border-primary focus:ring-primary/30 h-11 w-full rounded-md border bg-white pr-4 pl-10 text-xs placeholder-slate-400 transition focus:ring-1 focus:outline-none sm:text-sm"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={isSearching}
-                    className="bg-primary flex h-11 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md px-6 text-xs font-semibold text-white shadow-2xs transition hover:bg-emerald-600 active:scale-98 disabled:opacity-50 sm:text-sm"
+                    className="bg-primary hover:bg-primary-hover flex h-11 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md px-6 text-xs font-semibold text-white transition active:scale-98 disabled:opacity-50 sm:text-sm"
                   >
                     {isSearching ? 'Searching...' : 'Search'}
                   </button>
@@ -521,13 +521,13 @@ export function CompanyProfileView() {
                       displayedCompanies.map((item) => (
                         <div
                           key={item.id}
-                          className="border-outline-variant hover:border-primary flex items-center justify-between rounded-md border bg-white p-4 shadow-2xs transition-all hover:shadow-xs"
+                          className="border-outline-variant hover:border-primary flex items-center justify-between rounded-md border bg-white p-4 transition-all hover:shadow-xs"
                         >
                           {/* Left: Avatar / Logo + Details */}
                           <div className="flex min-w-0 flex-1 items-start gap-3.5 pr-3">
                             {/* Company Logo or Initials Avatar */}
                             <div
-                              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white shadow-2xs ${item.avatarBg}`}
+                              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${item.avatarBg}`}
                             >
                               {item.initials}
                             </div>
@@ -557,7 +557,7 @@ export function CompanyProfileView() {
                           <button
                             type="button"
                             onClick={() => handleSelectCompanyCard(item)}
-                            className="border-primary text-primary shrink-0 cursor-pointer rounded-md border bg-white px-4 py-1.5 text-xs font-semibold shadow-2xs transition hover:bg-emerald-50 active:scale-98"
+                            className="border-primary text-primary hover:bg-primary-light shrink-0 cursor-pointer rounded-md border bg-white px-4 py-1.5 text-xs font-semibold transition active:scale-98"
                           >
                             Select
                           </button>
@@ -599,7 +599,7 @@ export function CompanyProfileView() {
                             onClick={() => setCurrentPage(idx + 1)}
                             className={`h-7 w-7 cursor-pointer rounded border text-xs font-semibold transition ${
                               currentPage === idx + 1
-                                ? 'border-primary bg-primary text-white shadow-xs'
+                                ? 'border-primary bg-primary text-white'
                                 : 'border-outline-variant text-on-surface hover:bg-surface-container-low bg-white'
                             }`}
                           >
@@ -628,7 +628,7 @@ export function CompanyProfileView() {
           /* ================= SHOWCASE VIEW MODE (TopCV Standard) ================= */
           <div className="space-y-5">
             {/* Action Bar (TopCV: Yêu cầu cập nhật thông tin công ty) */}
-            <div className="border-outline-variant flex flex-col gap-3 rounded-lg border bg-white p-5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+            <div className="border-outline-variant flex flex-col gap-3 rounded-lg border bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
                 <h3 className="text-on-surface text-sm font-bold sm:text-base">Yêu cầu cập nhật thông tin công ty</h3>
                 <p className="text-on-surface-variant text-xs">
@@ -640,7 +640,7 @@ export function CompanyProfileView() {
                 <button
                   type="button"
                   onClick={() => setIsEditingProfile(true)}
-                  className="border-primary text-primary inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-4 py-2 text-xs font-semibold shadow-2xs transition hover:bg-emerald-50 active:scale-98"
+                  className="border-primary text-primary hover:bg-primary-light inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-4 py-2 text-xs font-semibold transition active:scale-98"
                 >
                   <Pencil className="h-3.5 w-3.5" />
                   <span>Tạo yêu cầu</span>
@@ -649,7 +649,7 @@ export function CompanyProfileView() {
                 <button
                   type="button"
                   onClick={() => setIsLeaveModalOpen(true)}
-                  className="border-outline-variant text-on-surface-variant inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-3.5 py-2 text-xs font-medium shadow-2xs transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
+                  className="border-outline-variant text-on-surface-variant inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-3.5 py-2 text-xs font-medium transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
                 >
                   <LogOut className="h-3.5 w-3.5" />
                   <span>Rời công ty</span>
@@ -658,11 +658,11 @@ export function CompanyProfileView() {
             </div>
 
             {/* Showcase Card (TopCV 2-Column Key-Value Display) */}
-            <div className="border-outline-variant rounded-lg border bg-white p-6 shadow-2xs">
+            <div className="border-outline-variant rounded-lg border bg-white p-6">
               {/* Header: Logo, Company Name, Badges, Short Address/Size */}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                 {displayedLogoUrl ? (
-                  <div className="border-outline-variant flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-white p-2 shadow-2xs">
+                  <div className="border-outline-variant flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-white p-2">
                     <img
                       src={displayedLogoUrl}
                       alt={currentDisplayedCompanyName}
@@ -670,7 +670,7 @@ export function CompanyProfileView() {
                     />
                   </div>
                 ) : (
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white shadow-2xs">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white">
                     {companyInitials}
                   </div>
                 )}
@@ -813,7 +813,7 @@ export function CompanyProfileView() {
                         {company.photos.map((photo) => (
                           <div
                             key={photo.id}
-                            className="group border-outline-variant bg-surface-container-low relative aspect-video overflow-hidden rounded-md border shadow-2xs"
+                            className="group border-outline-variant bg-surface-container-low relative aspect-video overflow-hidden rounded-md border"
                           >
                             <img
                               src={photo.url || photo.photoUrl}
@@ -839,7 +839,7 @@ export function CompanyProfileView() {
         {hasLinkedCompany && isEditingProfile ? (
           <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6 pt-1">
             {/* Header when editing linked company */}
-            <div className="border-outline-variant flex flex-col gap-2 rounded-lg border bg-white p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+            <div className="border-outline-variant flex flex-col gap-2 rounded-lg border bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 className="text-on-surface text-base font-bold">Yêu cầu cập nhật thông tin công ty</h3>
                 <p className="text-on-surface-variant text-xs">
@@ -849,7 +849,7 @@ export function CompanyProfileView() {
               <button
                 type="button"
                 onClick={() => setIsEditingProfile(false)}
-                className="border-outline text-on-surface hover:bg-surface-container-low inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-3.5 py-2 text-xs font-semibold shadow-2xs transition"
+                className="border-outline text-on-surface hover:bg-surface-container-low inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-3.5 py-2 text-xs font-semibold transition"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
                 <span>Quay lại xem thông tin</span>
@@ -858,7 +858,7 @@ export function CompanyProfileView() {
             {/* 1. Logo Upload Section (TopCV Style) */}
             <div className="border-outline-variant bg-surface-container-low/50 flex flex-col items-center justify-center gap-3 rounded-md border p-6 text-center">
               <div className="group relative">
-                <div className="border-outline text-outline flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-dashed bg-white shadow-2xs">
+                <div className="border-outline text-outline flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-dashed bg-white">
                   {displayedLogoUrl ? (
                     <img src={displayedLogoUrl} alt="Logo" className="h-full w-full object-contain p-1" />
                   ) : (
@@ -888,7 +888,7 @@ export function CompanyProfileView() {
                   type="checkbox"
                   checked={noLogo}
                   onChange={(e) => setNoLogo(e.target.checked)}
-                  className="border-outline text-primary h-4 w-4 rounded focus:ring-emerald-400"
+                  className="border-outline text-primary focus:ring-primary/30 h-4 w-4 rounded"
                 />
                 <span>I don&apos;t have a logo</span>
               </label>
@@ -901,7 +901,7 @@ export function CompanyProfileView() {
                 <label
                   className={`flex cursor-pointer items-center gap-2 rounded-md border px-4 py-2 text-xs font-semibold transition select-none ${
                     watchedBusinessType === 'ENTERPRISE'
-                      ? 'border-primary text-primary bg-emerald-50/60'
+                      ? 'border-primary text-primary bg-primary-light'
                       : 'border-outline text-on-surface hover:bg-surface-container-low bg-white'
                   }`}
                 >
@@ -919,7 +919,7 @@ export function CompanyProfileView() {
                 <label
                   className={`flex cursor-pointer items-center gap-2 rounded-md border px-4 py-2 text-xs font-semibold transition select-none ${
                     watchedBusinessType === 'HOUSEHOLD'
-                      ? 'border-primary text-primary bg-emerald-50/60'
+                      ? 'border-primary text-primary bg-primary-light'
                       : 'border-outline text-on-surface hover:bg-surface-container-low bg-white'
                   }`}
                 >
@@ -947,7 +947,7 @@ export function CompanyProfileView() {
                   href="https://masothue.com/"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-0.5 font-semibold text-emerald-700 underline hover:text-emerald-800"
+                  className="text-primary-deep hover:text-primary-deep inline-flex items-center gap-0.5 font-semibold underline"
                 >
                   here <ExternalLink className="h-3 w-3" />
                 </a>
@@ -982,7 +982,7 @@ export function CompanyProfileView() {
                 <select
                   {...register('industry')}
                   defaultValue="Software & Information Technology"
-                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary focus:ring-primary/30 h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:outline-none sm:text-sm"
                 >
                   <option value="Software & Information Technology">Software & Information Technology</option>
                   <option value="E-Commerce & Online Services">E-Commerce & Online Services</option>
@@ -1013,7 +1013,7 @@ export function CompanyProfileView() {
                   type="text"
                   {...register('tradingName')}
                   placeholder="e.g. TechX, Shopee, MoMo"
-                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary focus:ring-primary/30 h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:outline-none sm:text-sm"
                 />
               </div>
 
@@ -1027,7 +1027,7 @@ export function CompanyProfileView() {
                   disabled={noWebsite}
                   {...register('website')}
                   placeholder="https://company.com"
-                  className="border-outline text-on-surface focus:border-primary disabled:bg-surface-container-high disabled:text-outline h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary disabled:bg-surface-container-high disabled:text-outline focus:ring-primary/30 h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:outline-none sm:text-sm"
                 />
                 <label className="text-on-surface-variant flex cursor-pointer items-center gap-1.5 pt-0.5 text-xs select-none">
                   <input
@@ -1037,7 +1037,7 @@ export function CompanyProfileView() {
                       setNoWebsite(e.target.checked);
                       if (e.target.checked) setValue('website', '');
                     }}
-                    className="border-outline text-primary h-3.5 w-3.5 rounded focus:ring-emerald-400"
+                    className="border-outline text-primary focus:ring-primary/30 h-3.5 w-3.5 rounded"
                   />
                   <span>I don&apos;t have a website</span>
                 </label>
@@ -1051,7 +1051,7 @@ export function CompanyProfileView() {
                 </label>
                 <select
                   {...register('market')}
-                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary focus:ring-primary/30 h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:outline-none sm:text-sm"
                 >
                   <option value="Domestic">Domestic (Vietnam)</option>
                   <option value="International">International (Global / APAC)</option>
@@ -1064,7 +1064,7 @@ export function CompanyProfileView() {
                 <label className="text-on-surface text-xs font-bold">Target Customers</label>
                 <select
                   {...register('targetCustomers')}
-                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary focus:ring-primary/30 h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:outline-none sm:text-sm"
                 >
                   <option value="B2B (Enterprise clients)">B2B (Enterprise clients)</option>
                   <option value="B2C (Individual consumers)">B2C (Individual consumers)</option>
@@ -1080,7 +1080,7 @@ export function CompanyProfileView() {
                 </label>
                 <select
                   {...register('size')}
-                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary focus:ring-primary/30 h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:outline-none sm:text-sm"
                 >
                   <option value="1-9 employees">1-9 employees</option>
                   <option value="10-24 employees">10-24 employees</option>
@@ -1100,7 +1100,7 @@ export function CompanyProfileView() {
                   type="email"
                   {...register('email')}
                   placeholder="careers@company.com"
-                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary focus:ring-primary/30 h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:outline-none sm:text-sm"
                 />
                 {errors.email && <p className="text-xs text-rose-600">{errors.email.message}</p>}
               </div>
@@ -1114,7 +1114,7 @@ export function CompanyProfileView() {
                   type="tel"
                   {...register('phone')}
                   placeholder="024 1234 5678 or 0912345678"
-                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary focus:ring-primary/30 h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:outline-none sm:text-sm"
                 />
               </div>
 
@@ -1125,7 +1125,7 @@ export function CompanyProfileView() {
                   type="text"
                   {...register('address')}
                   placeholder={company?.registeredAddress || 'Địa chỉ văn phòng hiển thị cho ứng viên'}
-                  className="border-outline text-on-surface focus:border-primary h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:ring-emerald-200 focus:outline-none sm:text-sm"
+                  className="border-outline text-on-surface focus:border-primary focus:ring-primary/30 h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:outline-none sm:text-sm"
                 />
                 {company?.registeredAddress && (
                   <p className="text-label-sm text-on-surface-variant">Địa chỉ đăng ký: {company.registeredAddress}</p>
@@ -1149,7 +1149,7 @@ export function CompanyProfileView() {
               </div>
 
               {/* Rich text editor wrapper */}
-              <div className="border-outline focus-within:border-primary overflow-hidden rounded-md border bg-white focus-within:ring-1 focus-within:ring-emerald-200">
+              <div className="border-outline focus-within:border-primary focus-within:ring-primary/30 overflow-hidden rounded-md border bg-white focus-within:ring-1">
                 <div className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant flex items-center gap-1 border-b p-2">
                   <button type="button" className="hover:bg-surface-container-high rounded p-1 transition" title="Bold">
                     <Bold className="h-3.5 w-3.5" />
@@ -1206,7 +1206,7 @@ export function CompanyProfileView() {
               </div>
 
               {/* Rich text editor wrapper */}
-              <div className="border-outline focus-within:border-primary overflow-hidden rounded-md border bg-white focus-within:ring-1 focus-within:ring-emerald-200">
+              <div className="border-outline focus-within:border-primary focus-within:ring-primary/30 overflow-hidden rounded-md border bg-white focus-within:ring-1">
                 <div className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant flex items-center gap-1 border-b p-2">
                   <button type="button" className="hover:bg-surface-container-high rounded p-1 transition" title="Bold">
                     <Bold className="h-3.5 w-3.5" />
@@ -1263,7 +1263,7 @@ export function CompanyProfileView() {
                     <p>
                       Đã dùng {allPhotos.length}/{company.photoLimit} ảnh.{' '}
                       {company.brandPageUntil ? (
-                        <span className="font-semibold text-emerald-700">
+                        <span className="text-primary-deep font-semibold">
                           Trang thương hiệu đang chạy tới {formatDate(company.brandPageUntil)}.
                         </span>
                       ) : (
@@ -1286,7 +1286,7 @@ export function CompanyProfileView() {
                   type="button"
                   onClick={() => photoInputRef.current?.click()}
                   disabled={isUploadingPhotos}
-                  className="border-primary text-primary flex cursor-pointer items-center gap-1.5 rounded-md border bg-white px-4 py-2 text-xs font-semibold shadow-2xs transition hover:bg-emerald-50"
+                  className="border-primary text-primary hover:bg-primary-light flex cursor-pointer items-center gap-1.5 rounded-md border bg-white px-4 py-2 text-xs font-semibold transition"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   <span>{isUploadingPhotos ? 'Uploading Photos...' : '+ Add Photos'}</span>
@@ -1339,7 +1339,7 @@ export function CompanyProfileView() {
                   <button
                     type="button"
                     onClick={() => setIsEditingProfile(false)}
-                    className="border-outline text-on-surface hover:bg-surface-container-low flex h-11 cursor-pointer items-center justify-center rounded-md border bg-white px-6 text-sm font-semibold shadow-2xs transition"
+                    className="border-outline text-on-surface hover:bg-surface-container-low flex h-11 cursor-pointer items-center justify-center rounded-md border bg-white px-6 text-sm font-semibold transition"
                   >
                     Hủy bỏ
                   </button>
@@ -1347,7 +1347,7 @@ export function CompanyProfileView() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-primary flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-md px-8 text-sm font-semibold text-white shadow-2xs transition hover:bg-emerald-600 active:scale-98 disabled:opacity-50"
+                  className="bg-primary hover:bg-primary-hover flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-md px-8 text-sm font-semibold text-white transition active:scale-98 disabled:opacity-50"
                 >
                   {isSubmitting ? 'Saving...' : 'Save Profile'}
                 </button>
@@ -1389,7 +1389,7 @@ export function CompanyProfileView() {
               type="button"
               onClick={onConfirmSelectCompany}
               disabled={isSelecting}
-              className="bg-primary cursor-pointer rounded-md px-5 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-emerald-600 disabled:opacity-50"
+              className="bg-primary hover:bg-primary-hover cursor-pointer rounded-md px-5 py-2 text-xs font-semibold text-white transition disabled:opacity-50"
             >
               {isSelecting ? 'Selecting...' : 'Confirm Selection'}
             </button>
@@ -1401,7 +1401,7 @@ export function CompanyProfileView() {
             You are selecting <strong>{pendingCompanyToSelect?.name}</strong> (Tax ID:{' '}
             <code className="text-on-surface font-mono font-bold">{pendingCompanyToSelect?.taxCode}</code>).
           </p>
-          <div className="rounded-md border border-emerald-200 bg-emerald-50/70 p-3 text-emerald-950">
+          <div className="border-primary/30 bg-primary-light text-primary-deep rounded-md border p-3">
             <p className="font-bold">Auto-populate Data:</p>
             <p className="mt-1">
               Official company name, tax ID, and registered headquarters address will be automatically populated into
@@ -1430,7 +1430,7 @@ export function CompanyProfileView() {
               type="button"
               onClick={onConfirmLeave}
               disabled={isLeaving}
-              className="cursor-pointer rounded-md bg-rose-600 px-5 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-rose-700 disabled:opacity-50"
+              className="cursor-pointer rounded-md bg-rose-600 px-5 py-2 text-xs font-semibold text-white transition hover:bg-rose-700 disabled:opacity-50"
             >
               {isLeaving ? 'Leaving...' : 'Yes, Leave Company'}
             </button>
