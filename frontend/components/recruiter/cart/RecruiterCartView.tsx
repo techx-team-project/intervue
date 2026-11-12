@@ -214,8 +214,8 @@ export default function RecruiterCartView() {
       </div>
 
       {undoDeletedItem && (
-        <div className="animate-in slide-in-from-bottom-4 border-outline-variant text-on-surface shadow-elevation-2 fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-2xl border bg-white/95 px-4.5 py-3 text-xs ring-1 ring-black/5 backdrop-blur-md transition-all duration-200 sm:bottom-8">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+        <div className="animate-in slide-in-from-bottom-4 border-outline-variant text-on-surface shadow-elevation-2 fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-xl border bg-white/95 px-4.5 py-3 text-xs ring-1 ring-black/5 backdrop-blur-md transition-all duration-200 sm:bottom-8">
+          <div className="bg-primary-tag text-primary-deep flex h-7 w-7 shrink-0 items-center justify-center rounded-full">
             <Check className="h-4 w-4 stroke-[2.5]" />
           </div>
           <span className="text-on-surface font-medium">
@@ -225,7 +225,7 @@ export default function RecruiterCartView() {
             <button
               type="button"
               onClick={undoRemove}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 font-bold text-emerald-700 transition hover:bg-emerald-100 active:scale-95"
+              className="bg-primary-light text-primary-deep hover:bg-primary-tag inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 font-bold transition active:scale-95"
             >
               <Undo2 className="h-3.5 w-3.5" />
               Hoàn tác

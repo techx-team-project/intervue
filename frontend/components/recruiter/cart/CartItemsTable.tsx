@@ -21,7 +21,7 @@ export default function CartItemsTable({
   onRemoveItem,
 }: CartItemsTableProps) {
   return (
-    <div className="border-outline-variant overflow-hidden rounded-xl border bg-white shadow-xs">
+    <div className="border-outline-variant overflow-hidden rounded-xl border bg-white">
       {/* Desktop Table View */}
       <div className="hidden overflow-x-auto md:block">
         <table className="w-full text-left text-sm">
@@ -63,7 +63,7 @@ export default function CartItemsTable({
               return (
                 <tr
                   key={item.id}
-                  className={`transition-colors ${item.selected ? 'bg-emerald-50/20' : 'hover:bg-surface-container-low/50'}`}
+                  className={`transition-colors ${item.selected ? 'bg-primary-light' : 'hover:bg-surface-container-low/50'}`}
                 >
                   <td className="py-5 pr-2 pl-5 align-top">
                     <label className="flex cursor-pointer items-center">
@@ -86,7 +86,7 @@ export default function CartItemsTable({
                           {item.weeks.map((week) => (
                             <span
                               key={week}
-                              className="rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800"
+                              className="bg-primary-light text-primary-deep rounded-md px-2 py-0.5 text-[11px] font-semibold"
                             >
                               Tuần {week}
                             </span>
@@ -169,7 +169,7 @@ export default function CartItemsTable({
           const itemTotal = item.unitPrice * item.quantity;
           const isBannerLocked = Boolean(item.adSlotItem || (item.weeks && item.weeks.length > 0));
           return (
-            <div key={item.id} className={`p-4 transition ${item.selected ? 'bg-emerald-50/20' : 'bg-white'}`}>
+            <div key={item.id} className={`p-4 transition ${item.selected ? 'bg-primary-light' : 'bg-white'}`}>
               <div className="flex items-start gap-3">
                 <input
                   type="checkbox"
@@ -197,7 +197,7 @@ export default function CartItemsTable({
                       {item.weeks.map((week) => (
                         <span
                           key={week}
-                          className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-800"
+                          className="bg-primary-light text-primary-deep rounded px-1.5 py-0.5 text-[10px] font-semibold"
                         >
                           Tuần {week}
                         </span>
