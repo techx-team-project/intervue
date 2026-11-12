@@ -11,8 +11,8 @@ public final class DemoSeedData {
 
     public static final String PASSWORD = "Demo@123";
     public static final long RANDOM_SEED = 20261112L;
-    public static final int FAKE_CANDIDATES = 36;
-    public static final int JOB_COUNT = 160;
+    public static final int FAKE_CANDIDATES = 120;
+    public static final int JOB_COUNT = 480;
     public static final String FAKE_EMAIL_DOMAIN = "intervue.test";
 
     private static String logo(String file) {
@@ -34,10 +34,10 @@ public final class DemoSeedData {
 
     public static final List<OwnerAccount> OWNERS =
             List.of(
-                    new OwnerAccount("Phạm Hoàng Tuấn", "phamhoangtuanqn@gmail.com"),
-                    new OwnerAccount("Mai Trung Hậu", "chunhau.py@gmail.com"),
-                    new OwnerAccount("Lê Minh Trí", "leminhtri260903@gmail.com"),
-                    new OwnerAccount("Lâm Hoàng An", "lamhoangan612@gmail.com"));
+                    new OwnerAccount("Pham Hoang Tuan", "phamhoangtuanqn@gmail.com"),
+                    new OwnerAccount("Mai Trung Hau", "chunhau.py@gmail.com"),
+                    new OwnerAccount("Le Minh Tri", "leminhtri260903@gmail.com"),
+                    new OwnerAccount("Lam Hoang An", "lamhoangan612@gmail.com"));
 
     public static final List<DemoCompany> COMPANIES =
             List.of(
@@ -209,21 +209,21 @@ public final class DemoSeedData {
     public static final List<String> COMPANY_SIZES =
             List.of("51-200", "201-500", "501-1000", "1000+");
     public static final List<String> COMPANY_STREETS =
-            List.of("Lê Lợi", "Nguyễn Trãi", "Hai Bà Trưng");
+            List.of("Le Loi", "Nguyen Trai", "Hai Ba Trung");
 
     public static final List<String> LAST_NAMES =
             List.of(
-                    "Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan", "Vũ", "Võ", "Đặng",
-                    "Bùi", "Đỗ", "Hồ", "Ngô", "Dương", "Lý");
+                    "Nguyen", "Tran", "Le", "Pham", "Hoang", "Huynh", "Phan", "Vu", "Vo", "Dang",
+                    "Bui", "Do", "Ho", "Ngo", "Duong", "Ly");
     public static final List<String> MIDDLE_NAMES =
             List.of(
-                    "Văn", "Thị", "Minh", "Quốc", "Hoàng", "Ngọc", "Thanh", "Gia", "Đức", "Anh",
-                    "Hữu", "Bảo", "Khánh", "Tuấn");
+                    "Van", "Thi", "Minh", "Quoc", "Hoang", "Ngoc", "Thanh", "Gia", "Duc", "Anh",
+                    "Huu", "Bao", "Khanh", "Tuan");
     public static final List<String> FIRST_NAMES =
             List.of(
-                    "An", "Bình", "Châu", "Dũng", "Giang", "Hải", "Hiếu", "Huy", "Khoa", "Lan",
-                    "Linh", "Long", "Mai", "Nam", "Nhi", "Phát", "Phúc", "Quân", "Quyên", "Sơn",
-                    "Thảo", "Thịnh", "Trang", "Trung", "Uyên", "Vy", "Yến", "Hạnh", "Tâm", "Kiên");
+                    "An", "Binh", "Chau", "Dung", "Giang", "Hai", "Hieu", "Huy", "Khoa", "Lan",
+                    "Linh", "Long", "Mai", "Nam", "Nhi", "Phat", "Phuc", "Quan", "Quyen", "Son",
+                    "Thao", "Thinh", "Trang", "Trung", "Uyen", "Vy", "Yen", "Hanh", "Tam", "Kien");
 
     public static final List<CandidateRole> CANDIDATE_ROLES =
             List.of(
@@ -254,13 +254,14 @@ public final class DemoSeedData {
             List.of("Git", "Agile", "English", "Docker", "Linux");
     public static final List<String> SCHOOLS =
             List.of(
-                    "Đại học Bách khoa TP.HCM",
-                    "Đại học FPT",
-                    "Đại học Công nghệ Thông tin - ĐHQG TP.HCM",
-                    "Đại học Khoa học Tự nhiên",
-                    "Học viện Công nghệ Bưu chính Viễn thông",
-                    "Đại học Bách khoa Hà Nội",
-                    "Đại học Công nghiệp TP.HCM",
+                    "Ho Chi Minh City University of Technology",
+                    "FPT University",
+                    "University of Information Technology - VNU-HCM",
+                    "University of Science - VNU-HCM",
+                    "Posts and Telecommunications Institute of Technology",
+                    "Hanoi University of Science and Technology",
+                    "Industrial University of Ho Chi Minh City",
+                    "Da Nang University of Science and Technology",
                     "Aptech Computer Education");
     public static final List<String> PAST_COMPANIES =
             List.of(
@@ -282,9 +283,9 @@ public final class DemoSeedData {
             List.of("ACTIVELY_LOOKING", "ACTIVELY_LOOKING", "OPEN_TO_OFFERS", "NOT_LOOKING");
     public static final List<String> REJECT_REASONS =
             List.of(
-                    "Ảnh CCCD bị mờ, không đọc được số",
-                    "Ảnh chân dung không khớp với ảnh trên CCCD",
-                    "Thông tin họ tên không khớp với CCCD");
+                    "The ID card photo is blurry and the number cannot be read",
+                    "The portrait does not match the photo on the ID card",
+                    "The full name does not match the ID card");
 
     public static final List<JobSpec> JOB_SPECS =
             List.of(
@@ -421,16 +422,16 @@ public final class DemoSeedData {
                     new City("Cần Thơ", 10.0452, 105.7469));
     public static final List<String> STREETS =
             List.of(
-                    "Nguyễn Huệ",
-                    "Lê Lợi",
-                    "Trần Hưng Đạo",
-                    "Cầu Giấy",
-                    "Điện Biên Phủ",
-                    "Nguyễn Văn Linh",
-                    "Võ Văn Tần",
-                    "Láng Hạ",
-                    "Hai Bà Trưng",
-                    "Phạm Văn Đồng");
+                    "Nguyen Hue",
+                    "Le Loi",
+                    "Tran Hung Dao",
+                    "Cau Giay",
+                    "Dien Bien Phu",
+                    "Nguyen Van Linh",
+                    "Vo Van Tan",
+                    "Lang Ha",
+                    "Hai Ba Trung",
+                    "Pham Van Dong");
     public static final List<String> TITLE_TAGS =
             List.of(
                     "",
@@ -450,36 +451,177 @@ public final class DemoSeedData {
                     List.of(
                             new ScreeningQuestion(
                                     "CHOICE",
-                                    "Bạn có thể làm việc tại văn phòng không?",
-                                    List.of("Có", "Không", "Chỉ hybrid"),
+                                    "Can you work from our office?",
+                                    List.of("Yes", "No", "Hybrid only"),
                                     true),
                             new ScreeningQuestion(
                                     "SHORT_TEXT",
-                                    "Hãy mô tả ngắn dự án bạn tự hào nhất.",
+                                    "Briefly describe the project you are most proud of.",
                                     List.of(),
                                     true)),
                     List.of(
                             new ScreeningQuestion(
                                     "CHOICE",
-                                    "Bạn có thể nhận việc trong thời gian nào?",
-                                    List.of("Ngay lập tức", "Trong 2 tuần", "Trong 1 tháng"),
+                                    "When can you start?",
+                                    List.of("Immediately", "Within 2 weeks", "Within 1 month"),
                                     true),
                             new ScreeningQuestion(
                                     "SHORT_TEXT",
-                                    "Mức lương mong muốn của bạn là bao nhiêu?",
+                                    "What is your expected salary?",
+                                    List.of(),
+                                    false)),
+                    List.of(
+                            new ScreeningQuestion(
+                                    "CHOICE",
+                                    "How many years of professional experience do you have?",
+                                    List.of("Less than 1", "1 to 3", "3 to 5", "More than 5"),
+                                    true),
+                            new ScreeningQuestion(
+                                    "CHOICE",
+                                    "Which English level describes you best?",
+                                    List.of(
+                                            "Basic",
+                                            "Intermediate",
+                                            "Upper-intermediate",
+                                            "Fluent"),
+                                    false)),
+                    List.of(
+                            new ScreeningQuestion(
+                                    "SHORT_TEXT",
+                                    "Which technologies are you most comfortable with, and why?",
+                                    List.of(),
+                                    true),
+                            new ScreeningQuestion(
+                                    "SHORT_TEXT",
+                                    "Share a link to your GitHub or portfolio, if you have one.",
                                     List.of(),
                                     false)));
 
     public static final String SHORT_TEXT_ANSWER =
-            "Tôi làm hệ thống đặt lịch trực tuyến, phục vụ 5.000 người dùng mỗi tháng.";
+            "I built an online booking system that serves about 5,000 users every month.";
     public static final String COVER_LETTER =
-            "Kính gửi anh/chị, tôi rất quan tâm đến vị trí này và mong có cơ hội trao đổi thêm."
-                    + " Trân trọng cảm ơn.";
+            "Dear hiring team, I am very interested in this position and would love the chance to"
+                    + " discuss it further. Thank you for your time.";
     public static final List<String> RECRUITER_NOTES =
             List.of(
-                    "Hồ sơ phù hợp, cần phỏng vấn kỹ thuật.",
-                    "Kinh nghiệm tốt nhưng thiếu kỹ năng giao tiếp tiếng Anh.",
-                    "Ứng viên tiềm năng, ưu tiên liên hệ sớm.");
+                    "Strong profile, schedule a technical interview.",
+                    "Good experience but needs stronger English communication.",
+                    "Promising candidate, contact as soon as possible.",
+                    "Solid fundamentals, check system design depth in the next round.",
+                    "Great portfolio, ask about the largest project they shipped.");
+
+    public static final Map<String, List<String>> ROLE_RESPONSIBILITIES = roleResponsibilities();
+
+    public static final List<String> BENEFIT_PACKAGES =
+            List.of(
+                    "- 13th-month salary and performance bonus\n- Premium health insurance for you and"
+                            + " your family\n- Annual company trip and team building\n- Training and"
+                            + " certification budget",
+                    "- Competitive salary reviewed twice a year\n- Flexible working hours\n- MacBook"
+                            + " and equipment of your choice\n- 15 days of annual leave",
+                    "- Quarterly performance bonus\n- Free lunch and snacks at the office\n- Learning"
+                            + " budget for courses and conferences\n- Regular tech talks and hackathons");
+
+    private static Map<String, List<String>> roleResponsibilities() {
+        Map<String, List<String>> roles = new LinkedHashMap<>();
+        roles.put(
+                "BACKEND",
+                List.of(
+                        "Design, build and maintain scalable REST APIs and services",
+                        "Model data and optimize database queries for high traffic",
+                        "Write clean, tested code and take part in code reviews",
+                        "Monitor production services and fix performance bottlenecks",
+                        "Work with product and frontend teams to deliver features end to end"));
+        roles.put(
+                "FRONTEND",
+                List.of(
+                        "Build responsive, accessible user interfaces from design specs",
+                        "Own the performance and quality of the web client",
+                        "Integrate APIs and manage client-side state cleanly",
+                        "Collaborate with designers to improve the user experience",
+                        "Maintain a reusable component library"));
+        roles.put(
+                "FULLSTACK",
+                List.of(
+                        "Deliver features across the web client and the backend services",
+                        "Design APIs and database schemas that support product needs",
+                        "Ship small, well-tested changes through CI/CD",
+                        "Debug issues across the stack in production",
+                        "Share ownership of architecture decisions with the team"));
+        roles.put(
+                "MOBILE",
+                List.of(
+                        "Build and release high-quality mobile apps for iOS and Android",
+                        "Integrate REST APIs, push notifications and offline storage",
+                        "Optimize app startup time, memory use and battery impact",
+                        "Write automated tests and monitor crash reports",
+                        "Work closely with designers on native-feeling interactions"));
+        roles.put(
+                "DEVOPS",
+                List.of(
+                        "Build and operate CI/CD pipelines and infrastructure as code",
+                        "Run and scale services on Kubernetes and cloud platforms",
+                        "Set up monitoring, alerting and incident response",
+                        "Improve reliability, security and cost efficiency",
+                        "Support engineering teams with tooling and best practices"));
+        roles.put(
+                "QA",
+                List.of(
+                        "Design test plans and test cases from product requirements",
+                        "Build and maintain automated UI and API test suites",
+                        "Report defects with clear steps and follow them to closure",
+                        "Run regression and performance testing before each release",
+                        "Improve the team's quality processes and tooling"));
+        roles.put(
+                "DATA_AI",
+                List.of(
+                        "Build data pipelines and models that power product features",
+                        "Explore data, run experiments and measure impact",
+                        "Deploy and monitor machine learning models in production",
+                        "Work with engineers to turn prototypes into reliable services",
+                        "Present insights and trade-offs to non-technical stakeholders"));
+        roles.put(
+                "BA",
+                List.of(
+                        "Gather and document business requirements with stakeholders",
+                        "Write user stories, acceptance criteria and process flows",
+                        "Bridge the business, design and engineering teams",
+                        "Support UAT and release planning",
+                        "Analyze product metrics to prioritize improvements"));
+        roles.put(
+                "PM",
+                List.of(
+                        "Plan roadmaps, sprints and releases with engineering teams",
+                        "Remove blockers and keep stakeholders aligned",
+                        "Track delivery risks, quality and team health",
+                        "Coach the team on agile practices",
+                        "Report progress and outcomes to leadership"));
+        roles.put(
+                "UIUX",
+                List.of(
+                        "Research users and turn insights into flows and wireframes",
+                        "Design polished interfaces and maintain the design system",
+                        "Prototype and test ideas with real users",
+                        "Hand off clear specs to engineers and review the build",
+                        "Improve usability using data and feedback"));
+        roles.put(
+                "SECURITY",
+                List.of(
+                        "Run security assessments and penetration tests",
+                        "Review code and architecture for vulnerabilities",
+                        "Monitor threats and respond to security incidents",
+                        "Define secure development practices with engineering teams",
+                        "Prepare for audits and compliance requirements"));
+        roles.put(
+                "OTHER",
+                List.of(
+                        "Contribute to the design and development of our products",
+                        "Learn from senior engineers through mentoring and code reviews",
+                        "Take ownership of well-scoped tasks and deliver them on time",
+                        "Collaborate with a friendly, cross-functional team",
+                        "Share knowledge in team demos and tech talks"));
+        return roles;
+    }
 
     private DemoSeedData() {}
 

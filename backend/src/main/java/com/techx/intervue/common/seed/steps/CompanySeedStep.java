@@ -29,7 +29,19 @@ import org.springframework.stereotype.Component;
 public class CompanySeedStep implements DemoSeedStep {
 
     private static final List<String> COMPANY_COLUMNS =
-            List.of("id", "name", "tax_code", "address", "created_at", "updated_at");
+            List.of(
+                    "id",
+                    "name",
+                    "tax_code",
+                    "address",
+                    "created_at",
+                    "updated_at",
+                    "featured_until",
+                    "brand_page_until");
+
+    private static final int FEATURED_COMPANIES = 18;
+    private static final int BRAND_PAGE_COMPANIES = 10;
+    private static final int FEATURED_DAYS = 120;
 
     private static final List<String> RECRUITER_COLUMNS =
             List.of(
@@ -141,7 +153,13 @@ public class CompanySeedStep implements DemoSeedStep {
                         String.format("09%08d", companyId),
                         address,
                         createdAt,
-                        createdAt
+                        createdAt,
+                        index < FEATURED_COMPANIES
+                                ? random.now().plusDays(FEATURED_DAYS - index)
+                                : null,
+                        index < BRAND_PAGE_COMPANIES
+                                ? random.now().plusDays(FEATURED_DAYS - index)
+                                : null
                     });
             recruiterRows.add(
                     new Object[] {
@@ -232,7 +250,10 @@ public class CompanySeedStep implements DemoSeedStep {
             company.tradingName()
                     + " is a technology company in the "
                     + company.industry().toLowerCase(Locale.ROOT)
-                    + " space, growing its engineering team in Vietnam.",
+                    + " space, growing its engineering team in Vietnam. We build products used by"
+                    + " millions of people, invest in engineering quality and mentoring, and offer"
+                    + " clear career paths for engineers, designers and data specialists at every"
+                    + " level.",
             "13th-month salary, full insurance, project bonuses, flexible working, internal training.",
             company.logoFile(),
             createdAt,
