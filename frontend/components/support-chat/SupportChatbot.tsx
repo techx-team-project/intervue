@@ -15,7 +15,6 @@ export function SupportChatbot() {
     messages,
     isLoading,
     robotState,
-    remainingQuota,
     error,
     chatContext,
     setChatContext,
@@ -44,18 +43,12 @@ export function SupportChatbot() {
 
   return (
     <>
-      <FloatingChatButton
-        isOpen={isOpen}
-        onToggle={() => setIsOpen((prev) => !prev)}
-        remainingQuota={remainingQuota}
-        robotState={robotState}
-      />
+      <FloatingChatButton isOpen={isOpen} onToggle={() => setIsOpen((prev) => !prev)} robotState={robotState} />
       <ChatPanel
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         messages={messages}
         isLoading={isLoading}
-        remainingQuota={remainingQuota}
         context={chatContext}
         error={error}
         onSendMessage={sendMessage}

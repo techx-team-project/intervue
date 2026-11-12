@@ -35,7 +35,6 @@ export function useSupportChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_GREETING_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
   const [robotState, setRobotState] = useState<RobotHeadState>('idle');
-  const [remainingQuota, setRemainingQuota] = useState<number | null>(null);
   const [sessionId, setSessionId] = useState<string>(getInitialSessionId);
   const [chatContext, setChatContext] = useState<ChatContext | undefined>(undefined);
   const [error, setError] = useState<{
@@ -96,7 +95,6 @@ export function useSupportChat() {
         };
 
         setMessages((prev) => [...prev, botMessage]);
-        setRemainingQuota(response.remainingQuota);
         setRobotState('speaking');
         setTimeout(() => {
           setRobotState('idle');
@@ -128,7 +126,6 @@ export function useSupportChat() {
     messages,
     isLoading,
     robotState,
-    remainingQuota,
     error,
     chatContext,
     setChatContext,

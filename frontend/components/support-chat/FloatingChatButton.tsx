@@ -14,11 +14,10 @@ const FIXED_SCREEN_COLOR = '#a7f3d0';
 interface FloatingChatButtonProps {
   isOpen: boolean;
   onToggle: () => void;
-  remainingQuota: number | null;
   robotState?: RobotHeadState;
 }
 
-export function FloatingChatButton({ isOpen, onToggle, remainingQuota, robotState = 'idle' }: FloatingChatButtonProps) {
+export function FloatingChatButton({ isOpen, onToggle, robotState = 'idle' }: FloatingChatButtonProps) {
   const pathname = usePathname();
   const [isHovered, setIsHovered] = useState(false);
   const [ambientState, setAmbientState] = useState<RobotHeadState>('idle');
@@ -72,12 +71,6 @@ export function FloatingChatButton({ isOpen, onToggle, remainingQuota, robotStat
             paused={false}
             speed={1.7}
           />
-
-          {remainingQuota !== null && !isOpen && (
-            <span className="absolute top-2 left-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-slate-900 px-1 text-[10px] font-bold text-white shadow-xs">
-              {remainingQuota}
-            </span>
-          )}
         </div>
       </div>
     </aside>

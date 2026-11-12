@@ -6,11 +6,10 @@ import { Send } from 'lucide-react';
 interface ChatInputProps {
   onSend: (message: string) => void;
   isLoading: boolean;
-  remainingQuota: number | null;
   disabled?: boolean;
 }
 
-export function ChatInput({ onSend, isLoading, remainingQuota, disabled = false }: ChatInputProps) {
+export function ChatInput({ onSend, isLoading, disabled = false }: ChatInputProps) {
   const [text, setText] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -38,8 +37,6 @@ export function ChatInput({ onSend, isLoading, remainingQuota, disabled = false 
     e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
   };
 
-  const isQuotaExhausted = remainingQuota !== null && remainingQuota <= 0;
-
   return (
     <div className="border-t border-slate-100 bg-white/95 px-3 py-2.5 backdrop-blur-xs sm:px-4 sm:py-3">
       <form onSubmit={handleSubmit} className="flex items-end gap-2">
@@ -48,14 +45,14 @@ export function ChatInput({ onSend, isLoading, remainingQuota, disabled = false 
           value={text}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          disabled={isLoading || disabled || isQuotaExhausted}
+          disabled={isLoading || disabled}
           rows={1}
-          placeholder={isQuotaExhausted ? 'You have used all questions for today...' : 'Ask how to use InterVue...'}
+          placeholder="Ask how to use InterVue..."
           className="max-h-28 min-h-[42px] flex-1 resize-none rounded-2xl border border-slate-200/90 bg-slate-50/90 px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 transition-all focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:outline-none disabled:cursor-not-allowed disabled:bg-slate-100 disabled:opacity-60 sm:text-[13px]"
         />
         <button
           type="submit"
-          disabled={!text.trim() || isLoading || disabled || isQuotaExhausted}
+          disabled={!text.trim() || isLoading || disabled}
           className="flex h-[42px] w-[42px] shrink-0 cursor-pointer items-center justify-center rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white shadow-xs transition-all hover:scale-105 hover:opacity-95 hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:from-slate-200 disabled:to-slate-200 disabled:text-slate-400 disabled:hover:scale-100"
           title="Send question"
         >

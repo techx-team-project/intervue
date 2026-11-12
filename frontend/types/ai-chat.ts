@@ -15,7 +15,6 @@ export interface UserChatRequest {
 export interface UserChatResponse {
   answer: string;
   sources: string[];
-  remainingQuota: number;
 }
 
 export interface ChatMessage {
