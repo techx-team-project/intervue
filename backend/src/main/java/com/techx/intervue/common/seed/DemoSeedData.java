@@ -12,12 +12,16 @@ public final class DemoSeedData {
     public static final String PASSWORD = "Demo@123";
     public static final long RANDOM_SEED = 20261112L;
     public static final int FAKE_CANDIDATES = 36;
-    public static final int JOB_COUNT = 70;
+    public static final int JOB_COUNT = 160;
     public static final String FAKE_EMAIL_DOMAIN = "intervue.test";
+
+    private static String logo(String file) {
+        return "/company-logos/" + file;
+    }
 
     public record OwnerAccount(String name, String email) {}
 
-    public record DemoCompany(String tradingName, String industry, String city) {}
+    public record DemoCompany(String tradingName, String industry, String city, String logoFile) {}
 
     public record CandidateRole(String title, List<String> skills) {}
 
@@ -38,26 +42,170 @@ public final class DemoSeedData {
     public static final List<DemoCompany> COMPANIES =
             List.of(
                     new DemoCompany(
-                            "Viettel Solutions", "Giải pháp phần mềm & viễn thông", "Hà Nội"),
-                    new DemoCompany("MoMo", "Fintech, ví điện tử", "TP. Hồ Chí Minh"),
-                    new DemoCompany("VNPT Technology", "Công nghệ thông tin", "Hà Nội"),
-                    new DemoCompany("Tiki", "Thương mại điện tử", "TP. Hồ Chí Minh"),
-                    new DemoCompany("Shopee Vietnam", "Thương mại điện tử", "TP. Hồ Chí Minh"),
-                    new DemoCompany("KMS Technology", "Outsourcing phần mềm", "TP. Hồ Chí Minh"),
-                    new DemoCompany("One Mount Group", "Công nghệ & hệ sinh thái số", "Hà Nội"),
+                            "Viettel Solutions",
+                            "Software & telecom solutions",
+                            "Hà Nội",
+                            logo("viettel-solutions.svg")),
                     new DemoCompany(
-                            "Axon Enterprise Vietnam",
-                            "Phần mềm an ninh công cộng",
-                            "TP. Hồ Chí Minh"),
-                    new DemoCompany("NAB Vietnam", "Ngân hàng, công nghệ tài chính", "Hà Nội"),
-                    new DemoCompany("Techcombank", "Ngân hàng số", "Hà Nội"),
-                    new DemoCompany("VPBank", "Ngân hàng số", "Hà Nội"),
-                    new DemoCompany("VinAI", "Trí tuệ nhân tạo", "Hà Nội"),
-                    new DemoCompany("MISA", "Phần mềm kế toán", "Hà Nội"),
-                    new DemoCompany("FPT Telecom", "Viễn thông", "Đà Nẵng"),
-                    new DemoCompany("Zalo Group", "Mạng xã hội, nhắn tin", "TP. Hồ Chí Minh"));
+                            "Grab Vietnam",
+                            "Super app, ride-hailing & delivery",
+                            "TP. Hồ Chí Minh",
+                            logo("grab-vietnam.svg")),
+                    new DemoCompany(
+                            "FPT Software",
+                            "Software outsourcing",
+                            "Hà Nội",
+                            logo("fpt-software.svg")),
+                    new DemoCompany("Tiki", "E-commerce", "TP. Hồ Chí Minh", logo("tiki.png")),
+                    new DemoCompany(
+                            "Shopee Vietnam",
+                            "E-commerce",
+                            "TP. Hồ Chí Minh",
+                            logo("shopee-vietnam.svg")),
+                    new DemoCompany(
+                            "Lazada Vietnam",
+                            "E-commerce",
+                            "TP. Hồ Chí Minh",
+                            logo("lazada-vietnam.png")),
+                    new DemoCompany(
+                            "Vingroup",
+                            "Technology & industrial conglomerate",
+                            "Hà Nội",
+                            logo("vingroup.svg")),
+                    new DemoCompany(
+                            "Sacombank",
+                            "Digital banking",
+                            "TP. Hồ Chí Minh",
+                            logo("sacombank.png")),
+                    new DemoCompany("BIDV", "Banking & fintech", "Hà Nội", logo("bidv.svg")),
+                    new DemoCompany(
+                            "Techcombank", "Digital banking", "Hà Nội", logo("techcombank.png")),
+                    new DemoCompany("VPBank", "Digital banking", "Hà Nội", logo("vpbank.svg")),
+                    new DemoCompany(
+                            "VinAI", "Artificial intelligence", "Hà Nội", logo("vinai.png")),
+                    new DemoCompany("MISA", "Accounting software", "Hà Nội", logo("misa.jpg")),
+                    new DemoCompany(
+                            "FPT Telecom",
+                            "Telecommunications",
+                            "Đà Nẵng",
+                            logo("fpt-telecom.svg")),
+                    new DemoCompany(
+                            "Zalo Group",
+                            "Social network & messaging",
+                            "TP. Hồ Chí Minh",
+                            logo("zalo-group.png")),
+                    new DemoCompany(
+                            "Intel Vietnam",
+                            "Semiconductors & hardware",
+                            "TP. Hồ Chí Minh",
+                            logo("intel.svg")),
+                    new DemoCompany(
+                            "LG Electronics Vietnam",
+                            "Consumer electronics & software",
+                            "Hà Nội",
+                            logo("lg-electronics.svg")),
+                    new DemoCompany(
+                            "Accenture Vietnam",
+                            "IT consulting & services",
+                            "TP. Hồ Chí Minh",
+                            logo("accenture.svg")),
+                    new DemoCompany(
+                            "Oracle Vietnam",
+                            "Enterprise software & cloud",
+                            "Hà Nội",
+                            logo("oracle.svg")),
+                    new DemoCompany(
+                            "Cisco Vietnam", "Networking & security", "Hà Nội", logo("cisco.svg")),
+                    new DemoCompany(
+                            "Siemens Vietnam",
+                            "Industrial automation & software",
+                            "TP. Hồ Chí Minh",
+                            logo("siemens.svg")),
+                    new DemoCompany(
+                            "Nokia Vietnam",
+                            "Telecom equipment & networks",
+                            "Hà Nội",
+                            logo("nokia.svg")),
+                    new DemoCompany(
+                            "Ericsson Vietnam",
+                            "Telecom networks & 5G",
+                            "Hà Nội",
+                            logo("ericsson.svg")),
+                    new DemoCompany(
+                            "Toshiba Vietnam",
+                            "Electronics & embedded software",
+                            "TP. Hồ Chí Minh",
+                            logo("toshiba.svg")),
+                    new DemoCompany(
+                            "NTT Data Vietnam",
+                            "IT services & consulting",
+                            "Hà Nội",
+                            logo("ntt-data.svg")),
+                    new DemoCompany(
+                            "Fujitsu Vietnam",
+                            "IT services & digital transformation",
+                            "Đà Nẵng",
+                            logo("fujitsu.svg")),
+                    new DemoCompany(
+                            "Mercari Vietnam", "Online marketplace", "Hà Nội", logo("mercari.svg")),
+                    new DemoCompany(
+                            "LINE Vietnam",
+                            "Messaging & digital services",
+                            "Đà Nẵng",
+                            logo("line.svg")),
+                    new DemoCompany(
+                            "Shopify",
+                            "E-commerce platform",
+                            "TP. Hồ Chí Minh",
+                            logo("shopify.svg")),
+                    new DemoCompany(
+                            "Atlassian",
+                            "Collaboration software",
+                            "TP. Hồ Chí Minh",
+                            logo("atlassian.png")),
+                    new DemoCompany(
+                            "Zalando",
+                            "Fashion e-commerce platform",
+                            "Hà Nội",
+                            logo("zalando.svg")),
+                    new DemoCompany(
+                            "Booking.com", "Online travel", "TP. Hồ Chí Minh", logo("booking.svg")),
+                    new DemoCompany(
+                            "Traveloka", "Online travel", "TP. Hồ Chí Minh", logo("traveloka.png")),
+                    new DemoCompany(
+                            "Infosys Vietnam", "IT services", "Hà Nội", logo("infosys.svg")),
+                    new DemoCompany(
+                            "Tata Consultancy Services",
+                            "IT services",
+                            "TP. Hồ Chí Minh",
+                            logo("tcs.svg")),
+                    new DemoCompany(
+                            "Deloitte Vietnam",
+                            "Consulting & technology",
+                            "TP. Hồ Chí Minh",
+                            logo("deloitte.svg")),
+                    new DemoCompany(
+                            "Gojek Vietnam",
+                            "Super app & fintech",
+                            "TP. Hồ Chí Minh",
+                            logo("gojek.svg")),
+                    new DemoCompany(
+                            "Google Vietnam",
+                            "Internet & cloud services",
+                            "TP. Hồ Chí Minh",
+                            logo("google.svg")),
+                    new DemoCompany(
+                            "Panasonic Vietnam",
+                            "Electronics & IoT",
+                            "Hà Nội",
+                            logo("panasonic.svg")),
+                    new DemoCompany(
+                            "Hitachi Vietnam",
+                            "Digital & industrial solutions",
+                            "Hà Nội",
+                            logo("hitachi.svg")));
 
-    public static final int APPROVED_COMPANIES = 12;
+    public static final int APPROVED_COMPANIES = 34;
     public static final List<String> COMPANY_SIZES =
             List.of("51-200", "201-500", "501-1000", "1000+");
     public static final List<String> COMPANY_STREETS =
