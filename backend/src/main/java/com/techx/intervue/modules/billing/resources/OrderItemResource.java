@@ -11,6 +11,5 @@ public record OrderItemResource(
         Integer quantity,
         Long lineTotal,
         Integer validityDays,
-        Integer bonusCredits,
         List<ServicePackageBenefitResource> benefits,
         List<LocalDate> bookedWeeks) {}

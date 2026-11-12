@@ -18,7 +18,6 @@ public record AdminServicePackageResource(
         String accentColor,
         String heroImageUrl,
         Integer validityDays,
-        Integer bonusCredits,
         Boolean oneTimePerCompany,
         ServicePackageStatus status,
         Integer displayOrder,

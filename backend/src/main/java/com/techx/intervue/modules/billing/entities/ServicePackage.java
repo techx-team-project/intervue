@@ -71,10 +71,6 @@ public class ServicePackage extends BaseEntity {
     @Column(name = "validity_days")
     private Integer validityDays;
 
-    @Column(name = "bonus_credits", nullable = false)
-    @Builder.Default
-    private Integer bonusCredits = 0;
-
     @Column(name = "one_time_per_company", nullable = false)
     @Builder.Default
     private Boolean oneTimePerCompany = false;

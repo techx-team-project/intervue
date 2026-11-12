@@ -41,7 +41,7 @@ public class RecruiterEntitlementService implements RecruiterEntitlementServiceI
     @Transactional(readOnly = true)
     public List<EntitlementResource> listStock(Long recruiterId) {
         Long companyId = requireCompanyId(recruiterId);
-        // Credits and banner weeks have their own panel, not a stock card to activate here
+        // Banner weeks have their own panel, not a stock card to activate here
         return entitlementRepository.findAllByCompanyIdOrderByCreatedAtDesc(companyId).stream()
                 .filter(
                         entitlement ->

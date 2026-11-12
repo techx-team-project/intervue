@@ -30,7 +30,6 @@ import com.techx.intervue.modules.billing.requests.SaveServicePackageRequest;
 import com.techx.intervue.modules.billing.resources.AdminServiceCategoryResource;
 import com.techx.intervue.modules.billing.resources.AdminServicePackageResource;
 import com.techx.intervue.modules.billing.services.interfaces.AdminServiceCatalogServiceInterface;
-import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -220,7 +219,6 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
         validateBenefits(request.benefits());
         ServicePackage servicePackage = new ServicePackage();
         mapper.apply(servicePackage, request, requireCategory(request.categoryId()));
-        syncBonusCreditsFromBenefits(servicePackage, request);
         ServicePackage saved = packageRepository.save(servicePackage);
         replaceChildren(saved, request);
         audit(
@@ -242,7 +240,6 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
         }
         validateBenefits(request.benefits());
         mapper.apply(servicePackage, request, requireCategory(request.categoryId()));
-        syncBonusCreditsFromBenefits(servicePackage, request);
         adSlotRepository
                 .findByServicePackageId(servicePackage.getId())
                 .ifPresent(slot -> slot.setPricePerWeek(servicePackage.getPrice()));
@@ -392,23 +389,6 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
             SaveServicePackageRequest.Benefit benefit = benefits.get(i);
             EntitlementConfigRules.validateBenefit(
                     i, benefit.entitlementType(), benefit.tier(), benefit.durationDays());
-        }
-    }
-
-    private void syncBonusCreditsFromBenefits(
-            ServicePackage servicePackage, SaveServicePackageRequest request) {
-        if (request.benefits() == null) {
-            return;
-        }
-        int creditSum =
-                request.benefits().stream()
-                        .filter(benefit -> benefit.entitlementType() == EntitlementType.CREDIT)
-                        .mapToInt(SaveServicePackageRequest.Benefit::quantity)
-                        .sum();
-        if (creditSum > 0
-                && (servicePackage.getBonusCredits() == null
-                        || servicePackage.getBonusCredits() < creditSum)) {
-            servicePackage.setBonusCredits(creditSum);
         }
     }
 

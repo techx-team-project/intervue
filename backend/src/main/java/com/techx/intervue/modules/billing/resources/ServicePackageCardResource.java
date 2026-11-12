@@ -14,6 +14,5 @@ public record ServicePackageCardResource(
         Boolean vipRibbon,
         String accentColor,
         Integer validityDays,
-        Integer bonusCredits,
         Boolean oneTimePerCompany,
         List<ServicePackageBenefitResource> benefits) {}

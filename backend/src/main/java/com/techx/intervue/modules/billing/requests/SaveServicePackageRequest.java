@@ -26,7 +26,6 @@ public record SaveServicePackageRequest(
         @Size(max = 20) String accentColor,
         @Size(max = 500) String heroImageUrl,
         @Positive Integer validityDays,
-        @NotNull @PositiveOrZero Integer bonusCredits,
         @NotNull Boolean oneTimePerCompany,
         @NotNull ServicePackageStatus status,
         @NotNull @PositiveOrZero Integer displayOrder,

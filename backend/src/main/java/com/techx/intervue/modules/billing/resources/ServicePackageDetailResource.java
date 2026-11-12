@@ -15,7 +15,6 @@ public record ServicePackageDetailResource(
         String accentColor,
         String heroImageUrl,
         Integer validityDays,
-        Integer bonusCredits,
         Boolean oneTimePerCompany,
         String categoryCode,
         String categoryName,

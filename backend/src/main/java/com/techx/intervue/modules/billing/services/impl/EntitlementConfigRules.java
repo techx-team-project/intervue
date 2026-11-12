@@ -20,31 +20,12 @@ final class EntitlementConfigRules {
                     EntitlementType.FEATURED_COMPANY,
                     EntitlementType.AD_SLOT_WEEK);
 
-    private static final Set<EntitlementType> NON_CREDIT_EXCHANGE_TYPES =
-            EnumSet.of(EntitlementType.CREDIT, EntitlementType.AD_SLOT_WEEK);
-
     private EntitlementConfigRules() {}
 
     static void validateBenefit(
             int index, EntitlementType type, Integer tier, Integer durationDays) {
         String prefix = "benefits[" + index + "].";
         validateCommon(prefix + "tier", prefix + "durationDays", type, tier, durationDays);
-    }
-
-    static void validateCreditPrice(EntitlementType type, Integer tier, Integer durationDays) {
-        if (type == null) {
-            throw AppException.validation("entitlementType", "Entitlement type is required.");
-        }
-        if (NON_CREDIT_EXCHANGE_TYPES.contains(type)) {
-            throw AppException.validation(
-                    "entitlementType", "CREDIT and AD_SLOT_WEEK cannot be exchanged from Credits.");
-        }
-        if (!DURATION_REQUIRED_TYPES.contains(type) && durationDays != null) {
-            throw AppException.validation(
-                    "durationDays",
-                    "Per-use entitlement " + type.name() + " must not define durationDays.");
-        }
-        validateCommon("tier", "durationDays", type, tier, durationDays);
     }
 
     private static void validateCommon(

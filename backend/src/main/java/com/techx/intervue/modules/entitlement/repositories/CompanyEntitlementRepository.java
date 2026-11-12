@@ -18,9 +18,6 @@ public interface CompanyEntitlementRepository extends JpaRepository<CompanyEntit
 
     List<CompanyEntitlement> findAllBySourceOrderItemIdIn(Collection<Long> sourceOrderItemIds);
 
-    List<CompanyEntitlement> findAllByCompanyIdAndEntitlementTypeOrderByCreatedAtDesc(
-            Long companyId, EntitlementType entitlementType);
-
     Optional<CompanyEntitlement> findBySourceOrderItemId(Long sourceOrderItemId);
 
     Optional<CompanyEntitlement> findByIdAndCompanyId(Long id, Long companyId);
@@ -60,45 +57,6 @@ public interface CompanyEntitlementRepository extends JpaRepository<CompanyEntit
             """)
     Optional<Instant> findNearestExpiry(
             @Param("companyId") Long companyId,
-            @Param("type") EntitlementType type,
-            @Param("now") Instant now);
-
-    interface CompanyCreditSummaryProjection {
-        Long getCompanyId();
-
-        Long getAvailableBalance();
-
-        Long getLifetimeGranted();
-
-        Long getExpiredBalance();
-
-        Instant getNearestExpiry();
-    }
-
-    @Query(
-            """
-            select e.companyId as companyId,
-                   coalesce(sum(case when e.status = com.techx.intervue.modules.entitlement.enums.EntitlementStatus.AVAILABLE
-                                          and e.remainingQuantity > 0
-                                          and (e.activationDeadline is null or e.activationDeadline > :now)
-                                     then e.remainingQuantity else 0 end), 0L) as availableBalance,
-                   coalesce(sum(e.totalQuantity), 0L) as lifetimeGranted,
-                   coalesce(sum(case when e.status = com.techx.intervue.modules.entitlement.enums.EntitlementStatus.EXPIRED
-                                          or (e.status = com.techx.intervue.modules.entitlement.enums.EntitlementStatus.AVAILABLE
-                                              and e.activationDeadline is not null
-                                              and e.activationDeadline <= :now)
-                                     then e.remainingQuantity else 0 end), 0L) as expiredBalance,
-                   min(case when e.status = com.techx.intervue.modules.entitlement.enums.EntitlementStatus.AVAILABLE
-                                 and e.remainingQuantity > 0
-                                 and e.activationDeadline > :now
-                            then e.activationDeadline else null end) as nearestExpiry
-              from CompanyEntitlement e
-             where e.companyId in :companyIds
-               and e.entitlementType = :type
-             group by e.companyId
-            """)
-    List<CompanyCreditSummaryProjection> summarizeByCompanyIds(
-            @Param("companyIds") Collection<Long> companyIds,
             @Param("type") EntitlementType type,
             @Param("now") Instant now);
 
