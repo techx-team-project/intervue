@@ -4,7 +4,6 @@ export const SERVICE_NEED_MODAL_STORAGE_KEY = 'intervue.services.needModal.dismi
 
 export const SERVICE_NEED_OPTIONS: { key: ServiceNeedKey; label: string }[] = [
   { key: 'REACH', label: 'Hỗ trợ quảng cáo và tăng lượt tiếp cận với ứng viên' },
-  { key: 'CONNECT', label: 'Linh hoạt chọn tiện ích theo từng giai đoạn tuyển dụng' },
   { key: 'HIGHLIGHT', label: 'Làm nổi bật tin tuyển dụng để tăng hiệu quả với ứng viên' },
   {
     key: 'BRANDING',
@@ -21,12 +20,6 @@ export const SERVICE_NEED_ADMIN_META: Record<
     shortLabel: 'Candidate reach',
     summary: 'Scrolls recruiters looking for broader candidate visibility to this section',
     recruiterChoice: 'Hỗ trợ quảng cáo và tăng lượt tiếp cận với ứng viên',
-  },
-  CONNECT: {
-    label: 'Flexible credits & tools',
-    shortLabel: 'Flexible credits',
-    summary: 'Scrolls recruiters choosing flexible credit utilities across hiring stages',
-    recruiterChoice: 'Linh hoạt chọn tiện ích theo từng giai đoạn tuyển dụng',
   },
   HIGHLIGHT: {
     label: 'Job post highlight',
@@ -84,7 +77,6 @@ export const ENTITLEMENT_TYPE_OPTIONS: { value: EntitlementType; label: string }
   { value: 'BRAND_PAGE', label: 'Brand page' },
   { value: 'FEATURED_COMPANY', label: 'Featured company' },
   { value: 'AD_SLOT_WEEK', label: 'Ad slot week' },
-  { value: 'CREDIT', label: 'Credits' },
 ];
 
 export const BOOST_TIER_OPTIONS = [

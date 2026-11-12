@@ -39,7 +39,6 @@ export interface AdminServicePackage {
   accentColor: string | null;
   heroImageUrl: string | null;
   validityDays: number | null;
-  bonusCredits: number;
   oneTimePerCompany: boolean;
   status: ServicePackageStatus;
   displayOrder: number;
@@ -69,7 +68,6 @@ export interface SaveServicePackageInput {
   accentColor?: string | null;
   heroImageUrl?: string | null;
   validityDays?: number | null;
-  bonusCredits: number;
   oneTimePerCompany: boolean;
   status: ServicePackageStatus;
   displayOrder: number;

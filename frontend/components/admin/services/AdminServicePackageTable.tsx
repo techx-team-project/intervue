@@ -113,7 +113,6 @@ export default function AdminServicePackageTable({
                     </p>
                     <p className="dark:text-forest-300 text-on-surface-variant mt-0.5 text-[11px]">
                       {item.validityDays ? `${item.validityDays} days validity` : 'No expiry'}
-                      {item.bonusCredits > 0 && ` · +${item.bonusCredits.toLocaleString('en-US')} credit`}
                     </p>
                   </td>
 

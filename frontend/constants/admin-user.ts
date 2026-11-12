@@ -151,7 +151,7 @@ export const ADMIN_PERMISSION_META: Record<AdminPermission, { label: string; des
     description: 'Create admin accounts and assign admin permissions.',
   },
   'catalogs.manage': { label: 'Catalogs', description: 'Positions, levels, skills, locations and minimum wage.' },
-  'services.manage': { label: 'Services & pricing', description: 'Service packages, prices, credits and quotas.' },
+  'services.manage': { label: 'Services & pricing', description: 'Service packages, vouchers and quotas.' },
   'finance.manage': { label: 'Finance', description: 'Orders, transactions, refunds and VAT invoices.' },
   'support.manage': { label: 'Support', description: 'Support tickets and consultation requests.' },
   'content.manage': { label: 'Content', description: 'Blog, FAQ, chatbot knowledge and announcements.' },

@@ -269,7 +269,7 @@ export default function CartOrderSummary({
           </p>
           <p>
             2. <strong>Refund Policy:</strong> InterVue provides full refunds or package exchange within 24 hours if no
-            job posts have been published or activated using the purchased credits.
+            job posts have been published or activated using the purchased package.
           </p>
           <p>
             3. <strong>VAT E-Invoices:</strong> Official electronic VAT invoices are automatically generated and emailed

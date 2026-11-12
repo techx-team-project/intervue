@@ -71,7 +71,6 @@ export default function AdminServicePackagesMobileList({
 
             <div className="dark:text-forest-300 text-on-surface-variant mt-2.5 flex flex-wrap gap-2 text-[11px]">
               <span>{item.validityDays ? `${item.validityDays}d validity` : 'No expiry'}</span>
-              {item.bonusCredits > 0 && <span>· +{item.bonusCredits.toLocaleString('en-US')} credits</span>}
               <span>· {item.benefits.length} benefits</span>
               <span>· {item.sections.length} sections</span>
             </div>

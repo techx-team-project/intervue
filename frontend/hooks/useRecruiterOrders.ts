@@ -2,7 +2,6 @@
 
 import { recruiterOrderApi } from '@/apiRequest/recruiter-order';
 import { adKeys } from '@/hooks/useAds';
-import { creditKeys } from '@/hooks/useCredits';
 import { entitlementKeys } from '@/hooks/useEntitlements';
 import { notificationKeys } from '@/hooks/useNotifications';
 import type { CheckoutPayload, RecruiterOrderStatus } from '@/types/recruiter-order';
@@ -33,8 +32,6 @@ function invalidateAfterOrderPaid(queryClient: ReturnType<typeof useQueryClient>
     queryClient.invalidateQueries({ queryKey: recruiterOrderKeys.detail(code) });
   }
   queryClient.invalidateQueries({ queryKey: entitlementKeys.all });
-  queryClient.invalidateQueries({ queryKey: creditKeys.wallet });
-  queryClient.invalidateQueries({ queryKey: creditKeys.ledgerRoot });
   queryClient.invalidateQueries({ queryKey: adKeys.bookings });
   queryClient.invalidateQueries({ queryKey: notificationKeys.all('recruiter') });
 }
@@ -111,7 +108,7 @@ export function useRecruiterRefundsSummary() {
 }
 
 // While an order is still awaiting money the panel polls; the moment the bank reports the payment
-// the order, list, entitlements, credits, and notifications are refreshed automatically
+// the order, list, entitlements, and notifications are refreshed automatically
 export function useOrderPayment(code: string, live: boolean) {
   const queryClient = useQueryClient();
   const sawPendingRef = useRef(false);
