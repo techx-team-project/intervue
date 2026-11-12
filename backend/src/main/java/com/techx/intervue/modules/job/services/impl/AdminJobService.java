@@ -10,6 +10,7 @@ import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.enums.JobStatus;
+import com.techx.intervue.modules.job.events.JobHiddenEvent;
 import com.techx.intervue.modules.job.mappers.JobMapper;
 import com.techx.intervue.modules.job.repositories.JobRepository;
 import com.techx.intervue.modules.job.repositories.JobRepository.StatusCount;
@@ -28,6 +29,7 @@ import java.time.Instant;
 import java.util.EnumMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,7 @@ public class AdminJobService implements AdminJobServiceInterface, JobContentPort
     private final JobStatusPolicy statusPolicy;
     private final AuditLogServiceInterface auditLogService;
     private final NotificationPublisherInterface notificationPublisher;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional(readOnly = true)
@@ -87,6 +90,7 @@ public class AdminJobService implements AdminJobServiceInterface, JobContentPort
         job.setHiddenBy(actor.userId());
         audit(actor, AuditAction.JOB_HIDDEN, job, reason.trim());
         notifyRecruiter(job, NotificationType.JOB_HIDDEN_BY_ADMIN, reason.trim());
+        eventPublisher.publishEvent(new JobHiddenEvent(job.getId()));
         return jobMapper.toResource(job);
     }
 
