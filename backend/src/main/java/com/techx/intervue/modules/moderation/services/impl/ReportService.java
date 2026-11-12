@@ -20,6 +20,7 @@ import com.techx.intervue.modules.moderation.repositories.ReportSpecifications;
 import com.techx.intervue.modules.moderation.resources.AdminReportDetailResource;
 import com.techx.intervue.modules.moderation.resources.AdminReportSummaryResource;
 import com.techx.intervue.modules.moderation.services.interfaces.ConversationContentPortInterface;
+import com.techx.intervue.modules.moderation.services.interfaces.JobContentPortInterface;
 import com.techx.intervue.modules.moderation.services.interfaces.ReportServiceInterface;
 import com.techx.intervue.modules.notification.enums.NotificationType;
 import com.techx.intervue.modules.notification.enums.RecipientType;
@@ -43,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReportService implements ReportServiceInterface {
 
     private static final String LOCK_REASON = "Vi phạm quy tắc cộng đồng InterVue Connect";
+    private static final String JOB_HIDE_REASON = "Tin tuyển dụng vi phạm nội dung cho phép";
 
     // recruiter_refresh_tokens.revoked_reason is VARCHAR(32) - keep this short and code-like,
     // same style as RecruiterService's own DELETION_REQUESTED_REASON/ACCOUNT_PURGED_REASON.
@@ -53,6 +55,7 @@ public class ReportService implements ReportServiceInterface {
     private final ReportRepository reportRepository;
     private final ReportMapper reportMapper;
     private final ConversationContentPortInterface contentHidePort;
+    private final JobContentPortInterface jobContentPort;
     private final UserAdminServiceInterface userAdminService;
     private final RecruiterServiceInterface recruiterService;
     private final NotificationPublisherInterface notificationPublisher;
@@ -77,6 +80,26 @@ public class ReportService implements ReportServiceInterface {
                         .reasonNote(reasonNote)
                         .status(ReportStatus.PENDING)
                         .build());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsPending(
+            ReportTargetType targetType,
+            Long targetId,
+            ReporterType reporterType,
+            Long reporterId) {
+        return reporterId == null
+                ? reportRepository
+                        .existsByTargetTypeAndTargetIdAndReporterTypeAndReporterIdIsNullAndStatus(
+                                targetType, targetId, reporterType, ReportStatus.PENDING)
+                : reportRepository
+                        .existsByTargetTypeAndTargetIdAndReporterTypeAndReporterIdAndStatus(
+                                targetType,
+                                targetId,
+                                reporterType,
+                                reporterId,
+                                ReportStatus.PENDING);
     }
 
     @Override
@@ -120,16 +143,14 @@ public class ReportService implements ReportServiceInterface {
         Report report = requirePending(reportId);
 
         switch (action) {
-            case HIDE_CONTENT -> {
-                if (report.getTargetType() != ReportTargetType.CONVERSATION
-                        || report.getTargetId() == null
-                        || report.getTargetId() <= 0) {
+            case HIDE_CONTENT -> hideContent(report, note, actor);
+            case LOCK_ACCOUNT -> {
+                if (report.getTargetType() == ReportTargetType.JOB_POST) {
                     throw AppException.validation(
-                            "action", "No conversation exists to hide for this report");
+                            "action", "Locking an account is not supported for job reports");
                 }
-                contentHidePort.hideContent(report.getTargetId());
+                lockAccount(report, lockActorType, lockActorId, note, actor);
             }
-            case LOCK_ACCOUNT -> lockAccount(report, lockActorType, lockActorId, note, actor);
             case NONE -> {
                 // Reviewed, nothing punitive - the note alone is the outcome.
             }
@@ -145,6 +166,20 @@ public class ReportService implements ReportServiceInterface {
                 NotificationType.REPORT_RESOLVED,
                 Map.of("action", describe(action), "note", blankToDash(note)));
         audit(actor, AuditAction.REPORT_RESOLVED, report.getId(), action.name());
+    }
+
+    private void hideContent(Report report, String note, RequestActor actor) {
+        if (report.getTargetId() == null || report.getTargetId() <= 0) {
+            throw AppException.validation("action", "No content exists to hide for this report");
+        }
+        if (report.getTargetType() == ReportTargetType.JOB_POST) {
+            jobContentPort.hideJob(
+                    report.getTargetId(),
+                    note == null || note.isBlank() ? JOB_HIDE_REASON : note,
+                    actor);
+            return;
+        }
+        contentHidePort.hideContent(report.getTargetId());
     }
 
     private void lockAccount(
@@ -214,11 +249,17 @@ public class ReportService implements ReportServiceInterface {
                         .recipientId(report.getReporterId())
                         .type(type)
                         .params(params)
-                        .actionUrl(
-                                recipientType == RecipientType.USER
-                                        ? "/candidate/conversations"
-                                        : "/recruiter/conversations")
+                        .actionUrl(actionUrlOf(report, recipientType))
                         .build());
+    }
+
+    private String actionUrlOf(Report report, RecipientType recipientType) {
+        if (report.getTargetType() == ReportTargetType.JOB_POST) {
+            return "/jobs";
+        }
+        return recipientType == RecipientType.USER
+                ? "/candidate/conversations"
+                : "/recruiter/conversations";
     }
 
     private void audit(RequestActor actor, AuditAction action, Long reportId, String detail) {
@@ -238,7 +279,7 @@ public class ReportService implements ReportServiceInterface {
     private String describe(ReportResolveAction action) {
         return switch (action) {
             case NONE -> "Không có hành động nào";
-            case HIDE_CONTENT -> "Ẩn nội dung cuộc trò chuyện";
+            case HIDE_CONTENT -> "Ẩn nội dung bị báo cáo";
             case LOCK_ACCOUNT -> "Khoá tài khoản vi phạm";
         };
     }

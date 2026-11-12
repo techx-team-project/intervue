@@ -19,6 +19,7 @@ import com.techx.intervue.modules.job.resources.AdminJobSummaryResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.services.interfaces.AdminJobServiceInterface;
+import com.techx.intervue.modules.moderation.services.interfaces.JobContentPortInterface;
 import com.techx.intervue.modules.notification.enums.NotificationType;
 import com.techx.intervue.modules.notification.enums.RecipientType;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface;
@@ -34,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class AdminJobService implements AdminJobServiceInterface {
+public class AdminJobService implements AdminJobServiceInterface, JobContentPortInterface {
 
     private static final String RECRUITER_JOBS_PATH = "/recruiter/jobs";
 
@@ -87,6 +88,11 @@ public class AdminJobService implements AdminJobServiceInterface {
         audit(actor, AuditAction.JOB_HIDDEN, job, reason.trim());
         notifyRecruiter(job, NotificationType.JOB_HIDDEN_BY_ADMIN, reason.trim());
         return jobMapper.toResource(job);
+    }
+
+    @Override
+    public void hideJob(Long jobId, String reason, RequestActor actor) {
+        hide(jobId, reason, actor);
     }
 
     @Override
