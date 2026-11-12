@@ -100,15 +100,15 @@ export default function AdminAdSlotForm({ servicePackages, editingSlot }: AdminA
 
   const packageOptions = useMemo(() => {
     const sorted = [...servicePackages].sort((a, b) => {
-      const aIsBanner = a.code.startsWith('BANNER_') ? 0 : 1;
-      const bIsBanner = b.code.startsWith('BANNER_') ? 0 : 1;
+      const aIsBanner = a.slug.startsWith('banner-') ? 0 : 1;
+      const bIsBanner = b.slug.startsWith('banner-') ? 0 : 1;
       return aIsBanner - bIsBanner || a.displayOrder - b.displayOrder;
     });
     return [
       { value: '', label: 'Auto-create BANNER_<CODE> package (Recommended)' },
       ...sorted.map((pkg) => ({
         value: String(pkg.id),
-        label: `${pkg.code} — ${pkg.name} (${formatVnd(pkg.price)})`,
+        label: `${pkg.name} (${formatVnd(pkg.price)})`,
       })),
     ];
   }, [servicePackages]);

@@ -6,7 +6,6 @@ export type RecruiterOrderStatus =
 export interface RecruiterOrderItem {
   id: number;
   packageId: number | null;
-  packageCode: string;
   packageName: string;
   unitPrice: number;
   quantity: number;

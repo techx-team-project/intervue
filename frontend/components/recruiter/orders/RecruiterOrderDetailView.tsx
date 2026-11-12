@@ -149,7 +149,6 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
                 <tr key={item.id}>
                   <td className="py-3.5 pr-4 pl-5">
                     <p className="text-on-surface font-semibold">{item.packageName}</p>
-                    <p className="text-outline mt-0.5 font-mono text-[11px]">{item.packageCode}</p>
                     {item.benefits.length > 0 && (
                       <ul className="text-on-surface-variant marker:text-outline mt-1.5 list-inside list-disc space-y-0.5 text-xs">
                         {item.benefits.map((benefit) => (

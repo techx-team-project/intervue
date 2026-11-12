@@ -90,10 +90,6 @@ export default function AdminServicePackageTable({
                       )}
                     </div>
                     <p className="dark:text-forest-300 text-on-surface-variant mt-1 flex flex-wrap items-center gap-1.5 text-[11px]">
-                      <code className="dark:bg-forest-850 dark:text-forest-200 bg-surface-container-low rounded px-1.5 py-0.5 font-mono">
-                        {item.code}
-                      </code>
-                      <span aria-hidden>·</span>
                       <span className="font-mono">/{item.slug}</span>
                     </p>
                   </td>

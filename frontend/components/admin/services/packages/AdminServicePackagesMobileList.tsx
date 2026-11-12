@@ -59,7 +59,7 @@ export default function AdminServicePackagesMobileList({
                   )}
                 </div>
                 <p className="dark:text-forest-300 text-on-surface-variant mt-1 text-xs">
-                  <code className="font-mono">{item.code}</code> · {category?.name ?? item.categoryCode}
+                  {category?.name ?? item.categoryCode}
                   {category && !category.isActive ? ' (Hidden category)' : ''}
                 </p>
               </div>

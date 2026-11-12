@@ -91,7 +91,6 @@ export type AdminOrderStatus =
 
 export interface AdminOrderItem {
   id: number;
-  packageCode: string;
   packageName: string;
   unitPrice: number;
   quantity: number;
@@ -127,5 +126,5 @@ export interface RevenueReport {
   paidOrderCount: number;
   ordersByStatus: Partial<Record<AdminOrderStatus, number>>;
   byMonth: Array<{ month: string; collected: number; orderCount: number }>;
-  byPackage: Array<{ packageCode: string; packageName: string; quantity: number; collected: number }>;
+  byPackage: Array<{ packageName: string; quantity: number; collected: number }>;
 }

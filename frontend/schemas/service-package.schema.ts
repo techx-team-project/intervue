@@ -3,7 +3,6 @@ import type { EntitlementType, ServicePackageBadge } from '@/types/service-packa
 import { z } from 'zod';
 
 export const PACKAGE_FIELD_LIMITS = {
-  code: 50,
   slug: 120,
   name: 150,
   shortDescription: 1000,
@@ -135,12 +134,6 @@ export const saveServicePackageSchema = z.object({
     .trim()
     .min(1, 'Package name is required.')
     .max(PACKAGE_FIELD_LIMITS.name, `Name must be at most ${PACKAGE_FIELD_LIMITS.name} characters.`),
-  code: z
-    .string()
-    .trim()
-    .min(1, 'Package code is required.')
-    .max(PACKAGE_FIELD_LIMITS.code, `Code must be at most ${PACKAGE_FIELD_LIMITS.code} characters.`)
-    .regex(/^[A-Za-z0-9_]+$/, 'Use letters, digits and underscores only (e.g. PRO_MAX).'),
   slug: z
     .string()
     .trim()
@@ -203,14 +196,6 @@ export function slugifyPackageName(value: string): string {
     .slice(0, PACKAGE_FIELD_LIMITS.slug);
 }
 
-export function codeifyPackageName(value: string): string {
-  return stripVietnameseDiacritics(value)
-    .toUpperCase()
-    .replace(/[^A-Z0-9]+/g, '_')
-    .replace(/^_+|_+$/g, '')
-    .slice(0, PACKAGE_FIELD_LIMITS.code);
-}
-
 export function toPackageFormDefaults(
   initial: AdminServicePackage | undefined,
   defaultCategoryId: number | string,
@@ -219,7 +204,6 @@ export function toPackageFormDefaults(
   return {
     categoryId: String(initial?.categoryId ?? defaultCategoryId ?? ''),
     name: initial?.name ?? '',
-    code: initial?.code ?? '',
     slug: initial?.slug ?? '',
     shortDescription: initial?.shortDescription ?? '',
     price: initial ? String(initial.price) : '',
@@ -254,7 +238,6 @@ export function toPackageFormDefaults(
 export function toSaveServicePackagePayload(values: SaveServicePackageFormData): SaveServicePackageInput {
   return {
     categoryId: Number(values.categoryId),
-    code: values.code.trim().toUpperCase(),
     slug: values.slug.trim().toLowerCase(),
     name: values.name.trim(),
     shortDescription: values.shortDescription.trim() || null,
@@ -299,15 +282,11 @@ export function buildSamplePackageFormData({
   existingPackages = [],
   existingSectionImageUrls = [],
 }: BuildSamplePackageOptions): SaveServicePackageFormData {
-  const takenCodes = new Set(existingPackages.map((item) => item.code.toUpperCase()));
   const takenSlugs = new Set(existingPackages.map((item) => item.slug.toLowerCase()));
 
   let suffix = '';
   let attempt = 1;
-  while (
-    takenCodes.has(`TOP_BOOST_PLUS${suffix ? `_${suffix}` : ''}`) ||
-    takenSlugs.has(`top-boost-plus${suffix ? `-${suffix}` : ''}`)
-  ) {
+  while (takenSlugs.has(`top-boost-plus${suffix ? `-${suffix}` : ''}`)) {
     attempt += 1;
     suffix = String(attempt);
   }
@@ -315,7 +294,6 @@ export function buildSamplePackageFormData({
   return {
     categoryId,
     name: suffix ? `TOP BOOST PLUS ${suffix}` : 'TOP BOOST PLUS',
-    code: suffix ? `TOP_BOOST_PLUS_${suffix}` : 'TOP_BOOST_PLUS',
     slug: suffix ? `top-boost-plus-${suffix}` : 'top-boost-plus',
     shortDescription:
       'Đẩy tin tuyển dụng IT lên vị trí ưu tiên nổi bật, kết hợp AI Resume Match và nhãn HOT giúp tăng gấp đôi lượng hồ sơ chất lượng.',
