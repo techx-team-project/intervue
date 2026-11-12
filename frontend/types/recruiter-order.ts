@@ -124,6 +124,16 @@ export interface RefundQuote {
 
 export type PaymentTransactionStatus = 'MATCHED' | 'UNMATCHED';
 
+export interface PaymentTransactionSummary {
+  totalCount: number;
+  totalAmount: number;
+}
+
+export interface RefundStatusCounts {
+  total: number;
+  byStatus: Record<RefundStatus, number>;
+}
+
 export interface RecruiterPaymentTransaction {
   id: number;
   sepayId: string;
