@@ -40,6 +40,8 @@ public interface JobServiceInterface {
 
     JobResource renew(Long jobId, RenewJobRequest request, Long recruiterId);
 
+    JobResource extend(Long jobId, RenewJobRequest request, Long recruiterId);
+
     JobQuotaResource quota(Long recruiterId);
 
     List<SimilarJobResource> findSimilar(SimilarJobsRequest request, Long recruiterId);
