@@ -14,7 +14,7 @@ SELECT
     (SELECT id FROM service_categories WHERE code = 'ADD_ON' LIMIT 1),
     'ADDON_AI_JD', 'addon-ai-jd', 'ADD-ON AI JD GENERATOR',
     'Bổ sung 100 lượt AI tự động soạn thảo mô tả, yêu cầu ứng viên và quyền lợi công việc chuyên nghiệp.',
-    1200000, 'VND', 'NEW', 0, '#2563eb',
+    2000, 'VND', 'NEW', 0, '#2563eb',
     NULL, 0, 0, 'ACTIVE', 6,
     NOW(), NOW()
 WHERE EXISTS (SELECT 1 FROM service_categories WHERE code = 'ADD_ON')
