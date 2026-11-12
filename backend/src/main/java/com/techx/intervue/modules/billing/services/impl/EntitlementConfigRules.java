@@ -39,6 +39,11 @@ final class EntitlementConfigRules {
             throw AppException.validation(
                     "entitlementType", "CREDIT and AD_SLOT_WEEK cannot be exchanged from Credits.");
         }
+        if (!DURATION_REQUIRED_TYPES.contains(type) && durationDays != null) {
+            throw AppException.validation(
+                    "durationDays",
+                    "Per-use entitlement " + type.name() + " must not define durationDays.");
+        }
         validateCommon("tier", "durationDays", type, tier, durationDays);
     }
 

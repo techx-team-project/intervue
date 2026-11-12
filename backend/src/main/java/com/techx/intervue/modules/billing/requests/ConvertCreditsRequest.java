@@ -7,5 +7,5 @@ import jakarta.validation.constraints.NotNull;
 
 public record ConvertCreditsRequest(
         @NotNull EntitlementType entitlementType,
-        @NotNull @Min(1) @Max(5) Integer tier,
+        @NotNull @Min(1) @Max(3) Integer tier,
         @NotNull @Min(1) @Max(50) Integer quantity) {}
