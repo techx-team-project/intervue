@@ -2,6 +2,7 @@ package com.techx.intervue.modules.entitlement.services.interfaces;
 
 import com.techx.intervue.modules.entitlement.enums.EntitlementStatus;
 import com.techx.intervue.modules.entitlement.enums.EntitlementType;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -64,6 +65,12 @@ public interface EntitlementServiceInterface {
 
     /** Returns when the consumed job slot usage expires for the given job, if recorded. */
     Optional<Instant> jobSlotExpiresAt(Long jobId);
+
+    /**
+     * Pushes the job slot end back by the paused time and returns the new end, if the job has a
+     * slot.
+     */
+    Optional<Instant> extendJobSlot(Long jobId, Duration pausedFor);
 
     /** Spends one retop unit against the given job and records an ended usage entry. */
     boolean consumeRetop(Long companyId, Long jobId, Long recruiterId);

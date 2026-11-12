@@ -2,6 +2,7 @@ package com.techx.intervue.modules.job.services.impl;
 
 import com.techx.intervue.common.audit.enums.AuditAction;
 import com.techx.intervue.common.policy.FreeQuotaPolicyInterface;
+import com.techx.intervue.common.policy.FreeQuotaValues;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.resources.CompanyResource;
@@ -28,6 +29,7 @@ import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.resources.JobSummaryResource;
 import com.techx.intervue.modules.job.services.interfaces.JobApplicationLookupInterface;
 import com.techx.intervue.modules.job.services.interfaces.JobServiceInterface;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.EnumMap;
@@ -51,6 +53,7 @@ public class JobService implements JobServiceInterface {
             Set.of(JobStatus.DRAFT, JobStatus.PUBLISHED, JobStatus.PAUSED);
     private static final Set<JobStatus> CLOSABLE = Set.of(JobStatus.PUBLISHED, JobStatus.PAUSED);
     private static final Set<JobStatus> RENEWABLE = Set.of(JobStatus.CLOSED, JobStatus.EXPIRED);
+    private static final Duration FREE_REOPEN_WINDOW = Duration.ofDays(7);
 
     private final JobRepository jobRepository;
     private final SkillRepository skillRepository;
@@ -92,6 +95,7 @@ public class JobService implements JobServiceInterface {
             throw new AppException(ErrorCode.JOB_NOT_EDITABLE);
         }
         JobResource before = jobMapper.toResource(job);
+        LocalDate previousDeadline = job.getDeadline();
         jobMapper.apply(job, request, resolveSkills(request.skillIds()));
         applyScreeningQuestions(job, request);
         if (job.getStatus() != JobStatus.DRAFT) {
@@ -99,7 +103,9 @@ public class JobService implements JobServiceInterface {
             contentScreener.assertAllowed(job);
             entitlementService
                     .jobSlotExpiresAt(job.getId())
-                    .ifPresent(endsAt -> assertDeadlineWithinSlot(job.getDeadline(), endsAt));
+                    .ifPresentOrElse(
+                            endsAt -> assertDeadlineWithinSlot(job.getDeadline(), endsAt),
+                            () -> assertFreeDeadlineUnchangedOrAllowed(job, previousDeadline));
             contentScreener.flagForReview(job);
         }
         JobResource after = jobMapper.toResource(job);
@@ -164,16 +170,20 @@ public class JobService implements JobServiceInterface {
     public JobResource resume(Long jobId, Long recruiterId) {
         Job job = requireOwned(jobId, recruiterId);
         requireStatus(job, Set.of(JobStatus.PAUSED));
+        Duration pausedFor = pausedDuration(job);
+        if (job.getDeadline() != null) {
+            job.setDeadline(job.getDeadline().plusDays(pausedFor.toDays()));
+        }
+        Optional<Instant> slotEndsAt = entitlementService.extendJobSlot(job.getId(), pausedFor);
         assertReadyToGoLive(job, recruiterId);
-        entitlementService
-                .jobSlotExpiresAt(job.getId())
-                .ifPresent(
-                        endsAt -> {
-                            if (endsAt.isBefore(Instant.now())) {
-                                throw new AppException(ErrorCode.ENTITLEMENT_EXPIRED);
-                            }
-                            assertDeadlineWithinSlot(job.getDeadline(), endsAt);
-                        });
+        slotEndsAt.ifPresentOrElse(
+                endsAt -> {
+                    if (endsAt.isBefore(Instant.now())) {
+                        throw new AppException(ErrorCode.ENTITLEMENT_EXPIRED);
+                    }
+                    assertDeadlineWithinSlot(job.getDeadline(), endsAt);
+                },
+                () -> assertFreeCapacity(job, freeQuotaPolicy.current()));
         JobResource resumed = markLive(job);
         activityRecorder.record(recruiterId, AuditAction.JOB_RESUMED, job, null);
         return resumed;
@@ -201,9 +211,12 @@ public class JobService implements JobServiceInterface {
     public JobResource renew(Long jobId, RenewJobRequest request, Long recruiterId) {
         Job job = requireOwned(jobId, recruiterId);
         requireStatus(job, RENEWABLE);
+        Optional<Instant> freeReopenSlotEnd = freeReopenSlotEnd(job);
         job.setDeadline(request.deadline());
         assertReadyToGoLive(job, recruiterId);
-        consumeJobSlot(job, recruiterId);
+        freeReopenSlotEnd.ifPresentOrElse(
+                endsAt -> assertDeadlineWithinSlot(request.deadline(), endsAt),
+                () -> consumeJobSlot(job, recruiterId));
         job.setPublishedAt(null);
         job.setRetoppedAt(null);
         JobResource renewed = markLive(job);
@@ -235,6 +248,7 @@ public class JobService implements JobServiceInterface {
         requireStatus(job, Set.of(JobStatus.PUBLISHED));
         statusPolicy.requireTransition(job.getStatus(), JobStatus.PAUSED);
         job.setStatus(JobStatus.PAUSED);
+        job.setPausedAt(Instant.now());
         activityRecorder.record(recruiterId, AuditAction.JOB_PAUSED, job, null);
         return jobMapper.toResource(job);
     }
@@ -246,6 +260,8 @@ public class JobService implements JobServiceInterface {
         requireStatus(job, CLOSABLE);
         statusPolicy.requireTransition(job.getStatus(), JobStatus.CLOSED);
         job.setStatus(JobStatus.CLOSED);
+        job.setPausedAt(null);
+        job.setClosedAt(Instant.now());
         eventPublisher.publishEvent(new JobClosedEvent(job.getId()));
         activityRecorder.record(recruiterId, AuditAction.JOB_CLOSED, job, null);
         return jobMapper.toResource(job);
@@ -281,9 +297,12 @@ public class JobService implements JobServiceInterface {
         Optional<Integer> durationDays =
                 entitlementService.consumeJobSlot(job.getCompanyId(), job.getId(), recruiterId);
         if (durationDays.isEmpty()) {
-            if (freeQuotaPolicy.current().requireJobSlot()) {
+            FreeQuotaValues quota = freeQuotaPolicy.current();
+            if (quota.requireJobSlot()) {
                 throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
             }
+            assertFreeCapacity(job, quota);
+            assertDeadlineWithinFreeWindow(job.getDeadline(), JobDeadlines.today(), quota);
             return;
         }
         // Rejecting rolls the whole publish back, which returns the slot we just took
@@ -303,10 +322,63 @@ public class JobService implements JobServiceInterface {
 
     private JobResource markLive(Job job) {
         job.setStatus(JobStatus.PUBLISHED);
+        job.setPausedAt(null);
+        job.setClosedAt(null);
         if (job.getPublishedAt() == null) {
             job.setPublishedAt(Instant.now());
         }
         return jobMapper.toResource(job);
+    }
+
+    private Duration pausedDuration(Job job) {
+        return job.getPausedAt() == null
+                ? Duration.ZERO
+                : Duration.between(job.getPausedAt(), Instant.now());
+    }
+
+    // Only a job closed by its recruiter, still inside the paid window, comes back without a new
+    // slot.
+    private Optional<Instant> freeReopenSlotEnd(Job job) {
+        Instant now = Instant.now();
+        if (job.getStatus() != JobStatus.CLOSED
+                || job.getClosedAt() == null
+                || job.getClosedAt().isBefore(now.minus(FREE_REOPEN_WINDOW))) {
+            return Optional.empty();
+        }
+        return entitlementService
+                .jobSlotExpiresAt(job.getId())
+                .filter(endsAt -> endsAt.isAfter(now));
+    }
+
+    private void assertFreeCapacity(Job job, FreeQuotaValues quota) {
+        long live =
+                jobRepository.countByCompanyIdAndStatusAndIdNot(
+                        job.getCompanyId(), JobStatus.PUBLISHED, job.getId());
+        if (live >= quota.jobFreeActiveLimit()) {
+            throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
+        }
+    }
+
+    private void assertDeadlineWithinFreeWindow(
+            LocalDate deadline, LocalDate from, FreeQuotaValues quota) {
+        LocalDate latestAllowed = from.plusDays(quota.jobFreeMaxDays());
+        if (deadline != null && deadline.isAfter(latestAllowed)) {
+            throw AppException.validation(
+                    "deadline",
+                    "Free job posts can run until " + latestAllowed + ", buy a package for longer");
+        }
+    }
+
+    private void assertFreeDeadlineUnchangedOrAllowed(Job job, LocalDate previousDeadline) {
+        if (job.getDeadline() == null
+                || job.getDeadline().equals(previousDeadline)
+                || job.getPublishedAt() == null) {
+            return;
+        }
+        assertDeadlineWithinFreeWindow(
+                job.getDeadline(),
+                JobDeadlines.toBusinessDate(job.getPublishedAt()),
+                freeQuotaPolicy.current());
     }
 
     private void assertDeadlineWithinSlot(LocalDate deadline, Instant slotEndsAt) {

@@ -57,6 +57,8 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
             @Param("now") Instant now,
             Pageable pageable);
 
+    long countByCompanyIdAndStatusAndIdNot(Long companyId, JobStatus status, Long id);
+
     boolean existsByIdAndStatusAndDeadlineGreaterThanEqual(
             Long id, JobStatus status, LocalDate deadline);
 
