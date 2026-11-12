@@ -45,7 +45,7 @@ function ReviewSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="border-outline-variant rounded-xl border p-4">
+    <section className="border-outline-variant rounded-xl border bg-white p-5">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-on-surface text-sm font-bold">{title}</h3>
         <Button
