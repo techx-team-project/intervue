@@ -1,4 +1,4 @@
-export type JobStatus = 'DRAFT' | 'PUBLISHED' | 'PAUSED' | 'CLOSED' | 'EXPIRED' | 'HIDDEN_BY_ADMIN';
+export type JobStatus = 'DRAFT' | 'PENDING_REVIEW' | 'PUBLISHED' | 'PAUSED' | 'CLOSED' | 'EXPIRED' | 'HIDDEN_BY_ADMIN';
 
 export type ContractType = 'FULL_TIME' | 'PART_TIME' | 'INTERNSHIP';
 

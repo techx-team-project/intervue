@@ -7,14 +7,25 @@ import { useState } from 'react';
 
 const MAX_REASON = 500;
 
-interface AdminJobHideDialogProps {
-  jobTitle: string;
+interface AdminJobReasonDialogProps {
+  title: string;
+  description: string;
+  confirmLabel: string;
+  placeholder: string;
   isPending: boolean;
   onClose: () => void;
   onConfirm: (reason: string) => void;
 }
 
-export default function AdminJobHideDialog({ jobTitle, isPending, onClose, onConfirm }: AdminJobHideDialogProps) {
+export default function AdminJobReasonDialog({
+  title,
+  description,
+  confirmLabel,
+  placeholder,
+  isPending,
+  onClose,
+  onConfirm,
+}: AdminJobReasonDialogProps) {
   const [reason, setReason] = useState('');
   const trimmed = reason.trim();
 
@@ -23,8 +34,8 @@ export default function AdminJobHideDialog({ jobTitle, isPending, onClose, onCon
       isOpen
       onClose={onClose}
       maxWidth="md"
-      title="Hide this job?"
-      description={`"${jobTitle}" leaves search and the recruiter is notified with your reason.`}
+      title={title}
+      description={description}
       footer={
         <div className="flex justify-end gap-2">
           <Button variant="outline" onClick={onClose} disabled={isPending}>
@@ -36,7 +47,7 @@ export default function AdminJobHideDialog({ jobTitle, isPending, onClose, onCon
             disabled={trimmed.length === 0}
             onClick={() => onConfirm(trimmed)}
           >
-            Hide job
+            {confirmLabel}
           </Button>
         </div>
       }
@@ -46,7 +57,7 @@ export default function AdminJobHideDialog({ jobTitle, isPending, onClose, onCon
         value={reason}
         maxLength={MAX_REASON}
         rows={4}
-        placeholder="Tell the recruiter what to fix before the job can be restored"
+        placeholder={placeholder}
         helperText={`${reason.length}/${MAX_REASON}`}
         onChange={(event) => setReason(event.target.value)}
       />

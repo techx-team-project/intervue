@@ -20,6 +20,7 @@ interface QuotaDraft {
   companyFreePhotoLimit: string;
   jobFreeActiveLimit: string;
   jobFreeMaxDays: string;
+  jobReviewFirstCount: string;
   requireJobSlot: boolean;
 }
 
@@ -51,6 +52,12 @@ const QUOTA_BOUNDS: Record<NumericQuotaKey, { max: number; label: string; helper
     label: 'Free live jobs / company',
     helper: 'Jobs a company can keep published at the same time without a paid job slot.',
   },
+  jobReviewFirstCount: {
+    max: 100,
+    label: 'Jobs reviewed before going live',
+    helper:
+      'A company needs this many approved jobs before its posts go live without admin review (0 turns review off).',
+  },
   jobFreeMaxDays: {
     max: 365,
     label: 'Free job duration (days)',
@@ -78,6 +85,7 @@ function toDraft(settings: FreeQuotaSettings): QuotaDraft {
     companyFreePhotoLimit: String(settings.companyFreePhotoLimit),
     jobFreeActiveLimit: String(settings.jobFreeActiveLimit),
     jobFreeMaxDays: String(settings.jobFreeMaxDays),
+    jobReviewFirstCount: String(settings.jobReviewFirstCount),
     requireJobSlot: settings.requireJobSlot,
   };
 }
@@ -116,6 +124,7 @@ function validateQuotaDraft(draft: QuotaDraft):
       companyFreePhotoLimit: parsed.companyFreePhotoLimit,
       jobFreeActiveLimit: parsed.jobFreeActiveLimit,
       jobFreeMaxDays: parsed.jobFreeMaxDays,
+      jobReviewFirstCount: parsed.jobReviewFirstCount,
       requireJobSlot: draft.requireJobSlot,
     },
     errors: {},
@@ -226,6 +235,7 @@ function FreeQuotasForm({ settings }: FreeQuotasFormProps) {
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           {renderNumberField('jobFreeActiveLimit')}
           {renderNumberField('jobFreeMaxDays')}
+          {renderNumberField('jobReviewFirstCount')}
         </div>
       </div>
 

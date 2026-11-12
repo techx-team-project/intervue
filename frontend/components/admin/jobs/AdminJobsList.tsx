@@ -5,18 +5,20 @@ import { Button } from '@/components/ui/Button';
 import type { AdminJobSummaryResource } from '@/types/admin-job';
 import { formatDate } from '@/utils/datetime';
 import { formatSalary } from '@/utils/public-company';
-import { Eye, EyeOff, RotateCcw } from 'lucide-react';
+import { Check, Eye, EyeOff, RotateCcw, X } from 'lucide-react';
 
 interface AdminJobsListProps {
   jobs: AdminJobSummaryResource[];
   onView: (job: AdminJobSummaryResource) => void;
   onHide: (job: AdminJobSummaryResource) => void;
   onRestore: (job: AdminJobSummaryResource) => void;
+  onApprove: (job: AdminJobSummaryResource) => void;
+  onReject: (job: AdminJobSummaryResource) => void;
 }
 
 const HIDEABLE = new Set(['PUBLISHED', 'PAUSED']);
 
-export default function AdminJobsList({ jobs, onView, onHide, onRestore }: AdminJobsListProps) {
+export default function AdminJobsList({ jobs, onView, onHide, onRestore, onApprove, onReject }: AdminJobsListProps) {
   return (
     <ul className="divide-outline-variant border-outline-variant divide-y overflow-hidden rounded-2xl border bg-white shadow-xs">
       {jobs.map((job) => (
@@ -44,6 +46,16 @@ export default function AdminJobsList({ jobs, onView, onHide, onRestore }: Admin
             <Button variant="ghost" size="sm" leftIcon={<Eye className="h-4 w-4" />} onClick={() => onView(job)}>
               View
             </Button>
+            {job.status === 'PENDING_REVIEW' && (
+              <>
+                <Button variant="outline" size="sm" leftIcon={<X className="h-4 w-4" />} onClick={() => onReject(job)}>
+                  Reject
+                </Button>
+                <Button size="sm" leftIcon={<Check className="h-4 w-4" />} onClick={() => onApprove(job)}>
+                  Approve
+                </Button>
+              </>
+            )}
             {HIDEABLE.has(job.status) && (
               <Button variant="outline" size="sm" leftIcon={<EyeOff className="h-4 w-4" />} onClick={() => onHide(job)}>
                 Hide

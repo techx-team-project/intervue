@@ -14,7 +14,7 @@ import { getErrorMessage } from '@/utils/error';
 import { Search, SearchX } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import AdminJobHideDialog from './AdminJobHideDialog';
+import AdminJobReasonDialog from './AdminJobReasonDialog';
 import AdminJobPreviewModal from './AdminJobPreviewModal';
 import AdminJobsList from './AdminJobsList';
 
@@ -23,6 +23,7 @@ const SEARCH_DEBOUNCE_MS = 300;
 
 const TABS: Array<{ value: JobStatus | undefined; label: string }> = [
   { value: undefined, label: 'All' },
+  { value: 'PENDING_REVIEW', label: 'Pending review' },
   { value: 'PUBLISHED', label: 'Live' },
   { value: 'PAUSED', label: 'Paused' },
   { value: 'HIDDEN_BY_ADMIN', label: 'Hidden' },
@@ -37,11 +38,13 @@ export default function AdminJobsPageClient() {
   const [viewing, setViewing] = useState<AdminJobSummaryResource | null>(null);
   const [hiding, setHiding] = useState<AdminJobSummaryResource | null>(null);
   const [restoring, setRestoring] = useState<AdminJobSummaryResource | null>(null);
+  const [approving, setApproving] = useState<AdminJobSummaryResource | null>(null);
+  const [rejecting, setRejecting] = useState<AdminJobSummaryResource | null>(null);
 
   const debouncedSearch = useDebouncedValue(search, SEARCH_DEBOUNCE_MS);
   const list = useAdminJobList({ q: debouncedSearch, status, page: page - 1, size: PAGE_SIZE });
   const counts = useAdminJobCounts();
-  const { hide, restore } = useAdminJobModeration();
+  const { hide, restore, approve, reject } = useAdminJobModeration();
 
   const jobs = list.data?.items ?? [];
   const totalItems = list.data?.totalItems ?? 0;
@@ -57,6 +60,31 @@ export default function AdminJobsPageClient() {
         onSuccess: () => {
           toast.success('Job hidden and the recruiter was notified.');
           setHiding(null);
+        },
+        onError: (error) => toast.error(getErrorMessage(error)),
+      },
+    );
+  };
+
+  const confirmApprove = () => {
+    if (!approving) return;
+    approve.mutate(approving.id, {
+      onSuccess: () => {
+        toast.success('Job approved and published.');
+        setApproving(null);
+      },
+      onError: (error) => toast.error(getErrorMessage(error)),
+    });
+  };
+
+  const confirmReject = (reason: string) => {
+    if (!rejecting) return;
+    reject.mutate(
+      { id: rejecting.id, reason },
+      {
+        onSuccess: () => {
+          toast.success('Job rejected and the recruiter was notified.');
+          setRejecting(null);
         },
         onError: (error) => toast.error(getErrorMessage(error)),
       },
@@ -139,7 +167,14 @@ export default function AdminJobsPageClient() {
         </div>
       ) : (
         <>
-          <AdminJobsList jobs={jobs} onView={setViewing} onHide={setHiding} onRestore={setRestoring} />
+          <AdminJobsList
+            jobs={jobs}
+            onView={setViewing}
+            onHide={setHiding}
+            onRestore={setRestoring}
+            onApprove={setApproving}
+            onReject={setRejecting}
+          />
           <Pagination
             page={page}
             pageCount={Math.max(1, list.data?.totalPages ?? 1)}
@@ -153,13 +188,48 @@ export default function AdminJobsPageClient() {
       {viewing && <AdminJobPreviewModal jobId={viewing.id} onClose={() => setViewing(null)} />}
 
       {hiding && (
-        <AdminJobHideDialog
-          jobTitle={hiding.title}
+        <AdminJobReasonDialog
+          title="Hide this job?"
+          description={`"${hiding.title}" leaves search and the recruiter is notified with your reason.`}
+          confirmLabel="Hide job"
+          placeholder="Tell the recruiter what to fix before the job can be restored"
           isPending={hide.isPending}
           onClose={() => setHiding(null)}
           onConfirm={confirmHide}
         />
       )}
+
+      {rejecting && (
+        <AdminJobReasonDialog
+          title="Reject this job?"
+          description={`"${rejecting.title}" returns to the recruiter's drafts with your reason.`}
+          confirmLabel="Reject job"
+          placeholder="Tell the recruiter what to fix before submitting again"
+          isPending={reject.isPending}
+          onClose={() => setRejecting(null)}
+          onConfirm={confirmReject}
+        />
+      )}
+
+      <Modal
+        isOpen={approving !== null}
+        onClose={() => setApproving(null)}
+        maxWidth="sm"
+        title="Approve this job?"
+        description={approving ? `"${approving.title}" goes live for candidates right away.` : undefined}
+        footer={
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setApproving(null)} disabled={approve.isPending}>
+              Cancel
+            </Button>
+            <Button isLoading={approve.isPending} onClick={confirmApprove}>
+              Approve
+            </Button>
+          </div>
+        }
+      >
+        <p className="text-on-surface-variant text-sm">The recruiter is notified when the job is approved.</p>
+      </Modal>
 
       <Modal
         isOpen={restoring !== null}

@@ -6,6 +6,7 @@ const STATUS_META: Record<
   { label: string; variant: 'default' | 'success' | 'warning' | 'danger' | 'info' }
 > = {
   DRAFT: { label: 'Draft', variant: 'default' },
+  PENDING_REVIEW: { label: 'Pending review', variant: 'info' },
   PUBLISHED: { label: 'Hiring', variant: 'success' },
   PAUSED: { label: 'Paused', variant: 'warning' },
   CLOSED: { label: 'Closed', variant: 'default' },

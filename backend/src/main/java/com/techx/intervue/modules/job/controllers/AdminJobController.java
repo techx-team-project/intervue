@@ -3,10 +3,12 @@ package com.techx.intervue.modules.job.controllers;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.job.requests.AdminSearchJobsRequest;
 import com.techx.intervue.modules.job.requests.HideJobRequest;
+import com.techx.intervue.modules.job.requests.RejectJobRequest;
 import com.techx.intervue.modules.job.resources.AdminJobSummaryResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.services.interfaces.AdminJobServiceInterface;
+import com.techx.intervue.modules.job.services.interfaces.JobReviewServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminJobController extends BaseController {
 
     private final AdminJobServiceInterface adminJobService;
+    private final JobReviewServiceInterface jobReviewService;
 
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<AdminJobSummaryResource>>> search(
@@ -57,6 +60,27 @@ public class AdminJobController extends BaseController {
         return ok(
                 adminJobService.hide(id, request.reason(), actor(principal, httpRequest)),
                 "Job hidden successfully!");
+    }
+
+    @PostMapping("/{id}/approve")
+    public ResponseEntity<ApiResource<JobResource>> approve(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                jobReviewService.approve(id, actor(principal, httpRequest)),
+                "Job approved successfully!");
+    }
+
+    @PostMapping("/{id}/reject")
+    public ResponseEntity<ApiResource<JobResource>> reject(
+            @PathVariable Long id,
+            @Valid @RequestBody RejectJobRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                jobReviewService.reject(id, request.reason(), actor(principal, httpRequest)),
+                "Job rejected successfully!");
     }
 
     @PostMapping("/{id}/restore")

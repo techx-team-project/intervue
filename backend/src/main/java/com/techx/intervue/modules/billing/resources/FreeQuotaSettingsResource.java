@@ -14,4 +14,5 @@ public record FreeQuotaSettingsResource(
         boolean requireJobSlot,
         int jobFreeActiveLimit,
         int jobFreeMaxDays,
+        int jobReviewFirstCount,
         Instant updatedAt) {}

@@ -101,6 +101,24 @@ templates:
       Bạn có thể tắt thông báo này trong phần cài đặt thông báo.
     actionLabel: "Xem tin tuyển dụng"
 
+  JOB_APPROVED:
+    title: "{jobTitle} was approved"
+    summary: "Your job post {jobTitle} passed review and is now live."
+    body: |
+      Your job post **{jobTitle}** passed review and is now visible to candidates.
+    actionLabel: "View job posts"
+
+  JOB_REJECTED:
+    title: "{jobTitle} was not approved"
+    summary: "Your job post {jobTitle} did not pass review."
+    body: |
+      Your job post **{jobTitle}** did not pass review and was moved back to drafts.
+
+      **Reason:** {reason}
+
+      Update the post and submit it again.
+    actionLabel: "View job posts"
+
   JOB_HIDDEN_BY_ADMIN:
     title: "Tin tuyển dụng {jobTitle} đã bị ẩn"
     summary: "Quản trị viên đã ẩn tin {jobTitle} khỏi kết quả tìm kiếm."

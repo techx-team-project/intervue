@@ -61,4 +61,8 @@ public class FreeQuotaSettings extends BaseEntity {
     @Column(name = "job_free_max_days", nullable = false)
     @Builder.Default
     private Integer jobFreeMaxDays = 60;
+
+    @Column(name = "job_review_first_count", nullable = false)
+    @Builder.Default
+    private Integer jobReviewFirstCount = 3;
 }

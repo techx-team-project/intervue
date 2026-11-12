@@ -15,6 +15,7 @@ import com.techx.intervue.modules.job.entities.Skill;
 import com.techx.intervue.modules.job.enums.JobStatus;
 import com.techx.intervue.modules.job.events.JobClosedEvent;
 import com.techx.intervue.modules.job.events.JobPublishedEvent;
+import com.techx.intervue.modules.job.events.JobSubmittedForReviewEvent;
 import com.techx.intervue.modules.job.events.JobTermsChangedEvent;
 import com.techx.intervue.modules.job.mappers.JobMapper;
 import com.techx.intervue.modules.job.repositories.JobRepository;
@@ -165,17 +166,24 @@ public class JobService implements JobServiceInterface {
         Job job = requireOwned(jobId, recruiterId);
         requireStatus(job, Set.of(JobStatus.DRAFT));
         assertReadyToGoLive(job, recruiterId);
-        consumeJobSlot(job, recruiterId);
-        JobResource published = markLive(job);
-        contentScreener.flagForReview(job);
+        if (needsFirstPostReview(job)) {
+            return submitForReview(job, recruiterId);
+        }
+        JobResource published = goLive(job, recruiterId);
         activityRecorder.record(recruiterId, AuditAction.JOB_PUBLISHED, job, null);
-        eventPublisher.publishEvent(
-                new JobPublishedEvent(
-                        job.getId(),
-                        job.getCompanyId(),
-                        job.getTitle(),
-                        companyService.findSummary(job.getCompanyId()).name()));
         return published;
+    }
+
+    @Override
+    @Transactional
+    public JobResource publishApproved(Long jobId) {
+        Job job =
+                jobRepository
+                        .findById(jobId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        requireStatus(job, Set.of(JobStatus.PENDING_REVIEW));
+        assertReadyToGoLive(job, job.getRecruiterId());
+        return goLive(job, job.getRecruiterId());
     }
 
     @Override
@@ -356,6 +364,9 @@ public class JobService implements JobServiceInterface {
         job.setStatus(JobStatus.PUBLISHED);
         job.setPausedAt(null);
         job.setClosedAt(null);
+        if (job.getApprovedAt() == null) {
+            job.setApprovedAt(Instant.now());
+        }
         if (job.getPublishedAt() == null) {
             job.setPublishedAt(Instant.now());
         }
@@ -371,6 +382,48 @@ public class JobService implements JobServiceInterface {
         if (!changes.isEmpty()) {
             eventPublisher.publishEvent(new JobTermsChangedEvent(job.getId(), changes));
         }
+    }
+
+    private JobResource goLive(Job job, Long recruiterId) {
+        consumeJobSlot(job, recruiterId);
+        JobResource published = markLive(job);
+        contentScreener.flagForReview(job);
+        eventPublisher.publishEvent(
+                new JobPublishedEvent(
+                        job.getId(),
+                        job.getCompanyId(),
+                        job.getTitle(),
+                        companyService.findSummary(job.getCompanyId()).name()));
+        return published;
+    }
+
+    private boolean needsFirstPostReview(Job job) {
+        return jobRepository.countByCompanyIdAndApprovedAtIsNotNull(job.getCompanyId())
+                < freeQuotaPolicy.current().jobReviewFirstCount();
+    }
+
+    // The slot is only spent when an admin approves, so this just checks it will be available.
+    private JobResource submitForReview(Job job, Long recruiterId) {
+        assertSlotAvailable(job);
+        statusPolicy.requireTransition(job.getStatus(), JobStatus.PENDING_REVIEW);
+        job.setStatus(JobStatus.PENDING_REVIEW);
+        activityRecorder.record(recruiterId, AuditAction.JOB_SUBMITTED, job, null);
+        eventPublisher.publishEvent(
+                new JobSubmittedForReviewEvent(
+                        job.getId(), companyService.findSummary(job.getCompanyId()).name()));
+        return jobMapper.toResource(job);
+    }
+
+    private void assertSlotAvailable(Job job) {
+        if (entitlementService.remainingOf(job.getCompanyId(), EntitlementType.JOB_POST_SLOT) > 0) {
+            return;
+        }
+        FreeQuotaValues quota = freeQuotaPolicy.current();
+        if (quota.requireJobSlot()) {
+            throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
+        }
+        assertFreeCapacity(job, quota);
+        assertDeadlineWithinFreeWindow(job.getDeadline(), JobDeadlines.today(), quota);
     }
 
     private Duration pausedDuration(Job job) {

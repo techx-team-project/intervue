@@ -31,4 +31,9 @@ export const adminJobApi = {
     request<RecruiterJobResource>(`/admin/jobs/${id}/hide`, { method: 'POST', body: { reason } }),
 
   restore: (id: number) => request<RecruiterJobResource>(`/admin/jobs/${id}/restore`, { method: 'POST' }),
+
+  approve: (id: number) => request<RecruiterJobResource>(`/admin/jobs/${id}/approve`, { method: 'POST' }),
+
+  reject: (id: number, reason: string) =>
+    request<RecruiterJobResource>(`/admin/jobs/${id}/reject`, { method: 'POST', body: { reason } }),
 };
