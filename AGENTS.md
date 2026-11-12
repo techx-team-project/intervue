@@ -31,7 +31,7 @@ AI-assisted IT recruitment platform. Roles: Candidate, Recruiter, Admin (one acc
 3. Verify (build, lint, tests) before saying "done"; report real output.
 4. Don't invent requirements — see `FUNCTION_REQUIRMENT.md`, `docs/`.
 5. English for code and commits; Vietnamese for UI copy. No comments unless the code is truly hard to follow (one short English line).
-6. Commits and branches follow `docs/ai/git-commit.md`; PRs target `dev`; **one task = one branch from an up-to-date `dev`; never commit or push before the user approves the finished task, then their "OK" authorizes commit, push, PR and merge into `dev`, after which switch back to `dev` and pull.** Never add `Co-Authored-By` or AI attribution.
+6. Commits and branches follow `docs/ai/git-commit.md`; PRs target `dev`; **one task = one branch from an up-to-date `dev`; never commit or push before the user approves the finished task, then their "OK" authorizes commit, push, PR and merge into `dev`. Stay on the task branch while the user reviews; switch to `dev` and pull only after the merge.** Never add `Co-Authored-By` or AI attribution.
 
 ## Code standards and governance
 

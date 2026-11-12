@@ -76,9 +76,9 @@ Flow: branch from `dev` → PR into `dev` → `dev` merged into `main` for relea
 ## 6. Task workflow (one task = one branch)
 
 1. **Start clean.** Before a new task run `git switch dev && git pull --ff-only`, then create the task branch from `dev` (`type/scope-description`). One task, one branch; never mix two tasks on one branch.
-2. **Finish, verify, ask.** Run the relevant lint/build/test, summarize the change and ask the user to review. Keep the work uncommitted until the user approves.
+2. **Finish, verify, ask.** Run the relevant lint/build/test, summarize the change and ask the user to review. Keep the work uncommitted until the user approves. **Stay on the task branch while the user reviews** so they can run the app and see the change; do not switch to `dev` until the user says to merge.
 3. **On "OK", ship it.** Commit in small groups by purpose (explicit paths), push the branch, open a PR into `dev` and merge it. One "OK" covers commit, push, PR and merge for that task.
-4. **Return to `dev`.** After the merge, switch back to `dev` and run `git pull --ff-only` without asking. If `dev` has diverged and needs a reset, check for real uncommitted work first (`git diff --ignore-cr-at-eol`) and ask.
+4. **Return to `dev` only after the merge.** Once the user said merge and the PR is merged, switch back to `dev` and run `git pull --ff-only` without asking. If `dev` has diverged and needs a reset, check for real uncommitted work first (`git diff --ignore-cr-at-eol`) and ask.
 5. **Never stack tasks.** Do not start a new task while the previous one has unmerged work: finish step 3 first or ask the user. Files that differ only by line endings (CRLF/LF) are not work; ignore them.
 
 ## 7. Pull requests
