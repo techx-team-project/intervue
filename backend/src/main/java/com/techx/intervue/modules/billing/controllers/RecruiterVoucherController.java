@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,7 +43,8 @@ public class RecruiterVoucherController extends BaseController {
 
     @GetMapping("/available")
     public ResponseEntity<ApiResource<PageResource<AvailableVoucherResource>>> listAvailableWallet(
-            @AuthenticationPrincipal CustomUserDetails principal, Pageable pageable) {
+            @AuthenticationPrincipal CustomUserDetails principal,
+            @PageableDefault(size = 12) Pageable pageable) {
         return page(
                 voucherService.listAvailableWallet(principal.getId(), pageable),
                 "Available vouchers retrieved successfully!");
@@ -50,7 +52,8 @@ public class RecruiterVoucherController extends BaseController {
 
     @GetMapping("/used")
     public ResponseEntity<ApiResource<PageResource<UsedVoucherResource>>> listUsedWallet(
-            @AuthenticationPrincipal CustomUserDetails principal, Pageable pageable) {
+            @AuthenticationPrincipal CustomUserDetails principal,
+            @PageableDefault(size = 12) Pageable pageable) {
         return page(
                 voucherService.listUsedWallet(principal.getId(), pageable),
                 "Used vouchers retrieved successfully!");

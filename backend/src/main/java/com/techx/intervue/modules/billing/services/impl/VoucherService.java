@@ -42,6 +42,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class VoucherService implements VoucherServiceInterface {
 
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+    private static final int DEFAULT_WALLET_PAGE_SIZE = 12;
+    private static final int MAX_WALLET_PAGE_SIZE = 48;
     private static final List<OrderStatus> EXCLUDED_USED_ORDER_STATUSES =
             List.of(OrderStatus.CANCELLED, OrderStatus.EXPIRED);
 
@@ -96,7 +98,7 @@ public class VoucherService implements VoucherServiceInterface {
     @Transactional(readOnly = true)
     public Page<AvailableVoucherResource> listAvailableWallet(Long recruiterId, Pageable pageable) {
         Long companyId = companyResolver.findId(recruiterId).orElse(null);
-        Pageable sanitized = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        Pageable sanitized = sanitizeWalletPageable(pageable);
         Page<Voucher> page =
                 voucherRepository.findAvailablePage(
                         VoucherStatus.ACTIVE, Instant.now(), companyId, sanitized);
@@ -116,11 +118,11 @@ public class VoucherService implements VoucherServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public Page<UsedVoucherResource> listUsedWallet(Long recruiterId, Pageable pageable) {
+        Pageable sanitized = sanitizeWalletPageable(pageable);
         Optional<Long> companyId = companyResolver.findId(recruiterId);
         if (companyId.isEmpty()) {
-            return Page.empty(pageable);
+            return Page.empty(sanitized);
         }
-        Pageable sanitized = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         Page<Object[]> page =
                 redemptionRepository.findUsedByCompany(
                         companyId.get(), EXCLUDED_USED_ORDER_STATUSES, sanitized);
@@ -338,5 +340,16 @@ public class VoucherService implements VoucherServiceInterface {
                                     servicePackage.getPrice() * item.getQuantity());
                         })
                 .toList();
+    }
+
+    private Pageable sanitizeWalletPageable(Pageable pageable) {
+        if (pageable == null || pageable.isUnpaged()) {
+            return PageRequest.of(0, DEFAULT_WALLET_PAGE_SIZE);
+        }
+        int page = Math.max(0, pageable.getPageNumber());
+        int rawSize = pageable.getPageSize();
+        int size =
+                rawSize <= 0 ? DEFAULT_WALLET_PAGE_SIZE : Math.min(rawSize, MAX_WALLET_PAGE_SIZE);
+        return PageRequest.of(page, size);
     }
 }
