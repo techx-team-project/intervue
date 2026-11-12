@@ -60,8 +60,8 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
         {/* Header & Status */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800">
-              <ShieldCheck className="h-4 w-4 text-emerald-600" />
+            <span className="bg-primary-light text-primary-deep inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold">
+              <ShieldCheck className="text-primary h-4 w-4" />
               {profile.levelLabel}
             </span>
             <span className="text-on-surface-variant text-xs font-semibold">
@@ -86,7 +86,7 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
           </div>
           <div className="bg-surface-container-high h-2 w-full overflow-hidden rounded-full">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500"
+              className="bg-primary h-full rounded-full transition-all duration-500"
               style={{ width: `${profile.completionPercent}%` }}
             />
           </div>
@@ -94,14 +94,14 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
 
         {/* Verification Success Callout */}
         {profile.canPublish && (
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 text-emerald-950 shadow-2xs">
+          <div className="border-primary/30 bg-primary-light text-primary-deep rounded-xl border p-4">
             <div className="flex items-start gap-3">
               <ShieldCheck className="text-primary mt-0.5 h-5 w-5 shrink-0" />
               <div className="space-y-0.5">
-                <p className="text-sm font-bold text-emerald-950">
+                <p className="text-primary-deep text-sm font-bold">
                   Verification Complete — Level 3 Verified Enterprise
                 </p>
-                <p className="text-xs text-emerald-800">
+                <p className="text-primary-deep text-xs">
                   Your business credentials and data protection agreements have been fully verified. You have full job
                   posting privileges across the platform.
                 </p>
@@ -157,8 +157,8 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-on-surface-variant text-xs">
             {profile.canPublish ? (
-              <span className="flex items-center gap-1.5 font-semibold text-emerald-700">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              <span className="text-primary-deep flex items-center gap-1.5 font-semibold">
+                <CheckCircle2 className="text-primary h-4 w-4" />
                 Publishing rights active: You can post public jobs and review applicant CVs.
               </span>
             ) : (
@@ -171,7 +171,7 @@ export function VerificationChecklist({ profile }: VerificationChecklistProps) {
 
           <Link
             href={profile.nextStepUrl}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700 active:scale-95"
+            className="bg-primary hover:bg-primary-hover inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-xs font-bold text-white transition active:scale-95"
           >
             <span>{profile.nextStepLabel}</span>
             <ArrowRight className="h-3.5 w-3.5" />
@@ -194,7 +194,7 @@ function ChecklistRow({ item }: { item: VerificationChecklistItem }) {
     <div
       className={`group flex items-start justify-between rounded-xl border p-3.5 transition ${
         isApproved
-          ? 'border-emerald-200/80 bg-emerald-50/30'
+          ? 'border-primary/30 bg-primary-light'
           : isInReview
             ? 'border-amber-200/80 bg-amber-50/20'
             : isRejected || isRevoked
@@ -206,7 +206,7 @@ function ChecklistRow({ item }: { item: VerificationChecklistItem }) {
         {/* Status Icon */}
         <div className="mt-0.5">
           {isApproved ? (
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">
+            <div className="bg-primary flex h-6 w-6 items-center justify-center rounded-full text-white">
               <CheckCircle2 className="h-4 w-4" />
             </div>
           ) : isInReview ? (
@@ -271,14 +271,14 @@ function ChecklistRow({ item }: { item: VerificationChecklistItem }) {
         {isApproved ? (
           <Link
             href={item.actionUrl}
-            className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 hover:underline"
+            className="text-primary-deep hover:text-primary-deep text-xs font-semibold hover:underline"
           >
             View details
           </Link>
         ) : (
           <Link
             href={item.actionUrl}
-            className="border-outline-variant text-on-surface hover:bg-surface-container-low hover:text-on-surface inline-flex items-center gap-1 rounded-lg border bg-white px-2.5 py-1 text-xs font-bold shadow-2xs transition"
+            className="border-outline-variant text-on-surface hover:bg-surface-container-low hover:text-on-surface inline-flex items-center gap-1 rounded-lg border bg-white px-2.5 py-1 text-xs font-bold transition"
           >
             <span>{isRejected || isExpired ? 'Resubmit' : item.actionLabel}</span>
             <ArrowRight className="h-3 w-3" />

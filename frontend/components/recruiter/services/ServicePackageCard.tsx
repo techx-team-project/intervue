@@ -31,7 +31,7 @@ export default function ServicePackageCard({
   const actionsDisabled = disableActions || busyAction !== null;
 
   return (
-    <article className="border-outline-variant relative flex flex-col overflow-visible rounded-xl border bg-white shadow-xs transition hover:shadow-md">
+    <article className="border-outline-variant hover:border-navy relative flex flex-col overflow-visible rounded-xl border bg-white transition">
       <span aria-hidden className="h-1 w-full rounded-t-[11px]" style={{ backgroundColor: accent }} />
 
       {item.vipRibbon && (
@@ -58,14 +58,14 @@ export default function ServicePackageCard({
         {hasMetadata && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {adSlot && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+              <span className="bg-primary-light text-primary-deep inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium">
                 <CalendarDays className="h-3.5 w-3.5 shrink-0" aria-hidden />
                 Banner {adSlot.width}×{adSlot.height}px · Đặt theo tuần
               </span>
             )}
             {item.validityDays && (
               <span className="bg-surface-container-low text-on-surface-variant inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium">
-                <Clock className="h-3.5 w-3.5 shrink-0 text-emerald-600" aria-hidden />
+                <Clock className="text-primary h-3.5 w-3.5 shrink-0" aria-hidden />
                 Hiệu lực {item.validityDays} ngày
               </span>
             )}
@@ -96,7 +96,7 @@ export default function ServicePackageCard({
             disabled={actionsDisabled}
             className={cn(
               'border-primary text-primary inline-flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5',
-              'rounded-lg border bg-white text-sm font-semibold transition hover:bg-emerald-50 active:scale-[0.98]',
+              'hover:bg-primary-light rounded-lg border bg-white text-sm font-semibold transition active:scale-[0.98]',
               'disabled:cursor-not-allowed disabled:opacity-60',
             )}
           >

@@ -23,7 +23,7 @@ export function CompanyVerificationView() {
 
   if (error) {
     return (
-      <div className="mx-auto max-w-2xl rounded-2xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-900">
+      <div className="mx-auto max-w-2xl rounded-xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-900">
         <p className="font-bold">{error}</p>
         <p className="mt-1 text-xs text-rose-700">Please refresh the page or contact platform support.</p>
       </div>
@@ -34,7 +34,7 @@ export function CompanyVerificationView() {
     <div className="flex min-h-full flex-col">
       <div className="flex-1 space-y-6">
         {/* Main unified card layout (Left = Emerald Hero stats, Right = Checklist) */}
-        <div className="border-outline-variant/90 mx-auto grid max-w-7xl grid-cols-1 items-stretch overflow-hidden rounded-xl border bg-white shadow-sm lg:grid-cols-12">
+        <div className="border-outline-variant/90 mx-auto grid max-w-7xl grid-cols-1 items-stretch overflow-hidden rounded-xl border bg-white lg:grid-cols-12">
           {/* Left Column (6 cols on lg) */}
           <div className="flex flex-col bg-[#009647] lg:col-span-6">
             <CompanyVerificationHero profile={profile} />
@@ -49,11 +49,11 @@ export function CompanyVerificationView() {
 
       {/* Bottom informational banner */}
       {showBottomBanner && (
-        <div className="sticky bottom-0 z-30 -mx-2 mt-6 -mb-6 overflow-hidden bg-gradient-to-r from-[#06873f] via-[#0f9b50] to-[#3bb673] text-white shadow-[0_-6px_18px_-8px_rgba(0,0,0,0.35)] sm:-mx-3 sm:-mb-5 lg:-mx-5">
+        <div className="bg-primary-deep sticky bottom-0 z-30 -mx-2 mt-6 -mb-6 overflow-hidden text-white shadow-[0_-6px_18px_-8px_rgba(0,0,0,0.35)] sm:-mx-3 sm:-mb-5 lg:-mx-5">
           <div className="flex items-stretch">
             <div
               aria-hidden
-              className="relative hidden w-36 shrink-0 overflow-hidden border-r border-white/20 bg-gradient-to-br from-[#2cc06f] to-[#5ad28d] sm:block"
+              className="bg-primary relative hidden w-36 shrink-0 overflow-hidden border-r border-white/20 sm:block"
             >
               <div className="relative flex h-full flex-col items-center justify-center gap-1">
                 <ShieldCheck className="h-9 w-9 text-white drop-shadow-sm" strokeWidth={1.75} />
@@ -76,7 +76,7 @@ export function CompanyVerificationView() {
 
               <Link
                 href={ROUTES.RECRUITER_JOBS_CREATE}
-                className="shadow-elevation-1 shrink-0 self-start rounded-lg bg-white px-4 py-2 text-xs font-bold text-[#06873f] transition hover:bg-emerald-50 active:scale-95 sm:self-auto"
+                className="text-primary-deep hover:bg-primary-light shrink-0 self-start rounded-lg bg-white px-4 py-2 text-xs font-bold transition active:scale-95 sm:self-auto"
               >
                 Create Job Draft
               </Link>

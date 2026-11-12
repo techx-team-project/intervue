@@ -88,7 +88,7 @@ export default function RecruiterAdsView() {
     <div className="space-y-6 pb-16">
       <div>
         <h1 className="text-on-surface flex items-center gap-2 text-xl font-bold">
-          <Megaphone className="h-5 w-5 text-emerald-600" aria-hidden />
+          <Megaphone className="text-primary h-5 w-5" aria-hidden />
           Quảng cáo banner
         </h1>
         <p className="text-on-surface-variant mt-1 text-sm">
@@ -98,8 +98,8 @@ export default function RecruiterAdsView() {
       </div>
 
       {notice && (
-        <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-900">
-          <Check className="h-4 w-4 shrink-0 text-emerald-600" aria-hidden />
+        <div className="border-primary/30 bg-primary-light text-primary-deep flex items-center gap-2 rounded-lg border px-4 py-3 text-sm font-semibold">
+          <Check className="text-primary h-4 w-4 shrink-0" aria-hidden />
           {notice}
           <Link href={ROUTES.RECRUITER_CART} className="ml-auto underline">
             Tới giỏ hàng
@@ -123,8 +123,8 @@ export default function RecruiterAdsView() {
             className={cn(
               'cursor-pointer rounded-xl border px-4 py-2 text-sm font-semibold transition',
               item.code === activeCode
-                ? 'border-primary bg-emerald-50 text-emerald-900'
-                : 'border-outline-variant text-on-surface-variant bg-white hover:border-emerald-300',
+                ? 'border-primary bg-primary-light text-primary-deep'
+                : 'border-outline-variant text-on-surface-variant hover:border-primary bg-white',
             )}
           >
             {item.name}
@@ -135,7 +135,7 @@ export default function RecruiterAdsView() {
         ))}
       </div>
 
-      <section className="border-outline-variant rounded-2xl border bg-white p-5 shadow-2xs">
+      <section className="border-outline-variant rounded-xl border bg-white p-5">
         {calendar.isPending || !slot ? (
           <div className="flex justify-center py-10">
             <Spinner />
@@ -174,19 +174,19 @@ export default function RecruiterAdsView() {
         {bookings.isPending ? (
           <Spinner />
         ) : (bookings.data ?? []).length === 0 ? (
-          <div className="border-outline-variant text-on-surface-variant rounded-2xl border border-dashed px-4 py-10 text-center text-sm">
+          <div className="border-outline-variant text-on-surface-variant rounded-xl border border-dashed px-4 py-10 text-center text-sm">
             Bạn chưa đặt tuần banner nào.
           </div>
         ) : (
           <ul className="space-y-3">
             {(bookings.data ?? []).map((booking) => (
-              <li key={booking.id} className="border-outline-variant rounded-2xl border bg-white p-4 shadow-2xs">
+              <li key={booking.id} className="border-outline-variant rounded-xl border bg-white p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="text-on-surface font-semibold">
                       {booking.slotName}
                       {booking.running && (
-                        <span className="ml-2 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-700">
+                        <span className="bg-primary-light text-primary-deep ml-2 rounded-full px-2 py-0.5 text-xs font-bold">
                           Đang chạy
                         </span>
                       )}

@@ -54,7 +54,7 @@ export default function CartOrderSummary({
 
   return (
     <>
-      <div className="border-outline-variant rounded-xl border bg-white p-5 shadow-xs">
+      <div className="border-outline-variant rounded-xl border bg-white p-5">
         <h3 className="text-primary text-sm font-bold tracking-wider uppercase">ORDER SUMMARY</h3>
 
         {/* Pricing breakdown */}
@@ -67,7 +67,7 @@ export default function CartOrderSummary({
           </div>
 
           {discountAmount > 0 && (
-            <div className="flex items-center justify-between text-emerald-600">
+            <div className="text-primary flex items-center justify-between">
               <span className="flex items-center gap-1">
                 <Ticket className="h-3.5 w-3.5" />
                 <span>Promotional discount</span>
@@ -98,7 +98,7 @@ export default function CartOrderSummary({
               onClick={onOpenVoucherModal}
               className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition ${
                 appliedVoucher
-                  ? 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                  ? 'border-primary/30 bg-primary-light text-primary-deep hover:bg-primary-tag'
                   : 'border-outline text-on-surface-variant hover:border-primary hover:text-primary bg-white'
               }`}
             >
@@ -130,7 +130,7 @@ export default function CartOrderSummary({
               </span>
               <span className="text-primary inline-flex items-center gap-1 font-bold">
                 <span>+{Math.max(1, Math.round(totalAmount / 100000))}</span>
-                <span className="text-label-sm flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 font-bold text-amber-900 shadow-2xs">
+                <span className="text-label-sm flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 font-bold text-amber-900">
                   IP
                 </span>
               </span>
@@ -156,7 +156,7 @@ export default function CartOrderSummary({
               onClick={() => onSelectInvoiceType('business')}
               className={`text-body-md flex cursor-pointer items-center justify-between rounded-lg border p-3 transition ${
                 invoiceType === 'business'
-                  ? 'border-primary bg-emerald-50/30 ring-1 ring-[#00b14f]'
+                  ? 'border-primary bg-primary-light ring-1 ring-[#00b14f]'
                   : 'border-outline-variant hover:border-outline'
               }`}
             >
@@ -231,7 +231,7 @@ export default function CartOrderSummary({
               onClick={() => onSelectInvoiceType('personal')}
               className={`text-body-md flex cursor-pointer items-center justify-between rounded-lg border p-3 transition ${
                 invoiceType === 'personal'
-                  ? 'border-primary bg-emerald-50/30 ring-1 ring-[#00b14f]'
+                  ? 'border-primary bg-primary-light ring-1 ring-[#00b14f]'
                   : 'border-outline-variant hover:border-outline'
               }`}
             >
@@ -335,7 +335,7 @@ export default function CartOrderSummary({
             type="button"
             disabled={!canSubmit}
             onClick={onSubmitOrder}
-            className="bg-primary hover:bg-primary w-full rounded-lg py-3 text-center text-sm font-bold text-white shadow-sm transition disabled:cursor-not-allowed disabled:bg-emerald-300/70"
+            className="bg-primary hover:bg-primary disabled:bg-primary/40 w-full rounded-lg py-3 text-center text-sm font-bold text-white transition disabled:cursor-not-allowed"
           >
             Place order
           </button>

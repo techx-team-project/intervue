@@ -11,7 +11,7 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
   return (
     <div className="relative flex h-full flex-col justify-between bg-[#009647] p-3.5 select-none sm:p-4 lg:p-5">
       {/* Inner curved forest-emerald container */}
-      <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b from-[#005c38] via-[#004e30] to-[#003722] p-5 text-white shadow-inner sm:p-6">
+      <div className="bg-primary-deep relative flex h-full flex-col justify-between overflow-hidden rounded-xl border border-white/10 p-5 text-white sm:p-6">
         {/* Decorative Cityscape / Tech Towers Silhouette at the bottom */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-48 items-end justify-center overflow-hidden opacity-25">
           <svg
@@ -50,8 +50,8 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
 
         <div className="relative z-10 space-y-5">
           {/* Top category highlight box */}
-          <div className="flex items-center gap-3.5 rounded-2xl border border-white/15 bg-white/10 p-3.5 shadow-sm backdrop-blur-md">
-            <div className="bg-primary shadow-elevation-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white shadow-emerald-950/30">
+          <div className="flex items-center gap-3.5 rounded-xl border border-white/15 bg-white/10 p-3.5 backdrop-blur-md">
+            <div className="bg-primary flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white">
               <Tag className="h-6 w-6 stroke-[2.2]" />
             </div>
             <div>
@@ -69,7 +69,7 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
           </div>
 
           {/* Feature Card 1: 3D Stacked Application documents */}
-          <div className="group text-on-surface shadow-elevation-1 hover:shadow-elevation-2 flex items-center gap-4 rounded-2xl bg-white p-4 transition-all duration-200 hover:-translate-y-0.5">
+          <div className="group text-on-surface hover:bg-primary-light flex items-center gap-4 rounded-xl bg-white p-4 transition-all duration-200">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center">
               <svg className="h-12 w-12" viewBox="0 0 48 48" fill="none">
                 <path d="M12 14L34 8L40 32L18 38L12 14Z" fill="#A7F3D0" />
@@ -97,7 +97,7 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
           </div>
 
           {/* Feature Card 2: 3D Magnifying Glass */}
-          <div className="group text-on-surface shadow-elevation-1 hover:shadow-elevation-2 flex items-center gap-4 rounded-2xl bg-white p-4 transition-all duration-200 hover:-translate-y-0.5">
+          <div className="group text-on-surface hover:bg-primary-light flex items-center gap-4 rounded-xl bg-white p-4 transition-all duration-200">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center">
               <svg className="h-12 w-12" viewBox="0 0 48 48" fill="none">
                 <ellipse cx="32" cy="16" rx="6" ry="3.5" fill="#FBBF24" />
@@ -125,7 +125,7 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
           </div>
 
           {/* Feature Card 3: Enterprise Trust Badges */}
-          <div className="group text-on-surface shadow-elevation-1 hover:shadow-elevation-2 rounded-2xl bg-white p-4 transition-all duration-200 hover:-translate-y-0.5">
+          <div className="group text-on-surface hover:bg-primary-light rounded-xl bg-white p-4 transition-all duration-200">
             <div className="mb-3 flex items-start gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center">
                 <svg className="h-12 w-12" viewBox="0 0 48 48" fill="none">
@@ -149,16 +149,16 @@ export function CompanyVerificationHero({ profile }: CompanyVerificationHeroProp
             </div>
 
             <div className="grid grid-cols-4 gap-2 pt-1">
-              <div className="border-outline-variant flex h-9 items-center justify-center rounded-lg border bg-white px-2 text-xs font-bold tracking-wider text-orange-600 shadow-xs">
+              <div className="border-outline-variant flex h-9 items-center justify-center rounded-lg border bg-white px-2 text-xs font-bold tracking-wider text-orange-600">
                 FPT
               </div>
-              <div className="flex h-9 items-center justify-center rounded-lg border border-red-600 bg-red-600 px-2 text-xs font-bold tracking-wider text-white shadow-xs">
+              <div className="flex h-9 items-center justify-center rounded-lg border border-red-600 bg-red-600 px-2 text-xs font-bold tracking-wider text-white">
                 viettel
               </div>
-              <div className="border-outline-variant flex h-9 items-center justify-center rounded-lg border bg-white px-2 text-xs font-bold tracking-wider text-sky-600 shadow-xs">
+              <div className="border-outline-variant flex h-9 items-center justify-center rounded-lg border bg-white px-2 text-xs font-bold tracking-wider text-sky-600">
                 MISA
               </div>
-              <div className="flex h-9 items-center justify-center rounded-lg border border-emerald-600 bg-emerald-600 px-2 text-xs font-bold tracking-wider text-white shadow-xs">
+              <div className="border-primary bg-primary flex h-9 items-center justify-center rounded-lg border px-2 text-xs font-bold tracking-wider text-white">
                 VNG
               </div>
             </div>

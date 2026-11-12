@@ -161,13 +161,13 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
         <h1 className="text-on-surface text-lg font-bold sm:text-xl">Chi tiết dịch vụ</h1>
         <Link
           href={backToCategoryHref}
-          className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 transition hover:bg-emerald-100"
+          className="bg-primary-light text-primary-deep hover:bg-primary-tag rounded-full px-3 py-1 text-xs font-bold transition"
         >
           {data.categoryName}
         </Link>
       </div>
 
-      <section className="border-outline-variant relative overflow-visible rounded-xl border bg-white shadow-2xs">
+      <section className="border-outline-variant relative overflow-visible rounded-xl border bg-white">
         <ServicePackageHeroArtwork />
         {data.vipRibbon && (
           <span className="absolute top-0 right-5 z-20 flex h-10 w-8 items-end justify-center bg-amber-400 pb-1 text-[11px] font-extrabold text-amber-900 [clip-path:polygon(0_0,100%_0,100%_100%,50%_78%,0_100%)]">
@@ -203,13 +203,13 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
           className={cn(
             'flex flex-wrap items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm font-semibold',
             feedback.type === 'success'
-              ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
+              ? 'border-primary/30 bg-primary-light text-primary-deep'
               : 'border-rose-200 bg-rose-50 text-rose-800',
           )}
         >
           <span className="flex items-center gap-2">
             {feedback.type === 'success' ? (
-              <Check className="h-4 w-4 shrink-0 text-emerald-600" />
+              <Check className="text-primary h-4 w-4 shrink-0" />
             ) : (
               <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
             )}
@@ -241,10 +241,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-6">
           {matchedSlot && (
-            <section
-              id="banner-week-picker"
-              className="border-outline-variant rounded-xl border bg-white p-5 shadow-2xs"
-            >
+            <section id="banner-week-picker" className="border-outline-variant rounded-xl border bg-white p-5">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <h2 className="text-on-surface flex items-center gap-2 text-base font-bold">
@@ -255,7 +252,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                     Kích thước {matchedSlot.width}×{matchedSlot.height}px · Chỉ 1 doanh nghiệp mỗi tuần.
                   </p>
                 </div>
-                <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                <span className="bg-primary-light text-primary-deep rounded-full px-2.5 py-1 text-xs font-semibold">
                   {selectedWeeks.length} tuần đã chọn
                 </span>
               </div>
@@ -295,7 +292,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
 
           <div className="border-outline-variant grid gap-px overflow-hidden rounded-lg border bg-neutral-200 sm:grid-cols-2">
             <div className="flex items-center gap-2.5 bg-white px-4 py-3.5 text-sm">
-              <Clock className="h-4.5 w-4.5 text-emerald-600" />
+              <Clock className="text-primary h-4.5 w-4.5" />
               <span className="text-on-surface-variant">Thời gian hiệu lực:</span>
               <span className="text-on-surface font-semibold">
                 {data.validityDays ? `${data.validityDays} ngày` : 'Không giới hạn'}
@@ -321,7 +318,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                     key={`${benefit.entitlementType}-${benefit.label}-${index}`}
                     className="flex items-start gap-2.5 text-sm"
                   >
-                    <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 shrink-0 text-emerald-600" />
+                    <CheckCircle2 className="text-primary mt-0.5 h-4.5 w-4.5 shrink-0" />
                     <div className="flex flex-wrap items-center gap-2 leading-relaxed">
                       <span className="text-on-surface-variant">{benefit.label}</span>
                       {benefit.entitlementType === 'JOB_BOOST' && benefit.tier > 1 && (
@@ -352,12 +349,12 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                   <span>{section.heading}</span>
                 </h3>
                 {section.imageUrl && (
-                  <div className="mt-3 flex items-center justify-center rounded-xl border border-emerald-100/90 bg-emerald-50/65 p-4 sm:p-6">
+                  <div className="border-primary/20 bg-primary-light mt-3 flex items-center justify-center rounded-xl border p-4 sm:p-6">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={section.imageUrl}
                       alt={section.heading}
-                      className="max-h-[240px] w-auto max-w-full rounded-lg border border-black/5 bg-white object-contain shadow-sm sm:max-h-[280px]"
+                      className="max-h-[240px] w-auto max-w-full rounded-lg border border-black/5 bg-white object-contain sm:max-h-[280px]"
                     />
                   </div>
                 )}
@@ -373,7 +370,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
         </div>
 
         <aside className="space-y-5 lg:sticky lg:top-20">
-          <div className="rounded-xl border-2 border-emerald-500 bg-white p-5">
+          <div className="border-primary rounded-xl border-2 bg-white p-5">
             <p className="text-on-surface text-sm font-semibold">{data.name}</p>
 
             <p className="mt-3 text-2xl font-bold" style={{ color: accent }}>
@@ -400,14 +397,14 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                     {[...selectedWeeks].sort().map((week) => (
                       <li
                         key={week}
-                        className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800"
+                        className="bg-primary-light text-primary-deep inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
                       >
                         {formatDate(week)}
                         <button
                           type="button"
                           onClick={() => toggleWeek(week)}
                           aria-label={`Bỏ tuần ${formatDate(week)}`}
-                          className="cursor-pointer rounded-full p-0.5 hover:bg-emerald-100"
+                          className="hover:bg-primary-tag cursor-pointer rounded-full p-0.5"
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -442,7 +439,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                 type="button"
                 disabled={busyAction !== null || (matchedSlot !== null && selectedWeeks.length === 0)}
                 onClick={() => submitAction('cart')}
-                className="border-primary text-primary inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 rounded-lg border bg-white text-sm font-semibold transition hover:bg-emerald-50 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+                className="border-primary text-primary hover:bg-primary-light inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 rounded-lg border bg-white text-sm font-semibold transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {busyAction === 'cart' ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
