@@ -50,26 +50,26 @@ public class SearchJobsTool implements ChatTool {
         kwProp.put("type", "STRING");
         kwProp.put(
                 "description",
-                "Từ khóa kỹ năng, công nghệ hoặc vị trí tuyển dụng IT (ví dụ: 'Java', 'NodeJS', 'React', 'DevOps', 'Python', 'Golang'). Bỏ trống nếu người dùng không nêu kỹ năng hay vị trí cụ thể");
+                "Skill, technology or IT job title keyword (for example: 'Java', 'NodeJS', 'React', 'DevOps', 'Python', 'Golang'). Leave empty if the user names no specific skill or position");
 
         Map<String, Object> levelProp = new HashMap<>();
         levelProp.put("type", "STRING");
         levelProp.put(
                 "description",
-                "Cấp bậc mong muốn: 'intern', 'fresher', 'junior', 'mid', 'senior', 'lead'");
+                "Desired level: 'intern', 'fresher', 'junior', 'mid', 'senior', 'lead'");
 
         Map<String, Object> locProp = new HashMap<>();
         locProp.put("type", "STRING");
         locProp.put(
                 "description",
-                "Địa điểm hoặc hình thức làm việc: 'Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Remote'");
+                "Location or work arrangement: 'Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Remote'");
 
         Map<String, Object> sortProp = new HashMap<>();
         sortProp.put("type", "STRING");
         sortProp.put("enum", List.of("RECOMMENDED", "NEWEST", "SALARY_DESC", "DEADLINE_ASC"));
         sortProp.put(
                 "description",
-                "Cách sắp xếp: 'NEWEST' khi người dùng muốn việc làm mới nhất, 'SALARY_DESC' lương cao nhất, 'DEADLINE_ASC' sắp hết hạn nộp, mặc định 'RECOMMENDED'");
+                "Sort order: 'NEWEST' for the newest jobs, 'SALARY_DESC' for the highest salary, 'DEADLINE_ASC' for jobs closing soon, default 'RECOMMENDED'");
 
         Map<String, Object> properties =
                 Map.of(
@@ -80,7 +80,7 @@ public class SearchJobsTool implements ChatTool {
 
         return new AiToolDefinition(
                 TOOL_NAME,
-                "Tìm kiếm các tin tuyển dụng việc làm IT đang mở trên nền tảng InterVue phù hợp với kỹ năng, cấp bậc hoặc địa điểm của ứng viên",
+                "Search open IT jobs on the InterVue platform that match the candidate's skills, level or location",
                 properties,
                 List.of());
     }
@@ -102,20 +102,21 @@ public class SearchJobsTool implements ChatTool {
 
         List<JobSearchResult> results =
                 jobSearchService.search(keyword, level, location, sort, CAPPED_RESULTS);
-        String criteria = keyword != null ? "từ khóa '" + keyword + "'" : "tiêu chí đã chọn";
+        String criteria =
+                keyword != null ? "the keyword '" + keyword + "'" : "the selected criteria";
 
         if (results.isEmpty()) {
             return ToolExecutionResult.success(
-                    "Không tìm thấy việc làm IT phù hợp trực tiếp với "
+                    "No IT jobs directly match "
                             + criteria
-                            + ". Hãy hướng dẫn người dùng tìm kiếm trên trang việc làm: [Tất cả việc làm IT](/jobs).");
+                            + ". Guide the user to search on the jobs page: [All IT jobs](/jobs).");
         }
 
         StringBuilder sb = new StringBuilder();
         sb.append("<job_search_results>\n");
-        sb.append("Tìm thấy ")
+        sb.append("Found ")
                 .append(results.size())
-                .append(" việc làm phù hợp với ")
+                .append(" jobs matching ")
                 .append(criteria)
                 .append(":\n\n");
 
@@ -125,30 +126,30 @@ public class SearchJobsTool implements ChatTool {
                     .append(". **")
                     .append(job.title())
                     .append("**\n")
-                    .append("- **Công ty:** ")
+                    .append("- **Company:** ")
                     .append(job.company())
                     .append("\n")
-                    .append("- **Mức lương:** ")
+                    .append("- **Salary:** ")
                     .append(job.salary())
                     .append("\n")
-                    .append("- **Địa điểm:** ")
+                    .append("- **Location:** ")
                     .append(job.location())
                     .append("\n")
-                    .append("- **Kỹ năng chính:** ")
+                    .append("- **Key skills:** ")
                     .append(String.join(", ", job.skills()))
                     .append("\n")
-                    .append("- **Mô tả:** ")
+                    .append("- **Description:** ")
                     .append(job.description())
                     .append("\n")
-                    .append("- **Đường dẫn ứng tuyển:** [Xem chi tiết & Ứng tuyển ngay](")
+                    .append("- **Apply link:** [View details & apply now](")
                     .append(job.detailUrl())
                     .append(")\n\n");
         }
         if (results.size() >= CAPPED_RESULTS) {
-            sb.append("Đây là ")
+            sb.append("These are the first ")
                     .append(CAPPED_RESULTS)
                     .append(
-                            " kết quả đầu tiên, có thể còn nhiều việc làm khác. Hãy kết thúc câu trả lời bằng dòng: [Xem thêm việc làm](")
+                            " results, there may be more jobs. End the answer with this line: [See more jobs](")
                     .append(listUrl(keyword, location, sort))
                     .append(")\n");
         }

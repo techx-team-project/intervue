@@ -9,7 +9,7 @@ import {
   RECRUITER_POSITION_OPTIONS,
 } from '@/constants/recruiter-onboarding';
 import type { RecruiterNeedsFormData } from '@/schemas/recruiter.schema';
-import { todayIsoDate } from '@/utils/datetime';
+import { isoDateAfterDays, todayIsoDate } from '@/utils/datetime';
 import { Controller, useWatch, type UseFormReturn } from 'react-hook-form';
 
 type HiringNeedFieldsProps = {
@@ -53,6 +53,7 @@ export default function HiringNeedFields({ form }: HiringNeedFieldsProps) {
             type="date"
             label="When do you need to finish hiring? *"
             min={todayIsoDate()}
+            max={isoDateAfterDays(180)}
             disabled={continuous}
             className="disabled:bg-surface-container-low disabled:text-outline disabled:cursor-not-allowed"
             error={errors.hireBy?.message}
@@ -89,7 +90,7 @@ export default function HiringNeedFields({ form }: HiringNeedFieldsProps) {
               id="headcount"
               label="Number of hires *"
               min={1}
-              max={999}
+              max={100}
               error={errors.headcount?.message}
             />
           )}

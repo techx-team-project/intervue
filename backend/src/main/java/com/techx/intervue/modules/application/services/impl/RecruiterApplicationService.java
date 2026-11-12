@@ -271,11 +271,11 @@ public class RecruiterApplicationService implements RecruiterApplicationServiceI
 
     private String statusLabel(ApplicationStatus status) {
         return switch (status) {
-            case IN_REVIEW -> "đang được xem xét";
-            case INTERVIEW -> "được mời phỏng vấn";
-            case OFFER -> "nhận được đề nghị";
-            case HIRED -> "trúng tuyển";
-            case REJECTED -> "chưa phù hợp";
+            case IN_REVIEW -> "is under review";
+            case INTERVIEW -> "moved to the interview stage";
+            case OFFER -> "received an offer";
+            case HIRED -> "was successful";
+            case REJECTED -> "was not selected";
             default -> status.name();
         };
     }

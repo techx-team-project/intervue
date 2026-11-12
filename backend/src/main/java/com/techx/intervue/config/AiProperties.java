@@ -4,16 +4,9 @@ import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "ai")
-public record AiProperties(
-        String provider, Gemini gemini, OpenAi openai, Embedding embedding, Quota quota) {
+public record AiProperties(Gemini gemini, OpenAi openai, Embedding embedding, Quota quota) {
 
-    public record Gemini(
-            String apiKey,
-            String baseUrl,
-            String model,
-            int maxTokens,
-            Duration timeout,
-            int maxRetries) {}
+    public record Gemini(String apiKey, String baseUrl, Duration timeout, int maxRetries) {}
 
     public record OpenAi(
             String apiKey,

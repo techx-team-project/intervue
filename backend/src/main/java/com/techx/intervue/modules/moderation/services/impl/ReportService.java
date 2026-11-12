@@ -43,8 +43,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReportService implements ReportServiceInterface {
 
-    private static final String LOCK_REASON = "Vi phạm quy tắc cộng đồng InterVue Connect";
-    private static final String JOB_HIDE_REASON = "Tin tuyển dụng vi phạm nội dung cho phép";
+    private static final String LOCK_REASON =
+            "Violation of the InterVue Connect community guidelines";
+    private static final String JOB_HIDE_REASON = "The job post violates content rules";
 
     // recruiter_refresh_tokens.revoked_reason is VARCHAR(32) - keep this short and code-like,
     // same style as RecruiterService's own DELETION_REQUESTED_REASON/ACCOUNT_PURGED_REASON.
@@ -285,9 +286,9 @@ public class ReportService implements ReportServiceInterface {
 
     private String describe(ReportResolveAction action) {
         return switch (action) {
-            case NONE -> "Không có hành động nào";
-            case HIDE_CONTENT -> "Ẩn nội dung bị báo cáo";
-            case LOCK_ACCOUNT -> "Khoá tài khoản vi phạm";
+            case NONE -> "No action taken";
+            case HIDE_CONTENT -> "Reported content hidden";
+            case LOCK_ACCOUNT -> "Offending account locked";
         };
     }
 

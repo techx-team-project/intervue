@@ -7,12 +7,13 @@ import Modal from '@/components/ui/Modal';
 import { JOB_PAGE_SIZE, JOB_SEGMENT_META, JOB_SORT_OPTIONS } from '@/constants/recruiter-job';
 import { ROUTES } from '@/constants/routes';
 import { useJobPostActions } from '@/hooks/useJobPostActions';
-import { useRecruiterJobCounts, useRecruiterJobList } from '@/hooks/useRecruiterJobs';
+import { useRecruiterJob, useRecruiterJobCounts, useRecruiterJobList } from '@/hooks/useRecruiterJobs';
 import type { RecruiterJobPost, RecruiterJobSegment, RecruiterJobSort } from '@/types/recruiter-job';
 import { getErrorMessage } from '@/utils/error';
-import { summaryToJobPost } from '@/utils/recruiter-job';
+import { resourceToJobPost, summaryToJobPost } from '@/utils/recruiter-job';
 import { FilePlus, Plus, SearchX } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import JobHistoryModal from './JobHistoryModal';
 import JobStatsModal from './JobStatsModal';
@@ -20,6 +21,7 @@ import JobPostsBulkBar from './JobPostsBulkBar';
 import JobPostsFilterBar from './JobPostsFilterBar';
 import JobPostsList from './JobPostsList';
 import JobPostsSegmentTabs from './JobPostsSegmentTabs';
+import ExtendJobModal from './ExtendJobModal';
 import RenewJobModal from './RenewJobModal';
 import JobPostsStatsRow from './JobPostsStatsRow';
 
@@ -40,6 +42,18 @@ export default function JobPostsListView() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [confirm, setConfirm] = useState<ConfirmRequest | null>(null);
   const [renewingJob, setRenewingJob] = useState<RecruiterJobPost | null>(null);
+  const [extendingJob, setExtendingJob] = useState<RecruiterJobPost | null>(null);
+  const router = useRouter();
+  const extendId = Number(useSearchParams().get('extend')) || null;
+  const linkedJob = useRecruiterJob(extendId);
+  const linkedPost = linkedJob.data ? resourceToJobPost(linkedJob.data) : null;
+  const extendTarget =
+    extendingJob ?? (linkedPost && ['PUBLISHED', 'PAUSED'].includes(linkedPost.status) ? linkedPost : null);
+
+  const closeExtend = () => {
+    setExtendingJob(null);
+    if (extendId) router.replace(ROUTES.RECRUITER_JOBS);
+  };
   const [historyJob, setHistoryJob] = useState<RecruiterJobPost | null>(null);
   const [statsJob, setStatsJob] = useState<RecruiterJobPost | null>(null);
 
@@ -176,6 +190,7 @@ export default function JobPostsListView() {
             isAllSelected={isAllSelected}
             onConfirm={setConfirm}
             onRenew={setRenewingJob}
+            onExtend={setExtendingJob}
             onHistory={setHistoryJob}
             onStats={setStatsJob}
           />
@@ -210,6 +225,7 @@ export default function JobPostsListView() {
       />
 
       <RenewJobModal key={renewingJob?.id ?? 'renew'} job={renewingJob} onClose={() => setRenewingJob(null)} />
+      <ExtendJobModal key={extendTarget?.id ?? 'extend'} job={extendTarget} onClose={closeExtend} />
       <JobHistoryModal key={historyJob?.id ?? 'history'} job={historyJob} onClose={() => setHistoryJob(null)} />
       <JobStatsModal key={statsJob?.id ?? 'stats'} job={statsJob} onClose={() => setStatsJob(null)} />
 

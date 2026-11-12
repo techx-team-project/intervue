@@ -15,7 +15,7 @@ export default function InterviewDetails({ interview }: { interview: Interview }
         <CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" aria-hidden />
         <span>
           <span className="font-semibold text-slate-900">{formatInterviewMoment(interview.startsAt)}</span>
-          {` · ${interview.durationMinutes} phút`}
+          {` · ${interview.durationMinutes} min`}
         </span>
       </li>
       <li className="flex items-start gap-2">

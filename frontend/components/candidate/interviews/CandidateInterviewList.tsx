@@ -17,9 +17,9 @@ function groupInterviews(items: Interview[], now: number) {
   );
   const finished = items.filter((item) => !needsReply.includes(item) && !comingUp.includes(item));
   return [
-    { title: 'Cần bạn phản hồi', items: needsReply },
-    { title: 'Sắp diễn ra', items: comingUp.toSorted((a, b) => a.startsAt.localeCompare(b.startsAt)) },
-    { title: 'Đã qua hoặc đã đóng', items: finished },
+    { title: 'Needs your response', items: needsReply },
+    { title: 'Upcoming', items: comingUp.toSorted((a, b) => a.startsAt.localeCompare(b.startsAt)) },
+    { title: 'Past or closed', items: finished },
   ].filter((group) => group.items.length > 0);
 }
 
@@ -31,9 +31,9 @@ export default function CandidateInterviewList() {
   return (
     <div className="mx-auto w-full max-w-3xl space-y-5 px-4 py-8">
       <header>
-        <h1 className="text-2xl font-black text-slate-900">Lịch phỏng vấn</h1>
+        <h1 className="text-2xl font-black text-slate-900">Interview schedule</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Xác nhận tham gia, đề xuất giờ khác nếu bận và thêm buổi phỏng vấn vào lịch của bạn.
+          Confirm attendance, propose another time if you are busy and add interviews to your calendar.
         </p>
       </header>
 
@@ -45,7 +45,7 @@ export default function CandidateInterviewList() {
         <div className="flex flex-col items-center gap-3 py-14 text-center">
           <p className="text-sm font-semibold text-slate-700">{getErrorMessage(error)}</p>
           <Button variant="outline" onClick={() => refetch()}>
-            Thử lại
+            Try again
           </Button>
         </div>
       ) : data && data.items.length > 0 ? (
@@ -63,7 +63,7 @@ export default function CandidateInterviewList() {
           {data.totalPages > 1 && (
             <div className="flex items-center justify-between pt-2">
               <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
-                Trước
+                Previous
               </Button>
               <span className="text-xs text-slate-500">
                 Trang {page + 1} / {data.totalPages}
@@ -81,9 +81,9 @@ export default function CandidateInterviewList() {
         </>
       ) : (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-14 text-center">
-          <p className="text-sm font-semibold text-slate-700">Bạn chưa có lời mời phỏng vấn nào</p>
+          <p className="text-sm font-semibold text-slate-700">You have no interview invitations yet</p>
           <p className="mt-1 text-xs text-slate-500">
-            Khi nhà tuyển dụng mời, lịch sẽ hiện ở đây và được gửi qua email.
+            When a recruiter invites you, the schedule will appear here and be sent by email.
           </p>
         </div>
       )}

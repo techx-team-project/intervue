@@ -66,7 +66,7 @@ public class JdGenerateService implements JdGenerateServiceInterface {
                 .description(parsed.description())
                 .requirements(parsed.requirements())
                 .benefits(parsed.benefits())
-                .model(result.model() != null ? result.model() : "gemini-2.5-flash")
+                .model(result.model())
                 .promptVersion(PROMPT_VERSION_TAG)
                 .generatedAt(Instant.now())
                 .build();

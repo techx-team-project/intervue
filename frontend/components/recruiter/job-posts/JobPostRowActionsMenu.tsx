@@ -5,6 +5,7 @@ import type { RecruiterJobPost } from '@/types/recruiter-job';
 import {
   ArrowUpCircle,
   BarChart3,
+  CalendarPlus,
   Copy,
   Eye,
   History,
@@ -30,6 +31,7 @@ interface JobPostRowActionsMenuProps {
   onClose: () => void;
   onDuplicate: () => void;
   onRenew: () => void;
+  onExtend: () => void;
   onHistory: () => void;
   onStats: () => void;
   onDelete: () => void;
@@ -67,6 +69,9 @@ function buildActions(props: JobPostRowActionsMenuProps): MenuAction[] {
   if (job.status === 'PUBLISHED') {
     actions.push({ key: 'retop', label: 'Boost job post', icon: ArrowUpCircle, onClick: props.onRetop });
     actions.push({ key: 'pause', label: 'Pause', icon: Pause, onClick: props.onPause });
+  }
+  if (job.status === 'PUBLISHED' || job.status === 'PAUSED') {
+    actions.push({ key: 'extend', label: 'Extend deadline', icon: CalendarPlus, onClick: props.onExtend });
   }
   if (job.status === 'PAUSED') {
     actions.push({ key: 'reopen', label: 'Reopen', icon: PlayCircle, onClick: props.onReopen });

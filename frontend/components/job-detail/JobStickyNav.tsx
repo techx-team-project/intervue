@@ -10,12 +10,12 @@ interface JobStickyNavProps {
 }
 
 const NAV_TABS = [
-  { id: 'job-description', label: 'Mô tả công việc' },
-  { id: 'job-requirements', label: 'Yêu cầu ứng viên' },
-  { id: 'job-benefits', label: 'Quyền lợi ứng viên' },
-  { id: 'job-location', label: 'Địa điểm & Thời gian' },
-  { id: 'job-company', label: 'Thông tin công ty' },
-  { id: 'job-related', label: 'Việc làm liên quan' },
+  { id: 'job-description', label: 'Job description' },
+  { id: 'job-requirements', label: 'Candidate requirements' },
+  { id: 'job-benefits', label: 'Candidate benefits' },
+  { id: 'job-location', label: 'Location & Hours' },
+  { id: 'job-company', label: 'Company information' },
+  { id: 'job-related', label: 'Related jobs' },
 ];
 
 export default function JobStickyNav({ job, onApply }: JobStickyNavProps) {
@@ -92,7 +92,7 @@ export default function JobStickyNav({ job, onApply }: JobStickyNavProps) {
               className="bg-primary hover:bg-primary-hover flex cursor-pointer items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-bold text-white shadow-xs transition active:scale-95"
             >
               <Send className="h-3.5 w-3.5" />
-              <span>Ứng tuyển ngay</span>
+              <span>Apply now</span>
             </button>
           </div>
         )}

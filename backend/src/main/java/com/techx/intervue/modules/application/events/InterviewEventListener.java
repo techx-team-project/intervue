@@ -158,14 +158,14 @@ public class InterviewEventListener {
                             "Reminder: interview in 24 hours",
                             "Your interview for " + job + " at " + company + " starts in 24 hours.",
                             interview.getNote(),
-                            "24 giờ");
+                            "24 hours");
             case REMINDER_1H ->
                     new Content(
                             NotificationType.INTERVIEW_REMINDER,
                             "Reminder: interview in 1 hour",
                             "Your interview for " + job + " at " + company + " starts in 1 hour.",
                             interview.getNote(),
-                            "1 giờ");
+                            "1 hour");
         };
     }
 

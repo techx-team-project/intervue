@@ -27,7 +27,8 @@ export function useMockInterviewDetail(id: number | null) {
 export function useStartMockInterview() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: StartMockInterviewRequest) => candidateMockInterviewApi.startSession(payload),
+    mutationFn: ({ payload, cvFile }: { payload: StartMockInterviewRequest; cvFile: File | null }) =>
+      candidateMockInterviewApi.startSession(payload, cvFile),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: MOCK_INTERVIEWS_QUERY_KEY });
       if (data?.id) {

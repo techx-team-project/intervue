@@ -21,9 +21,9 @@ export function buildQuickSlots(): QuickSlot[] {
   const untilMonday = ((MONDAY - base.getUTCDay() + DAYS_PER_WEEK - 1) % DAYS_PER_WEEK) + 1;
 
   return [
-    { label: 'Ngày mai 09:00', value: at(base, 1, 9) },
-    { label: 'Ngày mai 14:00', value: at(base, 1, 14) },
-    { label: 'Ngày kia 10:00', value: at(base, 2, 10) },
-    { label: 'Thứ Hai tới 09:00', value: at(base, untilMonday, 9) },
+    { label: 'Tomorrow 09:00', value: at(base, 1, 9) },
+    { label: 'Tomorrow 14:00', value: at(base, 1, 14) },
+    { label: 'Day after tomorrow 10:00', value: at(base, 2, 10) },
+    { label: 'Next Monday 09:00', value: at(base, untilMonday, 9) },
   ].filter((slot) => slot.value > now);
 }

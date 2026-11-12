@@ -8,7 +8,10 @@ import com.techx.intervue.modules.ai.requests.EmbeddingInputType;
 import com.techx.intervue.modules.ai.requests.EmbeddingRequest;
 import com.techx.intervue.modules.ai.resources.AiUsage;
 import com.techx.intervue.modules.ai.resources.EmbeddingResult;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.retry.RetryTemplate;
@@ -23,11 +26,21 @@ public class GeminiEmbeddingClient implements EmbeddingClient {
 
     private static final String API_KEY_HEADER = "x-goog-api-key";
     private static final int MAX_INPUTS = 100;
+    private static final int QUERY_CACHE_SIZE = 500;
 
     private final RestClient restClient;
     private final AiProperties.Gemini gemini;
     private final AiProperties.Embedding config;
     private final RetryTemplate retryTemplate;
+
+    private final Map<String, float[]> queryCache =
+            Collections.synchronizedMap(
+                    new LinkedHashMap<>(16, 0.75f, true) {
+                        @Override
+                        protected boolean removeEldestEntry(Map.Entry<String, float[]> eldest) {
+                            return size() > QUERY_CACHE_SIZE;
+                        }
+                    });
 
     public GeminiEmbeddingClient(
             @Qualifier("geminiRestClient") RestClient restClient, AiProperties properties) {
@@ -49,7 +62,26 @@ public class GeminiEmbeddingClient implements EmbeddingClient {
             throw new IllegalArgumentException(
                     "Embedding inputs must contain between 1 and " + MAX_INPUTS + " items");
         }
-        return toResult(send(request), request.inputs().size());
+        String cacheKey = queryCacheKey(request);
+        if (cacheKey == null) {
+            return toResult(send(request), request.inputs().size());
+        }
+
+        float[] cached = queryCache.get(cacheKey);
+        if (cached != null) {
+            return new EmbeddingResult(List.of(cached), new AiUsage(0, 0), config.model());
+        }
+        EmbeddingResult result = toResult(send(request), 1);
+        queryCache.put(cacheKey, result.vectors().getFirst());
+        return result;
+    }
+
+    // Chat embeds one question for FAQ matching and again for retrieval; reuse the first vector.
+    private static String queryCacheKey(EmbeddingRequest request) {
+        if (request.inputType() != EmbeddingInputType.QUERY || request.inputs().size() != 1) {
+            return null;
+        }
+        return request.inputs().getFirst().trim();
     }
 
     private BatchResponse send(EmbeddingRequest request) {

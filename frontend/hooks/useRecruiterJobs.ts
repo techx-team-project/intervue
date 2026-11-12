@@ -97,6 +97,10 @@ export function useRecruiterJobMutations() {
         void queryClient.invalidateQueries({ queryKey: ['recruiter', 'entitlements'] });
       },
     }),
+    extend: useMutation({
+      mutationFn: ({ id, deadline }: { id: number; deadline: string }) => recruiterJobApi.extend(id, deadline),
+      onSuccess: invalidate,
+    }),
     remove: useMutation({ mutationFn: recruiterJobApi.remove, onSuccess: invalidate }),
   };
 }

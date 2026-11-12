@@ -6,18 +6,18 @@ import Link from 'next/link';
 
 function messageFor(identity: IdentityVerificationResource) {
   if (identity.status === 'PENDING') {
-    return 'Hồ sơ xác thực của bạn đang chờ duyệt (dự kiến trong 24 giờ làm việc). Bạn sẽ ứng tuyển được ngay khi được duyệt.';
+    return 'Your verification is pending review (expected within 24 business hours). You can apply as soon as it is approved.';
   }
   if (identity.status === 'REJECTED') {
     return identity.canSubmit
-      ? `Hồ sơ xác thực chưa được duyệt: ${identity.rejectReason}. Hãy gửi lại để ứng tuyển.`
-      : 'Hồ sơ xác thực chưa được duyệt và bạn đã hết lượt gửi lại. Bạn có thể yêu cầu quản trị viên duyệt thủ công.';
+      ? `Your verification was not approved: ${identity.rejectReason}. Please resubmit to apply.`
+      : 'Your verification was not approved and you have no resubmissions left. You can ask an admin for a manual review.';
   }
-  return 'Bạn cần xác thực danh tính bằng CCCD trước khi ứng tuyển. Chỉ mất vài phút.';
+  return 'You need to verify your identity with your national ID before applying. It only takes a few minutes.';
 }
 
 export default function ApplyIdentityGate({ identity }: { identity: IdentityVerificationResource }) {
-  const actionLabel = identity.status === 'PENDING' ? 'Xem trạng thái' : 'Xác thực danh tính';
+  const actionLabel = identity.status === 'PENDING' ? 'View status' : 'Verify identity';
 
   return (
     <div className="space-y-4 py-6 text-center">
