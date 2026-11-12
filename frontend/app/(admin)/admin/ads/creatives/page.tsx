@@ -1,5 +1,6 @@
 import AdminAdCreativesPageClient from '@/components/admin/ads/AdminAdCreativesPageClient';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Banner artwork | InterVue Admin',
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminAdCreativesPage() {
-  return <AdminAdCreativesPageClient />;
+  return (
+    <Suspense fallback={null}>
+      <AdminAdCreativesPageClient />
+    </Suspense>
+  );
 }
