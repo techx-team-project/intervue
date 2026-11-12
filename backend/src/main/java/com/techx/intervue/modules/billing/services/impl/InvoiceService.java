@@ -100,7 +100,12 @@ public class InvoiceService implements InvoiceServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public byte[] renderForRecruiter(String orderCode, Long recruiterId) {
-        Order order = requireOwnedOrder(orderCode, recruiterId);
+        return renderDocument(requireOwnedOrder(orderCode, recruiterId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public byte[] renderDocument(Order order) {
         return invoiceRepository
                 .findByOrderId(order.getId())
                 .map(invoice -> render(invoice, order))
