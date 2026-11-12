@@ -8,56 +8,29 @@ import ServiceImportantNotice from '@/components/recruiter/services/ServiceImpor
 import ServiceNeedSuggestionModal from '@/components/recruiter/services/ServiceNeedSuggestionModal';
 import { ROUTES } from '@/constants/routes';
 import { SERVICE_CATEGORY_ANCHOR_PREFIX, SERVICE_NEED_OPTIONS, SERVICE_VAT_NOTE } from '@/constants/service-package';
-import { useAdSlots } from '@/hooks/useAds';
-import { useAddToCart } from '@/hooks/useRecruiterCart';
 import { useServiceCatalog } from '@/hooks/useServiceCatalog';
 import { useServiceNeedModal } from '@/hooks/useServiceNeedModal';
+import { useServicePackageActions, type ServicePackageActionFeedback } from '@/hooks/useServicePackageActions';
 import { cn } from '@/lib/utils';
-import type { AdSlot } from '@/types/ads';
-import type { ServiceNeedKey, ServicePackageCard as ServicePackageCardType } from '@/types/service-package';
+import type { ServiceNeedKey } from '@/types/service-package';
 import { getErrorMessage } from '@/utils/error';
 import { AlertCircle, Check, Sparkles, X } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-type ActionFeedback = {
-  type: 'success' | 'error';
-  message: string;
-};
-
-type AdModalState = {
-  item: ServicePackageCardType;
-  slot: AdSlot;
-  intent: 'cart' | 'buy';
-};
-
 export default function ServiceCatalogView() {
   const { data, isPending, isError, error } = useServiceCatalog();
-  const adSlotsQuery = useAdSlots();
   const { dismissedForever, dismissForever } = useServiceNeedModal();
 
   const [autoModalClosed, setAutoModalClosed] = useState(false);
   const [suggestedNeed, setSuggestedNeed] = useState<ServiceNeedKey | null>(null);
-  const [feedback, setFeedback] = useState<ActionFeedback | null>(null);
-  const [pendingTarget, setPendingTarget] = useState<{ packageId: number; action: 'cart' | 'buy' } | null>(null);
-  const [adModal, setAdModal] = useState<AdModalState | null>(null);
+  const [feedback, setFeedback] = useState<ServicePackageActionFeedback | null>(null);
 
-  const router = useRouter();
-  const addToCart = useAddToCart();
+  const { adSlotsBySlug, pendingTarget, adModal, closeAdModal, handleAddToCart, handleBuyNow } =
+    useServicePackageActions({ onFeedback: setFeedback });
 
   const categories = useMemo(() => data?.categories ?? [], [data?.categories]);
-
-  const adSlotsBySlug = useMemo(() => {
-    const map = new Map<string, AdSlot>();
-    for (const slot of adSlotsQuery.data ?? []) {
-      if (slot.active && slot.packageSlug) {
-        map.set(slot.packageSlug, slot);
-      }
-    }
-    return map;
-  }, [adSlotsQuery.data]);
 
   const availableNeedKeys = useMemo(() => {
     const keys = new Set<ServiceNeedKey>();
@@ -96,60 +69,12 @@ export default function ServiceCatalogView() {
     setAutoModalClosed(true);
     const matches = categories.filter((category) => category.needKey === need);
     if (matches.length === 0) {
-      toast.info('No category matches the need you selected.');
+      toast.info('No category matches the need you selected yet.');
       return;
     }
 
     setSuggestedNeed(need);
     scrollToCategoryCode(matches[0].code);
-  };
-
-  const handleAddToCart = (item: ServicePackageCardType) => {
-    const matchedSlot = adSlotsBySlug.get(item.slug);
-    if (matchedSlot) {
-      setAdModal({ item, slot: matchedSlot, intent: 'cart' });
-      return;
-    }
-
-    setPendingTarget({ packageId: item.id, action: 'cart' });
-    addToCart.mutate(
-      { packageId: item.id, quantity: 1 },
-      {
-        onSuccess: () => {
-          const message = `Added "${item.name}" to your cart.`;
-          setFeedback({ type: 'success', message });
-          toast.success(message);
-        },
-        onError: (cause) => {
-          const message = getErrorMessage(cause);
-          setFeedback({ type: 'error', message });
-          toast.error(message);
-        },
-        onSettled: () => setPendingTarget(null),
-      },
-    );
-  };
-
-  const handleBuyNow = (item: ServicePackageCardType) => {
-    const matchedSlot = adSlotsBySlug.get(item.slug);
-    if (matchedSlot) {
-      setAdModal({ item, slot: matchedSlot, intent: 'buy' });
-      return;
-    }
-
-    setPendingTarget({ packageId: item.id, action: 'buy' });
-    addToCart.mutate(
-      { packageId: item.id, quantity: 1 },
-      {
-        onSuccess: () => router.push(ROUTES.RECRUITER_CART),
-        onError: (cause) => {
-          const message = getErrorMessage(cause);
-          setFeedback({ type: 'error', message });
-          toast.error(message);
-        },
-        onSettled: () => setPendingTarget(null),
-      },
-    );
   };
 
   if (isPending) {
@@ -172,7 +97,7 @@ export default function ServiceCatalogView() {
   if (categories.length === 0) {
     return (
       <div className="border-outline-variant text-on-surface-variant rounded-xl border border-dashed bg-white px-6 py-16 text-center text-sm">
-        No service packages are on sale.
+        No service packages are currently available.
       </div>
     );
   }
@@ -283,7 +208,7 @@ export default function ServiceCatalogView() {
         <AdPackageWeeksModal
           key={`${adModal.item.id}-${adModal.intent}`}
           isOpen
-          onClose={() => setAdModal(null)}
+          onClose={closeAdModal}
           slot={adModal.slot}
           packageItem={adModal.item}
           intent={adModal.intent}

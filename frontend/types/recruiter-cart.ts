@@ -4,7 +4,7 @@ export interface RecruiterCartItem {
   code: string;
   slug: string;
   name: string;
-  description: string;
+  shortDescription: string | null;
   unitPrice: number;
   currency: string;
   quantity: number;
@@ -35,6 +35,7 @@ export interface BusinessInvoiceInfo {
 }
 
 export interface PersonalInvoiceInfo {
+  personalDocumentType?: 'cccd' | 'passport';
   fullName: string;
   taxOrIdentityNumber: string;
   personalAddress: string;

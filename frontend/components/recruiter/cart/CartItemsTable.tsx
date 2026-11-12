@@ -80,7 +80,11 @@ export default function CartItemsTable({
                   <td className="px-3 py-5 align-top">
                     <div className="max-w-md">
                       <h4 className="text-body-md text-on-surface font-bold tracking-tight uppercase">{item.name}</h4>
-                      <p className="text-body-sm text-on-surface-variant mt-1.5 leading-relaxed">{item.description}</p>
+                      {item.shortDescription && (
+                        <p className="text-on-surface-variant mt-1.5 text-[13px] leading-relaxed">
+                          {item.shortDescription}
+                        </p>
+                      )}
                       {item.weeks && item.weeks.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           {item.weeks.map((week) => (
@@ -191,7 +195,11 @@ export default function CartItemsTable({
                     </button>
                   </div>
 
-                  <p className="text-on-surface-variant mt-1 line-clamp-3 text-xs">{item.description}</p>
+                  {item.shortDescription && (
+                    <p className="text-on-surface-variant mt-1 line-clamp-3 text-xs leading-relaxed">
+                      {item.shortDescription}
+                    </p>
+                  )}
                   {item.weeks && item.weeks.length > 0 && (
                     <div className="mt-1.5 flex flex-wrap gap-1">
                       {item.weeks.map((week) => (
