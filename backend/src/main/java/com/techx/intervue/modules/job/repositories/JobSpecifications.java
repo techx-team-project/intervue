@@ -3,16 +3,20 @@ package com.techx.intervue.modules.job.repositories;
 import com.techx.intervue.common.persistence.SpecificationSupport;
 import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.entities.Skill;
+import com.techx.intervue.modules.job.enums.JobSort;
 import com.techx.intervue.modules.job.enums.JobStatus;
 import com.techx.intervue.modules.job.enums.SalaryCurrency;
 import com.techx.intervue.modules.job.requests.AdminSearchJobsRequest;
 import com.techx.intervue.modules.job.requests.SearchJobsRequest;
 import com.techx.intervue.modules.job.requests.SearchRecruiterJobsRequest;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Order;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,6 +24,8 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 
 public final class JobSpecifications {
+
+    private static final long USD_TO_VND = 25_000L;
 
     private JobSpecifications() {}
 
@@ -99,6 +105,12 @@ public final class JobSpecifications {
                 predicates.add(
                         builder.greaterThanOrEqualTo(root.get("salaryMax"), request.salaryFrom()));
             }
+            if (request.postedWithinDays() != null) {
+                predicates.add(
+                        builder.greaterThanOrEqualTo(
+                                recency(root, builder),
+                                now.minus(Duration.ofDays(request.postedWithinDays()))));
+            }
             if (request.skillIds() != null && !request.skillIds().isEmpty()) {
                 Subquery<Long> skillMatch = query.subquery(Long.class);
                 Root<Job> subJob = skillMatch.correlate(root);
@@ -109,26 +121,49 @@ public final class JobSpecifications {
             if (query != null
                     && query.getResultType() != Long.class
                     && query.getResultType() != long.class) {
-                Expression<Integer> activeBoost =
-                        builder.<Integer>selectCase()
-                                .when(
-                                        builder.and(
-                                                builder.greaterThan(root.get("boostLevel"), 0),
-                                                builder.or(
-                                                        builder.isNull(root.get("boostExpiresAt")),
-                                                        builder.greaterThan(
-                                                                root.get("boostExpiresAt"), now))),
-                                        root.get("boostLevel"))
-                                .otherwise(0);
-                Expression<Instant> effectiveRecency =
-                        builder.coalesce(
-                                root.<Instant>get("retoppedAt"), root.<Instant>get("publishedAt"));
-                query.orderBy(
-                        builder.desc(activeBoost),
-                        builder.desc(effectiveRecency),
-                        builder.desc(root.get("id")));
+                query.orderBy(ordering(request.sort(), root, builder, now));
             }
             return builder.and(predicates.toArray(Predicate[]::new));
+        };
+    }
+
+    private static Expression<Instant> recency(Root<Job> root, CriteriaBuilder builder) {
+        return builder.coalesce(root.<Instant>get("retoppedAt"), root.<Instant>get("publishedAt"));
+    }
+
+    private static Expression<Integer> activeBoost(
+            Root<Job> root, CriteriaBuilder builder, Instant now) {
+        return builder.<Integer>selectCase()
+                .when(
+                        builder.and(
+                                builder.greaterThan(root.get("boostLevel"), 0),
+                                builder.or(
+                                        builder.isNull(root.get("boostExpiresAt")),
+                                        builder.greaterThan(root.get("boostExpiresAt"), now))),
+                        root.get("boostLevel"))
+                .otherwise(0);
+    }
+
+    // Salaries are stored in their own currency, so USD is converted at a fixed rate to compare
+    private static Expression<Long> salaryInVnd(Root<Job> root, CriteriaBuilder builder) {
+        return builder.<Long>selectCase()
+                .when(
+                        builder.equal(root.get("salaryCurrency"), SalaryCurrency.USD),
+                        builder.prod(root.<Long>get("salaryMax"), USD_TO_VND))
+                .otherwise(root.<Long>get("salaryMax"));
+    }
+
+    private static List<Order> ordering(
+            JobSort sort, Root<Job> root, CriteriaBuilder builder, Instant now) {
+        Order newestFirst = builder.desc(recency(root, builder));
+        Order latestId = builder.desc(root.get("id"));
+        return switch (sort == null ? JobSort.RECOMMENDED : sort) {
+            case NEWEST -> List.of(newestFirst, latestId);
+            case SALARY_DESC ->
+                    List.of(builder.desc(salaryInVnd(root, builder)), newestFirst, latestId);
+            case DEADLINE_ASC -> List.of(builder.asc(root.get("deadline")), newestFirst, latestId);
+            case RECOMMENDED ->
+                    List.of(builder.desc(activeBoost(root, builder, now)), newestFirst, latestId);
         };
     }
 
