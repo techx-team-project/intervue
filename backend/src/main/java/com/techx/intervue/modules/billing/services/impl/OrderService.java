@@ -100,9 +100,17 @@ public class OrderService implements OrderServiceInterface {
         for (Line line : lines) {
             subtotal += line.servicePackage().getPrice() * line.quantity();
         }
+        List<VoucherServiceInterface.BillableLine> billableLines =
+                lines.stream()
+                        .map(
+                                line ->
+                                        new VoucherServiceInterface.BillableLine(
+                                                line.servicePackage().getId(),
+                                                line.servicePackage().getPrice() * line.quantity()))
+                        .toList();
         AppliedVoucher applied =
                 isFilled(request.voucherCode())
-                        ? voucherService.apply(request.voucherCode(), subtotal, company.id())
+                        ? voucherService.apply(request.voucherCode(), billableLines, company.id())
                         : null;
         long discount = applied == null ? 0L : applied.discountAmount();
         OrderPricing.Totals totals =

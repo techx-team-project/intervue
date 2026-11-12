@@ -1,6 +1,8 @@
 package com.techx.intervue.modules.billing.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.billing.enums.VoucherDiscountType;
+import com.techx.intervue.modules.billing.enums.VoucherStatus;
 import com.techx.intervue.modules.billing.requests.SaveVoucherRequest;
 import com.techx.intervue.modules.billing.resources.AdminVoucherResource;
 import com.techx.intervue.modules.billing.services.interfaces.AdminVoucherServiceInterface;
@@ -33,9 +35,19 @@ public class AdminVoucherController extends BaseController {
 
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<AdminVoucherResource>>> search(
-            @RequestParam(value = "keyword", required = false) String keyword, Pageable pageable) {
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "status", required = false) VoucherStatus status,
+            @RequestParam(value = "discountType", required = false)
+                    VoucherDiscountType discountType,
+            Pageable pageable) {
         return page(
-                adminVoucherService.search(keyword, pageable), "Vouchers retrieved successfully!");
+                adminVoucherService.search(keyword, status, discountType, pageable),
+                "Vouchers retrieved successfully!");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResource<AdminVoucherResource>> detail(@PathVariable("id") Long id) {
+        return ok(adminVoucherService.findById(id), "Voucher retrieved successfully!");
     }
 
     @PostMapping
@@ -57,5 +69,27 @@ public class AdminVoucherController extends BaseController {
         return ok(
                 adminVoucherService.update(id, request, actor(principal, httpRequest)),
                 "Voucher updated successfully!");
+    }
+
+    @PostMapping("/{id}/activate")
+    public ResponseEntity<ApiResource<AdminVoucherResource>> activate(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                adminVoucherService.setStatus(
+                        id, VoucherStatus.ACTIVE, actor(principal, httpRequest)),
+                "Voucher activated successfully!");
+    }
+
+    @PostMapping("/{id}/deactivate")
+    public ResponseEntity<ApiResource<AdminVoucherResource>> deactivate(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest httpRequest) {
+        return ok(
+                adminVoucherService.setStatus(
+                        id, VoucherStatus.INACTIVE, actor(principal, httpRequest)),
+                "Voucher deactivated successfully!");
     }
 }
