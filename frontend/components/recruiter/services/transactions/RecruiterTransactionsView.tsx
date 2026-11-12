@@ -2,7 +2,14 @@
 
 import Pagination from '@/components/common/Pagination';
 import Spinner from '@/components/common/Spinner';
-import { useRecruiterPayments, useRecruiterRefunds } from '@/hooks/useRecruiterOrders';
+import PaymentsStatsRow from '@/components/recruiter/services/transactions/PaymentsStatsRow';
+import RefundsStatsRow from '@/components/recruiter/services/transactions/RefundsStatsRow';
+import {
+  useRecruiterPayments,
+  useRecruiterPaymentsSummary,
+  useRecruiterRefunds,
+  useRecruiterRefundsSummary,
+} from '@/hooks/useRecruiterOrders';
 import { formatServicePrice } from '@/utils/service-package';
 import { getErrorMessage } from '@/utils/error';
 import { AlertCircle, Receipt } from 'lucide-react';
@@ -55,19 +62,38 @@ function ErrorState({ error }: { error: unknown }) {
 function PaymentsTab() {
   const [page, setPage] = useState(0);
   const { data, isPending, isError, error } = useRecruiterPayments(page);
+  const { data: summary } = useRecruiterPaymentsSummary();
 
   if (isPending) {
     return (
-      <div className="flex min-h-[40vh] items-center justify-center">
-        <Spinner />
+      <div className="space-y-4">
+        <PaymentsStatsRow summary={summary} />
+        <div className="flex min-h-[40vh] items-center justify-center">
+          <Spinner />
+        </div>
       </div>
     );
   }
-  if (isError) return <ErrorState error={error} />;
-  if (data.items.length === 0) return <EmptyState label="No bank transfers yet" />;
+  if (isError) {
+    return (
+      <div className="space-y-4">
+        <PaymentsStatsRow summary={summary} />
+        <ErrorState error={error} />
+      </div>
+    );
+  }
+  if (data.items.length === 0) {
+    return (
+      <div className="space-y-4">
+        <PaymentsStatsRow summary={summary} />
+        <EmptyState label="No bank transfers yet" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
+      <PaymentsStatsRow summary={summary} />
       <div className="border-outline-variant overflow-hidden rounded-2xl border bg-white shadow-2xs">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] text-left text-sm">
@@ -128,19 +154,38 @@ function PaymentsTab() {
 function RefundsTab() {
   const [page, setPage] = useState(0);
   const { data, isPending, isError, error } = useRecruiterRefunds(page);
+  const { data: counts } = useRecruiterRefundsSummary();
 
   if (isPending) {
     return (
-      <div className="flex min-h-[40vh] items-center justify-center">
-        <Spinner />
+      <div className="space-y-4">
+        <RefundsStatsRow counts={counts} />
+        <div className="flex min-h-[40vh] items-center justify-center">
+          <Spinner />
+        </div>
       </div>
     );
   }
-  if (isError) return <ErrorState error={error} />;
-  if (data.items.length === 0) return <EmptyState label="No refund requests yet" />;
+  if (isError) {
+    return (
+      <div className="space-y-4">
+        <RefundsStatsRow counts={counts} />
+        <ErrorState error={error} />
+      </div>
+    );
+  }
+  if (data.items.length === 0) {
+    return (
+      <div className="space-y-4">
+        <RefundsStatsRow counts={counts} />
+        <EmptyState label="No refund requests yet" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
+      <RefundsStatsRow counts={counts} />
       <div className="border-outline-variant overflow-hidden rounded-2xl border bg-white shadow-2xs">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] text-left text-sm">
