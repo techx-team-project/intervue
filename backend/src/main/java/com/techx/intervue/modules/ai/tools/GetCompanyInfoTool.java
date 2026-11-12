@@ -4,6 +4,8 @@ import com.techx.intervue.modules.ai.requests.AiToolDefinition;
 import com.techx.intervue.modules.ai.resources.CompanySearchResult;
 import com.techx.intervue.modules.ai.resources.ToolExecutionResult;
 import com.techx.intervue.modules.ai.services.interfaces.CompanySearchServiceInterface;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class GetCompanyInfoTool implements ChatTool {
 
     public static final String TOOL_NAME = "get_company_info";
-    private static final int CAPPED_RESULTS = 3;
+    private static final int CAPPED_RESULTS = 10;
 
     private final CompanySearchServiceInterface companySearchService;
 
@@ -95,7 +97,9 @@ public class GetCompanyInfoTool implements ChatTool {
             return ToolExecutionResult.success(
                     "Không tìm thấy doanh nghiệp phù hợp với từ khóa: '"
                             + companyName
-                            + "'. Hãy gợi ý người dùng xem danh sách các nhà tuyển dụng hàng đầu trên nền tảng: [Danh sách Doanh nghiệp](/companies).");
+                            + "'. Hãy gợi ý người dùng tìm việc làm theo tên công ty: [Tìm việc làm](/jobs?q="
+                            + URLEncoder.encode(companyName, StandardCharsets.UTF_8)
+                            + ").");
         }
 
         StringBuilder sb = new StringBuilder();
@@ -111,11 +115,7 @@ public class GetCompanyInfoTool implements ChatTool {
             sb.append(i + 1)
                     .append(". **")
                     .append(company.name())
-                    .append("**")
-                    .append(
-                            company.isVerified()
-                                    ? " *(Đã xác thực giấy phép - Tick xanh)*\n"
-                                    : "\n")
+                    .append("**\n")
                     .append("- **Lĩnh vực:** ")
                     .append(company.industry())
                     .append("\n")
@@ -127,13 +127,21 @@ public class GetCompanyInfoTool implements ChatTool {
                     .append("\n")
                     .append("- **Việc làm đang tuyển:** ")
                     .append(company.openJobsCount())
-                    .append(" vị trí\n")
-                    .append("- **Đãi ngộ nổi bật:** ")
-                    .append(String.join(", ", company.highlights()))
-                    .append("\n")
-                    .append("- **Trang công ty:** [Xem chi tiết doanh nghiệp & việc làm](")
+                    .append(" vị trí\n");
+            if (!company.highlights().isEmpty()) {
+                sb.append("- **Đãi ngộ nổi bật:** ")
+                        .append(String.join(", ", company.highlights()))
+                        .append("\n");
+            }
+            sb.append("- **Trang công ty:** [Xem chi tiết doanh nghiệp & việc làm](")
                     .append(company.detailUrl())
                     .append(")\n\n");
+        }
+        if (results.size() >= CAPPED_RESULTS) {
+            sb.append("Đây là ")
+                    .append(CAPPED_RESULTS)
+                    .append(
+                            " kết quả đầu tiên, có thể còn nhiều doanh nghiệp khác. Hãy mời người dùng nêu tên công ty hoặc lĩnh vực cụ thể hơn để tìm chính xác.\n");
         }
         sb.append("</company_info_results>");
 
