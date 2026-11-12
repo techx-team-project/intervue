@@ -7,18 +7,10 @@ interface DashboardStatsRowProps {
 
 export default function DashboardStatsRow({ stats }: DashboardStatsRowProps) {
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <section className="border-outline-variant grid grid-cols-2 gap-px overflow-hidden rounded-xl border bg-[#e9eaec] lg:grid-cols-4">
       {stats.map((stat) => (
-        <StatCard
-          key={stat.kind}
-          kind={stat.kind}
-          label={stat.label}
-          value={stat.value}
-          trendPercent={stat.trendPercent}
-          trendDirection={stat.trendDirection}
-          sparkline={stat.sparkline}
-        />
+        <StatCard key={stat.kind} {...stat} />
       ))}
-    </div>
+    </section>
   );
 }

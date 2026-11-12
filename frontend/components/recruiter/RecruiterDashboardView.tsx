@@ -1,8 +1,8 @@
 import type { RecruiterDashboardData } from '@/types/recruiter';
 import DashboardBannerCarousel from './DashboardBannerCarousel';
+import DashboardHeader from './DashboardHeader';
 import DashboardStatsRow from './DashboardStatsRow';
 import PipelineFunnelCard from './PipelineFunnelCard';
-import QuickActionsRow from './QuickActionsRow';
 import RecentApplicationsTable from './RecentApplicationsTable';
 import SuggestedServicePackages from './SuggestedServicePackages';
 import TodayPriorities from './TodayPriorities';
@@ -15,22 +15,22 @@ interface RecruiterDashboardViewProps {
 export default function RecruiterDashboardView({ data }: RecruiterDashboardViewProps) {
   return (
     <div className="space-y-6">
-      <DashboardBannerCarousel />
+      <DashboardHeader companyName={data.company.name} />
       <VerificationStatusBanner verification={data.verification} />
+      <DashboardStatsRow stats={data.stats} />
 
-      <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-5">
+        <div className="lg:col-span-3">
           <PipelineFunnelCard stages={data.pipeline} />
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-2">
           <TodayPriorities items={data.priorities} />
         </div>
       </div>
 
-      <DashboardStatsRow stats={data.stats} />
-      <QuickActionsRow />
-      <SuggestedServicePackages services={data.suggestedServices} />
       <RecentApplicationsTable applications={data.recentApplications} />
+      <SuggestedServicePackages services={data.suggestedServices} />
+      <DashboardBannerCarousel />
     </div>
   );
 }

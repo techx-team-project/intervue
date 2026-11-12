@@ -8,42 +8,36 @@ interface TodayPrioritiesProps {
 
 export default function TodayPriorities({ items }: TodayPrioritiesProps) {
   return (
-    <div className="border-outline-variant flex h-full flex-col rounded-2xl border bg-white p-6 shadow-xs sm:p-7">
-      <h2 className="text-navy text-body-lg font-bold">Today’s priorities</h2>
+    <section className="border-outline-variant flex h-full flex-col rounded-xl border bg-white p-6">
+      <h2 className="text-navy text-body-lg font-bold">Cần xử lý hôm nay</h2>
 
       {items.length === 0 ? (
-        <p className="text-body-md text-on-surface-variant mt-4">Nothing needs your attention today 🎉</p>
+        <p className="text-body-md text-on-surface-variant mt-4">Hôm nay chưa có việc gấp nào.</p>
       ) : (
-        <div className="mt-4 flex-1 space-y-2">
+        <ul className="divide-outline-variant mt-3 flex-1 divide-y">
           {items.map((item) => {
             const Icon = item.icon;
             const isWarning = item.tone === 'warning';
 
             return (
-              <Link
-                key={item.id}
-                href={item.href}
-                className="group hover:bg-surface-container-low flex items-center gap-3 rounded-xl p-2.5 transition"
-              >
-                <div
-                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
-                    isWarning ? 'bg-amber-50 text-amber-600' : 'text-primary bg-emerald-50'
-                  }`}
-                >
-                  <Icon className="h-4.5 w-4.5" />
-                </div>
+              <li key={item.id}>
+                <Link href={item.href} className="group flex items-center gap-3 py-3.5">
+                  <Icon
+                    className={`h-4.5 w-4.5 shrink-0 ${isWarning ? 'text-amber-600' : 'text-on-surface-variant'}`}
+                  />
 
-                <div className="min-w-0 flex-1">
-                  <p className="text-navy text-body-md truncate font-bold">{item.label}</p>
-                  <p className="text-label-sm text-outline truncate">{item.description}</p>
-                </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-navy text-body-md truncate font-semibold">{item.label}</p>
+                    <p className="text-label-sm text-on-surface-variant truncate">{item.description}</p>
+                  </div>
 
-                <ChevronRight className="text-outline group-hover:text-outline h-4 w-4 shrink-0 transition" />
-              </Link>
+                  <ChevronRight className="text-outline group-hover:text-navy h-4 w-4 shrink-0 transition group-hover:translate-x-0.5" />
+                </Link>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
-    </div>
+    </section>
   );
 }
