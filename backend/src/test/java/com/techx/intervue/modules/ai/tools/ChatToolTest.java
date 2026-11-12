@@ -93,7 +93,7 @@ class ChatToolTest {
         ToolExecutionResult result = tool.execute(null, Map.of("keyword", "Cobol"));
 
         assertThat(result.isSuccess()).isTrue();
-        assertThat(result.content()).contains("Không tìm thấy việc làm IT phù hợp");
+        assertThat(result.content()).contains("No IT jobs directly match");
         assertThat(result.content()).contains("(/jobs)");
     }
 
@@ -123,7 +123,7 @@ class ChatToolTest {
                         null, Map.of("keyword", "Java", "location", "Hà Nội", "sort", "newest"));
 
         assertThat(result.content())
-                .contains("[Xem thêm việc làm](/jobs?q=Java&city=H%C3%A0+N%E1%BB%99i&sort=NEWEST)");
+                .contains("[See more jobs](/jobs?q=Java&city=H%C3%A0+N%E1%BB%99i&sort=NEWEST)");
     }
 
     @Test
@@ -146,7 +146,7 @@ class ChatToolTest {
 
         ToolExecutionResult result = tool.execute(null, Map.of("keyword", "Java"));
 
-        assertThat(result.content()).doesNotContain("Xem thêm việc làm");
+        assertThat(result.content()).doesNotContain("See more jobs");
     }
 
     @Test
