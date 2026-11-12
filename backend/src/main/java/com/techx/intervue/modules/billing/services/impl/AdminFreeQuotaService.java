@@ -62,6 +62,8 @@ public class AdminFreeQuotaService
         settings.setConnectDailyInviteLimit(request.connectDailyInviteLimit());
         settings.setCompanyFreePhotoLimit(request.companyFreePhotoLimit());
         settings.setRequireJobSlot(Boolean.TRUE.equals(request.requireJobSlot()));
+        settings.setJobFreeActiveLimit(request.jobFreeActiveLimit());
+        settings.setJobFreeMaxDays(request.jobFreeMaxDays());
         FreeQuotaSettings saved = settingsRepository.save(settings);
 
         auditLogService.record(
@@ -73,7 +75,7 @@ public class AdminFreeQuotaService
                         .targetType(AuditTargetType.FREE_QUOTA_SETTINGS)
                         .targetId(saved.getId())
                         .detail(
-                                "match=%d, jd=%d, cv=%d, credits=%d, connect=%d, photos=%d, requireJobSlot=%s"
+                                "match=%d, jd=%d, cv=%d, credits=%d, connect=%d, photos=%d, requireJobSlot=%s, jobFreeActive=%d, jobFreeDays=%d"
                                         .formatted(
                                                 saved.getAiResumeMatchFreePerMonth(),
                                                 saved.getAiJdGenerateFreePerMonth(),
@@ -81,7 +83,9 @@ public class AdminFreeQuotaService
                                                 saved.getCandidateStarterCredits(),
                                                 saved.getConnectDailyInviteLimit(),
                                                 saved.getCompanyFreePhotoLimit(),
-                                                saved.isRequireJobSlot()))
+                                                saved.isRequireJobSlot(),
+                                                saved.getJobFreeActiveLimit(),
+                                                saved.getJobFreeMaxDays()))
                         .ip(actor.ip())
                         .build());
 
@@ -105,7 +109,9 @@ public class AdminFreeQuotaService
                 defaults.candidateStarterCredits(),
                 defaults.connectDailyInviteLimit(),
                 defaults.companyFreePhotoLimit(),
-                billingProperties.requiresJobSlot());
+                billingProperties.requiresJobSlot(),
+                defaults.jobFreeActiveLimit(),
+                defaults.jobFreeMaxDays());
     }
 
     private static FreeQuotaValues toValues(FreeQuotaSettings s) {
@@ -116,7 +122,9 @@ public class AdminFreeQuotaService
                 s.getCandidateStarterCredits(),
                 s.getConnectDailyInviteLimit(),
                 s.getCompanyFreePhotoLimit(),
-                s.isRequireJobSlot());
+                s.isRequireJobSlot(),
+                s.getJobFreeActiveLimit(),
+                s.getJobFreeMaxDays());
     }
 
     private static FreeQuotaSettingsResource toResource(FreeQuotaSettings s) {
@@ -128,6 +136,8 @@ public class AdminFreeQuotaService
                 .connectDailyInviteLimit(s.getConnectDailyInviteLimit())
                 .companyFreePhotoLimit(s.getCompanyFreePhotoLimit())
                 .requireJobSlot(s.isRequireJobSlot())
+                .jobFreeActiveLimit(s.getJobFreeActiveLimit())
+                .jobFreeMaxDays(s.getJobFreeMaxDays())
                 .updatedAt(s.getUpdatedAt())
                 .build();
     }
@@ -141,6 +151,8 @@ public class AdminFreeQuotaService
                 .connectDailyInviteLimit(values.connectDailyInviteLimit())
                 .companyFreePhotoLimit(values.companyFreePhotoLimit())
                 .requireJobSlot(values.requireJobSlot())
+                .jobFreeActiveLimit(values.jobFreeActiveLimit())
+                .jobFreeMaxDays(values.jobFreeMaxDays())
                 .build();
     }
 }

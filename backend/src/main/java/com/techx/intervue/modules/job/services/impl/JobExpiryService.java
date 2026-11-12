@@ -30,7 +30,10 @@ public class JobExpiryService implements JobExpiryServiceInterface {
     public int expireOverdueJobs() {
         List<JobStatus> expirable =
                 Arrays.stream(JobStatus.values())
-                        .filter(status -> status != JobStatus.HIDDEN_BY_ADMIN)
+                        .filter(
+                                status ->
+                                        status != JobStatus.HIDDEN_BY_ADMIN
+                                                && status != JobStatus.PAUSED)
                         .filter(status -> statusPolicy.canTransition(status, JobStatus.EXPIRED))
                         .toList();
         LocalDate today = JobDeadlines.today();

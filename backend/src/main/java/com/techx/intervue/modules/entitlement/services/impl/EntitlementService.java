@@ -105,6 +105,20 @@ public class EntitlementService implements EntitlementServiceInterface {
 
     @Override
     @Transactional
+    public Optional<Instant> extendJobSlot(Long jobId, Duration pausedFor) {
+        return usageRepository
+                .findFirstByJobIdAndEntitlementTypeOrderByStartedAtDesc(
+                        jobId, EntitlementType.JOB_POST_SLOT)
+                .filter(usage -> usage.getEndsAt() != null)
+                .map(
+                        usage -> {
+                            usage.setEndsAt(usage.getEndsAt().plus(pausedFor));
+                            return usage.getEndsAt();
+                        });
+    }
+
+    @Override
+    @Transactional
     public boolean consumeRetop(Long companyId, Long jobId, Long recruiterId) {
         return spend(companyId, EntitlementType.JOB_RETOP, jobId, recruiterId, true).isPresent();
     }

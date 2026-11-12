@@ -12,4 +12,6 @@ public record FreeQuotaSettingsResource(
         int connectDailyInviteLimit,
         int companyFreePhotoLimit,
         boolean requireJobSlot,
+        int jobFreeActiveLimit,
+        int jobFreeMaxDays,
         Instant updatedAt) {}
