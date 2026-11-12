@@ -106,7 +106,7 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
                     : 'border-slate-200 bg-white hover:border-slate-300'
                 }`}
               >
-                <span className="font-medium text-slate-700">Use Profile Information (Default)</span>
+                <span className="font-medium text-slate-700">Use Default Resume (or Target Role)</span>
                 {selectedResumeId === null && <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />}
               </button>
 
