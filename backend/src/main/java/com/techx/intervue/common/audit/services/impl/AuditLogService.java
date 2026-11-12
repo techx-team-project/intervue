@@ -88,6 +88,9 @@ public class AuditLogService implements AuditLogServiceInterface {
         if (log.getActorType() == AuditActorType.SYSTEM) {
             return "System";
         }
+        if (log.getActorType() == AuditActorType.RECRUITER) {
+            return "Recruiter #" + log.getActorId();
+        }
         return log.getActorEmail() != null ? log.getActorEmail() : "Admin";
     }
 
@@ -96,6 +99,7 @@ public class AuditLogService implements AuditLogServiceInterface {
             case SYSTEM -> "System";
             case ADMIN -> "Platform Admin";
             case USER -> "User";
+            case RECRUITER -> "Recruiter";
         };
     }
 

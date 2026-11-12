@@ -517,7 +517,17 @@ public class UserAdminService implements UserAdminServiceInterface {
                     BROADCAST_SENT,
                     BROADCAST_CANCELLED ->
                     "notification";
-            case JOB_HIDDEN, JOB_RESTORED -> "moderation";
+            case JOB_HIDDEN,
+                    JOB_RESTORED,
+                    JOB_CREATED,
+                    JOB_UPDATED,
+                    JOB_PUBLISHED,
+                    JOB_PAUSED,
+                    JOB_RESUMED,
+                    JOB_CLOSED,
+                    JOB_RENEWED,
+                    JOB_RETOPPED ->
+                    "moderation";
             case IDENTITY_VERIFICATION_APPROVED,
                     IDENTITY_VERIFICATION_REJECTED,
                     IDENTITY_VERIFICATION_ATTEMPTS_GRANTED,
@@ -607,6 +617,14 @@ public class UserAdminService implements UserAdminServiceInterface {
                     BROADCAST_CANCELLED ->
                     detail != null && !detail.isBlank() ? detail : "Broadcast activity";
             case JOB_HIDDEN -> "Job hidden by an admin";
+            case JOB_CREATED -> "Job created";
+            case JOB_UPDATED -> "Job updated";
+            case JOB_PUBLISHED -> "Job published";
+            case JOB_PAUSED -> "Job paused";
+            case JOB_RESUMED -> "Job resumed";
+            case JOB_CLOSED -> "Job closed";
+            case JOB_RENEWED -> "Job renewed";
+            case JOB_RETOPPED -> "Job pushed to top";
             case JOB_RESTORED -> "Job restored by an admin";
             case IDENTITY_VERIFICATION_APPROVED -> "Identity verification approved";
             case IDENTITY_VERIFICATION_REJECTED -> "Identity verification rejected";
