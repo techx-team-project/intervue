@@ -23,10 +23,12 @@ import com.techx.intervue.modules.ai.services.interfaces.AiResponseCacheServiceI
 import com.techx.intervue.modules.ai.services.interfaces.KnowledgeBaseServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PlatformAgentToolServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
+import com.techx.intervue.modules.ai.services.interfaces.SmallTalkServiceInterface;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,7 @@ public class AiChatService implements AiChatServiceInterface {
     private final PlatformAgentToolServiceInterface agentToolService;
     private final StringRedisTemplate redis;
     private final ObjectMapper objectMapper;
+    private final SmallTalkServiceInterface smallTalkService;
     private final AiFaqServiceInterface faqService;
     private final AiResponseCacheServiceInterface responseCache;
 
@@ -66,6 +69,7 @@ public class AiChatService implements AiChatServiceInterface {
             PlatformAgentToolServiceInterface agentToolService,
             StringRedisTemplate redis,
             ObjectMapper objectMapper,
+            SmallTalkServiceInterface smallTalkService,
             @Nullable AiFaqServiceInterface faqService,
             @Nullable AiResponseCacheServiceInterface responseCache) {
         this.aiGatewayService = aiGatewayService;
@@ -74,6 +78,7 @@ public class AiChatService implements AiChatServiceInterface {
         this.agentToolService = agentToolService;
         this.redis = redis;
         this.objectMapper = objectMapper;
+        this.smallTalkService = smallTalkService;
         this.faqService = faqService;
         this.responseCache = responseCache;
     }
@@ -84,7 +89,8 @@ public class AiChatService implements AiChatServiceInterface {
             PromptServiceInterface promptService,
             PlatformAgentToolServiceInterface agentToolService,
             StringRedisTemplate redis,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            SmallTalkServiceInterface smallTalkService) {
         this(
                 aiGatewayService,
                 knowledgeBaseService,
@@ -92,12 +98,18 @@ public class AiChatService implements AiChatServiceInterface {
                 agentToolService,
                 redis,
                 objectMapper,
+                smallTalkService,
                 null,
                 null);
     }
 
     @Override
     public UserChatResponse chat(Long userId, String ip, UserChatRequest request) {
+        Optional<String> smallTalkReply = smallTalkService.reply(request.message());
+        if (smallTalkReply.isPresent()) {
+            return new UserChatResponse(smallTalkReply.get(), List.of());
+        }
+
         String historyKey = buildHistoryKey(userId, ip, request.sessionId());
 
         if (faqService != null) {

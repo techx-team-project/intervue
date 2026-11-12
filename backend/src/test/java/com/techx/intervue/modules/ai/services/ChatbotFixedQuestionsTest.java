@@ -27,6 +27,7 @@ import com.techx.intervue.modules.ai.resources.ToolExecutionResult;
 import com.techx.intervue.modules.ai.resources.UserChatResponse;
 import com.techx.intervue.modules.ai.services.impl.AiChatService;
 import com.techx.intervue.modules.ai.services.impl.KnowledgeChunker;
+import com.techx.intervue.modules.ai.services.impl.SmallTalkService;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.KnowledgeBaseServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PlatformAgentToolServiceInterface;
@@ -309,7 +310,8 @@ class ChatbotFixedQuestionsTest {
                         promptService,
                         agentToolService,
                         redis,
-                        objectMapper);
+                        objectMapper,
+                        new SmallTalkService());
 
         lenient().when(redis.opsForList()).thenReturn(listOperations);
         lenient()
