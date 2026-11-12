@@ -205,6 +205,22 @@ export function getVoucherScheduleState(
   };
 }
 
+// Shared by CartVoucherModal and VoucherConditionsModal so switching between the two never resizes the dialog.
+export const VOUCHER_MODAL_SIZE_CLASS = 'min-h-[620px]';
+
+export function subscribeVoucherTick(onStoreChange: () => void): () => void {
+  const timer = window.setInterval(onStoreChange, 30_000);
+  return () => window.clearInterval(timer);
+}
+
+export function getVoucherTickSnapshot(): number {
+  return Math.floor(Date.now() / 60_000) * 60_000;
+}
+
+export function getVoucherTickServerSnapshot(): number {
+  return 0;
+}
+
 export function formatVoucherCountdownVi(endsAtIso: string | null, nowMs: number): string | null {
   if (!endsAtIso || nowMs === 0) return null;
   const diffMs = Date.parse(endsAtIso) - nowMs;
