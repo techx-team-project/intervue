@@ -165,8 +165,7 @@ public enum ErrorCode {
             HttpStatus.FORBIDDEN, "This account cannot sign in with a social provider!"),
     PASSWORD_NOT_SET(HttpStatus.UNPROCESSABLE_CONTENT, "Set a password first!"),
     PACKAGE_NOT_AVAILABLE(HttpStatus.NOT_FOUND, "This service package is not available!"),
-    DUPLICATE_PACKAGE_CODE(
-            HttpStatus.CONFLICT, "A service package with this code or slug already exists!"),
+    DUPLICATE_PACKAGE_CODE(HttpStatus.CONFLICT, "A service package with this slug already exists!"),
     DUPLICATE_SERVICE_CATEGORY_CODE(
             HttpStatus.CONFLICT, "A service category with this code already exists!"),
     SERVICE_CATEGORY_IN_USE(

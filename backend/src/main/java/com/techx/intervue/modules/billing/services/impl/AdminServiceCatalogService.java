@@ -214,8 +214,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
     @Transactional
     public AdminServicePackageResource createPackage(
             SaveServicePackageRequest request, RequestActor actor) {
-        if (packageRepository.existsByCode(request.code())
-                || packageRepository.existsBySlug(request.slug())) {
+        if (packageRepository.existsBySlug(request.slug())) {
             throw new AppException(ErrorCode.DUPLICATE_PACKAGE_CODE);
         }
         validateBenefits(request.benefits());
@@ -229,7 +228,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 AuditAction.SERVICE_PACKAGE_CREATED,
                 AuditTargetType.SERVICE_PACKAGE,
                 saved.getId(),
-                saved.getCode());
+                saved.getSlug());
         return toResource(saved);
     }
 
@@ -238,8 +237,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
     public AdminServicePackageResource updatePackage(
             Long id, SaveServicePackageRequest request, RequestActor actor) {
         ServicePackage servicePackage = requirePackage(id);
-        if (packageRepository.existsByCodeAndIdNot(request.code(), id)
-                || packageRepository.existsBySlugAndIdNot(request.slug(), id)) {
+        if (packageRepository.existsBySlugAndIdNot(request.slug(), id)) {
             throw new AppException(ErrorCode.DUPLICATE_PACKAGE_CODE);
         }
         validateBenefits(request.benefits());
@@ -254,7 +252,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 AuditAction.SERVICE_PACKAGE_UPDATED,
                 AuditTargetType.SERVICE_PACKAGE,
                 id,
-                servicePackage.getCode());
+                servicePackage.getSlug());
         return toResource(servicePackage);
     }
 
@@ -342,7 +340,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 predicates.add(
                         builder.or(
                                 builder.like(builder.lower(root.get("name")), pattern),
-                                builder.like(builder.lower(root.get("code")), pattern)));
+                                builder.like(builder.lower(root.get("slug")), pattern)));
             }
             if (request.categoryId() != null) {
                 predicates.add(builder.equal(root.get("category").get("id"), request.categoryId()));

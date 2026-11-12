@@ -89,9 +89,9 @@ public class AdPackageLookupAdapter implements AdPackageLookupPortInterface {
                         .findByCode("BANNER")
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         String rawCode = slotCode.startsWith("BANNER_") ? slotCode : "BANNER_" + slotCode;
-        String packageCode = rawCode.length() > 50 ? rawCode.substring(0, 50) : rawCode;
-        String slug = packageCode.toLowerCase(Locale.ROOT).replace('_', '-');
-        if (packageRepository.existsByCode(packageCode) || packageRepository.existsBySlug(slug)) {
+        String rawSlug = rawCode.toLowerCase(Locale.ROOT).replace('_', '-');
+        String slug = rawSlug.length() > 120 ? rawSlug.substring(0, 120) : rawSlug;
+        if (packageRepository.existsBySlug(slug)) {
             throw new AppException(ErrorCode.DUPLICATE_PACKAGE_CODE);
         }
 
@@ -99,7 +99,6 @@ public class AdPackageLookupAdapter implements AdPackageLookupPortInterface {
                 packageRepository.save(
                         ServicePackage.builder()
                                 .category(bannerCategory)
-                                .code(packageCode)
                                 .slug(slug)
                                 .name("BANNER " + slotName.trim().toUpperCase(Locale.ROOT))
                                 .shortDescription(
