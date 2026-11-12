@@ -45,6 +45,7 @@ public class LocalDemoCompanyService implements LocalDemoCompanyServiceInterface
     private final BusinessDocumentRepository businessDocumentRepository;
     private final CompanyAgreementRepository companyAgreementRepository;
     private final CompanyLinker companyLinker;
+    private final CompanyProfileCompleteness completeness;
     private final LocalRecruiterSeedServiceInterface recruiterSeedService;
 
     @Override
@@ -76,6 +77,9 @@ public class LocalDemoCompanyService implements LocalDemoCompanyServiceInterface
     private void fillProfile(CompanyMember membership) {
         CompanyProfile profile =
                 companyProfileRepository.findByMemberId(membership.getId()).orElseThrow();
+        if (completeness.isComplete(profile)) {
+            return;
+        }
         profile.setTradingName("TechX Global");
         profile.setBusinessType(BusinessType.ENTERPRISE);
         profile.setIndustry("Software & Information Technology");

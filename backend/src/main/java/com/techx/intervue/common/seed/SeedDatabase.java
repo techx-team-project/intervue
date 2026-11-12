@@ -32,6 +32,14 @@ public class SeedDatabase {
         return true;
     }
 
+    public boolean contains(String table, String column, Object value) {
+        return Boolean.TRUE.equals(
+                jdbc.queryForObject(
+                        "SELECT EXISTS(SELECT 1 FROM " + table + " WHERE " + column + " = ?)",
+                        Boolean.class,
+                        value));
+    }
+
     public IdSequence sequence(String table) {
         Long maxId = jdbc.queryForObject("SELECT COALESCE(MAX(id), 0) FROM " + table, Long.class);
         return new IdSequence(maxId == null ? 0 : maxId);
