@@ -12,9 +12,10 @@ const MAX_FACT_TAGS = 3;
 
 type FeaturedJobCardProps = {
   job: PublicJobSummaryResource;
+  onQuickView?: (job: PublicJobSummaryResource) => void;
 };
 
-export default function FeaturedJobCard({ job }: FeaturedJobCardProps) {
+export default function FeaturedJobCard({ job, onQuickView }: FeaturedJobCardProps) {
   const facts = jobFacts(job).slice(0, MAX_FACT_TAGS);
 
   return (
@@ -58,9 +59,20 @@ export default function FeaturedJobCard({ job }: FeaturedJobCardProps) {
 
       <div className="border-outline-variant mt-auto flex items-center justify-between border-t pt-4">
         <p className="font-display text-title-md text-primary font-bold">{formatSalary(job.salary)}</p>
-        <span className="border-outline-variant text-outline ease-standard group-hover:bg-primary group-hover:border-primary flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200 group-hover:text-white">
-          <ArrowUpRight className="h-4 w-4" aria-hidden />
-        </span>
+        <div className="flex items-center gap-3">
+          {onQuickView && (
+            <button
+              type="button"
+              onClick={() => onQuickView(job)}
+              className="text-label-lg text-on-surface-variant hover:text-primary relative z-10 cursor-pointer font-semibold transition-colors hover:underline"
+            >
+              Quick view
+            </button>
+          )}
+          <span className="border-outline-variant text-outline ease-standard group-hover:bg-primary group-hover:border-primary flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200 group-hover:text-white">
+            <ArrowUpRight className="h-4 w-4" aria-hidden />
+          </span>
+        </div>
       </div>
     </article>
   );

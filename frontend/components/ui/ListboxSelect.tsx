@@ -17,6 +17,7 @@ type ListboxSelectProps = {
   searchable?: boolean;
   searchPlaceholder?: string;
   emptyLabel?: string;
+  popupAlign?: 'left' | 'right';
   className?: string;
   triggerClassName?: string;
 };
@@ -30,6 +31,7 @@ export default function ListboxSelect({
   searchable = false,
   searchPlaceholder = 'Search',
   emptyLabel = 'No results found',
+  popupAlign = 'left',
   className,
   triggerClassName,
 }: ListboxSelectProps) {
@@ -152,7 +154,8 @@ export default function ListboxSelect({
       {isOpen && (
         <div
           className={cn(
-            'animate-fade-in-up bg-surface border-outline-variant shadow-elevation-2 absolute top-full left-0 z-30 mt-3 min-w-52 overflow-hidden rounded-2xl border',
+            'animate-fade-in-up bg-surface border-outline-variant shadow-elevation-2 absolute top-full z-30 mt-3 min-w-52 overflow-hidden rounded-2xl border',
+            popupAlign === 'right' ? 'right-0' : 'left-0',
             searchable && 'w-72',
           )}
         >
