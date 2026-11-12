@@ -28,9 +28,14 @@ import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInte
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +66,8 @@ public class AdCreativeService implements AdCreativeServiceInterface {
                         .findById(bookingId)
                         .filter(found -> found.getCompanyId().equals(companyId))
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        if (booking.getStatus() != AdBookingStatus.BOOKED) {
+        if (booking.getStatus() != AdBookingStatus.BOOKED
+                || booking.getWeekStart().plusDays(6).isBefore(AdWeeks.today())) {
             throw new AppException(ErrorCode.AD_BOOKING_NOT_READY);
         }
         AdSlot slot =
@@ -81,7 +87,10 @@ public class AdCreativeService implements AdCreativeServiceInterface {
         creative.setImagePublicId(stored.publicId());
         creative.setImageUrl(storageService.publicImageUrl(stored.publicId()));
         creative.setTargetUrl(request.targetUrl().trim());
-        creative.setAltText(request.altText());
+        creative.setAltText(
+                request.altText() == null || request.altText().isBlank()
+                        ? null
+                        : request.altText().trim());
         // Every re-upload goes back through review; approving once must not approve everything
         // after
         creative.setStatus(AdCreativeStatus.PENDING);
@@ -100,7 +109,41 @@ public class AdCreativeService implements AdCreativeServiceInterface {
                 status == null
                         ? creativeRepository.findAllByOrderByCreatedAtDesc(pageable)
                         : creativeRepository.findAllByStatusOrderByCreatedAtAsc(status, pageable);
-        return page.map(this::toAdminResource);
+        List<AdCreative> creatives = page.getContent();
+        if (creatives.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        Map<Long, AdBooking> bookingsById =
+                bookingRepository
+                        .findAllById(
+                                creatives.stream()
+                                        .map(AdCreative::getAdBookingId)
+                                        .distinct()
+                                        .toList())
+                        .stream()
+                        .collect(Collectors.toMap(AdBooking::getId, Function.identity()));
+        Map<Long, AdSlot> slotsById =
+                slotRepository
+                        .findAllById(
+                                bookingsById.values().stream()
+                                        .map(AdBooking::getAdSlotId)
+                                        .distinct()
+                                        .toList())
+                        .stream()
+                        .collect(Collectors.toMap(AdSlot::getId, Function.identity()));
+        List<AdminAdCreativeResource> resources =
+                creatives.stream()
+                        .map(
+                                creative -> {
+                                    AdBooking booking = bookingsById.get(creative.getAdBookingId());
+                                    AdSlot slot =
+                                            booking == null
+                                                    ? null
+                                                    : slotsById.get(booking.getAdSlotId());
+                                    return toAdminResource(creative, booking, slot);
+                                })
+                        .toList();
+        return new PageImpl<>(resources, pageable, page.getTotalElements());
     }
 
     @Override
@@ -111,10 +154,11 @@ public class AdCreativeService implements AdCreativeServiceInterface {
         creative.setRejectionReason(null);
         stamp(creative, actor);
         audit(actor, AuditAction.AD_CREATIVE_APPROVED, creative, "approved");
-        bookingRepository
-                .findById(creative.getAdBookingId())
-                .ifPresent(adsNotifier::creativeApproved);
-        return toAdminResource(creative);
+        AdBooking booking = bookingRepository.findById(creative.getAdBookingId()).orElse(null);
+        if (booking != null) {
+            adsNotifier.creativeApproved(booking);
+        }
+        return toAdminResource(creative, booking);
     }
 
     @Override
@@ -122,16 +166,16 @@ public class AdCreativeService implements AdCreativeServiceInterface {
     public AdminAdCreativeResource reject(
             Long id, ReviewAdCreativeRequest request, RequestActor actor) {
         AdCreative creative = requirePending(id);
+        String reason = request.rejectionReason().trim();
         creative.setStatus(AdCreativeStatus.REJECTED);
-        creative.setRejectionReason(request.rejectionReason());
+        creative.setRejectionReason(reason);
         stamp(creative, actor);
-        audit(actor, AuditAction.AD_CREATIVE_REJECTED, creative, request.rejectionReason());
-        bookingRepository
-                .findById(creative.getAdBookingId())
-                .ifPresent(
-                        booking ->
-                                adsNotifier.creativeRejected(booking, request.rejectionReason()));
-        return toAdminResource(creative);
+        audit(actor, AuditAction.AD_CREATIVE_REJECTED, creative, reason);
+        AdBooking booking = bookingRepository.findById(creative.getAdBookingId()).orElse(null);
+        if (booking != null) {
+            adsNotifier.creativeRejected(booking, reason);
+        }
+        return toAdminResource(creative, booking);
     }
 
     private void requireMatchingSize(MultipartFile image, AdSlot slot) {
@@ -174,15 +218,20 @@ public class AdCreativeService implements AdCreativeServiceInterface {
                         .targetType(AuditTargetType.AD_CREATIVE)
                         .targetId(creative.getId())
                         .detail(detail)
+                        .ip(actor.ip())
                         .build());
     }
 
-    private AdminAdCreativeResource toAdminResource(AdCreative creative) {
-        AdBooking booking = bookingRepository.findById(creative.getAdBookingId()).orElse(null);
+    private AdminAdCreativeResource toAdminResource(AdCreative creative, AdBooking booking) {
         AdSlot slot =
                 booking == null
                         ? null
                         : slotRepository.findById(booking.getAdSlotId()).orElse(null);
+        return toAdminResource(creative, booking, slot);
+    }
+
+    private AdminAdCreativeResource toAdminResource(
+            AdCreative creative, AdBooking booking, AdSlot slot) {
         return AdminAdCreativeResource.builder()
                 .id(creative.getId())
                 .bookingId(creative.getAdBookingId())
