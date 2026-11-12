@@ -1,151 +1,122 @@
 'use client';
 
-import { useState } from 'react';
-import { Award, Briefcase, Building2, Globe, MapPin, Share2, Sparkles, Users } from 'lucide-react';
 import FollowCompanyButton from '@/components/candidate/saved/FollowCompanyButton';
+import CompanyLogo from '@/components/jobs/CompanyLogo';
+import { cn } from '@/lib/utils';
 import type { CompanyDetail } from '@/types/company';
+import { Check, Globe, MapPin, Share2, Users } from 'lucide-react';
+import { useState } from 'react';
+
+type CompanyTab = 'overview' | 'jobs';
 
 interface CompanyHeaderCoverProps {
   company: CompanyDetail;
-  activeTab: 'overview' | 'jobs';
-  onTabChange: (tab: 'overview' | 'jobs') => void;
+  activeTab: CompanyTab;
+  onTabChange: (tab: CompanyTab) => void;
 }
+
+const COPIED_RESET_MS = 2500;
+const SHORT_ADDRESS_PARTS = 2;
 
 export default function CompanyHeaderCover({ company, activeTab, onTabChange }: CompanyHeaderCoverProps) {
   const [copied, setCopied] = useState(false);
 
-  const handleShare = () => {
-    if (typeof window !== 'undefined') {
-      navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    }
+  const handleShare = async () => {
+    await navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), COPIED_RESET_MS);
   };
 
-  return (
-    <div className="border-outline-variant/90 overflow-hidden rounded-2xl border bg-white shadow-sm">
-      <div className="bg-primary h-28 w-full sm:h-40" />
+  const tabs: Array<{ id: CompanyTab; label: string; count?: number }> = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'jobs', label: 'Job posts', count: company.openJobsCount },
+  ];
 
-      <div className="relative px-5 pt-0 pb-5 sm:px-7">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-            <div className="shadow-elevation-1 relative -mt-16 flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-white p-2 sm:-mt-20 sm:h-32 sm:w-32">
-              {company.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  loading="lazy"
-                  decoding="async"
-                  src={company.logo}
-                  alt={company.name}
-                  className="h-full w-full object-contain"
-                />
-              ) : (
-                <Building2 className="text-outline h-12 w-12" />
+  return (
+    <header className="bg-surface border-outline-variant overflow-hidden rounded-2xl border">
+      <div className="flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+        <div className="flex min-w-0 items-center gap-5">
+          <CompanyLogo name={company.name} src={company.logo} className="h-20 w-20 rounded-2xl sm:h-24 sm:w-24" />
+          <div className="min-w-0 space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="font-display text-headline-sm sm:text-headline-md text-on-surface font-bold">
+                {company.name}
+              </h1>
+              {company.featured && (
+                <span className="bg-primary-container text-on-primary-container rounded-full px-2.5 py-0.5 text-[11px] font-bold">
+                  Featured
+                </span>
               )}
             </div>
-
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-on-surface text-xl font-bold tracking-tight sm:text-2xl">{company.name}</h1>
-                {company.featured && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-800">
-                    <Award className="h-3.5 w-3.5 text-amber-600" aria-hidden />
-                    Doanh nghiệp nổi bật
-                  </span>
-                )}
-                {company.brandPageActive && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
-                    <Sparkles className="h-3.5 w-3.5 text-emerald-600" aria-hidden />
-                    Brand Page
-                  </span>
-                )}
-              </div>
-
-              <div className="text-on-surface-variant mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
-                {company.website && (
+            <ul className="text-body-md text-on-surface-variant flex flex-wrap items-center gap-x-5 gap-y-1.5">
+              {company.website && (
+                <li>
                   <a
                     href={company.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary inline-flex items-center gap-1 hover:underline"
+                    className="hover:text-primary flex items-center gap-1.5 transition-colors"
                   >
-                    <Globe className="h-3.5 w-3.5" />
-                    <span>{company.website.replace(/^https?:\/\//, '')}</span>
+                    <Globe className="text-primary h-4 w-4" aria-hidden />
+                    {company.website.replace(/^https?:\/\//, '')}
                   </a>
-                )}
-
-                {company.size && (
-                  <span className="inline-flex items-center gap-1">
-                    <Users className="text-outline h-3.5 w-3.5" />
-                    <span>{company.size}</span>
-                  </span>
-                )}
-
-                <span className="inline-flex items-center gap-1">
-                  <MapPin className="text-outline h-3.5 w-3.5" />
-                  <span title={company.address}>{company.address.split(',').slice(-2).join(', ').trim()}</span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2.5 pt-2 sm:pt-0">
-            <FollowCompanyButton companyId={Number(company.id)} />
-            <button
-              type="button"
-              onClick={handleShare}
-              className="border-outline-variant text-on-surface hover:bg-surface-container-low relative flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border bg-white px-3.5 py-2.5 text-xs font-semibold transition-colors"
-              title="Copy company page link"
-            >
-              <Share2 className="text-on-surface-variant h-4 w-4" />
-              <span>Share</span>
-              {copied && (
-                <div className="text-label-sm shadow-elevation-2 absolute -top-9 left-1/2 -translate-x-1/2 rounded-md bg-slate-900 px-2.5 py-1 font-medium whitespace-nowrap text-white">
-                  Link copied!
-                </div>
+                </li>
               )}
-            </button>
+              {company.size && (
+                <li className="flex items-center gap-1.5">
+                  <Users className="text-primary h-4 w-4" aria-hidden />
+                  {company.size} employees
+                </li>
+              )}
+              <li className="flex items-center gap-1.5" title={company.address}>
+                <MapPin className="text-primary h-4 w-4" aria-hidden />
+                {company.address.split(',').slice(-SHORT_ADDRESS_PARTS).join(', ').trim()}
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
 
-      <div className="border-outline-variant bg-surface-container-low/70 border-t px-5 sm:px-7">
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2.5">
+          <FollowCompanyButton companyId={Number(company.id)} />
           <button
             type="button"
-            onClick={() => onTabChange('overview')}
-            className={`text-body-md cursor-pointer border-b-2 px-3 py-3 font-bold transition ${
-              activeTab === 'overview'
-                ? 'border-primary text-primary'
-                : 'text-on-surface-variant hover:text-on-surface border-transparent'
-            }`}
+            onClick={handleShare}
+            className="border-outline-variant text-on-surface hover:border-primary hover:text-primary text-label-lg flex h-10 cursor-pointer items-center gap-2 rounded-full border px-4 font-semibold transition-colors"
           >
-            Overview
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onTabChange('jobs')}
-            className={`text-body-md flex cursor-pointer items-center gap-1.5 border-b-2 px-3 py-3 font-bold transition ${
-              activeTab === 'jobs'
-                ? 'border-primary text-primary'
-                : 'text-on-surface-variant hover:text-on-surface border-transparent'
-            }`}
-          >
-            <Briefcase className="h-4 w-4" />
-            <span>Job posts</span>
-            <span
-              className={`rounded-full px-2 py-0.5 text-xs ${
-                activeTab === 'jobs'
-                  ? 'bg-primary-container text-primary'
-                  : 'bg-surface-container-high text-on-surface-variant'
-              }`}
-            >
-              {company.openJobsCount}
-            </span>
+            {copied ? <Check className="h-4 w-4" aria-hidden /> : <Share2 className="h-4 w-4" aria-hidden />}
+            {copied ? 'Link copied' : 'Share'}
           </button>
         </div>
       </div>
-    </div>
+
+      <div
+        role="tablist"
+        aria-label="Company sections"
+        className="border-outline-variant flex gap-1 border-t px-4 sm:px-6"
+      >
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            onClick={() => onTabChange(tab.id)}
+            className={cn(
+              'text-body-md -mb-px flex cursor-pointer items-center gap-2 border-b-2 px-4 py-3.5 font-semibold transition-colors',
+              activeTab === tab.id
+                ? 'border-primary text-primary'
+                : 'text-on-surface-variant hover:text-on-surface border-transparent',
+            )}
+          >
+            {tab.label}
+            {tab.count !== undefined && (
+              <span className="bg-surface-container-low text-on-surface-variant rounded-full px-2 py-0.5 text-xs">
+                {tab.count}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+    </header>
   );
 }

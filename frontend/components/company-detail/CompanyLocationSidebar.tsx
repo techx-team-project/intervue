@@ -1,6 +1,6 @@
 'use client';
 
-import { MapPin, Navigation } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 interface CompanyLocationSidebarProps {
   address: string;
@@ -8,18 +8,13 @@ interface CompanyLocationSidebarProps {
 
 export default function CompanyLocationSidebar({ address }: CompanyLocationSidebarProps) {
   return (
-    <div className="border-outline-variant/90 overflow-hidden rounded-2xl border bg-white p-5 shadow-2xs">
-      <h3 className="border-outline-variant text-on-surface flex items-center gap-1.5 border-b pb-3 text-sm font-bold">
-        <MapPin className="text-primary h-4 w-4" />
-        <span>Company location</span>
-      </h3>
+    <div className="border-outline-variant bg-surface overflow-hidden rounded-2xl border p-6">
+      <h3 className="font-display text-title-md text-on-surface font-bold">Company location</h3>
 
-      <div className="mt-3.5">
-        <div className="text-on-surface-variant flex items-start gap-2 text-xs leading-relaxed">
-          <Navigation className="text-outline mt-0.5 h-4 w-4 shrink-0" />
-          <span className="text-on-surface font-medium">{address}</span>
-        </div>
-      </div>
+      <p className="text-body-md text-on-surface-variant mt-3 flex items-start gap-2 leading-relaxed">
+        <MapPin className="text-primary mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+        {address}
+      </p>
     </div>
   );
 }
