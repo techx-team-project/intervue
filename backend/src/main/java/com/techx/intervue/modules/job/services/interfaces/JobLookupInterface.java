@@ -1,7 +1,10 @@
 package com.techx.intervue.modules.job.services.interfaces;
 
 import com.techx.intervue.modules.job.enums.ScreeningQuestionType;
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface JobLookupInterface {
 
@@ -22,4 +25,8 @@ public interface JobLookupInterface {
             List<ApplyQuestion> questions) {}
 
     ApplyTarget requireApplyTarget(Long jobId);
+
+    List<Long> findOpenJobIdsClosingOn(LocalDate day);
+
+    Map<Long, Long> findRecruiterIdsByJobIds(Collection<Long> jobIds);
 }
