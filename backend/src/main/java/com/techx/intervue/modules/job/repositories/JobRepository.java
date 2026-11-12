@@ -59,6 +59,9 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
 
     long countByCompanyIdAndStatusAndIdNot(Long companyId, JobStatus status, Long id);
 
+    List<Job> findTop5ByCompanyIdAndStatusAndTitleIgnoreCaseAndCityIgnoreCaseAndIdNot(
+            Long companyId, JobStatus status, String title, String city, Long id);
+
     boolean existsByIdAndStatusAndDeadlineGreaterThanEqual(
             Long id, JobStatus status, LocalDate deadline);
 

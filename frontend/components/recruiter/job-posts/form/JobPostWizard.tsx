@@ -3,14 +3,14 @@
 import { Button } from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import { ROUTES } from '@/constants/routes';
-import { useRecruiterJobMutations } from '@/hooks/useRecruiterJobs';
+import { useRecruiterJobMutations, useSimilarJobs } from '@/hooks/useRecruiterJobs';
 import { isApiError } from '@/lib/api-error';
 import { JobPostFormData, jobPostSchema } from '@/schemas/job.schema';
 import type { JobStatus } from '@/types/recruiter-job';
 import { getErrorMessage } from '@/utils/error';
 import { toSaveRequest } from '@/utils/recruiter-job';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, ArrowRight, Save, SendHorizontal } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, ArrowRight, Save, SendHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FieldErrors, FormProvider, Path, useForm } from 'react-hook-form';
@@ -91,6 +91,7 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
   });
 
   const isLive = status !== undefined && LIVE_STATUSES.includes(status);
+  const similarJobs = useSimilarJobs(form.getValues('title'), form.getValues('city'), savedId, confirmOpen).data;
 
   const goTo = (target: number) => {
     setStep(target);
@@ -245,6 +246,20 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
         }
       >
         <p className="text-on-surface-variant text-sm">You can still edit or close the post after publishing.</p>
+        {similarJobs && similarJobs.length > 0 && (
+          <div className="mt-3 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+            <div>
+              <p className="font-semibold">Your company already has a similar live job in this city:</p>
+              <ul className="mt-1 list-disc pl-4">
+                {similarJobs.map((job) => (
+                  <li key={job.id}>{job.title}</li>
+                ))}
+              </ul>
+              <p className="mt-1">Publish only if this is a separate opening.</p>
+            </div>
+          </div>
+        )}
       </Modal>
     </FormProvider>
   );

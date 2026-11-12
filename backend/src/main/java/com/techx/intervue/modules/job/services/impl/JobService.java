@@ -24,10 +24,12 @@ import com.techx.intervue.modules.job.repositories.SkillRepository;
 import com.techx.intervue.modules.job.requests.RenewJobRequest;
 import com.techx.intervue.modules.job.requests.SaveJobRequest;
 import com.techx.intervue.modules.job.requests.SearchRecruiterJobsRequest;
+import com.techx.intervue.modules.job.requests.SimilarJobsRequest;
 import com.techx.intervue.modules.job.resources.JobQuotaResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.resources.JobSummaryResource;
+import com.techx.intervue.modules.job.resources.SimilarJobResource;
 import com.techx.intervue.modules.job.services.interfaces.JobApplicationLookupInterface;
 import com.techx.intervue.modules.job.services.interfaces.JobServiceInterface;
 import java.time.Duration;
@@ -250,6 +252,25 @@ public class JobService implements JobServiceInterface {
         return new JobQuotaResource(
                 entitlementService.remainingOf(company.id(), EntitlementType.JOB_POST_SLOT),
                 freeQuotaPolicy.current().requireJobSlot());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SimilarJobResource> findSimilar(SimilarJobsRequest request, Long recruiterId) {
+        CompanyResource company = requireCompany(recruiterId);
+        if (request.city() == null || request.city().isBlank()) {
+            return List.of();
+        }
+        return jobRepository
+                .findTop5ByCompanyIdAndStatusAndTitleIgnoreCaseAndCityIgnoreCaseAndIdNot(
+                        company.id(),
+                        JobStatus.PUBLISHED,
+                        request.title().trim(),
+                        request.city().trim(),
+                        request.excludeId() == null ? 0L : request.excludeId())
+                .stream()
+                .map(job -> new SimilarJobResource(job.getId(), job.getTitle(), job.getCity()))
+                .toList();
     }
 
     @Override

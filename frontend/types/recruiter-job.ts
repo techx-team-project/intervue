@@ -225,3 +225,9 @@ export interface RecruiterJobPost {
   boostLevel?: number;
   highlightLabel?: 'URGENT' | 'HOT' | null;
 }
+
+export interface SimilarJob {
+  id: number;
+  title: string;
+  city?: string;
+}
