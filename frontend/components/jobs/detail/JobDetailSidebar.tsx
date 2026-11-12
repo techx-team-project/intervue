@@ -1,9 +1,12 @@
+'use client';
+
 import FollowCompanyButton from '@/components/candidate/saved/FollowCompanyButton';
 import SaveJobButton from '@/components/candidate/saved/SaveJobButton';
 import CompanyLogo from '@/components/jobs/CompanyLogo';
 import { Button, buttonClassName } from '@/components/ui/Button';
+import { useHasApplied } from '@/hooks/useCandidateApplication';
 import type { PublicJobResource } from '@/types/public-job';
-import { MapPin, Send, Sparkles } from 'lucide-react';
+import { Check, MapPin, Send, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import ReportJobButton from './ReportJobButton';
 
@@ -15,6 +18,7 @@ type JobDetailSidebarProps = {
 export default function JobDetailSidebar({ job, onApply }: JobDetailSidebarProps) {
   const address = [job.location.address, job.location.city].filter(Boolean).join(', ');
   const hasQuestions = job.screening.questionCount > 0;
+  const hasApplied = useHasApplied(job.id);
 
   return (
     <aside className="space-y-4 lg:sticky lg:top-24">
@@ -29,9 +33,19 @@ export default function JobDetailSidebar({ job, onApply }: JobDetailSidebarProps
         )}
 
         <div className="space-y-2.5">
-          <Button size="xl" className="w-full" leftIcon={<Send className="h-4 w-4" aria-hidden />} onClick={onApply}>
-            Apply now
-          </Button>
+          {hasApplied ? (
+            <Link
+              href="/candidate/applications"
+              className={buttonClassName({ variant: 'outline', size: 'xl', className: 'w-full' })}
+            >
+              <Check className="h-4 w-4" aria-hidden />
+              Applied · View application
+            </Link>
+          ) : (
+            <Button size="xl" className="w-full" leftIcon={<Send className="h-4 w-4" aria-hidden />} onClick={onApply}>
+              Apply now
+            </Button>
+          )}
           <Link
             href={`/cv-review?jobId=${job.id}&level=3`}
             className={buttonClassName({ variant: 'outline', size: 'xl', className: 'w-full' })}
