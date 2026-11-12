@@ -44,26 +44,26 @@ public class SearchJobsTool implements ChatTool {
         kwProp.put("type", "STRING");
         kwProp.put(
                 "description",
-                "Từ khóa kỹ năng, công nghệ hoặc vị trí tuyển dụng IT (ví dụ: 'Java', 'NodeJS', 'React', 'DevOps', 'Python', 'Golang')");
+                "Skill, technology or IT job title keyword (for example: 'Java', 'NodeJS', 'React', 'DevOps', 'Python', 'Golang')");
 
         Map<String, Object> levelProp = new HashMap<>();
         levelProp.put("type", "STRING");
         levelProp.put(
                 "description",
-                "Cấp bậc mong muốn: 'intern', 'fresher', 'junior', 'mid', 'senior', 'lead'");
+                "Desired level: 'intern', 'fresher', 'junior', 'mid', 'senior', 'lead'");
 
         Map<String, Object> locProp = new HashMap<>();
         locProp.put("type", "STRING");
         locProp.put(
                 "description",
-                "Địa điểm hoặc hình thức làm việc: 'Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Remote'");
+                "Location or work arrangement: 'Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Remote'");
 
         Map<String, Object> properties =
                 Map.of("keyword", kwProp, "level", levelProp, "location", locProp);
 
         return new AiToolDefinition(
                 TOOL_NAME,
-                "Tìm kiếm các tin tuyển dụng việc làm IT đang mở trên nền tảng InterVue phù hợp với kỹ năng, cấp bậc hoặc địa điểm của ứng viên",
+                "Search open IT job posts on InterVue that match the candidate's skills, level or location",
                 properties,
                 List.of("keyword"));
     }
@@ -88,16 +88,16 @@ public class SearchJobsTool implements ChatTool {
 
         if (results.isEmpty()) {
             return ToolExecutionResult.success(
-                    "Không tìm thấy việc làm IT phù hợp trực tiếp với từ khóa: '"
+                    "No IT jobs directly match the keyword: '"
                             + keyword
-                            + "'. Hãy hướng dẫn người dùng tìm kiếm trên trang việc làm: [Tất cả việc làm IT](/jobs).");
+                            + "'. Guide the user to search on the jobs page: [All IT jobs](/jobs).");
         }
 
         StringBuilder sb = new StringBuilder();
         sb.append("<job_search_results>\n");
-        sb.append("Tìm thấy ")
+        sb.append("Found ")
                 .append(results.size())
-                .append(" việc làm phù hợp với từ khóa '")
+                .append(" jobs matching the keyword '")
                 .append(keyword)
                 .append("':\n\n");
 
@@ -107,22 +107,22 @@ public class SearchJobsTool implements ChatTool {
                     .append(". **")
                     .append(job.title())
                     .append("**\n")
-                    .append("- **Công ty:** ")
+                    .append("- **Company:** ")
                     .append(job.company())
                     .append("\n")
-                    .append("- **Mức lương:** ")
+                    .append("- **Salary:** ")
                     .append(job.salary())
                     .append("\n")
-                    .append("- **Địa điểm:** ")
+                    .append("- **Location:** ")
                     .append(job.location())
                     .append("\n")
-                    .append("- **Kỹ năng chính:** ")
+                    .append("- **Key skills:** ")
                     .append(String.join(", ", job.skills()))
                     .append("\n")
-                    .append("- **Mô tả:** ")
+                    .append("- **Description:** ")
                     .append(job.description())
                     .append("\n")
-                    .append("- **Đường dẫn ứng tuyển:** [Xem chi tiết & Ứng tuyển ngay](")
+                    .append("- **Apply link:** [View details & apply now](")
                     .append(job.detailUrl())
                     .append(")\n\n");
         }

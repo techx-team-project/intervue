@@ -56,7 +56,7 @@ public class JobContentScreener {
             return;
         }
         String note =
-                "Tự động phát hiện qua bộ lọc nội dung tin tuyển dụng. Mẫu khớp: "
+                "Automatically flagged by the job content filter. Matched patterns: "
                         + hits.entrySet().stream()
                                 .map(hit -> hit.getKey() + " (" + quoted(hit.getValue()) + ")")
                                 .collect(Collectors.joining("; "));

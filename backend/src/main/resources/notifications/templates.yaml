@@ -93,13 +93,13 @@ templates:
     actionLabel: "Xem thoả thuận"
 
   FOLLOWED_COMPANY_NEW_JOB:
-    title: "{companyName} vừa đăng tin tuyển dụng mới"
-    summary: "{companyName} đang tuyển vị trí {jobTitle}."
+    title: "{companyName} posted a new job"
+    summary: "{companyName} is hiring for {jobTitle}."
     body: |
-      Công ty **{companyName}** mà bạn đang theo dõi vừa đăng tin tuyển dụng vị trí **{jobTitle}**.
+      **{companyName}**, a company you follow, just posted a job for **{jobTitle}**.
 
-      Bạn có thể tắt thông báo này trong phần cài đặt thông báo.
-    actionLabel: "Xem tin tuyển dụng"
+      You can turn these notifications off in your notification settings.
+    actionLabel: "View job"
 
   APPLICATIONS_WAITING_REVIEW:
     title: "{count} applications are waiting for your review"
@@ -147,15 +147,15 @@ templates:
     actionLabel: "View job posts"
 
   JOB_HIDDEN_BY_ADMIN:
-    title: "Tin tuyển dụng {jobTitle} đã bị ẩn"
-    summary: "Quản trị viên đã ẩn tin {jobTitle} khỏi kết quả tìm kiếm."
+    title: "The {jobTitle} job was hidden"
+    summary: "An administrator hid {jobTitle} from search results."
     body: |
-      Quản trị viên InterVue đã ẩn tin tuyển dụng **{jobTitle}** khỏi kết quả tìm kiếm.
+      An InterVue administrator hid the job post **{jobTitle}** from search results.
 
-      **Lý do:** {reason}
+      **Reason:** {reason}
 
-      Nếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ bộ phận hỗ trợ.
-    actionLabel: "Xem tin tuyển dụng"
+      If you think this is a mistake, please contact support.
+    actionLabel: "View job"
 
   JOB_TERMS_CHANGED_FOR_APPLICANT:
     title: "{jobTitle} was updated"
@@ -176,93 +176,93 @@ templates:
     actionLabel: "View my applications"
 
   JOB_RESTORED_BY_ADMIN:
-    title: "Tin tuyển dụng {jobTitle} đã được khôi phục"
-    summary: "Tin {jobTitle} đã được quản trị viên khôi phục."
+    title: "The {jobTitle} job was restored"
+    summary: "An administrator restored the job post {jobTitle}."
     body: |
-      Tin tuyển dụng **{jobTitle}** đã được quản trị viên InterVue khôi phục.
-    actionLabel: "Xem tin tuyển dụng"
+      The job post **{jobTitle}** was restored by an InterVue administrator.
+    actionLabel: "View job"
 
   APPLICATION_RECEIVED:
-    title: "Có hồ sơ ứng tuyển mới cho {jobTitle}"
-    summary: "Một ứng viên vừa nộp hồ sơ vào vị trí {jobTitle}."
+    title: "New application for {jobTitle}"
+    summary: "A candidate just applied for {jobTitle}."
     body: |
-      Một ứng viên vừa nộp hồ sơ vào vị trí **{jobTitle}**.
+      A candidate just applied for **{jobTitle}**.
 
-      Hãy xem hồ sơ và cập nhật trạng thái để ứng viên biết tiến độ.
-    actionLabel: "Xem hồ sơ ứng tuyển"
+      Review the application and update its status so the candidate knows where they stand.
+    actionLabel: "View application"
 
   APPLICATION_STATUS_CHANGED:
-    title: "Hồ sơ {jobTitle} {status}"
-    summary: "Hồ sơ ứng tuyển của bạn tại {companyName} {status}."
+    title: "Your application for {jobTitle} {status}"
+    summary: "Your application at {companyName} {status}."
     body: |
-      Hồ sơ ứng tuyển vị trí **{jobTitle}** tại **{companyName}** {status}.
-    actionLabel: "Xem tin tuyển dụng"
+      Your application for **{jobTitle}** at **{companyName}** {status}.
+    actionLabel: "View job"
 
   INTERVIEW_INVITED:
-    title: "Lời mời phỏng vấn từ {companyName}"
-    summary: "{companyName} mời bạn phỏng vấn vị trí {jobTitle} vào {when}."
+    title: "Interview invitation from {companyName}"
+    summary: "{companyName} invited you to interview for {jobTitle} on {when}."
     body: |
-      **{companyName}** mời bạn phỏng vấn vị trí **{jobTitle}**.
+      **{companyName}** invited you to interview for **{jobTitle}**.
 
-      **Thời gian:** {when}
+      **Time:** {when}
 
-      Hãy xác nhận tham gia hoặc đề xuất một thời gian khác nếu bạn bận.
-    actionLabel: "Xem lịch phỏng vấn"
+      Confirm that you will attend, or propose another time if you are busy.
+    actionLabel: "View interview"
 
   INTERVIEW_UPDATED:
-    title: "Lịch phỏng vấn tại {companyName} đã thay đổi"
-    summary: "Lịch phỏng vấn vị trí {jobTitle} đã được cập nhật: {when}."
+    title: "Your interview at {companyName} was rescheduled"
+    summary: "The interview for {jobTitle} was updated: {when}."
     body: |
-      Lịch phỏng vấn vị trí **{jobTitle}** tại **{companyName}** đã được cập nhật.
+      The interview for **{jobTitle}** at **{companyName}** was updated.
 
-      **Thời gian:** {when}
-    actionLabel: "Xem lịch phỏng vấn"
+      **Time:** {when}
+    actionLabel: "View interview"
 
   INTERVIEW_CANCELLED:
-    title: "Lịch phỏng vấn tại {companyName} đã bị huỷ"
-    summary: "{companyName} đã huỷ buổi phỏng vấn vị trí {jobTitle}."
+    title: "Your interview at {companyName} was cancelled"
+    summary: "{companyName} cancelled the interview for {jobTitle}."
     body: |
-      **{companyName}** đã huỷ buổi phỏng vấn vị trí **{jobTitle}**.
-    actionLabel: "Xem lịch phỏng vấn"
+      **{companyName}** cancelled the interview for **{jobTitle}**.
+    actionLabel: "View interview"
 
   INTERVIEW_CONFIRMED:
-    title: "{candidateName} đã xác nhận phỏng vấn"
-    summary: "{candidateName} sẽ tham gia phỏng vấn vị trí {jobTitle} vào {when}."
+    title: "{candidateName} confirmed the interview"
+    summary: "{candidateName} will attend the interview for {jobTitle} on {when}."
     body: |
-      **{candidateName}** đã xác nhận tham gia phỏng vấn vị trí **{jobTitle}**.
+      **{candidateName}** confirmed they will attend the interview for **{jobTitle}**.
 
-      **Thời gian:** {when}
-    actionLabel: "Xem hồ sơ ứng tuyển"
+      **Time:** {when}
+    actionLabel: "View application"
 
   INTERVIEW_DECLINED:
-    title: "{candidateName} đã từ chối phỏng vấn"
-    summary: "{candidateName} không thể tham gia phỏng vấn vị trí {jobTitle}."
+    title: "{candidateName} declined the interview"
+    summary: "{candidateName} cannot attend the interview for {jobTitle}."
     body: |
-      **{candidateName}** đã từ chối lời mời phỏng vấn vị trí **{jobTitle}**.
-    actionLabel: "Xem hồ sơ ứng tuyển"
+      **{candidateName}** declined the interview invitation for **{jobTitle}**.
+    actionLabel: "View application"
 
   INTERVIEW_RESCHEDULE_REQUESTED:
-    title: "{candidateName} xin đổi lịch phỏng vấn"
-    summary: "{candidateName} đề xuất một thời gian khác cho buổi phỏng vấn vị trí {jobTitle}."
+    title: "{candidateName} asked to reschedule the interview"
+    summary: "{candidateName} proposed another time for the {jobTitle} interview."
     body: |
-      **{candidateName}** bận vào thời gian đã hẹn và đề xuất một thời gian khác cho vị trí **{jobTitle}**.
+      **{candidateName}** is unavailable at the scheduled time and proposed another time for **{jobTitle}**.
 
-      Hãy mở hồ sơ để đồng ý hoặc chọn lại thời gian.
-    actionLabel: "Xem hồ sơ ứng tuyển"
+      Open the application to accept or pick a new time.
+    actionLabel: "View application"
 
   INTERVIEW_REMINDER:
-    title: "Buổi phỏng vấn bắt đầu sau {lead}"
-    summary: "Phỏng vấn vị trí {jobTitle} tại {companyName} bắt đầu sau {lead}."
+    title: "Your interview starts in {lead}"
+    summary: "The interview for {jobTitle} at {companyName} starts in {lead}."
     body: |
-      Buổi phỏng vấn vị trí **{jobTitle}** tại **{companyName}** sẽ bắt đầu vào **{when}**.
-    actionLabel: "Xem lịch phỏng vấn"
+      The interview for **{jobTitle}** at **{companyName}** starts at **{when}**.
+    actionLabel: "View interview"
 
   APPLICATION_WITHDRAWN:
-    title: "Ứng viên đã rút hồ sơ khỏi {jobTitle}"
-    summary: "Một ứng viên đã rút hồ sơ khỏi vị trí {jobTitle}."
+    title: "A candidate withdrew from {jobTitle}"
+    summary: "A candidate withdrew their application for {jobTitle}."
     body: |
-      Một ứng viên đã rút hồ sơ khỏi vị trí **{jobTitle}**.
-    actionLabel: "Xem hồ sơ ứng tuyển"
+      A candidate withdrew their application for **{jobTitle}**.
+    actionLabel: "View application"
 
   ACCOUNT_RESTRICTED:
     title: "Tài khoản của bạn đã bị hạn chế"
