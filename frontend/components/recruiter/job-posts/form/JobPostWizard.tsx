@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
 import { ROUTES } from '@/constants/routes';
 import { useRecruiterJobMutations } from '@/hooks/useRecruiterJobs';
 import { isApiError } from '@/lib/api-error';
@@ -81,6 +82,7 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
   const [reached, setReached] = useState(0);
   const [savedId, setSavedId] = useState(jobId);
   const [busy, setBusy] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const form = useForm<JobPostFormData>({
     resolver: zodResolver(jobPostSchema),
@@ -142,7 +144,7 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
     }
   };
 
-  const handleValid = async () => {
+  const publish = async () => {
     setBusy(true);
     try {
       const id = await persist();
@@ -153,7 +155,15 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
       showServerError(error);
     } finally {
       setBusy(false);
+      setConfirmOpen(false);
     }
+  };
+
+  // Only the review step publishes, and only after the confirmation dialog
+  const handleValid = () => {
+    if (step !== LAST_STEP) return;
+    if (isLive) void publish();
+    else setConfirmOpen(true);
   };
 
   const handleInvalid = (errors: FieldErrors<JobPostFormData>) => {
@@ -197,12 +207,13 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
                     Lưu nháp
                   </Button>
                 )}
+                {/* Distinct keys stop the click that reaches the last step from also submitting the form */}
                 {step < LAST_STEP ? (
-                  <Button type="button" rightIcon={<ArrowRight className="h-4 w-4" />} onClick={handleNext}>
+                  <Button key="next" type="button" rightIcon={<ArrowRight className="h-4 w-4" />} onClick={handleNext}>
                     Tiếp tục
                   </Button>
                 ) : (
-                  <Button type="submit" isLoading={busy} leftIcon={<SendHorizontal className="h-4 w-4" />}>
+                  <Button key="submit" type="submit" isLoading={busy} leftIcon={<SendHorizontal className="h-4 w-4" />}>
                     {isLive ? 'Lưu thay đổi' : 'Đăng tin'}
                   </Button>
                 )}
@@ -215,6 +226,26 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
           </div>
         </div>
       </form>
+
+      <Modal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        title="Đăng tin tuyển dụng?"
+        description="Tin sẽ hiển thị ngay cho ứng viên sau khi đăng."
+        maxWidth="sm"
+        footer={
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" disabled={busy} onClick={() => setConfirmOpen(false)}>
+              Xem lại
+            </Button>
+            <Button isLoading={busy} onClick={publish}>
+              Đăng tin
+            </Button>
+          </div>
+        }
+      >
+        <p className="text-on-surface-variant text-sm">Bạn vẫn có thể chỉnh sửa hoặc đóng tin sau khi đăng.</p>
+      </Modal>
     </FormProvider>
   );
 }
