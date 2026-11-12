@@ -64,7 +64,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
     [adSlotsQuery.data, data],
   );
   const adCalendar = useAdCalendar(matchedSlot?.code ?? null, 12);
-  const availableVouchers = useAvailableRecruiterVouchers();
+  const availableVouchers = useAvailableRecruiterVouchers(Boolean(data?.id), data?.id);
 
   if (isPending) {
     return (

@@ -239,6 +239,9 @@ public enum ErrorCode {
     VOUCHER_MIN_ORDER_NOT_MET(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "The order value is below what this voucher requires!"),
+    VOUCHER_NOT_APPLICABLE(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "This voucher does not apply to the selected service packages!"),
     INSUFFICIENT_CREDITS(
             HttpStatus.UNPROCESSABLE_CONTENT, "Your company does not have enough credits left!"),
     CREDIT_PRICE_NOT_AVAILABLE(

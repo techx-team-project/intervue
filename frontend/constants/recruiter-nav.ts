@@ -17,6 +17,7 @@ import {
   ShoppingBag,
   ShoppingCart,
   Smartphone,
+  Ticket,
   Users,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -67,6 +68,7 @@ export const RECRUITER_NAV_SECTIONS: RecruiterNavSection[] = [
     items: [
       { label: 'Service packages', href: ROUTES.RECRUITER_SERVICES, icon: ShoppingBag },
       { label: 'My services', href: ROUTES.RECRUITER_SERVICES_MY, icon: PackageOpen },
+      { label: 'Vouchers', href: ROUTES.RECRUITER_VOUCHERS, icon: Ticket },
       { label: 'Banner ads', href: ROUTES.RECRUITER_ADS, icon: Megaphone },
       { label: 'Cart', href: ROUTES.RECRUITER_CART, icon: ShoppingCart },
       { label: 'Orders', href: ROUTES.RECRUITER_ORDERS, icon: Receipt },

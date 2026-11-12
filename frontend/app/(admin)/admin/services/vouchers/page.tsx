@@ -1,5 +1,6 @@
 import AdminVouchersPageClient from '@/components/admin/services/AdminVouchersPageClient';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Vouchers | InterVue Admin',
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminVouchersPage() {
-  return <AdminVouchersPageClient />;
+  return (
+    <Suspense fallback={null}>
+      <AdminVouchersPageClient />
+    </Suspense>
+  );
 }

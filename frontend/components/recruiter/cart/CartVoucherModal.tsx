@@ -136,6 +136,11 @@ export default function CartVoucherModal({
                       <span className="mt-0.5 block text-[11px] text-[#009944]/80">
                         <code className="font-mono font-bold text-[#00823a]">{item.code}</code>
                         {item.minOrderValue > 0 && ` · Đơn từ ${item.minOrderValue.toLocaleString('vi-VN')}đ`}
+                        {item.applicablePackages.length > 0 &&
+                          ` · Áp dụng ${item.applicablePackages.length} gói (${item.applicablePackages
+                            .slice(0, 2)
+                            .map((pkg) => pkg.name)
+                            .join(', ')}${item.applicablePackages.length > 2 ? '…' : ''})`}
                       </span>
                     </span>
                     <span className="shrink-0 rounded-full border border-[#00b14f]/30 bg-white px-2.5 py-0.5 text-[11px] font-bold text-[#009944]">
