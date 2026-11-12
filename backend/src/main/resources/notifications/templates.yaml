@@ -112,6 +112,15 @@ templates:
       Nếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ bộ phận hỗ trợ.
     actionLabel: "Xem tin tuyển dụng"
 
+  JOB_TERMS_CHANGED_FOR_APPLICANT:
+    title: "{jobTitle} was updated"
+    summary: "{companyName} changed the {changes} of a job you applied to."
+    body: |
+      **{companyName}** changed the **{changes}** of the **{jobTitle}** posting after you applied.
+
+      Review the updated posting. If it no longer suits you, you can withdraw your application.
+    actionLabel: "View my applications"
+
   JOB_HIDDEN_FOR_APPLICANT:
     title: "The {jobTitle} job is no longer visible"
     summary: "{companyName}'s {jobTitle} posting was hidden by an administrator."

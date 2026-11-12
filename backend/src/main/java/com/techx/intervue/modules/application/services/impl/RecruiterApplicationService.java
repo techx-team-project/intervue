@@ -25,6 +25,7 @@ import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterService
 import java.time.Instant;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -196,23 +197,36 @@ public class RecruiterApplicationService implements RecruiterApplicationServiceI
     @Override
     @Transactional(readOnly = true)
     public void notifyApplicantsJobHidden(Long jobId) {
+        notifyUnfinishedApplicants(jobId, NotificationType.JOB_HIDDEN_FOR_APPLICANT, Map.of());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void notifyApplicantsJobTermsChanged(Long jobId, String changes) {
+        notifyUnfinishedApplicants(
+                jobId,
+                NotificationType.JOB_TERMS_CHANGED_FOR_APPLICANT,
+                Map.of("changes", changes));
+    }
+
+    private void notifyUnfinishedApplicants(
+            Long jobId, NotificationType type, Map<String, Object> extraParams) {
         applicationRepository
                 .findByJobIdAndStatusIn(jobId, UNFINISHED)
                 .forEach(
-                        application ->
-                                notificationPublisher.publish(
-                                        NotificationCommand.builder()
-                                                .recipientType(RecipientType.USER)
-                                                .recipientId(application.getCandidateId())
-                                                .type(NotificationType.JOB_HIDDEN_FOR_APPLICANT)
-                                                .params(
-                                                        Map.of(
-                                                                "jobTitle",
-                                                                application.getJobTitle(),
-                                                                "companyName",
-                                                                application.getCompanyName()))
-                                                .actionUrl("/candidate/applications")
-                                                .build()));
+                        application -> {
+                            Map<String, Object> params = new HashMap<>(extraParams);
+                            params.put("jobTitle", application.getJobTitle());
+                            params.put("companyName", application.getCompanyName());
+                            notificationPublisher.publish(
+                                    NotificationCommand.builder()
+                                            .recipientType(RecipientType.USER)
+                                            .recipientId(application.getCandidateId())
+                                            .type(type)
+                                            .params(params)
+                                            .actionUrl("/candidate/applications")
+                                            .build());
+                        });
     }
 
     private Application require(Long applicationId, Long recruiterId) {

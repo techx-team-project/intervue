@@ -30,4 +30,6 @@ public interface RecruiterApplicationServiceInterface {
     void closeForJob(Long jobId);
 
     void notifyApplicantsJobHidden(Long jobId);
+
+    void notifyApplicantsJobTermsChanged(Long jobId, String changes);
 }
