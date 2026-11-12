@@ -1,6 +1,8 @@
 import { request } from '@/apiRequest/http';
 import type { Page } from '@/types/api';
 import type {
+  JobHistoryEntry,
+  JobQuota,
   JobStatus,
   RecruiterJobCounts,
   RecruiterJobResource,
@@ -49,6 +51,14 @@ export const recruiterJobApi = {
   close: (id: number) => request<RecruiterJobResource>(`/recruiter/jobs/${id}/close`, { method: 'POST' }),
 
   retop: (id: number) => request<RecruiterJobResource>(`/recruiter/jobs/${id}/retop`, { method: 'POST' }),
+
+  renew: (id: number, deadline: string) =>
+    request<RecruiterJobResource>(`/recruiter/jobs/${id}/renew`, { method: 'POST', body: { deadline } }),
+
+  history: (id: number, page: number, size: number) =>
+    request<Page<JobHistoryEntry>>(`/recruiter/jobs/${id}/history?page=${page}&size=${size}`),
+
+  quota: () => request<JobQuota>('/recruiter/jobs/quota'),
 
   remove: (id: number) => request<null>(`/recruiter/jobs/${id}`, { method: 'DELETE' }),
 };

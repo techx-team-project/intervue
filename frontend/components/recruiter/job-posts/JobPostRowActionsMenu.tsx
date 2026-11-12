@@ -2,7 +2,19 @@
 
 import { ROUTES } from '@/constants/routes';
 import type { RecruiterJobPost } from '@/types/recruiter-job';
-import { ArrowUpCircle, Copy, Eye, MoreVertical, Pause, Pencil, PlayCircle, Square, Trash2 } from 'lucide-react';
+import {
+  ArrowUpCircle,
+  Copy,
+  Eye,
+  History,
+  MoreVertical,
+  Pause,
+  Pencil,
+  PlayCircle,
+  RefreshCw,
+  Square,
+  Trash2,
+} from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -16,6 +28,8 @@ interface JobPostRowActionsMenuProps {
   onRetop: () => void;
   onClose: () => void;
   onDuplicate: () => void;
+  onRenew: () => void;
+  onHistory: () => void;
   onDelete: () => void;
 }
 
@@ -56,7 +70,11 @@ function buildActions(props: JobPostRowActionsMenuProps): MenuAction[] {
     actions.push({ key: 'close', label: 'Đóng tin', icon: Square, onClick: props.onClose, tone: 'danger' });
   }
 
+  if (job.status === 'CLOSED' || job.status === 'EXPIRED') {
+    actions.push({ key: 'renew', label: 'Gia hạn / Đăng lại', icon: RefreshCw, onClick: props.onRenew });
+  }
   actions.push({ key: 'duplicate', label: 'Nhân bản', icon: Copy, onClick: props.onDuplicate });
+  actions.push({ key: 'history', label: 'Lịch sử', icon: History, onClick: props.onHistory });
 
   if (job.status === 'DRAFT') {
     actions.push({ key: 'delete', label: 'Xóa bản nháp', icon: Trash2, onClick: props.onDelete, tone: 'danger' });

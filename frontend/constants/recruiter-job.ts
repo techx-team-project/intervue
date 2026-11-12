@@ -1,6 +1,7 @@
 import type {
   ContractType,
   JobBenefitTag,
+  JobHistoryAction,
   JobLevel,
   JobRole,
   JobStatus,
@@ -167,6 +168,39 @@ export const JOB_FORM_BENEFIT_OPTIONS: Array<{ value: JobBenefitTag; label: stri
   { value: 'ANNUAL_LEAVE', label: 'Phép năm' },
   { value: 'MEALS', label: 'Phụ cấp ăn' },
 ];
+
+export const JOB_HISTORY_ACTION_LABELS: Record<JobHistoryAction, string> = {
+  JOB_CREATED: 'Tạo tin',
+  JOB_UPDATED: 'Chỉnh sửa tin',
+  JOB_PUBLISHED: 'Đăng tin',
+  JOB_PAUSED: 'Tạm dừng tin',
+  JOB_RESUMED: 'Mở lại tin',
+  JOB_CLOSED: 'Đóng tin',
+  JOB_RENEWED: 'Gia hạn và đăng lại',
+  JOB_RETOPPED: 'Đẩy top tin',
+  JOB_HIDDEN: 'Bị quản trị viên ẩn',
+  JOB_RESTORED: 'Được quản trị viên khôi phục',
+};
+
+export const JOB_FIELD_LABELS: Record<string, string> = {
+  title: 'Tiêu đề',
+  level: 'Cấp bậc',
+  jobRole: 'Nhóm vị trí',
+  experience: 'Kinh nghiệm',
+  contractType: 'Loại hợp đồng',
+  workingArrangement: 'Hình thức làm việc',
+  location: 'Địa điểm',
+  salary: 'Mức lương',
+  skills: 'Kỹ năng',
+  description: 'Mô tả',
+  requirements: 'Yêu cầu',
+  benefits: 'Phúc lợi',
+  benefitTags: 'Thẻ phúc lợi',
+  hiringSteps: 'Quy trình tuyển dụng',
+  screeningQuestions: 'Câu hỏi sàng lọc',
+  deadline: 'Hạn nộp',
+  openings: 'Số lượng tuyển',
+};
 
 export const JOB_FORM_CURRENCY_OPTIONS = [
   { value: 'VND', label: 'triệu VND' },

@@ -134,6 +134,31 @@ export interface RecruiterJobResource {
   highlightExpiresAt?: string;
 }
 
+export type JobHistoryAction =
+  | 'JOB_CREATED'
+  | 'JOB_UPDATED'
+  | 'JOB_PUBLISHED'
+  | 'JOB_PAUSED'
+  | 'JOB_RESUMED'
+  | 'JOB_CLOSED'
+  | 'JOB_RENEWED'
+  | 'JOB_RETOPPED'
+  | 'JOB_HIDDEN'
+  | 'JOB_RESTORED';
+
+export interface JobHistoryEntry {
+  action: JobHistoryAction;
+  actorType: 'ADMIN' | 'SYSTEM' | 'USER' | 'RECRUITER';
+  detail?: string;
+  reason?: string;
+  createdAt: string;
+}
+
+export interface JobQuota {
+  slotsRemaining: number;
+  slotRequired: boolean;
+}
+
 export interface RecruiterJobCounts {
   total: number;
   byStatus: Record<JobStatus, number>;
