@@ -14,6 +14,9 @@ public interface InvoiceServiceInterface {
 
     byte[] renderForRecruiter(String orderCode, Long recruiterId);
 
+    /** The real invoice if one was issued, otherwise the pre-payment order confirmation. */
+    byte[] renderDocument(Order order);
+
     Page<InvoiceResource> search(Pageable pageable);
 
     byte[] renderForAdmin(Long invoiceId);

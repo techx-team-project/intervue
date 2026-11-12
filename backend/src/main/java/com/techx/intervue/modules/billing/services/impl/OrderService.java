@@ -11,6 +11,7 @@ import com.techx.intervue.modules.billing.entities.OrderItem;
 import com.techx.intervue.modules.billing.entities.PaymentTransaction;
 import com.techx.intervue.modules.billing.entities.ServicePackage;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
+import com.techx.intervue.modules.billing.events.OrderCreatedEvent;
 import com.techx.intervue.modules.billing.mappers.OrderMapper;
 import com.techx.intervue.modules.billing.mappers.ServicePackageMapper;
 import com.techx.intervue.modules.billing.repositories.CartItemRepository;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -81,6 +83,7 @@ public class OrderService implements OrderServiceInterface {
     private final AdCartMeta adCartMeta;
     private final AdBookingServiceInterface adBookingService;
     private final PaymentTransactionRepository paymentTransactionRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -186,6 +189,11 @@ public class OrderService implements OrderServiceInterface {
         }
 
         billingNotifier.orderCreated(order, recruiterService.getMe(recruiterId).name());
+        // A fully discounted order settles on the spot above, so there is nothing "awaiting
+        // payment" to confirm by email in that case
+        if (order.getStatus() == OrderStatus.PENDING_PAYMENT) {
+            eventPublisher.publishEvent(new OrderCreatedEvent(order.getId()));
+        }
         return toResource(order);
     }
 
