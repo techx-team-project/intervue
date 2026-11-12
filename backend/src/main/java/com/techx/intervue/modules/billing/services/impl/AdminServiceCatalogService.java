@@ -292,7 +292,6 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                             .servicePackage(servicePackage)
                             .entitlementType(benefit.entitlementType())
                             .quantity(benefit.quantity())
-                            .tier(benefit.tier())
                             .durationDays(benefit.durationDays())
                             .label(benefit.label().trim())
                             .displayOrder(index)
@@ -388,7 +387,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
         for (int i = 0; i < benefits.size(); i++) {
             SaveServicePackageRequest.Benefit benefit = benefits.get(i);
             EntitlementConfigRules.validateBenefit(
-                    i, benefit.entitlementType(), benefit.tier(), benefit.durationDays());
+                    i, benefit.entitlementType(), benefit.durationDays());
         }
     }
 

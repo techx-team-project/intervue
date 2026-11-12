@@ -12,12 +12,7 @@ import org.springframework.stereotype.Component;
 public class EntitlementMapper {
 
     public static final Set<EntitlementType> ACTIVATABLE_ON_JOB =
-            Set.of(
-                    EntitlementType.JOB_BOOST,
-                    EntitlementType.JOB_LABEL_URGENT,
-                    EntitlementType.JOB_LABEL_HOT,
-                    EntitlementType.JOB_HIGHLIGHT,
-                    EntitlementType.JOB_RETOP);
+            Set.of(EntitlementType.JOB_LABEL_HOT, EntitlementType.JOB_HIGHLIGHT);
 
     public static final Set<EntitlementType> ACTIVATABLE_ON_COMPANY =
             Set.of(EntitlementType.BRAND_PAGE, EntitlementType.FEATURED_COMPANY);
@@ -33,7 +28,6 @@ public class EntitlementMapper {
                 entitlement.getLabel(),
                 entitlement.getTotalQuantity(),
                 entitlement.getRemainingQuantity(),
-                entitlement.getTier(),
                 entitlement.getDurationDays(),
                 entitlement.getStatus(),
                 entitlement.getActivationDeadline(),

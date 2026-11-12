@@ -48,7 +48,6 @@ public class EntitlementService implements EntitlementServiceInterface {
                                                 .label(grant.label())
                                                 .totalQuantity(grant.quantity())
                                                 .remainingQuantity(grant.quantity())
-                                                .tier(grant.tier() == null ? 1 : grant.tier())
                                                 .durationDays(grant.durationDays())
                                                 .bonus(grant.bonus())
                                                 .status(EntitlementStatus.AVAILABLE)
@@ -98,12 +97,6 @@ public class EntitlementService implements EntitlementServiceInterface {
                             usage.setEndsAt(usage.getEndsAt().plus(pausedFor));
                             return usage.getEndsAt();
                         });
-    }
-
-    @Override
-    @Transactional
-    public boolean consumeRetop(Long companyId, Long jobId, Long recruiterId) {
-        return spend(companyId, EntitlementType.JOB_RETOP, jobId, recruiterId, true).isPresent();
     }
 
     @Override
@@ -171,7 +164,6 @@ public class EntitlementService implements EntitlementServiceInterface {
                             return new UnusedUnits(
                                     entitlement.getSourceOrderItemId(),
                                     entitlement.getEntitlementType(),
-                                    entitlement.getTier() == null ? 1 : entitlement.getTier(),
                                     entitlement.isBonus(),
                                     entitlement.getTotalQuantity(),
                                     usable ? entitlement.getRemainingQuantity() : 0);
