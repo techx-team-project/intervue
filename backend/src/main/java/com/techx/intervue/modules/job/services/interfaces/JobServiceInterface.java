@@ -36,8 +36,6 @@ public interface JobServiceInterface {
 
     JobResource close(Long jobId, Long recruiterId);
 
-    JobResource retop(Long jobId, Long recruiterId);
-
     JobResource renew(Long jobId, RenewJobRequest request, Long recruiterId);
 
     JobResource extend(Long jobId, RenewJobRequest request, Long recruiterId);

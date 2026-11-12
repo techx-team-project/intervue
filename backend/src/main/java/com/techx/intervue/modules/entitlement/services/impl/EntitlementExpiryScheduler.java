@@ -36,8 +36,6 @@ public class EntitlementExpiryScheduler {
             }
             // The job stays published; only the paid-for display effect ends
             switch (usage.getEntitlementType()) {
-                case JOB_BOOST -> jobBoostPort.clearExpiredBoost(usage.getJobId());
-                case JOB_LABEL_URGENT -> jobBoostPort.clearExpiredLabel(usage.getJobId(), "URGENT");
                 case JOB_LABEL_HOT -> jobBoostPort.clearExpiredLabel(usage.getJobId(), "HOT");
                 case JOB_HIGHLIGHT -> jobBoostPort.clearExpiredHighlight(usage.getJobId());
                 default -> {}

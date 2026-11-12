@@ -212,23 +212,6 @@ public class JobService implements JobServiceInterface {
 
     @Override
     @Transactional
-    public JobResource retop(Long jobId, Long recruiterId) {
-        Job job = requireOwned(jobId, recruiterId);
-        if (job.getStatus() != JobStatus.PUBLISHED
-                || (job.getDeadline() != null
-                        && job.getDeadline().isBefore(JobDeadlines.today()))) {
-            throw new AppException(ErrorCode.JOB_MUST_BE_PUBLISHED);
-        }
-        if (!entitlementService.consumeRetop(job.getCompanyId(), job.getId(), recruiterId)) {
-            throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
-        }
-        job.setRetoppedAt(Instant.now());
-        activityRecorder.record(recruiterId, AuditAction.JOB_RETOPPED, job, null);
-        return jobMapper.toResource(job);
-    }
-
-    @Override
-    @Transactional
     public JobResource renew(Long jobId, RenewJobRequest request, Long recruiterId) {
         Job job = requireOwned(jobId, recruiterId);
         requireStatus(job, RENEWABLE);
@@ -239,7 +222,6 @@ public class JobService implements JobServiceInterface {
                 endsAt -> assertDeadlineWithinSlot(request.deadline(), endsAt),
                 () -> consumeJobSlot(job, recruiterId));
         job.setPublishedAt(null);
-        job.setRetoppedAt(null);
         JobResource renewed = markLive(job);
         contentScreener.flagForReview(job);
         activityRecorder.record(

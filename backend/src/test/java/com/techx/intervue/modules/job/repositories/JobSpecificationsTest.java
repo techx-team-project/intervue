@@ -46,15 +46,15 @@ class JobSpecificationsTest {
     }
 
     @Test
-    void defaultSortRanksActiveBoostBeforeRecency() {
+    void defaultSortOrdersByRecencyOnly() {
         List<Order> orders = orderingFor(null, null);
 
-        assertThat(orders).hasSize(3);
-        verify(builder).selectCase();
+        assertThat(orders).hasSize(2);
+        verify(builder, never()).selectCase();
     }
 
     @Test
-    void newestSortIgnoresBoost() {
+    void newestSortOrdersByRecencyOnly() {
         List<Order> orders = orderingFor(JobSort.NEWEST, null);
 
         assertThat(orders).hasSize(2);

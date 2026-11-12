@@ -23,7 +23,5 @@ public record JobSummaryResource(
         int openings,
         LocalDate deadline,
         Instant publishedAt,
-        Instant retoppedAt,
-        Integer boostLevel,
         String highlightLabel,
         Instant updatedAt) {}
