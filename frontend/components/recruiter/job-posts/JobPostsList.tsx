@@ -51,7 +51,7 @@ export default function JobPostsList({
   onConfirm,
 }: JobPostsListProps) {
   return (
-    <div className="border-outline-variant rounded-2xl border bg-white shadow-xs">
+    <div className="border-outline-variant rounded-xl border bg-white">
       <div
         className={`border-outline-variant bg-surface-container-low/70 text-label-sm text-on-surface-variant hidden border-b px-4 py-3 font-bold tracking-wide uppercase lg:grid lg:grid-cols-[32px_minmax(0,3fr)_1.2fr_1.2fr_1.2fr_44px] lg:gap-4`}
       >
@@ -105,7 +105,7 @@ export default function JobPostsList({
             <li
               key={job.id}
               className={`flex flex-col gap-3 px-4 py-4 transition-colors ${ROW_GRID} ${
-                isSelected ? 'bg-emerald-50/30' : isPending ? 'opacity-50' : 'hover:bg-surface-container-low/80'
+                isSelected ? 'bg-primary-light' : isPending ? 'opacity-50' : 'hover:bg-surface-container-low/80'
               }`}
             >
               <input

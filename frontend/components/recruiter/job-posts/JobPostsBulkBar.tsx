@@ -20,9 +20,9 @@ export default function JobPostsBulkBar({
   if (selectedCount === 0) return null;
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 shadow-elevation-2 fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-2xl border border-slate-800/80 bg-slate-900/95 px-4 py-2.5 text-white backdrop-blur-md duration-200">
+    <div className="animate-in fade-in slide-in-from-bottom-4 shadow-elevation-2 fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-xl border border-slate-800/80 bg-slate-900/95 px-4 py-2.5 text-white backdrop-blur-md duration-200">
       <div className="flex items-center gap-2 pr-2">
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-xs font-bold text-white">
+        <span className="bg-primary flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white">
           <Check className="h-3.5 w-3.5 stroke-[3]" />
         </span>
         <span className="text-xs font-bold whitespace-nowrap">Đã chọn {selectedCount} tin</span>

@@ -44,7 +44,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
       <div className={isCollapsed ? 'flex justify-center p-3' : 'p-5'}>
         <div className={isCollapsed ? '' : 'flex items-center gap-3.5'}>
           <div
-            className={`from-primary flex shrink-0 items-center justify-center rounded-2xl bg-linear-to-tr to-[#00d660] font-bold text-white shadow-sm ${
+            className={`bg-primary-light text-primary-deep flex shrink-0 items-center justify-center rounded-lg font-bold ${
               isCollapsed ? 'h-10 w-10 text-base' : 'h-12 w-12 text-lg'
             }`}
           >
@@ -81,7 +81,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
           <Link
             href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
             onClick={onNavigate}
-            className="bg-primary text-body-sm mt-3 flex w-full items-center justify-center gap-1.5 rounded-full px-3 py-2 font-bold text-white shadow-xs transition-colors hover:bg-[#009b45]"
+            className="bg-primary text-body-sm mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg px-3 py-2 font-semibold text-white transition-colors hover:bg-[#009b45]"
           >
             <ShieldCheck className="h-4 w-4 text-white" />
             <span>Verified Enterprise</span>
@@ -92,7 +92,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
           <Link
             href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
             onClick={onNavigate}
-            className="bg-primary text-body-sm mt-3 flex w-full items-center justify-center gap-1.5 rounded-full px-3 py-2 font-bold text-white shadow-xs transition-colors hover:bg-[#009b45]"
+            className="bg-primary text-body-sm mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg px-3 py-2 font-semibold text-white transition-colors hover:bg-[#009b45]"
           >
             <ShieldCheck className="h-4 w-4" />
             <span>
@@ -117,15 +117,15 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
                 href={item.href}
                 onClick={onNavigate}
                 title={isCollapsed ? item.label : undefined}
-                className={`text-body-md flex items-center rounded-xl py-2.5 transition ${
+                className={`text-body-md flex items-center rounded-lg py-2 transition ${
                   isCollapsed ? 'justify-center px-2' : 'justify-between px-2.5'
-                } ${isActive ? 'font-bold' : 'text-on-surface-variant hover:bg-surface-container-low font-medium'}`}
+                } ${isActive ? 'bg-primary-light font-semibold' : 'text-on-surface-variant hover:bg-surface-container-low font-medium'}`}
               >
                 <div className={`flex items-center ${isCollapsed ? '' : 'gap-3'}`}>
                   <span
-                    className={`relative flex shrink-0 items-center justify-center rounded-full transition-colors ${
+                    className={`relative flex shrink-0 items-center justify-center transition-colors ${
                       isCollapsed ? 'h-9 w-9' : 'h-8 w-8'
-                    } ${isActive ? 'bg-primary/10 text-primary' : 'text-on-surface-variant'}`}
+                    } ${isActive ? 'text-primary' : 'text-on-surface-variant'}`}
                   >
                     <Icon className={isCollapsed ? 'h-5 w-5' : 'h-4.5 w-4.5'} />
                     {isCollapsed && badgeCount > 0 && (
@@ -136,7 +136,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
                 </div>
 
                 {!isCollapsed && badgeCount > 0 && (
-                  <span className="bg-primary text-label-sm rounded-full px-2 py-0.5 font-bold text-white tabular-nums shadow-2xs">
+                  <span className="bg-primary text-label-sm rounded-full px-2 py-0.5 font-bold text-white tabular-nums">
                     {badgeCount > 99 ? '99+' : badgeCount}
                   </span>
                 )}

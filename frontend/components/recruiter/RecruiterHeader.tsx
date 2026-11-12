@@ -90,7 +90,7 @@ export default function RecruiterHeader({
           <div className="hidden items-center gap-2.5 sm:flex">
             <Link
               href={ROUTES.RECRUITER_JOBS}
-              className="bg-primary hover:bg-primary-hover inline-flex h-9 items-center gap-1.5 rounded-full px-4 text-sm font-semibold text-white transition-colors"
+              className="bg-primary hover:bg-primary-hover inline-flex h-9 items-center gap-1.5 rounded-lg px-4 text-sm font-semibold text-white transition-colors"
             >
               <Plus className="h-4 w-4" />
               <span>Post a job</span>
@@ -99,12 +99,12 @@ export default function RecruiterHeader({
             <Link
               href={ROUTES.RECRUITER_MESSAGES}
               title="InterVue Connect"
-              className="bg-primary hover:bg-primary-hover relative inline-flex h-9 items-center gap-1.5 rounded-full px-4 text-sm font-semibold text-white transition-colors"
+              className="border-outline-variant text-navy hover:bg-surface-container-low relative inline-flex h-9 items-center gap-1.5 rounded-lg border px-4 text-sm font-semibold transition-colors"
             >
               <MessageCircleMore className="h-4 w-4" />
               <span>Connect</span>
               {connectUnreadCount > 0 && (
-                <span className="ml-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 text-[11px] font-bold text-white shadow-xs">
+                <span className="ml-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 text-[11px] font-bold text-white">
                   {connectUnreadCount > 99 ? '99+' : connectUnreadCount}
                 </span>
               )}
@@ -120,11 +120,11 @@ export default function RecruiterHeader({
               }}
               title="Notifications"
               aria-label="Notifications"
-              className="bg-surface-container-high text-on-surface hover:bg-surface-container-high relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-colors sm:h-9.5 sm:w-9.5"
+              className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg transition-colors sm:h-9.5 sm:w-9.5"
             >
               <Bell className="h-4.5 w-4.5" />
               {unreadCount > 0 && (
-                <span className="text-label-sm absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 font-bold text-white shadow-xs">
+                <span className="text-label-sm absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 font-bold text-white">
                   {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
               )}
@@ -142,11 +142,11 @@ export default function RecruiterHeader({
             href={ROUTES.RECRUITER_MESSAGES}
             title="InterVue Connect"
             aria-label="InterVue Connect"
-            className="bg-surface-container-high text-on-surface hover:bg-surface-container-high relative flex h-10 w-10 items-center justify-center rounded-full transition-colors sm:hidden"
+            className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface relative flex h-10 w-10 items-center justify-center rounded-lg transition-colors sm:hidden"
           >
             <MessageCircleMore className="h-4.5 w-4.5" />
             {connectUnreadCount > 0 && (
-              <span className="text-label-sm absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 font-bold text-white shadow-xs">
+              <span className="text-label-sm absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 font-bold text-white">
                 {connectUnreadCount > 99 ? '99+' : connectUnreadCount}
               </span>
             )}
@@ -155,11 +155,11 @@ export default function RecruiterHeader({
           <Link
             href={ROUTES.RECRUITER_CART}
             title="Shopping cart"
-            className="bg-surface-container-high text-on-surface hover:bg-surface-container-high relative flex h-10 w-10 items-center justify-center rounded-full transition-colors sm:h-9.5 sm:w-9.5"
+            className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface relative flex h-10 w-10 items-center justify-center rounded-lg transition-colors sm:h-9.5 sm:w-9.5"
           >
             <ShoppingCart className="h-4.5 w-4.5" />
             {cartCount > 0 && (
-              <span className="text-label-sm absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 font-bold text-white shadow-xs">
+              <span className="text-label-sm absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#e03e2d] px-1 font-bold text-white">
                 {cartCount}
               </span>
             )}
@@ -174,10 +174,10 @@ export default function RecruiterHeader({
               className="flex cursor-pointer items-center rounded-full p-0.5 transition hover:scale-105 active:scale-95"
               aria-label="Account menu"
             >
-              <div className="relative flex h-9.5 w-9.5 items-center justify-center rounded-full bg-linear-to-tr from-emerald-500 via-emerald-600 to-teal-600 text-sm font-bold text-white shadow-sm ring-2 ring-emerald-400/30">
+              <div className="bg-navy relative flex h-9.5 w-9.5 items-center justify-center rounded-full text-sm font-bold text-white">
                 <span>{user?.name.charAt(0).toUpperCase()}</span>
-                <div className="absolute -right-0.5 -bottom-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white ring-1 ring-emerald-200">
-                  <ChevronDown className="h-2 w-2 stroke-[2.5] text-emerald-700" />
+                <div className="ring-outline-variant absolute -right-0.5 -bottom-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white ring-1">
+                  <ChevronDown className="text-navy h-2 w-2 stroke-[2.5]" />
                 </div>
               </div>
             </button>

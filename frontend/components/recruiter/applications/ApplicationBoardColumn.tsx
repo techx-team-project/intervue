@@ -50,7 +50,7 @@ export default function ApplicationBoardColumn({
       <button
         type="button"
         onClick={onToggleCollapse}
-        className="hover:border-outline flex w-12 shrink-0 cursor-pointer flex-col items-center gap-3 rounded-2xl border border-[#e5e9ef] bg-white py-4 transition-colors"
+        className="hover:border-outline flex w-12 shrink-0 cursor-pointer flex-col items-center gap-3 rounded-xl border border-[#e5e9ef] bg-white py-4 transition-colors"
       >
         <span className={cn('h-2 w-2 rounded-full', meta.accentDotClassName)} />
         <span className="text-navy text-body-sm font-bold">{applications.length}</span>
@@ -64,22 +64,17 @@ export default function ApplicationBoardColumn({
       ref={setNodeRef}
       aria-label={`${meta.label} — ${applications.length} applications`}
       className={cn(
-        'flex min-w-0 flex-col rounded-2xl border transition-colors',
+        'flex min-w-0 flex-col rounded-xl border transition-colors',
         isOver ? cn('border-transparent bg-white ring-2', meta.accentRingClassName) : 'border-[#e5e9ef] bg-[#fafbfc]',
         className,
       )}
     >
-      <header
-        className={cn(
-          'rounded-t-2xl border-b border-[#eef1f5] bg-linear-to-b to-transparent px-3.5 pt-3.5 pb-3',
-          meta.accentSurfaceClassName,
-        )}
-      >
+      <header className={cn('rounded-t-xl border-b border-[#eef1f5] px-3.5 pt-3.5 pb-3')}>
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className={cn('h-2 w-2 shrink-0 rounded-full', meta.accentDotClassName)} />
             <h3 className={cn('text-body-md truncate font-bold', meta.accentTextClassName)}>{meta.label}</h3>
-            <span className="text-navy text-label-sm shrink-0 rounded-full bg-white px-1.5 py-0.5 font-bold shadow-2xs">
+            <span className="text-navy text-label-sm shrink-0 rounded-full bg-white px-1.5 py-0.5 font-bold">
               {applications.length}
             </span>
           </div>

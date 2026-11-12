@@ -115,17 +115,17 @@ export default function JobPostsListView() {
           <Spinner />
         </div>
       ) : listQuery.isError ? (
-        <div className="flex flex-col items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-6 py-12 text-center">
+        <div className="flex flex-col items-center gap-3 rounded-xl border border-rose-200 bg-rose-50 px-6 py-12 text-center">
           <p className="text-sm font-semibold text-rose-700">{getErrorMessage(listQuery.error)}</p>
           <Button variant="outline" size="sm" onClick={() => listQuery.refetch()}>
             Thử lại
           </Button>
         </div>
       ) : jobs.length === 0 ? (
-        <div className="border-outline-variant flex flex-col items-center justify-center gap-3 rounded-2xl border bg-white px-6 py-16 text-center shadow-xs">
+        <div className="border-outline-variant flex flex-col items-center justify-center gap-3 rounded-xl border bg-white px-6 py-16 text-center">
           {isFiltered ? (
             <>
-              <div className="bg-surface-container-high text-outline flex h-14 w-14 items-center justify-center rounded-2xl">
+              <div className="bg-surface-container-high text-outline flex h-14 w-14 items-center justify-center rounded-xl">
                 <SearchX className="h-7 w-7" />
               </div>
               <h3 className="text-navy text-base font-bold">Không tìm thấy tin phù hợp</h3>
@@ -146,7 +146,7 @@ export default function JobPostsListView() {
             </>
           ) : (
             <>
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+              <div className="bg-primary-light text-primary flex h-14 w-14 items-center justify-center rounded-xl">
                 <FilePlus className="h-7 w-7" />
               </div>
               <h3 className="text-navy text-base font-bold">Bạn chưa có tin tuyển dụng nào</h3>
@@ -170,7 +170,7 @@ export default function JobPostsListView() {
             isAllSelected={isAllSelected}
             onConfirm={setConfirm}
           />
-          <div className="border-outline-variant rounded-2xl border bg-white p-3.5 shadow-xs sm:p-4">
+          <div className="border-outline-variant rounded-xl border bg-white p-3.5 sm:p-4">
             <Pagination
               page={page}
               pageCount={pageCount}

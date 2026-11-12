@@ -60,7 +60,7 @@ export default function SwimlaneBoard({ visibleApplications, handlers, selectedI
 
   if (lanes.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-[#e5e9ef] bg-white py-20 text-center shadow-xs">
+      <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-[#e5e9ef] bg-white py-20 text-center">
         <Briefcase className="text-outline h-9 w-9" />
         <p className="text-navy text-body-md font-bold">No applications match these filters</p>
         <p className="text-body-sm text-on-surface-variant max-w-sm">
@@ -81,7 +81,7 @@ export default function SwimlaneBoard({ visibleApplications, handlers, selectedI
           const isCollapsed = collapsedJobIds.includes(lane.jobId);
 
           return (
-            <section key={lane.jobId} className="rounded-2xl border border-[#e5e9ef] bg-white shadow-xs">
+            <section key={lane.jobId} className="rounded-xl border border-[#e5e9ef] bg-white">
               <header className="flex flex-wrap items-center gap-3 border-b border-[#eef1f5] px-4 py-3">
                 <button
                   type="button"
@@ -94,7 +94,7 @@ export default function SwimlaneBoard({ visibleApplications, handlers, selectedI
                   ) : (
                     <ChevronDown className="text-outline h-4 w-4 shrink-0" />
                   )}
-                  <span className="text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
+                  <span className="text-navy bg-surface-container-low flex h-8 w-8 shrink-0 items-center justify-center rounded-lg">
                     <Briefcase className="h-4 w-4" />
                   </span>
                   <span className="min-w-0">

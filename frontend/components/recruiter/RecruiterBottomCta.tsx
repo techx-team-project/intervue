@@ -1,7 +1,7 @@
 'use client';
 
 import { ROUTES } from '@/constants/routes';
-import { ArrowRight, Sparkles, X } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSyncExternalStore } from 'react';
@@ -40,7 +40,7 @@ export default function RecruiterBottomCta() {
 
   return (
     <div className="fixed right-4 bottom-4 z-30 w-[calc(100%-2rem)] max-w-sm sm:right-6 sm:bottom-6 sm:w-auto">
-      <div className="to-primary shadow-elevation-2 relative flex items-start gap-3 rounded-2xl bg-linear-to-br from-[#0c2e24] via-[#103a2e] p-4 pr-8 text-white">
+      <div className="bg-primary-deep relative flex items-start gap-3 rounded-xl p-4 pr-8 text-white">
         <button
           type="button"
           onClick={dismiss}
@@ -50,12 +50,8 @@ export default function RecruiterBottomCta() {
           <X className="h-4 w-4" />
         </button>
 
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15">
-          <Sparkles className="h-4.5 w-4.5" />
-        </div>
-
         <div className="min-w-0">
-          <p className="text-body-md font-bold">Need to hire faster?</p>
+          <p className="text-body-md font-semibold">Need to hire faster?</p>
           <p className="text-body-sm mt-0.5 leading-relaxed text-white/80">
             Explore service packages that make your job posts stand out to the right IT candidates.
           </p>

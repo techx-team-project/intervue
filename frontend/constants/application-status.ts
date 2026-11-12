@@ -63,7 +63,6 @@ export interface ApplicationColumnMeta {
   accentTextClassName: string;
   accentDotClassName: string;
   accentBarClassName: string;
-  accentSurfaceClassName: string;
   accentRingClassName: string;
 }
 
@@ -76,7 +75,6 @@ export const APPLICATION_COLUMNS: ApplicationColumnMeta[] = [
     accentTextClassName: 'text-sky-700',
     accentDotClassName: 'bg-sky-500',
     accentBarClassName: 'bg-linear-to-r from-sky-400 to-sky-500',
-    accentSurfaceClassName: 'from-sky-50/80',
     accentRingClassName: 'ring-sky-300',
   },
   {
@@ -87,7 +85,6 @@ export const APPLICATION_COLUMNS: ApplicationColumnMeta[] = [
     accentTextClassName: 'text-amber-700',
     accentDotClassName: 'bg-amber-500',
     accentBarClassName: 'bg-linear-to-r from-amber-400 to-amber-500',
-    accentSurfaceClassName: 'from-amber-50/80',
     accentRingClassName: 'ring-amber-300',
   },
   {
@@ -98,7 +95,6 @@ export const APPLICATION_COLUMNS: ApplicationColumnMeta[] = [
     accentTextClassName: 'text-violet-700',
     accentDotClassName: 'bg-violet-500',
     accentBarClassName: 'bg-linear-to-r from-violet-400 to-violet-500',
-    accentSurfaceClassName: 'from-violet-50/80',
     accentRingClassName: 'ring-violet-300',
   },
   {
@@ -109,7 +105,6 @@ export const APPLICATION_COLUMNS: ApplicationColumnMeta[] = [
     accentTextClassName: 'text-indigo-700',
     accentDotClassName: 'bg-indigo-500',
     accentBarClassName: 'bg-linear-to-r from-indigo-400 to-indigo-500',
-    accentSurfaceClassName: 'from-indigo-50/80',
     accentRingClassName: 'ring-indigo-300',
   },
   {
@@ -120,7 +115,6 @@ export const APPLICATION_COLUMNS: ApplicationColumnMeta[] = [
     accentTextClassName: 'text-emerald-700',
     accentDotClassName: 'bg-emerald-500',
     accentBarClassName: 'bg-linear-to-r from-emerald-400 to-emerald-500',
-    accentSurfaceClassName: 'from-emerald-50/80',
     accentRingClassName: 'ring-emerald-300',
   },
   {
@@ -131,7 +125,6 @@ export const APPLICATION_COLUMNS: ApplicationColumnMeta[] = [
     accentTextClassName: 'text-slate-600',
     accentDotClassName: 'bg-slate-400',
     accentBarClassName: 'bg-linear-to-r from-slate-300 to-slate-400',
-    accentSurfaceClassName: 'from-slate-100/80',
     accentRingClassName: 'ring-slate-300',
   },
 ];
