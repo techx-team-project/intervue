@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { DynamicRobotHead, type RobotHeadShape, type RobotHeadState } from '@/components/mascot/MascotCore';
-import { hasBottomBar } from '@/constants/ai-chat';
+import { hasBottomBar, hasMobileActionBar } from '@/constants/ai-chat';
+import { cn } from '@/lib/utils';
 
 const FIXED_SHAPE: RobotHeadShape = 'rectangle';
 const FIXED_COLOR = '#064e3b';
@@ -40,7 +41,12 @@ export function FloatingChatButton({ isOpen, onToggle, remainingQuota, robotStat
     robotState !== 'idle' ? robotState : isHovered ? 'happy' : isOpen ? 'speaking' : ambientState;
 
   return (
-    <aside className="pointer-events-auto fixed right-3 bottom-3 z-40 select-none sm:right-6 sm:bottom-6">
+    <aside
+      className={cn(
+        'pointer-events-auto fixed right-3 z-40 select-none sm:right-6 sm:bottom-6',
+        hasMobileActionBar(pathname) ? 'bottom-20' : 'bottom-3',
+      )}
+    >
       <div className="relative">
         <div
           onClick={onToggle}
@@ -56,7 +62,7 @@ export function FloatingChatButton({ isOpen, onToggle, remainingQuota, robotStat
           <DynamicRobotHead
             shape={FIXED_SHAPE}
             state={activeState}
-            size={115}
+            size={84}
             color={FIXED_COLOR}
             trimColor={FIXED_TRIM_COLOR}
             screenColor={FIXED_SCREEN_COLOR}
