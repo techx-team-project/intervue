@@ -79,6 +79,5 @@ public enum AuditAction {
     JOB_PAUSED,
     JOB_RESUMED,
     JOB_CLOSED,
-    JOB_RENEWED,
-    JOB_RETOPPED
+    JOB_RENEWED
 }

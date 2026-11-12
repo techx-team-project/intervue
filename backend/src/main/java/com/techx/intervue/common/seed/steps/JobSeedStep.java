@@ -70,8 +70,6 @@ public class JobSeedStep implements DemoSeedStep {
                     "salary_basis",
                     "benefit_tags",
                     "hiring_steps",
-                    "boost_level",
-                    "boost_expires_at",
                     "highlight_label",
                     "highlight_label_expires_at",
                     "highlighted",
@@ -239,8 +237,6 @@ public class JobSeedStep implements DemoSeedStep {
             negotiable ? null : (index % 4 == 0 ? "NET" : "GROSS"),
             jsonArray(benefitTags(index)),
             jsonArray(HIRING_STEPS),
-            promotion.boostLevel(),
-            promotion.boostLevel() > 0 ? promotionEnd : null,
             promotion.label(),
             promotion.label() == null ? null : promotionEnd,
             promotion.highlighted(),
@@ -249,15 +245,14 @@ public class JobSeedStep implements DemoSeedStep {
         };
     }
 
-    private record Promotion(int boostLevel, String label, boolean highlighted) {}
+    private record Promotion(String label, boolean highlighted) {}
 
     private Promotion promotionFor(int index, String status) {
         if (!"PUBLISHED".equals(status)) {
-            return new Promotion(0, null, false);
+            return new Promotion(null, false);
         }
-        String label = index % 10 == 0 ? "HOT" : index % 14 == 0 ? "URGENT" : null;
-        int boost = index % 21 == 0 ? 2 : index % 7 == 0 ? 1 : 0;
-        return new Promotion(boost, label, index % 12 == 0);
+        String label = index % 10 == 0 ? "HOT" : null;
+        return new Promotion(label, index % 12 == 0);
     }
 
     private String description(

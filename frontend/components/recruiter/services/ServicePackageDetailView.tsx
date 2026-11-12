@@ -311,14 +311,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                     className="flex items-start gap-2.5 text-sm"
                   >
                     <CheckCircle2 className="text-primary mt-0.5 h-4.5 w-4.5 shrink-0" />
-                    <div className="flex flex-wrap items-center gap-2 leading-relaxed">
-                      <span className="text-on-surface-variant">{benefit.label}</span>
-                      {benefit.entitlementType === 'JOB_BOOST' && benefit.tier > 1 && (
-                        <span className="rounded bg-amber-50 px-1.5 py-0.5 text-[11px] font-semibold text-amber-700">
-                          Tier {benefit.tier}
-                        </span>
-                      )}
-                    </div>
+                    <span className="text-on-surface-variant leading-relaxed">{benefit.label}</span>
                   </li>
                 ))}
               </ul>

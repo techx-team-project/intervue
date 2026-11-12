@@ -177,7 +177,6 @@ export const JOB_HISTORY_ACTION_LABELS: Record<JobHistoryAction, string> = {
   JOB_RESUMED: 'Job reopened',
   JOB_CLOSED: 'Job closed',
   JOB_RENEWED: 'Renewed and republished',
-  JOB_RETOPPED: 'Job bumped to top',
   JOB_HIDDEN: 'Hidden by admin',
   JOB_RESTORED: 'Restored by admin',
 };

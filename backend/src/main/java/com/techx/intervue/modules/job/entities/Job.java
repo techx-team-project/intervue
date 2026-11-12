@@ -155,9 +155,6 @@ public class Job extends BaseEntity {
     @Column(name = "published_at")
     private Instant publishedAt;
 
-    @Column(name = "retopped_at")
-    private Instant retoppedAt;
-
     @Column(name = "paused_at")
     private Instant pausedAt;
 
@@ -166,13 +163,6 @@ public class Job extends BaseEntity {
 
     @Column(name = "approved_at")
     private Instant approvedAt;
-
-    @Column(name = "boost_level", nullable = false)
-    @Builder.Default
-    private Integer boostLevel = 0;
-
-    @Column(name = "boost_expires_at")
-    private Instant boostExpiresAt;
 
     @Column(name = "highlight_label", length = 20)
     private String highlightLabel;

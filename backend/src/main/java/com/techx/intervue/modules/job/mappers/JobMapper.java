@@ -69,7 +69,6 @@ public class JobMapper {
 
     public JobResource toResource(Job job) {
         Instant now = Instant.now();
-        int boostLevel = effectiveBoostLevel(job, now);
         String highlightLabel = effectiveHighlightLabel(job, now);
         boolean highlighted = effectiveHighlighted(job, now);
         return JobResource.builder()
@@ -100,11 +99,8 @@ public class JobMapper {
                 .openings(job.getOpenings())
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
-                .retoppedAt(job.getRetoppedAt())
                 .hiddenReason(job.getHiddenReason())
                 .hiddenAt(job.getHiddenAt())
-                .boostLevel(boostLevel)
-                .boostExpiresAt(boostLevel > 0 ? job.getBoostExpiresAt() : null)
                 .highlightLabel(highlightLabel)
                 .highlightLabelExpiresAt(
                         highlightLabel != null ? job.getHighlightLabelExpiresAt() : null)
@@ -129,8 +125,6 @@ public class JobMapper {
                 .openings(job.getOpenings())
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
-                .retoppedAt(job.getRetoppedAt())
-                .boostLevel(effectiveBoostLevel(job, now))
                 .highlightLabel(effectiveHighlightLabel(job, now))
                 .updatedAt(job.getUpdatedAt())
                 .build();
@@ -168,7 +162,6 @@ public class JobMapper {
                 .skills(toSkills(job))
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
-                .boostLevel(effectiveBoostLevel(job, now))
                 .highlightLabel(effectiveHighlightLabel(job, now))
                 .highlighted(effectiveHighlighted(job, now))
                 .build();
@@ -202,19 +195,9 @@ public class JobMapper {
                 .screening(toScreeningSummary(job))
                 .deadline(job.getDeadline())
                 .publishedAt(job.getPublishedAt())
-                .boostLevel(effectiveBoostLevel(job, now))
                 .highlightLabel(effectiveHighlightLabel(job, now))
                 .highlighted(effectiveHighlighted(job, now))
                 .build();
-    }
-
-    private int effectiveBoostLevel(Job job, Instant now) {
-        if (job.getBoostLevel() == null || job.getBoostLevel() <= 0) {
-            return 0;
-        }
-        return job.getBoostExpiresAt() == null || job.getBoostExpiresAt().isAfter(now)
-                ? job.getBoostLevel()
-                : 0;
     }
 
     private String effectiveHighlightLabel(Job job, Instant now) {

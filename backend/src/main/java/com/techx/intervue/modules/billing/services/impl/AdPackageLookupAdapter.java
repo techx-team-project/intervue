@@ -121,7 +121,6 @@ public class AdPackageLookupAdapter implements AdPackageLookupPortInterface {
                         .servicePackage(saved)
                         .entitlementType(EntitlementType.AD_SLOT_WEEK)
                         .quantity(1)
-                        .tier(1)
                         .durationDays(7)
                         .label("01 tuần hiển thị banner " + slotName.trim())
                         .displayOrder(0)

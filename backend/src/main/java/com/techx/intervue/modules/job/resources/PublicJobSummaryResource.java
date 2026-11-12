@@ -25,6 +25,5 @@ public record PublicJobSummaryResource(
         List<SkillResource> skills,
         LocalDate deadline,
         Instant publishedAt,
-        Integer boostLevel,
         String highlightLabel,
         Boolean highlighted) {}

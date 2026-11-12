@@ -14,7 +14,6 @@ public interface EntitlementServiceInterface {
             Long sourceOrderItemId,
             EntitlementType type,
             Integer quantity,
-            Integer tier,
             Integer durationDays,
             String label,
             Integer packageValidityDays,
@@ -25,7 +24,6 @@ public interface EntitlementServiceInterface {
                 Long sourceOrderItemId,
                 EntitlementType type,
                 Integer quantity,
-                Integer tier,
                 Integer durationDays,
                 String label,
                 Integer packageValidityDays,
@@ -34,7 +32,6 @@ public interface EntitlementServiceInterface {
                     sourceOrderItemId,
                     type,
                     quantity,
-                    tier,
                     durationDays,
                     label,
                     packageValidityDays,
@@ -45,12 +42,11 @@ public interface EntitlementServiceInterface {
         public static EntitlementGrant direct(
                 EntitlementType type,
                 Integer quantity,
-                Integer tier,
                 Integer durationDays,
                 String label,
                 Instant explicitDeadline) {
             return new EntitlementGrant(
-                    null, type, quantity, tier, durationDays, label, null, explicitDeadline, false);
+                    null, type, quantity, durationDays, label, null, explicitDeadline, false);
         }
     }
 
@@ -67,9 +63,6 @@ public interface EntitlementServiceInterface {
      * slot.
      */
     Optional<Instant> extendJobSlot(Long jobId, Duration pausedFor);
-
-    /** Spends one retop unit against the given job and records an ended usage entry. */
-    boolean consumeRetop(Long companyId, Long jobId, Long recruiterId);
 
     /** Companies from the given set that still hold an unused alert-priority slot. */
     Set<Long> companiesWithAlertPush(Collection<Long> companyIds);
@@ -96,7 +89,6 @@ public interface EntitlementServiceInterface {
     record UnusedUnits(
             Long sourceOrderItemId,
             EntitlementType type,
-            int tier,
             boolean bonus,
             int totalQuantity,
             int remainingQuantity) {}

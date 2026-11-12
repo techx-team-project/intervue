@@ -68,7 +68,6 @@ public class ServicePackageMapper {
         return new ServicePackageBenefitResource(
                 benefit.getEntitlementType(),
                 benefit.getQuantity(),
-                benefit.getTier(),
                 benefit.getDurationDays(),
                 benefit.getLabel());
     }

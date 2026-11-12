@@ -34,9 +34,6 @@ export function useJobPostActions() {
 
   const closeJob = (id: string) => run(id, () => mutations.close.mutateAsync(Number(id)), 'Job closed.');
 
-  const retopJob = (id: string) =>
-    run(id, () => mutations.retop.mutateAsync(Number(id)), 'Job bumped to the top of the list.');
-
   const deleteJob = (id: string) => run(id, () => mutations.remove.mutateAsync(Number(id)), 'Draft deleted.');
 
   const toggleJobStatus = (id: string, currentStatus: JobStatus) => {
@@ -80,7 +77,6 @@ export function useJobPostActions() {
     reopenJob,
     toggleJobStatus,
     closeJob,
-    retopJob,
     deleteJob,
     duplicateJob,
     bulkPauseJobs,

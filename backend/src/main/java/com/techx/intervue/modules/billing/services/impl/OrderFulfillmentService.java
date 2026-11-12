@@ -45,7 +45,6 @@ public class OrderFulfillmentService {
                                 item.getId(),
                                 benefit.entitlementType(),
                                 benefit.quantity() * item.getQuantity(),
-                                benefit.tier(),
                                 benefit.durationDays(),
                                 benefit.label(),
                                 item.getValidityDays(),

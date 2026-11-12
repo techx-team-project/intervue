@@ -528,8 +528,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     JOB_PAUSED,
                     JOB_RESUMED,
                     JOB_CLOSED,
-                    JOB_RENEWED,
-                    JOB_RETOPPED ->
+                    JOB_RENEWED ->
                     "moderation";
             case IDENTITY_VERIFICATION_APPROVED,
                     IDENTITY_VERIFICATION_REJECTED,
@@ -627,7 +626,6 @@ public class UserAdminService implements UserAdminServiceInterface {
             case JOB_RESUMED -> "Job resumed";
             case JOB_CLOSED -> "Job closed";
             case JOB_RENEWED -> "Job renewed";
-            case JOB_RETOPPED -> "Job pushed to top";
             case JOB_RESTORED -> "Job restored by an admin";
             case IDENTITY_VERIFICATION_APPROVED -> "Identity verification approved";
             case IDENTITY_VERIFICATION_REJECTED -> "Identity verification rejected";

@@ -34,6 +34,5 @@ public record PublicJobResource(
         ScreeningSummaryResource screening,
         LocalDate deadline,
         Instant publishedAt,
-        Integer boostLevel,
         String highlightLabel,
         Boolean highlighted) {}
