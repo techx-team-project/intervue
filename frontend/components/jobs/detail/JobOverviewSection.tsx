@@ -1,14 +1,39 @@
-import { JOB_ARRANGEMENT_LABELS, JOB_CONTRACT_LABELS, JOB_LEVEL_LABELS } from '@/constants/recruiter-job';
+import {
+  JOB_ARRANGEMENT_LABELS,
+  JOB_CONTRACT_LABELS,
+  JOB_LEVEL_LABELS,
+  JOB_ROLE_LABELS,
+} from '@/constants/recruiter-job';
 import type { PublicJobResource } from '@/types/public-job';
 import { formatDate, formatRelativeDay } from '@/utils/datetime';
-import { Briefcase, CalendarClock, Clock3, Laptop, TrendingUp, Users, type LucideIcon } from 'lucide-react';
+import {
+  Briefcase,
+  CalendarClock,
+  Clock3,
+  Code2,
+  Hourglass,
+  Laptop,
+  TrendingUp,
+  Users,
+  type LucideIcon,
+} from 'lucide-react';
 import JobDetailSection from './JobDetailSection';
 
 type Fact = { icon: LucideIcon; label: string; value?: string };
 
+function experienceLabel(experience: PublicJobResource['experience']): string | undefined {
+  const min = experience?.minYears ?? undefined;
+  const max = experience?.maxYears ?? undefined;
+  if (min === undefined && max === undefined) return undefined;
+  if (min !== undefined && max !== undefined) return min === max ? `${min} years` : `${min} - ${max} years`;
+  return min !== undefined ? `${min}+ years` : `Up to ${max} years`;
+}
+
 export default function JobOverviewSection({ job, index }: { job: PublicJobResource; index?: string }) {
   const facts: Fact[] = [
+    { icon: Code2, label: 'Role', value: job.jobRole && JOB_ROLE_LABELS[job.jobRole] },
     { icon: TrendingUp, label: 'Level', value: job.level && JOB_LEVEL_LABELS[job.level] },
+    { icon: Hourglass, label: 'Experience', value: experienceLabel(job.experience) },
     { icon: Briefcase, label: 'Contract', value: job.contractType && JOB_CONTRACT_LABELS[job.contractType] },
     {
       icon: Laptop,

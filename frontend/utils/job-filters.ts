@@ -1,12 +1,19 @@
 import type { PublicJobSearchParams } from '@/apiRequest/public-job';
 import { DEFAULT_CURRENCY, MILLION, POSTED_OPTIONS } from '@/constants/job-filters';
-import { JOB_ARRANGEMENT_LABELS, JOB_CONTRACT_LABELS, JOB_LEVEL_LABELS } from '@/constants/recruiter-job';
+import {
+  JOB_ARRANGEMENT_LABELS,
+  JOB_CONTRACT_LABELS,
+  JOB_LEVEL_LABELS,
+  JOB_ROLE_LABELS,
+} from '@/constants/recruiter-job';
 import type { ActiveJobFilter, JobFilterKey, PublicJobFilters, SkillFilter } from '@/types/job-filters';
 
 export const FILTER_KEYS: JobFilterKey[] = [
   'q',
   'city',
   'level',
+  'jobRole',
+  'experienceYears',
   'contractType',
   'workingArrangement',
   'salaryFrom',
@@ -20,6 +27,8 @@ export const EMPTY_FILTERS: PublicJobFilters = {
   q: '',
   city: '',
   level: '',
+  jobRole: '',
+  experienceYears: '',
   contractType: '',
   workingArrangement: '',
   salaryFrom: '',
@@ -62,6 +71,8 @@ export function toSearchParams(filters: PublicJobFilters, page: number, size: nu
     q: filters.q,
     city: filters.city,
     level: filters.level,
+    jobRole: filters.jobRole,
+    experienceYears: filters.experienceYears ? Number(filters.experienceYears) : undefined,
     contractType: filters.contractType,
     workingArrangement: filters.workingArrangement,
     salaryFrom: filters.salaryFrom ? Number(filters.salaryFrom) : undefined,
@@ -88,6 +99,17 @@ export function describeActiveFilters(filters: PublicJobFilters): ActiveJobFilte
   if (filters.level) {
     const label = JOB_LEVEL_LABELS[filters.level as keyof typeof JOB_LEVEL_LABELS] ?? filters.level;
     active.push({ id: 'level', label, patch: { level: '' } });
+  }
+  if (filters.jobRole) {
+    const label = JOB_ROLE_LABELS[filters.jobRole as keyof typeof JOB_ROLE_LABELS] ?? filters.jobRole;
+    active.push({ id: 'jobRole', label, patch: { jobRole: '' } });
+  }
+  if (filters.experienceYears) {
+    active.push({
+      id: 'experienceYears',
+      label: `My experience: ${filters.experienceYears} yr`,
+      patch: { experienceYears: '' },
+    });
   }
   if (filters.workingArrangement) {
     const label =

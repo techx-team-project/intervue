@@ -6,6 +6,8 @@ export type PublicJobSearchParams = {
   q?: string;
   city?: string;
   level?: string;
+  jobRole?: string;
+  experienceYears?: number;
   contractType?: string;
   workingArrangement?: string;
   salaryFrom?: number;
@@ -23,6 +25,8 @@ function toQuery(params: PublicJobSearchParams) {
   if (params.q?.trim()) query.set('q', params.q.trim());
   if (params.city) query.set('city', params.city);
   if (params.level) query.set('level', params.level);
+  if (params.jobRole) query.set('jobRole', params.jobRole);
+  if (params.experienceYears !== undefined) query.set('experienceYears', String(params.experienceYears));
   if (params.contractType) query.set('contractType', params.contractType);
   if (params.workingArrangement) query.set('workingArrangement', params.workingArrangement);
   if (params.salaryFrom) query.set('salaryFrom', String(params.salaryFrom));

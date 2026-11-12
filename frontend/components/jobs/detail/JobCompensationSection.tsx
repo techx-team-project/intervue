@@ -92,8 +92,8 @@ export default function JobCompensationSection({ job, similar, index }: JobCompe
               />
               <Tile
                 label="Pay basis"
-                value={salary.currency === 'USD' ? 'USD' : 'VND'}
-                hint="Gross, before personal income tax"
+                value={`${salary.currency === 'USD' ? 'USD' : 'VND'}${salary.basis ? ` · ${salary.basis === 'NET' ? 'Net' : 'Gross'}` : ''}`}
+                hint={salary.basis === 'NET' ? 'Net, after tax and insurance' : 'Gross, before personal income tax'}
               />
             </dl>
           </div>

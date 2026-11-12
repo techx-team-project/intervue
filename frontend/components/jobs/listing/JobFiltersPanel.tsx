@@ -1,7 +1,12 @@
 'use client';
 
 import { DEFAULT_CURRENCY, FILTER_CURRENCIES, POSTED_OPTIONS, SALARY_PRESETS } from '@/constants/job-filters';
-import { JOB_ARRANGEMENT_LABELS, JOB_CONTRACT_LABELS, JOB_LEVEL_LABELS } from '@/constants/recruiter-job';
+import {
+  JOB_ARRANGEMENT_LABELS,
+  JOB_CONTRACT_LABELS,
+  JOB_LEVEL_LABELS,
+  JOB_ROLE_LABELS,
+} from '@/constants/recruiter-job';
 import type { PublicJobFilters } from '@/types/job-filters';
 import { formatSalaryFloor, parseSkillFilters, serializeSkillFilters } from '@/utils/job-filters';
 import { ROUTES } from '@/constants/routes';
@@ -21,6 +26,15 @@ const toOptions = (labels: Record<string, string>) =>
   Object.entries(labels).map(([value, label]) => ({ value, label }));
 
 const LEVEL_OPTIONS = toOptions(JOB_LEVEL_LABELS);
+const ROLE_OPTIONS = toOptions(JOB_ROLE_LABELS);
+const EXPERIENCE_OPTIONS = [
+  { value: '0', label: 'No experience' },
+  { value: '1', label: '1 year' },
+  { value: '2', label: '2 years' },
+  { value: '3', label: '3 years' },
+  { value: '5', label: '5 years' },
+  { value: '8', label: '8+ years' },
+];
 const ARRANGEMENT_OPTIONS = toOptions(JOB_ARRANGEMENT_LABELS);
 const CONTRACT_OPTIONS = toOptions(JOB_CONTRACT_LABELS);
 
@@ -34,6 +48,24 @@ export default function JobFiltersPanel({ filters, onChange }: JobFiltersPanelPr
 
   return (
     <div>
+      <JobFilterSection title="Role" activeCount={filters.jobRole ? 1 : 0}>
+        <FilterChipGroup
+          ariaLabel="Role"
+          options={ROLE_OPTIONS}
+          value={filters.jobRole}
+          onChange={(jobRole) => onChange({ jobRole })}
+        />
+      </JobFilterSection>
+
+      <JobFilterSection title="My experience" activeCount={filters.experienceYears ? 1 : 0}>
+        <FilterChipGroup
+          ariaLabel="My experience"
+          options={EXPERIENCE_OPTIONS}
+          value={filters.experienceYears}
+          onChange={(experienceYears) => onChange({ experienceYears })}
+        />
+      </JobFilterSection>
+
       <JobFilterSection title="Level" activeCount={filters.level ? 1 : 0}>
         <FilterChipGroup
           ariaLabel="Level"
