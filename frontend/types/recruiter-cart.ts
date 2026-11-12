@@ -25,19 +25,9 @@ export interface RecruiterCart {
   currency: string;
 }
 
-export type InvoiceType = 'business' | 'personal';
-
 export interface BusinessInvoiceInfo {
   taxId: string;
   companyName: string;
   companyAddress: string;
-  recipientEmail: string;
-}
-
-export interface PersonalInvoiceInfo {
-  personalDocumentType?: 'cccd' | 'passport';
-  fullName: string;
-  taxOrIdentityNumber: string;
-  personalAddress: string;
   recipientEmail: string;
 }
