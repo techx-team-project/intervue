@@ -13,6 +13,6 @@ function pin(color: string) {
   });
 }
 
-export const jobPinIcon = pin('#2563eb');
-export const selectedJobPinIcon = pin('#dc2626');
-export const originPinIcon = pin('#16a34a');
+export const jobPinIcon = pin('#00b14f');
+export const selectedJobPinIcon = pin('#043d2d');
+export const originPinIcon = pin('#212f3f');

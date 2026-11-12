@@ -64,19 +64,21 @@ export default function JobDeck() {
               key={job.id}
               aria-hidden={!isTop}
               className={cn(
-                'shadow-float ease-standard absolute inset-x-0 top-0 flex h-[330px] flex-col rounded-3xl bg-white p-7 transition-all',
+                'shadow-float ease-standard border-outline-variant absolute inset-x-0 top-0 flex h-[330px] flex-col rounded-[28px] border bg-white p-7 transition-all',
                 isLeaving ? LEAVING_CLASS : (POSITION_CLASSES[position] ?? HIDDEN_CLASS),
               )}
             >
               <div className="flex items-center gap-3">
                 <CompanyLogo name={job.company.name} src={job.company.logoUrl} className="h-12 w-12 rounded-xl" />
-                <p className="text-body-sm text-on-surface-variant line-clamp-1 flex-1 uppercase">{job.company.name}</p>
+                <p className="text-label-md text-on-surface-variant line-clamp-1 flex-1 font-semibold tracking-wider uppercase">
+                  {job.company.name}
+                </p>
                 <span className="bg-primary-container text-on-primary-container text-label-md shrink-0 rounded-full px-3 py-1 font-semibold">
                   New
                 </span>
               </div>
 
-              <h3 className="font-display text-headline-sm text-on-surface mt-5 line-clamp-2 font-bold">{job.title}</h3>
+              <h3 className="font-display text-title-lg text-on-surface mt-5 line-clamp-2 font-bold">{job.title}</h3>
 
               <ul className="mt-4 flex flex-wrap gap-2">
                 {facts.map((fact) => (
@@ -92,7 +94,7 @@ export default function JobDeck() {
               <div className="border-outline-variant mt-auto flex items-end justify-between border-t pt-5">
                 <div>
                   <p className="text-label-md text-on-surface-variant">Salary</p>
-                  <p className="font-display text-headline-sm text-primary font-bold">{formatSalary(job.salary)}</p>
+                  <p className="font-display text-title-lg text-primary font-bold">{formatSalary(job.salary)}</p>
                 </div>
                 <Link href={`/jobs/${job.id}`} tabIndex={isTop ? 0 : -1} className={buttonClassName({ size: 'xl' })}>
                   View details

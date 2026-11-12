@@ -1,4 +1,9 @@
-export const SEARCH_CITIES = ['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Cần Thơ', 'Hải Phòng'];
+import { VN_LOCATIONS } from '@/constants/vn-locations';
+
+export const CITY_OPTIONS = [
+  { value: '', label: 'All locations' },
+  ...VN_LOCATIONS.map((city) => ({ value: city, label: city })),
+];
 
 export const POPULAR_KEYWORDS = [
   'Java',
@@ -16,7 +21,7 @@ export const POPULAR_KEYWORDS = [
 export const FEATURED_CITY_FILTERS = [
   { id: '', label: 'Latest' },
   { id: 'Hà Nội', label: 'Hanoi' },
-  { id: 'Hồ Chí Minh', label: 'Ho Chi Minh City' },
+  { id: 'TP. Hồ Chí Minh', label: 'Ho Chi Minh City' },
   { id: 'Đà Nẵng', label: 'Da Nang' },
 ];
 

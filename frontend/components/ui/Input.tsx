@@ -19,7 +19,8 @@ const radiusStyles: Record<NonNullable<InputProps['radius']>, string> = {
 };
 
 const focusToneStyles: Record<NonNullable<InputProps['focusTone']>, string> = {
-  primary: 'border-outline focus:border-primary focus:ring-2 focus:ring-emerald-600/15 focus:outline-none',
+  primary:
+    'border-outline hover:border-on-surface-variant/60 focus:border-primary focus:ring-2 focus:ring-emerald-600/15 focus:outline-none',
   neutral:
     'border-slate-200 hover:border-slate-300 focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-slate-200/60 focus:outline-none',
 };
@@ -50,7 +51,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              'text-on-surface w-full border bg-white px-3.5 py-2.5 text-sm placeholder-slate-400 transition-colors',
+              'text-on-surface placeholder:text-on-surface-variant/70 min-h-11 w-full border bg-white px-3.5 py-2.5 text-sm transition-colors',
               'disabled:bg-surface-container-low disabled:text-on-surface-variant dark:disabled:bg-forest-900/60 dark:disabled:text-forest-400 disabled:cursor-not-allowed disabled:opacity-75',
               radiusStyles[radius],
               leftIcon ? 'pl-10' : 'pl-3.5',

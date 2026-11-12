@@ -7,6 +7,7 @@ import type {
   SkillGroup,
   WorkingArrangement,
 } from '@/types/recruiter-job';
+import { VN_LOCATIONS } from '@/constants/vn-locations';
 
 export const JOB_PAGE_SIZE = 8;
 
@@ -119,7 +120,7 @@ export const JOB_FORM_CURRENCY_OPTIONS = [
   { value: 'USD', label: 'USD' },
 ];
 
-export const JOB_CITY_SUGGESTIONS = ['Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ'];
+export const JOB_CITY_SUGGESTIONS = VN_LOCATIONS;
 
 export const SKILL_GROUP_LABELS: Record<SkillGroup, string> = {
   CORE: 'Cốt lõi',
