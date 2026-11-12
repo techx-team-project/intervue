@@ -85,6 +85,7 @@ export const ROUTES = {
   ADMIN_SERVICE_VOUCHERS: '/admin/services/vouchers',
   ADMIN_SERVICE_VOUCHERS_CREATE: '/admin/services/vouchers/create',
   ADMIN_ADS_SLOTS: '/admin/ads/slots',
+  ADMIN_ADS_SLOTS_CREATE: '/admin/ads/slots/create',
   ADMIN_ADS_CREATIVES: '/admin/ads/creatives',
   ADMIN_EDUCATION_CODES: '/admin/services/education-codes',
   ADMIN_FINANCE_ORDERS: '/admin/finance/orders',
