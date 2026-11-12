@@ -51,6 +51,8 @@ export interface FreeQuotaSettings {
   connectDailyInviteLimit: number;
   companyFreePhotoLimit: number;
   requireJobSlot: boolean;
+  jobFreeActiveLimit: number;
+  jobFreeMaxDays: number;
   updatedAt: string | null;
 }
 

@@ -18,6 +18,8 @@ interface QuotaDraft {
   candidateStarterCredits: string;
   connectDailyInviteLimit: string;
   companyFreePhotoLimit: string;
+  jobFreeActiveLimit: string;
+  jobFreeMaxDays: string;
   requireJobSlot: boolean;
 }
 
@@ -44,6 +46,16 @@ const QUOTA_BOUNDS: Record<NumericQuotaKey, { max: number; label: string; helper
     label: 'Company free gallery photos',
     helper: 'Maximum company profile photos without an active Brand Page upgrade (minimum 10 with Brand Page).',
   },
+  jobFreeActiveLimit: {
+    max: 100,
+    label: 'Free live jobs / company',
+    helper: 'Jobs a company can keep published at the same time without a paid job slot.',
+  },
+  jobFreeMaxDays: {
+    max: 365,
+    label: 'Free job duration (days)',
+    helper: 'Longest a free job can stay open, counted from the day it is published.',
+  },
   cvReviewFreePerDay: {
     max: 1_000,
     label: 'Candidate CV Review / day',
@@ -64,6 +76,8 @@ function toDraft(settings: FreeQuotaSettings): QuotaDraft {
     candidateStarterCredits: String(settings.candidateStarterCredits),
     connectDailyInviteLimit: String(settings.connectDailyInviteLimit),
     companyFreePhotoLimit: String(settings.companyFreePhotoLimit),
+    jobFreeActiveLimit: String(settings.jobFreeActiveLimit),
+    jobFreeMaxDays: String(settings.jobFreeMaxDays),
     requireJobSlot: settings.requireJobSlot,
   };
 }
@@ -100,6 +114,8 @@ function validateQuotaDraft(draft: QuotaDraft):
       candidateStarterCredits: parsed.candidateStarterCredits,
       connectDailyInviteLimit: parsed.connectDailyInviteLimit,
       companyFreePhotoLimit: parsed.companyFreePhotoLimit,
+      jobFreeActiveLimit: parsed.jobFreeActiveLimit,
+      jobFreeMaxDays: parsed.jobFreeMaxDays,
       requireJobSlot: draft.requireJobSlot,
     },
     errors: {},
@@ -206,6 +222,10 @@ function FreeQuotasForm({ settings }: FreeQuotasFormProps) {
             onChange={(checked) => setDraft((current) => ({ ...current, requireJobSlot: checked }))}
             ariaLabel="Toggle require paid job post slot to publish"
           />
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+          {renderNumberField('jobFreeActiveLimit')}
+          {renderNumberField('jobFreeMaxDays')}
         </div>
       </div>
 
