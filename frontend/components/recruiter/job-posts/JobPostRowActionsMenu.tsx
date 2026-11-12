@@ -4,6 +4,7 @@ import { ROUTES } from '@/constants/routes';
 import type { RecruiterJobPost } from '@/types/recruiter-job';
 import {
   ArrowUpCircle,
+  BarChart3,
   Copy,
   Eye,
   History,
@@ -30,6 +31,7 @@ interface JobPostRowActionsMenuProps {
   onDuplicate: () => void;
   onRenew: () => void;
   onHistory: () => void;
+  onStats: () => void;
   onDelete: () => void;
 }
 
@@ -58,6 +60,9 @@ function buildActions(props: JobPostRowActionsMenuProps): MenuAction[] {
     actions.push({ key: 'edit', label: 'Chỉnh sửa', icon: Pencil, href: `${base}/edit` });
   }
   actions.push({ key: 'preview', label: 'Xem trước', icon: Eye, href: `${base}/preview` });
+  if (job.status !== 'DRAFT') {
+    actions.push({ key: 'stats', label: 'Thống kê', icon: BarChart3, onClick: props.onStats });
+  }
 
   if (job.status === 'PUBLISHED') {
     actions.push({ key: 'retop', label: 'Đẩy top tin', icon: ArrowUpCircle, onClick: props.onRetop });

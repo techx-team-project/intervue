@@ -33,6 +33,7 @@ interface JobPostsListProps {
   onConfirm: (request: { title: string; message: string; run: () => void }) => void;
   onRenew: (job: RecruiterJobPost) => void;
   onHistory: (job: RecruiterJobPost) => void;
+  onStats: (job: RecruiterJobPost) => void;
 }
 
 function salaryText(salary: JobSalary) {
@@ -53,6 +54,7 @@ export default function JobPostsList({
   onConfirm,
   onRenew,
   onHistory,
+  onStats,
 }: JobPostsListProps) {
   return (
     <div className="border-outline-variant rounded-xl border bg-white">
@@ -97,6 +99,7 @@ export default function JobPostsList({
               onDuplicate={() => actions.duplicateJob(job.id)}
               onRenew={() => onRenew(job)}
               onHistory={() => onHistory(job)}
+              onStats={() => onStats(job)}
               onDelete={() =>
                 onConfirm({
                   title: 'Xóa bản nháp?',

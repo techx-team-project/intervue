@@ -13,6 +13,7 @@ export const recruiterJobKeys = {
   detail: (id: number) => ['recruiter', 'jobs', 'detail', id] as const,
   history: (id: number, page: number) => ['recruiter', 'jobs', 'history', id, page] as const,
   quota: ['recruiter', 'jobs', 'quota'] as const,
+  stats: (id: number, days: number) => ['recruiter', 'jobs', 'stats', id, days] as const,
 };
 
 export function useRecruiterJobList(params: RecruiterJobSearchParams) {
@@ -39,6 +40,15 @@ export function useJobHistory(id: number | null, page: number, size: number) {
   return useQuery({
     queryKey: recruiterJobKeys.history(id ?? 0, page),
     queryFn: () => recruiterJobApi.history(id as number, page, size),
+    enabled: id !== null,
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useJobStats(id: number | null, days: number) {
+  return useQuery({
+    queryKey: recruiterJobKeys.stats(id ?? 0, days),
+    queryFn: () => recruiterJobApi.stats(id as number, days),
     enabled: id !== null,
     placeholderData: keepPreviousData,
   });

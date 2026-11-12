@@ -154,6 +154,19 @@ export interface JobHistoryEntry {
   createdAt: string;
 }
 
+export interface JobDailyStat {
+  date: string;
+  views: number;
+  applications: number;
+}
+
+export interface JobStats {
+  totalViews: number;
+  totalApplications: number;
+  conversionRate?: number;
+  daily: JobDailyStat[];
+}
+
 export interface JobQuota {
   slotsRemaining: number;
   slotRequired: boolean;

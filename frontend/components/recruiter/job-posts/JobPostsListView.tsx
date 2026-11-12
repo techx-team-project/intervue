@@ -15,6 +15,7 @@ import { FilePlus, Plus, SearchX } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import JobHistoryModal from './JobHistoryModal';
+import JobStatsModal from './JobStatsModal';
 import JobPostsBulkBar from './JobPostsBulkBar';
 import JobPostsFilterBar from './JobPostsFilterBar';
 import JobPostsList from './JobPostsList';
@@ -40,6 +41,7 @@ export default function JobPostsListView() {
   const [confirm, setConfirm] = useState<ConfirmRequest | null>(null);
   const [renewingJob, setRenewingJob] = useState<RecruiterJobPost | null>(null);
   const [historyJob, setHistoryJob] = useState<RecruiterJobPost | null>(null);
+  const [statsJob, setStatsJob] = useState<RecruiterJobPost | null>(null);
 
   const listQuery = useRecruiterJobList({
     status: JOB_SEGMENT_META[segment].status,
@@ -175,6 +177,7 @@ export default function JobPostsListView() {
             onConfirm={setConfirm}
             onRenew={setRenewingJob}
             onHistory={setHistoryJob}
+            onStats={setStatsJob}
           />
           <div className="border-outline-variant rounded-xl border bg-white p-3.5 sm:p-4">
             <Pagination
@@ -208,6 +211,7 @@ export default function JobPostsListView() {
 
       <RenewJobModal key={renewingJob?.id ?? 'renew'} job={renewingJob} onClose={() => setRenewingJob(null)} />
       <JobHistoryModal key={historyJob?.id ?? 'history'} job={historyJob} onClose={() => setHistoryJob(null)} />
+      <JobStatsModal key={statsJob?.id ?? 'stats'} job={statsJob} onClose={() => setStatsJob(null)} />
 
       <Modal
         isOpen={confirm !== null}
