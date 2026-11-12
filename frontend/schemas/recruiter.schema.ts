@@ -1,5 +1,5 @@
 import { email, strongPassword } from '@/schemas/auth.schema';
-import { todayIsoDate } from '@/utils/datetime';
+import { isoDateAfterDays, todayIsoDate } from '@/utils/datetime';
 import { z } from 'zod';
 
 export const recruiterProfileSchema = z.object({
@@ -40,8 +40,8 @@ export const recruiterRegisterSchema = recruiterProfileSchema
 const budgetAmount = z
   .string()
   .trim()
-  .refine((value) => value === '' || /^\d{1,12}$/.test(value), {
-    message: 'Budget must contain digits only (up to 12 digits).',
+  .refine((value) => value === '' || /^\d{1,9}$/.test(value), {
+    message: 'Budget must contain digits only (up to 9 digits).',
   });
 
 const recruiterNeedsShape = z.object({
@@ -55,7 +55,7 @@ const recruiterNeedsShape = z.object({
     .number({ error: 'Please enter the number of hires.' })
     .int('Number of hires must be a whole number.')
     .min(1, 'Number of hires must be at least 1.')
-    .max(999, 'Number of hires must be at most 999.'),
+    .max(100, 'Number of hires must be at most 100.'),
   budgetFrom: budgetAmount,
   budgetTo: budgetAmount,
   budgetSource: z.enum(['COMPANY', 'PERSONAL']),
@@ -68,6 +68,11 @@ const budgetFields = recruiterNeedsShape.pick({ budgetFrom: true, budgetTo: true
 export const recruiterNeedsSchema = recruiterNeedsShape
   .refine((data) => data.continuous || data.hireBy !== '', {
     message: 'Please choose a hire-by date or select Hire continuously.',
+    path: ['hireBy'],
+    when: ({ value }) => hireByFields.safeParse(value).success,
+  })
+  .refine((data) => data.continuous || data.hireBy === '' || data.hireBy <= isoDateAfterDays(180), {
+    message: 'Hire-by date must be within the next 180 days.',
     path: ['hireBy'],
     when: ({ value }) => hireByFields.safeParse(value).success,
   })

@@ -6,7 +6,8 @@ import Modal from '@/components/ui/Modal';
 import { ROUTES } from '@/constants/routes';
 import { useJobQuota, useRecruiterJobMutations } from '@/hooks/useRecruiterJobs';
 import type { RecruiterJobPost } from '@/types/recruiter-job';
-import { todayIsoDate } from '@/utils/datetime';
+import { JOB_MAX_DEADLINE_DAYS } from '@/schemas/job.schema';
+import { isoDateAfterDays, todayIsoDate } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
 import { defaultDeadline } from '@/utils/recruiter-job';
 import Link from 'next/link';
@@ -63,6 +64,7 @@ export default function RenewJobModal({ job, onClose }: RenewJobModalProps) {
           type="date"
           label="New application deadline"
           min={todayIsoDate()}
+          max={isoDateAfterDays(JOB_MAX_DEADLINE_DAYS)}
           value={deadline}
           onChange={(event) => setDeadline(event.target.value)}
         />

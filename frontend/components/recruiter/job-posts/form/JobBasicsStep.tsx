@@ -13,7 +13,15 @@ import {
   JOB_FORM_ROLE_OPTIONS,
   JOB_FORM_SALARY_BASIS_OPTIONS,
 } from '@/constants/recruiter-job';
-import type { JobPostFormData } from '@/schemas/job.schema';
+import {
+  JOB_MAX_DEADLINE_DAYS,
+  JOB_MAX_EXPERIENCE_YEARS,
+  JOB_MAX_SALARY,
+  JOB_MIN_SALARY,
+  type JobPostFormData,
+} from '@/schemas/job.schema';
+import { isoDateAfterDays, todayIsoDate } from '@/utils/datetime';
+import { blockInvalidDecimalKeys, blockInvalidIntegerKeys } from '@/utils/number-input';
 import { Controller, useFormContext } from 'react-hook-form';
 import FormSection from './FormSection';
 import SkillPicker from './SkillPicker';
@@ -129,8 +137,10 @@ export default function JobBasicsStep() {
                 <Input
                   type="number"
                   inputMode="decimal"
-                  min={0}
+                  min={JOB_MIN_SALARY[currency]}
+                  max={JOB_MAX_SALARY[currency]}
                   step={currency === 'VND' ? 0.5 : 100}
+                  onKeyDown={blockInvalidDecimalKeys}
                   placeholder="From"
                   aria-label="Minimum salary"
                   {...register('salaryMin', { setValueAs: numberOrUndefined })}
@@ -138,8 +148,10 @@ export default function JobBasicsStep() {
                 <Input
                   type="number"
                   inputMode="decimal"
-                  min={0}
+                  min={JOB_MIN_SALARY[currency]}
+                  max={JOB_MAX_SALARY[currency]}
                   step={currency === 'VND' ? 0.5 : 100}
+                  onKeyDown={blockInvalidDecimalKeys}
                   placeholder="To"
                   aria-label="Maximum salary"
                   {...register('salaryMax', { setValueAs: numberOrUndefined })}
@@ -175,6 +187,9 @@ export default function JobBasicsStep() {
               type="number"
               inputMode="numeric"
               min={0}
+              max={JOB_MAX_EXPERIENCE_YEARS}
+              step={1}
+              onKeyDown={blockInvalidIntegerKeys}
               placeholder="From"
               aria-label="Minimum years of experience"
               {...register('experienceMinYears', { setValueAs: numberOrUndefined })}
@@ -183,6 +198,9 @@ export default function JobBasicsStep() {
               type="number"
               inputMode="numeric"
               min={0}
+              max={JOB_MAX_EXPERIENCE_YEARS}
+              step={1}
+              onKeyDown={blockInvalidIntegerKeys}
               placeholder="To"
               aria-label="Maximum years of experience"
               {...register('experienceMaxYears', { setValueAs: numberOrUndefined })}
@@ -202,10 +220,21 @@ export default function JobBasicsStep() {
         />
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Input type="date" label="Application deadline" error={errors.deadline?.message} {...register('deadline')} />
+          <Input
+            type="date"
+            label="Application deadline"
+            min={todayIsoDate()}
+            max={isoDateAfterDays(JOB_MAX_DEADLINE_DAYS)}
+            error={errors.deadline?.message}
+            {...register('deadline')}
+          />
           <Input
             type="number"
+            inputMode="numeric"
             min={1}
+            max={100}
+            step={1}
+            onKeyDown={blockInvalidIntegerKeys}
             label="Number of openings"
             error={errors.openings?.message}
             {...register('openings', { valueAsNumber: true })}

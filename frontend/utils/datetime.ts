@@ -88,3 +88,13 @@ export function formatRelativeDay(iso: string): string {
   if (difference < 0) return `${Math.abs(difference)} days ago`;
   return `In ${difference} days`;
 }
+
+export function isoDateAfterDays(days: number): string {
+  const date = new Date(`${todayIsoDate()}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+export function localInputValueAfterDays(days: number): string {
+  return toLocalInputValue(new Date(Date.now() + days * DAY_MS).toISOString());
+}
