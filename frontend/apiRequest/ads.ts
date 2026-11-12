@@ -41,6 +41,12 @@ export const adminAdApi = {
   updateSlot: (id: number, data: SaveAdSlotInput) =>
     request<AdSlot>(`/admin/ads/slots/${id}`, { method: 'PUT', body: data }),
 
+  uploadHouseImage: (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return request<{ url: string; publicId: string }>('/admin/ads/upload-image', { method: 'POST', body: form });
+  },
+
   creatives: (status: AdCreativeStatus | '', page: number, size: number) =>
     request<Page<AdminAdCreative>>(
       `/admin/ads/creatives?${new URLSearchParams({

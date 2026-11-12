@@ -377,9 +377,11 @@ export default function AdminAdSlotForm({ servicePackages, editingSlot }: AdminA
                     label="House ad image (optional)"
                     value={field.value}
                     onChange={field.onChange}
+                    onUpload={adminAdApi.uploadHouseImage}
                     error={errors.houseImageUrl?.message}
                     placeholder="https://... or /images/banners/..."
-                    helperText={`Upload PNG/JPG matching ${formatAdDimensions(parsedWidth, parsedHeight)} (min 160×90px, max 5 MB) or paste a URL.`}
+                    helperText={`Upload PNG/JPG matching ${formatAdDimensions(parsedWidth, parsedHeight)} (min 160×60px, max 5 MB) or paste a URL.`}
+                    minDimensions={{ width: 160, height: 60 }}
                     maxDimensions={{
                       width: Math.max(parsedWidth * 2, 1600),
                       height: Math.max(parsedHeight * 2, 1200),
