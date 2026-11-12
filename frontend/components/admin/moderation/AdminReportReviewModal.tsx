@@ -35,6 +35,7 @@ const REASON_LABELS: Record<ReportReasonCode, string> = {
 export default function AdminReportReviewModal({ reportSummary, onClose }: AdminReportReviewModalProps) {
   const { data: report } = useAdminReportDetail(reportSummary.id);
   const hasConversationThread = reportSummary.targetType === 'CONVERSATION' && reportSummary.targetId > 0;
+  const isJobPost = reportSummary.targetType === 'JOB_POST';
   const isPreConnectionViolation = reportSummary.targetType === 'CONVERSATION' && reportSummary.targetId === 0;
   const { data: messagesPage, isLoading: isMessagesLoading } = useAdminReportConversationMessages(
     hasConversationThread ? reportSummary.targetId : undefined,
@@ -57,7 +58,7 @@ export default function AdminReportReviewModal({ reportSummary, onClose }: Admin
   const [activeAction, setActiveAction] = useState<'NONE' | 'DISMISS' | 'RESOLVE'>('NONE');
   const [dismissNote, setDismissNote] = useState('');
   const [resolveAction, setResolveAction] = useState<ReportResolveAction>(
-    hasConversationThread ? 'HIDE_CONTENT' : 'LOCK_ACCOUNT',
+    hasConversationThread || isJobPost ? 'HIDE_CONTENT' : 'LOCK_ACCOUNT',
   );
   const [resolveNote, setResolveNote] = useState('');
   const [customLockActorType, setCustomLockActorType] = useState<'CANDIDATE' | 'RECRUITER' | null>(null);
@@ -145,6 +146,16 @@ export default function AdminReportReviewModal({ reportSummary, onClose }: Admin
               <p className="mt-1 font-bold text-slate-800">
                 {reportSummary.targetType} #{reportSummary.targetId}
               </p>
+              {isJobPost && (
+                <a
+                  href={`/jobs/${reportSummary.targetId}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-primary mt-1 inline-block text-[11px] font-semibold hover:underline"
+                >
+                  View job post
+                </a>
+              )}
             </div>
             <div>
               <p className="font-semibold text-slate-500 uppercase">Reported At</p>
@@ -325,7 +336,7 @@ export default function AdminReportReviewModal({ reportSummary, onClose }: Admin
 
                 {/* Resolution Action Radios */}
                 <div className="space-y-2 text-xs">
-                  {hasConversationThread && (
+                  {(hasConversationThread || isJobPost) && (
                     <label className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 bg-white p-2.5 hover:bg-slate-50">
                       <input
                         type="radio"
@@ -338,36 +349,39 @@ export default function AdminReportReviewModal({ reportSummary, onClose }: Admin
                       <div>
                         <p className="flex items-center gap-1.5 font-bold text-slate-800">
                           <EyeOff className="h-3.5 w-3.5 text-amber-600" />
-                          Hide Conversation Content
+                          {isJobPost ? 'Hide Job Post' : 'Hide Conversation Content'}
                         </p>
                         <p className="mt-0.5 text-[11px] text-slate-500">
-                          Redacts message content for both candidate and recruiter. Conversation stays accessible for
-                          evidence.
+                          {isJobPost
+                            ? 'Hides the job from candidates and notifies the recruiter with your note as the reason. You can restore it later from the jobs page.'
+                            : 'Redacts message content for both candidate and recruiter. Conversation stays accessible for evidence.'}
                         </p>
                       </div>
                     </label>
                   )}
 
-                  <label className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 bg-white p-2.5 hover:bg-slate-50">
-                    <input
-                      type="radio"
-                      name="resolveAction"
-                      value="LOCK_ACCOUNT"
-                      checked={resolveAction === 'LOCK_ACCOUNT'}
-                      onChange={() => setResolveAction('LOCK_ACCOUNT')}
-                      className="accent-primary mt-0.5"
-                    />
-                    <div>
-                      <p className="flex items-center gap-1.5 font-bold text-rose-700">
-                        <Ban className="h-3.5 w-3.5 text-rose-600" />
-                        Lock Offender Account
-                      </p>
-                      <p className="mt-0.5 text-[11px] text-slate-500">
-                        Applies platform restriction to candidate or suspends recruiter account, terminating their
-                        sessions.
-                      </p>
-                    </div>
-                  </label>
+                  {!isJobPost && (
+                    <label className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 bg-white p-2.5 hover:bg-slate-50">
+                      <input
+                        type="radio"
+                        name="resolveAction"
+                        value="LOCK_ACCOUNT"
+                        checked={resolveAction === 'LOCK_ACCOUNT'}
+                        onChange={() => setResolveAction('LOCK_ACCOUNT')}
+                        className="accent-primary mt-0.5"
+                      />
+                      <div>
+                        <p className="flex items-center gap-1.5 font-bold text-rose-700">
+                          <Ban className="h-3.5 w-3.5 text-rose-600" />
+                          Lock Offender Account
+                        </p>
+                        <p className="mt-0.5 text-[11px] text-slate-500">
+                          Applies platform restriction to candidate or suspends recruiter account, terminating their
+                          sessions.
+                        </p>
+                      </div>
+                    </label>
+                  )}
 
                   <label className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 bg-white p-2.5 hover:bg-slate-50">
                     <input

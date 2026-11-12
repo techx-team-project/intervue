@@ -12,7 +12,7 @@ import {
   useAdminToggleFilterWord,
   useAdminUpdateFilterWord,
 } from '@/hooks/useAdminModeration';
-import type { ConnectFilterWord } from '@/types/admin-moderation';
+import type { ConnectFilterWord, FilterScope } from '@/types/admin-moderation';
 import type { ConnectFilterSeverity } from '@/types/connect';
 import { formatDateTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
@@ -20,8 +20,25 @@ import { AlertTriangle, Edit2, Plus, Shield, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+const SCOPE_TABS: Array<{ value: FilterScope; label: string; description: string }> = [
+  {
+    value: 'CONNECT',
+    label: 'Messaging',
+    description:
+      'Messages containing these patterns will be screened. 3 mild strikes or 1 severe strike automatically triggers a Connect mute.',
+  },
+  {
+    value: 'JOB',
+    label: 'Job posts',
+    description:
+      'Severe patterns block a job from being published. Mild patterns let it publish but flag it for review in the reports queue. Accents and letter case are ignored; regex patterns match accent-free lowercase text.',
+  },
+];
+
 export default function AdminFilterWordsTab() {
-  const { data: pageData, isLoading } = useAdminFilterWords(0, 100);
+  const [scope, setScope] = useState<FilterScope>('CONNECT');
+  const { data: pageData, isLoading } = useAdminFilterWords(scope, 0, 100);
+  const scopeTab = SCOPE_TABS.find((tab) => tab.value === scope) ?? SCOPE_TABS[0];
   const filterWords = pageData?.items ?? [];
 
   const [modalMode, setModalMode] = useState<'create' | 'edit' | null>(null);
@@ -68,6 +85,7 @@ export default function AdminFilterWordsTab() {
 
     const payload = {
       pattern: trimmedPattern,
+      scope,
       regex: isRegex,
       severity,
       active: isActive,
@@ -116,14 +134,30 @@ export default function AdminFilterWordsTab() {
 
   return (
     <div className="space-y-4">
+      <div role="tablist" aria-label="Filter scope" className="flex gap-1.5">
+        {SCOPE_TABS.map((tab) => (
+          <button
+            key={tab.value}
+            type="button"
+            role="tab"
+            aria-selected={scope === tab.value}
+            onClick={() => setScope(tab.value)}
+            className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+              scope === tab.value
+                ? 'border-primary bg-primary-light text-primary-deep'
+                : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       {/* Top Banner and Actions */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-sm font-bold text-slate-800">Automated Content Filters</h2>
-          <p className="text-xs text-slate-500">
-            Messages containing these patterns will be screened. 3 mild strikes or 1 severe strike automatically
-            triggers a Connect mute.
-          </p>
+          <p className="text-xs text-slate-500">{scopeTab.description}</p>
         </div>
         <Button onClick={openCreateModal} className="flex shrink-0 items-center gap-1.5 text-xs font-semibold">
           <Plus className="h-4 w-4" />

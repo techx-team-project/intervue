@@ -7,6 +7,7 @@ import type {
   AdminResolveReportPayload,
   ConnectFilterWord,
   CreateFilterWordPayload,
+  FilterScope,
   ReportStatus,
   ReportTargetType,
   UpdateFilterWordPayload,
@@ -38,8 +39,8 @@ export const adminModerationApi = {
     request<Page<ConnectMessage>>(`/admin/connect/conversations/${connectionId}/messages?${toQuery({ page, size })}`),
 
   // Filter Words
-  filterWords: (page = 0, size = 50) =>
-    request<Page<ConnectFilterWord>>(`/admin/connect/filter-words?${toQuery({ page, size })}`),
+  filterWords: (scope: FilterScope, page = 0, size = 50) =>
+    request<Page<ConnectFilterWord>>(`/admin/connect/filter-words?${toQuery({ scope, page, size })}`),
 
   createFilterWord: (payload: CreateFilterWordPayload) =>
     request<ConnectFilterWord>('/admin/connect/filter-words', { method: 'POST', body: payload }),

@@ -3,6 +3,7 @@ import type {
   AdminDismissReportPayload,
   AdminResolveReportPayload,
   CreateFilterWordPayload,
+  FilterScope,
   ReportStatus,
   ReportTargetType,
   UpdateFilterWordPayload,
@@ -16,7 +17,8 @@ export const adminModerationKeys = {
   reportDetail: (id: number) => ['admin', 'moderation', 'report', id] as const,
   conversationMessages: (connectionId: number, page: number, size: number) =>
     ['admin', 'moderation', 'conversation-messages', connectionId, page, size] as const,
-  filterWords: (page: number, size: number) => ['admin', 'moderation', 'filter-words', page, size] as const,
+  filterWords: (scope: FilterScope, page: number, size: number) =>
+    ['admin', 'moderation', 'filter-words', scope, page, size] as const,
 };
 
 export function useAdminReports(params: {
@@ -71,10 +73,10 @@ export function useAdminResolveReport() {
   });
 }
 
-export function useAdminFilterWords(page = 0, size = 50) {
+export function useAdminFilterWords(scope: FilterScope, page = 0, size = 50) {
   return useQuery({
-    queryKey: adminModerationKeys.filterWords(page, size),
-    queryFn: () => adminModerationApi.filterWords(page, size),
+    queryKey: adminModerationKeys.filterWords(scope, page, size),
+    queryFn: () => adminModerationApi.filterWords(scope, page, size),
   });
 }
 
