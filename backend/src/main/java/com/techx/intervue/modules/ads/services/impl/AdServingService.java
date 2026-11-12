@@ -14,10 +14,12 @@ import java.time.Duration;
 import java.util.EnumSet;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AdServingService implements AdServingServiceInterface {
@@ -68,7 +70,7 @@ public class AdServingService implements AdServingServiceInterface {
     @Transactional(readOnly = true)
     public void recordClick(String slotCode, String clientIp) {
         AdSlot slot = slotRepository.findByCode(slotCode.trim().toUpperCase()).orElse(null);
-        if (slot == null) {
+        if (slot == null || !Boolean.TRUE.equals(slot.getIsActive())) {
             return;
         }
         AdCreative creative = approvedCreativeFor(slot);
@@ -77,7 +79,12 @@ public class AdServingService implements AdServingServiceInterface {
         }
         // One click per IP per slot per minute keeps a refresh loop from inflating the report
         String guard = CLICK_GUARD_KEY + slot.getCode() + ":" + clientIp;
-        if (!Boolean.TRUE.equals(redis.opsForValue().setIfAbsent(guard, "1", CLICK_COOLDOWN))) {
+        try {
+            if (!Boolean.TRUE.equals(redis.opsForValue().setIfAbsent(guard, "1", CLICK_COOLDOWN))) {
+                return;
+            }
+        } catch (RuntimeException ex) {
+            log.warn("Failed to check click guard for slot {}", slot.getCode(), ex);
             return;
         }
         increment(CLICK_KEY + creative.getAdBookingId());
@@ -122,9 +129,13 @@ public class AdServingService implements AdServingServiceInterface {
 
     // Counters live in Redis and are flushed to the table on a schedule; a page view must not write
     private void increment(String key) {
-        Long value = redis.opsForValue().increment(key);
-        if (value != null && value == 1L) {
-            redis.expire(key, COUNTER_TTL);
+        try {
+            Long value = redis.opsForValue().increment(key);
+            if (value != null && value == 1L) {
+                redis.expire(key, COUNTER_TTL);
+            }
+        } catch (RuntimeException ex) {
+            log.warn("Failed to increment Redis ad metric key {}", key, ex);
         }
     }
 }

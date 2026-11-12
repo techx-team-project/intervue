@@ -2,6 +2,7 @@ package com.techx.intervue.modules.billing.services.impl;
 
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
+import com.techx.intervue.modules.ads.services.interfaces.AdBookingServiceInterface;
 import com.techx.intervue.modules.billing.entities.BillingSettings;
 import com.techx.intervue.modules.billing.entities.Cart;
 import com.techx.intervue.modules.billing.entities.CartItem;
@@ -32,6 +33,7 @@ public class CartService implements CartServiceInterface {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final AdCartMeta adCartMeta;
+    private final AdBookingServiceInterface adBookingService;
     private final ServicePackageRepository packageRepository;
     private final CartMapper cartMapper;
     private final OrderPricing orderPricing;
@@ -65,9 +67,13 @@ public class CartService implements CartServiceInterface {
                     new ArrayList<>(adCartMeta.readWeeks(existing.getMetaJson()));
             combined.addAll(request.weeks());
             List<LocalDate> merged = combined.stream().distinct().sorted().toList();
+            adBookingService.assertWeeksAvailable(servicePackage.getId(), merged);
             existing.setMetaJson(adCartMeta.build(servicePackage, merged, merged.size()));
             existing.setQuantity(merged.size());
             return toResource(cart);
+        }
+        if (metaJson != null) {
+            adBookingService.assertWeeksAvailable(servicePackage.getId(), request.weeks());
         }
 
         if (cartItemRepository.countByCartId(cart.getId()) >= MAX_DISTINCT_ITEMS) {

@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface AdBookingServiceInterface {
 
+    void assertWeeksAvailable(Long servicePackageId, List<LocalDate> weeks);
+
     /**
      * Holds the weeks the moment an order is placed. Without this two companies could both pay for
      * the same week and only find out afterwards.

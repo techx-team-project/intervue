@@ -40,6 +40,24 @@ public class AdBookingService implements AdBookingServiceInterface {
     private final EntitlementServiceInterface entitlementService;
 
     @Override
+    @Transactional(readOnly = true)
+    public void assertWeeksAvailable(Long servicePackageId, List<LocalDate> weeks) {
+        if (weeks == null || weeks.isEmpty()) {
+            throw new AppException(ErrorCode.AD_WEEKS_REQUIRED);
+        }
+        AdSlot slot = requireActiveSlotForPackage(servicePackageId);
+        for (LocalDate week : weeks.stream().distinct().sorted().toList()) {
+            if (!AdWeeks.isBookable(week)) {
+                throw AppException.validation("weeks", "Week " + week + " is no longer bookable");
+            }
+            if (bookingRepository.existsByAdSlotIdAndWeekStartAndStatusIn(
+                    slot.getId(), week, AdSlotService.HOLDING)) {
+                throw new AppException(ErrorCode.AD_SLOT_UNAVAILABLE);
+            }
+        }
+    }
+
+    @Override
     @Transactional
     public void reserve(
             Long companyId,
@@ -50,11 +68,7 @@ public class AdBookingService implements AdBookingServiceInterface {
         if (weeks.isEmpty()) {
             throw new AppException(ErrorCode.AD_WEEKS_REQUIRED);
         }
-        AdSlot slot =
-                slotRepository
-                        .findByServicePackageId(servicePackageId)
-                        .filter(found -> Boolean.TRUE.equals(found.getIsActive()))
-                        .orElseThrow(() -> new AppException(ErrorCode.AD_SLOT_NOT_FOUND));
+        AdSlot slot = requireActiveSlotForPackage(servicePackageId);
 
         for (LocalDate week : weeks.stream().distinct().sorted().toList()) {
             if (!AdWeeks.isBookable(week)) {
@@ -165,5 +179,12 @@ public class AdBookingService implements AdBookingServiceInterface {
                                         totals.getOrDefault(booking.getId(), new int[2])[0],
                                         totals.getOrDefault(booking.getId(), new int[2])[1]))
                 .toList();
+    }
+
+    private AdSlot requireActiveSlotForPackage(Long servicePackageId) {
+        return slotRepository
+                .findByServicePackageId(servicePackageId)
+                .filter(found -> Boolean.TRUE.equals(found.getIsActive()))
+                .orElseThrow(() -> new AppException(ErrorCode.AD_SLOT_NOT_FOUND));
     }
 }
