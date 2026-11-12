@@ -13,6 +13,8 @@ export const recruiterJobKeys = {
   detail: (id: number) => ['recruiter', 'jobs', 'detail', id] as const,
   history: (id: number, page: number) => ['recruiter', 'jobs', 'history', id, page] as const,
   quota: ['recruiter', 'jobs', 'quota'] as const,
+  similar: (title: string, city: string, excludeId?: number) =>
+    ['recruiter', 'jobs', 'similar', title, city, excludeId] as const,
   stats: (id: number, days: number) => ['recruiter', 'jobs', 'stats', id, days] as const,
 };
 
@@ -97,4 +99,12 @@ export function useRecruiterJobMutations() {
     }),
     remove: useMutation({ mutationFn: recruiterJobApi.remove, onSuccess: invalidate }),
   };
+}
+
+export function useSimilarJobs(title: string, city: string, excludeId: number | undefined, enabled: boolean) {
+  return useQuery({
+    queryKey: recruiterJobKeys.similar(title, city, excludeId),
+    queryFn: () => recruiterJobApi.similar(title, city, excludeId),
+    enabled: enabled && title.trim() !== '' && city.trim() !== '',
+  });
 }

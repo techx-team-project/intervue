@@ -3,6 +3,7 @@ import type { Page } from '@/types/api';
 import type {
   JobHistoryEntry,
   JobQuota,
+  SimilarJob,
   JobStats,
   JobStatus,
   RecruiterJobCounts,
@@ -60,6 +61,12 @@ export const recruiterJobApi = {
     request<Page<JobHistoryEntry>>(`/recruiter/jobs/${id}/history?page=${page}&size=${size}`),
 
   quota: () => request<JobQuota>('/recruiter/jobs/quota'),
+
+  similar: (title: string, city: string, excludeId?: number) => {
+    const query = new URLSearchParams({ title, city });
+    if (excludeId) query.set('excludeId', String(excludeId));
+    return request<SimilarJob[]>(`/recruiter/jobs/similar?${query.toString()}`);
+  },
 
   stats: (id: number, days: number) => request<JobStats>(`/recruiter/jobs/${id}/stats?days=${days}`),
 
