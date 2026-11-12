@@ -8,7 +8,12 @@ import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
 import { INTERVIEW_DURATION_OPTIONS, INTERVIEW_FORMAT_OPTIONS } from '@/constants/interview';
 import type { Interview, InterviewFormat, InterviewFormValues } from '@/types/interview';
-import { currentLocalInputValue, fromLocalInputValue, toLocalInputValue } from '@/utils/datetime';
+import {
+  currentLocalInputValue,
+  fromLocalInputValue,
+  localInputValueAfterDays,
+  toLocalInputValue,
+} from '@/utils/datetime';
 import { loadInterviewPreferences, saveInterviewPreferences } from '@/utils/interview-preferences';
 import { ExternalLink } from 'lucide-react';
 import { useState } from 'react';
@@ -43,6 +48,7 @@ export default function InterviewFormModal({
   const submit = () => {
     if (!startsAt) return setError('Please choose the interview date and time.');
     if (startsAt <= currentLocalInputValue()) return setError('The interview time must be in the future.');
+    if (startsAt > localInputValueAfterDays(30)) return setError('The interview time must be within the next 30 days.');
     if (!location.trim()) {
       return setError(format === 'ONLINE' ? 'Please enter the meeting link.' : 'Please enter the interview address.');
     }

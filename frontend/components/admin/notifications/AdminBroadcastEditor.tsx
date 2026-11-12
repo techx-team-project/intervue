@@ -1,5 +1,6 @@
 'use client';
 
+import { currentLocalInputValue, localInputValueAfterDays } from '@/utils/datetime';
 import AdminUserConfirmDialog from '@/components/admin/users/AdminUserConfirmDialog';
 import NotificationMarkdown from '@/components/common/NotificationMarkdown';
 import { Button } from '@/components/ui/Button';
@@ -296,6 +297,8 @@ export default function AdminBroadcastEditor({ broadcastId }: AdminBroadcastEdit
               <Input
                 {...field}
                 type="datetime-local"
+                min={currentLocalInputValue()}
+                max={localInputValueAfterDays(90)}
                 label="Schedule (optional)"
                 helperText="Leave empty to keep it as a draft you send manually."
                 error={fieldState.error?.message}

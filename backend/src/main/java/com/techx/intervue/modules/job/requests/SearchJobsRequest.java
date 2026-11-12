@@ -21,7 +21,7 @@ public record SearchJobsRequest(
         WorkingArrangement workingArrangement,
         JobLevel level,
         @Size(max = 10) List<@NotNull Long> skillIds,
-        @PositiveOrZero Long salaryFrom,
+        @PositiveOrZero @Max(JobLimits.MAX_SALARY_VND) Long salaryFrom,
         SalaryCurrency currency,
         @Min(1) @Max(90) Integer postedWithinDays,
         JobSort sort,

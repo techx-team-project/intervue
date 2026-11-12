@@ -13,6 +13,7 @@ interface JobAlertModalProps {
   defaultValues?: { keyword?: string; city?: string } | null;
 }
 
+const MAX_ALERT_SALARY = 250_000_000;
 const VIETNAM_CITIES = ['All locations', 'Ho Chi Minh City', 'Hanoi', 'Da Nang', 'Can Tho', 'Hai Phong', 'Remote'];
 
 const CAREER_LEVELS = [
@@ -167,6 +168,7 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
           <input
             type="text"
             required
+            maxLength={150}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Senior Frontend React in HCMC"
@@ -180,6 +182,7 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
             <label className="text-on-surface block text-xs font-bold tracking-wider uppercase">Keywords / Skill</label>
             <input
               type="text"
+              maxLength={255}
               value={keyword}
               onChange={(e) => handleKeywordChange(e.target.value)}
               placeholder="e.g. React, Java, Golang"
@@ -244,7 +247,7 @@ function JobAlertForm({ onClose, onSuccess, initialData, defaultValues }: Omit<J
             value={salaryMin}
             onChange={(e) => {
               const numericOnly = e.target.value.replace(/\D/g, '');
-              setSalaryMin(numericOnly ? Number(numericOnly).toLocaleString('en-US') : '');
+              setSalaryMin(numericOnly ? Math.min(Number(numericOnly), MAX_ALERT_SALARY).toLocaleString('en-US') : '');
             }}
             placeholder="e.g. 25,000,000"
             className="border-outline-variant text-on-surface focus:border-primary mt-1.5 w-full rounded-xl border px-3.5 py-2 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"

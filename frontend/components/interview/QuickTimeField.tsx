@@ -2,9 +2,11 @@
 
 import { Input } from '@/components/ui/Input';
 import { cn } from '@/lib/utils';
-import { currentLocalInputValue } from '@/utils/datetime';
+import { currentLocalInputValue, localInputValueAfterDays } from '@/utils/datetime';
 import { buildQuickSlots } from '@/utils/interview-slots';
 import { useState } from 'react';
+
+const MAX_FUTURE_DAYS = 30;
 
 interface QuickTimeFieldProps {
   label: string;
@@ -23,6 +25,7 @@ export default function QuickTimeField({ label, value, error, onChange }: QuickT
         type="datetime-local"
         value={value}
         min={currentLocalInputValue()}
+        max={localInputValueAfterDays(MAX_FUTURE_DAYS)}
         error={error}
         onChange={(event) => onChange(event.target.value)}
       />

@@ -1,3 +1,4 @@
+import { isoDateAfterDays, todayIsoDate } from '@/utils/datetime';
 import { z } from 'zod';
 
 export const jobLevelSchema = z.enum(['INTERN', 'JUNIOR', 'MID', 'SENIOR', 'LEAD']);
@@ -25,6 +26,10 @@ export const jobBenefitTagSchema = z.enum([
 export const JOB_MAX_BENEFIT_TAGS = 10;
 export const JOB_MAX_HIRING_STEPS = 6;
 export const JOB_MAX_EXPERIENCE_YEARS = 30;
+export const JOB_MAX_DEADLINE_DAYS = 90;
+export const JOB_MAX_TEXT_LENGTH = 20000;
+export const JOB_MIN_SALARY = { VND: 1, USD: 50 } as const;
+export const JOB_MAX_SALARY = { VND: 250, USD: 10000 } as const;
 
 export const screeningQuestionTypeSchema = z.enum(['CHOICE', 'SHORT_TEXT']);
 
@@ -93,16 +98,31 @@ export const jobPostSchema = z
     currency: salaryCurrencySchema,
     salaryBasis: salaryBasisSchema,
     skills: z.array(skillOptionSchema).min(1, 'Select at least 1 skill.').max(20, 'Maximum 20 skills.'),
-    description: z.string().trim().min(50, 'Description must be at least 50 characters.'),
-    requirements: z.string().trim().min(20, 'Requirements must be at least 20 characters.'),
-    benefits: z.string().trim(),
+    description: z
+      .string()
+      .trim()
+      .min(50, 'Description must be at least 50 characters.')
+      .max(JOB_MAX_TEXT_LENGTH, 'Description allows at most 20,000 characters.'),
+    requirements: z
+      .string()
+      .trim()
+      .min(20, 'Requirements must be at least 20 characters.')
+      .max(JOB_MAX_TEXT_LENGTH, 'Requirements allow at most 20,000 characters.'),
+    benefits: z.string().trim().max(JOB_MAX_TEXT_LENGTH, 'Benefits allow at most 20,000 characters.'),
     benefitTags: z.array(jobBenefitTagSchema).max(JOB_MAX_BENEFIT_TAGS),
     hiringSteps: z
       .array(z.object({ title: z.string().trim().min(1, 'Enter the step name.').max(80, 'Maximum 80 characters.') }))
       .max(JOB_MAX_HIRING_STEPS),
-    deadline: z.string().min(1, 'Select an application deadline.'),
+    deadline: z
+      .string()
+      .min(1, 'Select an application deadline.')
+      .refine((value) => value >= todayIsoDate(), 'The deadline cannot be in the past.')
+      .refine(
+        (value) => value <= isoDateAfterDays(JOB_MAX_DEADLINE_DAYS),
+        `The deadline must be within ${JOB_MAX_DEADLINE_DAYS} days from today.`,
+      ),
     screeningQuestions: z.array(screeningQuestionSchema).max(SCREENING_MAX_QUESTIONS),
-    openings: z.number().int('Enter a whole number.').min(1, 'Minimum 1 opening.').max(1000, 'Maximum 1000 openings.'),
+    openings: z.number().int('Enter a whole number.').min(1, 'Minimum 1 opening.').max(100, 'Maximum 100 openings.'),
   })
   .refine((data) => data.jobRole !== undefined, { message: 'Select a job role.', path: ['jobRole'] })
   .refine(
@@ -116,6 +136,18 @@ export const jobPostSchema = z
     message: 'Enter a salary range or choose Negotiable.',
     path: ['salaryMax'],
   })
+  .refine(
+    (data) =>
+      data.salaryNegotiable ||
+      [data.salaryMin, data.salaryMax].every(
+        (value) =>
+          value === undefined || (value >= JOB_MIN_SALARY[data.currency] && value <= JOB_MAX_SALARY[data.currency]),
+      ),
+    {
+      message: 'Salary must be between 1 million and 250 million VND, or 50 and 10,000 USD.',
+      path: ['salaryMax'],
+    },
+  )
   .refine(
     (data) =>
       data.salaryNegotiable ||
