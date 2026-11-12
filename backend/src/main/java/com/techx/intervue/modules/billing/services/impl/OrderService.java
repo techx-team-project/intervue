@@ -17,11 +17,13 @@ import com.techx.intervue.modules.billing.repositories.CartItemRepository;
 import com.techx.intervue.modules.billing.repositories.OrderInvoiceDetailRepository;
 import com.techx.intervue.modules.billing.repositories.OrderItemRepository;
 import com.techx.intervue.modules.billing.repositories.OrderRepository;
+import com.techx.intervue.modules.billing.repositories.OrderRepository.StatusCount;
 import com.techx.intervue.modules.billing.repositories.PaymentTransactionRepository;
 import com.techx.intervue.modules.billing.repositories.ServicePackageBenefitRepository;
 import com.techx.intervue.modules.billing.repositories.ServicePackageRepository;
 import com.techx.intervue.modules.billing.requests.CheckoutRequest;
 import com.techx.intervue.modules.billing.resources.OrderResource;
+import com.techx.intervue.modules.billing.resources.OrderStatusCountsResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
 import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
@@ -34,6 +36,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -197,6 +200,22 @@ public class OrderService implements OrderServiceInterface {
                 order ->
                         orderMapper.toSummaryResource(
                                 order, counts.getOrDefault(order.getId(), 0)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrderStatusCountsResource countByStatus(Long recruiterId) {
+        Long companyId = companyResolver.requireId(recruiterId);
+        Map<OrderStatus, Long> counts = new EnumMap<>(OrderStatus.class);
+        for (OrderStatus status : OrderStatus.values()) {
+            counts.put(status, 0L);
+        }
+        long total = 0;
+        for (StatusCount row : orderRepository.countByStatusForCompany(companyId)) {
+            counts.put(row.getStatus(), row.getTotal());
+            total += row.getTotal();
+        }
+        return new OrderStatusCountsResource(total, counts);
     }
 
     @Override

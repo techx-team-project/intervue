@@ -17,10 +17,10 @@ import { useRecruiterCart } from '@/hooks/useRecruiterCart';
 import { useRecruiterOrderMutations } from '@/hooks/useRecruiterOrders';
 import { isApiError } from '@/lib/api-error';
 import { useAuthStore } from '@/store/auth.store';
-import type { BusinessInvoiceInfo, InvoiceType, PersonalInvoiceInfo } from '@/types/recruiter-cart';
+import type { BusinessInvoiceInfo } from '@/types/recruiter-cart';
 import type { RecruiterOrder } from '@/types/recruiter-order';
 import type { VoucherPreview } from '@/types/voucher';
-import { isInvoiceInfoComplete } from '@/utils/cart-invoice';
+import { isBusinessInvoiceComplete } from '@/utils/cart-invoice';
 import { getErrorMessage } from '@/utils/error';
 import { useQuery } from '@tanstack/react-query';
 import { AlertCircle, Check, Undo2, X } from 'lucide-react';
@@ -70,21 +70,8 @@ export default function RecruiterCartView() {
     };
   }, [companyQuery.data, authUser?.email]);
 
-  const dbPersonalDefaults = useMemo<PersonalInvoiceInfo>(() => {
-    const company = companyQuery.data;
-    return {
-      personalDocumentType: 'cccd',
-      fullName: authUser?.name?.trim() ?? '',
-      taxOrIdentityNumber: '',
-      personalAddress: (company?.registeredAddress ?? company?.address)?.trim() ?? '',
-      recipientEmail: (authUser?.email ?? company?.email)?.trim() ?? '',
-    };
-  }, [companyQuery.data, authUser?.email, authUser?.name]);
-
-  const [invoiceType, setInvoiceType] = useState<InvoiceType | null>(null);
   const [editedBusinessInvoice, setEditedBusinessInvoice] = useState<BusinessInvoiceInfo | null>(null);
-  const [editedPersonalInvoice, setEditedPersonalInvoice] = useState<PersonalInvoiceInfo | null>(null);
-  const [invoiceModalType, setInvoiceModalType] = useState<InvoiceType | null>(null);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
@@ -93,21 +80,14 @@ export default function RecruiterCartView() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const businessInvoice = editedBusinessInvoice ?? dbBusinessDefaults;
-  const personalInvoice = editedPersonalInvoice ?? dbPersonalDefaults;
   const verificationProfile = verificationQuery.data ?? null;
   const isVerificationComplete =
     Boolean(verificationProfile?.canPublish) &&
     (verificationProfile?.stepsCompleted ?? 0) >= (verificationProfile?.stepsTotal ?? 5);
 
-  const handleSaveInvoice = (
-    savedType: InvoiceType,
-    nextBusiness: BusinessInvoiceInfo,
-    nextPersonal: PersonalInvoiceInfo,
-  ) => {
-    setInvoiceType(savedType);
+  const handleSaveInvoice = (nextBusiness: BusinessInvoiceInfo) => {
     setEditedBusinessInvoice(nextBusiness);
-    setEditedPersonalInvoice(nextPersonal);
-    setInvoiceModalType(null);
+    setIsInvoiceModalOpen(false);
   };
 
   // The discount is computed from the selected lines, so a changed selection invalidates it
@@ -134,8 +114,8 @@ export default function RecruiterCartView() {
       setErrorMessage('Select at least one service in your cart to place an order.');
       return;
     }
-    if (!invoiceType || !isInvoiceInfoComplete(invoiceType, businessInvoice, personalInvoice)) {
-      setErrorMessage('Please select and complete the invoice information.');
+    if (!isBusinessInvoiceComplete(businessInvoice)) {
+      setErrorMessage('Please complete the e-invoice information.');
       return;
     }
     if (!termsAccepted) {
@@ -147,22 +127,13 @@ export default function RecruiterCartView() {
       return;
     }
 
-    const invoice =
-      invoiceType === 'business'
-        ? {
-            invoiceType: 'BUSINESS' as const,
-            taxId: businessInvoice.taxId,
-            companyName: businessInvoice.companyName,
-            companyAddress: businessInvoice.companyAddress,
-            recipientEmail: businessInvoice.recipientEmail,
-          }
-        : {
-            invoiceType: 'PERSONAL' as const,
-            fullName: personalInvoice.fullName,
-            identityNumber: personalInvoice.taxOrIdentityNumber,
-            personalAddress: personalInvoice.personalAddress,
-            recipientEmail: personalInvoice.recipientEmail,
-          };
+    const invoice = {
+      invoiceType: 'BUSINESS' as const,
+      taxId: businessInvoice.taxId,
+      companyName: businessInvoice.companyName,
+      companyAddress: businessInvoice.companyAddress,
+      recipientEmail: businessInvoice.recipientEmail,
+    };
 
     checkout.mutate(
       {
@@ -256,10 +227,8 @@ export default function RecruiterCartView() {
                 totalAmount={subtotalAfterDiscount + vatAfterDiscount}
                 appliedVoucher={voucher}
                 onOpenVoucherModal={() => setIsVoucherModalOpen(true)}
-                invoiceType={invoiceType}
-                onOpenInvoiceModal={setInvoiceModalType}
+                onOpenInvoiceModal={() => setIsInvoiceModalOpen(true)}
                 businessInvoice={businessInvoice}
-                personalInvoice={personalInvoice}
                 termsAccepted={termsAccepted}
                 onToggleTerms={setTermsAccepted}
                 onSubmitOrder={handleSubmitOrder}
@@ -316,14 +285,11 @@ export default function RecruiterCartView() {
         onRemoveVoucher={dropVoucher}
       />
 
-      {invoiceModalType !== null && (
+      {isInvoiceModalOpen && (
         <CartInvoiceModal
-          key={invoiceModalType}
           isOpen
-          onClose={() => setInvoiceModalType(null)}
-          initialType={invoiceModalType}
+          onClose={() => setIsInvoiceModalOpen(false)}
           businessInvoice={businessInvoice}
-          personalInvoice={personalInvoice}
           onSave={handleSaveInvoice}
         />
       )}

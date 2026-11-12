@@ -18,6 +18,7 @@ import com.techx.intervue.modules.billing.services.interfaces.InvoiceServiceInte
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -30,7 +31,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class InvoiceService implements InvoiceServiceInterface {
 
     private static final ZoneId VIETNAM = ZoneId.of("Asia/Ho_Chi_Minh");
-    private static final String ANONYMOUS_BUYER = "Khách hàng";
+    private static final String ANONYMOUS_BUYER = "Customer";
+    private static final String INVOICE_NOTICE =
+            "Internal record only. This is not an electronic invoice carrying a tax authority code.";
+    private static final float[] STATUS_AMBER = {0.78f, 0.45f, 0.02f};
+    private static final float[] STATUS_NEUTRAL = {0.45f, 0.45f, 0.47f};
+
+    // A recruiter may need this to prove the order to their finance team before being funded to
+    // pay, or to keep for their own records after the order was cancelled unpaid
+    private static final Set<OrderStatus> PRE_PAYMENT_DOCUMENT_STATUSES =
+            Set.of(OrderStatus.PENDING_PAYMENT, OrderStatus.UNDERPAID, OrderStatus.CANCELLED);
 
     private final InvoiceRepository invoiceRepository;
     private final OrderRepository orderRepository;
@@ -91,7 +101,10 @@ public class InvoiceService implements InvoiceServiceInterface {
     @Transactional(readOnly = true)
     public byte[] renderForRecruiter(String orderCode, Long recruiterId) {
         Order order = requireOwnedOrder(orderCode, recruiterId);
-        return render(requireInvoice(order), order);
+        return invoiceRepository
+                .findByOrderId(order.getId())
+                .map(invoice -> render(invoice, order))
+                .orElseGet(() -> renderPrePaymentDocument(order));
     }
 
     @Override
@@ -117,7 +130,73 @@ public class InvoiceService implements InvoiceServiceInterface {
 
     private byte[] render(Invoice invoice, Order order) {
         List<OrderItem> items = orderItemRepository.findAllByOrderIdOrderByIdAsc(order.getId());
-        return renderer.render(invoice, items, order.getCode());
+        return renderer.render(toDocumentView(invoice, order.getCode()), items);
+    }
+
+    private byte[] renderPrePaymentDocument(Order order) {
+        if (!PRE_PAYMENT_DOCUMENT_STATUSES.contains(order.getStatus())) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+        OrderInvoiceDetail detail =
+                invoiceDetailRepository.findByOrderId(order.getId()).orElse(null);
+        List<OrderItem> items = orderItemRepository.findAllByOrderIdOrderByIdAsc(order.getId());
+        return renderer.render(toPrePaymentDocumentView(order, detail), items);
+    }
+
+    private OrderDocumentView toDocumentView(Invoice invoice, String orderCode) {
+        return new OrderDocumentView(
+                "INVOICE",
+                invoice.getNumber(),
+                null,
+                null,
+                orderCode,
+                invoice.getIssuedAt(),
+                invoice.getBuyerName(),
+                invoice.getBuyerTaxId(),
+                invoice.getBuyerAddress(),
+                invoice.getRecipientEmail(),
+                invoice.getSubtotal(),
+                invoice.getDiscountAmount(),
+                invoice.getVatRate(),
+                invoice.getVatAmount(),
+                invoice.getTotalAmount(),
+                invoice.getCurrency(),
+                "Total paid",
+                INVOICE_NOTICE);
+    }
+
+    private OrderDocumentView toPrePaymentDocumentView(Order order, OrderInvoiceDetail detail) {
+        boolean cancelled = order.getStatus() == OrderStatus.CANCELLED;
+        String statusLabel =
+                cancelled
+                        ? "CANCELLED"
+                        : order.getStatus() == OrderStatus.UNDERPAID
+                                ? "UNDERPAID"
+                                : "AWAITING PAYMENT";
+        String notice =
+                cancelled
+                        ? "This order was cancelled before payment was completed. For internal reference only — not a valid VAT invoice."
+                        : "This order has not been paid yet. For internal reference only — not a valid VAT invoice.";
+
+        return new OrderDocumentView(
+                "ORDER CONFIRMATION",
+                null,
+                statusLabel,
+                cancelled ? STATUS_NEUTRAL : STATUS_AMBER,
+                order.getCode(),
+                Instant.now(),
+                buyerName(detail),
+                detail == null ? null : detail.getTaxId(),
+                buyerAddress(detail),
+                detail == null ? "" : detail.getRecipientEmail(),
+                order.getSubtotal(),
+                order.getDiscountAmount(),
+                order.getVatRate(),
+                order.getVatAmount(),
+                order.getTotalAmount(),
+                order.getCurrency(),
+                cancelled ? "Total (not paid)" : "Total due",
+                notice);
     }
 
     private Order requireOwnedOrder(String orderCode, Long recruiterId) {

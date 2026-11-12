@@ -1,10 +1,14 @@
 'use client';
 
+import InfoNotice from '@/components/common/InfoNotice';
 import Pagination from '@/components/common/Pagination';
 import Spinner from '@/components/common/Spinner';
+import CancelOrderModal from '@/components/recruiter/orders/CancelOrderModal';
+import OrdersStatsRow from '@/components/recruiter/orders/OrdersStatsRow';
 import { ORDER_CANCELLABLE, ORDER_STATUS_LABEL, ORDER_STATUS_STYLE } from '@/constants/recruiter-order';
 import { ROUTES } from '@/constants/routes';
-import { useRecruiterOrderList, useRecruiterOrderMutations } from '@/hooks/useRecruiterOrders';
+import { useRecruiterOrderCounts, useRecruiterOrderList, useRecruiterOrderMutations } from '@/hooks/useRecruiterOrders';
+import type { RecruiterOrderSummary } from '@/types/recruiter-order';
 import { formatServicePrice } from '@/utils/service-package';
 import { getErrorMessage } from '@/utils/error';
 import { AlertCircle, Receipt } from 'lucide-react';
@@ -14,60 +18,34 @@ import { useState } from 'react';
 export default function RecruiterOrdersView() {
   const [page, setPage] = useState(0);
   const { data, isPending, isError, error } = useRecruiterOrderList(page);
+  const countsQuery = useRecruiterOrderCounts();
   const { cancel } = useRecruiterOrderMutations();
   const [actionError, setActionError] = useState<string | null>(null);
+  const [cancelTarget, setCancelTarget] = useState<RecruiterOrderSummary | null>(null);
 
-  if (isPending) {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <Spinner />
-      </div>
-    );
-  }
+  const confirmCancelOrder = () => {
+    if (!cancelTarget) return;
+    setActionError(null);
+    cancel.mutate(cancelTarget.code, {
+      onSuccess: () => setCancelTarget(null),
+      onError: (cause) => {
+        setCancelTarget(null);
+        setActionError(getErrorMessage(cause));
+      },
+    });
+  };
 
-  if (isError) {
-    return (
-      <div className="flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800">
-        <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
-        {getErrorMessage(error)}
-      </div>
-    );
-  }
-
-  if (data.items.length === 0) {
-    return (
-      <div className="border-outline-variant flex flex-col items-center justify-center rounded-xl border border-dashed bg-white py-16 text-center">
-        <div className="bg-surface-container-high text-outline flex h-12 w-12 items-center justify-center rounded-xl">
-          <Receipt className="h-6 w-6" />
-        </div>
-        <h4 className="text-on-surface mt-3 text-sm font-bold">No orders yet</h4>
-        <Link
-          href={ROUTES.RECRUITER_SERVICES}
-          className="bg-primary mt-5 inline-flex h-10 items-center justify-center rounded-lg px-6 text-sm font-semibold text-white transition hover:brightness-95"
-        >
-          Browse service packages
-        </Link>
-      </div>
-    );
-  }
-
-  const hasPendingOrder = data.items.some((order) => ORDER_CANCELLABLE.includes(order.status));
+  const hasPendingOrder =
+    (countsQuery.data?.byStatus.PENDING_PAYMENT ?? 0) + (countsQuery.data?.byStatus.UNDERPAID ?? 0) > 0;
 
   return (
     <div className="space-y-4">
+      <OrdersStatsRow counts={countsQuery.data} />
+
       {hasPendingOrder && (
-        <div
-          role="status"
-          className="flex items-center gap-2 rounded-lg border border-emerald-200/80 bg-emerald-50/70 px-3.5 py-2 text-xs font-medium text-emerald-800"
-        >
-          <span className="relative flex h-2 w-2 shrink-0" aria-hidden>
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-          </span>
-          <span>
-            Auto-checking pending orders — status updates automatically without refreshing once payment settles.
-          </span>
-        </div>
+        <InfoNotice title="Auto-checking pending orders">
+          Status updates automatically without refreshing once payment settles.
+        </InfoNotice>
       )}
 
       {actionError && (
@@ -77,75 +55,107 @@ export default function RecruiterOrdersView() {
         </div>
       )}
 
-      <div className="border-outline-variant overflow-hidden rounded-xl border bg-white">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[760px] text-left text-sm">
-            <thead>
-              <tr className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant border-b text-xs font-semibold tracking-wider uppercase">
-                <th className="py-3.5 pr-4 pl-6">Order code</th>
-                <th className="px-4 py-3.5 text-center">Services</th>
-                <th className="px-4 py-3.5 text-right">Total</th>
-                <th className="px-4 py-3.5 text-center">Status</th>
-                <th className="px-4 py-3.5">Created</th>
-                <th className="py-3.5 pr-6 pl-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-outline-variant divide-y">
-              {data.items.map((order) => (
-                <tr key={order.id} className="hover:bg-surface-container-low/50 transition-colors">
-                  <td className="py-3.5 pr-4 pl-6">
-                    <Link
-                      href={`${ROUTES.RECRUITER_ORDERS}/${order.code}`}
-                      className="text-primary font-mono font-bold hover:underline"
-                    >
-                      {order.code}
-                    </Link>
-                  </td>
-                  <td className="text-on-surface-variant px-4 py-3.5 text-center">{order.itemCount}</td>
-                  <td className="text-on-surface px-4 py-3.5 text-right font-semibold">
-                    {formatServicePrice(order.totalAmount, order.currency)}
-                  </td>
-                  <td className="px-4 py-3.5 text-center">
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${ORDER_STATUS_STYLE[order.status]}`}>
-                      {ORDER_STATUS_LABEL[order.status]}
-                    </span>
-                  </td>
-                  <td className="text-on-surface-variant px-4 py-3.5">
-                    {new Date(order.createdAt).toLocaleString('vi-VN')}
-                  </td>
-                  <td className="py-3.5 pr-6 pl-4 text-right">
-                    {ORDER_CANCELLABLE.includes(order.status) && (
-                      <button
-                        type="button"
-                        disabled={cancel.isPending}
-                        onClick={() => {
-                          setActionError(null);
-                          cancel.mutate(order.code, {
-                            onError: (cause) => setActionError(getErrorMessage(cause)),
-                          });
-                        }}
-                        className="cursor-pointer text-xs font-semibold text-rose-600 hover:underline disabled:opacity-50"
-                      >
-                        Cancel order
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {isPending ? (
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Spinner />
         </div>
-      </div>
+      ) : isError ? (
+        <div className="flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800">
+          <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+          {getErrorMessage(error)}
+        </div>
+      ) : data.items.length === 0 ? (
+        <div className="border-outline-variant flex flex-col items-center justify-center rounded-xl border border-dashed bg-white py-16 text-center">
+          <div className="bg-surface-container-high text-outline flex h-12 w-12 items-center justify-center rounded-xl">
+            <Receipt className="h-6 w-6" />
+          </div>
+          <h4 className="text-on-surface mt-3 text-sm font-bold">No orders yet</h4>
+          <Link
+            href={ROUTES.RECRUITER_SERVICES}
+            className="bg-primary mt-5 inline-flex h-10 items-center justify-center rounded-lg px-6 text-sm font-semibold text-white transition hover:brightness-95"
+          >
+            Browse service packages
+          </Link>
+        </div>
+      ) : (
+        <>
+          <div className="border-outline-variant overflow-hidden rounded-xl border bg-white">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[760px] text-left text-sm">
+                <thead>
+                  <tr className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant border-b text-xs font-semibold tracking-wider uppercase">
+                    <th className="py-3.5 pr-4 pl-6">Order code</th>
+                    <th className="px-4 py-3.5 text-center">Services</th>
+                    <th className="px-4 py-3.5 text-right">Total</th>
+                    <th className="px-4 py-3.5 text-center">Status</th>
+                    <th className="px-4 py-3.5">Created</th>
+                    <th className="py-3.5 pr-6 pl-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-outline-variant divide-y">
+                  {data.items.map((order) => (
+                    <tr key={order.id} className="hover:bg-surface-container-low/50 transition-colors">
+                      <td className="py-3.5 pr-4 pl-6">
+                        <Link
+                          href={`${ROUTES.RECRUITER_ORDERS}/${order.code}`}
+                          className="text-primary font-mono font-bold hover:underline"
+                        >
+                          {order.code}
+                        </Link>
+                      </td>
+                      <td className="text-on-surface-variant px-4 py-3.5 text-center">{order.itemCount}</td>
+                      <td className="text-on-surface px-4 py-3.5 text-right font-semibold">
+                        {formatServicePrice(order.totalAmount, order.currency)}
+                      </td>
+                      <td className="px-4 py-3.5 text-center">
+                        <span
+                          className={`rounded-full px-2.5 py-1 text-xs font-bold ${ORDER_STATUS_STYLE[order.status]}`}
+                        >
+                          {ORDER_STATUS_LABEL[order.status]}
+                        </span>
+                      </td>
+                      <td className="text-on-surface-variant px-4 py-3.5">
+                        {new Date(order.createdAt).toLocaleString('vi-VN')}
+                      </td>
+                      <td className="py-3.5 pr-6 pl-4 text-right">
+                        {ORDER_CANCELLABLE.includes(order.status) && (
+                          <button
+                            type="button"
+                            onClick={() => setCancelTarget(order)}
+                            className="cursor-pointer text-xs font-semibold text-rose-600 hover:underline"
+                          >
+                            Cancel order
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-      {data.totalPages > 1 && (
-        <Pagination
-          page={data.page + 1}
-          pageCount={data.totalPages}
-          totalItems={data.totalItems}
-          pageSize={data.size}
-          onPageChange={(next) => setPage(next - 1)}
-        />
+          {data.totalPages > 1 && (
+            <Pagination
+              page={data.page + 1}
+              pageCount={data.totalPages}
+              totalItems={data.totalItems}
+              pageSize={data.size}
+              onPageChange={(next) => setPage(next - 1)}
+            />
+          )}
+        </>
       )}
+
+      <CancelOrderModal
+        isOpen={cancelTarget !== null}
+        onClose={() => setCancelTarget(null)}
+        onConfirm={confirmCancelOrder}
+        isConfirming={cancel.isPending}
+        code={cancelTarget?.code ?? ''}
+        totalAmount={cancelTarget?.totalAmount ?? 0}
+        currency={cancelTarget?.currency ?? 'VND'}
+      />
     </div>
   );
 }
