@@ -110,7 +110,7 @@ public class OrderService implements OrderServiceInterface {
                         .toList();
         AppliedVoucher applied =
                 isFilled(request.voucherCode())
-                        ? voucherService.apply(request.voucherCode(), billableLines, company.id())
+                        ? voucherService.previewForCheckout(request.voucherCode(), billableLines)
                         : null;
         long discount = applied == null ? 0L : applied.discountAmount();
         OrderPricing.Totals totals =
@@ -125,11 +125,14 @@ public class OrderService implements OrderServiceInterface {
                                 Instant.now().minus(RESUBMIT_WINDOW))
                         .orElse(null);
         // A retried submit must return the pending order, not a rule error such as
-        // TRIAL_ALREADY_USED
+        // TRIAL_ALREADY_USED or VOUCHER_ALREADY_USED
         if (duplicate != null) {
             return toResource(duplicate);
         }
 
+        if (applied != null) {
+            voucherService.assertUsableForCompany(applied.voucher(), company.id());
+        }
         assertPackagesPurchasable(lines.stream().map(Line::servicePackage).toList(), company.id());
 
         if (orderRepository.countByCompanyIdAndStatus(company.id(), OrderStatus.PENDING_PAYMENT)

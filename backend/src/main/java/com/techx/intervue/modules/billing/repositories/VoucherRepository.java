@@ -2,6 +2,7 @@ package com.techx.intervue.modules.billing.repositories;
 
 import com.techx.intervue.modules.billing.entities.Voucher;
 import com.techx.intervue.modules.billing.enums.VoucherStatus;
+import jakarta.persistence.LockModeType;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +20,10 @@ public interface VoucherRepository
         extends JpaRepository<Voucher, Long>, JpaSpecificationExecutor<Voucher> {
 
     Optional<Voucher> findByCode(String code);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select voucher from Voucher voucher where voucher.id = :id")
+    Optional<Voucher> findByIdForUpdate(@Param("id") Long id);
 
     @Query(
             "select voucher from Voucher voucher left join fetch voucher.applicablePackages where voucher.id = :id")

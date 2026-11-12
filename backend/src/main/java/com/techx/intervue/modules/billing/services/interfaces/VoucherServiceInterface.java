@@ -24,6 +24,10 @@ public interface VoucherServiceInterface {
 
     VoucherPreviewResource validate(ValidateVoucherRequest request, Long recruiterId);
 
+    AppliedVoucher previewForCheckout(String code, List<BillableLine> lines);
+
+    void assertUsableForCompany(Voucher voucher, Long companyId);
+
     AppliedVoucher apply(String code, List<BillableLine> lines, Long companyId);
 
     void claim(AppliedVoucher applied, Long orderId, Long companyId);
