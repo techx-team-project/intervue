@@ -104,6 +104,13 @@ public class ReportService implements ReportServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
+    public long countPending(ReportTargetType targetType, Long targetId) {
+        return reportRepository.countByTargetTypeAndTargetIdAndStatus(
+                targetType, targetId, ReportStatus.PENDING);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Page<AdminReportSummaryResource> search(
             ReportTargetType targetType, ReportStatus status, Pageable pageable) {
         return reportRepository

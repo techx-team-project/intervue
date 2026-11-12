@@ -12,6 +12,9 @@ import org.springframework.stereotype.Repository;
 public interface ReportRepository
         extends JpaRepository<Report, Long>, JpaSpecificationExecutor<Report> {
 
+    long countByTargetTypeAndTargetIdAndStatus(
+            ReportTargetType targetType, Long targetId, ReportStatus status);
+
     boolean existsByTargetTypeAndTargetIdAndReporterTypeAndReporterIdAndStatus(
             ReportTargetType targetType,
             Long targetId,
