@@ -12,7 +12,6 @@ interface ChatPanelProps {
   onClose: () => void;
   messages: ChatMessage[];
   isLoading: boolean;
-  remainingQuota: number | null;
   context?: ChatContext;
   error: {
     message: string;
@@ -28,7 +27,6 @@ export function ChatPanel({
   onClose,
   messages,
   isLoading,
-  remainingQuota,
   context,
   error,
   onSendMessage,
@@ -157,7 +155,7 @@ export function ChatPanel({
         )}
       </div>
 
-      <ChatInput onSend={onSendMessage} isLoading={isLoading} remainingQuota={remainingQuota} />
+      <ChatInput onSend={onSendMessage} isLoading={isLoading} />
     </div>
   );
 }

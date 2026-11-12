@@ -20,7 +20,6 @@
     "ACCOUNT_DELETED": "Tài khoản này đã bị xóa.",
     "ACCOUNT_BANNED": "Tài khoản này đã bị khóa hoặc tạm ngưng hoạt động.",
     "RATE_LIMITED": "Quá nhiều yêu cầu. Vui lòng thử lại sau {seconds} giây.",
-    "AI_IP_QUOTA_EXCEEDED": "Bạn đã dùng hết {count} câu hỏi/giờ dành cho khách. Vui lòng đăng nhập hoặc thử lại sau.",
     "AI_USER_QUOTA_EXCEEDED": "Bạn đã đạt giới hạn {count} câu hỏi trong ngày hôm nay.",
     "AI_CHAT_FAILED": "Không thể xử lý tin nhắn lúc này, vui lòng thử lại sau.",
     "AI_PROVIDER_UNAVAILABLE": "Dịch vụ AI tạm thời gián đoạn, vui lòng thử lại sau.",

@@ -39,7 +39,7 @@ type Page<T> = { items: T[]; page: number; size: number; totalItems: number; tot
 | ✅ | `POST /auth/forgot-password` | public | `{ email }` | – (same message whether or not the email exists; 60s cooldown, 3 per 15 min by email and IP) |
 | ✅ | `POST /auth/reset-password` | public | `{ token, password, confirmPassword }` | – (link valid 15 min, single use; logs out all devices) |
 | ✅ | `GET /users/me` | user | – | `UserResource` `{ id, email, name, phone?, emailVerified, hasPassword, roles, createdAt }` (`hasPassword` is `false` for an account created with Google that never set a password) |
-| ✅ | `POST /ai/chat` | public / optional user | `{ message, sessionId? }` | `{ answer, sources, remainingQuota }` |
+| ✅ | `POST /ai/chat` | public / optional user | `{ message, sessionId? }` | `{ answer, sources }` |
 | ✅ | `POST /ai/resume-match` | recruiter | `{ applicationId?, jobTitle, jobRequirements, jobDescription?, candidateData?, cvText? }` | `ResumeMatchResult` `{ applicationId, experienceSummary, requirements, questionsToAsk, model, promptVersion, aiProcessedCandidateData, analyzedAt, disclaimer }` (Runs async; sensitive PII/KYC and screening questions strictly stripped) |
 | ✅ | `POST /ai/cv-reviews` | candidate | `{ resumeId?, cvText?, targetPosition?, jobId?, level? }` | `CvReviewResult` `{ id, fileHash, overallScore, summary, comments, reviewLevel, jobId, jobTitle, companyName, jobFitScore, requirementMatches, keyStrengths, gapAnalysis, tailoringTips, chargedCredits, refunded, fromCache }` (Level 1/2 free with 3 uses/day; Level 3 paid 1 credit/use with per-requirement comparison and automatic refund on AI failure; unchanged CV returns cached result without charging/quota) |
 | ✅ | `POST /ai/cover-letter` | candidate | `{ jobTitle, companyName, jobRequirements?, jobDescription?, resumeId?, cvText?, candidateName? }` | `CoverLetterGenerateResult` `{ coverLetter, modelVersion, promptVersion, notice }` (Fact-only draft from CV and job; user edits before sending; never sent automatically) |
@@ -679,7 +679,6 @@ from the wave 1 design during implementation:
 | `PASSWORD_NOT_SET` | 422 | The action needs a password and the account has none (change email, disable 2FA, grant `ADMIN`); set one first with `POST /users/me/change-password` |
 | `RATE_LIMITED` | 429 | Honor `Retry-After`. Global `RateLimitFilter`: 10/min per IP on login, register, forgot/reset-password and verify-2fa; 20/min per account on `/ai/**`; 300/min per account or IP on `/api/**` |
 | `AI_USER_QUOTA_EXCEEDED` | 429 | Daily AI limit per user reached; honor `Retry-After` |
-| `AI_IP_QUOTA_EXCEEDED` | 429 | Hourly AI limit per IP reached; honor `Retry-After` |
 | `AI_NOT_CONFIGURED` | 503 | AI provider key missing or rejected |
 | `AI_PROVIDER_BUSY` | 503 | AI provider is rate limited or overloaded; retry later |
 | `AI_PROVIDER_TIMEOUT` | 504 | AI provider did not answer in time |

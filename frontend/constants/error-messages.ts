@@ -77,7 +77,6 @@ export const ERROR_MESSAGES: Record<string, string> = {
   SOCIAL_LOGIN_NOT_ALLOWED: 'This account cannot sign in with a social provider.',
   PASSWORD_NOT_SET: 'Set a password first.',
   RATE_LIMITED: 'Too many attempts, please try again in a few minutes.',
-  AI_IP_QUOTA_EXCEEDED: 'You have used all 10 guest questions this hour. Please sign in or try again later.',
   AI_USER_QUOTA_EXCEEDED: 'You have reached the limit of 30 questions today.',
   AI_CHAT_FAILED: 'Could not process your message right now. Please try again later.',
   AI_PROVIDER_ERROR: 'The AI service returned an unexpected error. Please try again later.',

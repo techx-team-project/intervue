@@ -29,7 +29,6 @@ import com.techx.intervue.modules.ai.resources.ToolExecutionResult;
 import com.techx.intervue.modules.ai.resources.UserChatResponse;
 import com.techx.intervue.modules.ai.services.impl.AiChatService;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
-import com.techx.intervue.modules.ai.services.interfaces.AiQuotaServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.KnowledgeBaseServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PlatformAgentToolServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
@@ -53,8 +52,6 @@ class AiChatServiceTest {
 
     @Mock private KnowledgeBaseServiceInterface knowledgeBaseService;
 
-    @Mock private AiQuotaServiceInterface quotaService;
-
     @Mock private PromptServiceInterface promptService;
 
     @Mock private PlatformAgentToolServiceInterface agentToolService;
@@ -73,7 +70,6 @@ class AiChatServiceTest {
                 new AiChatService(
                         aiGatewayService,
                         knowledgeBaseService,
-                        quotaService,
                         promptService,
                         agentToolService,
                         redis,
@@ -81,8 +77,8 @@ class AiChatServiceTest {
     }
 
     @Test
-    @DisplayName("Should answer with sources and remaining quota")
-    void shouldAnswerWithSourcesAndRemainingQuota() {
+    @DisplayName("Should answer with sources")
+    void shouldAnswerWithSources() {
         when(redis.opsForList()).thenReturn(listOperations);
         when(listOperations.range(anyString(), eq(0L), eq(-1L))).thenReturn(List.of());
 
@@ -110,8 +106,6 @@ class AiChatServiceTest {
         when(aiGatewayService.chat(any(AiCallContext.class), any(AiChatRequest.class)))
                 .thenReturn(mockResult);
 
-        when(quotaService.getRemaining(eq(1L), anyString())).thenReturn(29);
-
         UserChatRequest request = new UserChatRequest("How do I verify my company?", "session-abc");
         UserChatResponse response = service.chat(1L, "127.0.0.1", request);
 
@@ -119,7 +113,6 @@ class AiChatServiceTest {
         assertThat(response.sources())
                 .containsExactly(
                         "recruiter_flows.md - How to Verify Your Company (Company Verification Process)");
-        assertThat(response.remainingQuota()).isEqualTo(29);
     }
 
     @Test
@@ -162,7 +155,6 @@ class AiChatServiceTest {
 
         when(agentToolService.execute("get_my_applications", 42L, Map.of()))
                 .thenReturn(ToolExecutionResult.success("Hồ sơ 1: Java Backend"));
-        when(quotaService.getRemaining(eq(42L), anyString())).thenReturn(28);
 
         UserChatRequest request = new UserChatRequest("Xem các hồ sơ tôi đã nộp", "session-xyz");
         UserChatResponse response = service.chat(42L, "127.0.0.1", request);
@@ -218,7 +210,6 @@ class AiChatServiceTest {
 
         when(agentToolService.execute(anyString(), any(), any()))
                 .thenReturn(ToolExecutionResult.success("tool output"));
-        when(quotaService.getRemaining(eq(1L), anyString())).thenReturn(27);
 
         UserChatRequest request = new UserChatRequest("Tìm tất cả", "session-xyz");
         UserChatResponse response = service.chat(1L, "127.0.0.1", request);
@@ -229,8 +220,8 @@ class AiChatServiceTest {
     }
 
     @Test
-    @DisplayName("Should enforce 429 when quota limit is exceeded")
-    void shouldThrow429WhenQuotaExceeded() {
+    @DisplayName("Should propagate 429 raised by the AI gateway")
+    void shouldPropagate429FromGateway() {
         when(redis.opsForList()).thenReturn(listOperations);
         when(listOperations.range(anyString(), eq(0L), eq(-1L))).thenReturn(List.of());
         when(knowledgeBaseService.retrieve(anyString(), anyInt(), anyDouble()))
@@ -239,7 +230,7 @@ class AiChatServiceTest {
                 .thenReturn(new PromptTemplate("support-chatbot.v1", 1, "System prompt"));
 
         when(aiGatewayService.chat(any(AiCallContext.class), any(AiChatRequest.class)))
-                .thenThrow(AppException.rateLimited(ErrorCode.AI_IP_QUOTA_EXCEEDED, 3600));
+                .thenThrow(AppException.rateLimited(ErrorCode.RATE_LIMITED, 3600));
 
         UserChatRequest request = new UserChatRequest("Hello", "sess-123");
 

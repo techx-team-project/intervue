@@ -28,7 +28,6 @@ import com.techx.intervue.modules.ai.resources.UserChatResponse;
 import com.techx.intervue.modules.ai.services.impl.AiChatService;
 import com.techx.intervue.modules.ai.services.impl.KnowledgeChunker;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
-import com.techx.intervue.modules.ai.services.interfaces.AiQuotaServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.KnowledgeBaseServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PlatformAgentToolServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
@@ -290,7 +289,6 @@ class ChatbotFixedQuestionsTest {
 
     @Mock private AiGatewayServiceInterface aiGatewayService;
     @Mock private KnowledgeBaseServiceInterface knowledgeBaseService;
-    @Mock private AiQuotaServiceInterface quotaService;
     @Mock private PromptServiceInterface promptService;
     @Mock private PlatformAgentToolServiceInterface agentToolService;
     @Mock private StringRedisTemplate redis;
@@ -308,7 +306,6 @@ class ChatbotFixedQuestionsTest {
                 new AiChatService(
                         aiGatewayService,
                         knowledgeBaseService,
-                        quotaService,
                         promptService,
                         agentToolService,
                         redis,
@@ -318,7 +315,6 @@ class ChatbotFixedQuestionsTest {
         lenient()
                 .when(listOperations.range(anyString(), any(Long.class), any(Long.class)))
                 .thenReturn(List.of());
-        lenient().when(quotaService.getRemaining(any(), anyString())).thenReturn(30);
 
         PromptTemplate systemPrompt =
                 new PromptTemplate(
