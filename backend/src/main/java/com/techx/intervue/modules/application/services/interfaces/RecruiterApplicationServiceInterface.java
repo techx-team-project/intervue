@@ -28,4 +28,6 @@ public interface RecruiterApplicationServiceInterface {
     ResumeContent downloadCv(Long applicationId, Long recruiterId);
 
     void closeForJob(Long jobId);
+
+    void notifyApplicantsJobHidden(Long jobId);
 }

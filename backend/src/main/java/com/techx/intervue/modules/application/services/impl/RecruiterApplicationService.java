@@ -54,6 +54,8 @@ public class RecruiterApplicationService implements RecruiterApplicationServiceI
                     ApplicationStatus.IN_REVIEW,
                     ApplicationStatus.INTERVIEW,
                     ApplicationStatus.OFFER);
+    private static final Set<ApplicationStatus> UNTOUCHED =
+            EnumSet.of(ApplicationStatus.APPLIED, ApplicationStatus.VIEWED);
     private static final Sort NEWEST_FIRST =
             Sort.by(Sort.Direction.DESC, "submittedAt").and(Sort.by(Sort.Direction.DESC, "id"));
     private static final String CLOSED_NOTE = "The job was closed";
@@ -179,9 +181,9 @@ public class RecruiterApplicationService implements RecruiterApplicationServiceI
     @Override
     @Transactional
     public void closeForJob(Long jobId) {
-        List<Application> unfinished =
-                applicationRepository.findByJobIdAndStatusIn(jobId, UNFINISHED);
-        unfinished.forEach(
+        List<Application> untouched =
+                applicationRepository.findByJobIdAndStatusIn(jobId, UNTOUCHED);
+        untouched.forEach(
                 application ->
                         statusChanger.change(
                                 application,
@@ -189,6 +191,28 @@ public class RecruiterApplicationService implements RecruiterApplicationServiceI
                                 ApplicationActorType.SYSTEM,
                                 null,
                                 CLOSED_NOTE));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void notifyApplicantsJobHidden(Long jobId) {
+        applicationRepository
+                .findByJobIdAndStatusIn(jobId, UNFINISHED)
+                .forEach(
+                        application ->
+                                notificationPublisher.publish(
+                                        NotificationCommand.builder()
+                                                .recipientType(RecipientType.USER)
+                                                .recipientId(application.getCandidateId())
+                                                .type(NotificationType.JOB_HIDDEN_FOR_APPLICANT)
+                                                .params(
+                                                        Map.of(
+                                                                "jobTitle",
+                                                                application.getJobTitle(),
+                                                                "companyName",
+                                                                application.getCompanyName()))
+                                                .actionUrl("/candidate/applications")
+                                                .build()));
     }
 
     private Application require(Long applicationId, Long recruiterId) {
