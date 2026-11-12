@@ -11,32 +11,32 @@ export default function JobGeneralInfoSidebar({ job }: JobGeneralInfoSidebarProp
   const specs = [
     {
       icon: Award,
-      label: 'Cấp bậc',
+      label: 'Level',
       value: job.level,
     },
     {
       icon: Briefcase,
-      label: 'Kinh nghiệm',
+      label: 'Experience',
       value: job.experience,
     },
     {
       icon: Users,
-      label: 'Số lượng tuyển',
+      label: 'Openings',
       value: job.recruitsCount,
     },
     {
       icon: Building,
-      label: 'Hình thức làm việc',
+      label: 'Working arrangement',
       value: job.workingType,
     },
     {
       icon: Clock,
-      label: 'Loại hình hợp đồng',
+      label: 'Contract type',
       value: job.employmentType,
     },
     {
       icon: User,
-      label: 'Giới tính',
+      label: 'Gender',
       value: job.gender,
     },
   ];
@@ -44,7 +44,7 @@ export default function JobGeneralInfoSidebar({ job }: JobGeneralInfoSidebarProp
   return (
     <div className="space-y-5">
       <div className="border-outline-variant/90 rounded-2xl border bg-white p-5 shadow-2xs">
-        <h3 className="border-outline-variant text-on-surface border-b pb-3 text-sm font-bold">Thông tin chung</h3>
+        <h3 className="border-outline-variant text-on-surface border-b pb-3 text-sm font-bold">General information</h3>
 
         <div className="mt-4 space-y-3.5">
           {specs.map((item, idx) => {
@@ -67,7 +67,7 @@ export default function JobGeneralInfoSidebar({ job }: JobGeneralInfoSidebarProp
       <div className="border-outline-variant/90 rounded-2xl border bg-white p-5 shadow-2xs">
         <h3 className="border-outline-variant text-on-surface flex items-center gap-1.5 border-b pb-3 text-sm font-bold">
           <Tag className="text-primary h-4 w-4" />
-          <span>Ngành nghề & Lĩnh vực</span>
+          <span>Occupation & Industry</span>
         </h3>
 
         <div className="mt-4 flex flex-wrap gap-2">
@@ -85,7 +85,7 @@ export default function JobGeneralInfoSidebar({ job }: JobGeneralInfoSidebarProp
           <div className="border-outline-variant mt-4 border-t pt-4">
             <div className="text-on-surface-variant mb-2 flex items-center gap-1 text-xs font-bold">
               <MapPin className="text-outline h-3.5 w-3.5" />
-              <span>Khu vực tìm kiếm liên quan</span>
+              <span>Related search areas</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {job.location.allLocations.map((loc, idx) => (
@@ -104,11 +104,10 @@ export default function JobGeneralInfoSidebar({ job }: JobGeneralInfoSidebarProp
       <div className="bg-primary-light text-on-surface rounded-2xl border border-emerald-100 p-4 text-xs">
         <div className="text-on-primary-container mb-1 flex items-center gap-2 font-bold">
           <ShieldCheck className="text-primary h-4 w-4" />
-          <span>Cam kết minh bạch InterVue</span>
+          <span>InterVue transparency commitment</span>
         </div>
         <p className="text-label-sm text-on-surface-variant leading-relaxed">
-          Mọi tin tuyển dụng đều được hệ thống kiểm duyệt giấy phép kinh doanh và xác minh danh tính doanh nghiệp trước
-          khi phát hành.
+          Every job post goes through business license review and company identity verification before it is published.
         </p>
       </div>
     </div>

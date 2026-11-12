@@ -44,7 +44,7 @@ export default function CandidateInterviewCard({ interview }: { interview: Inter
       { id: interview.id, reason: message.trim() || undefined },
       {
         onSuccess: () => {
-          toast.success('Đã gửi phản hồi từ chối cho nhà tuyển dụng.');
+          toast.success('Your decline has been sent to the recruiter.');
           close();
         },
         onError: onFailure,
@@ -52,12 +52,12 @@ export default function CandidateInterviewCard({ interview }: { interview: Inter
     );
 
   const submitReschedule = () => {
-    if (!proposed || proposed <= currentLocalInputValue()) return setError('Hãy chọn một thời gian ở tương lai.');
+    if (!proposed || proposed <= currentLocalInputValue()) return setError('Choose a time in the future.');
     requestReschedule.mutate(
       { id: interview.id, proposedStartsAt: fromLocalInputValue(proposed), message: message.trim() || undefined },
       {
         onSuccess: () => {
-          toast.success('Đã gửi đề xuất giờ mới cho nhà tuyển dụng.');
+          toast.success('Your new time proposal has been sent to the recruiter.');
           close();
         },
         onError: onFailure,
@@ -93,12 +93,12 @@ export default function CandidateInterviewCard({ interview }: { interview: Inter
 
       {interview.status === 'RESCHEDULE_REQUESTED' && interview.proposedStartsAt && (
         <p className="rounded-lg bg-amber-50 p-3 text-[13px] text-amber-900">
-          Bạn đã đề xuất: <span className="font-bold">{formatInterviewMoment(interview.proposedStartsAt)}</span>. Hãy
-          chờ nhà tuyển dụng phản hồi.
+          You proposed: <span className="font-bold">{formatInterviewMoment(interview.proposedStartsAt)}</span>. Please
+          wait for the recruiter to respond.
         </p>
       )}
       {interview.status === 'CANCELLED' && interview.cancelReason && (
-        <p className="text-xs text-slate-600">Lý do huỷ: {interview.cancelReason}</p>
+        <p className="text-xs text-slate-600">Cancellation reason: {interview.cancelReason}</p>
       )}
 
       <div className="flex flex-wrap gap-2">
@@ -109,12 +109,12 @@ export default function CandidateInterviewCard({ interview }: { interview: Inter
             isLoading={confirm.isPending}
             onClick={() =>
               confirm.mutate(interview.id, {
-                onSuccess: () => toast.success('Bạn đã xác nhận tham gia phỏng vấn.'),
+                onSuccess: () => toast.success('You confirmed your attendance.'),
                 onError: onFailure,
               })
             }
           >
-            Xác nhận tham gia
+            Confirm attendance
           </Button>
         )}
         {canRespond && (
@@ -124,17 +124,17 @@ export default function CandidateInterviewCard({ interview }: { interview: Inter
             leftIcon={<Clock className="h-4 w-4" />}
             onClick={() => setDialog('reschedule')}
           >
-            Bận, đổi giờ
+            Busy, reschedule
           </Button>
         )}
         {canRespond && (
           <Button size="sm" variant="ghost" leftIcon={<X className="h-4 w-4" />} onClick={() => setDialog('decline')}>
-            Từ chối
+            Decline
           </Button>
         )}
         {calendarAvailable && (
           <Button size="sm" variant="outline" leftIcon={<CalendarPlus className="h-4 w-4" />} onClick={addToCalendar}>
-            Thêm vào lịch
+            Add to calendar
           </Button>
         )}
       </div>
@@ -143,21 +143,21 @@ export default function CandidateInterviewCard({ interview }: { interview: Inter
         isOpen={dialog === 'decline'}
         onClose={close}
         maxWidth="md"
-        title="Từ chối buổi phỏng vấn?"
-        description="Nhà tuyển dụng sẽ nhận thông báo. Nếu chỉ bận giờ này, hãy chọn “Bận, đổi giờ”."
+        title="Decline this interview?"
+        description="The recruiter will be notified. If you are only busy at this time, choose “Busy, reschedule”."
         footer={
           <div className="flex justify-end gap-2">
             <Button variant="ghost" onClick={close}>
-              Quay lại
+              Go back
             </Button>
             <Button variant="danger" isLoading={decline.isPending} onClick={submitDecline}>
-              Từ chối
+              Decline
             </Button>
           </div>
         }
       >
         <Textarea
-          label="Lý do (không bắt buộc)"
+          label="Reason (optional)"
           value={message}
           rows={3}
           maxLength={500}
@@ -169,23 +169,23 @@ export default function CandidateInterviewCard({ interview }: { interview: Inter
         isOpen={dialog === 'reschedule'}
         onClose={close}
         maxWidth="md"
-        title="Đề xuất giờ khác"
-        description="Chọn thời gian phù hợp với bạn. Nhà tuyển dụng sẽ đồng ý hoặc gửi lại lịch mới. Giờ theo múi giờ Việt Nam (GMT+7)."
+        title="Propose another time"
+        description="Choose a time that suits you. The recruiter will accept or send a new schedule. Times are in Vietnam time (GMT+7)."
         footer={
           <div className="flex justify-end gap-2">
             <Button variant="ghost" onClick={close}>
-              Hủy
+              Cancel
             </Button>
             <Button isLoading={requestReschedule.isPending} onClick={submitReschedule}>
-              Gửi đề xuất
+              Send proposal
             </Button>
           </div>
         }
       >
         <div className="space-y-4">
-          <QuickTimeField label="Thời gian đề xuất" value={proposed} error={error} onChange={setProposed} />
+          <QuickTimeField label="Proposed time" value={proposed} error={error} onChange={setProposed} />
           <Textarea
-            label="Lời nhắn (không bắt buộc)"
+            label="Message (optional)"
             value={message}
             rows={3}
             maxLength={500}

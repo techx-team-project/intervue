@@ -48,10 +48,10 @@ public class JobSearchService implements JobSearchServiceInterface {
     }
 
     private JobSearchResult toSearchResult(PublicJobSummaryResource job) {
-        String salaryText = "Thỏa thuận";
+        String salaryText = "Negotiable";
         if (job.salary() != null) {
             if (job.salary().negotiable()) {
-                salaryText = "Lương thỏa thuận";
+                salaryText = "Negotiable";
             } else if (job.salary().min() != null && job.salary().max() != null) {
                 salaryText =
                         String.format(
@@ -62,7 +62,7 @@ public class JobSearchService implements JobSearchServiceInterface {
             } else if (job.salary().min() != null) {
                 salaryText =
                         String.format(
-                                "Từ %,d %s",
+                                "From %,d %s",
                                 job.salary().min(),
                                 job.salary().currency() != null ? job.salary().currency() : "VND");
             }
@@ -76,19 +76,17 @@ public class JobSearchService implements JobSearchServiceInterface {
         String companyName =
                 job.company() != null && job.company().name() != null
                         ? job.company().name()
-                        : "Doanh nghiệp đối tác";
+                        : "Partner company";
 
         return new JobSearchResult(
                 String.valueOf(job.id()),
                 job.title(),
                 companyName,
                 salaryText,
-                job.city() != null ? job.city() : "Toàn quốc",
-                job.level() != null ? job.level().name() : "Mọi cấp bậc",
+                job.city() != null ? job.city() : "Nationwide",
+                job.level() != null ? job.level().name() : "All levels",
                 skills,
-                "Tin tuyển dụng đang mở tại "
-                        + companyName
-                        + ". Xem chi tiết yêu cầu để ứng tuyển.",
+                "Open job post at " + companyName + ". View the requirements and apply.",
                 "/jobs/" + job.id());
     }
 

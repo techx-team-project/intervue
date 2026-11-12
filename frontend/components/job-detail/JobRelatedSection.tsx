@@ -17,13 +17,13 @@ export default function JobRelatedSection({ relatedJobs }: JobRelatedSectionProp
             <Sparkles className="h-4.5 w-4.5" />
           </div>
           <div>
-            <h2 className="text-on-surface text-lg font-bold sm:text-xl">Việc làm liên quan</h2>
-            <p className="text-on-surface-variant mt-0.5 text-xs">Các vị trí tuyển dụng tương tự có thể bạn quan tâm</p>
+            <h2 className="text-on-surface text-lg font-bold sm:text-xl">Related jobs</h2>
+            <p className="text-on-surface-variant mt-0.5 text-xs">Similar openings you may be interested in</p>
           </div>
         </div>
 
         <Link href="/#feature-jobs" className="text-primary flex items-center gap-1 text-xs font-bold hover:underline">
-          <span>Xem tất cả</span>
+          <span>View all</span>
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>

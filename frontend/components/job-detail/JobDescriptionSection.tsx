@@ -46,7 +46,7 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
           <div className="text-primary bg-primary-light flex h-8 w-8 items-center justify-center rounded-lg">
             <Briefcase className="h-4.5 w-4.5" />
           </div>
-          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Mô tả công việc</h2>
+          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Job description</h2>
         </div>
 
         <div className="mt-5 space-y-3">
@@ -69,12 +69,12 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
           <div className="text-primary bg-primary-light flex h-8 w-8 items-center justify-center rounded-lg">
             <Layers className="h-4.5 w-4.5" />
           </div>
-          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Yêu cầu ứng viên</h2>
+          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Candidate requirements</h2>
         </div>
 
         <div className="mt-5">
           <div className="text-on-surface-variant mb-2.5 text-xs font-bold tracking-wider uppercase">
-            Kỹ năng & Chuyên môn ưu tiên
+            Preferred skills & expertise
           </div>
           <div className="flex flex-wrap gap-2">
             {job.skills.map((skill, index) => (
@@ -106,7 +106,7 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
           <div className="text-primary bg-primary-light flex h-8 w-8 items-center justify-center rounded-lg">
             <Gift className="h-4.5 w-4.5" />
           </div>
-          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Quyền lợi ứng viên</h2>
+          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Candidate benefits</h2>
         </div>
 
         {job.perks && job.perks.length > 0 && (
@@ -149,7 +149,7 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
           <div className="text-primary bg-primary-light flex h-8 w-8 items-center justify-center rounded-lg">
             <MapPin className="h-4.5 w-4.5" />
           </div>
-          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Địa điểm & Thời gian làm việc</h2>
+          <h2 className="text-on-surface text-lg font-bold sm:text-xl">Location & working hours</h2>
         </div>
 
         <div className="mt-5 space-y-4">
@@ -157,11 +157,11 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
             <div className="flex items-start gap-3">
               <MapPin className="text-primary mt-0.5 h-5 w-5 shrink-0" />
               <div className="flex-1">
-                <div className="text-body-md text-on-surface font-bold">Địa điểm làm việc:</div>
+                <div className="text-body-md text-on-surface font-bold">Work location:</div>
                 <div className="text-body-md text-on-surface-variant mt-1">{job.location.specificAddress}</div>
                 {job.location.allLocations && (
                   <div className="mt-2 flex flex-wrap gap-1.5">
-                    <span className="text-on-surface-variant mr-1 text-xs">Khu vực liên quan:</span>
+                    <span className="text-on-surface-variant mr-1 text-xs">Related areas:</span>
                     {job.location.allLocations.map((loc, idx) => (
                       <span
                         key={idx}
@@ -180,9 +180,9 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
             <div className="flex items-start gap-3">
               <Clock className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
               <div>
-                <div className="text-body-md text-on-surface font-bold">Thời gian làm việc:</div>
+                <div className="text-body-md text-on-surface font-bold">Working hours:</div>
                 <div className="text-body-md text-on-surface mt-1 font-medium">{job.workSchedule.days}</div>
-                <div className="text-body-md text-on-surface-variant mt-0.5">Giờ làm việc: {job.workSchedule.time}</div>
+                <div className="text-body-md text-on-surface-variant mt-0.5">Hours: {job.workSchedule.time}</div>
               </div>
             </div>
           </div>
@@ -194,17 +194,17 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
           <div>
             <div className="bg-primary-container text-primary inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-extrabold">
               <Calendar className="h-3.5 w-3.5" />
-              <span>Hạn nộp hồ sơ: {job.deadline}</span>
+              <span>Application deadline: {job.deadline}</span>
               {job.daysRemaining && (
-                <span className="ml-1 font-bold text-amber-700">(Còn {job.daysRemaining} ngày)</span>
+                <span className="ml-1 font-bold text-amber-700">({job.daysRemaining} days left)</span>
               )}
             </div>
 
             <h3 className="text-on-surface mt-2.5 text-lg font-bold sm:text-xl">
-              Sẵn sàng gia nhập đội ngũ {job.company.name}?
+              Ready to join the {job.company.name} team?
             </h3>
             <p className="text-on-surface-variant mt-1 text-sm">
-              Nhà tuyển dụng phản hồi hồ sơ trong vòng 24 - 48 giờ làm việc.
+              The recruiter responds to applications within 24 - 48 business hours.
             </p>
           </div>
 
@@ -214,7 +214,7 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
             className="shadow-primary/30 hover:shadow-primary/40 bg-primary text-body-lg shadow-elevation-1 hover:shadow-elevation-2 flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-7 py-3.5 font-bold text-white transition active:translate-y-0"
           >
             <Send className="h-4 w-4" />
-            <span>Ứng tuyển ngay</span>
+            <span>Apply now</span>
             <Sparkles className="h-4 w-4 text-emerald-200" />
           </button>
         </div>
@@ -223,17 +223,17 @@ export default function JobDescriptionSection({ job, onApply, onReport }: JobDes
           <div className="flex items-start gap-2.5">
             <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
             <div className="leading-relaxed">
-              <span className="font-bold">Cảnh báo an toàn từ InterVue:</span> NTD chân chính không bao giờ yêu cầu ứng
-              viên đóng tiền phí tuyển dụng, tiền cọc đồng phục hay tham gia các hoạt động nạp tiền online. Nếu gặp dấu
-              hiệu khả nghi, vui lòng nhấn nút{' '}
+              <span className="font-bold">Safety warning from InterVue:</span> Genuine employers never ask candidates to
+              pay recruitment fees, uniform deposits or take part in online top-up activities. If you notice anything
+              suspicious, please click{' '}
               <button
                 type="button"
                 onClick={onReport}
                 className="cursor-pointer font-semibold text-amber-900 underline hover:text-amber-700"
               >
-                Báo cáo tin xấu
+                Report bad post
               </button>{' '}
-              để được hỗ trợ bảo vệ quyền lợi.
+              so we can help protect your rights.
             </div>
           </div>
         </div>

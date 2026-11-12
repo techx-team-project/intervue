@@ -34,16 +34,16 @@ export default function JobLocationPicker({ latitude, longitude, addressQuery, o
 
   const findByAddress = async () => {
     if (!addressQuery.trim()) {
-      toast.info('Nhập địa chỉ hoặc nơi làm việc trước khi tìm trên bản đồ.');
+      toast.info('Enter an address or workplace before searching the map.');
       return;
     }
     setSearching(true);
     try {
       const result = await geocodeAddress(addressQuery.trim());
       if (result) select(result);
-      else toast.info('Không tìm thấy địa chỉ này. Bạn hãy bấm trực tiếp lên bản đồ để đặt ghim.');
+      else toast.info('Address not found. Click the map to drop a pin instead.');
     } catch {
-      toast.error('Không tìm được vị trí lúc này. Bạn hãy bấm trực tiếp lên bản đồ.');
+      toast.error('Could not find the location right now. Click the map directly.');
     } finally {
       setSearching(false);
     }
@@ -52,21 +52,22 @@ export default function JobLocationPicker({ latitude, longitude, addressQuery, o
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="text-on-surface text-sm font-semibold">Vị trí trên bản đồ (không bắt buộc)</span>
+        <span className="text-on-surface text-sm font-semibold">Map location (optional)</span>
         <div className="flex gap-2">
           <Button type="button" size="sm" variant="outline" disabled={searching} onClick={findByAddress}>
-            <MapPin className="h-4 w-4" aria-hidden /> {searching ? 'Đang tìm...' : 'Tìm theo địa chỉ'}
+            <MapPin className="h-4 w-4" aria-hidden /> {searching ? 'Searching...' : 'Search by address'}
           </Button>
           {value && (
             <Button type="button" size="sm" variant="ghost" onClick={() => onChange(null)}>
-              Xoá ghim
+              Remove pin
             </Button>
           )}
         </div>
       </div>
       <JobLocationPickerMap value={value} onChange={select} />
       <p className="text-on-surface-variant text-xs">
-        Bấm lên bản đồ hoặc kéo ghim để đặt vị trí. Tin có ghim sẽ hiện trong mục “Việc làm gần tôi” của ứng viên.
+        Click the map or drag the pin to set the location. Jobs with a pin appear in candidates&apos; &ldquo;Jobs near
+        me&rdquo; section.
       </p>
     </div>
   );

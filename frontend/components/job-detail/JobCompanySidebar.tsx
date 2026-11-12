@@ -20,8 +20,8 @@ export default function JobCompanySidebar({ company, isPreviewMode = false }: Jo
       if (isPreviewMode) {
         toast.info(
           next
-            ? 'Chế độ xem trước: Đã theo dõi công ty (mô phỏng thao tác của ứng viên).'
-            : 'Chế độ xem trước: Đã hủy theo dõi công ty (mô phỏng thao tác của ứng viên).',
+            ? 'Preview mode: Company followed (simulating a candidate action).'
+            : 'Preview mode: Company unfollowed (simulating a candidate action).',
         );
       }
       return next;
@@ -57,7 +57,7 @@ export default function JobCompanySidebar({ company, isPreviewMode = false }: Jo
           </Link>
           <div className="text-on-surface-variant mt-1 flex items-center gap-1.5 text-xs">
             <CheckCircle2 className="text-primary h-3.5 w-3.5" />
-            <span>Doanh nghiệp xác thực</span>
+            <span>Verified company</span>
           </div>
         </div>
       </div>
@@ -75,12 +75,12 @@ export default function JobCompanySidebar({ company, isPreviewMode = false }: Jo
           {isFollowing ? (
             <>
               <Check className="h-3.5 w-3.5" />
-              <span>Đang theo dõi ({company.followers || '1.2k'})</span>
+              <span>Following ({company.followers || '1.2k'})</span>
             </>
           ) : (
             <>
               <Plus className="h-3.5 w-3.5" />
-              <span>Theo dõi công ty ({company.followers || '1.2k'})</span>
+              <span>Follow company ({company.followers || '1.2k'})</span>
             </>
           )}
         </button>
@@ -92,7 +92,7 @@ export default function JobCompanySidebar({ company, isPreviewMode = false }: Jo
         <div className="flex items-start gap-2.5">
           <Users className="text-outline mt-0.5 h-4 w-4 shrink-0" />
           <div>
-            <div className="text-outline font-medium">Quy mô công ty:</div>
+            <div className="text-outline font-medium">Company size:</div>
             <div className="text-on-surface mt-0.5 font-semibold">{company.size}</div>
           </div>
         </div>
@@ -100,7 +100,7 @@ export default function JobCompanySidebar({ company, isPreviewMode = false }: Jo
         <div className="flex items-start gap-2.5">
           <Briefcase className="text-outline mt-0.5 h-4 w-4 shrink-0" />
           <div>
-            <div className="text-outline font-medium">Lĩnh vực hoạt động:</div>
+            <div className="text-outline font-medium">Industry:</div>
             <div className="text-on-surface mt-0.5 font-semibold">{company.industry}</div>
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function JobCompanySidebar({ company, isPreviewMode = false }: Jo
         <div className="flex items-start gap-2.5">
           <MapPin className="text-outline mt-0.5 h-4 w-4 shrink-0" />
           <div>
-            <div className="text-outline font-medium">Địa chỉ:</div>
+            <div className="text-outline font-medium">Address:</div>
             <div className="text-on-surface mt-0.5 leading-relaxed font-medium">{company.address}</div>
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function JobCompanySidebar({ company, isPreviewMode = false }: Jo
           href={`/companies/${company.id || 224996}`}
           className="text-primary flex items-center justify-center gap-1.5 text-xs font-bold hover:underline"
         >
-          <span>Xem trang công ty</span>
+          <span>View company page</span>
           <ExternalLink className="h-3.5 w-3.5" />
         </Link>
       </div>

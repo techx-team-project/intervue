@@ -455,7 +455,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                 className="bg-primary inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 rounded-lg text-sm font-semibold text-white transition hover:brightness-95 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {busyAction === 'buy' && <Loader2 className="h-4 w-4 animate-spin" />}
-                Mua ngay
+                Buy now
               </button>
             </div>
 
