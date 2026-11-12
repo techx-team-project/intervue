@@ -4,6 +4,7 @@ import type { CreditPrice, SaveCreditPriceInput } from '@/types/credit';
 import type { EntitlementType } from '@/types/service-package';
 
 export const MAX_CREDIT_DURATION_DAYS = 3650;
+export const MAX_CREDIT_COST = 1_000_000;
 
 export const CREDIT_PRICE_PAGE_SIZE_OPTIONS = [
   { value: '5', label: '5 / page' },
@@ -189,13 +190,16 @@ export function validateCreditPriceDraft(
   const parsedCost = Number(draft.creditCost.trim());
   if (!draft.creditCost.trim() || !Number.isInteger(parsedCost) || parsedCost < 1) {
     fieldErrors.creditCost = 'Must be ≥ 1';
+  } else if (parsedCost > MAX_CREDIT_COST) {
+    fieldErrors.creditCost = `Max ${MAX_CREDIT_COST.toLocaleString('en-US')}`;
   }
 
   const trimmedDuration = draft.durationDays.trim();
+  const timeBoxed = isTimeBoxedEntitlement(entitlementType);
   let durationDays: number | null = null;
-  if (isTimeBoxedEntitlement(entitlementType) && !trimmedDuration) {
+  if (timeBoxed && !trimmedDuration) {
     fieldErrors.durationDays = 'Required';
-  } else if (trimmedDuration) {
+  } else if (timeBoxed && trimmedDuration) {
     const parsedDuration = Number(trimmedDuration);
     if (!Number.isInteger(parsedDuration) || parsedDuration < 1 || parsedDuration > MAX_CREDIT_DURATION_DAYS) {
       fieldErrors.durationDays = `1–${MAX_CREDIT_DURATION_DAYS}`;
