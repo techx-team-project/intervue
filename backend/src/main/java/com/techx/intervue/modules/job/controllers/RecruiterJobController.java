@@ -1,11 +1,15 @@
 package com.techx.intervue.modules.job.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.job.requests.RenewJobRequest;
 import com.techx.intervue.modules.job.requests.SaveJobRequest;
 import com.techx.intervue.modules.job.requests.SearchRecruiterJobsRequest;
+import com.techx.intervue.modules.job.resources.JobHistoryResource;
+import com.techx.intervue.modules.job.resources.JobQuotaResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.resources.JobSummaryResource;
+import com.techx.intervue.modules.job.services.interfaces.JobHistoryServiceInterface;
 import com.techx.intervue.modules.job.services.interfaces.JobServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
@@ -32,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RecruiterJobController extends BaseController {
 
     private final JobServiceInterface jobService;
+    private final JobHistoryServiceInterface jobHistoryService;
 
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<JobSummaryResource>>> search(
@@ -41,6 +46,12 @@ public class RecruiterJobController extends BaseController {
         return page(
                 jobService.search(request, pageable, principal.getId()),
                 "Jobs retrieved successfully!");
+    }
+
+    @GetMapping("/quota")
+    public ResponseEntity<ApiResource<JobQuotaResource>> quota(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(jobService.quota(principal.getId()), "Job quota retrieved successfully!");
     }
 
     @GetMapping("/summary")
@@ -99,6 +110,24 @@ public class RecruiterJobController extends BaseController {
     public ResponseEntity<ApiResource<JobResource>> retop(
             @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails principal) {
         return ok(jobService.retop(id, principal.getId()), "Job pushed to top successfully!");
+    }
+
+    @PostMapping("/{id}/renew")
+    public ResponseEntity<ApiResource<JobResource>> renew(
+            @PathVariable Long id,
+            @Valid @RequestBody RenewJobRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(jobService.renew(id, request, principal.getId()), "Job renewed successfully!");
+    }
+
+    @GetMapping("/{id}/history")
+    public ResponseEntity<ApiResource<PageResource<JobHistoryResource>>> history(
+            @PathVariable Long id,
+            Pageable pageable,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return page(
+                jobHistoryService.history(id, principal.getId(), pageable),
+                "Job history retrieved successfully!");
     }
 
     @DeleteMapping("/{id}")

@@ -8,16 +8,18 @@ import { JOB_PAGE_SIZE, JOB_SEGMENT_META, JOB_SORT_OPTIONS } from '@/constants/r
 import { ROUTES } from '@/constants/routes';
 import { useJobPostActions } from '@/hooks/useJobPostActions';
 import { useRecruiterJobCounts, useRecruiterJobList } from '@/hooks/useRecruiterJobs';
-import type { RecruiterJobSegment, RecruiterJobSort } from '@/types/recruiter-job';
+import type { RecruiterJobPost, RecruiterJobSegment, RecruiterJobSort } from '@/types/recruiter-job';
 import { getErrorMessage } from '@/utils/error';
 import { summaryToJobPost } from '@/utils/recruiter-job';
 import { FilePlus, Plus, SearchX } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
+import JobHistoryModal from './JobHistoryModal';
 import JobPostsBulkBar from './JobPostsBulkBar';
 import JobPostsFilterBar from './JobPostsFilterBar';
 import JobPostsList from './JobPostsList';
 import JobPostsSegmentTabs from './JobPostsSegmentTabs';
+import RenewJobModal from './RenewJobModal';
 import JobPostsStatsRow from './JobPostsStatsRow';
 
 interface ConfirmRequest {
@@ -36,6 +38,8 @@ export default function JobPostsListView() {
   const [page, setPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [confirm, setConfirm] = useState<ConfirmRequest | null>(null);
+  const [renewingJob, setRenewingJob] = useState<RecruiterJobPost | null>(null);
+  const [historyJob, setHistoryJob] = useState<RecruiterJobPost | null>(null);
 
   const listQuery = useRecruiterJobList({
     status: JOB_SEGMENT_META[segment].status,
@@ -169,6 +173,8 @@ export default function JobPostsListView() {
             onSelectAll={toggleSelectAll}
             isAllSelected={isAllSelected}
             onConfirm={setConfirm}
+            onRenew={setRenewingJob}
+            onHistory={setHistoryJob}
           />
           <div className="border-outline-variant rounded-xl border bg-white p-3.5 sm:p-4">
             <Pagination
@@ -192,13 +198,16 @@ export default function JobPostsListView() {
         onCloseSelected={() =>
           setConfirm({
             title: 'Đóng các tin đã chọn?',
-            message: `${selectedIds.size} tin sẽ ngừng nhận hồ sơ và không thể mở lại.`,
+            message: `${selectedIds.size} tin sẽ ngừng nhận hồ sơ. Bạn có thể gia hạn để đăng lại sau.`,
             run: () => runBulk(actions.bulkCloseJobs),
           })
         }
         onDeselectAll={resetSelection}
         isPending={actions.pendingId === 'bulk'}
       />
+
+      <RenewJobModal key={renewingJob?.id ?? 'renew'} job={renewingJob} onClose={() => setRenewingJob(null)} />
+      <JobHistoryModal key={historyJob?.id ?? 'history'} job={historyJob} onClose={() => setHistoryJob(null)} />
 
       <Modal
         isOpen={confirm !== null}

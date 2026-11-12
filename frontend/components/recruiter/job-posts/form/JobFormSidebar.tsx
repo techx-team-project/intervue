@@ -1,8 +1,11 @@
 'use client';
 
+import { ROUTES } from '@/constants/routes';
+import { useJobQuota } from '@/hooks/useRecruiterJobs';
 import { cn } from '@/lib/utils';
 import type { JobPostFormData } from '@/schemas/job.schema';
 import { Check } from 'lucide-react';
+import Link from 'next/link';
 import { useWatch } from 'react-hook-form';
 
 const MIN_DESCRIPTION_LENGTH = 50;
@@ -27,6 +30,8 @@ export default function JobFormSidebar() {
   const items = checklistOf(values);
   const doneCount = items.filter((item) => item.done).length;
   const percent = Math.round((doneCount / items.length) * 100);
+  const { data: quota } = useJobQuota();
+  const outOfSlots = quota !== undefined && quota.slotRequired && quota.slotsRemaining === 0;
 
   return (
     <aside
@@ -67,6 +72,24 @@ export default function JobFormSidebar() {
           </li>
         ))}
       </ul>
+
+      {quota && (
+        <div className="border-outline-variant mt-4 border-t pt-4">
+          <div className="flex items-baseline justify-between">
+            <span className="text-body-sm text-on-surface-variant">Lượt đăng tin còn lại</span>
+            <span className="text-navy text-body-md font-bold tabular-nums">{quota.slotsRemaining}</span>
+          </div>
+          {outOfSlots && (
+            <p className="text-body-sm mt-2 rounded-lg bg-amber-50 px-3 py-2 text-amber-800">
+              Bạn đã hết lượt.{' '}
+              <Link href={ROUTES.RECRUITER_SERVICES} className="font-semibold underline">
+                Mua thêm dịch vụ
+              </Link>
+              .
+            </p>
+          )}
+        </div>
+      )}
 
       <p className="text-body-sm text-on-surface-variant border-outline-variant mt-4 border-t pt-4 leading-relaxed">
         Hoàn tất các mục trên để có thể đăng tin. Bạn vẫn lưu nháp được bất cứ lúc nào.

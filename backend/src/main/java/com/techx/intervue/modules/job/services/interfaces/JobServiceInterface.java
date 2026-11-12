@@ -1,7 +1,9 @@
 package com.techx.intervue.modules.job.services.interfaces;
 
+import com.techx.intervue.modules.job.requests.RenewJobRequest;
 import com.techx.intervue.modules.job.requests.SaveJobRequest;
 import com.techx.intervue.modules.job.requests.SearchRecruiterJobsRequest;
+import com.techx.intervue.modules.job.resources.JobQuotaResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.resources.JobSummaryResource;
@@ -30,6 +32,10 @@ public interface JobServiceInterface {
     JobResource close(Long jobId, Long recruiterId);
 
     JobResource retop(Long jobId, Long recruiterId);
+
+    JobResource renew(Long jobId, RenewJobRequest request, Long recruiterId);
+
+    JobQuotaResource quota(Long recruiterId);
 
     void delete(Long jobId, Long recruiterId);
 }

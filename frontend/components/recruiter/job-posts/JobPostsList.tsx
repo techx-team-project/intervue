@@ -31,6 +31,8 @@ interface JobPostsListProps {
   onSelectAll: () => void;
   isAllSelected: boolean;
   onConfirm: (request: { title: string; message: string; run: () => void }) => void;
+  onRenew: (job: RecruiterJobPost) => void;
+  onHistory: (job: RecruiterJobPost) => void;
 }
 
 function salaryText(salary: JobSalary) {
@@ -49,6 +51,8 @@ export default function JobPostsList({
   onSelectAll,
   isAllSelected,
   onConfirm,
+  onRenew,
+  onHistory,
 }: JobPostsListProps) {
   return (
     <div className="border-outline-variant rounded-xl border bg-white">
@@ -86,11 +90,13 @@ export default function JobPostsList({
               onClose={() =>
                 onConfirm({
                   title: 'Đóng tin tuyển dụng?',
-                  message: `Tin "${job.title}" sẽ ngừng nhận hồ sơ và không thể mở lại.`,
+                  message: `Tin "${job.title}" sẽ ngừng nhận hồ sơ. Bạn có thể gia hạn để đăng lại sau.`,
                   run: () => actions.closeJob(job.id),
                 })
               }
               onDuplicate={() => actions.duplicateJob(job.id)}
+              onRenew={() => onRenew(job)}
+              onHistory={() => onHistory(job)}
               onDelete={() =>
                 onConfirm({
                   title: 'Xóa bản nháp?',

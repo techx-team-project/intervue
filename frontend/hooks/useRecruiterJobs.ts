@@ -11,6 +11,8 @@ export const recruiterJobKeys = {
   list: (params: RecruiterJobSearchParams) => ['recruiter', 'jobs', 'list', params] as const,
   counts: ['recruiter', 'jobs', 'counts'] as const,
   detail: (id: number) => ['recruiter', 'jobs', 'detail', id] as const,
+  history: (id: number, page: number) => ['recruiter', 'jobs', 'history', id, page] as const,
+  quota: ['recruiter', 'jobs', 'quota'] as const,
 };
 
 export function useRecruiterJobList(params: RecruiterJobSearchParams) {
@@ -31,6 +33,19 @@ export function useRecruiterJob(id: number | null) {
     queryFn: () => recruiterJobApi.get(id as number),
     enabled: id !== null,
   });
+}
+
+export function useJobHistory(id: number | null, page: number, size: number) {
+  return useQuery({
+    queryKey: recruiterJobKeys.history(id ?? 0, page),
+    queryFn: () => recruiterJobApi.history(id as number, page, size),
+    enabled: id !== null,
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useJobQuota() {
+  return useQuery({ queryKey: recruiterJobKeys.quota, queryFn: recruiterJobApi.quota });
 }
 
 export function useSkillSuggestions(query: string) {
@@ -58,6 +73,13 @@ export function useRecruiterJobMutations() {
     close: useMutation({ mutationFn: recruiterJobApi.close, onSuccess: invalidate }),
     retop: useMutation({
       mutationFn: recruiterJobApi.retop,
+      onSuccess: () => {
+        invalidate();
+        void queryClient.invalidateQueries({ queryKey: ['recruiter', 'entitlements'] });
+      },
+    }),
+    renew: useMutation({
+      mutationFn: ({ id, deadline }: { id: number; deadline: string }) => recruiterJobApi.renew(id, deadline),
       onSuccess: () => {
         invalidate();
         void queryClient.invalidateQueries({ queryKey: ['recruiter', 'entitlements'] });
