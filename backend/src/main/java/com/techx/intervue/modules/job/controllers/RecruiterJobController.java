@@ -4,12 +4,14 @@ import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.job.requests.RenewJobRequest;
 import com.techx.intervue.modules.job.requests.SaveJobRequest;
 import com.techx.intervue.modules.job.requests.SearchRecruiterJobsRequest;
+import com.techx.intervue.modules.job.requests.SimilarJobsRequest;
 import com.techx.intervue.modules.job.resources.JobHistoryResource;
 import com.techx.intervue.modules.job.resources.JobQuotaResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatsResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.resources.JobSummaryResource;
+import com.techx.intervue.modules.job.resources.SimilarJobResource;
 import com.techx.intervue.modules.job.services.interfaces.JobHistoryServiceInterface;
 import com.techx.intervue.modules.job.services.interfaces.JobServiceInterface;
 import com.techx.intervue.modules.job.services.interfaces.JobStatsServiceInterface;
@@ -17,6 +19,7 @@ import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +53,15 @@ public class RecruiterJobController extends BaseController {
         return page(
                 jobService.search(request, pageable, principal.getId()),
                 "Jobs retrieved successfully!");
+    }
+
+    @GetMapping("/similar")
+    public ResponseEntity<ApiResource<List<SimilarJobResource>>> similar(
+            @Valid SimilarJobsRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                jobService.findSimilar(request, principal.getId()),
+                "Similar jobs retrieved successfully!");
     }
 
     @GetMapping("/quota")
