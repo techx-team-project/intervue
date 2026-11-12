@@ -1,143 +1,209 @@
 'use client';
 
 import { adminAdApi } from '@/apiRequest/ads';
-import { Button } from '@/components/ui/Button';
-import Textarea from '@/components/ui/Textarea';
-import type { AdminAdCreative } from '@/types/ads';
-import { formatDate, formatDateTime } from '@/utils/datetime';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import AdArtworkLightboxModal, { type LightboxArtworkItem } from '@/components/admin/ads/AdArtworkLightboxModal';
+import AdminAdCreativesFilterBar from '@/components/admin/ads/creatives/AdminAdCreativesFilterBar';
+import AdminAdCreativesMobileList from '@/components/admin/ads/creatives/AdminAdCreativesMobileList';
+import AdminAdCreativesTable from '@/components/admin/ads/creatives/AdminAdCreativesTable';
+import RejectAdCreativeModal from '@/components/admin/ads/creatives/RejectAdCreativeModal';
+import Pagination from '@/components/common/Pagination';
+import { buttonClassName } from '@/components/ui/Button';
+import Select from '@/components/ui/Select';
+import { ROUTES } from '@/constants/routes';
+import { AD_CREATIVE_PAGE_SIZE_OPTIONS, adminAdKeys, formatIsoWeekRange } from '@/lib/admin-ads';
+import type { AdCreativeStatus, AdminAdCreative } from '@/types/ads';
+import type { Page } from '@/types/api';
 import { getErrorMessage } from '@/utils/error';
-import { AlertCircle, ExternalLink } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { CheckCircle2, Image as ImageIcon, Megaphone } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
-const STATUS_STYLE: Record<string, string> = {
-  PENDING: 'bg-amber-50 text-amber-700',
-  APPROVED: 'bg-emerald-50 text-emerald-700',
-  REJECTED: 'bg-rose-50 text-rose-700',
-};
+interface AdminAdCreativesViewProps {
+  result: Page<AdminAdCreative>;
+  status: AdCreativeStatus | '';
+  pendingCount?: number;
+  pageSize: number;
+  isFetching: boolean;
+  onStatusChange: (status: AdCreativeStatus | '') => void;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
+}
 
-export default function AdminAdCreativesView({ initialCreatives }: { initialCreatives: AdminAdCreative[] }) {
-  const [creatives, setCreatives] = useState(initialCreatives);
-  const [openId, setOpenId] = useState<number | null>(null);
-  const [reason, setReason] = useState('');
-  const [busyId, setBusyId] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export default function AdminAdCreativesView({
+  result,
+  status,
+  pendingCount,
+  pageSize,
+  isFetching,
+  onStatusChange,
+  onPageChange,
+  onPageSizeChange,
+}: AdminAdCreativesViewProps) {
+  const queryClient = useQueryClient();
+  const [busyCreativeId, setBusyCreativeId] = useState<number | null>(null);
+  const [rejectTarget, setRejectTarget] = useState<AdminAdCreative | null>(null);
+  const [lightboxItem, setLightboxItem] = useState<LightboxArtworkItem | null>(null);
 
-  const review = async (id: number, approve: boolean) => {
-    setBusyId(id);
-    setError(null);
+  const creatives = result.items;
+
+  const invalidateCreatives = async () => {
+    await queryClient.invalidateQueries({ queryKey: adminAdKeys.all });
+  };
+
+  const handleApprove = async (creative: AdminAdCreative) => {
+    setBusyCreativeId(creative.id);
     try {
-      const saved = approve ? await adminAdApi.approve(id) : await adminAdApi.reject(id, reason.trim());
-      setCreatives((current) => current.map((item) => (item.id === saved.id ? saved : item)));
-      setOpenId(null);
-      setReason('');
+      await adminAdApi.approve(creative.id);
+      await invalidateCreatives();
+      toast.success(`Artwork for ${creative.slotCode} (Booking #${creative.bookingId}) approved.`);
     } catch (cause) {
-      setError(getErrorMessage(cause));
+      toast.error(getErrorMessage(cause));
     } finally {
-      setBusyId(null);
+      setBusyCreativeId(null);
     }
   };
 
-  return (
-    <div className="space-y-5 pb-16">
-      <div>
-        <h1 className="text-on-surface text-xl font-bold">Banner artwork</h1>
-        <p className="text-on-surface-variant mt-1 text-sm">
-          Nothing goes live until it is approved. A rejected week shows the house ad instead and is not extended.
-        </p>
-      </div>
+  const handleConfirmReject = async (creativeId: number, reason: string) => {
+    setBusyCreativeId(creativeId);
+    try {
+      await adminAdApi.reject(creativeId, reason);
+      await invalidateCreatives();
+      setRejectTarget(null);
+      toast.success('Banner artwork rejected and advertiser notified.');
+    } catch (cause) {
+      toast.error(getErrorMessage(cause));
+    } finally {
+      setBusyCreativeId(null);
+    }
+  };
 
-      {error && (
-        <div className="flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800">
-          <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" aria-hidden />
-          {error}
-        </div>
-      )}
+  const handleInspect = (creative: AdminAdCreative) => {
+    setLightboxItem({
+      title: `${creative.slotCode ?? 'Ad slot'} — ${creative.slotName ?? 'Banner'}`,
+      subtitle: `Company #${creative.companyId ?? '—'} · ${formatIsoWeekRange(creative.weekStart, creative.weekEnd)}`,
+      imageUrl: creative.imageUrl,
+      targetUrl: creative.targetUrl,
+      altText: creative.altText,
+      width: creative.width,
+      height: creative.height,
+    });
+  };
+
+  const countLabel =
+    status === 'PENDING'
+      ? 'pending submissions'
+      : status === 'APPROVED'
+        ? 'approved banners'
+        : status === 'REJECTED'
+          ? 'rejected banners'
+          : 'submissions';
+
+  return (
+    <div className="space-y-4 pb-12">
+      <AdminPageHeader
+        className="mb-0"
+        description="Review recruiter banner artwork before it goes live on the storefront. Rejected weeks fall back to the slot's house ad."
+        count={result.totalItems}
+        countLabel={countLabel}
+        actions={
+          <Link
+            href={ROUTES.ADMIN_ADS_SLOTS}
+            className={buttonClassName({
+              variant: 'outline',
+              size: 'md',
+              className: 'dark:border-forest-700 dark:text-forest-100 dark:hover:bg-forest-850',
+            })}
+          >
+            <Megaphone className="h-4 w-4" />
+            <span>Manage ad slots</span>
+          </Link>
+        }
+      />
+
+      <AdminAdCreativesFilterBar status={status} pendingCount={pendingCount} onStatusChange={onStatusChange} />
 
       {creatives.length === 0 ? (
-        <div className="border-outline-variant text-on-surface-variant rounded-2xl border border-dashed px-4 py-12 text-center text-sm">
-          No artwork has been submitted yet.
+        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex flex-col items-center justify-center gap-3 rounded-lg border bg-white px-6 py-16 text-center shadow-xs">
+          {status === 'PENDING' ? (
+            <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+          ) : (
+            <ImageIcon className="text-outline h-10 w-10" />
+          )}
+          <p className="text-navy dark:text-forest-50 text-body-md font-bold">
+            {status === 'PENDING'
+              ? 'All caught up — no artwork waiting for review'
+              : status
+                ? `No ${status.toLowerCase()} artwork found`
+                : 'No artwork has been submitted yet'}
+          </p>
+          <p className="dark:text-forest-300 text-body-sm text-on-surface-variant max-w-sm">
+            {status
+              ? 'Switch tabs above to browse artwork in other moderation states.'
+              : 'When recruiters upload banners for their booked ad weeks, they will appear here for approval.'}
+          </p>
+          {status && (
+            <button
+              type="button"
+              onClick={() => onStatusChange('')}
+              className="text-primary text-body-sm mt-1 cursor-pointer font-bold hover:underline"
+            >
+              Show all artwork
+            </button>
+          )}
         </div>
       ) : (
-        <ul className="space-y-4">
-          {creatives.map((creative) => (
-            <li key={creative.id} className="border-outline-variant rounded-2xl border bg-white p-5 shadow-2xs">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="text-on-surface font-semibold">
-                    {creative.slotName} · {creative.width}×{creative.height}
-                  </p>
-                  <p className="text-on-surface-variant text-xs">
-                    Company #{creative.companyId} · week {creative.weekStart ? formatDate(creative.weekStart) : '—'} ·
-                    submitted {formatDateTime(creative.createdAt)}
-                  </p>
-                </div>
-                <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${STATUS_STYLE[creative.status]}`}>
-                  {creative.status}
-                </span>
-              </div>
-
-              <div className="border-outline-variant mt-3 overflow-x-auto rounded-xl border bg-slate-50 p-3">
-                {/* Artwork is served from Cloudinary, which is not in next.config images.remotePatterns */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={creative.imageUrl}
-                  alt={creative.altText ?? 'Banner artwork'}
-                  className="h-auto max-w-full rounded-lg"
-                />
-              </div>
-
-              <p className="text-on-surface-variant mt-2 text-xs">
-                Links to{' '}
-                <a
-                  href={creative.targetUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary inline-flex items-center gap-1 hover:underline"
-                >
-                  {creative.targetUrl}
-                  <ExternalLink className="h-3 w-3" aria-hidden />
-                </a>
-              </p>
-
-              {creative.rejectionReason && (
-                <p className="mt-2 text-xs font-semibold text-rose-600">{creative.rejectionReason}</p>
-              )}
-
-              {creative.status === 'PENDING' &&
-                (openId === creative.id ? (
-                  <div className="mt-4 space-y-3">
-                    <Textarea
-                      label="Reason (required when rejecting)"
-                      rows={2}
-                      value={reason}
-                      onChange={(event) => setReason(event.target.value)}
-                    />
-                    <div className="flex flex-wrap justify-end gap-3">
-                      <Button variant="neutral" onClick={() => setOpenId(null)}>
-                        Cancel
-                      </Button>
-                      <Button
-                        variant="neutral"
-                        disabled={reason.trim().length === 0}
-                        isLoading={busyId === creative.id}
-                        onClick={() => review(creative.id, false)}
-                      >
-                        Reject
-                      </Button>
-                      <Button isLoading={busyId === creative.id} onClick={() => review(creative.id, true)}>
-                        Approve
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <Button size="sm" className="mt-4" onClick={() => setOpenId(creative.id)}>
-                    Review
-                  </Button>
-                ))}
-            </li>
-          ))}
-        </ul>
+        <div className={isFetching ? 'opacity-75 transition-opacity' : 'transition-opacity'}>
+          <AdminAdCreativesTable
+            creatives={creatives}
+            busyCreativeId={busyCreativeId}
+            onInspect={handleInspect}
+            onApprove={handleApprove}
+            onOpenReject={setRejectTarget}
+          />
+          <AdminAdCreativesMobileList
+            creatives={creatives}
+            busyCreativeId={busyCreativeId}
+            onInspect={handleInspect}
+            onApprove={handleApprove}
+            onOpenReject={setRejectTarget}
+          />
+        </div>
       )}
+
+      {result.totalItems > 0 && (
+        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-white px-4 py-3 shadow-2xs">
+          <div className="min-w-0 flex-1">
+            <Pagination
+              page={result.page + 1}
+              pageCount={result.totalPages}
+              totalItems={result.totalItems}
+              pageSize={pageSize}
+              onPageChange={onPageChange}
+            />
+          </div>
+          <div className="w-32 shrink-0">
+            <Select
+              aria-label="Rows per page"
+              value={String(pageSize)}
+              onChange={(event) => onPageSizeChange(Number(event.target.value))}
+              options={[...AD_CREATIVE_PAGE_SIZE_OPTIONS]}
+              className="dark:border-forest-700 dark:bg-forest-950 dark:text-forest-50"
+            />
+          </div>
+        </div>
+      )}
+
+      <RejectAdCreativeModal
+        creative={rejectTarget}
+        isSubmitting={busyCreativeId !== null && busyCreativeId === rejectTarget?.id}
+        onClose={() => setRejectTarget(null)}
+        onConfirm={handleConfirmReject}
+      />
+
+      <AdArtworkLightboxModal item={lightboxItem} onClose={() => setLightboxItem(null)} />
     </div>
   );
 }

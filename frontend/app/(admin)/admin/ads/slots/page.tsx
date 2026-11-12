@@ -1,5 +1,6 @@
 import AdminAdSlotsPageClient from '@/components/admin/ads/AdminAdSlotsPageClient';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Ad slots | InterVue Admin',
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminAdSlotsPage() {
-  return <AdminAdSlotsPageClient />;
+  return (
+    <Suspense fallback={null}>
+      <AdminAdSlotsPageClient />
+    </Suspense>
+  );
 }

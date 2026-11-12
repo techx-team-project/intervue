@@ -84,6 +84,8 @@ const DYNAMIC_LEAVES: { pattern: RegExp; label: (match: RegExpMatchArray) => str
   { pattern: /^\/admin\/services\/packages\/(\d+)\/edit$/, label: (match) => `Edit package #${match[1]}` },
   { pattern: /^\/admin\/services\/vouchers\/create$/, label: () => 'New voucher' },
   { pattern: /^\/admin\/services\/vouchers\/(\d+)\/edit$/, label: (match) => `Edit voucher #${match[1]}` },
+  { pattern: /^\/admin\/ads\/slots\/create$/, label: () => 'New ad slot' },
+  { pattern: /^\/admin\/ads\/slots\/(\d+)\/edit$/, label: (match) => `Edit ad slot #${match[1]}` },
 ];
 
 function dynamicLeaf(pathname: string): AdminBreadcrumbEntry[] {
