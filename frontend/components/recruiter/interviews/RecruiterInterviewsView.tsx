@@ -64,7 +64,7 @@ export default function RecruiterInterviewsView() {
               <li key={interview.id}>
                 <Link
                   href={`${ROUTES.RECRUITER_APPLICATIONS}/${interview.applicationId}`}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-2xs transition-colors hover:border-slate-300"
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:border-slate-300"
                 >
                   <div className="min-w-0 space-y-1">
                     <p className="truncate text-sm font-bold text-slate-900">{interview.candidateName}</p>
@@ -99,7 +99,7 @@ export default function RecruiterInterviewsView() {
           )}
         </>
       ) : (
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-14 text-center">
+        <div className="rounded-xl border border-dashed border-slate-300 bg-white py-14 text-center">
           <p className="text-sm font-semibold text-slate-700">Chưa có lịch phỏng vấn nào</p>
           <p className="mt-1 text-xs text-slate-500">Mở một hồ sơ ứng tuyển và bấm “Mời phỏng vấn” để đặt lịch.</p>
         </div>
