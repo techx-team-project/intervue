@@ -253,6 +253,7 @@ An application is one row per candidate and job (`UNIQUE job_id, candidate_id`);
 | Method | Path | Auth | Notes |
 |---|---|---|---|
 | `GET` | `/candidate/applications?status=&jobId=&page=&size=` | candidate | Own applications, most recently updated first. `ApplicationSummaryResource { id, status, jobId, jobTitle, companyId, companyName, submittedAt?, updatedAt }`. |
+| `GET` | `/candidate/applications/applied-job-ids` | candidate | `number[]`: ids of jobs the caller has an application for (any status except `DRAFT` and `WITHDRAWN`). Used to show an Applied badge on job cards and an Applied button on the job detail page. |
 | `GET` | `/candidate/applications/form?jobId=` | candidate | `ApplyFormResource { jobId, jobTitle, companyName, open, questions: [{ id, type, prompt, required, options? }], application? }`. `application` is the candidate's own draft or submission. `404` for a draft job. |
 | `GET` | `/candidate/applications/{id}` | candidate | `ApplicationResource { id, status, jobId, jobTitle, companyId, companyName, resumeId?, cv?: { fileName, fileSizeBytes }, coverLetter?, answers: [{ questionId, prompt, answer }], history: [{ from?, to, actorType, at }], submittedAt?, viewedAt?, updatedAt }`. Someone else's application is `404`. |
 | `PUT` | `/candidate/applications/draft` | candidate | Auto-save. Body `SaveApplicationRequest { jobId, resumeId?, coverLetter? (max 5000), answers?: [{ questionId, answer (max 1000) }] }`. Partial answers are allowed; answers to questions the job no longer has are dropped. `409 ALREADY_APPLIED` once submitted. |
