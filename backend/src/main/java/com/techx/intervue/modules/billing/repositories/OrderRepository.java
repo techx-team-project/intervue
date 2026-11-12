@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface OrderRepository
         extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
@@ -29,4 +31,14 @@ public interface OrderRepository
             Long recruiterId, OrderStatus status, Long totalAmount, Instant createdAfter);
 
     boolean existsByCode(String code);
+
+    @Query(
+            "SELECT o.status AS status, COUNT(o) AS total FROM Order o WHERE o.companyId = :companyId GROUP BY o.status")
+    List<StatusCount> countByStatusForCompany(@Param("companyId") Long companyId);
+
+    interface StatusCount {
+        OrderStatus getStatus();
+
+        long getTotal();
+    }
 }

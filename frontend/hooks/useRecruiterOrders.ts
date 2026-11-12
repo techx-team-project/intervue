@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 
 export const recruiterOrderKeys = {
   all: ['recruiter', 'orders'] as const,
+  counts: ['recruiter', 'orders', 'counts'] as const,
   list: (page: number, size: number) => ['recruiter', 'orders', 'list', page, size] as const,
   detail: (code: string) => ['recruiter', 'orders', 'detail', code] as const,
   payment: (code: string) => ['recruiter', 'orders', 'payment', code] as const,
@@ -64,6 +65,10 @@ export function useRecruiterOrderList(page: number, size = 10) {
       return items.some((item) => PENDING_ORDER_STATUSES.includes(item.status)) ? PAYMENT_POLL_MS : false;
     },
   });
+}
+
+export function useRecruiterOrderCounts() {
+  return useQuery({ queryKey: recruiterOrderKeys.counts, queryFn: recruiterOrderApi.counts });
 }
 
 export function useRecruiterOrder(code: string) {

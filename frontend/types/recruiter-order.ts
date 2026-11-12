@@ -48,6 +48,11 @@ export interface RecruiterOrder {
   invoice: RecruiterOrderInvoice | null;
 }
 
+export interface OrderStatusCounts {
+  total: number;
+  byStatus: Record<RecruiterOrderStatus, number>;
+}
+
 export interface RecruiterOrderSummary {
   id: number;
   code: string;

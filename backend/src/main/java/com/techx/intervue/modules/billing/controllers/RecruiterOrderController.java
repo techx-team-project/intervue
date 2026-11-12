@@ -6,6 +6,7 @@ import com.techx.intervue.modules.billing.requests.CreateRefundRequest;
 import com.techx.intervue.modules.billing.resources.InvoiceResource;
 import com.techx.intervue.modules.billing.resources.OrderPaymentResource;
 import com.techx.intervue.modules.billing.resources.OrderResource;
+import com.techx.intervue.modules.billing.resources.OrderStatusCountsResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
 import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
 import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
@@ -49,6 +50,14 @@ public class RecruiterOrderController extends BaseController {
             Pageable pageable, @AuthenticationPrincipal CustomUserDetails principal) {
         return page(
                 orderService.search(pageable, principal.getId()), "Orders retrieved successfully!");
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResource<OrderStatusCountsResource>> summary(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                orderService.countByStatus(principal.getId()),
+                "Order summary retrieved successfully!");
     }
 
     @GetMapping("/payments")
