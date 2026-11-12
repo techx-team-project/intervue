@@ -12,10 +12,10 @@ interface JobBreadcrumbProps {
 
 export default function JobBreadcrumb({
   title,
-  category = 'Kế toán / Kiểm toán / Thuế',
+  category = 'Accounting / Auditing / Tax',
   onReport,
 }: JobBreadcrumbProps) {
-  const items = [{ label: 'Tìm việc làm', href: '/#feature-jobs' }, { label: category }, { label: title }];
+  const items = [{ label: 'Find jobs', href: '/#feature-jobs' }, { label: category }, { label: title }];
 
   return (
     <div className="text-on-surface-variant mb-4 flex flex-wrap items-center justify-between gap-2 text-xs">
@@ -25,10 +25,10 @@ export default function JobBreadcrumb({
         type="button"
         onClick={onReport}
         className="text-on-surface-variant hover:text-error inline-flex cursor-pointer items-center gap-1 text-xs font-medium transition-colors"
-        title="Báo cáo tin tuyển dụng không chính xác"
+        title="Report an inaccurate job post"
       >
         <ShieldAlert className="h-3.5 w-3.5 text-amber-500" />
-        <span>Báo cáo tin này</span>
+        <span>Report this post</span>
       </button>
     </div>
   );

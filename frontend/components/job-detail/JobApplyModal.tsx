@@ -18,7 +18,7 @@ interface JobApplyModalProps {
 
 export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = false }: JobApplyModalProps) {
   const [selectedCv, setSelectedCv] = useState<'profile' | 'upload'>('profile');
-  const [fullName, setFullName] = useState('Lê Minh Trí');
+  const [fullName, setFullName] = useState('Le Minh Tri');
   const [email, setEmail] = useState('minhtri.le@gmail.com');
   const [phone, setPhone] = useState('0912 345 678');
   const [coverLetter, setCoverLetter] = useState('');
@@ -41,19 +41,19 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
           candidateName: fullName,
           cvText:
             selectedCv === 'profile'
-              ? `Ứng viên: ${fullName}. Kỹ năng và kinh nghiệm liên quan đến vị trí ${job.title}.`
+              ? `Candidate: ${fullName}. Skills and experience relevant to the ${job.title} position.`
               : '',
         });
 
         if (response?.coverLetter) {
           setCoverLetter(response.coverLetter);
-          toast.success('Đã tạo bản nháp thư giới thiệu! Bạn hãy kiểm tra và chỉnh sửa trước khi gửi.');
+          toast.success('Cover letter draft created! Please review and edit it before sending.');
         }
       } catch {
         setCoverLetter(
-          `Kính gửi Bộ phận Tuyển dụng ${job.company.name},\n\nTôi viết thư này để bày tỏ nguyện vọng ứng tuyển vào vị trí ${job.title} tại Quý công ty. Dựa trên các yêu cầu công việc được nêu rõ trong thông báo tuyển dụng và quá trình tích lũy kinh nghiệm thực tế của bản thân, tôi tin rằng các kỹ năng chuyên môn của mình hoàn toàn đáp ứng tốt mục tiêu phát triển của dự án.\n\nTôi rất mong có cơ hội được tham gia buổi phỏng vấn để trao đổi chi tiết hơn về những đóng góp có thể mang lại cho ${job.company.name}.\n\nTrân trọng cảm ơn,\n${fullName}`,
+          `Dear ${job.company.name} Hiring Team,\n\nI am writing to express my interest in the ${job.title} position at your company. Based on the requirements outlined in the job posting and my hands-on experience, I believe my professional skills are a strong match for the goals of the project.\n\nI would welcome the opportunity to interview and discuss in more detail the contributions I can make to ${job.company.name}.\n\nThank you for your time and consideration,\n${fullName}`,
         );
-        toast.info('Đã tạo bản nháp thư giới thiệu từ dữ kiện công việc. Vui lòng chỉnh sửa trước khi nộp.');
+        toast.info('Cover letter draft created from the job details. Please edit it before submitting.');
       } finally {
         setIsGeneratingAi(false);
       }
@@ -67,7 +67,9 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
       setIsSubmitting(false);
       setIsSubmitted(true);
       if (isPreviewMode) {
-        toast.success('Mô phỏng nộp hồ sơ thành công! Đây là màn hình thông báo hoàn tất mà ứng viên sẽ nhìn thấy.');
+        toast.success(
+          'Application submission simulated successfully! This is the completion screen candidates will see.',
+        );
       }
     }, 700);
   };
@@ -82,7 +84,7 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
       isOpen={isOpen}
       onClose={handleResetAndClose}
       maxWidth="2xl"
-      title="Ứng tuyển việc làm"
+      title="Apply for this job"
       description={`${job.title} - ${job.company.name}`}
     >
       {consentDialog}
@@ -92,22 +94,22 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
             <CheckCircle2 className="h-10 w-10" />
           </div>
 
-          <h4 className="text-on-surface text-xl font-bold">Nộp hồ sơ ứng tuyển thành công!</h4>
+          <h4 className="text-on-surface text-xl font-bold">Application submitted successfully!</h4>
 
           <p className="text-on-surface-variant mx-auto max-w-md text-sm leading-relaxed">
-            Hồ sơ của bạn đã được chuyển thẳng tới phòng nhân sự của{' '}
-            <strong className="text-on-surface">{job.company.name}</strong>. Nhà tuyển dụng sẽ xem xét và phản hồi trong
-            24-48 giờ làm việc.
+            Your application has been sent directly to the HR team at{' '}
+            <strong className="text-on-surface">{job.company.name}</strong>. The recruiter will review it and respond
+            within 24-48 business hours.
           </p>
 
           <div className="border-primary/30 text-on-surface mx-auto max-w-md rounded-xl border bg-emerald-50/70 p-4 text-left text-xs">
             <div className="text-on-primary-container mb-1 flex items-center gap-1.5 font-bold">
               <Sparkles className="text-primary h-4 w-4" />
-              <span>Gợi ý cho bạn:</span>
+              <span>A tip for you:</span>
             </div>
             <div>
-              Trong lúc chờ đợi kết quả, bạn có thể tham gia <strong>Phòng luyện phỏng vấn AI</strong> của InterVue để
-              chuẩn bị câu trả lời cho vị trí này!
+              While you wait for the result, you can join InterVue&apos;s <strong>AI Interview Practice Room</strong> to
+              prepare your answers for this position!
             </div>
           </div>
 
@@ -115,18 +117,18 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
             <div className="mx-auto max-w-md rounded-xl border border-amber-300 bg-amber-50 p-3.5 text-left text-xs text-amber-900">
               <div className="mb-1 flex items-center gap-1.5 font-bold text-amber-950">
                 <Sparkles className="h-3.5 w-3.5 text-amber-600" />
-                <span>Ghi chú Chế độ Xem trước:</span>
+                <span>Preview Mode note:</span>
               </div>
               <p className="leading-relaxed text-amber-800">
-                Mô phỏng hoàn tất. Ứng viên thật sau khi nộp sẽ được lưu vào mục <strong>Applications</strong> trong
-                Recruiter Panel của bạn để chấm điểm AI ATS và lọc hồ sơ.
+                Simulation complete. Real applications are saved to the <strong>Applications</strong> section of your
+                Recruiter Panel for AI ATS scoring and screening.
               </p>
             </div>
           )}
 
           <div className="flex justify-center gap-3 pt-4">
             <Button onClick={handleResetAndClose} className="px-6">
-              Hoàn tất & Đóng
+              Done & Close
             </Button>
           </div>
         </div>
@@ -136,10 +138,10 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
             <div className="flex items-start gap-2.5 rounded-xl border border-amber-300 bg-amber-50/90 p-3 text-xs text-amber-900 shadow-2xs">
               <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
               <div>
-                <p className="font-bold">Chế độ xem trước (Candidate Preview Mode):</p>
+                <p className="font-bold">Candidate Preview Mode:</p>
                 <p className="mt-0.5 text-amber-800">
-                  Đây là giao diện nộp CV và câu hỏi tuyển dụng mà ứng viên nhìn thấy. Dữ liệu nộp thử sẽ không được ghi
-                  nhận vào hệ thống.
+                  This is the CV submission and screening question form candidates see. Test submissions will not be
+                  recorded in the system.
                 </p>
               </div>
             </div>
@@ -148,16 +150,16 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
           <div className="border-primary/30 bg-primary-light flex items-center justify-between rounded-xl border px-4 py-2.5 text-xs">
             <div className="flex items-center gap-2">
               <Sparkles className="text-primary h-4 w-4" />
-              <span className="text-on-surface font-medium">Độ tương thích hồ sơ với vị trí:</span>
+              <span className="text-on-surface font-medium">Profile match for this position:</span>
             </div>
             <span className="border-primary/30 text-primary rounded-full border bg-white px-2 py-0.5 font-extrabold">
-              {job.atsMatchScore}% Rất phù hợp
+              {job.atsMatchScore}% Strong match
             </span>
           </div>
 
           <div>
             <label className="text-on-surface mb-2 block text-xs font-bold tracking-wider uppercase">
-              Chọn CV ứng tuyển <span className="text-error">*</span>
+              Select CV to apply with <span className="text-error">*</span>
             </label>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -172,11 +174,11 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     <FileText className="text-primary h-5 w-5" />
-                    <span className="text-on-surface text-xs font-bold">CV Kế toán trưởng ATS</span>
+                    <span className="text-on-surface text-xs font-bold">Chief Accountant ATS CV</span>
                   </div>
                   {selectedCv === 'profile' && <Check className="text-primary h-4 w-4" />}
                 </div>
-                <p className="text-on-surface-variant mt-1.5 text-xs">Cập nhật 2 ngày trước • Chuẩn ATS 92 điểm</p>
+                <p className="text-on-surface-variant mt-1.5 text-xs">Updated 2 days ago • ATS score 92</p>
               </div>
 
               <div
@@ -190,11 +192,11 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     <Upload className="text-on-surface-variant h-5 w-5" />
-                    <span className="text-on-surface text-xs font-bold">Tải lên CV mới</span>
+                    <span className="text-on-surface text-xs font-bold">Upload a new CV</span>
                   </div>
                   {selectedCv === 'upload' && <Check className="text-primary h-4 w-4" />}
                 </div>
-                <p className="text-on-surface-variant mt-1.5 text-xs">Hỗ trợ file PDF, DOCX (tối đa 5MB)</p>
+                <p className="text-on-surface-variant mt-1.5 text-xs">PDF, DOCX supported (max 5MB)</p>
               </div>
             </div>
           </div>
@@ -202,7 +204,7 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div>
               <label className="text-on-surface mb-1 block text-xs font-bold">
-                Họ và tên <span className="text-error">*</span>
+                Full name <span className="text-error">*</span>
               </label>
               <input
                 type="text"
@@ -215,7 +217,7 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
 
             <div>
               <label className="text-on-surface mb-1 block text-xs font-bold">
-                Email liên hệ <span className="text-error">*</span>
+                Contact email <span className="text-error">*</span>
               </label>
               <input
                 type="email"
@@ -228,7 +230,7 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
 
             <div>
               <label className="text-on-surface mb-1 block text-xs font-bold">
-                Số điện thoại <span className="text-error">*</span>
+                Phone number <span className="text-error">*</span>
               </label>
               <input
                 type="tel"
@@ -242,7 +244,7 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
 
           <div>
             <div className="mb-1.5 flex items-center justify-between">
-              <label className="text-on-surface text-xs font-bold">Thư giới thiệu (Cover Letter)</label>
+              <label className="text-on-surface text-xs font-bold">Cover Letter</label>
 
               <button
                 type="button"
@@ -251,7 +253,7 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
                 className="border-primary/30 bg-primary-light text-primary hover:bg-primary-container inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-bold transition-colors disabled:opacity-50"
               >
                 <Bot className="text-primary h-3.5 w-3.5" />
-                <span>{isGeneratingAi ? 'Đang tạo thư...' : 'Generate with AI'}</span>
+                <span>{isGeneratingAi ? 'Generating letter...' : 'Generate with AI'}</span>
               </button>
             </div>
 
@@ -259,14 +261,14 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
               rows={4}
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
-              placeholder="Giới thiệu ngắn gọn kinh nghiệm, kỹ năng nổi bật và lý do bạn phù hợp với vị trí này..."
+              placeholder="Briefly describe your experience, key skills and why you are a good fit for this position..."
               className="border-outline text-on-surface focus:border-primary w-full rounded-xl border p-3 text-xs placeholder-slate-400 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
             />
             <p className="text-label-sm text-on-surface-variant mt-1 flex items-center gap-1">
               <Sparkles className="text-primary h-3 w-3 shrink-0" />
               <span>
-                Chỉ sử dụng dữ kiện từ CV và tin tuyển dụng. Bạn có thể chỉnh sửa tự do trước khi nộp; thư không bao giờ
-                được gửi tự động.
+                Uses only facts from your CV and the job post. You can freely edit it before submitting; the letter is
+                never sent automatically.
               </span>
             </p>
           </div>
@@ -276,7 +278,7 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
             <div className="border-outline-variant bg-surface-container-low/70 space-y-3 rounded-xl border p-4">
               <div className="text-on-surface flex items-center gap-2 text-xs font-bold tracking-wide uppercase">
                 <HelpCircle className="text-primary h-4 w-4" />
-                <span>Câu hỏi sàng lọc ứng viên ({job.screeningQuestions.length})</span>
+                <span>Screening questions ({job.screeningQuestions.length})</span>
               </div>
 
               <div className="space-y-3.5">
@@ -289,7 +291,7 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
 
                     {q.type === 'YES_NO' ? (
                       <div className="flex items-center gap-4">
-                        {['Có', 'Không'].map((opt) => (
+                        {['Yes', 'No'].map((opt) => (
                           <label key={opt} className="text-on-surface flex cursor-pointer items-center gap-1.5 text-xs">
                             <input
                               type="radio"
@@ -320,7 +322,7 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
                     ) : (
                       <input
                         type="text"
-                        placeholder="Nhập câu trả lời của bạn..."
+                        placeholder="Enter your answer..."
                         value={answers[q.id] || ''}
                         onChange={(e) => setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))}
                         className="border-outline text-on-surface focus:border-primary w-full rounded-xl border px-3 py-1.5 text-xs placeholder-slate-400 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
@@ -333,16 +335,16 @@ export default function JobApplyModal({ job, isOpen, onClose, isPreviewMode = fa
           )}
 
           <div className="text-on-surface-variant text-xs leading-relaxed">
-            Bằng việc nhấn &quot;Nộp hồ sơ ứng tuyển&quot;, bạn đồng ý với Điều khoản dịch vụ và Chính sách quyền riêng
-            tư của InterVue.
+            By clicking &quot;Submit application&quot;, you agree to InterVue&apos;s Terms of Service and Privacy
+            Policy.
           </div>
 
           <div className="border-outline-variant flex items-center justify-end gap-3 border-t pt-3">
             <Button variant="secondary" size="sm" onClick={handleResetAndClose}>
-              Hủy bỏ
+              Cancel
             </Button>
             <Button type="submit" size="sm" isLoading={isSubmitting} leftIcon={<Send className="h-3.5 w-3.5" />}>
-              {isPreviewMode ? 'Nộp thử nghiệm (Mô phỏng)' : 'Nộp hồ sơ ứng tuyển'}
+              {isPreviewMode ? 'Test submit (Simulation)' : 'Submit application'}
             </Button>
           </div>
         </form>

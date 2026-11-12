@@ -23,25 +23,25 @@ const PAGE_SIZE = 12;
 type Tab = 'jobs' | 'companies' | 'applied';
 
 const TABS: Array<{ value: Tab; label: string }> = [
-  { value: 'jobs', label: 'Việc làm đã lưu' },
-  { value: 'companies', label: 'Công ty theo dõi' },
-  { value: 'applied', label: 'Việc làm đã ứng tuyển' },
+  { value: 'jobs', label: 'Saved jobs' },
+  { value: 'companies', label: 'Followed companies' },
+  { value: 'applied', label: 'Applied jobs' },
 ];
 
 const APPLICATION_STATUS_META: Record<
   CandidateApplicationStatus,
   { label: string; variant: 'default' | 'info' | 'warning' | 'success' | 'danger' }
 > = {
-  DRAFT: { label: 'Bản nháp', variant: 'default' },
-  APPLIED: { label: 'Đã ứng tuyển', variant: 'info' },
-  VIEWED: { label: 'NTD đã xem', variant: 'info' },
-  IN_REVIEW: { label: 'Đang xem xét', variant: 'warning' },
-  INTERVIEW: { label: 'Phỏng vấn', variant: 'warning' },
-  OFFER: { label: 'Đề nghị nhận việc', variant: 'success' },
-  HIRED: { label: 'Đã tuyển', variant: 'success' },
-  REJECTED: { label: 'Chưa phù hợp', variant: 'danger' },
-  WITHDRAWN: { label: 'Đã rút hồ sơ', variant: 'default' },
-  JOB_CLOSED: { label: 'Tin đã đóng', variant: 'default' },
+  DRAFT: { label: 'Draft', variant: 'default' },
+  APPLIED: { label: 'Applied', variant: 'info' },
+  VIEWED: { label: 'Viewed by recruiter', variant: 'info' },
+  IN_REVIEW: { label: 'In review', variant: 'warning' },
+  INTERVIEW: { label: 'Interview', variant: 'warning' },
+  OFFER: { label: 'Offer', variant: 'success' },
+  HIRED: { label: 'Hired', variant: 'success' },
+  REJECTED: { label: 'Not a fit', variant: 'danger' },
+  WITHDRAWN: { label: 'Withdrawn', variant: 'default' },
+  JOB_CLOSED: { label: 'Job closed', variant: 'default' },
 };
 
 function Feedback({ isLoading, error, onRetry }: { isLoading: boolean; error: unknown; onRetry: () => void }) {
@@ -56,7 +56,7 @@ function Feedback({ isLoading, error, onRetry }: { isLoading: boolean; error: un
     <div className="flex flex-col items-center gap-3 py-14 text-center">
       <p className="text-sm font-semibold text-slate-700">{getErrorMessage(error)}</p>
       <Button variant="outline" onClick={onRetry}>
-        Thử lại
+        Try again
       </Button>
     </div>
   );
@@ -82,10 +82,10 @@ function SavedJobsTab() {
   if (!data || data.items.length === 0) {
     return (
       <Empty
-        title="Bạn chưa lưu việc làm nào"
-        hint="Bấm biểu tượng trái tim trên tin tuyển dụng để lưu lại xem sau."
+        title="You have not saved any jobs yet"
+        hint="Click the heart icon on a job post to save it for later."
         href="/jobs"
-        cta="Tìm việc làm"
+        cta="Find jobs"
       />
     );
   }
@@ -120,10 +120,10 @@ function FollowedCompaniesTab() {
   if (!data || data.items.length === 0) {
     return (
       <Empty
-        title="Bạn chưa theo dõi công ty nào"
-        hint="Theo dõi công ty để nhận thông báo ngay khi họ đăng tin tuyển dụng mới."
+        title="You are not following any companies yet"
+        hint="Follow companies to get notified as soon as they post new jobs."
         href="/jobs"
-        cta="Khám phá việc làm"
+        cta="Explore jobs"
       />
     );
   }
@@ -157,10 +157,10 @@ function AppliedJobsTab() {
   if (!data || data.items.length === 0) {
     return (
       <Empty
-        title="Bạn chưa ứng tuyển việc làm nào"
-        hint="Khám phá các vị trí phù hợp và nộp hồ sơ trực tuyến ngay."
+        title="You have not applied to any jobs yet"
+        hint="Explore matching positions and apply online right away."
         href="/jobs"
-        cta="Tìm việc làm"
+        cta="Find jobs"
       />
     );
   }
@@ -195,7 +195,7 @@ function AppliedJobsTab() {
                     </>
                   )}
                 </span>
-                {app.submittedAt && <span className="shrink-0">Nộp {formatRelativeDay(app.submittedAt)}</span>}
+                {app.submittedAt && <span className="shrink-0">Applied {formatRelativeDay(app.submittedAt)}</span>}
               </div>
             </Link>
           );
@@ -218,9 +218,9 @@ export default function SavedItemsView({ initialTab = 'jobs' }: { initialTab?: T
   return (
     <div className="container-page space-y-5 py-8">
       <header>
-        <h1 className="text-2xl font-black text-slate-900">Đã lưu và theo dõi</h1>
+        <h1 className="text-2xl font-black text-slate-900">Saved and following</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Xem lại việc làm bạn quan tâm, vị trí đã ứng tuyển và các công ty bạn theo dõi.
+          Review the jobs you like, positions you applied to and companies you follow.
         </p>
       </header>
 

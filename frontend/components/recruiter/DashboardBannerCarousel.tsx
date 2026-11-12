@@ -88,7 +88,7 @@ export default function DashboardBannerCarousel() {
                     ? 'bg-primary h-1.5 w-5 rounded-full'
                     : 'h-1.5 w-1.5 rounded-full border border-black/10 bg-white/80 hover:bg-white'
                 }`}
-                title={`Xem banner ${index + 1}`}
+                title={`View banner ${index + 1}`}
               />
             ))}
           </div>

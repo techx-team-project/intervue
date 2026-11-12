@@ -34,7 +34,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
       const publicUrl = `${window.location.origin}/jobs/${job.id}`;
       navigator.clipboard.writeText(publicUrl);
       setCopied(true);
-      toast.success('Đã sao chép liên kết công khai của tin tuyển dụng!');
+      toast.success('Public job post link copied!');
       setTimeout(() => setCopied(false), 2500);
     }
   };
@@ -90,14 +90,14 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
                   className="text-primary border-primary/30 bg-primary-light hover:bg-primary-container inline-flex cursor-pointer items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-semibold transition-colors"
                 >
                   <CheckCircle2 className="fill-primary/20 text-primary h-3.5 w-3.5" />
-                  <span>Đã xác thực</span>
+                  <span>Verified</span>
                 </button>
 
                 {showVerifyTooltip && (
                   <div className="border-outline-variant text-on-surface shadow-elevation-2 absolute top-full left-0 z-40 mt-1.5 w-72 rounded-xl border bg-white p-3.5 text-xs">
                     <div className="text-on-surface mb-1.5 flex items-center gap-1.5 font-bold">
                       <ShieldCheck className="text-primary h-4 w-4" />
-                      <span>Nhà tuyển dụng đã được xác thực</span>
+                      <span>Recruiter has been verified</span>
                     </div>
                     <ul className="text-on-surface-variant space-y-1">
                       {job.verifiedBadges.map((badge, idx) => (
@@ -116,7 +116,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
               <div className="bg-primary-light rounded-xl border border-emerald-200/90 p-2.5 sm:p-3">
                 <div className="text-on-primary-container flex items-center gap-1.5 text-xs font-medium">
                   <Banknote className="text-primary h-3.5 w-3.5" />
-                  <span>Mức lương</span>
+                  <span>Salary</span>
                 </div>
                 <div className="text-primary mt-1 text-sm font-bold sm:text-base">{job.salary.display}</div>
               </div>
@@ -124,7 +124,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
               <div className="border-outline-variant bg-surface-container-low/70 rounded-xl border p-2.5 sm:p-3">
                 <div className="text-label-sm text-on-surface-variant flex items-center gap-1.5 font-medium">
                   <MapPin className="text-on-surface-variant h-3.5 w-3.5" />
-                  <span>Địa điểm</span>
+                  <span>Location</span>
                 </div>
                 <div className="text-body-md text-on-surface sm:text-body-lg mt-1 truncate font-bold">
                   {job.location.city}
@@ -134,7 +134,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
               <div className="border-outline-variant bg-surface-container-low/70 rounded-xl border p-2.5 sm:p-3">
                 <div className="text-label-sm text-on-surface-variant flex items-center gap-1.5 font-medium">
                   <Briefcase className="text-on-surface-variant h-3.5 w-3.5" />
-                  <span>Kinh nghiệm</span>
+                  <span>Experience</span>
                 </div>
                 <div className="text-body-md text-on-surface sm:text-body-lg mt-1 font-bold">{job.experience}</div>
               </div>
@@ -142,7 +142,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
               <div className="border-outline-variant bg-surface-container-low/70 rounded-xl border p-2.5 sm:p-3">
                 <div className="text-label-sm text-on-surface-variant flex items-center gap-1.5 font-medium">
                   <Clock className="text-on-surface-variant h-3.5 w-3.5" />
-                  <span>Hạn nộp hồ sơ</span>
+                  <span>Application deadline</span>
                 </div>
                 <div className="text-body-md text-on-surface sm:text-body-md mt-1 truncate font-bold">
                   {job.deadline}
@@ -159,7 +159,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
             className="group bg-primary shadow-elevation-1 hover:shadow-elevation-2 relative flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl px-6 py-3.5 text-sm font-extrabold text-white shadow-emerald-500/20 transition duration-200 active:translate-y-0 active:scale-[0.98]"
           >
             <Send className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            <span>Ứng tuyển ngay</span>
+            <span>Apply now</span>
             <Sparkles className="h-4 w-4 text-emerald-200" />
           </button>
 
@@ -174,20 +174,20 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
               }`}
             >
               <Heart className={`h-4 w-4 ${isSaved ? 'fill-primary text-primary' : 'text-outline'}`} />
-              <span>{isSaved ? 'Đã lưu' : 'Lưu tin'}</span>
+              <span>{isSaved ? 'Saved' : 'Save job'}</span>
             </button>
 
             <button
               type="button"
               onClick={handleShare}
               className="border-outline-variant text-on-surface hover:bg-surface-container-low relative flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border bg-white px-3.5 py-2 text-xs font-semibold transition"
-              title="Sao chép liên kết chia sẻ"
+              title="Copy share link"
             >
               <Share2 className="text-on-surface-variant h-4 w-4" />
-              <span>Chia sẻ</span>
+              <span>Share</span>
               {copied && (
                 <div className="shadow-elevation-2 absolute -top-9 left-1/2 -translate-x-1/2 rounded-md bg-slate-900 px-2.5 py-1 text-xs font-medium whitespace-nowrap text-white">
-                  Đã copy link!
+                  Link copied!
                 </div>
               )}
             </button>
@@ -205,7 +205,7 @@ export default function JobHeaderCard({ job, onApply, isSaved, onToggleSave }: J
               <div className="bg-primary h-full rounded-full" style={{ width: `${job.atsMatchScore}%` }} />
             </div>
             <p className="text-on-surface-variant mt-1 text-xs">
-              Hồ sơ của bạn rất phù hợp với tiêu chí tuyển dụng này!
+              Your profile is a great match for this job&apos;s criteria!
             </p>
           </div>
         </div>

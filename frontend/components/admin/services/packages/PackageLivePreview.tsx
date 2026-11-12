@@ -101,7 +101,7 @@ export default function PackageLivePreview({ values, selectedCategory, editingPa
                 Thêm vào giỏ
               </span>
               <span className="bg-primary inline-flex h-8 flex-1 items-center justify-center rounded-lg text-xs font-semibold text-white">
-                Mua ngay
+                Buy now
               </span>
             </div>
           </div>

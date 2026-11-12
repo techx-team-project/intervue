@@ -28,8 +28,8 @@ export default function JobDetailView({ job, relatedJobs, isPreviewMode = false 
       if (isPreviewMode) {
         toast.info(
           next
-            ? 'Chế độ xem trước: Đã lưu tin vào danh sách quan tâm (mô phỏng thao tác của ứng viên).'
-            : 'Chế độ xem trước: Đã hủy lưu tin (mô phỏng thao tác của ứng viên).',
+            ? 'Preview mode: Job saved to your watchlist (simulating a candidate action).'
+            : 'Preview mode: Job unsaved (simulating a candidate action).',
         );
       }
       return next;
@@ -39,11 +39,11 @@ export default function JobDetailView({ job, relatedJobs, isPreviewMode = false 
   const handleReport = () => {
     if (isPreviewMode) {
       toast.warning(
-        'Chế độ xem trước: Tính năng Báo cáo tin vi phạm chỉ dành cho ứng viên khi phát hiện nội dung sai phạm.',
+        'Preview mode: Reporting a violating post is only available to candidates who spot inappropriate content.',
       );
       return;
     }
-    toast.success('Cảm ơn bạn! Đội ngũ kiểm duyệt InterVue sẽ rà soát lại thông tin tin tuyển dụng này.');
+    toast.success('Thank you! The InterVue moderation team will review this job post.');
   };
 
   return (
