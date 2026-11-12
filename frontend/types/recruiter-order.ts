@@ -11,7 +11,6 @@ export interface RecruiterOrderItem {
   quantity: number;
   lineTotal: number;
   validityDays: number | null;
-  bonusCredits: number;
   benefits: ServicePackageBenefit[];
   bookedWeeks: string[];
 }

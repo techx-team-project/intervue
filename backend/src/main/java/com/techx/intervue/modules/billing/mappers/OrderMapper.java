@@ -45,7 +45,6 @@ public class OrderMapper {
                 item.getQuantity(),
                 item.getLineTotal(),
                 item.getValidityDays(),
-                item.getBonusCredits(),
                 readBenefits(item.getBenefitsJson()),
                 adCartMeta.readWeeks(item.getMetaJson()));
     }

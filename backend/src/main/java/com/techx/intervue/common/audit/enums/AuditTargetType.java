@@ -11,7 +11,6 @@ public enum AuditTargetType {
     JOB,
     SERVICE_CATEGORY,
     SERVICE_PACKAGE,
-    CREDIT_PRICE,
     VOUCHER,
     REFUND_REQUEST,
     AD_CREATIVE,

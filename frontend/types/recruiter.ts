@@ -9,7 +9,7 @@ export interface RecruiterVerificationStatus {
   nextStepLabel: string;
 }
 
-export type DashboardStatKind = 'activeJobPosts' | 'newApplications' | 'scheduledInterviews' | 'creditBalance';
+export type DashboardStatKind = 'activeJobPosts' | 'newApplications' | 'scheduledInterviews';
 
 export interface RecruiterDashboardStat {
   kind: DashboardStatKind;

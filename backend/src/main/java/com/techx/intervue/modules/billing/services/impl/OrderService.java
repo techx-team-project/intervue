@@ -357,7 +357,6 @@ public class OrderService implements OrderServiceInterface {
                             .lineTotal(servicePackage.getPrice() * quantity)
                             .metaJson(line.metaJson())
                             .validityDays(servicePackage.getValidityDays())
-                            .bonusCredits(servicePackage.getBonusCredits())
                             .benefitsJson(
                                     orderMapper.writeBenefits(
                                             benefitRepository

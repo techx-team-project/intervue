@@ -27,7 +27,6 @@ export const ENTITLEMENT_TYPES = [
   'BRAND_PAGE',
   'FEATURED_COMPANY',
   'AD_SLOT_WEEK',
-  'CREDIT',
 ] as const satisfies readonly EntitlementType[];
 
 const HEX_COLOR_REGEX = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
@@ -160,11 +159,6 @@ export const saveServicePackageSchema = z.object({
     .string()
     .trim()
     .refine((value) => !value || /^[1-9]\d*$/.test(value), 'Validity must be at least 1 day.'),
-  bonusCredits: z
-    .string()
-    .trim()
-    .min(1, 'Bonus credits must be 0 or greater.')
-    .refine((value) => /^\d+$/.test(value), 'Bonus credits must be a whole number (0 or greater).'),
   oneTimePerCompany: z.boolean(),
   status: z.enum(['DRAFT', 'ACTIVE', 'INACTIVE']),
   displayOrder: z
@@ -212,7 +206,6 @@ export function toPackageFormDefaults(
     vipRibbon: initial?.vipRibbon ?? false,
     accentColor: initial?.accentColor ?? '',
     validityDays: initial?.validityDays ? String(initial.validityDays) : '',
-    bonusCredits: String(initial?.bonusCredits ?? 0),
     oneTimePerCompany: initial?.oneTimePerCompany ?? false,
     status: (initial?.status ?? 'DRAFT') as ServicePackageStatus,
     displayOrder: String(initial?.displayOrder ?? suggestedDisplayOrder),
@@ -248,7 +241,6 @@ export function toSaveServicePackagePayload(values: SaveServicePackageFormData):
     accentColor: values.accentColor.trim() || null,
     heroImageUrl: null,
     validityDays: values.validityDays.trim() ? Number(values.validityDays) : null,
-    bonusCredits: Number(values.bonusCredits),
     oneTimePerCompany: values.oneTimePerCompany,
     status: values.status,
     displayOrder: Number(values.displayOrder),
@@ -303,7 +295,6 @@ export function buildSamplePackageFormData({
     vipRibbon: true,
     accentColor: '#16a34a',
     validityDays: '30',
-    bonusCredits: '200',
     oneTimePerCompany: false,
     status: 'ACTIVE',
     displayOrder: String(displayOrder),
@@ -336,13 +327,6 @@ export function buildSamplePackageFormData({
         durationDays: '',
         label: '200 lượt AI phân tích và đối chiếu CV ứng viên',
       },
-      {
-        entitlementType: 'CREDIT',
-        quantity: '200',
-        tier: '1',
-        durationDays: '',
-        label: 'Tặng kèm 200 Credits quy đổi tiện ích linh hoạt',
-      },
     ],
     sections: [
       {
@@ -353,10 +337,10 @@ export function buildSamplePackageFormData({
         imageUrl: existingSectionImageUrls[0] ?? '',
       },
       {
-        heading: 'AI Resume Match & quà tặng 200 Credits linh hoạt',
+        heading: 'AI Resume Match giúp sàng lọc hồ sơ nhanh hơn',
         iconName: 'sparkles',
         accentColor: '#2563eb',
-        body: '- Sử dụng **200 lượt AI Resume Match** để tự động chấm điểm mức độ phù hợp của từng hồ sơ với JD.\n- Ví **200 Credits** tặng kèm giúp quy đổi thêm lượt đẩy tin hoặc nhãn nổi bật khi cần.',
+        body: '- Sử dụng **200 lượt AI Resume Match** để tự động chấm điểm mức độ phù hợp của từng hồ sơ với JD.',
         imageUrl: existingSectionImageUrls[1] ?? '',
       },
     ],

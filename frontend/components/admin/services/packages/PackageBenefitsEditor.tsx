@@ -84,9 +84,7 @@ export default function PackageBenefitsEditor({
         <Info className="text-on-surface-variant dark:text-forest-300 mt-0.5 h-4 w-4 shrink-0" />
         <p className="dark:text-forest-300 text-on-surface-variant leading-relaxed">
           <strong className="text-on-surface dark:text-forest-100">Tip:</strong> Only{' '}
-          <code className="font-mono">JOB_BOOST</code> uses ranking tier (1–3). For spendable credit grants (like Trial
-          bonus credits), add a <code className="font-mono">CREDIT</code> row here — the{' '}
-          <span className="italic">Bonus credits</span> field above is catalog/order display metadata.
+          <code className="font-mono">JOB_BOOST</code> uses ranking tier (1–3); every other type must use tier 1.
         </p>
       </div>
 

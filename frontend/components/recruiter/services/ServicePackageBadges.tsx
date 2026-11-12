@@ -4,10 +4,9 @@ import { Gift, Info } from 'lucide-react';
 
 interface ServicePackageBadgesProps {
   badge: ServicePackageBadge;
-  bonusCredits?: number;
 }
 
-export default function ServicePackageBadges({ badge, bonusCredits = 0 }: ServicePackageBadgesProps) {
+export default function ServicePackageBadges({ badge }: ServicePackageBadgesProps) {
   if (badge === 'NONE') return null;
 
   if (badge === 'NEW') {
@@ -18,10 +17,7 @@ export default function ServicePackageBadges({ badge, bonusCredits = 0 }: Servic
     );
   }
 
-  const tooltipText =
-    bonusCredits > 0
-      ? `Special offer: get ${bonusCredits.toLocaleString('vi-VN')} bonus credits when you activate the package.`
-      : 'This package has a special InterVue promotion applied.';
+  const tooltipText = 'This package has a special InterVue promotion applied.';
 
   return (
     <span className="group relative inline-flex items-center">

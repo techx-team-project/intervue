@@ -48,7 +48,7 @@ public class EntitlementUsage extends BaseEntity {
     @Builder.Default
     private Integer quantity = 1;
 
-    /** What the units were drawn for, e.g. a credit conversion's target package; optional. */
+    /** What the units were drawn for; optional. */
     @Column(length = 255)
     private String note;
 

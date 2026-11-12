@@ -11,7 +11,7 @@ export const SERVICE_SECTION_ICON_OPTIONS: readonly ServiceSectionIconOption[] =
   { value: 'target', label: 'Target (Matching)' },
   { value: 'megaphone', label: 'Megaphone (Branding / Ads)' },
   { value: 'shield-check', label: 'Shield Check (Guarantee)' },
-  { value: 'gift', label: 'Gift (Bonus / Credits)' },
+  { value: 'gift', label: 'Gift (Bonus / Promo)' },
   { value: 'layers', label: 'Layers (Features)' },
   { value: 'users', label: 'Users (Candidates)' },
   { value: 'bar-chart-3', label: 'Bar Chart (Analytics)' },

@@ -12,10 +12,9 @@ export type EntitlementType =
   | 'AI_JD_GENERATE'
   | 'BRAND_PAGE'
   | 'FEATURED_COMPANY'
-  | 'AD_SLOT_WEEK'
-  | 'CREDIT';
+  | 'AD_SLOT_WEEK';
 
-export type ServiceNeedKey = 'REACH' | 'CONNECT' | 'HIGHLIGHT' | 'BRANDING';
+export type ServiceNeedKey = 'REACH' | 'HIGHLIGHT' | 'BRANDING';
 
 export interface ServicePackageBenefit {
   entitlementType: EntitlementType;
@@ -44,7 +43,6 @@ export interface ServicePackageCard {
   vipRibbon: boolean;
   accentColor: string | null;
   validityDays: number | null;
-  bonusCredits: number;
   oneTimePerCompany: boolean;
   benefits: ServicePackageBenefit[];
 }

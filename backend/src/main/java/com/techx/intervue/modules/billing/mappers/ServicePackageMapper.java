@@ -59,7 +59,6 @@ public class ServicePackageMapper {
         servicePackage.setAccentColor(request.accentColor());
         servicePackage.setHeroImageUrl(request.heroImageUrl());
         servicePackage.setValidityDays(request.validityDays());
-        servicePackage.setBonusCredits(request.bonusCredits());
         servicePackage.setOneTimePerCompany(request.oneTimePerCompany());
         servicePackage.setStatus(request.status());
         servicePackage.setDisplayOrder(request.displayOrder());
@@ -96,7 +95,6 @@ public class ServicePackageMapper {
                 servicePackage.getVipRibbon(),
                 servicePackage.getAccentColor(),
                 servicePackage.getValidityDays(),
-                servicePackage.getBonusCredits(),
                 servicePackage.getOneTimePerCompany(),
                 benefits.stream().map(this::toBenefitResource).toList());
     }
@@ -130,7 +128,6 @@ public class ServicePackageMapper {
                 servicePackage.getAccentColor(),
                 servicePackage.getHeroImageUrl(),
                 servicePackage.getValidityDays(),
-                servicePackage.getBonusCredits(),
                 servicePackage.getOneTimePerCompany(),
                 category.getCode(),
                 category.getName(),
@@ -173,7 +170,6 @@ public class ServicePackageMapper {
                 servicePackage.getAccentColor(),
                 servicePackage.getHeroImageUrl(),
                 servicePackage.getValidityDays(),
-                servicePackage.getBonusCredits(),
                 servicePackage.getOneTimePerCompany(),
                 servicePackage.getStatus(),
                 servicePackage.getDisplayOrder(),

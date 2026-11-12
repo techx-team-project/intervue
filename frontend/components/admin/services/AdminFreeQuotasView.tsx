@@ -1,10 +1,11 @@
 'use client';
 
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import { Button } from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { Switch } from '@/components/ui/Switch';
-import { useAdminFreeQuotas, useUpdateAdminFreeQuotas } from '@/hooks/useCredits';
-import type { FreeQuotaSettings, SaveFreeQuotaSettingsInput } from '@/types/credit';
+import { useAdminFreeQuotas, useUpdateAdminFreeQuotas } from '@/hooks/useFreeQuotas';
+import type { FreeQuotaSettings, SaveFreeQuotaSettingsInput } from '@/types/free-quota';
 import { formatDateTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
 import { AlertCircle, BriefcaseBusiness, RotateCcw, Save, Sparkles, Users } from 'lucide-react';
@@ -274,28 +275,28 @@ function FreeQuotasForm({ settings }: FreeQuotasFormProps) {
   );
 }
 
-export default function AdminFreeQuotasTab() {
+export default function AdminFreeQuotasView() {
   const { data, isLoading, isError, refetch } = useAdminFreeQuotas(true);
 
-  if (isLoading) {
-    return (
-      <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-lg border bg-white px-6 py-12 text-center">
-        <p className="dark:text-forest-300 text-on-surface-variant text-sm">Loading free quota settings...</p>
-      </div>
-    );
-  }
+  return (
+    <div className="space-y-5 pb-12">
+      <AdminPageHeader description="Runtime free-tier limits applied automatically to every company and candidate." />
 
-  if (isError || !data) {
-    return (
-      <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex flex-col items-center gap-3 rounded-lg border bg-white px-6 py-12 text-center">
-        <AlertCircle className="h-8 w-8 text-rose-500" />
-        <p className="text-navy dark:text-forest-50 text-sm font-semibold">Unable to load free quota settings</p>
-        <Button type="button" variant="outline" size="sm" onClick={() => void refetch()}>
-          Retry
-        </Button>
-      </div>
-    );
-  }
-
-  return <FreeQuotasForm key={data.updatedAt ?? 'default'} settings={data} />;
+      {isLoading ? (
+        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant rounded-lg border bg-white px-6 py-12 text-center">
+          <p className="dark:text-forest-300 text-on-surface-variant text-sm">Loading free quota settings...</p>
+        </div>
+      ) : isError || !data ? (
+        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex flex-col items-center gap-3 rounded-lg border bg-white px-6 py-12 text-center">
+          <AlertCircle className="h-8 w-8 text-rose-500" />
+          <p className="text-navy dark:text-forest-50 text-sm font-semibold">Unable to load free quota settings</p>
+          <Button type="button" variant="outline" size="sm" onClick={() => void refetch()}>
+            Retry
+          </Button>
+        </div>
+      ) : (
+        <FreeQuotasForm key={data.updatedAt ?? 'default'} settings={data} />
+      )}
+    </div>
+  );
 }

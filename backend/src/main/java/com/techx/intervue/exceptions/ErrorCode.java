@@ -238,13 +238,7 @@ public enum ErrorCode {
     VOUCHER_NOT_APPLICABLE(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "This voucher does not apply to the selected service packages!"),
-    INSUFFICIENT_CREDITS(
-            HttpStatus.UNPROCESSABLE_CONTENT, "Your company does not have enough credits left!"),
-    CREDIT_PRICE_NOT_AVAILABLE(
-            HttpStatus.NOT_FOUND, "This service cannot be exchanged for credits right now!"),
-    DUPLICATE_CREDIT_PRICE(
-            HttpStatus.CONFLICT,
-            "A credit price for this entitlement type and tier already exists!"),
+    INSUFFICIENT_CREDITS(HttpStatus.UNPROCESSABLE_CONTENT, "You do not have enough credits left!"),
     ENTITLEMENT_NOT_ACTIVATABLE(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "This service is used automatically and cannot be applied to a job!"),

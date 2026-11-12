@@ -8,7 +8,6 @@ import com.techx.intervue.modules.billing.mappers.OrderMapper;
 import com.techx.intervue.modules.billing.repositories.OrderItemRepository;
 import com.techx.intervue.modules.billing.resources.ServicePackageBenefitResource;
 import com.techx.intervue.modules.billing.services.interfaces.InvoiceServiceInterface;
-import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface.EntitlementGrant;
 import java.util.ArrayList;
@@ -40,11 +39,7 @@ public class OrderFulfillmentService {
         for (OrderItem item : items) {
             List<ServicePackageBenefitResource> benefits =
                     orderMapper.readBenefits(item.getBenefitsJson());
-            int creditBenefitPerUnit = 0;
             for (ServicePackageBenefitResource benefit : benefits) {
-                if (benefit.entitlementType() == EntitlementType.CREDIT) {
-                    creditBenefitPerUnit += benefit.quantity();
-                }
                 grants.add(
                         EntitlementGrant.fromOrderItem(
                                 item.getId(),
@@ -55,20 +50,6 @@ public class OrderFulfillmentService {
                                 benefit.label(),
                                 item.getValidityDays(),
                                 false));
-            }
-            int bonusCredits = item.getBonusCredits() == null ? 0 : item.getBonusCredits();
-            int extraCredits = Math.max(0, bonusCredits - creditBenefitPerUnit);
-            if (extraCredits > 0) {
-                grants.add(
-                        EntitlementGrant.fromOrderItem(
-                                item.getId(),
-                                EntitlementType.CREDIT,
-                                extraCredits * item.getQuantity(),
-                                1,
-                                null,
-                                "Quà tặng credits kèm gói " + item.getPackageName(),
-                                item.getValidityDays(),
-                                true));
             }
         }
 

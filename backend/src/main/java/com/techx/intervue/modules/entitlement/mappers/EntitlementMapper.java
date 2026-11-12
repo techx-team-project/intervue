@@ -22,9 +22,9 @@ public class EntitlementMapper {
     public static final Set<EntitlementType> ACTIVATABLE_ON_COMPANY =
             Set.of(EntitlementType.BRAND_PAGE, EntitlementType.FEATURED_COMPANY);
 
-    /** Not a stock card waiting to be activated: a wallet balance or a slot managed elsewhere. */
+    /** Not a stock card waiting to be activated: a slot booked and managed elsewhere. */
     public static final Set<EntitlementType> HIDDEN_FROM_STOCK =
-            Set.of(EntitlementType.CREDIT, EntitlementType.AD_SLOT_WEEK);
+            Set.of(EntitlementType.AD_SLOT_WEEK);
 
     public EntitlementResource toResource(CompanyEntitlement entitlement) {
         return new EntitlementResource(

@@ -1,16 +1,12 @@
 package com.techx.intervue.modules.entitlement.services.interfaces;
 
-import com.techx.intervue.modules.entitlement.enums.EntitlementStatus;
 import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 public interface EntitlementServiceInterface {
 
@@ -90,16 +86,6 @@ public interface EntitlementServiceInterface {
     /** Spends one unit of a type not tied to a job; false when the company had none left. */
     boolean consumeUnit(Long companyId, EntitlementType type);
 
-    record ConsumeResult(Instant earliestDeadline, String batchKey) {}
-
-    /**
-     * Spends several units FIFO by earliest expiry across lots. Returns the earliest non-null
-     * deadline among touched lots (null when all consumed lots have no expiry) and the shared batch
-     * key recorded in the usage ledger.
-     */
-    ConsumeResult consumeUnits(
-            Long companyId, EntitlementType type, int amount, String note, Long actorUserId);
-
     /**
      * Consumes from the exact lot one order line produced, instead of drawing FIFO across the
      * company's whole stock.
@@ -119,37 +105,4 @@ public interface EntitlementServiceInterface {
 
     /** Takes back the units of those order lines that were never activated. */
     void revokeUnusedFromOrderItems(Collection<Long> orderItemIds);
-
-    /** One statement line: a grant received (credit) or a usage/expiry/revocation (debit). */
-    record LedgerEntry(boolean credit, int quantity, String label, Instant at, Long actorUserId) {}
-
-    /** Every grant and usage/expiry of a type for a company, newest first. */
-    Page<LedgerEntry> ledgerOf(Long companyId, EntitlementType type, Pageable pageable);
-
-    record CompanyStockSummary(
-            Long companyId,
-            long availableBalance,
-            long lifetimeGranted,
-            long lifetimeSpent,
-            long expiredBalance,
-            Instant nearestExpiry) {}
-
-    Map<Long, CompanyStockSummary> summarizeStockByCompanyIds(
-            Collection<Long> companyIds, EntitlementType type);
-
-    record EntitlementLotView(
-            Long id,
-            Long sourceOrderItemId,
-            EntitlementType type,
-            String label,
-            int totalQuantity,
-            int remainingQuantity,
-            int tier,
-            Integer durationDays,
-            boolean bonus,
-            EntitlementStatus status,
-            Instant activationDeadline,
-            Instant createdAt) {}
-
-    List<EntitlementLotView> lotsOf(Long companyId, EntitlementType type);
 }

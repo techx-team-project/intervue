@@ -12,6 +12,5 @@ public enum EntitlementType {
     AI_JD_GENERATE,
     BRAND_PAGE,
     FEATURED_COMPANY,
-    AD_SLOT_WEEK,
-    CREDIT
+    AD_SLOT_WEEK
 }
