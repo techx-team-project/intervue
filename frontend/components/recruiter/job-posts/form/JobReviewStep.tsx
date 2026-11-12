@@ -20,17 +20,17 @@ interface JobReviewStepProps {
 }
 
 function salaryText(values: JobPostFormData) {
-  if (values.salaryNegotiable) return 'Thỏa thuận';
-  const unit = values.currency === 'VND' ? 'triệu VND' : 'USD';
+  if (values.salaryNegotiable) return 'Negotiable';
+  const unit = values.currency === 'VND' ? 'million VND' : 'USD';
   const basis = optionLabel(JOB_FORM_SALARY_BASIS_OPTIONS, values.salaryBasis);
   return `${values.salaryMin ?? '—'} – ${values.salaryMax ?? '—'} ${unit} · ${basis}`;
 }
 
 function experienceText(values: JobPostFormData) {
   const { experienceMinYears: min, experienceMaxYears: max } = values;
-  if (min === undefined && max === undefined) return 'Không yêu cầu';
-  if (min !== undefined && max !== undefined) return `${min} – ${max} năm`;
-  return min !== undefined ? `Từ ${min} năm` : `Đến ${max} năm`;
+  if (min === undefined && max === undefined) return 'Not required';
+  if (min !== undefined && max !== undefined) return `${min} – ${max} years`;
+  return min !== undefined ? `From ${min} years` : `Up to ${max} years`;
 }
 
 function ReviewSection({
@@ -55,7 +55,7 @@ function ReviewSection({
           leftIcon={<Pencil className="h-3.5 w-3.5" />}
           onClick={() => onEdit(step)}
         >
-          Sửa
+          Edit
         </Button>
       </div>
       {children}
@@ -67,7 +67,7 @@ function TextPreview({ label, text }: { label: string; text: string }) {
   return (
     <div>
       <p className="text-on-surface-variant text-xs font-semibold">{label}</p>
-      <p className="text-on-surface mt-1 line-clamp-3 text-sm whitespace-pre-line">{text.trim() || 'Chưa nhập'}</p>
+      <p className="text-on-surface mt-1 line-clamp-3 text-sm whitespace-pre-line">{text.trim() || 'Not entered'}</p>
     </div>
   );
 }
@@ -78,7 +78,7 @@ export default function JobReviewStep({ onEdit }: JobReviewStepProps) {
 
   return (
     <div className="space-y-4">
-      <ReviewSection title="Thông tin chính" step={0} onEdit={onEdit}>
+      <ReviewSection title="Main info" step={0} onEdit={onEdit}>
         <p className="text-on-surface text-base font-bold">{values.title}</p>
         <div className="mt-2 flex flex-wrap gap-1.5">
           <Badge variant="info">{optionLabel(JOB_FORM_ROLE_OPTIONS, values.jobRole)}</Badge>
@@ -88,23 +88,23 @@ export default function JobReviewStep({ onEdit }: JobReviewStepProps) {
         </div>
         <dl className="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
           <div>
-            <dt className="text-on-surface-variant text-xs font-semibold">Nơi làm việc</dt>
+            <dt className="text-on-surface-variant text-xs font-semibold">Location</dt>
             <dd className="text-on-surface">{[values.address, values.city].filter(Boolean).join(', ')}</dd>
           </div>
           <div>
-            <dt className="text-on-surface-variant text-xs font-semibold">Mức lương</dt>
+            <dt className="text-on-surface-variant text-xs font-semibold">Salary</dt>
             <dd className="text-on-surface">{salaryText(values)}</dd>
           </div>
           <div>
-            <dt className="text-on-surface-variant text-xs font-semibold">Kinh nghiệm</dt>
+            <dt className="text-on-surface-variant text-xs font-semibold">Experience</dt>
             <dd className="text-on-surface">{experienceText(values)}</dd>
           </div>
           <div>
-            <dt className="text-on-surface-variant text-xs font-semibold">Hạn nộp hồ sơ</dt>
+            <dt className="text-on-surface-variant text-xs font-semibold">Application deadline</dt>
             <dd className="text-on-surface">{values.deadline}</dd>
           </div>
           <div>
-            <dt className="text-on-surface-variant text-xs font-semibold">Số lượng cần tuyển</dt>
+            <dt className="text-on-surface-variant text-xs font-semibold">Number of openings</dt>
             <dd className="text-on-surface">{values.openings}</dd>
           </div>
         </dl>
@@ -117,11 +117,11 @@ export default function JobReviewStep({ onEdit }: JobReviewStepProps) {
         </div>
       </ReviewSection>
 
-      <ReviewSection title="Nội dung" step={1} onEdit={onEdit}>
+      <ReviewSection title="Content" step={1} onEdit={onEdit}>
         <div className="space-y-3">
-          <TextPreview label="Mô tả công việc" text={values.description} />
-          <TextPreview label="Yêu cầu" text={values.requirements} />
-          {values.benefits.trim() && <TextPreview label="Phúc lợi" text={values.benefits} />}
+          <TextPreview label="Job description" text={values.description} />
+          <TextPreview label="Requirements" text={values.requirements} />
+          {values.benefits.trim() && <TextPreview label="Benefits" text={values.benefits} />}
           {values.benefitTags.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {values.benefitTags.map((tag) => (
@@ -131,14 +131,14 @@ export default function JobReviewStep({ onEdit }: JobReviewStepProps) {
           )}
           {values.hiringSteps.length > 0 && (
             <div>
-              <p className="text-on-surface-variant text-xs font-semibold">Quy trình tuyển dụng</p>
+              <p className="text-on-surface-variant text-xs font-semibold">Hiring process</p>
               <p className="text-on-surface mt-1 text-sm">{values.hiringSteps.map((step) => step.title).join(' → ')}</p>
             </div>
           )}
           <p className="text-on-surface-variant text-xs">
             {values.screeningQuestions.length > 0
-              ? `${values.screeningQuestions.length} câu hỏi sàng lọc`
-              : 'Không có câu hỏi sàng lọc'}
+              ? `${values.screeningQuestions.length} screening questions`
+              : 'No screening questions'}
           </p>
         </div>
       </ReviewSection>

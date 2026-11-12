@@ -23,7 +23,7 @@ function Notice({ title, description }: { title: string; description: string }) 
       <p className="text-on-surface-variant text-sm">{description}</p>
       <Link href={ROUTES.RECRUITER_JOBS}>
         <Button variant="outline" leftIcon={<ArrowLeft className="h-4 w-4" />}>
-          Về danh sách tin
+          Back to job posts
         </Button>
       </Link>
     </div>
@@ -46,14 +46,14 @@ export default function JobPostFormView({ jobId }: JobPostFormViewProps) {
   }
 
   if (error || !job) {
-    return <Notice title="Không tải được tin tuyển dụng" description={getErrorMessage(error)} />;
+    return <Notice title="Could not load the job post" description={getErrorMessage(error)} />;
   }
 
   if (!EDITABLE_STATUSES.includes(job.status)) {
     return (
       <Notice
-        title="Tin này không thể chỉnh sửa"
-        description="Tin đã đóng, hết hạn hoặc bị ẩn bởi quản trị viên không thể sửa nội dung."
+        title="This job post cannot be edited"
+        description="Closed, expired or admin-hidden job posts cannot be edited."
       />
     );
   }

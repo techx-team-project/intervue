@@ -31,7 +31,7 @@ export default function CartRecommendedServices() {
   return (
     <section className="space-y-4 pt-2" aria-labelledby="cart-recommended-services-heading">
       <h2 id="cart-recommended-services-heading" className="text-primary text-xl font-bold sm:text-[22px]">
-        Dịch vụ đề xuất
+        Recommended services
       </h2>
 
       <CartImportantNote size="comfortable" />

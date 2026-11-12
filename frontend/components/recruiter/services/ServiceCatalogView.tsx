@@ -69,7 +69,7 @@ export default function ServiceCatalogView() {
     setAutoModalClosed(true);
     const matches = categories.filter((category) => category.needKey === need);
     if (matches.length === 0) {
-      toast.info('Hiện chưa có danh mục phù hợp với nhu cầu bạn đã chọn.');
+      toast.info('No category matches the need you selected yet.');
       return;
     }
 
@@ -97,7 +97,7 @@ export default function ServiceCatalogView() {
   if (categories.length === 0) {
     return (
       <div className="border-outline-variant text-on-surface-variant rounded-xl border border-dashed bg-white px-6 py-16 text-center text-sm">
-        Chưa có gói dịch vụ nào đang mở bán.
+        No service packages are currently available.
       </div>
     );
   }
@@ -113,10 +113,10 @@ export default function ServiceCatalogView() {
           <div className="space-y-1">
             <p className="flex items-center gap-1.5 font-semibold text-emerald-800">
               <Sparkles className="h-4 w-4 shrink-0" />
-              <span>Gợi ý cho nhu cầu: {suggestedNeedLabel}</span>
+              <span>Suggested for your need: {suggestedNeedLabel}</span>
             </p>
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <span className="text-emerald-800/80">Nhóm phù hợp:</span>
+              <span className="text-emerald-800/80">Matching group:</span>
               {suggestedCategories.map((category) => (
                 <button
                   key={category.id}
@@ -133,7 +133,7 @@ export default function ServiceCatalogView() {
           <button
             type="button"
             onClick={() => setSuggestedNeed(null)}
-            aria-label="Ẩn gợi ý"
+            aria-label="Hide suggestion"
             className="cursor-pointer self-end rounded p-1 text-emerald-700 transition hover:bg-emerald-100 sm:self-center"
           >
             <X className="h-4 w-4" />
@@ -162,14 +162,14 @@ export default function ServiceCatalogView() {
           <span className="flex items-center gap-3">
             {feedback.type === 'success' && (
               <Link href={ROUTES.RECRUITER_CART} className="text-primary font-bold hover:underline">
-                Xem giỏ hàng
+                View cart
               </Link>
             )}
             <button
               type="button"
               onClick={() => setFeedback(null)}
               className="cursor-pointer opacity-70 transition hover:opacity-100"
-              aria-label="Đóng thông báo"
+              aria-label="Dismiss notification"
             >
               <X className="h-4 w-4" />
             </button>

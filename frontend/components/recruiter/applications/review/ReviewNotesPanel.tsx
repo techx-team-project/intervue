@@ -27,10 +27,10 @@ export default function ReviewNotesPanel({ application }: { application: ReviewA
 
   return (
     <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs">
-      <h3 className="text-sm font-bold text-slate-900">Ghi chú nội bộ</h3>
+      <h3 className="text-sm font-bold text-slate-900">Internal notes</h3>
 
       {application.notes.length === 0 ? (
-        <p className="text-xs text-slate-500">Chưa có ghi chú. Ứng viên không nhìn thấy các ghi chú này.</p>
+        <p className="text-xs text-slate-500">No notes yet. Candidates cannot see these notes.</p>
       ) : (
         <ul className="space-y-2.5">
           {application.notes.map((note) => (
@@ -43,7 +43,7 @@ export default function ReviewNotesPanel({ application }: { application: ReviewA
                 {String(note.authorId) === String(currentId) && (
                   <button
                     type="button"
-                    aria-label="Xóa ghi chú"
+                    aria-label="Delete note"
                     onClick={() =>
                       deleteNote.mutate(note.id, { onError: (error) => toast.error(getErrorMessage(error)) })
                     }
@@ -63,13 +63,13 @@ export default function ReviewNotesPanel({ application }: { application: ReviewA
         value={content}
         rows={2}
         maxLength={2000}
-        aria-label="Thêm ghi chú"
-        placeholder="Thêm ghi chú cho hồ sơ này"
+        aria-label="Add note"
+        placeholder="Add a note for this application"
         onChange={(event) => setContent(event.target.value)}
       />
       <div className="flex justify-end">
         <Button size="sm" isLoading={addNote.isPending} disabled={!content.trim()} onClick={handleAdd}>
-          Thêm ghi chú
+          Add note
         </Button>
       </div>
     </section>

@@ -16,18 +16,18 @@ import { VN_LOCATIONS } from '@/constants/vn-locations';
 export const JOB_PAGE_SIZE = 8;
 
 export const JOB_SEGMENT_META: Record<RecruiterJobSegment, { label: string; status?: JobStatus }> = {
-  all: { label: 'Tất cả' },
-  published: { label: 'Đang tuyển', status: 'PUBLISHED' },
-  paused: { label: 'Tạm dừng', status: 'PAUSED' },
-  expired: { label: 'Hết hạn', status: 'EXPIRED' },
-  draft: { label: 'Bản nháp', status: 'DRAFT' },
-  closed: { label: 'Đã đóng', status: 'CLOSED' },
+  all: { label: 'All' },
+  published: { label: 'Hiring', status: 'PUBLISHED' },
+  paused: { label: 'Paused', status: 'PAUSED' },
+  expired: { label: 'Expired', status: 'EXPIRED' },
+  draft: { label: 'Draft', status: 'DRAFT' },
+  closed: { label: 'Closed', status: 'CLOSED' },
 };
 
 export const JOB_SORT_OPTIONS: Array<{ value: RecruiterJobSort; label: string; param: string }> = [
-  { value: 'newest', label: 'Mới cập nhật', param: 'updatedAt,desc' },
-  { value: 'expiringSoon', label: 'Sắp hết hạn', param: 'deadline,asc' },
-  { value: 'highestSalary', label: 'Lương cao nhất', param: 'salaryMax,desc' },
+  { value: 'newest', label: 'Recently updated', param: 'updatedAt,desc' },
+  { value: 'expiringSoon', label: 'Expiring soon', param: 'deadline,asc' },
+  { value: 'highestSalary', label: 'Highest salary', param: 'salaryMax,desc' },
 ];
 
 export const JOB_LEVEL_LABELS: Record<JobLevel, string> = {
@@ -84,7 +84,7 @@ export function getJobExpiryDetails(expiresAt?: string, status?: JobStatus) {
     return {
       daysLeft: null,
       isExpired: false,
-      label: 'Chưa đặt hạn',
+      label: 'No deadline set',
       tone: 'muted' as const,
       progressPercent: 0,
     };
@@ -99,7 +99,7 @@ export function getJobExpiryDetails(expiresAt?: string, status?: JobStatus) {
     return {
       daysLeft: 0,
       isExpired: true,
-      label: 'Đã hết hạn',
+      label: 'Expired',
       tone: 'danger' as const,
       progressPercent: 100,
     };
@@ -111,7 +111,7 @@ export function getJobExpiryDetails(expiresAt?: string, status?: JobStatus) {
     return {
       daysLeft,
       isExpired: false,
-      label: `Còn ${daysLeft} ngày`,
+      label: `${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left`,
       tone: 'warning' as const,
       progressPercent,
     };
@@ -120,14 +120,14 @@ export function getJobExpiryDetails(expiresAt?: string, status?: JobStatus) {
   return {
     daysLeft,
     isExpired: false,
-    label: `Còn ${daysLeft} ngày`,
+    label: `${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left`,
     tone: 'normal' as const,
     progressPercent,
   };
 }
 
 export const JOB_FORM_LEVEL_OPTIONS: Array<{ value: JobLevel; label: string }> = [
-  { value: 'INTERN', label: 'Thực tập sinh' },
+  { value: 'INTERN', label: 'Intern' },
   { value: 'JUNIOR', label: 'Junior' },
   { value: 'MID', label: 'Middle' },
   { value: 'SENIOR', label: 'Senior' },
@@ -135,85 +135,85 @@ export const JOB_FORM_LEVEL_OPTIONS: Array<{ value: JobLevel; label: string }> =
 ];
 
 export const JOB_FORM_CONTRACT_OPTIONS: Array<{ value: ContractType; label: string }> = [
-  { value: 'FULL_TIME', label: 'Toàn thời gian' },
-  { value: 'PART_TIME', label: 'Bán thời gian' },
-  { value: 'INTERNSHIP', label: 'Thực tập' },
+  { value: 'FULL_TIME', label: 'Full-time' },
+  { value: 'PART_TIME', label: 'Part-time' },
+  { value: 'INTERNSHIP', label: 'Internship' },
 ];
 
 export const JOB_FORM_ARRANGEMENT_OPTIONS: Array<{ value: WorkingArrangement; label: string }> = [
-  { value: 'ON_SITE', label: 'Tại văn phòng' },
+  { value: 'ON_SITE', label: 'On-site' },
   { value: 'HYBRID', label: 'Hybrid' },
-  { value: 'REMOTE', label: 'Từ xa' },
-  { value: 'FLEXIBLE', label: 'Linh hoạt' },
+  { value: 'REMOTE', label: 'Remote' },
+  { value: 'FLEXIBLE', label: 'Flexible' },
 ];
 
 export const JOB_FORM_ROLE_OPTIONS: Array<{ value: JobRole; label: string }> = (
   Object.entries(JOB_ROLE_LABELS) as Array<[JobRole, string]>
-).map(([value, label]) => ({ value, label: value === 'OTHER' ? 'Khác' : label }));
+).map(([value, label]) => ({ value, label: value === 'OTHER' ? 'Other' : label }));
 
 export const JOB_FORM_SALARY_BASIS_OPTIONS: Array<{ value: SalaryBasis; label: string }> = [
-  { value: 'GROSS', label: 'Gross (trước thuế)' },
-  { value: 'NET', label: 'Net (sau thuế)' },
+  { value: 'GROSS', label: 'Gross (before tax)' },
+  { value: 'NET', label: 'Net (after tax)' },
 ];
 
 export const JOB_FORM_BENEFIT_OPTIONS: Array<{ value: JobBenefitTag; label: string }> = [
-  { value: 'HEALTH_INSURANCE', label: 'Bảo hiểm sức khỏe' },
-  { value: 'BONUS_13TH_MONTH', label: 'Thưởng tháng 13' },
-  { value: 'PERFORMANCE_BONUS', label: 'Thưởng hiệu suất' },
-  { value: 'LAPTOP', label: 'Laptop / thiết bị' },
-  { value: 'TRAINING', label: 'Đào tạo & chứng chỉ' },
-  { value: 'TEAM_BUILDING', label: 'Team building / du lịch' },
-  { value: 'FLEXIBLE_HOURS', label: 'Giờ làm linh hoạt' },
-  { value: 'REMOTE_DAYS', label: 'Làm từ xa một số ngày' },
-  { value: 'ANNUAL_LEAVE', label: 'Phép năm' },
-  { value: 'MEALS', label: 'Phụ cấp ăn' },
+  { value: 'HEALTH_INSURANCE', label: 'Health insurance' },
+  { value: 'BONUS_13TH_MONTH', label: '13th-month bonus' },
+  { value: 'PERFORMANCE_BONUS', label: 'Performance bonus' },
+  { value: 'LAPTOP', label: 'Laptop / equipment' },
+  { value: 'TRAINING', label: 'Training & certifications' },
+  { value: 'TEAM_BUILDING', label: 'Team building / trips' },
+  { value: 'FLEXIBLE_HOURS', label: 'Flexible hours' },
+  { value: 'REMOTE_DAYS', label: 'Some remote days' },
+  { value: 'ANNUAL_LEAVE', label: 'Annual leave' },
+  { value: 'MEALS', label: 'Meal allowance' },
 ];
 
 export const JOB_HISTORY_ACTION_LABELS: Record<JobHistoryAction, string> = {
-  JOB_CREATED: 'Tạo tin',
-  JOB_UPDATED: 'Chỉnh sửa tin',
-  JOB_PUBLISHED: 'Đăng tin',
-  JOB_PAUSED: 'Tạm dừng tin',
-  JOB_RESUMED: 'Mở lại tin',
-  JOB_CLOSED: 'Đóng tin',
-  JOB_RENEWED: 'Gia hạn và đăng lại',
-  JOB_RETOPPED: 'Đẩy top tin',
-  JOB_HIDDEN: 'Bị quản trị viên ẩn',
-  JOB_RESTORED: 'Được quản trị viên khôi phục',
+  JOB_CREATED: 'Job created',
+  JOB_UPDATED: 'Job edited',
+  JOB_PUBLISHED: 'Job published',
+  JOB_PAUSED: 'Job paused',
+  JOB_RESUMED: 'Job reopened',
+  JOB_CLOSED: 'Job closed',
+  JOB_RENEWED: 'Renewed and republished',
+  JOB_RETOPPED: 'Job bumped to top',
+  JOB_HIDDEN: 'Hidden by admin',
+  JOB_RESTORED: 'Restored by admin',
 };
 
 export const JOB_FIELD_LABELS: Record<string, string> = {
-  title: 'Tiêu đề',
-  level: 'Cấp bậc',
-  jobRole: 'Nhóm vị trí',
-  experience: 'Kinh nghiệm',
-  contractType: 'Loại hợp đồng',
-  workingArrangement: 'Hình thức làm việc',
-  location: 'Địa điểm',
-  salary: 'Mức lương',
-  skills: 'Kỹ năng',
-  description: 'Mô tả',
-  requirements: 'Yêu cầu',
-  benefits: 'Phúc lợi',
-  benefitTags: 'Thẻ phúc lợi',
-  hiringSteps: 'Quy trình tuyển dụng',
-  screeningQuestions: 'Câu hỏi sàng lọc',
-  deadline: 'Hạn nộp',
-  openings: 'Số lượng tuyển',
+  title: 'Title',
+  level: 'Level',
+  jobRole: 'Job role',
+  experience: 'Experience',
+  contractType: 'Contract type',
+  workingArrangement: 'Working arrangement',
+  location: 'Location',
+  salary: 'Salary',
+  skills: 'Skills',
+  description: 'Description',
+  requirements: 'Requirements',
+  benefits: 'Benefits',
+  benefitTags: 'Benefit tags',
+  hiringSteps: 'Hiring process',
+  screeningQuestions: 'Screening questions',
+  deadline: 'Deadline',
+  openings: 'Openings',
 };
 
 export const JOB_FORM_CURRENCY_OPTIONS = [
-  { value: 'VND', label: 'triệu VND' },
+  { value: 'VND', label: 'million VND' },
   { value: 'USD', label: 'USD' },
 ];
 
 export const JOB_CITY_SUGGESTIONS = VN_LOCATIONS;
 
 export const SKILL_GROUP_LABELS: Record<SkillGroup, string> = {
-  CORE: 'Cốt lõi',
-  AI_DATA: 'AI & Dữ liệu',
-  TOOLS_DEVOPS: 'Công cụ & DevOps',
-  SOFT_SKILLS: 'Kỹ năng mềm',
+  CORE: 'Core',
+  AI_DATA: 'AI & Data',
+  TOOLS_DEVOPS: 'Tools & DevOps',
+  SOFT_SKILLS: 'Soft skills',
 };
 
 export const JOB_MAX_SKILLS = 20;

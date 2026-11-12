@@ -20,27 +20,27 @@ interface CartVerificationModalProps {
 const VERIFICATION_ITEMS: { id: VerificationStepId; label: string; route: string }[] = [
   {
     id: 'PHONE',
-    label: 'Xác thực số điện thoại',
+    label: 'Verify phone number',
     route: ROUTES.RECRUITER_COMPANY_PHONE_VERIFY,
   },
   {
     id: 'COMPANY',
-    label: 'Cập nhật thông tin công ty',
+    label: 'Update company information',
     route: ROUTES.RECRUITER_COMPANY,
   },
   {
     id: 'LICENSE',
-    label: 'Xác thực Giấy đăng ký doanh nghiệp',
+    label: 'Verify business registration certificate',
     route: ROUTES.RECRUITER_COMPANY_LICENSE,
   },
   {
     id: 'CANDIDATE_AGREEMENT',
-    label: 'Thỏa thuận xử lý dữ liệu ứng viên',
+    label: 'Candidate data processing agreement',
     route: ROUTES.RECRUITER_COMPANY_AGREEMENTS,
   },
   {
     id: 'PLATFORM_AGREEMENT',
-    label: 'Thỏa thuận sử dụng nền tảng InterVue',
+    label: 'InterVue platform terms of use',
     route: ROUTES.RECRUITER_COMPANY_AGREEMENTS,
   },
 ];
@@ -79,35 +79,35 @@ export default function CartVerificationModal({ isOpen, onClose, verificationPro
       onClose={onClose}
       maxWidth="lg"
       radius="xl"
-      title="Thông báo"
+      title="Notice"
       footer={
         <button
           type="button"
           onClick={onClose}
           className="border-outline-variant bg-surface-container-high text-on-surface hover:bg-surface-container cursor-pointer rounded-lg border px-5 py-2 text-sm font-semibold transition"
         >
-          Đóng
+          Close
         </button>
       }
     >
       <div className="space-y-4">
         <p className="text-on-surface-variant text-sm leading-relaxed">
-          Vui lòng thực hiện các bước xác thực dưới đây để hoàn thiện thông tin doanh nghiệp và trải nghiệm đầy đủ các
-          tính năng của sản phẩm.{' '}
+          Please complete the verification steps below to finish your business profile and get full access to all
+          product features.{' '}
           <Link
             href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
             onClick={onClose}
             className="text-primary font-semibold hover:underline"
           >
-            Tìm hiểu thêm
+            Learn more
           </Link>
         </p>
 
         {/* Progress */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-on-surface font-bold">Xác thực thông tin</span>
-            <span className="text-primary font-bold">Hoàn thành {completionPercent}%</span>
+            <span className="text-on-surface font-bold">Verify information</span>
+            <span className="text-primary font-bold">{completionPercent}% complete</span>
           </div>
           <div className="bg-surface-container-high h-1.5 w-full overflow-hidden rounded-full">
             <div
@@ -143,10 +143,12 @@ export default function CartVerificationModal({ isOpen, onClose, verificationPro
                       {item.label}
                     </span>
                     {status === 'IN_REVIEW' && (
-                      <span className="text-[11px] font-medium text-amber-700">Đang chờ Admin duyệt</span>
+                      <span className="text-[11px] font-medium text-amber-700">Pending admin review</span>
                     )}
                     {(status === 'REJECTED' || status === 'ACTION_REQUIRED') && (
-                      <span className="text-[11px] font-medium text-rose-600">Cần cập nhật / bổ sung</span>
+                      <span className="text-[11px] font-medium text-rose-600">
+                        Needs update / additional information
+                      </span>
                     )}
                   </div>
                 </div>

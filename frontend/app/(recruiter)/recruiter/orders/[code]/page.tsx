@@ -2,8 +2,8 @@ import RecruiterOrderDetailView from '@/components/recruiter/orders/RecruiterOrd
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Chi tiết đơn hàng | InterVue Recruiter',
-  description: 'Thông tin chi tiết và trạng thái thanh toán của đơn hàng',
+  title: 'Order details | InterVue Recruiter',
+  description: 'Order details and payment status',
 };
 
 type RecruiterOrderDetailPageProps = { params: Promise<{ code: string }> };

@@ -47,14 +47,12 @@ export default function CartEmptyState() {
   return (
     <div className="border-outline-variant flex flex-col items-center justify-center rounded-xl border bg-white px-6 py-12 text-center shadow-2xs sm:py-14">
       <EmptyCartIllustration />
-      <h2 className="text-on-surface-variant mt-4 text-base font-medium sm:text-lg">
-        Giỏ hàng của bạn hiện chưa thêm dịch vụ nào
-      </h2>
+      <h2 className="text-on-surface-variant mt-4 text-base font-medium sm:text-lg">Your cart is empty</h2>
       <Link
         href={ROUTES.RECRUITER_SERVICES}
         className="bg-primary mt-5 inline-flex h-10 items-center justify-center gap-1 rounded-lg px-5 text-sm font-semibold text-white transition hover:brightness-95 active:scale-[0.98]"
       >
-        <span>Đi tới trang mua dịch vụ</span>
+        <span>Browse services</span>
         <ChevronRight className="h-4 w-4" aria-hidden />
       </Link>
     </div>

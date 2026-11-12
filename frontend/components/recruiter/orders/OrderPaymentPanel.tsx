@@ -35,15 +35,15 @@ export default function OrderPaymentPanel({ code, status }: OrderPaymentPanelPro
         <div className="flex items-center gap-3 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 px-4 py-3.5">
           <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
           <p className="text-sm font-semibold text-emerald-900">
-            Đã nhận {formatServicePrice(data.paidAmount, data.currency)}. Đơn hàng đã được thanh toán.
+            Received {formatServicePrice(data.paidAmount, data.currency)}. This order has been paid.
           </p>
         </div>
         {overpaid > 0 && (
           <div className="flex gap-3 rounded-lg border-l-4 border-amber-400 bg-amber-50 px-4 py-3">
             <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-600" />
             <p className="text-sm leading-relaxed text-amber-900">
-              Bạn đã chuyển dư {formatServicePrice(overpaid, data.currency)}. Khoản dư không tự cộng vào tài khoản — hãy
-              liên hệ InterVue để được hoàn lại.
+              You overpaid by {formatServicePrice(overpaid, data.currency)}. The excess is not credited to your account
+              automatically — please contact InterVue for a refund.
             </p>
           </div>
         )}
@@ -58,7 +58,7 @@ export default function OrderPaymentPanel({ code, status }: OrderPaymentPanelPro
       <div className="flex gap-3 rounded-lg border-l-4 border-sky-500 bg-sky-50 px-4 py-3.5">
         <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-sky-600" />
         <p className="text-on-surface-variant text-sm leading-relaxed">
-          Cổng thanh toán chưa được cấu hình. Vui lòng liên hệ InterVue để được hướng dẫn chuyển khoản.
+          The payment gateway is not configured. Please contact InterVue for bank transfer instructions.
         </p>
       </div>
     );
@@ -69,7 +69,7 @@ export default function OrderPaymentPanel({ code, status }: OrderPaymentPanelPro
   return (
     <div className="border-outline-variant rounded-2xl border bg-white p-5 shadow-2xs">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-on-surface text-base font-bold">Chuyển khoản để hoàn tất</h2>
+        <h2 className="text-on-surface text-base font-bold">Transfer to complete payment</h2>
         {remaining !== null && (
           <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-300 px-3 py-1 text-xs font-bold text-rose-600">
             <Clock className="h-3.5 w-3.5" />
@@ -80,8 +80,8 @@ export default function OrderPaymentPanel({ code, status }: OrderPaymentPanelPro
 
       {data.status === 'UNDERPAID' && (
         <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900">
-          Đã nhận {formatServicePrice(data.paidAmount, data.currency)}. Vui lòng chuyển bổ sung{' '}
-          {formatServicePrice(remainingAmount, data.currency)} với cùng nội dung bên dưới.
+          Received {formatServicePrice(data.paidAmount, data.currency)}. Please transfer the remaining{' '}
+          {formatServicePrice(remainingAmount, data.currency)} using the same transfer content below.
         </p>
       )}
 
@@ -90,23 +90,23 @@ export default function OrderPaymentPanel({ code, status }: OrderPaymentPanelPro
           <div className="border-outline-variant mx-auto rounded-xl border p-2">
             {/* Remote QR host is not in next.config images.remotePatterns, so this stays a plain img */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={data.qrUrl} alt={`Mã QR thanh toán đơn ${data.orderCode}`} className="h-44 w-44" />
+            <img src={data.qrUrl} alt={`Payment QR code for order ${data.orderCode}`} className="h-44 w-44" />
           </div>
         )}
 
         <dl className="divide-outline-variant divide-y text-sm">
-          <Row label="Ngân hàng" value={data.bankCode ?? '—'} />
+          <Row label="Bank" value={data.bankCode ?? '—'} />
           <Row
-            label="Số tài khoản"
+            label="Account number"
             value={data.accountNumber ?? '—'}
             onCopy={() => copy('acc', data.accountNumber ?? '')}
             copied={copied === 'acc'}
             mono
           />
-          <Row label="Chủ tài khoản" value={data.accountName ?? '—'} />
-          <Row label="Số tiền" value={formatServicePrice(remainingAmount, data.currency)} highlight />
+          <Row label="Account holder" value={data.accountName ?? '—'} />
+          <Row label="Amount" value={formatServicePrice(remainingAmount, data.currency)} highlight />
           <Row
-            label="Nội dung chuyển khoản"
+            label="Transfer content"
             value={data.transferContent}
             onCopy={() => copy('content', data.transferContent)}
             copied={copied === 'content'}
@@ -116,9 +116,9 @@ export default function OrderPaymentPanel({ code, status }: OrderPaymentPanelPro
       </div>
 
       <p className="text-on-surface-variant mt-4 text-xs leading-relaxed">
-        Quét mã QR là chắc nhất. Nếu nhập tay, hãy giữ <strong>nguyên vẹn toàn bộ</strong> nội dung chuyển khoản ở trên
-        — thiếu một ký tự là ngân hàng không báo về và đơn sẽ không tự cập nhật. Sau khi ngân hàng ghi nhận, trạng thái
-        đơn đổi trong vài phút.
+        Scanning the QR code is the most reliable option. If you enter it manually, keep the transfer content above
+        <strong>exactly as shown</strong> — a single missing character means the bank will not report the payment and
+        the order will not update. The order status changes within a few minutes after the bank records the payment.
       </p>
     </div>
   );
@@ -153,12 +153,12 @@ function Row({
             type="button"
             onClick={onCopy}
             className="text-outline hover:text-primary cursor-pointer transition"
-            aria-label={`Sao chép ${label}`}
+            aria-label={`Copy ${label}`}
           >
             <Copy className="h-3.5 w-3.5" />
           </button>
         )}
-        {copied && <span className="text-xs font-semibold text-emerald-600">Đã chép</span>}
+        {copied && <span className="text-xs font-semibold text-emerald-600">Copied</span>}
       </dd>
     </div>
   );

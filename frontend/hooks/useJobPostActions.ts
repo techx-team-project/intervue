@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 
 const BULK_ID = 'bulk';
 const MAX_TITLE_LENGTH = 150;
-const COPY_SUFFIX = ' (bản sao)';
+const COPY_SUFFIX = ' (copy)';
 
 export function useJobPostActions() {
   const mutations = useRecruiterJobMutations();
@@ -28,16 +28,16 @@ export function useJobPostActions() {
     }
   };
 
-  const pauseJob = (id: string) => run(id, () => mutations.pause.mutateAsync(Number(id)), 'Đã tạm dừng tin.');
+  const pauseJob = (id: string) => run(id, () => mutations.pause.mutateAsync(Number(id)), 'Job paused.');
 
-  const reopenJob = (id: string) => run(id, () => mutations.resume.mutateAsync(Number(id)), 'Đã mở lại tin.');
+  const reopenJob = (id: string) => run(id, () => mutations.resume.mutateAsync(Number(id)), 'Job reopened.');
 
-  const closeJob = (id: string) => run(id, () => mutations.close.mutateAsync(Number(id)), 'Đã đóng tin.');
+  const closeJob = (id: string) => run(id, () => mutations.close.mutateAsync(Number(id)), 'Job closed.');
 
   const retopJob = (id: string) =>
-    run(id, () => mutations.retop.mutateAsync(Number(id)), 'Đã đẩy tin lên đầu danh sách.');
+    run(id, () => mutations.retop.mutateAsync(Number(id)), 'Job bumped to the top of the list.');
 
-  const deleteJob = (id: string) => run(id, () => mutations.remove.mutateAsync(Number(id)), 'Đã xóa bản nháp.');
+  const deleteJob = (id: string) => run(id, () => mutations.remove.mutateAsync(Number(id)), 'Draft deleted.');
 
   const toggleJobStatus = (id: string, currentStatus: JobStatus) => {
     if (currentStatus === 'PUBLISHED') return pauseJob(id);
@@ -54,7 +54,7 @@ export function useJobPostActions() {
         const title = `${source.title.slice(0, MAX_TITLE_LENGTH - COPY_SUFFIX.length)}${COPY_SUFFIX}`;
         await mutations.create.mutateAsync({ ...copy, title });
       },
-      'Đã tạo bản sao dưới dạng nháp.',
+      'Copy created as a draft.',
     );
 
   const runBulk = async (ids: string[], task: (id: number) => Promise<unknown>, noun: string) => {
@@ -63,16 +63,16 @@ export function useJobPostActions() {
     const results = await Promise.allSettled(ids.map((id) => task(Number(id))));
     const failed = results.filter((result) => result.status === 'rejected').length;
     if (failed === 0) {
-      toast.success(`Đã ${noun} ${ids.length} tin.`);
+      toast.success(`${ids.length} job(s) ${noun}.`);
     } else {
-      toast.error(`${noun} thất bại ${failed}/${ids.length} tin. Chỉ tin đang tuyển mới tạm dừng được.`);
+      toast.error(`Failed for ${failed}/${ids.length} job(s). Only active jobs can be paused.`);
     }
     setPendingId(null);
   };
 
-  const bulkPauseJobs = (ids: string[]) => runBulk(ids, (id) => mutations.pause.mutateAsync(id), 'tạm dừng');
+  const bulkPauseJobs = (ids: string[]) => runBulk(ids, (id) => mutations.pause.mutateAsync(id), 'paused');
 
-  const bulkCloseJobs = (ids: string[]) => runBulk(ids, (id) => mutations.close.mutateAsync(id), 'đóng');
+  const bulkCloseJobs = (ids: string[]) => runBulk(ids, (id) => mutations.close.mutateAsync(id), 'closed');
 
   return {
     pendingId,

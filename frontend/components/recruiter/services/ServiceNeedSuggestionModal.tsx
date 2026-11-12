@@ -68,7 +68,7 @@ export default function ServiceNeedSuggestionModal({
                 <span className="text-on-surface text-sm leading-relaxed">
                   {option.label}
                   {!isAvailable && (
-                    <span className="text-on-surface-variant ml-1.5 text-xs italic">(hiện chưa có gói mở bán)</span>
+                    <span className="text-on-surface-variant ml-1.5 text-xs italic">(no packages on sale yet)</span>
                   )}
                 </span>
               </label>

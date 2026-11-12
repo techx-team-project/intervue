@@ -7,7 +7,7 @@ export const salaryCurrencySchema = z.enum(['VND', 'USD']);
 export const salaryBasisSchema = z.enum(['GROSS', 'NET']);
 export const jobRoleSchema = z.enum(
   ['BACKEND', 'FRONTEND', 'FULLSTACK', 'MOBILE', 'DEVOPS', 'QA', 'DATA_AI', 'BA', 'PM', 'UIUX', 'SECURITY', 'OTHER'],
-  { error: 'Chọn nhóm vị trí.' },
+  { error: 'Select a job role.' },
 );
 export const jobBenefitTagSchema = z.enum([
   'HEALTH_INSURANCE',
@@ -35,9 +35,9 @@ export const SCREENING_MAX_OPTIONS = 6;
 export const screeningQuestionSchema = z
   .object({
     type: screeningQuestionTypeSchema,
-    prompt: z.string().trim().min(1, 'Nhập nội dung câu hỏi.').max(300, 'Tối đa 300 ký tự.'),
+    prompt: z.string().trim().min(1, 'Enter the question.').max(300, 'Maximum 300 characters.'),
     required: z.boolean(),
-    options: z.array(z.string().trim().min(1).max(100, 'Mỗi lựa chọn tối đa 100 ký tự.')),
+    options: z.array(z.string().trim().min(1).max(100, 'Each option allows at most 100 characters.')),
   })
   .superRefine((question, ctx) => {
     if (question.type !== 'CHOICE') return;
@@ -50,7 +50,7 @@ export const screeningQuestionSchema = z
       ctx.addIssue({
         code: 'custom',
         path: ['options'],
-        message: `Cần ${SCREENING_MIN_OPTIONS}-${SCREENING_MAX_OPTIONS} lựa chọn khác nhau.`,
+        message: `Provide ${SCREENING_MIN_OPTIONS}-${SCREENING_MAX_OPTIONS} distinct options.`,
       });
     }
   });
@@ -62,54 +62,58 @@ export const skillOptionSchema = z.object({
 
 export const jobPostSchema = z
   .object({
-    title: z.string().trim().min(5, 'Tiêu đề cần ít nhất 5 ký tự.').max(150, 'Tiêu đề tối đa 150 ký tự.'),
+    title: z
+      .string()
+      .trim()
+      .min(5, 'Title must be at least 5 characters.')
+      .max(150, 'Title allows at most 150 characters.'),
     level: jobLevelSchema,
     jobRole: jobRoleSchema.optional(),
     experienceMinYears: z
       .number()
-      .int('Nhập số nguyên.')
-      .min(0, 'Tối thiểu 0.')
-      .max(JOB_MAX_EXPERIENCE_YEARS, 'Tối đa 30 năm.')
+      .int('Enter a whole number.')
+      .min(0, 'Minimum 0.')
+      .max(JOB_MAX_EXPERIENCE_YEARS, 'Maximum 30 years.')
       .optional(),
     experienceMaxYears: z
       .number()
-      .int('Nhập số nguyên.')
-      .min(0, 'Tối thiểu 0.')
-      .max(JOB_MAX_EXPERIENCE_YEARS, 'Tối đa 30 năm.')
+      .int('Enter a whole number.')
+      .min(0, 'Minimum 0.')
+      .max(JOB_MAX_EXPERIENCE_YEARS, 'Maximum 30 years.')
       .optional(),
     contractType: contractTypeSchema,
     workingArrangement: workingArrangementSchema,
-    city: z.string().trim().min(1, 'Vui lòng nhập nơi làm việc.').max(100, 'Tối đa 100 ký tự.'),
-    address: z.string().trim().max(500, 'Tối đa 500 ký tự.'),
+    city: z.string().trim().min(1, 'Enter the work location.').max(100, 'Maximum 100 characters.'),
+    address: z.string().trim().max(500, 'Maximum 500 characters.'),
     latitude: z.number().min(-90).max(90).optional(),
     longitude: z.number().min(-180).max(180).optional(),
     salaryNegotiable: z.boolean(),
-    salaryMin: z.number().positive('Nhập số lớn hơn 0.').optional(),
-    salaryMax: z.number().positive('Nhập số lớn hơn 0.').optional(),
+    salaryMin: z.number().positive('Enter a number greater than 0.').optional(),
+    salaryMax: z.number().positive('Enter a number greater than 0.').optional(),
     currency: salaryCurrencySchema,
     salaryBasis: salaryBasisSchema,
-    skills: z.array(skillOptionSchema).min(1, 'Chọn ít nhất 1 kỹ năng.').max(20, 'Tối đa 20 kỹ năng.'),
-    description: z.string().trim().min(50, 'Mô tả cần ít nhất 50 ký tự.'),
-    requirements: z.string().trim().min(20, 'Yêu cầu cần ít nhất 20 ký tự.'),
+    skills: z.array(skillOptionSchema).min(1, 'Select at least 1 skill.').max(20, 'Maximum 20 skills.'),
+    description: z.string().trim().min(50, 'Description must be at least 50 characters.'),
+    requirements: z.string().trim().min(20, 'Requirements must be at least 20 characters.'),
     benefits: z.string().trim(),
     benefitTags: z.array(jobBenefitTagSchema).max(JOB_MAX_BENEFIT_TAGS),
     hiringSteps: z
-      .array(z.object({ title: z.string().trim().min(1, 'Nhập tên bước.').max(80, 'Tối đa 80 ký tự.') }))
+      .array(z.object({ title: z.string().trim().min(1, 'Enter the step name.').max(80, 'Maximum 80 characters.') }))
       .max(JOB_MAX_HIRING_STEPS),
-    deadline: z.string().min(1, 'Chọn hạn nộp hồ sơ.'),
+    deadline: z.string().min(1, 'Select an application deadline.'),
     screeningQuestions: z.array(screeningQuestionSchema).max(SCREENING_MAX_QUESTIONS),
-    openings: z.number().int('Nhập số nguyên.').min(1, 'Tối thiểu 1 vị trí.').max(1000, 'Tối đa 1000 vị trí.'),
+    openings: z.number().int('Enter a whole number.').min(1, 'Minimum 1 opening.').max(1000, 'Maximum 1000 openings.'),
   })
-  .refine((data) => data.jobRole !== undefined, { message: 'Chọn nhóm vị trí.', path: ['jobRole'] })
+  .refine((data) => data.jobRole !== undefined, { message: 'Select a job role.', path: ['jobRole'] })
   .refine(
     (data) =>
       data.experienceMinYears === undefined ||
       data.experienceMaxYears === undefined ||
       data.experienceMinYears <= data.experienceMaxYears,
-    { message: 'Số năm tối thiểu không được lớn hơn tối đa.', path: ['experienceMinYears'] },
+    { message: 'Minimum years cannot exceed maximum years.', path: ['experienceMinYears'] },
   )
   .refine((data) => data.salaryNegotiable || (data.salaryMin !== undefined && data.salaryMax !== undefined), {
-    message: 'Nhập khoảng lương hoặc chọn Thỏa thuận.',
+    message: 'Enter a salary range or choose Negotiable.',
     path: ['salaryMax'],
   })
   .refine(
@@ -119,7 +123,7 @@ export const jobPostSchema = z
       data.salaryMax === undefined ||
       data.salaryMin <= data.salaryMax,
     {
-      message: 'Lương tối thiểu không được lớn hơn tối đa.',
+      message: 'Minimum salary cannot exceed maximum salary.',
       path: ['salaryMin'],
     },
   );

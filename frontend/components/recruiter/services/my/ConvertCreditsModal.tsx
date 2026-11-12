@@ -37,18 +37,18 @@ export default function ConvertCreditsModal({
   const affordable = cost > 0 && cost <= balance;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Đổi credits lấy tiện ích" maxWidth="lg">
+    <Modal isOpen={isOpen} onClose={onClose} title="Exchange credits for add-ons" maxWidth="lg">
       <p className="text-on-surface-variant text-sm">
-        Số dư hiện tại: <strong className="text-on-surface">{balance.toLocaleString('vi-VN')}</strong> credits
+        Current balance: <strong className="text-on-surface">{balance.toLocaleString('vi-VN')}</strong> credits
       </p>
 
       <div className="mt-4 space-y-4">
         <Select
-          label="Tiện ích muốn đổi"
+          label="Add-on to exchange"
           value={priceId}
           onChange={(event) => setPriceId(event.target.value)}
           options={[
-            { value: '', label: '— Chọn tiện ích —' },
+            { value: '', label: '— Select an add-on —' },
             ...prices.map((price) => ({
               value: String(price.id),
               label: `${price.label} — ${price.creditCost.toLocaleString('vi-VN')} credits`,
@@ -57,7 +57,7 @@ export default function ConvertCreditsModal({
         />
 
         <Input
-          label="Số lượng"
+          label="Quantity"
           type="number"
           min={1}
           max={50}
@@ -68,9 +68,9 @@ export default function ConvertCreditsModal({
 
       {selected && validQuantity && (
         <p className="mt-4 text-sm">
-          Tổng trừ: <strong>{cost.toLocaleString('vi-VN')}</strong> credits · còn lại{' '}
+          Total cost: <strong>{cost.toLocaleString('vi-VN')}</strong> credits · remaining{' '}
           <strong className={affordable ? 'text-emerald-700' : 'text-rose-600'}>
-            {affordable ? (balance - cost).toLocaleString('vi-VN') : 'không đủ'}
+            {affordable ? (balance - cost).toLocaleString('vi-VN') : 'insufficient'}
           </strong>
         </p>
       )}
@@ -78,8 +78,8 @@ export default function ConvertCreditsModal({
       <div className="mt-4 flex gap-3 rounded-lg border-l-4 border-amber-400 bg-amber-50 px-4 py-3">
         <AlertTriangle className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-600" />
         <p className="text-sm leading-relaxed text-amber-900">
-          Credits đã đổi <strong>không lấy lại được</strong>. Tiện ích vào kho dưới dạng chưa kích hoạt, bạn chọn thời
-          điểm áp lên tin sau.
+          Exchanged credits <strong>cannot be refunded</strong>. The add-on goes to your inventory unactivated, and you
+          choose when to apply it to a job later.
         </p>
       </div>
 
@@ -87,14 +87,14 @@ export default function ConvertCreditsModal({
 
       <div className="mt-5 flex justify-end gap-3">
         <Button variant="neutral" onClick={onClose}>
-          Huỷ
+          Cancel
         </Button>
         <Button
           onClick={() => selected && onConfirm(selected, amount)}
           disabled={!selected || !affordable}
           isLoading={isBusy}
         >
-          Xác nhận đổi
+          Confirm exchange
         </Button>
       </div>
     </Modal>

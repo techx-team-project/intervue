@@ -80,16 +80,16 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
       <div className="border-outline-variant rounded-xl border border-dashed bg-white px-6 py-16 text-center">
         <AlertCircle className="text-on-surface-variant mx-auto h-8 w-8" />
         <p className="text-on-surface mt-3 text-base font-bold">
-          {notFound ? 'Không tìm thấy gói dịch vụ' : 'Không tải được gói dịch vụ'}
+          {notFound ? 'Service package not found' : 'Could not load the service package'}
         </p>
         <p className="text-on-surface-variant mt-1 text-sm">
-          {notFound ? 'Gói dịch vụ này hiện đã ngừng mở bán hoặc danh mục đã tạm ẩn.' : getErrorMessage(error)}
+          {notFound ? 'This service package is no longer on sale or its category is hidden.' : getErrorMessage(error)}
         </p>
         <Link
           href={ROUTES.RECRUITER_SERVICES}
           className="bg-primary mt-5 inline-flex h-10 items-center justify-center rounded-lg px-6 text-sm font-semibold text-white transition hover:brightness-95"
         >
-          Quay lại danh sách dịch vụ
+          Back to services
         </Link>
       </div>
     );
@@ -110,7 +110,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
   const submitAction = (action: 'cart' | 'buy') => {
     if (matchedSlot && selectedWeeks.length === 0) {
       document.getElementById('banner-week-picker')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const warning = 'Vui lòng chọn ít nhất 1 tuần hiển thị ở lịch banner.';
+      const warning = 'Please select at least 1 display week in the banner calendar.';
       setFeedback({ type: 'error', message: warning });
       toast.error(warning);
       return;
@@ -131,8 +131,8 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
             return;
           }
           const message = sortedWeeks
-            ? `Đã thêm "${data.name}" (${sortedWeeks.length} tuần) vào giỏ hàng.`
-            : `Đã thêm "${data.name}" vào giỏ hàng.`;
+            ? `Added "${data.name}" (${sortedWeeks.length} weeks) to your cart.`
+            : `Added "${data.name}" to your cart.`;
           setFeedback({ type: 'success', message });
           toast.success(message);
         },
@@ -156,9 +156,9 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
           className="border-outline-variant text-on-surface-variant hover:bg-surface-container-low inline-flex h-9 items-center gap-1.5 rounded-full border bg-white px-3.5 text-sm font-medium transition"
         >
           <ArrowLeft className="h-4 w-4" />
-          Quay lại
+          Back
         </Link>
-        <h1 className="text-on-surface text-lg font-bold sm:text-xl">Chi tiết dịch vụ</h1>
+        <h1 className="text-on-surface text-lg font-bold sm:text-xl">Service details</h1>
         <Link
           href={backToCategoryHref}
           className="bg-primary-light text-primary-deep hover:bg-primary-tag rounded-full px-3 py-1 text-xs font-bold transition"
@@ -218,19 +218,19 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
           <span className="flex items-center gap-3">
             {feedback.type === 'success' && (
               <Link href={ROUTES.RECRUITER_CART} className="text-primary font-bold hover:underline">
-                Xem giỏ hàng
+                View cart
               </Link>
             )}
             {feedback.requiresCompany && (
               <Link href={ROUTES.RECRUITER_COMPANY} className="font-bold underline">
-                Liên kết doanh nghiệp
+                Link company
               </Link>
             )}
             <button
               type="button"
               onClick={() => setFeedback(null)}
               className="cursor-pointer opacity-70 transition hover:opacity-100"
-              aria-label="Đóng thông báo"
+              aria-label="Dismiss notification"
             >
               <X className="h-4 w-4" />
             </button>
@@ -246,14 +246,14 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                 <div>
                   <h2 className="text-on-surface flex items-center gap-2 text-base font-bold">
                     <CalendarDays className="text-primary h-4.5 w-4.5 shrink-0" aria-hidden />
-                    Chọn tuần hiển thị banner · {matchedSlot.name}
+                    Select banner display weeks · {matchedSlot.name}
                   </h2>
                   <p className="text-on-surface-variant mt-1 text-xs">
-                    Kích thước {matchedSlot.width}×{matchedSlot.height}px · Chỉ 1 doanh nghiệp mỗi tuần.
+                    Size {matchedSlot.width}×{matchedSlot.height}px · Only 1 company per week.
                   </p>
                 </div>
                 <span className="bg-primary-light text-primary-deep rounded-full px-2.5 py-1 text-xs font-semibold">
-                  {selectedWeeks.length} tuần đã chọn
+                  {selectedWeeks.length} weeks selected
                 </span>
               </div>
 
@@ -268,7 +268,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                       <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" aria-hidden />
                       <span>
                         {isNoCompanyCalendarError
-                          ? 'Bạn cần liên kết hoặc tạo hồ sơ doanh nghiệp trước khi chọn tuần đặt banner.'
+                          ? 'You need to link or create a company profile before choosing banner weeks.'
                           : getErrorMessage(adCalendar.error)}
                       </span>
                     </p>
@@ -277,7 +277,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                         href={ROUTES.RECRUITER_COMPANY}
                         className="bg-primary inline-flex h-8 items-center rounded-lg px-3.5 text-xs font-semibold text-white transition hover:brightness-95"
                       >
-                        Liên kết doanh nghiệp
+                        Link company
                       </Link>
                     )}
                   </div>
@@ -288,21 +288,21 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
             </section>
           )}
 
-          <h2 className="text-on-surface text-xl font-bold">Thông tin chi tiết dịch vụ</h2>
+          <h2 className="text-on-surface text-xl font-bold">Service details</h2>
 
           <div className="border-outline-variant grid gap-px overflow-hidden rounded-lg border bg-neutral-200 sm:grid-cols-2">
             <div className="flex items-center gap-2.5 bg-white px-4 py-3.5 text-sm">
               <Clock className="text-primary h-4.5 w-4.5" />
-              <span className="text-on-surface-variant">Thời gian hiệu lực:</span>
+              <span className="text-on-surface-variant">Validity:</span>
               <span className="text-on-surface font-semibold">
-                {data.validityDays ? `${data.validityDays} ngày` : 'Không giới hạn'}
+                {data.validityDays ? `${data.validityDays} days` : 'Unlimited'}
               </span>
             </div>
             <div className="flex items-center gap-2.5 bg-white px-4 py-3.5 text-sm">
               <Gift className="h-4.5 w-4.5 text-amber-500" />
-              <span className="text-on-surface-variant">Quà tặng:</span>
+              <span className="text-on-surface-variant">Bonus:</span>
               <span className="text-on-surface font-semibold">
-                {data.bonusCredits > 0 ? `${data.bonusCredits.toLocaleString('vi-VN')} Credits` : 'Không có'}
+                {data.bonusCredits > 0 ? `${data.bonusCredits.toLocaleString('vi-VN')} Credits` : 'None'}
               </span>
             </div>
           </div>
@@ -310,7 +310,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
           {data.benefits.length > 0 && (
             <div>
               <h3 className="border-primary text-on-surface border-l-[3px] pl-3 text-base font-bold">
-                Quyền lợi của gói
+                Package benefits
               </h3>
               <ul className="mt-3 space-y-2.5">
                 {data.benefits.map((benefit, index) => (
@@ -323,7 +323,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                       <span className="text-on-surface-variant">{benefit.label}</span>
                       {benefit.entitlementType === 'JOB_BOOST' && benefit.tier > 1 && (
                         <span className="rounded bg-amber-50 px-1.5 py-0.5 text-[11px] font-semibold text-amber-700">
-                          Cấp {benefit.tier}
+                          Tier {benefit.tier}
                         </span>
                       )}
                     </div>
@@ -376,21 +376,21 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
             <p className="mt-3 text-2xl font-bold" style={{ color: accent }}>
               {formatServicePrice(data.price, data.currency)}
               <span className="ml-0.5 text-rose-500">*</span>
-              {matchedSlot && <span className="text-on-surface-variant ml-1 text-xs font-normal">/ tuần</span>}
+              {matchedSlot && <span className="text-on-surface-variant ml-1 text-xs font-normal">/ week</span>}
             </p>
 
             {matchedSlot ? (
               <div className="border-outline-variant bg-surface-container-low/60 mt-4 space-y-2 rounded-lg border p-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-on-surface-variant font-medium">Tuần hiển thị đã chọn</span>
-                  <span className="text-on-surface font-bold">{selectedWeeks.length} tuần</span>
+                  <span className="text-on-surface-variant font-medium">Selected display weeks</span>
+                  <span className="text-on-surface font-bold">{selectedWeeks.length} weeks</span>
                 </div>
                 {selectedWeeks.length === 0 ? (
                   <a
                     href="#banner-week-picker"
                     className="text-primary inline-block text-xs font-semibold hover:underline"
                   >
-                    Chọn ít nhất 1 tuần ở lịch hiển thị ↓
+                    Select at least 1 week in the calendar below ↓
                   </a>
                 ) : (
                   <ul className="flex flex-wrap gap-1.5">
@@ -403,7 +403,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                         <button
                           type="button"
                           onClick={() => toggleWeek(week)}
-                          aria-label={`Bỏ tuần ${formatDate(week)}`}
+                          aria-label={`Remove week ${formatDate(week)}`}
                           className="hover:bg-primary-tag cursor-pointer rounded-full p-0.5"
                         >
                           <X className="h-3 w-3" />
@@ -415,7 +415,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
               </div>
             ) : (
               <div className="mt-4 flex items-center justify-between gap-3">
-                <span className="text-on-surface-variant text-sm">Số lượng</span>
+                <span className="text-on-surface-variant text-sm">Quantity</span>
                 <NumberStepper
                   value={effectiveQuantity}
                   onChange={setQuantity}
@@ -429,7 +429,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
 
             {effectiveQuantity > 1 && (
               <div className="border-outline-variant mt-3 flex items-center justify-between border-t pt-3 text-sm">
-                <span className="text-on-surface-variant">Tạm tính</span>
+                <span className="text-on-surface-variant">Subtotal</span>
                 <span className="text-on-surface font-bold">{formatServicePrice(subtotal, data.currency)}</span>
               </div>
             )}
@@ -446,7 +446,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                 ) : (
                   <ShoppingCart className="h-4 w-4" />
                 )}
-                Thêm vào giỏ
+                Add to cart
               </button>
               <button
                 type="button"
@@ -463,7 +463,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
 
             {data.oneTimePerCompany && (
               <p className="mt-2 text-xs font-semibold text-rose-600">
-                Mỗi doanh nghiệp chỉ được mua và kích hoạt 1 lần
+                Each company can buy and activate this only once
               </p>
             )}
           </div>

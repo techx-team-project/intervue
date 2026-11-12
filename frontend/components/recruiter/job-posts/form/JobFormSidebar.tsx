@@ -14,14 +14,14 @@ const MIN_REQUIREMENTS_LENGTH = 20;
 function checklistOf(values: JobPostFormData): Array<{ label: string; done: boolean }> {
   const hasSalary = values.salaryNegotiable || (values.salaryMin !== undefined && values.salaryMax !== undefined);
   return [
-    { label: 'Tiêu đề', done: values.title.trim().length >= 5 },
-    { label: 'Nhóm vị trí', done: values.jobRole !== undefined },
-    { label: 'Nơi làm việc', done: values.city.trim().length > 0 },
-    { label: 'Mức lương', done: hasSalary },
-    { label: 'Kỹ năng', done: values.skills.length > 0 },
-    { label: 'Mô tả công việc', done: values.description.trim().length >= MIN_DESCRIPTION_LENGTH },
-    { label: 'Yêu cầu ứng viên', done: values.requirements.trim().length >= MIN_REQUIREMENTS_LENGTH },
-    { label: 'Hạn nộp hồ sơ', done: values.deadline.length > 0 },
+    { label: 'Title', done: values.title.trim().length >= 5 },
+    { label: 'Job role', done: values.jobRole !== undefined },
+    { label: 'Location', done: values.city.trim().length > 0 },
+    { label: 'Salary', done: hasSalary },
+    { label: 'Skills', done: values.skills.length > 0 },
+    { label: 'Job description', done: values.description.trim().length >= MIN_DESCRIPTION_LENGTH },
+    { label: 'Candidate requirements', done: values.requirements.trim().length >= MIN_REQUIREMENTS_LENGTH },
+    { label: 'Application deadline', done: values.deadline.length > 0 },
   ];
 }
 
@@ -36,10 +36,10 @@ export default function JobFormSidebar() {
   return (
     <aside
       className="border-outline-variant rounded-xl border bg-white p-5 lg:sticky lg:top-24"
-      aria-label="Tiến độ hoàn thành"
+      aria-label="Completion progress"
     >
       <div className="flex items-baseline justify-between">
-        <h3 className="text-navy text-body-md font-bold">Tiến độ hoàn thành</h3>
+        <h3 className="text-navy text-body-md font-bold">Completion progress</h3>
         <span className="text-body-sm text-on-surface-variant tabular-nums">
           {doneCount}/{items.length}
         </span>
@@ -76,14 +76,14 @@ export default function JobFormSidebar() {
       {quota && (
         <div className="border-outline-variant mt-4 border-t pt-4">
           <div className="flex items-baseline justify-between">
-            <span className="text-body-sm text-on-surface-variant">Lượt đăng tin còn lại</span>
+            <span className="text-body-sm text-on-surface-variant">Remaining job posts</span>
             <span className="text-navy text-body-md font-bold tabular-nums">{quota.slotsRemaining}</span>
           </div>
           {outOfSlots && (
             <p className="text-body-sm mt-2 rounded-lg bg-amber-50 px-3 py-2 text-amber-800">
-              Bạn đã hết lượt.{' '}
+              You have no posts left.{' '}
               <Link href={ROUTES.RECRUITER_SERVICES} className="font-semibold underline">
-                Mua thêm dịch vụ
+                Buy more services
               </Link>
               .
             </p>
@@ -92,7 +92,7 @@ export default function JobFormSidebar() {
       )}
 
       <p className="text-body-sm text-on-surface-variant border-outline-variant mt-4 border-t pt-4 leading-relaxed">
-        Hoàn tất các mục trên để có thể đăng tin. Bạn vẫn lưu nháp được bất cứ lúc nào.
+        Complete the items above to publish. You can still save a draft at any time.
       </p>
     </aside>
   );

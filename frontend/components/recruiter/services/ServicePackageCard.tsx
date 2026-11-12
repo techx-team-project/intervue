@@ -60,13 +60,13 @@ export default function ServicePackageCard({
             {adSlot && (
               <span className="bg-primary-light text-primary-deep inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium">
                 <CalendarDays className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                Banner {adSlot.width}×{adSlot.height}px · Đặt theo tuần
+                Banner {adSlot.width}×{adSlot.height}px · Booked weekly
               </span>
             )}
             {item.validityDays && (
               <span className="bg-surface-container-low text-on-surface-variant inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium">
                 <Clock className="text-primary h-3.5 w-3.5 shrink-0" aria-hidden />
-                Hiệu lực {item.validityDays} ngày
+                Valid for {item.validityDays} days
               </span>
             )}
             {item.bonusCredits > 0 && (
@@ -79,14 +79,14 @@ export default function ServicePackageCard({
         )}
 
         {item.oneTimePerCompany && (
-          <p className="mt-2.5 text-xs font-semibold text-rose-600">Mỗi doanh nghiệp chỉ được mua và kích hoạt 1 lần</p>
+          <p className="mt-2.5 text-xs font-semibold text-rose-600">Each company can buy and activate this only once</p>
         )}
 
         <Link
           href={`${ROUTES.RECRUITER_SERVICES}/${item.slug}`}
           className="text-primary mt-3 inline-flex w-fit items-center text-sm font-semibold hover:underline"
         >
-          Xem chi tiết ›
+          View details ›
         </Link>
 
         <div className="mt-auto flex gap-2.5 pt-5">
@@ -105,7 +105,7 @@ export default function ServicePackageCard({
             ) : (
               <ShoppingCart className="h-4 w-4" />
             )}
-            {adSlot ? 'Chọn tuần' : 'Thêm vào giỏ'}
+            {adSlot ? 'Select weeks' : 'Add to cart'}
           </button>
           <button
             type="button"

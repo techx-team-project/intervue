@@ -2,9 +2,9 @@ import { PersonalDataProtectionView } from '@/components/recruiter/company/verif
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Văn bản xử lý Dữ liệu cá nhân | InterVue',
+  title: 'Personal Data Processing Agreements | InterVue',
   description:
-    'Thỏa thuận xử lý dữ liệu cá nhân giữa Ứng viên, Nhà tuyển dụng và nền tảng InterVue theo Nghị định 13/2023/NĐ-CP.',
+    'Personal data processing agreements between Candidates, Recruiters and the InterVue platform under Decree 13/2023/ND-CP.',
 };
 
 export default function PersonalDataProtectionPage() {

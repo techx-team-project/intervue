@@ -103,7 +103,7 @@ export default function CartOrderSummary({
               }`}
             >
               <Tag className="h-3.5 w-3.5" />
-              <span>{appliedVoucher ? appliedVoucher.code : 'Chọn mã ưu đãi'}</span>
+              <span>{appliedVoucher ? appliedVoucher.code : 'Select a voucher'}</span>
             </button>
           </div>
         </div>
@@ -165,14 +165,14 @@ export default function CartOrderSummary({
               {invoiceType === 'business' && invoiceComplete && (
                 <div className="border-primary/20 border-t px-3 pt-2.5 pb-3">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-on-surface text-xs font-bold">Thông tin xuất hóa đơn điện tử</span>
+                    <span className="text-on-surface text-xs font-bold">E-invoice information</span>
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
                         onClick={() => onOpenInvoiceModal('business')}
                         className="text-primary hover:bg-primary/10 cursor-pointer rounded p-1 transition"
-                        aria-label="Chỉnh sửa thông tin hóa đơn doanh nghiệp"
-                        title="Chỉnh sửa thông tin"
+                        aria-label="Edit business invoice information"
+                        title="Edit information"
                       >
                         <SquarePen className="h-3.5 w-3.5" />
                       </button>
@@ -180,7 +180,7 @@ export default function CartOrderSummary({
                         type="button"
                         onClick={() => setIsInvoiceExpanded((prev) => !prev)}
                         className="text-on-surface-variant hover:bg-surface-container-high cursor-pointer rounded p-1 transition"
-                        aria-label={isInvoiceExpanded ? 'Thu gọn thông tin hóa đơn' : 'Mở rộng thông tin hóa đơn'}
+                        aria-label={isInvoiceExpanded ? 'Collapse invoice information' : 'Expand invoice information'}
                         aria-expanded={isInvoiceExpanded}
                       >
                         {isInvoiceExpanded ? (
@@ -195,25 +195,25 @@ export default function CartOrderSummary({
                   {isInvoiceExpanded && (
                     <dl className="mt-2.5 space-y-1.5 text-xs">
                       <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Mã số thuế</dt>
+                        <dt className="text-on-surface-variant">Tax ID</dt>
                         <dd className="text-on-surface truncate font-medium" title={businessInvoice.taxId}>
                           {businessInvoice.taxId}
                         </dd>
                       </div>
                       <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Tên công ty</dt>
+                        <dt className="text-on-surface-variant">Company name</dt>
                         <dd className="text-on-surface truncate font-medium" title={businessInvoice.companyName}>
                           {businessInvoice.companyName}
                         </dd>
                       </div>
                       <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Địa chỉ</dt>
+                        <dt className="text-on-surface-variant">Address</dt>
                         <dd className="text-on-surface truncate font-medium" title={businessInvoice.companyAddress}>
                           {businessInvoice.companyAddress}
                         </dd>
                       </div>
                       <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Email nhận hóa đơn điện tử</dt>
+                        <dt className="text-on-surface-variant">E-invoice email</dt>
                         <dd className="text-on-surface truncate font-medium" title={businessInvoice.recipientEmail}>
                           {businessInvoice.recipientEmail}
                         </dd>
@@ -255,14 +255,14 @@ export default function CartOrderSummary({
               {invoiceType === 'personal' && invoiceComplete && (
                 <div className="border-primary/20 border-t px-3 pt-2.5 pb-3">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-on-surface text-xs font-bold">Thông tin xuất hóa đơn điện tử</span>
+                    <span className="text-on-surface text-xs font-bold">E-invoice information</span>
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
                         onClick={() => onOpenInvoiceModal('personal')}
                         className="text-primary hover:bg-primary/10 cursor-pointer rounded p-1 transition"
-                        aria-label="Chỉnh sửa thông tin hóa đơn cá nhân"
-                        title="Chỉnh sửa thông tin"
+                        aria-label="Edit personal invoice information"
+                        title="Edit information"
                       >
                         <SquarePen className="h-3.5 w-3.5" />
                       </button>
@@ -270,7 +270,7 @@ export default function CartOrderSummary({
                         type="button"
                         onClick={() => setIsInvoiceExpanded((prev) => !prev)}
                         className="text-on-surface-variant hover:bg-surface-container-high cursor-pointer rounded p-1 transition"
-                        aria-label={isInvoiceExpanded ? 'Thu gọn thông tin hóa đơn' : 'Mở rộng thông tin hóa đơn'}
+                        aria-label={isInvoiceExpanded ? 'Collapse invoice information' : 'Expand invoice information'}
                         aria-expanded={isInvoiceExpanded}
                       >
                         {isInvoiceExpanded ? (
@@ -286,7 +286,9 @@ export default function CartOrderSummary({
                     <dl className="mt-2.5 space-y-1.5 text-xs">
                       <div className="grid grid-cols-[118px_1fr] items-start gap-2">
                         <dt className="text-on-surface-variant">
-                          {personalInvoice.personalDocumentType === 'passport' ? 'Số hộ chiếu' : 'Số CCCD'}
+                          {personalInvoice.personalDocumentType === 'passport'
+                            ? 'Passport number'
+                            : 'Citizen ID number'}
                         </dt>
                         <dd
                           className="text-on-surface truncate font-medium"
@@ -296,19 +298,19 @@ export default function CartOrderSummary({
                         </dd>
                       </div>
                       <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Họ và tên</dt>
+                        <dt className="text-on-surface-variant">Full name</dt>
                         <dd className="text-on-surface truncate font-medium" title={personalInvoice.fullName}>
                           {personalInvoice.fullName}
                         </dd>
                       </div>
                       <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Địa chỉ</dt>
+                        <dt className="text-on-surface-variant">Address</dt>
                         <dd className="text-on-surface truncate font-medium" title={personalInvoice.personalAddress}>
                           {personalInvoice.personalAddress}
                         </dd>
                       </div>
                       <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Email nhận hóa đơn điện tử</dt>
+                        <dt className="text-on-surface-variant">E-invoice email</dt>
                         <dd className="text-on-surface truncate font-medium" title={personalInvoice.recipientEmail}>
                           {personalInvoice.recipientEmail}
                         </dd>
@@ -355,16 +357,16 @@ export default function CartOrderSummary({
             onClick={onSubmitOrder}
             className="bg-primary hover:bg-primary disabled:bg-primary/40 w-full cursor-pointer rounded-lg py-3 text-center text-sm font-bold text-white transition disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Đang tạo đơn hàng...' : 'Place order'}
+            {isSubmitting ? 'Creating order...' : 'Place order'}
           </button>
 
           {!canSubmit && hasItems && !isSubmitting && (
             <p className="text-label-sm text-outline mt-2 text-center">
               {selectedCount === 0
-                ? 'Vui lòng chọn ít nhất 1 dịch vụ'
+                ? 'Please select at least 1 service'
                 : !invoiceType || !invoiceComplete
-                  ? 'Vui lòng chọn và điền đầy đủ thông tin xuất hóa đơn'
-                  : 'Vui lòng đồng ý với Điều khoản dịch vụ'}
+                  ? 'Please select and complete the invoice information'
+                  : 'Please agree to the Terms of Service'}
             </p>
           )}
         </div>

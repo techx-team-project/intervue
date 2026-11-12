@@ -17,7 +17,7 @@ export default function DashboardHeader({ companyName }: DashboardHeaderProps) {
       <div className="min-w-0">
         <p className="text-body-sm text-on-surface-variant truncate">{companyName}</p>
         <h1 className="text-navy mt-1 text-2xl font-bold tracking-tight sm:text-[28px]">
-          {user?.name ? `Chào ${user.name}, hôm nay có gì mới?` : 'Tổng quan tuyển dụng'}
+          {user?.name ? `Hi ${user.name}, what is new today?` : 'Hiring overview'}
         </h1>
       </div>
 
@@ -27,21 +27,21 @@ export default function DashboardHeader({ companyName }: DashboardHeaderProps) {
           className="border-outline-variant text-navy hover:bg-surface-container-low text-body-sm inline-flex h-10 items-center gap-2 rounded-lg border bg-white px-4 font-semibold transition"
         >
           <Search className="h-4 w-4" />
-          Tìm ứng viên
+          Find candidates
         </Link>
         <Link
           href={ROUTES.RECRUITER_SERVICES}
           className="border-outline-variant text-navy hover:bg-surface-container-low text-body-sm inline-flex h-10 items-center gap-2 rounded-lg border bg-white px-4 font-semibold transition"
         >
           <ShoppingBag className="h-4 w-4" />
-          Mua dịch vụ
+          Buy services
         </Link>
         <Link
           href={ROUTES.RECRUITER_JOBS_CREATE}
           className="bg-primary hover:bg-primary-hover text-body-sm inline-flex h-10 items-center gap-2 rounded-lg px-4 font-semibold text-white transition"
         >
           <Plus className="h-4 w-4" />
-          Đăng tin tuyển dụng
+          Post a job
         </Link>
       </div>
     </header>

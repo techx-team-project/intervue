@@ -282,14 +282,14 @@ export function CompanyProfileView() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > MAX_LOGO_BYTES) {
-      toast.error('Logo không được vượt quá 2MB.');
+      toast.error('Logo must not exceed 2MB.');
       return;
     }
     setIsUploadingLogo(true);
     try {
       await handleUploadLogo(file);
       setNoLogo(false);
-      toast.success('Đã cập nhật logo.');
+      toast.success('Logo updated.');
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -303,7 +303,7 @@ export function CompanyProfileView() {
     setIsUploadingPhotos(true);
     try {
       await handleUploadPhotos(files);
-      toast.success(`Đã thêm ${files.length} ảnh.`);
+      toast.success(`Added ${files.length} photo(s).`);
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
@@ -314,7 +314,7 @@ export function CompanyProfileView() {
   const onRemovePhotoItem = async (photoId: number) => {
     try {
       await handleRemovePhoto(photoId);
-      toast.success('Đã xóa ảnh.');
+      toast.success('Photo removed.');
     } catch (err) {
       toast.error(getErrorMessage(err));
     }
@@ -324,7 +324,7 @@ export function CompanyProfileView() {
 
   const displayedLogoUrl = !noLogo ? company?.logoUrl : null;
 
-  const currentDisplayedCompanyName = company?.tradingName || company?.name || 'Hồ sơ doanh nghiệp';
+  const currentDisplayedCompanyName = company?.tradingName || company?.name || 'Company profile';
 
   const companyInitials = useMemo(() => {
     const name = currentDisplayedCompanyName || 'InterVue';
@@ -515,7 +515,7 @@ export function CompanyProfileView() {
                     {isLoadingCompanies ? (
                       <div className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant col-span-1 flex items-center justify-center gap-2.5 rounded-md border p-12 text-xs font-medium md:col-span-2">
                         <Loader2 className="text-primary h-4 w-4 animate-spin" />
-                        <span>Đang tải danh sách doanh nghiệp...</span>
+                        <span>Loading companies...</span>
                       </div>
                     ) : displayedCompanies.length > 0 ? (
                       displayedCompanies.map((item) => (
@@ -565,8 +565,8 @@ export function CompanyProfileView() {
                       ))
                     ) : (
                       <div className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant col-span-1 rounded-md border p-8 text-center text-xs md:col-span-2">
-                        Không tìm thấy công ty nào phù hợp với từ khóa &ldquo;{searchQuery}&rdquo;. Bạn có thể chuyển
-                        sang tab &ldquo;Create New Company&rdquo; để đăng ký thông tin doanh nghiệp.
+                        No companies match &ldquo;{searchQuery}&rdquo;. You can switch to the &ldquo;Create New
+                        Company&rdquo; tab to register your company.
                       </div>
                     )}
                   </div>
@@ -627,12 +627,12 @@ export function CompanyProfileView() {
         {hasLinkedCompany && !isEditingProfile ? (
           /* ================= SHOWCASE VIEW MODE (TopCV Standard) ================= */
           <div className="space-y-5">
-            {/* Action Bar (TopCV: Yêu cầu cập nhật thông tin công ty) */}
+            {/* Action Bar (TopCV: Request company information update) */}
             <div className="border-outline-variant flex flex-col gap-3 rounded-lg border bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
-                <h3 className="text-on-surface text-sm font-bold sm:text-base">Yêu cầu cập nhật thông tin công ty</h3>
+                <h3 className="text-on-surface text-sm font-bold sm:text-base">Request company information update</h3>
                 <p className="text-on-surface-variant text-xs">
-                  Ngày yêu cầu gần nhất: <span className="text-on-surface font-semibold">{formattedUpdatedAt}</span>
+                  Last requested: <span className="text-on-surface font-semibold">{formattedUpdatedAt}</span>
                 </p>
               </div>
 
@@ -643,7 +643,7 @@ export function CompanyProfileView() {
                   className="border-primary text-primary hover:bg-primary-light inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-4 py-2 text-xs font-semibold transition active:scale-98"
                 >
                   <Pencil className="h-3.5 w-3.5" />
-                  <span>Tạo yêu cầu</span>
+                  <span>Create request</span>
                 </button>
 
                 <button
@@ -652,7 +652,7 @@ export function CompanyProfileView() {
                   className="border-outline-variant text-on-surface-variant inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-3.5 py-2 text-xs font-medium transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
                 >
                   <LogOut className="h-3.5 w-3.5" />
-                  <span>Rời công ty</span>
+                  <span>Leave company</span>
                 </button>
               </div>
             </div>
@@ -689,18 +689,16 @@ export function CompanyProfileView() {
 
               {/* Detail 2-Column Key-Value List */}
               <div className="divide-outline-variant divide-y">
-                {/* Row: Mã số thuế */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="text-on-surface-variant font-medium sm:col-span-3">Mã số thuế:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Tax code:</div>
                   <div className="text-on-surface font-mono font-semibold sm:col-span-9">
                     {company?.taxCode || '--'}
                   </div>
                 </div>
 
-                {/* Row: Tên thương mại */}
                 {company?.tradingName && (
                   <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                    <div className="text-on-surface-variant font-medium sm:col-span-3">Tên thương mại:</div>
+                    <div className="text-on-surface-variant font-medium sm:col-span-3">Trading name:</div>
                     <div className="text-on-surface font-medium sm:col-span-9">{company.tradingName}</div>
                   </div>
                 )}
@@ -720,53 +718,46 @@ export function CompanyProfileView() {
                         <ExternalLink className="h-3.5 w-3.5" />
                       </a>
                     ) : (
-                      <span className="text-outline">Tôi không có website</span>
+                      <span className="text-outline">I don&apos;t have a website</span>
                     )}
                   </div>
                 </div>
 
-                {/* Row: Loại hình doanh nghiệp */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="text-on-surface-variant font-medium sm:col-span-3">Loại hình doanh nghiệp:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Business type:</div>
                   <div className="text-on-surface sm:col-span-9">
-                    {company?.businessType === 'ENTERPRISE'
-                      ? 'Doanh nghiệp (Công ty Cổ phần / TNHH)'
-                      : 'Hộ kinh doanh cá thể'}
+                    {company?.businessType === 'ENTERPRISE' ? 'Enterprise (Joint Stock / LLC)' : 'Household business'}
                   </div>
                 </div>
 
-                {/* Row: Ngành nghề kinh doanh */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="text-on-surface-variant font-medium sm:col-span-3">Ngành nghề kinh doanh:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Industry:</div>
                   <div className="space-y-1 sm:col-span-9">
                     <div className="text-on-surface">
-                      {company?.industry || 'Công nghệ thông tin & Dịch vụ phần mềm'}
+                      {company?.industry || 'Information Technology & Software Services'}
                     </div>
                     <p className="text-outline flex items-center gap-1 text-xs">
                       <Info className="h-3 w-3 shrink-0" />
                       <span>
-                        InterVue sẽ cập nhật danh mục ngành nghề theo Giấy phép ĐKKD của MST bạn đã nhập ở trên trong
-                        vòng 24h làm việc.
+                        InterVue will update the industry categories based on the business license of the tax code you
+                        entered above within 24 working hours.
                       </span>
                     </p>
                   </div>
                 </div>
 
-                {/* Row: Thị trường hoạt động */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="text-on-surface-variant font-medium sm:col-span-3">Thị trường hoạt động:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Operating market:</div>
                   <div className="text-on-surface sm:col-span-9">{company?.market || '--'}</div>
                 </div>
 
-                {/* Row: Khách hàng mục tiêu */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="text-on-surface-variant font-medium sm:col-span-3">Khách hàng mục tiêu:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Target customers:</div>
                   <div className="text-on-surface sm:col-span-9">{company?.targetCustomers || '--'}</div>
                 </div>
 
-                {/* Row: Quy mô */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="text-on-surface-variant font-medium sm:col-span-3">Quy mô:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Company size:</div>
                   <div className="text-on-surface sm:col-span-9">{company?.size || '--'}</div>
                 </div>
 
@@ -776,37 +767,32 @@ export function CompanyProfileView() {
                   <div className="text-on-surface sm:col-span-9">{company?.email || '--'}</div>
                 </div>
 
-                {/* Row: Số điện thoại */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="text-on-surface-variant font-medium sm:col-span-3">Số điện thoại:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Phone number:</div>
                   <div className="text-on-surface sm:col-span-9">{company?.phone || '--'}</div>
                 </div>
 
-                {/* Row: Địa chỉ */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="text-on-surface-variant font-medium sm:col-span-3">Địa chỉ:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Address:</div>
                   <div className="text-on-surface leading-relaxed sm:col-span-9">{company?.address || '--'}</div>
                 </div>
 
-                {/* Row: Mô tả công ty */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="text-on-surface-variant font-medium sm:col-span-3">Mô tả công ty:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Company description:</div>
                   <div className="text-on-surface leading-relaxed whitespace-pre-line sm:col-span-9">
                     {company?.description || '--'}
                   </div>
                 </div>
 
-                {/* Row: Phúc lợi nhân viên */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="text-on-surface-variant font-medium sm:col-span-3">Phúc lợi nhân viên:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Employee benefits:</div>
                   <div className="text-on-surface leading-relaxed whitespace-pre-line sm:col-span-9">
                     {company?.benefits || '--'}
                   </div>
                 </div>
 
-                {/* Row: Hình ảnh công ty */}
                 <div className="grid grid-cols-1 gap-1.5 py-3 text-sm sm:grid-cols-12 sm:gap-4">
-                  <div className="text-on-surface-variant font-medium sm:col-span-3">Hình ảnh công ty:</div>
+                  <div className="text-on-surface-variant font-medium sm:col-span-3">Company photos:</div>
                   <div className="sm:col-span-9">
                     {company?.photos && company.photos.length > 0 ? (
                       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -841,9 +827,9 @@ export function CompanyProfileView() {
             {/* Header when editing linked company */}
             <div className="border-outline-variant flex flex-col gap-2 rounded-lg border bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h3 className="text-on-surface text-base font-bold">Yêu cầu cập nhật thông tin công ty</h3>
+                <h3 className="text-on-surface text-base font-bold">Request company information update</h3>
                 <p className="text-on-surface-variant text-xs">
-                  Chỉnh sửa thông tin hồ sơ doanh nghiệp hiển thị tới ứng viên
+                  Edit the company profile information shown to candidates
                 </p>
               </div>
               <button
@@ -852,7 +838,7 @@ export function CompanyProfileView() {
                 className="border-outline text-on-surface hover:bg-surface-container-low inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border bg-white px-3.5 py-2 text-xs font-semibold transition"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
-                <span>Quay lại xem thông tin</span>
+                <span>Back to company information</span>
               </button>
             </div>
             {/* 1. Logo Upload Section (TopCV Style) */}
@@ -913,7 +899,7 @@ export function CompanyProfileView() {
                   >
                     {watchedBusinessType === 'ENTERPRISE' && <span className="bg-primary h-2 w-2 rounded-full" />}
                   </span>
-                  <span>Enterprise (Công ty TNHH / Cổ phần)</span>
+                  <span>Enterprise (LLC / Joint Stock Company)</span>
                 </label>
 
                 <label
@@ -931,7 +917,7 @@ export function CompanyProfileView() {
                   >
                     {watchedBusinessType === 'HOUSEHOLD' && <span className="bg-primary h-2 w-2 rounded-full" />}
                   </span>
-                  <span>Household Business (Hộ kinh doanh)</span>
+                  <span>Household Business</span>
                 </label>
               </div>
             </div>
@@ -958,14 +944,14 @@ export function CompanyProfileView() {
             {/* 4. Form Fields Grid (TopCV 2-Column Standard) */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="text-on-surface text-xs font-bold">Mã số thuế</label>
+                <label className="text-on-surface text-xs font-bold">Tax code</label>
                 <div className="border-outline-variant bg-surface-container-low text-on-surface flex h-11 items-center rounded-md border px-3.5 font-mono text-xs sm:text-sm">
                   {company?.taxCode}
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-on-surface text-xs font-bold">Tên pháp lý</label>
+                <label className="text-on-surface text-xs font-bold">Legal name</label>
                 <div className="border-outline-variant bg-surface-container-low text-on-surface flex h-11 items-center rounded-md border px-3.5 text-xs sm:text-sm">
                   <span className="truncate">{company?.name}</span>
                 </div>
@@ -1120,21 +1106,22 @@ export function CompanyProfileView() {
 
               {/* Field 11: Registered Address (Span 2 cols) */}
               <div className="space-y-1.5 md:col-span-2">
-                <label className="text-on-surface text-xs font-bold">Địa chỉ văn phòng</label>
+                <label className="text-on-surface text-xs font-bold">Office address</label>
                 <input
                   type="text"
                   {...register('address')}
-                  placeholder={company?.registeredAddress || 'Địa chỉ văn phòng hiển thị cho ứng viên'}
+                  placeholder={company?.registeredAddress || 'Office address shown to candidates'}
                   className="border-outline text-on-surface focus:border-primary focus:ring-primary/30 h-11 w-full rounded-md border bg-white px-3.5 text-xs transition focus:ring-1 focus:outline-none sm:text-sm"
                 />
                 {company?.registeredAddress && (
-                  <p className="text-label-sm text-on-surface-variant">Địa chỉ đăng ký: {company.registeredAddress}</p>
+                  <p className="text-label-sm text-on-surface-variant">
+                    Registered address: {company.registeredAddress}
+                  </p>
                 )}
                 {errors.address && <p className="text-xs text-rose-600">{errors.address.message}</p>}
               </div>
             </div>
 
-            {/* 5. Mô tả công ty (Rich Text Box TopCV Style) */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
@@ -1193,7 +1180,6 @@ export function CompanyProfileView() {
               </div>
             </div>
 
-            {/* 6. Phúc lợi nhân viên (Rich Text Box TopCV Style) */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
@@ -1261,20 +1247,20 @@ export function CompanyProfileView() {
                 {company && (
                   <div className="text-on-surface-variant space-y-1 pt-1 text-xs">
                     <p>
-                      Đã dùng {allPhotos.length}/{company.photoLimit} ảnh.{' '}
+                      Used {allPhotos.length}/{company.photoLimit} photos.{' '}
                       {company.brandPageUntil ? (
                         <span className="text-primary-deep font-semibold">
-                          Trang thương hiệu đang chạy tới {formatDate(company.brandPageUntil)}.
+                          Brand page active until {formatDate(company.brandPageUntil)}.
                         </span>
                       ) : (
                         <Link href={ROUTES.RECRUITER_SERVICES} className="text-primary font-semibold hover:underline">
-                          Mua gói Trang thương hiệu để tăng lên 10 ảnh
+                          Buy a Brand Page package to increase the limit to 10 photos
                         </Link>
                       )}
                     </p>
                     {company.featuredUntil && (
                       <p className="font-semibold text-amber-700">
-                        Doanh nghiệp nổi bật đang chạy tới {formatDate(company.featuredUntil)}.
+                        Featured company active until {formatDate(company.featuredUntil)}.
                       </p>
                     )}
                   </div>
@@ -1341,7 +1327,7 @@ export function CompanyProfileView() {
                     onClick={() => setIsEditingProfile(false)}
                     className="border-outline text-on-surface hover:bg-surface-container-low flex h-11 cursor-pointer items-center justify-center rounded-md border bg-white px-6 text-sm font-semibold transition"
                   >
-                    Hủy bỏ
+                    Cancel
                   </button>
                 )}
                 <button

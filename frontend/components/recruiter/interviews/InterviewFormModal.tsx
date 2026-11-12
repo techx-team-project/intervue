@@ -41,10 +41,10 @@ export default function InterviewFormModal({
   const [error, setError] = useState('');
 
   const submit = () => {
-    if (!startsAt) return setError('Hãy chọn ngày và giờ phỏng vấn.');
-    if (startsAt <= currentLocalInputValue()) return setError('Thời gian phỏng vấn phải ở tương lai.');
+    if (!startsAt) return setError('Please choose the interview date and time.');
+    if (startsAt <= currentLocalInputValue()) return setError('The interview time must be in the future.');
     if (!location.trim()) {
-      return setError(format === 'ONLINE' ? 'Hãy nhập link họp.' : 'Hãy nhập địa chỉ phỏng vấn.');
+      return setError(format === 'ONLINE' ? 'Please enter the meeting link.' : 'Please enter the interview address.');
     }
     setError('');
     saveInterviewPreferences({ durationMinutes: Number(duration), format, location: location.trim() });
@@ -62,44 +62,44 @@ export default function InterviewFormModal({
       isOpen={isOpen}
       onClose={onClose}
       maxWidth="lg"
-      title={interview ? 'Sửa lịch phỏng vấn' : 'Mời ứng viên phỏng vấn'}
-      description="Ứng viên sẽ nhận thông báo và email để xác nhận, từ chối hoặc đề xuất giờ khác. Giờ theo múi giờ Việt Nam (GMT+7)."
+      title={interview ? 'Edit interview' : 'Invite candidate to interview'}
+      description="The candidate will receive a notification and email to confirm, decline or propose another time. Times are in Vietnam time (GMT+7)."
       footer={
         <div className="flex justify-end gap-2">
           <Button variant="ghost" onClick={onClose}>
-            Hủy
+            Cancel
           </Button>
           <Button isLoading={isSubmitting} onClick={submit}>
-            {interview ? 'Lưu và gửi lại' : 'Gửi lời mời'}
+            {interview ? 'Save and resend' : 'Send invitation'}
           </Button>
         </div>
       }
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <QuickTimeField label="Ngày giờ phỏng vấn" value={startsAt} onChange={setStartsAt} />
+          <QuickTimeField label="Interview date and time" value={startsAt} onChange={setStartsAt} />
           <Select
-            label="Thời lượng"
+            label="Duration"
             value={duration}
             options={INTERVIEW_DURATION_OPTIONS}
             onChange={(event) => setDuration(event.target.value)}
           />
         </div>
         <Select
-          label="Hình thức"
+          label="Format"
           value={format}
           options={INTERVIEW_FORMAT_OPTIONS}
           onChange={(event) => setFormat(event.target.value as InterviewFormat)}
         />
         <Input
-          label={format === 'ONLINE' ? 'Link họp' : 'Địa chỉ'}
+          label={format === 'ONLINE' ? 'Meeting link' : 'Address'}
           value={location}
           maxLength={500}
-          placeholder={format === 'ONLINE' ? 'https://meet.google.com/...' : 'Tầng 5, 72 Lê Thánh Tôn, Quận 1'}
+          placeholder={format === 'ONLINE' ? 'https://meet.google.com/...' : '5th Floor, 72 Le Thanh Ton, District 1'}
           onChange={(event) => setLocation(event.target.value)}
         />
         <Textarea
-          label="Ghi chú cho ứng viên (không bắt buộc)"
+          label="Note for the candidate (optional)"
           value={note}
           rows={3}
           maxLength={1000}
@@ -113,7 +113,7 @@ export default function InterviewFormModal({
             className="text-primary inline-flex items-center gap-1 text-xs font-semibold hover:underline"
           >
             <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-            Tạo nhanh phòng Google Meet rồi dán link vào ô trên
+            Quickly create a Google Meet room and paste the link above
           </a>
         )}
         {error && (

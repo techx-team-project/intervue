@@ -30,7 +30,7 @@ export default function RenewJobModal({ job, onClose }: RenewJobModalProps) {
       { id: Number(job.id), deadline },
       {
         onSuccess: () => {
-          toast.success('Đã gia hạn và đăng lại tin.');
+          toast.success('Job post renewed and reposted.');
           onClose();
         },
         onError: (error) => toast.error(getErrorMessage(error)),
@@ -42,16 +42,18 @@ export default function RenewJobModal({ job, onClose }: RenewJobModalProps) {
     <Modal
       isOpen={job !== null}
       onClose={onClose}
-      title="Gia hạn / Đăng lại tin"
-      description={job ? `"${job.title}" sẽ hiển thị lại với hạn nộp mới. Hồ sơ cũ được giữ nguyên.` : undefined}
+      title="Renew / Repost job post"
+      description={
+        job ? `"${job.title}" will be visible again with the new deadline. Existing applications are kept.` : undefined
+      }
       maxWidth="sm"
       footer={
         <div className="flex justify-end gap-2">
           <Button variant="ghost" onClick={onClose}>
-            Hủy
+            Cancel
           </Button>
           <Button onClick={submit} isLoading={renew.isPending} disabled={outOfSlots || !deadline}>
-            Gia hạn
+            Renew
           </Button>
         </div>
       }
@@ -59,7 +61,7 @@ export default function RenewJobModal({ job, onClose }: RenewJobModalProps) {
       <div className="space-y-4">
         <Input
           type="date"
-          label="Hạn nộp hồ sơ mới"
+          label="New application deadline"
           min={todayIsoDate()}
           value={deadline}
           onChange={(event) => setDeadline(event.target.value)}
@@ -67,16 +69,16 @@ export default function RenewJobModal({ job, onClose }: RenewJobModalProps) {
 
         {quota && quota.slotsRemaining > 0 && (
           <p className="text-body-sm text-on-surface-variant">
-            Gia hạn sẽ dùng 1 lượt đăng tin (còn {quota.slotsRemaining} lượt).
+            Renewing uses 1 posting slot ({quota.slotsRemaining} remaining).
           </p>
         )}
         {outOfSlots && (
           <p className="text-body-sm rounded-lg bg-amber-50 px-3 py-2 text-amber-800">
-            Bạn đã hết lượt đăng tin.{' '}
+            You have no posting slots left.{' '}
             <Link href={ROUTES.RECRUITER_SERVICES} className="font-semibold underline">
-              Mua thêm dịch vụ
+              Buy more services
             </Link>{' '}
-            để gia hạn.
+            to renew.
           </p>
         )}
       </div>

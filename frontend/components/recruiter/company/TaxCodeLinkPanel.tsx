@@ -31,7 +31,7 @@ export default function TaxCodeLinkPanel({ onLink }: TaxCodeLinkPanelProps) {
   const handleLookup = async () => {
     const value = taxCode.trim();
     if (!TAX_CODE_PATTERN.test(value)) {
-      setError('Mã số thuế gồm 10 số, có thể kèm 3 số chi nhánh (ví dụ 0101234567-001).');
+      setError('The tax code has 10 digits, optionally followed by a 3-digit branch code (e.g. 0101234567-001).');
       return;
     }
     setIsLooking(true);
@@ -60,9 +60,9 @@ export default function TaxCodeLinkPanel({ onLink }: TaxCodeLinkPanelProps) {
   return (
     <div className="border-outline-variant space-y-4 rounded-lg border bg-white p-5 shadow-2xs">
       <div>
-        <h3 className="text-on-surface text-base font-bold">Liên kết công ty bằng mã số thuế</h3>
+        <h3 className="text-on-surface text-base font-bold">Link your company by tax code</h3>
         <p className="text-on-surface-variant mt-0.5 text-xs">
-          Tên và địa chỉ pháp lý được lấy từ cơ quan thuế. Bạn chỉ cần nhập mã số thuế.
+          The legal name and address are retrieved from the tax authority. You only need to enter the tax code.
         </p>
       </div>
 
@@ -77,8 +77,8 @@ export default function TaxCodeLinkPanel({ onLink }: TaxCodeLinkPanelProps) {
                 handleLookup();
               }
             }}
-            placeholder="Ví dụ 0101234567"
-            aria-label="Mã số thuế"
+            placeholder="e.g. 0101234567"
+            aria-label="Tax code"
             inputMode="numeric"
             error={error ?? undefined}
           />
@@ -90,7 +90,7 @@ export default function TaxCodeLinkPanel({ onLink }: TaxCodeLinkPanelProps) {
           onClick={handleLookup}
           leftIcon={<Search className="h-4 w-4" />}
         >
-          Tra cứu
+          Look up
         </Button>
       </div>
 
@@ -106,13 +106,13 @@ export default function TaxCodeLinkPanel({ onLink }: TaxCodeLinkPanelProps) {
               {result.address && <p className="text-on-surface-variant mt-1 text-xs">{result.address}</p>}
               {result.existingOnPlatform && (
                 <p className="mt-1 text-xs font-medium text-emerald-700">
-                  Công ty đã có trên InterVue, bạn sẽ được thêm vào cùng công ty.
+                  This company already exists on InterVue. You will be added to it.
                 </p>
               )}
             </div>
           </div>
           <Button type="button" isLoading={isLinking} onClick={handleLink}>
-            Liên kết công ty này
+            Link this company
           </Button>
         </div>
       )}

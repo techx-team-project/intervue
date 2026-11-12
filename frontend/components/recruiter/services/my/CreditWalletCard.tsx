@@ -31,25 +31,25 @@ export default function CreditWalletCard({ onConverted }: { onConverted: (messag
             <Coins className="h-5 w-5 text-amber-600" aria-hidden />
           </span>
           <div>
-            <p className="text-on-surface-variant text-xs font-semibold">Ví credits</p>
+            <p className="text-on-surface-variant text-xs font-semibold">Credit wallet</p>
             <p className="text-on-surface text-2xl font-bold">{balance.toLocaleString('vi-VN')}</p>
             <p className="text-on-surface-variant text-xs">
               {balance === 0
-                ? 'Chưa có credits. Mua gói FLEX để dùng linh hoạt các tiện ích.'
+                ? 'No credits yet. Buy a FLEX package to use add-ons flexibly.'
                 : nearestExpiryAt
-                  ? `Hạn dùng đến ${formatDate(nearestExpiryAt)}`
-                  : 'Không giới hạn thời gian dùng'}
+                  ? `Valid until ${formatDate(nearestExpiryAt)}`
+                  : 'No expiry'}
             </p>
           </div>
         </div>
 
         {balance > 0 ? (
           <Button size="sm" onClick={() => setIsOpen(true)}>
-            Đổi credits lấy tiện ích
+            Exchange credits for add-ons
           </Button>
         ) : (
           <Link href={ROUTES.RECRUITER_SERVICES} className="text-primary text-sm font-semibold hover:underline">
-            Xem gói credits
+            View credit packages
           </Link>
         )}
       </div>
@@ -60,15 +60,15 @@ export default function CreditWalletCard({ onConverted }: { onConverted: (messag
         className="text-on-surface-variant mt-3 inline-flex items-center gap-1 text-xs font-semibold hover:underline"
       >
         {showLedger ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-        Lịch sử đổi credits
+        Credit exchange history
       </button>
 
       {showLedger && (
         <div className="mt-2 overflow-hidden rounded-xl border border-dashed border-slate-200">
           {ledger.isPending ? (
-            <p className="text-on-surface-variant px-4 py-3 text-xs">Đang tải...</p>
+            <p className="text-on-surface-variant px-4 py-3 text-xs">Loading...</p>
           ) : ledger.isError || !ledger.data || ledger.data.items.length === 0 ? (
-            <p className="text-on-surface-variant px-4 py-3 text-xs">Chưa có giao dịch credits nào.</p>
+            <p className="text-on-surface-variant px-4 py-3 text-xs">No credit transactions yet.</p>
           ) : (
             <>
               <div className="max-h-56 overflow-y-auto">
@@ -96,7 +96,7 @@ export default function CreditWalletCard({ onConverted }: { onConverted: (messag
               {ledger.data.totalPages > 1 && (
                 <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50/70 px-4 py-2 text-[11px] text-slate-600">
                   <span>
-                    Trang {ledger.data.page + 1}/{ledger.data.totalPages} ({ledger.data.totalItems} giao dịch)
+                    Page {ledger.data.page + 1}/{ledger.data.totalPages} ({ledger.data.totalItems} transactions)
                   </span>
                   <div className="flex items-center gap-1.5">
                     <button
@@ -105,7 +105,7 @@ export default function CreditWalletCard({ onConverted }: { onConverted: (messag
                       onClick={() => setLedgerPage((p) => Math.max(0, p - 1))}
                       className="cursor-pointer rounded border border-slate-200 bg-white px-2 py-0.5 font-semibold hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      Trước
+                      Previous
                     </button>
                     <button
                       type="button"
@@ -140,7 +140,7 @@ export default function CreditWalletCard({ onConverted }: { onConverted: (messag
               onSuccess: () => {
                 setIsOpen(false);
                 setError(null);
-                onConverted(`Đã đổi credits lấy ${quantity} × ${price.label}.`);
+                onConverted(`Exchanged credits for ${quantity} × ${price.label}.`);
               },
               onError: (cause) => setError(getErrorMessage(cause)),
             },

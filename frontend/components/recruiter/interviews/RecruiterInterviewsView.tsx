@@ -54,7 +54,7 @@ export default function RecruiterInterviewsView() {
         <div className="flex flex-col items-center gap-3 py-14 text-center">
           <p className="text-sm font-semibold text-slate-700">{getErrorMessage(error)}</p>
           <Button variant="outline" onClick={() => refetch()}>
-            Thử lại
+            Try again
           </Button>
         </div>
       ) : data && data.items.length > 0 ? (
@@ -82,10 +82,10 @@ export default function RecruiterInterviewsView() {
           {data.totalPages > 1 && (
             <div className="flex items-center justify-between pt-2">
               <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
-                Trước
+                Previous
               </Button>
               <span className="text-xs text-slate-500">
-                Trang {page + 1} / {data.totalPages}
+                Page {page + 1} / {data.totalPages}
               </span>
               <Button
                 variant="outline"
@@ -93,15 +93,17 @@ export default function RecruiterInterviewsView() {
                 disabled={page + 1 >= data.totalPages}
                 onClick={() => setPage(page + 1)}
               >
-                Sau
+                Next
               </Button>
             </div>
           )}
         </>
       ) : (
         <div className="rounded-xl border border-dashed border-slate-300 bg-white py-14 text-center">
-          <p className="text-sm font-semibold text-slate-700">Chưa có lịch phỏng vấn nào</p>
-          <p className="mt-1 text-xs text-slate-500">Mở một hồ sơ ứng tuyển và bấm “Mời phỏng vấn” để đặt lịch.</p>
+          <p className="text-sm font-semibold text-slate-700">No interviews scheduled yet</p>
+          <p className="mt-1 text-xs text-slate-500">
+            Open an application and click “Invite to interview” to schedule one.
+          </p>
         </div>
       )}
     </div>

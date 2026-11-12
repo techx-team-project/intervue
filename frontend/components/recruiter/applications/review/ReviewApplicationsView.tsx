@@ -49,10 +49,10 @@ export default function ReviewApplicationsView() {
             setJobId(event.target.value ? Number(event.target.value) : undefined);
             setPage(1);
           }}
-          aria-label="Lọc theo tin tuyển dụng"
+          aria-label="Filter by job"
           className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 focus:border-emerald-600 focus:outline-none sm:w-72"
         >
-          <option value="">Tất cả tin tuyển dụng</option>
+          <option value="">All jobs</option>
           {(jobs.data?.items ?? [])
             .filter((job) => job.status !== 'DRAFT')
             .map((job) => (
@@ -70,14 +70,14 @@ export default function ReviewApplicationsView() {
               setSearch(event.target.value);
               setPage(1);
             }}
-            placeholder="Tìm theo tên hoặc email ứng viên"
-            aria-label="Tìm ứng viên"
+            placeholder="Search by candidate name or email"
+            aria-label="Search candidates"
             className="h-10 w-full rounded-xl border border-slate-300 bg-white pr-3 pl-9 text-sm focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
           />
         </label>
       </div>
 
-      <div role="tablist" aria-label="Trạng thái hồ sơ" className="flex flex-wrap gap-1.5">
+      <div role="tablist" aria-label="Application status" className="flex flex-wrap gap-1.5">
         {REVIEW_TABS.map((tab) => (
           <button
             key={tab.label}
@@ -108,14 +108,14 @@ export default function ReviewApplicationsView() {
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-6 py-12 text-center">
           <p className="text-sm font-semibold text-rose-700">{getErrorMessage(list.error)}</p>
           <Button variant="outline" size="sm" onClick={() => list.refetch()}>
-            Thử lại
+            Try again
           </Button>
         </div>
       ) : items.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center">
           <Inbox className="h-9 w-9 text-slate-300" aria-hidden />
-          <p className="text-sm font-semibold text-slate-700">Chưa có hồ sơ nào</p>
-          <p className="text-xs text-slate-500">Hồ sơ ứng viên nộp vào tin của công ty bạn sẽ hiện ở đây.</p>
+          <p className="text-sm font-semibold text-slate-700">No applications yet</p>
+          <p className="text-xs text-slate-500">Applications submitted to your company&apos;s jobs will appear here.</p>
         </div>
       ) : (
         <>

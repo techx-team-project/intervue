@@ -25,7 +25,7 @@ export default function JobPostsBulkBar({
         <span className="bg-primary flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white">
           <Check className="h-3.5 w-3.5 stroke-[3]" />
         </span>
-        <span className="text-xs font-bold whitespace-nowrap">Đã chọn {selectedCount} tin</span>
+        <span className="text-xs font-bold whitespace-nowrap">{selectedCount} selected</span>
       </div>
 
       <div className="h-4 w-px bg-slate-700" />
@@ -38,7 +38,7 @@ export default function JobPostsBulkBar({
           className="flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-200 transition-colors hover:bg-slate-800 hover:text-white disabled:opacity-50"
         >
           <Pause className="h-3.5 w-3.5" />
-          <span>Tạm dừng</span>
+          <span>Pause</span>
         </button>
 
         <button
@@ -48,7 +48,7 @@ export default function JobPostsBulkBar({
           className="flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-rose-300 transition-colors hover:bg-rose-950/60 hover:text-rose-200 disabled:opacity-50"
         >
           <XCircle className="h-3.5 w-3.5" />
-          <span>Đóng tin</span>
+          <span>Close job posts</span>
         </button>
       </div>
 
@@ -59,10 +59,10 @@ export default function JobPostsBulkBar({
         disabled={isPending}
         onClick={onDeselectAll}
         className="text-outline flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-medium transition-colors hover:bg-slate-800 hover:text-slate-200 disabled:opacity-50"
-        title="Bỏ chọn tất cả"
+        title="Clear selection"
       >
         <X className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Bỏ chọn</span>
+        <span className="hidden sm:inline">Clear</span>
       </button>
     </div>
   );

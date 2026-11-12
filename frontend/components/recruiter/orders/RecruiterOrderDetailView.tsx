@@ -50,13 +50,13 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
     return (
       <div className="border-outline-variant rounded-xl border border-dashed px-6 py-16 text-center">
         <AlertCircle className="text-on-surface-variant mx-auto h-8 w-8" />
-        <p className="text-on-surface mt-3 text-base font-bold">Không tìm thấy đơn hàng</p>
+        <p className="text-on-surface mt-3 text-base font-bold">Order not found</p>
         <p className="text-on-surface-variant mt-1 text-sm">{getErrorMessage(error)}</p>
         <Link
           href={ROUTES.RECRUITER_ORDERS}
           className="bg-primary mt-5 inline-flex h-10 items-center justify-center rounded-lg px-6 text-sm font-semibold text-white transition hover:brightness-95"
         >
-          Quay lại danh sách đơn hàng
+          Back to orders
         </Link>
       </div>
     );
@@ -72,7 +72,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
           className="border-outline-variant text-on-surface-variant hover:bg-surface-container-low inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-sm font-medium transition"
         >
           <ArrowLeft className="h-4 w-4" />
-          Quay lại
+          Back
         </Link>
         <h1 className="text-on-surface font-mono text-lg font-bold">{data.code}</h1>
         <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${ORDER_STATUS_STYLE[data.status]}`}>
@@ -94,9 +94,9 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant border-b text-xs font-semibold tracking-wider uppercase">
-                <th className="py-3 pr-4 pl-5">Dịch vụ</th>
+                <th className="py-3 pr-4 pl-5">Service</th>
                 <th className="px-4 py-3 text-center">SL</th>
-                <th className="py-3 pr-5 pl-4 text-right">Thành tiền</th>
+                <th className="py-3 pr-5 pl-4 text-right">Amount</th>
               </tr>
             </thead>
             <tbody className="divide-outline-variant divide-y">
@@ -114,7 +114,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
                     )}
                     {item.bookedWeeks.length > 0 && (
                       <p className="text-on-surface-variant mt-1.5 text-xs">
-                        Tuần: {item.bookedWeeks.map((week) => formatDate(week)).join(', ')}
+                        Weeks: {item.bookedWeeks.map((week) => formatDate(week)).join(', ')}
                       </p>
                     )}
                   </td>
@@ -131,7 +131,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
         <div className="space-y-4">
           <dl className="border-outline-variant divide-outline-variant divide-y rounded-xl border bg-white">
             <div className="flex items-center justify-between px-4 py-3 text-sm">
-              <dt className="text-on-surface-variant">Tạm tính</dt>
+              <dt className="text-on-surface-variant">Subtotal</dt>
               <dd className="text-on-surface font-semibold">{formatServicePrice(data.subtotal, data.currency)}</dd>
             </div>
             <div className="flex items-center justify-between px-4 py-3 text-sm">
@@ -139,7 +139,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
               <dd className="text-on-surface font-semibold">{formatServicePrice(data.vatAmount, data.currency)}</dd>
             </div>
             <div className="flex items-center justify-between px-4 py-3.5">
-              <dt className="text-on-surface text-sm font-bold">Tổng cộng</dt>
+              <dt className="text-on-surface text-sm font-bold">Total</dt>
               <dd className="text-primary text-base font-bold">
                 {formatServicePrice(data.totalAmount, data.currency)}
               </dd>
@@ -149,23 +149,23 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
           {invoice && (
             <div className="border-outline-variant rounded-xl border bg-white p-4">
               <p className="text-on-surface text-sm font-bold">
-                Hoá đơn {invoice.invoiceType === 'BUSINESS' ? 'doanh nghiệp' : 'cá nhân'}
+                {invoice.invoiceType === 'BUSINESS' ? 'Business' : 'Personal'} invoice
               </p>
               <dl className="text-on-surface-variant mt-2 space-y-1 text-xs">
                 {invoice.invoiceType === 'BUSINESS' ? (
                   <>
-                    <div>Mã số thuế: {invoice.taxId ?? '—'}</div>
-                    <div>Đơn vị: {invoice.companyName ?? '—'}</div>
-                    <div>Địa chỉ: {invoice.companyAddress ?? '—'}</div>
+                    <div>Tax ID: {invoice.taxId ?? '—'}</div>
+                    <div>Company: {invoice.companyName ?? '—'}</div>
+                    <div>Address: {invoice.companyAddress ?? '—'}</div>
                   </>
                 ) : (
                   <>
-                    <div>Họ tên: {invoice.fullName ?? '—'}</div>
+                    <div>Full name: {invoice.fullName ?? '—'}</div>
                     <div>CCCD/MST: {invoice.identityNumber ?? '—'}</div>
-                    <div>Địa chỉ: {invoice.personalAddress ?? '—'}</div>
+                    <div>Address: {invoice.personalAddress ?? '—'}</div>
                   </>
                 )}
-                <div>Email nhận hoá đơn: {invoice.recipientEmail}</div>
+                <div>Invoice email: {invoice.recipientEmail}</div>
               </dl>
             </div>
           )}
@@ -179,7 +179,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
               className="border-outline-variant text-on-surface-variant hover:border-primary hover:bg-primary-light hover:text-primary inline-flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white text-sm font-semibold transition"
             >
               <FileDown className="h-4 w-4" aria-hidden />
-              Tải hoá đơn (PDF)
+              Download invoice (PDF)
             </button>
           )}
 
@@ -193,7 +193,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
               }}
               className="border-outline-variant text-on-surface-variant inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-lg border bg-white text-sm font-semibold transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700 disabled:opacity-50"
             >
-              Huỷ đơn hàng
+              Cancel order
             </button>
           )}
         </div>

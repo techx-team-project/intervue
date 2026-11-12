@@ -118,7 +118,7 @@ export default function CouponWalletCard({
     }
     copyTimerRef.current = window.setTimeout(() => setCopied(false), 1800);
     if (!isPreview) {
-      toast.success(`Đã sao chép mã ${voucher.code}.`);
+      toast.success(`Copied code ${voucher.code}.`);
     }
   };
 
@@ -130,7 +130,7 @@ export default function CouponWalletCard({
           role="tooltip"
           className="pointer-events-none invisible absolute bottom-[calc(100%+10px)] left-1/2 z-40 w-[min(340px,calc(100vw-2.5rem))] -translate-x-1/2 translate-y-1 rounded-xl bg-[#243242] p-4 text-white opacity-0 shadow-xl transition-all duration-150 group-focus-within/coupon:visible group-focus-within/coupon:translate-y-0 group-focus-within/coupon:opacity-100 group-hover/coupon:visible group-hover/coupon:translate-y-0 group-hover/coupon:opacity-100"
         >
-          <p className="mb-2.5 text-[13px] font-bold text-white">Điều kiện áp dụng:</p>
+          <p className="mb-2.5 text-[13px] font-bold text-white">Terms and conditions:</p>
           <ul className="space-y-2">
             {conditions.map((condition, index) => (
               <li
@@ -243,22 +243,18 @@ export default function CouponWalletCard({
                 variant === 'used' ? 'text-slate-600 dark:text-slate-300' : theme.headlineTextClass,
               )}
             >
-              {voucher.label || 'Ưu đãi dịch vụ InterVue'}
+              {voucher.label || 'InterVue service offer'}
             </p>
 
             {variant === 'available' ? (
               <p className="dark:text-forest-300 mt-2 text-[12px] text-slate-600 tabular-nums">
-                {countdown
-                  ? `Thời gian còn lại: ${countdown}`
-                  : voucher.endsAt
-                    ? 'Sắp hết hiệu lực'
-                    : 'Hiệu lực: Không giới hạn thời gian'}
+                {countdown ? `Time left: ${countdown}` : voucher.endsAt ? 'Expiring soon' : 'Validity: No time limit'}
               </p>
             ) : (
               <p className="dark:text-forest-300 mt-2 truncate text-[12px] text-slate-500">
-                {voucher.usedAt ? `Đã dùng ${new Date(voucher.usedAt).toLocaleDateString('vi-VN')}` : 'Đã sử dụng'}
-                {voucher.orderCode ? ` · Đơn #${voucher.orderCode}` : ''}
-                {typeof voucher.discountAmount === 'number' ? ` · Giảm ${formatVnd(voucher.discountAmount)}` : ''}
+                {voucher.usedAt ? `Used ${new Date(voucher.usedAt).toLocaleDateString('vi-VN')}` : 'Used'}
+                {voucher.orderCode ? ` · Order #${voucher.orderCode}` : ''}
+                {typeof voucher.discountAmount === 'number' ? ` · Discount ${formatVnd(voucher.discountAmount)}` : ''}
               </p>
             )}
           </div>
@@ -267,7 +263,7 @@ export default function CouponWalletCard({
             <button
               type="button"
               onClick={() => void handleCopyCode()}
-              title="Nhấn để sao chép mã ưu đãi"
+              title="Click to copy the offer code"
               className={cn(
                 'inline-flex max-w-[144px] cursor-pointer items-center gap-1 rounded-[4px] px-2.5 py-1.5 text-[12px] font-bold tracking-wide transition hover:brightness-95',
                 variant === 'used'
@@ -280,7 +276,7 @@ export default function CouponWalletCard({
               ) : (
                 <Copy className="h-3 w-3 shrink-0 opacity-70" />
               )}
-              <span className="truncate font-mono">{copied ? 'Đã chép' : voucher.code || 'CODE'}</span>
+              <span className="truncate font-mono">{copied ? 'Copied' : voucher.code || 'CODE'}</span>
             </button>
 
             {variant === 'available' ? (
@@ -291,7 +287,7 @@ export default function CouponWalletCard({
                     theme.buttonBgClass,
                   )}
                 >
-                  Dùng ngay
+                  Use now
                 </span>
               ) : (
                 <Link
@@ -301,12 +297,12 @@ export default function CouponWalletCard({
                     theme.buttonBgClass,
                   )}
                 >
-                  Dùng ngay
+                  Use now
                 </Link>
               )
             ) : (
               <span className="dark:bg-forest-850 dark:text-forest-300 inline-flex shrink-0 items-center justify-center rounded-[4px] bg-slate-200 px-3.5 py-1.5 text-[12px] font-semibold text-slate-600">
-                Đã sử dụng
+                Used
               </span>
             )}
           </div>

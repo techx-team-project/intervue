@@ -60,20 +60,20 @@ export default function AiJdGeneratorModal({ isOpen, onClose, values, onApply }:
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Tạo nội dung JD bằng AI"
-      description="AI tổng hợp từ tiêu đề, cấp bậc, hình thức làm việc, kỹ năng và ghi chú thêm để viết Mô tả, Yêu cầu, Quyền lợi."
+      title="Generate job description with AI"
+      description="AI uses the title, level, working arrangement, skills and extra notes to write the Description, Requirements and Benefits."
       maxWidth="2xl"
     >
       <div className="space-y-4">
         <div className="border-outline-variant bg-surface-container-low/60 flex flex-wrap items-center justify-between gap-2 rounded-xl border px-3.5 py-2.5 text-xs">
           <div className="text-on-surface-variant">
-            Vị trí: <strong className="text-on-surface">{trimmedTitle || 'Chưa nhập tiêu đề'}</strong>
+            Position: <strong className="text-on-surface">{trimmedTitle || 'No title yet'}</strong>
             {values.skills.length > 0 && ` · ${values.skills.map((skill) => skill.name).join(', ')}`}
           </div>
           {quota.data && (
             <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 font-semibold text-emerald-800">
-              Còn {quota.data.totalRemaining} lượt ({quota.data.freeRemaining} miễn phí
-              {quota.data.paidRemaining > 0 ? ` + ${quota.data.paidRemaining} từ gói` : ''})
+              {quota.data.totalRemaining} left ({quota.data.freeRemaining} free
+              {quota.data.paidRemaining > 0 ? ` + ${quota.data.paidRemaining} from plan` : ''})
             </span>
           )}
         </div>
@@ -81,23 +81,23 @@ export default function AiJdGeneratorModal({ isOpen, onClose, values, onApply }:
         {!trimmedTitle && (
           <div className="flex items-center gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3.5 py-2.5 text-xs font-medium text-amber-900">
             <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" />
-            Vui lòng nhập Tiêu đề tin tuyển dụng trước khi dùng AI tạo JD.
+            Please enter the job title before using AI to generate a JD.
           </div>
         )}
 
         {noQuotaLeft && (
           <div className="flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-xs font-medium text-rose-800">
             <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
-            Bạn đã hết lượt tạo JD miễn phí tháng này. Hãy mua thêm gói AI JD Generator trong Cửa hàng dịch vụ.
+            You have used all free JD generations this month. Buy an AI JD Generator plan in the Service Store.
           </div>
         )}
 
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-on-surface text-sm font-semibold">Ngôn ngữ JD:</span>
+          <span className="text-on-surface text-sm font-semibold">JD language:</span>
           <div className="border-outline-variant inline-flex rounded-lg border bg-white p-0.5">
             {(
               [
-                ['vi', 'Tiếng Việt'],
+                ['vi', 'Vietnamese'],
                 ['en', 'English'],
               ] as const
             ).map(([code, label]) => (
@@ -116,9 +116,9 @@ export default function AiJdGeneratorModal({ isOpen, onClose, values, onApply }:
         </div>
 
         <Textarea
-          label="Ghi chú thêm cho AI (không bắt buộc)"
+          label="Extra notes for AI (optional)"
           rows={3}
-          placeholder="Ví dụ: Dự án thương mại điện tử, team Agile 12 người, yêu cầu kinh nghiệm microservices và tối ưu SQL..."
+          placeholder="e.g. E-commerce project, 12-person Agile team, microservices and SQL optimization experience required..."
           value={notes}
           onChange={(event) => setNotes(event.target.value)}
         />
@@ -138,16 +138,16 @@ export default function AiJdGeneratorModal({ isOpen, onClose, values, onApply }:
             disabled={!trimmedTitle || noQuotaLeft}
             isLoading={generate.isPending}
           >
-            {draft ? 'Tạo lại bản nháp khác' : 'Tạo nội dung JD'}
+            {draft ? 'Regenerate draft' : 'Generate JD'}
           </Button>
         </div>
 
         {draft && (
           <div className="border-outline-variant bg-surface-container-low/40 space-y-3 rounded-2xl border p-4">
             <div className="max-h-72 space-y-3 overflow-y-auto pr-1">
-              <PreviewBlock title="Mô tả công việc" content={draft.description} />
-              <PreviewBlock title="Yêu cầu ứng viên" content={draft.requirements} />
-              <PreviewBlock title="Quyền lợi" content={draft.benefits} />
+              <PreviewBlock title="Job description" content={draft.description} />
+              <PreviewBlock title="Candidate requirements" content={draft.requirements} />
+              <PreviewBlock title="Benefits" content={draft.benefits} />
             </div>
 
             {hasExisting && (
@@ -158,20 +158,20 @@ export default function AiJdGeneratorModal({ isOpen, onClose, values, onApply }:
                   onChange={(event) => setOverwriteFilled(event.target.checked)}
                   className="accent-primary h-4 w-4"
                 />
-                Ghi đè cả những mục đã có nội dung (bỏ chọn nếu chỉ điền các mục còn trống)
+                Overwrite sections that already have content (uncheck to fill only empty sections)
               </label>
             )}
 
             <div className="flex justify-end gap-2 pt-1">
               <Button type="button" variant="neutral" onClick={onClose}>
-                Đóng
+                Close
               </Button>
               <Button
                 type="button"
                 leftIcon={<Check className="h-4 w-4" />}
                 onClick={() => onApply(draft, overwriteFilled)}
               >
-                Áp dụng vào tin tuyển dụng
+                Apply to job post
               </Button>
             </div>
           </div>

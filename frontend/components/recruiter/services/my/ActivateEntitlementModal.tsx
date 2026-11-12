@@ -32,41 +32,41 @@ export default function ActivateEntitlementModal({
   const [jobId, setJobId] = useState('');
 
   const options = [
-    { value: '', label: '— Chọn tin tuyển dụng —' },
+    { value: '', label: '— Select a job —' },
     ...(data?.items ?? []).map((job) => ({ value: String(job.id), label: job.title })),
   ];
 
   const modalTitle = onCompany
-    ? 'Kích hoạt dịch vụ cho công ty'
+    ? 'Activate service for the company'
     : isRetop
-      ? 'Đẩy top tin tuyển dụng'
-      : 'Áp dụng dịch vụ cho tin tuyển dụng';
+      ? 'Boost job to top'
+      : 'Apply service to a job';
 
   return (
     <Modal isOpen={entitlement !== null} onClose={onClose} title={modalTitle} maxWidth="lg">
       {entitlement && (
         <>
           <p className="text-on-surface-variant text-sm">
-            Dịch vụ: <strong className="text-on-surface">{entitlement.label}</strong> · còn{' '}
-            {entitlement.remainingQuantity}
-            {entitlement.durationDays ? ` · hiệu lực ${entitlement.durationDays} ngày` : ''}
+            Service: <strong className="text-on-surface">{entitlement.label}</strong> · {entitlement.remainingQuantity}{' '}
+            left
+            {entitlement.durationDays ? ` · valid for ${entitlement.durationDays} days` : ''}
           </p>
 
           {onCompany ? (
             <p className="text-on-surface-variant mt-4 text-sm">
-              Dịch vụ này áp dụng cho toàn bộ công ty, không gắn với một tin tuyển dụng cụ thể.
+              This service applies to the whole company and is not tied to a specific job.
             </p>
           ) : (
             <div className="mt-4">
               <Select
-                label="Tin tuyển dụng đang chạy"
+                label="Active jobs"
                 value={jobId}
                 onChange={(event) => setJobId(event.target.value)}
                 options={options}
               />
               {(data?.items ?? []).length === 0 && (
                 <p className="mt-2 text-xs font-semibold text-amber-700">
-                  Bạn chưa có tin nào đang hiển thị. Hãy đăng tin trước khi áp dụng dịch vụ này.
+                  You have no jobs currently live. Post a job before applying this service.
                 </p>
               )}
             </div>
@@ -77,11 +77,11 @@ export default function ActivateEntitlementModal({
             <p className="text-sm leading-relaxed text-amber-900">
               {isRetop ? (
                 <>
-                  Tin tuyển dụng được chọn sẽ lên đầu danh sách ngay lập tức và <strong>trừ 1 lượt đẩy top</strong>.
+                  The selected job moves to the top of the list immediately and <strong>uses 1 boost</strong>.
                 </>
               ) : (
                 <>
-                  Đã áp dụng thì <strong>không gỡ ra được</strong>. Thời gian hiệu lực bắt đầu tính từ lúc này.
+                  Once applied it <strong>cannot be removed</strong>. The validity period starts now.
                 </>
               )}
             </p>
@@ -91,14 +91,14 @@ export default function ActivateEntitlementModal({
 
           <div className="mt-5 flex justify-end gap-3">
             <Button variant="neutral" onClick={onClose}>
-              Huỷ
+              Cancel
             </Button>
             <Button
               onClick={() => onConfirm(onCompany ? undefined : Number(jobId))}
               disabled={!onCompany && !jobId}
               isLoading={isBusy}
             >
-              {isRetop ? 'Đẩy top ngay' : 'Xác nhận áp dụng'}
+              {isRetop ? 'Boost now' : 'Confirm'}
             </Button>
           </div>
         </>

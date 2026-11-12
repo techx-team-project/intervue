@@ -3,14 +3,14 @@ import MyServicesView from '@/components/recruiter/services/my/MyServicesView';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Dịch vụ của tôi | InterVue Recruiter',
-  description: 'Dịch vụ doanh nghiệp đã mua, còn lại bao nhiêu và đang chạy trên tin nào',
+  title: 'My Services | InterVue Recruiter',
+  description: 'Services your company has purchased, what is left and which jobs they are running on',
 };
 
 export default function MyServicesPage() {
   return (
     <>
-      <PageHeader title="Dịch vụ của tôi" description="Dịch vụ đã mua của doanh nghiệp và tình trạng sử dụng" />
+      <PageHeader title="My Services" description="Purchased services of your company and their usage" />
       <MyServicesView />
     </>
   );

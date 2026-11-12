@@ -13,7 +13,7 @@ const RANGES = [7, 30] as const;
 const BAR_AREA_PX = 128;
 const MIN_BAR_PX = 2;
 
-const numberFormatter = new Intl.NumberFormat('vi-VN');
+const numberFormatter = new Intl.NumberFormat('en-US');
 
 function Tile({ label, value }: { label: string; value: string }) {
   return (
@@ -36,14 +36,8 @@ export default function JobStatsModal({ job, onClose }: JobStatsModalProps) {
   const conversion = data?.conversionRate == null ? '—' : `${data.conversionRate.toFixed(1)}%`;
 
   return (
-    <Modal
-      isOpen={job !== null}
-      onClose={onClose}
-      title="Thống kê tin tuyển dụng"
-      description={job?.title}
-      maxWidth="lg"
-    >
-      <div className="flex justify-end gap-1.5" role="tablist" aria-label="Khoảng thời gian">
+    <Modal isOpen={job !== null} onClose={onClose} title="Job post statistics" description={job?.title} maxWidth="lg">
+      <div className="flex justify-end gap-1.5" role="tablist" aria-label="Time range">
         {RANGES.map((range) => (
           <button
             key={range}
@@ -58,7 +52,7 @@ export default function JobStatsModal({ job, onClose }: JobStatsModalProps) {
                 : 'border-outline-variant text-on-surface-variant hover:bg-surface-container-low bg-white',
             )}
           >
-            {range} ngày
+            {range} days
           </button>
         ))}
       </div>
@@ -72,20 +66,20 @@ export default function JobStatsModal({ job, onClose }: JobStatsModalProps) {
       ) : (
         <div className="mt-4 space-y-5">
           <dl className="grid grid-cols-3 gap-3">
-            <Tile label="Lượt xem" value={numberFormatter.format(data.totalViews)} />
-            <Tile label="Hồ sơ ứng tuyển" value={numberFormatter.format(data.totalApplications)} />
-            <Tile label="Tỉ lệ chuyển đổi" value={conversion} />
+            <Tile label="Views" value={numberFormatter.format(data.totalViews)} />
+            <Tile label="Applications" value={numberFormatter.format(data.totalApplications)} />
+            <Tile label="Conversion rate" value={conversion} />
           </dl>
 
           {data.totalViews === 0 && data.totalApplications === 0 ? (
             <p className="text-on-surface-variant py-6 text-center text-sm">
-              Chưa có lượt xem hay hồ sơ nào trong {days} ngày qua.
+              No views or applications in the last {days} days.
             </p>
           ) : (
             <div>
               <div
                 role="img"
-                aria-label={`Biểu đồ lượt xem và hồ sơ ứng tuyển trong ${days} ngày qua`}
+                aria-label={`Chart of views and applications over the last ${days} days`}
                 className="flex items-end gap-0.5"
                 style={{ height: BAR_AREA_PX }}
               >
@@ -93,7 +87,7 @@ export default function JobStatsModal({ job, onClose }: JobStatsModalProps) {
                   <div
                     key={day.date}
                     className="flex h-full min-w-0 flex-1 items-end justify-center gap-px"
-                    title={`${formatDate(day.date)}: ${day.views} lượt xem, ${day.applications} hồ sơ`}
+                    title={`${formatDate(day.date)}: ${day.views} views, ${day.applications} applications`}
                   >
                     <span
                       className="bg-primary/30 w-full rounded-t-sm"
@@ -111,11 +105,11 @@ export default function JobStatsModal({ job, onClose }: JobStatsModalProps) {
                 <span className="flex items-center gap-3">
                   <span className="flex items-center gap-1.5">
                     <span className="bg-primary/30 h-2.5 w-2.5 rounded-sm" aria-hidden />
-                    Lượt xem
+                    Views
                   </span>
                   <span className="flex items-center gap-1.5">
                     <span className="bg-primary-deep h-2.5 w-2.5 rounded-sm" aria-hidden />
-                    Hồ sơ
+                    Applications
                   </span>
                 </span>
                 <span>{formatDate(data.daily[data.daily.length - 1].date)}</span>

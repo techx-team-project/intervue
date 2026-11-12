@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
 
-export const JOB_FORM_STEPS = ['Thông tin chính', 'Nội dung', 'Xem lại & đăng'] as const;
+export const JOB_FORM_STEPS = ['Main info', 'Content', 'Review & publish'] as const;
 
 interface JobFormStepperProps {
   current: number;
@@ -11,7 +11,7 @@ interface JobFormStepperProps {
 
 export default function JobFormStepper({ current, reached, onSelect }: JobFormStepperProps) {
   return (
-    <ol className="border-outline-variant flex border-b" aria-label="Các bước đăng tin">
+    <ol className="border-outline-variant flex border-b" aria-label="Posting steps">
       {JOB_FORM_STEPS.map((label, index) => {
         const done = index < current;
         const isCurrent = index === current;

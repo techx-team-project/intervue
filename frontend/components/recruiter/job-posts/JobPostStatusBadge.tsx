@@ -5,12 +5,12 @@ const STATUS_META: Record<
   JobStatus,
   { label: string; variant: 'default' | 'success' | 'warning' | 'danger' | 'info' }
 > = {
-  DRAFT: { label: 'Bản nháp', variant: 'default' },
-  PUBLISHED: { label: 'Đang tuyển', variant: 'success' },
-  PAUSED: { label: 'Tạm dừng', variant: 'warning' },
-  CLOSED: { label: 'Đã đóng', variant: 'default' },
-  EXPIRED: { label: 'Hết hạn', variant: 'danger' },
-  HIDDEN_BY_ADMIN: { label: 'Bị ẩn', variant: 'danger' },
+  DRAFT: { label: 'Draft', variant: 'default' },
+  PUBLISHED: { label: 'Hiring', variant: 'success' },
+  PAUSED: { label: 'Paused', variant: 'warning' },
+  CLOSED: { label: 'Closed', variant: 'default' },
+  EXPIRED: { label: 'Expired', variant: 'danger' },
+  HIDDEN_BY_ADMIN: { label: 'Hidden', variant: 'danger' },
 };
 
 interface JobPostStatusBadgeProps {

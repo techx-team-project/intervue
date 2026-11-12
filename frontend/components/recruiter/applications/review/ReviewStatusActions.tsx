@@ -25,7 +25,7 @@ export default function ReviewStatusActions({ application }: ReviewStatusActions
       { status, note: text },
       {
         onSuccess: () => {
-          toast.success('Đã cập nhật trạng thái hồ sơ.');
+          toast.success('Application status updated.');
           setRejecting(false);
           setNote('');
         },
@@ -37,7 +37,7 @@ export default function ReviewStatusActions({ application }: ReviewStatusActions
   const statuses = application.nextStatuses.filter((status) => status !== 'INTERVIEW');
 
   if (statuses.length === 0) {
-    return <p className="text-xs text-slate-500">Hồ sơ này không còn bước xử lý tiếp theo.</p>;
+    return <p className="text-xs text-slate-500">This application has no further steps.</p>;
   }
 
   return (
@@ -61,21 +61,21 @@ export default function ReviewStatusActions({ application }: ReviewStatusActions
         isOpen={rejecting}
         onClose={() => setRejecting(false)}
         maxWidth="md"
-        title="Từ chối hồ sơ này?"
-        description="Ứng viên sẽ nhận thông báo hồ sơ chưa phù hợp. Ghi chú bên dưới chỉ để nội bộ."
+        title="Reject this application?"
+        description="The candidate will be notified that their application was not a fit. The note below is internal only."
         footer={
           <div className="flex justify-end gap-2">
             <Button variant="ghost" onClick={() => setRejecting(false)}>
-              Hủy
+              Cancel
             </Button>
             <Button variant="danger" isLoading={changeStatus.isPending} onClick={() => move('REJECTED', note)}>
-              Từ chối
+              Reject
             </Button>
           </div>
         }
       >
         <Textarea
-          label="Lý do (nội bộ, không bắt buộc)"
+          label="Reason (internal, optional)"
           value={note}
           rows={3}
           maxLength={500}

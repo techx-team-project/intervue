@@ -3,14 +3,14 @@ import RecruiterTransactionsView from '@/components/recruiter/services/transacti
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Lịch sử giao dịch | InterVue Recruiter',
-  description: 'Toàn bộ giao dịch chuyển khoản và yêu cầu hoàn tiền của doanh nghiệp bạn',
+  title: 'Transaction History | InterVue Recruiter',
+  description: 'All bank transfers and refund requests of your company',
 };
 
 export default function RecruiterTransactionsPage() {
   return (
     <>
-      <PageHeader title="Lịch sử giao dịch" description="Theo dõi thanh toán và hoàn tiền ở một nơi" />
+      <PageHeader title="Transaction History" description="Track payments and refunds in one place" />
       <RecruiterTransactionsView />
     </>
   );

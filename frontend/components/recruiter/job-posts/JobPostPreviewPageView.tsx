@@ -17,16 +17,16 @@ interface JobPostPreviewPageViewProps {
 }
 
 export function recruiterJobToCandidateJobDetail(job: RecruiterJobPost): JobDetail {
-  const formatter = new Intl.NumberFormat('vi-VN');
-  let salaryDisplay = 'Thoả thuận';
+  const formatter = new Intl.NumberFormat('en-US');
+  let salaryDisplay = 'Negotiable';
   if (!job.salary.negotiable && (job.salary.min || job.salary.max)) {
     const curr = job.salary.currency || 'VND';
     if (job.salary.min && job.salary.max) {
       salaryDisplay = `${formatter.format(job.salary.min)} - ${formatter.format(job.salary.max)} ${curr}`;
     } else if (job.salary.min) {
-      salaryDisplay = `Từ ${formatter.format(job.salary.min)} ${curr}`;
+      salaryDisplay = `From ${formatter.format(job.salary.min)} ${curr}`;
     } else if (job.salary.max) {
-      salaryDisplay = `Lên đến ${formatter.format(job.salary.max)} ${curr}`;
+      salaryDisplay = `Up to ${formatter.format(job.salary.max)} ${curr}`;
     }
   }
 
@@ -40,24 +40,24 @@ export function recruiterJobToCandidateJobDetail(job: RecruiterJobPost): JobDeta
   };
 
   const levelLabels: Record<string, string> = {
-    INTERN: 'Thực tập sinh (Intern)',
-    JUNIOR: 'Junior (1-2 năm kinh nghiệm)',
-    MID: 'Middle (2-4 năm kinh nghiệm)',
-    SENIOR: 'Senior (4+ năm kinh nghiệm)',
-    LEAD: 'Trưởng nhóm / Quản lý (Lead)',
+    INTERN: 'Intern',
+    JUNIOR: 'Junior (1-2 years of experience)',
+    MID: 'Mid-level (2-4 years of experience)',
+    SENIOR: 'Senior (4+ years of experience)',
+    LEAD: 'Team lead / Manager (Lead)',
   };
 
   const arrangementLabels: Record<string, string> = {
-    ON_SITE: 'Làm việc trực tiếp tại văn phòng (On-site)',
-    HYBRID: 'Linh hoạt kết hợp (Hybrid)',
-    REMOTE: 'Làm việc từ xa hoàn toàn (Remote)',
-    FLEXIBLE: 'Thời gian linh hoạt (Flexible)',
+    ON_SITE: 'On-site at the office',
+    HYBRID: 'Hybrid',
+    REMOTE: 'Fully remote',
+    FLEXIBLE: 'Flexible hours',
   };
 
   const contractLabels: Record<string, string> = {
-    FULL_TIME: 'Toàn thời gian (Full-time)',
-    PART_TIME: 'Bán thời gian (Part-time)',
-    INTERNSHIP: 'Thực tập (Internship)',
+    FULL_TIME: 'Full-time',
+    PART_TIME: 'Part-time',
+    INTERNSHIP: 'Internship',
   };
 
   return {
@@ -65,16 +65,16 @@ export function recruiterJobToCandidateJobDetail(job: RecruiterJobPost): JobDeta
     slug: job.id,
     title: job.title || 'Untitled Job Post',
     company: {
-      name: job.companyName ?? 'Công ty của bạn',
+      name: job.companyName ?? 'Your company',
       logo: 'https://cdn-new.topcv.vn/unsafe/80x/https://static.topcv.vn/company_logos/68d4fafca98ba1758788348.png',
-      size: '50 - 150 nhân viên',
-      industry: 'Công nghệ thông tin / Phần mềm',
+      size: '50 - 150 employees',
+      industry: 'Information technology / Software',
       address: [job.location.address, job.location.city].filter(Boolean).join(', '),
       website: 'https://intervue.vn',
       isVerified: true,
       followers: '3.5k',
       description:
-        'InterVue là nền tảng tuyển dụng IT ứng dụng AI hàng đầu tại Việt Nam, kết nối hàng chục nghìn nhân tài công nghệ với các doanh nghiệp công nghệ hàng đầu.',
+        'InterVue is a leading AI-powered IT recruitment platform in Vietnam, connecting tens of thousands of tech professionals with top technology companies.',
     },
     salary: {
       display: salaryDisplay,
@@ -87,14 +87,14 @@ export function recruiterJobToCandidateJobDetail(job: RecruiterJobPost): JobDeta
       city: job.location.city ?? '',
       specificAddress: [job.location.address, job.location.city].filter(Boolean).join(', '),
     },
-    experience: (job.level && levelLabels[job.level]) || 'Tất cả cấp bậc',
-    deadline: job.expiresAt ? new Date(job.expiresAt).toLocaleDateString('vi-VN') : '30 ngày tới',
+    experience: (job.level && levelLabels[job.level]) || 'All levels',
+    deadline: job.expiresAt ? new Date(job.expiresAt).toLocaleDateString('en-US') : 'Next 30 days',
     daysRemaining: 30,
     level: (job.level && levelLabels[job.level]) || job.level || '',
-    recruitsCount: `${job.recruitsCount || 1} người`,
+    recruitsCount: `${job.recruitsCount || 1} people`,
     workingType: (job.workingArrangement && arrangementLabels[job.workingArrangement]) || job.workingArrangement || '',
     employmentType: (job.contractType && contractLabels[job.contractType]) || job.contractType || '',
-    gender: 'Không yêu cầu',
+    gender: 'Not required',
     isPro: false,
     isUrgent: false,
     tags: job.skills || [],
@@ -104,10 +104,10 @@ export function recruiterJobToCandidateJobDetail(job: RecruiterJobPost): JobDeta
     benefits: splitLines(job.benefits),
     workSchedule: {
       time: '08:30 - 18:00',
-      days: 'Thứ 2 - Thứ 6 (Nghỉ Thứ 7, CN)',
+      days: 'Monday - Friday (weekends off)',
     },
-    categories: [{ name: 'IT - Phần mềm', link: '/jobs' }],
-    verifiedBadges: ['Giấy phép kinh doanh đã xác thực', 'Nhà tuyển dụng xác minh'],
+    categories: [{ name: 'IT - Software', link: '/jobs' }],
+    verifiedBadges: ['Business license verified', 'Verified recruiter'],
     screeningQuestions: (job.screeningQuestions ?? []).map((question) => ({
       id: String(question.id),
       question: question.prompt,
@@ -127,7 +127,7 @@ export default function JobPostPreviewPageView({ initialJob }: JobPostPreviewPag
     const url = `${window.location.origin}/jobs/${job.id}`;
     navigator.clipboard.writeText(url);
     setHasCopied(true);
-    toast.success('Đã sao chép link công khai vào clipboard!');
+    toast.success('Public link copied to clipboard!');
     setTimeout(() => setHasCopied(false), 2000);
   };
 
@@ -157,23 +157,23 @@ export default function JobPostPreviewPageView({ initialJob }: JobPostPreviewPag
 
     // If company profile, open in new tab so preview context isn't lost
     if (href.startsWith('/companies/')) {
-      toast.info('Đang mở trang công ty trong tab mới để không làm gián đoạn xem trước.');
+      toast.info('Opening the company page in a new tab so your preview is not interrupted.');
       window.open(href, '_blank');
       return;
     }
 
     // If related job, open in new tab
     if (href.startsWith('/jobs/')) {
-      toast.info('Đang mở việc làm liên quan trong tab mới để không làm gián đoạn xem trước.');
+      toast.info('Opening the related job in a new tab so your preview is not interrupted.');
       window.open(href, '_blank');
       return;
     }
 
     // Candidate navigation links (Header, Breadcrumb, Footer)
     toast.warning(
-      'Bạn đang ở chế độ xem trước tin tuyển dụng. Thao tác điều hướng ngoài trang tạm thời bị khóa để không làm mất ngữ cảnh.',
+      'You are previewing this job post. Navigation away from this page is temporarily disabled so you do not lose context.',
       {
-        description: 'Để quay lại quản trị tin, vui lòng nhấn "Về danh sách tin" ở thanh trên cùng.',
+        description: 'To return to job management, click "Back to job posts" in the top bar.',
         duration: 3500,
       },
     );
@@ -193,15 +193,13 @@ export default function JobPostPreviewPageView({ initialJob }: JobPostPreviewPag
               className="flex items-center gap-1.5 rounded-lg border border-amber-300/80 bg-white px-2.5 py-1 font-semibold text-amber-900 transition-colors hover:bg-amber-100"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
-              <span>Về danh sách tin</span>
+              <span>Back to job posts</span>
             </Link>
 
             <div className="flex items-center gap-1.5 font-medium text-amber-950">
               <Sparkles className="h-4 w-4 text-amber-600" />
-              <span className="font-bold">Giao diện xem trước của Ứng viên (Candidate 1:1 Live Preview):</span>
-              <span className="hidden text-amber-800 md:inline">
-                Đây là giao diện chuẩn 100% như ứng viên nhìn thấy trên InterVue.
-              </span>
+              <span className="font-bold">Candidate view (1:1 live preview):</span>
+              <span className="hidden text-amber-800 md:inline">This is exactly what candidates see on InterVue.</span>
             </div>
           </div>
 
@@ -212,7 +210,7 @@ export default function JobPostPreviewPageView({ initialJob }: JobPostPreviewPag
               className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-amber-300/80 bg-white px-3 py-1 font-semibold text-amber-900 transition-colors hover:bg-amber-100"
             >
               {hasCopied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
-              <span>{hasCopied ? 'Đã chép link' : 'Copy link tin'}</span>
+              <span>{hasCopied ? 'Link copied' : 'Copy job link'}</span>
             </button>
 
             <Link
@@ -220,7 +218,7 @@ export default function JobPostPreviewPageView({ initialJob }: JobPostPreviewPag
               className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1 font-bold text-white shadow-xs transition-colors hover:bg-emerald-700"
             >
               <Pencil className="h-3.5 w-3.5" />
-              <span>Chỉnh sửa tin này</span>
+              <span>Edit this job post</span>
             </Link>
           </div>
         </div>

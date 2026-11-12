@@ -45,31 +45,26 @@ export default function CartInvoiceModal({
 
   const personalDocType = personalDraft.personalDocumentType ?? 'cccd';
 
-  const taxIdError =
-    touched.taxId && !isValidTaxId(businessDraft.taxId) ? 'Mã số thuế không hợp lệ (8–20 chữ số).' : null;
+  const taxIdError = touched.taxId && !isValidTaxId(businessDraft.taxId) ? 'Tax ID is invalid (8–20 digits).' : null;
   const companyNameError =
-    touched.companyName && !businessDraft.companyName.trim() ? 'Vui lòng nhập tên công ty / hộ kinh doanh.' : null;
+    touched.companyName && !businessDraft.companyName.trim() ? 'Please enter the company / business name.' : null;
   const companyAddressError =
-    touched.companyAddress && !businessDraft.companyAddress.trim() ? 'Vui lòng nhập địa chỉ công ty.' : null;
+    touched.companyAddress && !businessDraft.companyAddress.trim() ? 'Please enter the company address.' : null;
   const businessEmailError =
-    touched.businessEmail && !isValidInvoiceEmail(businessDraft.recipientEmail)
-      ? 'Email nhận hóa đơn điện tử không hợp lệ.'
-      : null;
+    touched.businessEmail && !isValidInvoiceEmail(businessDraft.recipientEmail) ? 'E-invoice email is invalid.' : null;
 
   const personalDocError =
     (touched.personalDoc || personalDraft.taxOrIdentityNumber.trim().length > 0) &&
     !isValidPersonalDocumentNumber(personalDocType, personalDraft.taxOrIdentityNumber)
       ? personalDocType === 'passport'
-        ? 'Số hộ chiếu không hợp lệ (6–20 ký tự chữ hoặc số).'
-        : 'Số CCCD không hợp lệ (gồm 12 chữ số).'
+        ? 'Passport number is invalid (6–20 letters or digits).'
+        : 'Citizen ID number is invalid (must be 12 digits).'
       : null;
-  const fullNameError = touched.fullName && !personalDraft.fullName.trim() ? 'Vui lòng nhập họ và tên.' : null;
+  const fullNameError = touched.fullName && !personalDraft.fullName.trim() ? 'Please enter your full name.' : null;
   const personalAddressError =
-    touched.personalAddress && !personalDraft.personalAddress.trim() ? 'Vui lòng nhập địa chỉ.' : null;
+    touched.personalAddress && !personalDraft.personalAddress.trim() ? 'Please enter your address.' : null;
   const personalEmailError =
-    touched.personalEmail && !isValidInvoiceEmail(personalDraft.recipientEmail)
-      ? 'Email nhận hóa đơn điện tử không hợp lệ.'
-      : null;
+    touched.personalEmail && !isValidInvoiceEmail(personalDraft.recipientEmail) ? 'E-invoice email is invalid.' : null;
 
   const isCurrentValid =
     activeType === 'business' ? isBusinessInvoiceComplete(businessDraft) : isPersonalInvoiceComplete(personalDraft);
@@ -77,8 +72,8 @@ export default function CartInvoiceModal({
 
   const ownerLabel =
     activeType === 'business'
-      ? businessDraft.companyName.trim() || 'đơn vị'
-      : personalDraft.fullName.trim() || 'người mua hàng';
+      ? businessDraft.companyName.trim() || 'the business'
+      : personalDraft.fullName.trim() || 'the buyer';
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -107,7 +102,7 @@ export default function CartInvoiceModal({
       onClose={onClose}
       maxWidth="lg"
       radius="xl"
-      title="Thông tin xuất hóa đơn"
+      title="Invoice information"
       footer={
         <>
           <button
@@ -115,7 +110,7 @@ export default function CartInvoiceModal({
             onClick={onClose}
             className="border-outline-variant bg-surface-container-high text-on-surface hover:bg-surface-container cursor-pointer rounded-lg border px-5 py-2 text-sm font-semibold transition"
           >
-            Đóng
+            Close
           </button>
           <button
             type="submit"
@@ -123,7 +118,7 @@ export default function CartInvoiceModal({
             disabled={!canSave}
             className="bg-primary cursor-pointer rounded-lg px-6 py-2 text-sm font-semibold text-white transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-45"
           >
-            Lưu
+            Save
           </button>
         </>
       }
@@ -132,13 +127,13 @@ export default function CartInvoiceModal({
         {/* Invoice type selector */}
         <div>
           <p className="text-on-surface text-sm font-semibold">
-            Loại hóa đơn <span className="text-rose-500">*</span>
+            Invoice type <span className="text-rose-500">*</span>
           </p>
           <div className="mt-2 flex flex-wrap gap-3">
             {(
               [
-                { value: 'business', label: 'Hóa đơn doanh nghiệp' },
-                { value: 'personal', label: 'Hóa đơn cá nhân' },
+                { value: 'business', label: 'Business invoice' },
+                { value: 'personal', label: 'Personal invoice' },
               ] as const
             ).map((option) => {
               const selected = activeType === option.value;
@@ -173,7 +168,7 @@ export default function CartInvoiceModal({
           <div className="space-y-3.5">
             <div>
               <label htmlFor="invoice-tax-id" className="text-on-surface block text-sm font-medium">
-                Mã số thuế <span className="text-rose-500">*</span>
+                Tax ID <span className="text-rose-500">*</span>
               </label>
               <input
                 id="invoice-tax-id"
@@ -181,7 +176,7 @@ export default function CartInvoiceModal({
                 value={businessDraft.taxId}
                 onBlur={() => markTouched('taxId')}
                 onChange={(e) => setBusinessDraft((prev) => ({ ...prev, taxId: e.target.value }))}
-                placeholder="Nhập mã số thuế doanh nghiệp"
+                placeholder="Enter the business tax ID"
                 className={cn(
                   'text-on-surface mt-1.5 w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm transition focus:outline-hidden',
                   taxIdError ? 'border-rose-500 focus:border-rose-500' : 'border-outline-variant focus:border-primary',
@@ -192,7 +187,7 @@ export default function CartInvoiceModal({
 
             <div>
               <label htmlFor="invoice-company-name" className="text-on-surface block text-sm font-medium">
-                Tên công ty/ Hộ kinh doanh <span className="text-rose-500">*</span>
+                Company / business name <span className="text-rose-500">*</span>
               </label>
               <input
                 id="invoice-company-name"
@@ -200,7 +195,7 @@ export default function CartInvoiceModal({
                 value={businessDraft.companyName}
                 onBlur={() => markTouched('companyName')}
                 onChange={(e) => setBusinessDraft((prev) => ({ ...prev, companyName: e.target.value }))}
-                placeholder="Nhập tên công ty hoặc hộ kinh doanh"
+                placeholder="Enter the company or business name"
                 className={cn(
                   'text-on-surface mt-1.5 w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm transition focus:outline-hidden',
                   companyNameError
@@ -213,7 +208,7 @@ export default function CartInvoiceModal({
 
             <div>
               <label htmlFor="invoice-company-address" className="text-on-surface block text-sm font-medium">
-                Địa chỉ công ty <span className="text-rose-500">*</span>
+                Company address <span className="text-rose-500">*</span>
               </label>
               <input
                 id="invoice-company-address"
@@ -221,7 +216,7 @@ export default function CartInvoiceModal({
                 value={businessDraft.companyAddress}
                 onBlur={() => markTouched('companyAddress')}
                 onChange={(e) => setBusinessDraft((prev) => ({ ...prev, companyAddress: e.target.value }))}
-                placeholder="Nhập địa chỉ đăng ký kinh doanh"
+                placeholder="Enter the registered business address"
                 className={cn(
                   'text-on-surface mt-1.5 w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm transition focus:outline-hidden',
                   companyAddressError
@@ -234,7 +229,7 @@ export default function CartInvoiceModal({
 
             <div>
               <label htmlFor="invoice-business-email" className="text-on-surface block text-sm font-medium">
-                Email nhận hóa đơn điện tử <span className="text-rose-500">*</span>
+                E-invoice email <span className="text-rose-500">*</span>
               </label>
               <input
                 id="invoice-business-email"
@@ -257,13 +252,14 @@ export default function CartInvoiceModal({
           <div className="space-y-3.5">
             <div>
               <span className="text-on-surface block text-sm font-medium">
-                {personalDocType === 'passport' ? 'Số hộ chiếu' : 'Số CCCD'} <span className="text-rose-500">*</span>
+                {personalDocType === 'passport' ? 'Passport number' : 'Citizen ID number'}{' '}
+                <span className="text-rose-500">*</span>
               </span>
               <div className="mt-1.5 flex items-center gap-5">
                 {(
                   [
                     { value: 'cccd', label: 'CCCD' },
-                    { value: 'passport', label: 'Hộ chiếu' },
+                    { value: 'passport', label: 'Passport' },
                   ] as const
                 ).map((docOption) => {
                   const selected = personalDocType === docOption.value;
@@ -291,7 +287,9 @@ export default function CartInvoiceModal({
                 value={personalDraft.taxOrIdentityNumber}
                 onBlur={() => markTouched('personalDoc')}
                 onChange={(e) => setPersonalDraft((prev) => ({ ...prev, taxOrIdentityNumber: e.target.value }))}
-                placeholder={personalDocType === 'passport' ? 'Nhập số hộ chiếu' : 'Nhập 12 chữ số CCCD'}
+                placeholder={
+                  personalDocType === 'passport' ? 'Enter the passport number' : 'Enter the 12-digit citizen ID number'
+                }
                 className={cn(
                   'text-on-surface mt-2 w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm transition focus:outline-hidden',
                   personalDocError
@@ -304,7 +302,7 @@ export default function CartInvoiceModal({
 
             <div>
               <label htmlFor="invoice-full-name" className="text-on-surface block text-sm font-medium">
-                Họ và tên <span className="text-rose-500">*</span>
+                Full name <span className="text-rose-500">*</span>
               </label>
               <input
                 id="invoice-full-name"
@@ -312,7 +310,7 @@ export default function CartInvoiceModal({
                 value={personalDraft.fullName}
                 onBlur={() => markTouched('fullName')}
                 onChange={(e) => setPersonalDraft((prev) => ({ ...prev, fullName: e.target.value }))}
-                placeholder="Nhập họ và tên người nhận hóa đơn"
+                placeholder="Enter the full name of the invoice recipient"
                 className={cn(
                   'text-on-surface mt-1.5 w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm transition focus:outline-hidden',
                   fullNameError
@@ -325,7 +323,7 @@ export default function CartInvoiceModal({
 
             <div>
               <label htmlFor="invoice-personal-address" className="text-on-surface block text-sm font-medium">
-                Địa chỉ <span className="text-rose-500">*</span>
+                Address <span className="text-rose-500">*</span>
               </label>
               <input
                 id="invoice-personal-address"
@@ -333,7 +331,7 @@ export default function CartInvoiceModal({
                 value={personalDraft.personalAddress}
                 onBlur={() => markTouched('personalAddress')}
                 onChange={(e) => setPersonalDraft((prev) => ({ ...prev, personalAddress: e.target.value }))}
-                placeholder="Nhập địa chỉ liên hệ"
+                placeholder="Enter the contact address"
                 className={cn(
                   'text-on-surface mt-1.5 w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm transition focus:outline-hidden',
                   personalAddressError
@@ -346,7 +344,7 @@ export default function CartInvoiceModal({
 
             <div>
               <label htmlFor="invoice-personal-email" className="text-on-surface block text-sm font-medium">
-                Email nhận hóa đơn điện tử <span className="text-rose-500">*</span>
+                E-invoice email <span className="text-rose-500">*</span>
               </label>
               <input
                 id="invoice-personal-email"
@@ -376,11 +374,10 @@ export default function CartInvoiceModal({
             className="text-primary mt-0.5 h-4 w-4 shrink-0 rounded accent-[#00b14f]"
           />
           <span>
-            Tôi xác nhận mình là người có thẩm quyền hoặc được ủy quyền hợp lệ của{' '}
-            <strong className="font-semibold">{ownerLabel}</strong> để{' '}
-            <strong className="font-semibold">đồng ý với nội dung xuất hóa đơn VAT</strong> của đơn hàng này và cam kết
-            những thông tin trên là đúng sự thật, tôi hoàn toàn chịu trách nhiệm trước pháp luật về nội dung đã cung
-            cấp.
+            I confirm that I am the authorized person or a duly authorized representative of{' '}
+            <strong className="font-semibold">{ownerLabel}</strong> to{' '}
+            <strong className="font-semibold">agree to the VAT invoice details</strong> for this order and affirm that
+            the information above is true. I take full legal responsibility for the content I have provided.
           </span>
         </label>
       </form>

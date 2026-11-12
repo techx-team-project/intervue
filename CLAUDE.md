@@ -46,7 +46,7 @@ PowerShell: use `.\mvnw.cmd`. Git Bash: `./mvnw`.
 4. Verify before claiming done: run build/lint/test and report real output; say so if you could not run something.
 5. Ambiguous behavior → check `FUNCTION_REQUIRMENT.md` / `docs/`, then ask. Don't invent requirements.
 6. Features touching DB + API + UI: use plan mode, share the plan, then implement.
-7. Code and commits in English. UI copy in Vietnamese. Write no comments unless the code is truly hard to follow; then a single short English line.
+7. Code, commits and UI copy in English. Write no comments unless the code is truly hard to follow; then a single short English line.
 8. **One task = one branch. Never commit or push before the user approves the finished task; their "OK" then authorizes commit, push, PR into `dev` and merge for that task. Stay on the task branch while the user reviews; switch to `dev` and pull only after the merge.** Follow `docs/ai/git-commit.md` exactly (section 6 for the workflow): `type(scope): description`, branches `type/scope-description`. **Never add `Co-Authored-By` or any AI attribution to commits or PRs.**
 
 ## Code standards
