@@ -9,6 +9,7 @@ import {
   getEntitlementTypeLabel,
   isCreditPriceDraftDirty,
   isTimeBoxedEntitlement,
+  MAX_CREDIT_COST,
   MAX_CREDIT_DURATION_DAYS,
   toCreditPriceDraft,
   validateCreditPriceDraft,
@@ -113,6 +114,7 @@ export default function AdminCreditPricesMobileList({
                 label="Credits *"
                 type="number"
                 min={1}
+                max={MAX_CREDIT_COST}
                 radius="lg"
                 value={draft.creditCost}
                 onChange={(event) => onPatch(price.id, { creditCost: event.target.value })}

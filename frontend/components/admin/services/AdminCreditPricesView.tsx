@@ -2,9 +2,11 @@
 
 import { adminCreditPriceApi } from '@/apiRequest/credit';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import AdminCompanyCreditsTab from '@/components/admin/services/credit-prices/AdminCompanyCreditsTab';
 import AdminCreditPricesFilterBar from '@/components/admin/services/credit-prices/AdminCreditPricesFilterBar';
 import AdminCreditPricesMobileList from '@/components/admin/services/credit-prices/AdminCreditPricesMobileList';
 import AdminCreditPricesTable from '@/components/admin/services/credit-prices/AdminCreditPricesTable';
+import AdminFreeQuotasTab from '@/components/admin/services/credit-prices/AdminFreeQuotasTab';
 import CreateCreditPriceModal from '@/components/admin/services/credit-prices/CreateCreditPriceModal';
 import Pagination from '@/components/common/Pagination';
 import { Button, buttonClassName } from '@/components/ui/Button';
@@ -23,13 +25,16 @@ import {
   type CreditPriceDraft,
   type CreditPriceFilters,
 } from '@/lib/admin-credit-prices';
+import { cn } from '@/lib/utils';
 import type { CreateCreditPriceInput, CreditPrice } from '@/types/credit';
 import { getErrorMessage } from '@/utils/error';
 import { useQueryClient } from '@tanstack/react-query';
-import { Coins, FolderKanban, Info, Plus, Save, SearchX } from 'lucide-react';
+import { Building2, Coins, FolderKanban, Info, Plus, Save, SearchX, Sliders } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
+
+type CreditPricingTab = 'PRICES' | 'QUOTAS' | 'WALLETS';
 
 interface AdminCreditPricesViewProps {
   initialPrices: CreditPrice[];
@@ -38,6 +43,7 @@ interface AdminCreditPricesViewProps {
 export default function AdminCreditPricesView({ initialPrices }: AdminCreditPricesViewProps) {
   const queryClient = useQueryClient();
 
+  const [activeTab, setActiveTab] = useState<CreditPricingTab>('PRICES');
   const [prices, setPrices] = useState<CreditPrice[]>(() => sortCreditPrices(initialPrices));
   const [drafts, setDrafts] = useState<Record<number, CreditPriceDraft>>(() =>
     Object.fromEntries(initialPrices.map((price) => [price.id, toCreditPriceDraft(price)])),
@@ -203,9 +209,15 @@ export default function AdminCreditPricesView({ initialPrices }: AdminCreditPric
     <div className="space-y-4 pb-12">
       <AdminPageHeader
         className="mb-0"
-        description="Set how many credits recruiters spend per unit when exchanging wallet credits."
-        count={prices.length}
-        countLabel={`rules (${activeCount} active)`}
+        description={
+          activeTab === 'PRICES'
+            ? 'Set how many credits recruiters spend per unit when exchanging wallet credits.'
+            : activeTab === 'QUOTAS'
+              ? 'Configure platform-wide free usage allowances and job publishing slot requirements.'
+              : 'Inspect company credit wallets, credit lot expiries, and apply manual credit adjustments.'
+        }
+        count={activeTab === 'PRICES' ? prices.length : undefined}
+        countLabel={activeTab === 'PRICES' ? `rules (${activeCount} active)` : undefined}
         actions={
           <>
             <Link
@@ -219,7 +231,7 @@ export default function AdminCreditPricesView({ initialPrices }: AdminCreditPric
               <FolderKanban className="h-4 w-4" />
               <span>Service packages</span>
             </Link>
-            {dirtyPrices.length > 0 && (
+            {activeTab === 'PRICES' && dirtyPrices.length > 0 && (
               <Button
                 type="button"
                 variant="outline"
@@ -233,127 +245,190 @@ export default function AdminCreditPricesView({ initialPrices }: AdminCreditPric
                 Save all ({dirtyPrices.length})
               </Button>
             )}
-            <Button type="button" size="md" onClick={() => setCreateOpen(true)} leftIcon={<Plus className="h-4 w-4" />}>
-              New credit price
-            </Button>
+            {activeTab === 'PRICES' && (
+              <Button
+                type="button"
+                size="md"
+                onClick={() => setCreateOpen(true)}
+                leftIcon={<Plus className="h-4 w-4" />}
+              >
+                New credit price
+              </Button>
+            )}
           </>
         }
       />
 
-      <AdminCreditPricesFilterBar filters={filters} onPatchFilters={patchFilters} onResetFilters={resetFilters} />
+      <div className="dark:border-forest-800 border-outline-variant flex gap-6 border-b">
+        <button
+          type="button"
+          onClick={() => setActiveTab('PRICES')}
+          className={cn(
+            'flex cursor-pointer items-center gap-2 border-b-2 py-2.5 text-xs font-bold transition-colors',
+            activeTab === 'PRICES'
+              ? 'border-primary text-primary'
+              : 'dark:text-forest-300 dark:hover:text-forest-100 border-transparent text-slate-500 hover:text-slate-800',
+          )}
+        >
+          <Coins className="h-3.5 w-3.5" />
+          <span>Credit prices</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('QUOTAS')}
+          className={cn(
+            'flex cursor-pointer items-center gap-2 border-b-2 py-2.5 text-xs font-bold transition-colors',
+            activeTab === 'QUOTAS'
+              ? 'border-primary text-primary'
+              : 'dark:text-forest-300 dark:hover:text-forest-100 border-transparent text-slate-500 hover:text-slate-800',
+          )}
+        >
+          <Sliders className="h-3.5 w-3.5" />
+          <span>Free quotas</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('WALLETS')}
+          className={cn(
+            'flex cursor-pointer items-center gap-2 border-b-2 py-2.5 text-xs font-bold transition-colors',
+            activeTab === 'WALLETS'
+              ? 'border-primary text-primary'
+              : 'dark:text-forest-300 dark:hover:text-forest-100 border-transparent text-slate-500 hover:text-slate-800',
+          )}
+        >
+          <Building2 className="h-3.5 w-3.5" />
+          <span>Company wallets</span>
+        </button>
+      </div>
 
-      {prices.length === 0 ? (
-        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex flex-col items-center justify-center gap-3 rounded-lg border bg-white px-6 py-16 text-center shadow-xs">
-          <Coins className="text-outline h-10 w-10" />
-          <p className="text-navy dark:text-forest-50 text-body-md font-bold">No credit exchange rules yet</p>
-          <p className="dark:text-forest-300 text-body-sm text-on-surface-variant max-w-sm">
-            Create conversion rules so recruiters can exchange wallet credits from FLEX or bonus packages into services.
-          </p>
-          <Button type="button" size="md" onClick={() => setCreateOpen(true)} leftIcon={<Plus className="h-4 w-4" />}>
-            New credit price
-          </Button>
-        </div>
-      ) : filteredPrices.length === 0 ? (
-        <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex flex-col items-center justify-center gap-3 rounded-lg border bg-white px-6 py-16 text-center shadow-xs">
-          <SearchX className="text-outline h-10 w-10" />
-          <p className="text-navy dark:text-forest-50 text-body-md font-bold">No rules match these filters</p>
-          <p className="dark:text-forest-300 text-body-sm text-on-surface-variant max-w-sm">
-            Try a different service keyword or reset the status and billing type filters.
-          </p>
-          <button
-            type="button"
-            onClick={resetFilters}
-            className="text-primary text-body-sm mt-1 cursor-pointer font-bold hover:underline"
-          >
-            Clear all filters
-          </button>
-        </div>
+      {activeTab === 'QUOTAS' ? (
+        <AdminFreeQuotasTab />
+      ) : activeTab === 'WALLETS' ? (
+        <AdminCompanyCreditsTab />
       ) : (
         <>
-          <div className="rounded-lg border border-l-4 border-amber-200/75 border-l-amber-500 bg-amber-50 px-4 py-3.5 dark:border-amber-800/60 dark:border-l-amber-400 dark:bg-amber-950/35">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div className="flex gap-3">
-                <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-600 dark:text-amber-400" />
-                <div>
-                  <p className="text-sm font-bold text-amber-900 dark:text-amber-200">
-                    How recruiters see this pricing table
-                  </p>
-                  <p className="text-on-surface-variant mt-1 text-sm leading-relaxed dark:text-amber-100/80">
-                    Only active rows appear when recruiters exchange credits, ordered from lowest Order to highest. Edit
-                    any row inline and click Save (or Save all) to publish changes.
-                  </p>
+          <AdminCreditPricesFilterBar filters={filters} onPatchFilters={patchFilters} onResetFilters={resetFilters} />
+
+          {prices.length === 0 ? (
+            <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex flex-col items-center justify-center gap-3 rounded-lg border bg-white px-6 py-16 text-center shadow-xs">
+              <Coins className="text-outline h-10 w-10" />
+              <p className="text-navy dark:text-forest-50 text-body-md font-bold">No credit exchange rules yet</p>
+              <p className="dark:text-forest-300 text-body-sm text-on-surface-variant max-w-sm">
+                Create conversion rules so recruiters can exchange wallet credits from FLEX or bonus packages into
+                services.
+              </p>
+              <Button
+                type="button"
+                size="md"
+                onClick={() => setCreateOpen(true)}
+                leftIcon={<Plus className="h-4 w-4" />}
+              >
+                New credit price
+              </Button>
+            </div>
+          ) : filteredPrices.length === 0 ? (
+            <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex flex-col items-center justify-center gap-3 rounded-lg border bg-white px-6 py-16 text-center shadow-xs">
+              <SearchX className="text-outline h-10 w-10" />
+              <p className="text-navy dark:text-forest-50 text-body-md font-bold">No rules match these filters</p>
+              <p className="dark:text-forest-300 text-body-sm text-on-surface-variant max-w-sm">
+                Try a different service keyword or reset the status and billing type filters.
+              </p>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="text-primary text-body-sm mt-1 cursor-pointer font-bold hover:underline"
+              >
+                Clear all filters
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="rounded-lg border border-l-4 border-amber-200/75 border-l-amber-500 bg-amber-50 px-4 py-3.5 dark:border-amber-800/60 dark:border-l-amber-400 dark:bg-amber-950/35">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex gap-3">
+                    <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-600 dark:text-amber-400" />
+                    <div>
+                      <p className="text-sm font-bold text-amber-900 dark:text-amber-200">
+                        How recruiters see this pricing table
+                      </p>
+                      <p className="text-on-surface-variant mt-1 text-sm leading-relaxed dark:text-amber-100/80">
+                        Only active rows appear when recruiters exchange credits, ordered from lowest Order to highest.
+                        Edit any row inline and click Save (or Save all) to publish changes.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {dirtyPrices.length > 0 && (
+                  <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 border-t border-amber-200/80 pt-2.5 pl-7.5 dark:border-amber-800/50">
+                    <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+                      {dirtyPrices.length} {dirtyPrices.length === 1 ? 'rule has' : 'rules have'} unsaved changes.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={discardAllChanges}
+                      className="cursor-pointer text-xs font-bold text-amber-900 underline underline-offset-2 hover:text-amber-700 dark:text-amber-200 dark:hover:text-amber-100"
+                    >
+                      Discard all changes
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <AdminCreditPricesTable
+                prices={pagedPrices}
+                drafts={drafts}
+                savingIds={savingIds}
+                isBatchSaving={isBatchSaving}
+                onPatch={patchDraft}
+                onResetRow={resetRow}
+                onSaveRow={(price) => void handleSaveRow(price)}
+              />
+
+              <AdminCreditPricesMobileList
+                prices={pagedPrices}
+                drafts={drafts}
+                savingIds={savingIds}
+                isBatchSaving={isBatchSaving}
+                onPatch={patchDraft}
+                onResetRow={resetRow}
+                onSaveRow={(price) => void handleSaveRow(price)}
+              />
+
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <Pagination
+                  page={safePage}
+                  pageCount={pageCount}
+                  totalItems={filteredPrices.length}
+                  pageSize={pageSize}
+                  onPageChange={setPage}
+                  className="flex-1"
+                />
+                <div className="w-32 shrink-0 self-end sm:self-auto">
+                  <Select
+                    aria-label="Rows per page"
+                    value={String(pageSize)}
+                    onChange={(event) => {
+                      setPageSize(Number(event.target.value));
+                      setPage(1);
+                    }}
+                    options={CREDIT_PRICE_PAGE_SIZE_OPTIONS}
+                    className="dark:border-forest-700 dark:bg-forest-900 dark:text-forest-100 py-1.5 text-xs"
+                  />
                 </div>
               </div>
-            </div>
+            </>
+          )}
 
-            {dirtyPrices.length > 0 && (
-              <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 border-t border-amber-200/80 pt-2.5 pl-7.5 dark:border-amber-800/50">
-                <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
-                  {dirtyPrices.length} {dirtyPrices.length === 1 ? 'rule has' : 'rules have'} unsaved changes.
-                </p>
-                <button
-                  type="button"
-                  onClick={discardAllChanges}
-                  className="cursor-pointer text-xs font-bold text-amber-900 underline underline-offset-2 hover:text-amber-700 dark:text-amber-200 dark:hover:text-amber-100"
-                >
-                  Discard all changes
-                </button>
-              </div>
-            )}
-          </div>
-
-          <AdminCreditPricesTable
-            prices={pagedPrices}
-            drafts={drafts}
-            savingIds={savingIds}
-            isBatchSaving={isBatchSaving}
-            onPatch={patchDraft}
-            onResetRow={resetRow}
-            onSaveRow={(price) => void handleSaveRow(price)}
+          <CreateCreditPriceModal
+            isOpen={createOpen}
+            prices={prices}
+            isCreating={isCreating}
+            onClose={() => setCreateOpen(false)}
+            onCreate={handleCreate}
           />
-
-          <AdminCreditPricesMobileList
-            prices={pagedPrices}
-            drafts={drafts}
-            savingIds={savingIds}
-            isBatchSaving={isBatchSaving}
-            onPatch={patchDraft}
-            onResetRow={resetRow}
-            onSaveRow={(price) => void handleSaveRow(price)}
-          />
-
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <Pagination
-              page={safePage}
-              pageCount={pageCount}
-              totalItems={filteredPrices.length}
-              pageSize={pageSize}
-              onPageChange={setPage}
-              className="flex-1"
-            />
-            <div className="w-32 shrink-0 self-end sm:self-auto">
-              <Select
-                aria-label="Rows per page"
-                value={String(pageSize)}
-                onChange={(event) => {
-                  setPageSize(Number(event.target.value));
-                  setPage(1);
-                }}
-                options={CREDIT_PRICE_PAGE_SIZE_OPTIONS}
-                className="dark:border-forest-700 dark:bg-forest-900 dark:text-forest-100 py-1.5 text-xs"
-              />
-            </div>
-          </div>
         </>
       )}
-
-      <CreateCreditPriceModal
-        isOpen={createOpen}
-        prices={prices}
-        isCreating={isCreating}
-        onClose={() => setCreateOpen(false)}
-        onCreate={handleCreate}
-      />
     </div>
   );
 }

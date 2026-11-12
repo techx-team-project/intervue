@@ -13,6 +13,7 @@ import {
   formatRecruiterCreditPreview,
   getAvailableCreditPairs,
   isTimeBoxedEntitlement,
+  MAX_CREDIT_COST,
   MAX_CREDIT_DURATION_DAYS,
   validateCreditPriceDraft,
   type CreateCreditPriceDraft,
@@ -185,6 +186,7 @@ function CreateCreditPriceModalBody({ prices, isCreating, onClose, onCreate }: C
           label="Credits *"
           type="number"
           min={1}
+          max={MAX_CREDIT_COST}
           value={draft.creditCost}
           onChange={(event) => setDraft((current) => ({ ...current, creditCost: event.target.value }))}
           error={fieldErrors.creditCost}

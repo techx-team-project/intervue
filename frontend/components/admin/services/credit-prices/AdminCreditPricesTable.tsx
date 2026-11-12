@@ -9,6 +9,7 @@ import {
   getEntitlementTypeLabel,
   isCreditPriceDraftDirty,
   isTimeBoxedEntitlement,
+  MAX_CREDIT_COST,
   MAX_CREDIT_DURATION_DAYS,
   toCreditPriceDraft,
   validateCreditPriceDraft,
@@ -139,6 +140,7 @@ export default function AdminCreditPricesTable({
                     <Input
                       type="number"
                       min={1}
+                      max={MAX_CREDIT_COST}
                       radius="lg"
                       aria-label={`Credits cost for ${serviceLabel}`}
                       value={draft.creditCost}
