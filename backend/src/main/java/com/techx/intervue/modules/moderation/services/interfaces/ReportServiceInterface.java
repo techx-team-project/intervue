@@ -24,6 +24,8 @@ public interface ReportServiceInterface {
     boolean existsPending(
             ReportTargetType targetType, Long targetId, ReporterType reporterType, Long reporterId);
 
+    long countPending(ReportTargetType targetType, Long targetId);
+
     Page<AdminReportSummaryResource> search(
             ReportTargetType targetType, ReportStatus status, Pageable pageable);
 

@@ -6,8 +6,12 @@ import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.enums.JobStatus;
 import com.techx.intervue.modules.job.repositories.JobRepository;
 import com.techx.intervue.modules.job.services.interfaces.JobLookupInterface;
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,5 +56,18 @@ public class JobLookup implements JobLookupInterface {
                                                         ? List.of()
                                                         : question.getOptions()))
                         .toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> findOpenJobIdsClosingOn(LocalDate day) {
+        return jobRepository.findIdsByStatusAndDeadline(JobStatus.PUBLISHED, day);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<Long, Long> findRecruiterIdsByJobIds(Collection<Long> jobIds) {
+        return jobRepository.findAllById(jobIds).stream()
+                .collect(Collectors.toMap(Job::getId, Job::getRecruiterId));
     }
 }

@@ -45,6 +45,18 @@ public interface ApplicationRepository
     boolean existsByJobIdAndStatusNot(Long jobId, ApplicationStatus status);
 
     @Query(
+            "SELECT a.jobId AS jobId, COUNT(a) AS total FROM Application a"
+                    + " WHERE a.status = :status AND a.submittedAt < :before GROUP BY a.jobId")
+    List<JobCount> countByJobForStatusSubmittedBefore(
+            @Param("status") ApplicationStatus status, @Param("before") Instant before);
+
+    interface JobCount {
+        Long getJobId();
+
+        long getTotal();
+    }
+
+    @Query(
             "SELECT a.submittedAt FROM Application a WHERE a.jobId = :jobId"
                     + " AND a.status <> :excluded AND a.submittedAt >= :since")
     List<Instant> findSubmissionTimes(

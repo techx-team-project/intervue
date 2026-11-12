@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.candidate.repositories;
 
 import com.techx.intervue.modules.candidate.entities.SavedJob;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,15 @@ public interface SavedJobRepository extends JpaRepository<SavedJob, Long> {
 
     @Query("SELECT s.jobId FROM SavedJob s WHERE s.candidateId = :candidateId")
     List<Long> findJobIdsByCandidateId(@Param("candidateId") Long candidateId);
+
+    @Query(
+            "SELECT s.candidateId AS candidateId, COUNT(s) AS total FROM SavedJob s"
+                    + " WHERE s.jobId IN :jobIds GROUP BY s.candidateId")
+    List<CandidateCount> countByCandidateForJobs(@Param("jobIds") Collection<Long> jobIds);
+
+    interface CandidateCount {
+        Long getCandidateId();
+
+        long getTotal();
+    }
 }

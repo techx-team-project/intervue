@@ -16,6 +16,9 @@ public enum NotificationType {
     COMPANY_MEMBERSHIP_CHANGED(NotificationCategory.COMPANY, NotificationSeverity.WARNING, true),
     AGREEMENT_REVIEWED(NotificationCategory.COMPANY, NotificationSeverity.INFO, true),
     FOLLOWED_COMPANY_NEW_JOB(NotificationCategory.JOBS, NotificationSeverity.INFO, false),
+    APPLICATIONS_WAITING_REVIEW(
+            NotificationCategory.APPLICATIONS, NotificationSeverity.INFO, false),
+    SAVED_JOBS_CLOSING_SOON(NotificationCategory.JOBS, NotificationSeverity.INFO, false),
     JOB_APPROVED(NotificationCategory.JOBS, NotificationSeverity.SUCCESS, true),
     JOB_REJECTED(NotificationCategory.JOBS, NotificationSeverity.DANGER, true),
     JOB_HIDDEN_BY_ADMIN(NotificationCategory.JOBS, NotificationSeverity.DANGER, true),
@@ -42,6 +45,8 @@ public enum NotificationType {
     SECURITY_SETTING_CHANGED(NotificationCategory.SECURITY, NotificationSeverity.INFO, true),
     IDENTITY_VERIFIED(NotificationCategory.ACCOUNT, NotificationSeverity.INFO, true),
     IDENTITY_REJECTED(NotificationCategory.ACCOUNT, NotificationSeverity.WARNING, true),
+    JOB_REPORT_THRESHOLD_REACHED(
+            NotificationCategory.MODERATION, NotificationSeverity.WARNING, false),
     ADMIN_REVIEW_QUEUE_ITEM(NotificationCategory.MODERATION, NotificationSeverity.INFO, false),
     ANNOUNCEMENT(NotificationCategory.SYSTEM, NotificationSeverity.INFO, false),
     ORDER_CREATED(NotificationCategory.COMPANY, NotificationSeverity.INFO, true),

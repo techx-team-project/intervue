@@ -61,6 +61,10 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
 
     long countByCompanyIdAndApprovedAtIsNotNull(Long companyId);
 
+    @Query("SELECT j.id FROM Job j WHERE j.status = :status AND j.deadline = :deadline")
+    List<Long> findIdsByStatusAndDeadline(
+            @Param("status") JobStatus status, @Param("deadline") LocalDate deadline);
+
     List<Job> findTop5ByCompanyIdAndStatusAndTitleIgnoreCaseAndCityIgnoreCaseAndIdNot(
             Long companyId, JobStatus status, String title, String city, Long id);
 
