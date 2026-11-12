@@ -6,5 +6,6 @@ public enum JobStatus {
     PAUSED,
     CLOSED,
     EXPIRED,
-    HIDDEN_BY_ADMIN
+    HIDDEN_BY_ADMIN,
+    PENDING_REVIEW
 }

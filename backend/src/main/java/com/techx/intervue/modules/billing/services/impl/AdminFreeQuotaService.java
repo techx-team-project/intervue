@@ -64,6 +64,7 @@ public class AdminFreeQuotaService
         settings.setRequireJobSlot(Boolean.TRUE.equals(request.requireJobSlot()));
         settings.setJobFreeActiveLimit(request.jobFreeActiveLimit());
         settings.setJobFreeMaxDays(request.jobFreeMaxDays());
+        settings.setJobReviewFirstCount(request.jobReviewFirstCount());
         FreeQuotaSettings saved = settingsRepository.save(settings);
 
         auditLogService.record(
@@ -75,7 +76,7 @@ public class AdminFreeQuotaService
                         .targetType(AuditTargetType.FREE_QUOTA_SETTINGS)
                         .targetId(saved.getId())
                         .detail(
-                                "match=%d, jd=%d, cv=%d, credits=%d, connect=%d, photos=%d, requireJobSlot=%s, jobFreeActive=%d, jobFreeDays=%d"
+                                "match=%d, jd=%d, cv=%d, credits=%d, connect=%d, photos=%d, requireJobSlot=%s, jobFreeActive=%d, jobFreeDays=%d, jobReviewFirst=%d"
                                         .formatted(
                                                 saved.getAiResumeMatchFreePerMonth(),
                                                 saved.getAiJdGenerateFreePerMonth(),
@@ -85,7 +86,8 @@ public class AdminFreeQuotaService
                                                 saved.getCompanyFreePhotoLimit(),
                                                 saved.isRequireJobSlot(),
                                                 saved.getJobFreeActiveLimit(),
-                                                saved.getJobFreeMaxDays()))
+                                                saved.getJobFreeMaxDays(),
+                                                saved.getJobReviewFirstCount()))
                         .ip(actor.ip())
                         .build());
 
@@ -111,7 +113,8 @@ public class AdminFreeQuotaService
                 defaults.companyFreePhotoLimit(),
                 billingProperties.requiresJobSlot(),
                 defaults.jobFreeActiveLimit(),
-                defaults.jobFreeMaxDays());
+                defaults.jobFreeMaxDays(),
+                defaults.jobReviewFirstCount());
     }
 
     private static FreeQuotaValues toValues(FreeQuotaSettings s) {
@@ -124,7 +127,8 @@ public class AdminFreeQuotaService
                 s.getCompanyFreePhotoLimit(),
                 s.isRequireJobSlot(),
                 s.getJobFreeActiveLimit(),
-                s.getJobFreeMaxDays());
+                s.getJobFreeMaxDays(),
+                s.getJobReviewFirstCount());
     }
 
     private static FreeQuotaSettingsResource toResource(FreeQuotaSettings s) {
@@ -138,6 +142,7 @@ public class AdminFreeQuotaService
                 .requireJobSlot(s.isRequireJobSlot())
                 .jobFreeActiveLimit(s.getJobFreeActiveLimit())
                 .jobFreeMaxDays(s.getJobFreeMaxDays())
+                .jobReviewFirstCount(s.getJobReviewFirstCount())
                 .updatedAt(s.getUpdatedAt())
                 .build();
     }
@@ -153,6 +158,7 @@ public class AdminFreeQuotaService
                 .requireJobSlot(values.requireJobSlot())
                 .jobFreeActiveLimit(values.jobFreeActiveLimit())
                 .jobFreeMaxDays(values.jobFreeMaxDays())
+                .jobReviewFirstCount(values.jobReviewFirstCount())
                 .build();
     }
 }

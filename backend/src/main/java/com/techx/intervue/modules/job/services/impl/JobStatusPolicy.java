@@ -13,7 +13,8 @@ public class JobStatusPolicy extends StatusTransitionPolicy<JobStatus> {
         super(
                 JobStatus.class,
                 Map.of(
-                        JobStatus.DRAFT, Set.of(JobStatus.PUBLISHED),
+                        JobStatus.DRAFT, Set.of(JobStatus.PUBLISHED, JobStatus.PENDING_REVIEW),
+                        JobStatus.PENDING_REVIEW, Set.of(JobStatus.PUBLISHED, JobStatus.DRAFT),
                         JobStatus.PUBLISHED,
                                 Set.of(
                                         JobStatus.PAUSED,

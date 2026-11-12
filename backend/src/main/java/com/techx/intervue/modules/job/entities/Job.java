@@ -164,6 +164,9 @@ public class Job extends BaseEntity {
     @Column(name = "closed_at")
     private Instant closedAt;
 
+    @Column(name = "approved_at")
+    private Instant approvedAt;
+
     @Column(name = "boost_level", nullable = false)
     @Builder.Default
     private Integer boostLevel = 0;
