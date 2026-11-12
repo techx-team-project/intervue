@@ -2,6 +2,7 @@ import { publicJobApi } from '@/apiRequest/public-job';
 import Footer from '@/components/common/Footer';
 import Header from '@/components/common/Header';
 import PublicJobDetailView from '@/components/jobs/PublicJobDetailView';
+import { buildJobPostingJsonLd, serializeJsonLd } from '@/utils/job-structured-data';
 import { formatSalary } from '@/utils/public-company';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -37,6 +38,10 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
   return (
     <div className="bg-surface-container-low flex min-h-screen flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(buildJobPostingJsonLd(job)) }}
+      />
       <Header />
       <main className="flex-1">
         <PublicJobDetailView job={job} />
