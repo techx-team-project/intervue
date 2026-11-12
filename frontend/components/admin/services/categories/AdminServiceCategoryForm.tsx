@@ -101,29 +101,28 @@ export default function AdminServiceCategoryForm({
   });
 
   return (
-    <div className="space-y-6 pb-16">
-      <div className="pb-1">
-        <AdminPageHeader
-          description={
-            editingCategory
-              ? `Update configuration for ${editingCategory.name} (${editingCategory.code}).`
-              : 'Create a section for grouping and ordering packages on the recruiter buy-services page.'
-          }
-          actions={
-            <Link
-              href={ROUTES.ADMIN_SERVICE_CATEGORIES}
-              className={buttonClassName({
-                variant: 'outline',
-                size: 'md',
-                className: 'dark:border-forest-700 dark:text-forest-100 dark:hover:bg-forest-850',
-              })}
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span>Back to categories</span>
-            </Link>
-          }
-        />
-      </div>
+    <div className="space-y-5 pb-16">
+      <AdminPageHeader
+        className="mb-0"
+        description={
+          editingCategory
+            ? `Update configuration for ${editingCategory.name} (${editingCategory.code}).`
+            : 'Create a section for grouping and ordering packages on the recruiter buy-services page.'
+        }
+        actions={
+          <Link
+            href={ROUTES.ADMIN_SERVICE_CATEGORIES}
+            className={buttonClassName({
+              variant: 'outline',
+              size: 'md',
+              className: 'dark:border-forest-700 dark:text-forest-100 dark:hover:bg-forest-850',
+            })}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back to categories</span>
+          </Link>
+        }
+      />
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <form
