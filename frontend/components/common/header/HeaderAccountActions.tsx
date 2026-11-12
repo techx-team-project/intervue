@@ -77,11 +77,14 @@ export default function HeaderAccountActions({ portal = 'candidate' }: HeaderAcc
       <div className="hidden items-center gap-2 sm:flex">
         <Link
           href={isRecruiter ? ROUTES.RECRUITER_REGISTER : ROUTES.REGISTER}
-          className={buttonClassName({ variant: 'outline', size: 'xl' })}
+          className={buttonClassName({ variant: 'outline', size: 'md', className: 'px-5 font-semibold' })}
         >
           Sign up
         </Link>
-        <Link href={isRecruiter ? ROUTES.RECRUITER_LOGIN : ROUTES.LOGIN} className={buttonClassName({ size: 'xl' })}>
+        <Link
+          href={isRecruiter ? ROUTES.RECRUITER_LOGIN : ROUTES.LOGIN}
+          className={buttonClassName({ size: 'md', className: 'px-5 font-semibold' })}
+        >
           Sign in
         </Link>
       </div>
