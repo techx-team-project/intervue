@@ -81,7 +81,7 @@ export const ROUTES = {
   ADMIN_SERVICE_PACKAGES_CREATE: '/admin/services/packages/create',
   ADMIN_SERVICE_CATEGORIES: '/admin/services/categories',
   ADMIN_SERVICE_CATEGORIES_CREATE: '/admin/services/categories/create',
-  ADMIN_SERVICE_PRICING: '/admin/services/pricing',
+  ADMIN_SERVICE_QUOTAS: '/admin/services/quotas',
   ADMIN_SERVICE_VOUCHERS: '/admin/services/vouchers',
   ADMIN_SERVICE_VOUCHERS_CREATE: '/admin/services/vouchers/create',
   ADMIN_ADS_SLOTS: '/admin/ads/slots',
