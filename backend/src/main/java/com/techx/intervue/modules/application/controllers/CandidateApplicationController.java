@@ -14,6 +14,7 @@ import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ContentDisposition;
@@ -47,6 +48,14 @@ public class CandidateApplicationController extends BaseController {
         return page(
                 applicationService.search(request, pageable, principal.getId()),
                 "Applications retrieved successfully!");
+    }
+
+    @GetMapping("/applied-job-ids")
+    public ResponseEntity<ApiResource<List<Long>>> appliedJobIds(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                applicationService.findAppliedJobIds(principal.getId()),
+                "Applied jobs retrieved successfully!");
     }
 
     @GetMapping("/form")

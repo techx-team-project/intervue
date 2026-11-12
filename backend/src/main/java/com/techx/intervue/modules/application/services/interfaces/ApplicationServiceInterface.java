@@ -7,10 +7,13 @@ import com.techx.intervue.modules.application.resources.ApplicationResource;
 import com.techx.intervue.modules.application.resources.ApplicationSummaryResource;
 import com.techx.intervue.modules.application.resources.ApplyFormResource;
 import com.techx.intervue.modules.candidate.services.interfaces.CandidateResumeServiceInterface.ResumeContent;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ApplicationServiceInterface {
+
+    List<Long> findAppliedJobIds(Long candidateId);
 
     ApplyFormResource findForm(Long jobId, Long candidateId);
 
