@@ -17,6 +17,9 @@ export async function buildDemoJobValues(): Promise<JobPostFormData> {
   return {
     title: 'Senior Java Backend Engineer',
     level: 'SENIOR',
+    jobRole: 'BACKEND',
+    experienceMinYears: 4,
+    experienceMaxYears: 8,
     contractType: 'FULL_TIME',
     workingArrangement: 'HYBRID',
     city: 'Hà Nội',
@@ -25,6 +28,7 @@ export async function buildDemoJobValues(): Promise<JobPostFormData> {
     salaryMin: 25,
     salaryMax: 40,
     currency: 'VND',
+    salaryBasis: 'GROSS',
     skills: skills.filter((skill, index, all) => all.findIndex((other) => other.id === skill.id) === index),
     description:
       'Join our platform team to design, build and operate the backend services behind our AI recruitment products. You will own features end to end, from API design to production monitoring.',
@@ -32,6 +36,13 @@ export async function buildDemoJobValues(): Promise<JobPostFormData> {
       '4+ years of professional Java experience\nStrong knowledge of Spring Boot and REST API design\nSolid SQL skills, preferably MySQL\nComfortable with Docker and CI/CD pipelines',
     benefits:
       '13th-month salary and performance bonus\nPremium health insurance\nMacBook Pro and annual learning budget\nFlexible hybrid working',
+    benefitTags: ['HEALTH_INSURANCE', 'BONUS_13TH_MONTH', 'LAPTOP', 'TRAINING'],
+    hiringSteps: [
+      { title: 'CV screening' },
+      { title: 'Technical interview' },
+      { title: 'HR interview' },
+      { title: 'Offer' },
+    ],
     deadline: defaultDeadline(),
     openings: 3,
     screeningQuestions: [

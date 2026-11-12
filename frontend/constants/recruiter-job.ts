@@ -1,7 +1,10 @@
 import type {
   ContractType,
+  JobBenefitTag,
   JobLevel,
+  JobRole,
   JobStatus,
+  SalaryBasis,
   RecruiterJobSegment,
   RecruiterJobSort,
   SkillGroup,
@@ -32,6 +35,34 @@ export const JOB_LEVEL_LABELS: Record<JobLevel, string> = {
   MID: 'Middle',
   SENIOR: 'Senior',
   LEAD: 'Lead',
+};
+
+export const JOB_ROLE_LABELS: Record<JobRole, string> = {
+  BACKEND: 'Backend',
+  FRONTEND: 'Frontend',
+  FULLSTACK: 'Fullstack',
+  MOBILE: 'Mobile',
+  DEVOPS: 'DevOps / Cloud',
+  QA: 'QA / Tester',
+  DATA_AI: 'Data / AI',
+  BA: 'Business Analyst',
+  PM: 'Project / Product',
+  UIUX: 'UI/UX Design',
+  SECURITY: 'Security',
+  OTHER: 'Other',
+};
+
+export const JOB_BENEFIT_TAG_LABELS: Record<JobBenefitTag, string> = {
+  HEALTH_INSURANCE: 'Health insurance',
+  BONUS_13TH_MONTH: '13th-month salary',
+  PERFORMANCE_BONUS: 'Performance bonus',
+  LAPTOP: 'Laptop & equipment',
+  TRAINING: 'Training & certifications',
+  TEAM_BUILDING: 'Team building & trips',
+  FLEXIBLE_HOURS: 'Flexible hours',
+  REMOTE_DAYS: 'Remote days',
+  ANNUAL_LEAVE: 'Annual leave',
+  MEALS: 'Meals & allowance',
 };
 
 export const JOB_ARRANGEMENT_LABELS: Record<WorkingArrangement, string> = {
@@ -113,6 +144,28 @@ export const JOB_FORM_ARRANGEMENT_OPTIONS: Array<{ value: WorkingArrangement; la
   { value: 'HYBRID', label: 'Hybrid' },
   { value: 'REMOTE', label: 'Từ xa' },
   { value: 'FLEXIBLE', label: 'Linh hoạt' },
+];
+
+export const JOB_FORM_ROLE_OPTIONS: Array<{ value: JobRole; label: string }> = (
+  Object.entries(JOB_ROLE_LABELS) as Array<[JobRole, string]>
+).map(([value, label]) => ({ value, label: value === 'OTHER' ? 'Khác' : label }));
+
+export const JOB_FORM_SALARY_BASIS_OPTIONS: Array<{ value: SalaryBasis; label: string }> = [
+  { value: 'GROSS', label: 'Gross (trước thuế)' },
+  { value: 'NET', label: 'Net (sau thuế)' },
+];
+
+export const JOB_FORM_BENEFIT_OPTIONS: Array<{ value: JobBenefitTag; label: string }> = [
+  { value: 'HEALTH_INSURANCE', label: 'Bảo hiểm sức khỏe' },
+  { value: 'BONUS_13TH_MONTH', label: 'Thưởng tháng 13' },
+  { value: 'PERFORMANCE_BONUS', label: 'Thưởng hiệu suất' },
+  { value: 'LAPTOP', label: 'Laptop / thiết bị' },
+  { value: 'TRAINING', label: 'Đào tạo & chứng chỉ' },
+  { value: 'TEAM_BUILDING', label: 'Team building / du lịch' },
+  { value: 'FLEXIBLE_HOURS', label: 'Giờ làm linh hoạt' },
+  { value: 'REMOTE_DAYS', label: 'Làm từ xa một số ngày' },
+  { value: 'ANNUAL_LEAVE', label: 'Phép năm' },
+  { value: 'MEALS', label: 'Phụ cấp ăn' },
 ];
 
 export const JOB_FORM_CURRENCY_OPTIONS = [

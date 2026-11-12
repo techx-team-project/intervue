@@ -11,41 +11,35 @@ interface JobFormStepperProps {
 
 export default function JobFormStepper({ current, reached, onSelect }: JobFormStepperProps) {
   return (
-    <ol className="flex items-center gap-2" aria-label="Các bước đăng tin">
+    <ol className="border-outline-variant flex border-b" aria-label="Các bước đăng tin">
       {JOB_FORM_STEPS.map((label, index) => {
         const done = index < current;
-        const reachable = index <= reached;
+        const isCurrent = index === current;
         return (
-          <li key={label} className="flex flex-1 items-center gap-2 last:flex-none">
+          <li key={label} className="flex-1">
             <button
               type="button"
-              disabled={!reachable}
+              disabled={index > reached}
               onClick={() => onSelect(index)}
-              aria-current={index === current ? 'step' : undefined}
-              className="flex items-center gap-2 disabled:cursor-not-allowed"
+              aria-current={isCurrent ? 'step' : undefined}
+              className={cn(
+                '-mb-px flex w-full items-center justify-center gap-2 border-b-2 px-2 py-3 text-sm font-semibold transition-colors disabled:cursor-not-allowed',
+                isCurrent ? 'border-primary text-navy' : 'text-on-surface-variant border-transparent',
+                !isCurrent && index <= reached && 'hover:text-navy',
+              )}
             >
               <span
                 className={cn(
-                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors',
-                  index === current && 'bg-emerald-600 text-white',
-                  done && 'bg-emerald-100 text-emerald-700',
-                  index > current && 'bg-surface-container-high text-outline',
+                  'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold',
+                  isCurrent && 'bg-primary text-white',
+                  done && 'bg-primary-light text-primary-deep',
+                  !isCurrent && !done && 'bg-surface-container-high text-outline',
                 )}
               >
                 {done ? <Check className="h-3.5 w-3.5" /> : index + 1}
               </span>
-              <span
-                className={cn(
-                  'hidden text-sm font-semibold sm:inline',
-                  index === current ? 'text-on-surface' : 'text-outline',
-                )}
-              >
-                {label}
-              </span>
+              <span className="hidden sm:inline">{label}</span>
             </button>
-            {index < JOB_FORM_STEPS.length - 1 && (
-              <span className="bg-surface-container-high h-px flex-1" aria-hidden />
-            )}
           </li>
         );
       })}
