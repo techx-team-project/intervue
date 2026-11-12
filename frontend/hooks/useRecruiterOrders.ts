@@ -1,8 +1,14 @@
 'use client';
 
 import { recruiterOrderApi } from '@/apiRequest/recruiter-order';
-import type { RecruiterOrderStatus, CheckoutPayload } from '@/types/recruiter-order';
+import { adKeys } from '@/hooks/useAds';
+import { creditKeys } from '@/hooks/useCredits';
+import { entitlementKeys } from '@/hooks/useEntitlements';
+import { notificationKeys } from '@/hooks/useNotifications';
+import type { CheckoutPayload, RecruiterOrderStatus } from '@/types/recruiter-order';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 
 export const recruiterOrderKeys = {
   all: ['recruiter', 'orders'] as const,
@@ -13,13 +19,50 @@ export const recruiterOrderKeys = {
   refunds: (page: number, size: number) => ['recruiter', 'orders', 'refunds', page, size] as const,
 };
 
-const PAYMENT_POLL_MS = 5000;
+const PAYMENT_POLL_MS = 4000;
+const PENDING_ORDER_STATUSES: RecruiterOrderStatus[] = ['PENDING_PAYMENT', 'UNDERPAID'];
+const PAID_ORDER_STATUSES: RecruiterOrderStatus[] = ['PAID', 'FULFILLED'];
+const SETTLED: RecruiterOrderStatus[] = ['PAID', 'FULFILLED', 'EXPIRED', 'CANCELLED'];
+
+function invalidateAfterOrderPaid(queryClient: ReturnType<typeof useQueryClient>, code?: string) {
+  queryClient.invalidateQueries({ queryKey: recruiterOrderKeys.all });
+  if (code) {
+    queryClient.invalidateQueries({ queryKey: recruiterOrderKeys.detail(code) });
+  }
+  queryClient.invalidateQueries({ queryKey: entitlementKeys.all });
+  queryClient.invalidateQueries({ queryKey: creditKeys.wallet });
+  queryClient.invalidateQueries({ queryKey: creditKeys.ledgerRoot });
+  queryClient.invalidateQueries({ queryKey: adKeys.bookings });
+  queryClient.invalidateQueries({ queryKey: notificationKeys.all('recruiter') });
+}
 
 export function useRecruiterOrderList(page: number, size = 10) {
+  const queryClient = useQueryClient();
+  const pendingCodesRef = useRef<Set<string>>(new Set());
+
   return useQuery({
     queryKey: recruiterOrderKeys.list(page, size),
-    queryFn: () => recruiterOrderApi.search(page, size),
+    queryFn: async () => {
+      const result = await recruiterOrderApi.search(page, size);
+      const newlyPaid = result.items.filter(
+        (item) => pendingCodesRef.current.has(item.code) && PAID_ORDER_STATUSES.includes(item.status),
+      );
+      if (newlyPaid.length > 0) {
+        for (const item of newlyPaid) {
+          toast.success(`Payment confirmed for order ${item.code}!`);
+        }
+        invalidateAfterOrderPaid(queryClient);
+      }
+      pendingCodesRef.current = new Set(
+        result.items.filter((item) => PENDING_ORDER_STATUSES.includes(item.status)).map((item) => item.code),
+      );
+      return result;
+    },
     placeholderData: keepPreviousData,
+    refetchInterval: (query) => {
+      const items = query.state.data?.items ?? [];
+      return items.some((item) => PENDING_ORDER_STATUSES.includes(item.status)) ? PAYMENT_POLL_MS : false;
+    },
   });
 }
 
@@ -46,18 +89,29 @@ export function useRecruiterRefunds(page: number, size = 10) {
   });
 }
 
-const SETTLED: RecruiterOrderStatus[] = ['PAID', 'FULFILLED', 'EXPIRED', 'CANCELLED'];
-
 // While an order is still awaiting money the panel polls; the moment the bank reports the payment
-// the order itself is refetched, otherwise the status badge and the invoice button stay stale
+// the order, list, entitlements, credits, and notifications are refreshed automatically
 export function useOrderPayment(code: string, live: boolean) {
   const queryClient = useQueryClient();
+  const sawPendingRef = useRef(false);
+  const notifiedCodeRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    sawPendingRef.current = false;
+  }, [code]);
+
   return useQuery({
     queryKey: recruiterOrderKeys.payment(code),
     queryFn: async () => {
       const payment = await recruiterOrderApi.payment(code);
-      if (SETTLED.includes(payment.status)) {
-        queryClient.invalidateQueries({ queryKey: recruiterOrderKeys.detail(code) });
+      if (PENDING_ORDER_STATUSES.includes(payment.status)) {
+        sawPendingRef.current = true;
+      } else if (SETTLED.includes(payment.status)) {
+        if (sawPendingRef.current && PAID_ORDER_STATUSES.includes(payment.status) && notifiedCodeRef.current !== code) {
+          notifiedCodeRef.current = code;
+          toast.success(`Payment confirmed for order ${code}! Your service package is now active.`);
+        }
+        invalidateAfterOrderPaid(queryClient, code);
       }
       return payment;
     },

@@ -51,8 +51,25 @@ export default function RecruiterOrdersView() {
     );
   }
 
+  const hasPendingOrder = data.items.some((order) => ORDER_CANCELLABLE.includes(order.status));
+
   return (
     <div className="space-y-4">
+      {hasPendingOrder && (
+        <div
+          role="status"
+          className="flex items-center gap-2 rounded-lg border border-emerald-200/80 bg-emerald-50/70 px-3.5 py-2 text-xs font-medium text-emerald-800"
+        >
+          <span className="relative flex h-2 w-2 shrink-0" aria-hidden>
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+          </span>
+          <span>
+            Auto-checking pending orders — status updates automatically without refreshing once payment settles.
+          </span>
+        </div>
+      )}
+
       {actionError && (
         <div className="flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800">
           <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />

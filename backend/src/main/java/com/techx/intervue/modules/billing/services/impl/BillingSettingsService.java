@@ -7,6 +7,7 @@ import com.techx.intervue.modules.billing.entities.BillingSettings;
 import com.techx.intervue.modules.billing.enums.SupportedBank;
 import com.techx.intervue.modules.billing.repositories.BillingSettingsRepository;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -59,6 +60,12 @@ public class BillingSettingsService implements BillingSettingsServiceInterface {
                                             cleanName.length() > 150
                                                     ? cleanName.substring(0, 150)
                                                     : cleanName);
+                                }
+                                if (!isBlank(sepayProperties.apiToken())) {
+                                    settings.setPaymentSyncEnabled(true);
+                                    if (settings.getPaymentSyncSince() == null) {
+                                        settings.setPaymentSyncSince(Instant.now());
+                                    }
                                 }
                                 log.info(
                                         "Initialized empty billing bank settings from environment ({})",
