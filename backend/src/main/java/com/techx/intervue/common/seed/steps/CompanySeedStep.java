@@ -99,7 +99,7 @@ public class CompanySeedStep implements DemoSeedStep {
 
     @Override
     public void seed() {
-        if (!database.allEmpty("companies", "recruiters")) {
+        if (database.contains("recruiters", "email", DemoSeedData.OWNERS.get(0).email())) {
             return;
         }
         SeedRandom random = new SeedRandom(DemoSeedData.RANDOM_SEED + 2);
