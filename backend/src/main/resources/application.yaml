@@ -112,7 +112,7 @@ sepay:
   api-token: ${SEPAY_API_TOKEN:}
   timeout: 15s
   sync:
-    cron: "0 */2 * * * *"
+    cron: "*/10 * * * * *"
     limit: 100
   default-bank:
     code: ${SEPAY_BANK_CODE:}
