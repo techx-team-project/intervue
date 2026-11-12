@@ -1,57 +1,50 @@
 'use client';
 
-import React, { useState } from 'react';
-import { CV_FAQS } from '@/mocks/cv-template.mock';
 import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
-import { HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { CV_FAQS } from '@/mocks/cv-template.mock';
+import { cn } from '@/lib/utils';
+import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 
 export default function CvFaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const { badge, title } = CV_TEMPLATE_MESSAGES.faq;
-
-  const toggleFaq = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+  const { title } = CV_TEMPLATE_MESSAGES.faq;
 
   return (
-    <section className="border-t border-gray-200 bg-white py-14">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 text-center">
-          <div className="text-primary bg-primary-container mb-3 inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-semibold">
-            <HelpCircle className="h-3.5 w-3.5" />
-            <span>{badge}</span>
-          </div>
-          <h2 className="text-on-surface text-2xl font-bold tracking-tight sm:text-3xl">{title}</h2>
-        </div>
+    <section aria-labelledby="cv-faq-title" className="bg-surface border-outline-variant border-t py-20">
+      <div className="container-page grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+        <h2
+          id="cv-faq-title"
+          className="font-display text-headline-lg text-on-surface font-bold tracking-tight lg:sticky lg:top-28 lg:self-start"
+        >
+          {title}
+        </h2>
 
-        <div className="space-y-3.5">
-          {CV_FAQS.map((faq, idx) => {
-            const isOpen = openIndex === idx;
+        <ul className="border-outline-variant divide-outline-variant divide-y border-y">
+          {CV_FAQS.map((faq, index) => {
+            const isOpen = openIndex === index;
             return (
-              <div
-                key={idx}
-                className="hover:border-primary/50 overflow-hidden rounded-2xl border border-gray-200 bg-white transition duration-200"
-              >
+              <li key={faq.question}>
                 <button
                   type="button"
-                  onClick={() => toggleFaq(idx)}
-                  className="hover:text-primary text-on-surface flex w-full items-center justify-between p-5 text-left text-sm font-bold transition sm:text-base"
+                  aria-expanded={isOpen}
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  className="text-title-md text-on-surface hover:text-primary flex w-full cursor-pointer items-center justify-between gap-4 py-5 text-left font-semibold transition-colors"
                 >
-                  <span className="pr-4">{faq.question}</span>
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-600">
-                    {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                  </span>
+                  {faq.question}
+                  <ChevronDown
+                    className={cn(
+                      'text-on-surface-variant h-5 w-5 shrink-0 transition-transform',
+                      isOpen && 'rotate-180',
+                    )}
+                    aria-hidden
+                  />
                 </button>
-
-                {isOpen && (
-                  <div className="bg-surface-container-low/50 text-on-surface-variant border-t border-gray-100 p-5 pt-3 text-xs leading-relaxed sm:text-sm">
-                    {faq.answer}
-                  </div>
-                )}
-              </div>
+                {isOpen && <p className="text-body-lg text-on-surface-variant pb-5 leading-relaxed">{faq.answer}</p>}
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </section>
   );

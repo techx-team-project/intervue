@@ -1,51 +1,36 @@
-'use client';
-
-import React from 'react';
-import { CV_BENEFITS } from '@/mocks/cv-template.mock';
 import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
-import { ShieldCheck, Eye, Sliders, FileCheck2, Sparkles } from 'lucide-react';
+import { CV_BENEFITS } from '@/mocks/cv-template.mock';
+import { Eye, FileCheck2, ShieldCheck, Sliders, type LucideIcon } from 'lucide-react';
 
-const BENEFIT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  ShieldCheck,
-  Eye,
-  Sliders,
-  FileCheck2,
-};
+const BENEFIT_ICONS: Record<string, LucideIcon> = { ShieldCheck, Eye, Sliders, FileCheck2 };
 
 export default function CvBenefitsSection() {
-  const { badge, title, description } = CV_TEMPLATE_MESSAGES.benefits;
+  const { title, description } = CV_TEMPLATE_MESSAGES.benefits;
 
   return (
-    <section className="bg-surface border-t border-gray-200 py-14">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto mb-12 max-w-2xl text-center">
-          <div className="text-primary bg-primary-container mb-3 inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-semibold">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>{badge}</span>
-          </div>
-          <h2 className="text-on-surface text-2xl font-bold tracking-tight sm:text-3xl">{title}</h2>
-          <p className="text-on-surface-variant mt-2 text-xs leading-relaxed sm:text-sm">{description}</p>
+    <section aria-labelledby="cv-benefits-title" className="bg-surface-container-low py-20">
+      <div className="container-page">
+        <div className="mb-10 max-w-2xl space-y-3">
+          <h2 id="cv-benefits-title" className="font-display text-headline-lg text-on-surface font-bold tracking-tight">
+            {title}
+          </h2>
+          <p className="text-title-md text-on-surface-variant font-normal">{description}</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {CV_BENEFITS.map((b, idx) => {
-            const IconComponent = BENEFIT_ICONS[b.icon] || ShieldCheck;
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {CV_BENEFITS.map((benefit) => {
+            const Icon = BENEFIT_ICONS[benefit.icon] ?? ShieldCheck;
             return (
-              <div
-                key={idx}
-                className="hover:border-primary/50 hover:shadow-elevation-2 flex flex-col justify-between rounded-3xl border border-gray-200 bg-white p-6 shadow-xs transition duration-300"
-              >
-                <div>
-                  <div className="text-primary bg-primary-container mb-4 flex h-12 w-12 items-center justify-center rounded-2xl">
-                    <IconComponent className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-on-surface mb-2 text-base leading-snug font-bold">{b.title}</h3>
-                  <p className="text-on-surface-variant text-xs leading-relaxed sm:text-sm">{b.description}</p>
-                </div>
-              </div>
+              <li key={benefit.title} className="bg-surface border-outline-variant rounded-2xl border p-6">
+                <span className="bg-primary-light text-primary flex h-10 w-10 items-center justify-center rounded-full">
+                  <Icon className="h-5 w-5" aria-hidden />
+                </span>
+                <h3 className="font-display text-title-md text-on-surface mt-5 font-bold">{benefit.title}</h3>
+                <p className="text-body-md text-on-surface-variant mt-2">{benefit.description}</p>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </section>
   );

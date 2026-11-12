@@ -11,7 +11,8 @@ import CvPreviewModal from './CvPreviewModal';
 import CvStepGuideSection from './CvStepGuideSection';
 import CvBenefitsSection from './CvBenefitsSection';
 import CvFaqSection from './CvFaqSection';
-import { SearchX, LayoutGrid } from 'lucide-react';
+import { buttonClassName } from '@/components/ui/Button';
+import { SearchX } from 'lucide-react';
 
 interface CvTemplatesViewProps {
   initialTemplates: CvTemplateItem[];
@@ -109,21 +110,16 @@ export default function CvTemplatesView({
         onSearchChange={setSearchQuery}
       />
 
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="text-primary bg-primary-container flex h-8 w-8 items-center justify-center rounded-lg">
-              <LayoutGrid className="h-5 w-5" />
-            </div>
-            <h2 className="text-on-surface text-xl font-bold sm:text-2xl">
-              {listTitle(styleSuffix, filteredTemplates.length)}
-            </h2>
-          </div>
-          <span className="text-on-surface-variant hidden text-xs sm:inline-block">{freeAndAtsBadge}</span>
+      <div className="container-page py-10">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-2">
+          <h2 className="font-display text-title-lg text-on-surface font-bold">
+            {listTitle(styleSuffix, filteredTemplates.length)}
+          </h2>
+          <span className="text-body-md text-on-surface-variant">{freeAndAtsBadge}</span>
         </div>
 
         {filteredTemplates.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {filteredTemplates.map((tpl) => (
               <CvTemplateCard
                 key={tpl.id}
@@ -134,10 +130,10 @@ export default function CvTemplatesView({
             ))}
           </div>
         ) : (
-          <div className="rounded-3xl border border-dashed border-gray-200 bg-white p-12 text-center">
-            <SearchX className="text-outline mx-auto mb-3 h-12 w-12" />
-            <h3 className="text-on-surface text-base font-bold">{notFoundTitle}</h3>
-            <p className="text-on-surface-variant mt-1 text-xs">{notFoundDesc}</p>
+          <div className="bg-surface border-outline-variant flex flex-col items-center gap-3 rounded-2xl border px-6 py-16 text-center">
+            <SearchX className="text-outline h-9 w-9" aria-hidden />
+            <h3 className="text-title-md text-on-surface font-semibold">{notFoundTitle}</h3>
+            <p className="text-body-md text-on-surface-variant max-w-sm">{notFoundDesc}</p>
             <button
               type="button"
               onClick={() => {
@@ -146,7 +142,7 @@ export default function CvTemplatesView({
                 setSelectedLanguage('all');
                 setSearchQuery('');
               }}
-              className="bg-primary hover:bg-primary mt-4 rounded-xl px-4 py-2 text-xs font-semibold text-white transition"
+              className={buttonClassName({ variant: 'outline', size: 'md', className: 'mt-1 px-5' })}
             >
               {viewAllBtn}
             </button>
