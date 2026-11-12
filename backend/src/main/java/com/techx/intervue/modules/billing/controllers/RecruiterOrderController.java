@@ -9,8 +9,10 @@ import com.techx.intervue.modules.billing.resources.OrderResource;
 import com.techx.intervue.modules.billing.resources.OrderStatusCountsResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
 import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
+import com.techx.intervue.modules.billing.resources.PaymentTransactionSummaryResource;
 import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
+import com.techx.intervue.modules.billing.resources.RefundStatusCountsResource;
 import com.techx.intervue.modules.billing.services.interfaces.InvoiceServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderPaymentServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
@@ -68,12 +70,28 @@ public class RecruiterOrderController extends BaseController {
                 "Payments retrieved successfully!");
     }
 
+    @GetMapping("/payments/summary")
+    public ResponseEntity<ApiResource<PaymentTransactionSummaryResource>> paymentsSummary(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                orderService.summarizePayments(principal.getId()),
+                "Payment summary retrieved successfully!");
+    }
+
     @GetMapping("/refunds")
     public ResponseEntity<ApiResource<PageResource<RefundRequestResource>>> refunds(
             Pageable pageable, @AuthenticationPrincipal CustomUserDetails principal) {
         return page(
                 refundService.listMine(principal.getId(), pageable),
                 "Refund requests retrieved successfully!");
+    }
+
+    @GetMapping("/refunds/summary")
+    public ResponseEntity<ApiResource<RefundStatusCountsResource>> refundsSummary(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                refundService.summaryForRecruiter(principal.getId()),
+                "Refund summary retrieved successfully!");
     }
 
     @GetMapping("/{code}")

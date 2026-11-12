@@ -23,6 +23,7 @@ import com.techx.intervue.modules.billing.requests.CreateRefundRequest;
 import com.techx.intervue.modules.billing.requests.ReviewRefundRequest;
 import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
+import com.techx.intervue.modules.billing.resources.RefundStatusCountsResource;
 import com.techx.intervue.modules.billing.services.interfaces.RefundServiceInterface;
 import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
@@ -30,6 +31,7 @@ import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementSer
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -115,6 +117,23 @@ public class RefundService implements RefundServiceInterface {
         return refundRepository
                 .findAllByCompanyIdOrderByCreatedAtDesc(companyId, pageable)
                 .map(refund -> toResource(refund, requireOrder(refund.getOrderId())));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RefundStatusCountsResource summaryForRecruiter(Long recruiterId) {
+        Long companyId = companyResolver.requireId(recruiterId);
+        Map<RefundStatus, Long> counts = new EnumMap<>(RefundStatus.class);
+        for (RefundStatus status : RefundStatus.values()) {
+            counts.put(status, 0L);
+        }
+        long total = 0;
+        for (RefundRequestRepository.StatusCount row :
+                refundRepository.countByStatusForCompany(companyId)) {
+            counts.put(row.getStatus(), row.getTotal());
+            total += row.getTotal();
+        }
+        return new RefundStatusCountsResource(total, counts);
     }
 
     @Override

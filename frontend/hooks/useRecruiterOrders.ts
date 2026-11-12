@@ -17,7 +17,9 @@ export const recruiterOrderKeys = {
   detail: (code: string) => ['recruiter', 'orders', 'detail', code] as const,
   payment: (code: string) => ['recruiter', 'orders', 'payment', code] as const,
   payments: (page: number, size: number) => ['recruiter', 'orders', 'payments', page, size] as const,
+  paymentsSummary: ['recruiter', 'orders', 'payments', 'summary'] as const,
   refunds: (page: number, size: number) => ['recruiter', 'orders', 'refunds', page, size] as const,
+  refundsSummary: ['recruiter', 'orders', 'refunds', 'summary'] as const,
 };
 
 const PAYMENT_POLL_MS = 4000;
@@ -86,11 +88,25 @@ export function useRecruiterPayments(page: number, size = 10) {
   });
 }
 
+export function useRecruiterPaymentsSummary() {
+  return useQuery({
+    queryKey: recruiterOrderKeys.paymentsSummary,
+    queryFn: recruiterOrderApi.paymentsSummary,
+  });
+}
+
 export function useRecruiterRefunds(page: number, size = 10) {
   return useQuery({
     queryKey: recruiterOrderKeys.refunds(page, size),
     queryFn: () => recruiterOrderApi.searchRefunds(page, size),
     placeholderData: keepPreviousData,
+  });
+}
+
+export function useRecruiterRefundsSummary() {
+  return useQuery({
+    queryKey: recruiterOrderKeys.refundsSummary,
+    queryFn: recruiterOrderApi.refundsSummary,
   });
 }
 

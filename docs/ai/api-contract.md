@@ -394,6 +394,8 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | Method | Path | Auth | Notes |
 |---|---|---|---|
 | `GET` | `/recruiter/orders/{code}/payment` | recruiter | `OrderPaymentResource`. When the bank account is not configured yet it returns `configured: false` with every bank field `null` — the endpoint never fails for that reason. |
+| `GET` | `/recruiter/orders/payments?page=&size=` | recruiter | `PageResource<PaymentTransactionResource>` of bank transfers matched to the company's orders, newest first. Always `MATCHED` from this view — an `UNMATCHED` transfer has no `matchedOrder` to join on. |
+| `GET` | `/recruiter/orders/payments/summary` | recruiter | `PaymentTransactionSummaryResource`: `{ totalCount, totalAmount }` over every bank transfer matched to the company's orders. |
 | `GET` · `PUT` | `/admin/payments/settings` | admin | `BillingSettingsResource` / `SaveBillingSettingsRequest`. `apiTokenConfigured` is read-only and reports whether `SEPAY_API_TOKEN` is present in the server environment. |
 | `GET` | `/admin/payments/transactions?status=&page=&size=` | admin | `PageResource<PaymentTransactionResource>`, newest first. `status` is `MATCHED` or `UNMATCHED`. |
 | `POST` | `/admin/payments/transactions/{id}/match` | admin | Body `{ orderCode, note? }`. Links an `UNMATCHED` transfer to an order by hand. `409 TRANSACTION_ALREADY_MATCHED`, `422 ORDER_NOT_PAYABLE`. |
@@ -469,6 +471,8 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `GET` | `/recruiter/orders/{code}/invoice` | recruiter | VAT invoice metadata. `422 INVOICE_NOT_ISSUED_YET` until the order is paid. |
 | `GET` | `/recruiter/orders/{code}/invoice/pdf` | recruiter | `application/pdf`, always available. Once `PAID`/`FULFILLED`/`REFUND_REQUESTED`/`REFUNDED`, the real numbered VAT invoice. For `PENDING_PAYMENT`, `UNDERPAID` or `CANCELLED` (no invoice issued yet), an **order confirmation** document instead — same layout and InterVue logo, titled "ORDER CONFIRMATION" with a status line underneath (`AWAITING PAYMENT` / `UNDERPAID` / `CANCELLED`), no invoice number, so a recruiter can show it to their finance team before or instead of payment. Still `404 NOT_FOUND` for `EXPIRED` and other statuses with neither document. |
 | `GET` | `/admin/invoices`, `/admin/invoices/{id}/pdf` | admin | Every issued document. |
+| `GET` | `/recruiter/orders/refunds?page=&size=` | recruiter | `PageResource<RefundRequestResource>` of the company's refund requests, newest first. |
+| `GET` | `/recruiter/orders/refunds/summary` | recruiter | `RefundStatusCountsResource`: `{ total, byStatus: { PENDING, APPROVED, REJECTED } }` for the company's refund requests. |
 | `GET`/`POST` | `/recruiter/orders/{code}/refund` | recruiter | `GET` quotes what would come back; `POST` submits `{ reason }`. |
 | `GET` | `/admin/refunds` | admin | Optional `?status=PENDING\|APPROVED\|REJECTED`. |
 | `POST` | `/admin/refunds/{id}/approve`, `/reject` | admin | `{ approvedAmount?, adminNote? }`. Audited as `REFUND_APPROVED` / `REFUND_REJECTED`. |
