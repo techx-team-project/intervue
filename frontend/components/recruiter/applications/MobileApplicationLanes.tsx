@@ -36,7 +36,7 @@ export default function MobileApplicationLanes({ lanes, handlers, selectedIds }:
         const activeColumn = lane.columns.find((column) => column.meta.id === activeStatus) ?? lane.columns[0];
 
         return (
-          <section key={lane.jobId} className="overflow-hidden rounded-2xl border border-[#e5e9ef] bg-white shadow-xs">
+          <section key={lane.jobId} className="overflow-hidden rounded-xl border border-[#e5e9ef] bg-white">
             <button
               type="button"
               onClick={() => toggleLane(lane.jobId)}
@@ -49,7 +49,7 @@ export default function MobileApplicationLanes({ lanes, handlers, selectedIds }:
                 <ChevronDown className="text-outline h-4 w-4 shrink-0" />
               )}
 
-              <span className="text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
+              <span className="text-navy bg-surface-container-low flex h-8 w-8 shrink-0 items-center justify-center rounded-lg">
                 <Briefcase className="h-4 w-4" />
               </span>
 
