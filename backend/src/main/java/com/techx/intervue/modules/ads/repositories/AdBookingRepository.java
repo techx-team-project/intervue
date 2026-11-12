@@ -16,6 +16,9 @@ public interface AdBookingRepository extends JpaRepository<AdBooking, Long> {
     Optional<AdBooking> findByAdSlotIdAndWeekStartAndStatusIn(
             Long adSlotId, LocalDate weekStart, Collection<AdBookingStatus> statuses);
 
+    boolean existsByAdSlotIdAndWeekStartAndStatusIn(
+            Long adSlotId, LocalDate weekStart, Collection<AdBookingStatus> statuses);
+
     List<AdBooking> findAllByOrderId(Long orderId);
 
     List<AdBooking> findAllByCompanyIdAndStatusOrderByWeekStartDesc(

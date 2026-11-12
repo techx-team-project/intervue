@@ -17,6 +17,8 @@ interface PackageImageFieldProps {
   helperText?: string;
   placeholder?: string;
   maxDimensions?: { width: number; height: number };
+  minDimensions?: { width: number; height: number };
+  onUpload?: (file: File) => Promise<{ url: string; publicId: string }>;
 }
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -24,6 +26,7 @@ const MAX_RAW_FILE_BYTES = 15 * 1024 * 1024;
 const MIN_IMAGE_WIDTH = 160;
 const MIN_IMAGE_HEIGHT = 90;
 const DEFAULT_MAX_DIMENSIONS = { width: 1200, height: 720 };
+const DEFAULT_MIN_DIMENSIONS = { width: MIN_IMAGE_WIDTH, height: MIN_IMAGE_HEIGHT };
 const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png']);
 const CONTROL_DARK_CLASS =
   'dark:border-forest-700 dark:bg-forest-950 dark:text-forest-50 dark:placeholder:text-forest-400';
@@ -48,14 +51,14 @@ async function normalizeUploadImage(
   file: File,
   maxWidth: number,
   maxHeight: number,
+  minWidth: number,
+  minHeight: number,
 ): Promise<{ file: File; width: number; height: number; scaled: boolean }> {
   const img = await loadImageElement(file);
   const { naturalWidth, naturalHeight } = img;
 
-  if (naturalWidth < MIN_IMAGE_WIDTH || naturalHeight < MIN_IMAGE_HEIGHT) {
-    throw new Error(
-      `Image is too small (${naturalWidth}×${naturalHeight}px). Minimum is ${MIN_IMAGE_WIDTH}×${MIN_IMAGE_HEIGHT}px.`,
-    );
+  if (naturalWidth < minWidth || naturalHeight < minHeight) {
+    throw new Error(`Image is too small (${naturalWidth}×${naturalHeight}px). Minimum is ${minWidth}×${minHeight}px.`);
   }
 
   const ratio = Math.min(maxWidth / naturalWidth, maxHeight / naturalHeight, 1);
@@ -162,6 +165,8 @@ export default function PackageImageField({
   helperText = 'Upload PNG/JPG (max 5 MB) or paste an HTTPS image URL.',
   placeholder = 'https://res.cloudinary.com/...',
   maxDimensions = DEFAULT_MAX_DIMENSIONS,
+  minDimensions = DEFAULT_MIN_DIMENSIONS,
+  onUpload,
 }: PackageImageFieldProps) {
   const inputId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -184,12 +189,19 @@ export default function PackageImageField({
 
     setIsUploading(true);
     try {
-      const processed = await normalizeUploadImage(file, maxDimensions.width, maxDimensions.height);
+      const processed = await normalizeUploadImage(
+        file,
+        maxDimensions.width,
+        maxDimensions.height,
+        minDimensions.width,
+        minDimensions.height,
+      );
       if (processed.file.size > MAX_IMAGE_BYTES) {
         toast.error('Image still exceeds the 5 MB upload limit after scaling.');
         return;
       }
-      const uploaded = await adminServicePackageApi.uploadImage(processed.file);
+      const uploadImage = onUpload ?? adminServicePackageApi.uploadImage;
+      const uploaded = await uploadImage(processed.file);
       onChange(uploaded.url);
       toast.success(
         processed.scaled

@@ -24,7 +24,7 @@ export default function Home() {
 
       <main id="main-content" className="flex-1">
         <HomeHero />
-        <AdSlot code="HOME_TOP" className="mx-auto w-full max-w-[1200px] px-4 pt-6" />
+        <AdSlot code="HOME_TOP" className="container-page pt-6" />
         <MarketPulse />
         <div className="container-page pt-12 pb-4">
           <RecommendedJobsSection limit={6} />
@@ -33,7 +33,7 @@ export default function Home() {
         <TopCategoriesSection />
         <HowItWorksSection />
         <AiShowcaseSection />
-        <AdSlot code="HOME_MID" className="mx-auto w-full max-w-[1200px] px-4 py-6" />
+        <AdSlot code="HOME_MID" className="container-page py-6" />
         <HiringCompaniesSection />
         <CallToActionSection />
       </main>

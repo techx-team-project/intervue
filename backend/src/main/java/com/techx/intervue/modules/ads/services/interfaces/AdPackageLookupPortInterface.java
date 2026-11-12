@@ -13,10 +13,13 @@ public interface AdPackageLookupPortInterface {
 
     void syncPrice(Long servicePackageId, Long price);
 
+    void syncAvailability(Long servicePackageId, boolean active);
+
     Long createBannerPackageForSlot(
             String slotCode,
             String slotName,
             String description,
             Long pricePerWeek,
+            boolean active,
             Integer displayOrder);
 }

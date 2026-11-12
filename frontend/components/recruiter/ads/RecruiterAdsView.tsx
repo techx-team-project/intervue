@@ -202,8 +202,12 @@ export default function RecruiterAdsView() {
                       lượt bấm
                     </p>
                     {booking.status === 'BOOKED' && (
-                      <Button size="sm" variant="neutral" onClick={() => setTarget(booking)}>
-                        <ImageUp className="h-4 w-4" aria-hidden />
+                      <Button
+                        size="sm"
+                        variant="neutral"
+                        leftIcon={<ImageUp className="h-4 w-4" aria-hidden />}
+                        onClick={() => setTarget(booking)}
+                      >
                         {booking.creativeStatus ? 'Đổi ảnh' : 'Tải ảnh'}
                       </Button>
                     )}
