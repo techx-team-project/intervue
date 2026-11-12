@@ -1,210 +1,114 @@
 'use client';
 
-import PageHero from '@/components/common/PageHero';
-import FollowCompanyButton from '@/components/candidate/saved/FollowCompanyButton';
-import SaveJobButton from '@/components/candidate/saved/SaveJobButton';
+import { JobSkillTags } from '@/components/jobs/listing/JobCardParts';
 import { Button } from '@/components/ui/Button';
-import { JOB_HIGHLIGHT_LABEL, JOB_HIGHLIGHT_STYLE } from '@/constants/job-highlight';
+import { useRelatedJobs } from '@/hooks/useRelatedJobs';
 import type { PublicJobResource } from '@/types/public-job';
-import { formatDate } from '@/utils/datetime';
 import { formatSalary } from '@/utils/public-company';
-import { deadlineLabel, jobFacts, textLines } from '@/utils/public-job';
-import { Clock, FileQuestion, MapPin, Send, Sparkles, Users } from 'lucide-react';
+import { textLines } from '@/utils/public-job';
+import { ChevronRight, Send } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import CandidateApplyModal from './apply/CandidateApplyModal';
-import CompanyLogo from './CompanyLogo';
+import JobApplySteps from './detail/JobApplySteps';
+import JobCompensationSection from './detail/JobCompensationSection';
+import JobDetailHeader from './detail/JobDetailHeader';
+import JobDetailNav, { type JobDetailNavItem } from './detail/JobDetailNav';
+import JobDetailSection from './detail/JobDetailSection';
+import JobDetailSidebar from './detail/JobDetailSidebar';
+import JobLocationSection from './detail/JobLocationSection';
+import JobOverviewSection from './detail/JobOverviewSection';
+import RelatedJobsSection from './detail/RelatedJobsSection';
+
+const MAX_SKILLS = 30;
 
 interface PublicJobDetailViewProps {
   job: PublicJobResource;
 }
 
-function Section({ title, text }: { title: string; text?: string }) {
-  const lines = textLines(text);
-  if (lines.length === 0) return null;
-  return (
-    <section className="bg-surface shadow-card rounded-3xl p-6 sm:p-8">
-      <h2 className="text-on-surface text-headline-sm mb-4 font-bold">{title}</h2>
-      <ul className="text-body-md text-on-surface space-y-2 leading-relaxed">
-        {lines.map((line, index) => (
-          <li key={index} className="flex gap-2.5">
-            <span className="bg-primary mt-2 h-1.5 w-1.5 shrink-0 rounded-full" aria-hidden />
-            <span>{line}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
 export default function PublicJobDetailView({ job }: PublicJobDetailViewProps) {
   const [isApplyOpen, setIsApplyOpen] = useState(false);
-  const facts = jobFacts({
-    city: job.location.city,
-    level: job.level,
-    workingArrangement: job.workingArrangement,
-    contractType: job.contractType,
-  });
-  const address = [job.location.address, job.location.city].filter(Boolean).join(', ');
-  const hasQuestions = job.screening.questionCount > 0;
+  const openApply = () => setIsApplyOpen(true);
+  const related = useRelatedJobs(job);
+
+  const description = textLines(job.description);
+  const requirements = textLines(job.requirements);
+  const benefits = textLines(job.benefits);
+  const hasRelated = related.isLoading || related.similarShown.length > 0 || related.sameCompany.length > 0;
+
+  const navItems: JobDetailNavItem[] = [
+    { id: 'overview', label: 'Overview' },
+    description.length > 0 && { id: 'description', label: 'Description' },
+    (requirements.length > 0 || job.skills.length > 0) && { id: 'requirements', label: 'Requirements' },
+    { id: 'compensation', label: 'Compensation' },
+    benefits.length > 0 && { id: 'benefits', label: 'Benefits' },
+    { id: 'location', label: 'Location & schedule' },
+    hasRelated && { id: 'related', label: 'Related jobs' },
+  ].filter((item): item is JobDetailNavItem => Boolean(item));
 
   return (
     <>
-      <PageHero
-        id="job-title"
-        eyebrow={job.company.name}
-        title={
-          <span className="flex flex-wrap items-center gap-2.5">
-            <span>{job.title}</span>
-            {job.highlighted && (
-              <span className="rounded-full bg-amber-400 px-3 py-0.5 text-xs font-bold tracking-wide text-amber-950 uppercase">
-                Nổi bật
-              </span>
-            )}
-            {job.highlightLabel && (
-              <span
-                className={`rounded-full px-3 py-0.5 text-xs font-bold tracking-wide uppercase ${JOB_HIGHLIGHT_STYLE[job.highlightLabel]}`}
-              >
-                {JOB_HIGHLIGHT_LABEL[job.highlightLabel]}
-              </span>
-            )}
-          </span>
-        }
-        crumbs={[{ label: 'Home', href: '/' }, { label: 'Jobs', href: '/jobs' }, { label: job.title }]}
-        overlap
-      >
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-white">
-          <span className="font-display text-headline-sm text-primary-bright font-bold">
-            {formatSalary(job.salary)}
-          </span>
-          {job.location.city && (
-            <span className="text-body-lg flex items-center gap-2 text-white/80">
-              <MapPin className="h-4 w-4" aria-hidden />
-              {job.location.city}
-            </span>
-          )}
-          {job.deadline && (
-            <span className="text-body-lg flex items-center gap-2 text-white/80">
-              <Clock className="h-4 w-4" aria-hidden />
-              {deadlineLabel(job.deadline)} · {formatDate(job.deadline)}
-            </span>
-          )}
-          <Button size="2xl" leftIcon={<Send className="h-4 w-4" />} onClick={() => setIsApplyOpen(true)}>
-            Apply now
-          </Button>
-          <Link
-            href={`/cv-review?jobId=${job.id}&level=3`}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-white/20"
-          >
-            <Sparkles className="h-4 w-4 text-emerald-300" />
-            Check CV fit (AI)
+      <nav aria-label="Breadcrumb" className="bg-primary-deeper">
+        <div className="container-page text-body-sm flex items-center gap-1.5 py-3.5 text-white/60">
+          <Link href="/" className="hover:text-white">
+            Home
           </Link>
-          <SaveJobButton
-            jobId={job.id}
-            variant="labeled"
-            className="border-white/40 bg-transparent text-white hover:bg-white/10"
+          <ChevronRight className="h-3 w-3" aria-hidden />
+          <Link href="/jobs" className="hover:text-white">
+            Jobs
+          </Link>
+          <ChevronRight className="h-3 w-3" aria-hidden />
+          <span className="truncate text-white/90">{job.title}</span>
+        </div>
+      </nav>
+
+      <div className="container-page grid items-start gap-6 py-8 pb-28 lg:grid-cols-[minmax(0,1fr)_22rem] lg:pb-12">
+        <div className="min-w-0 space-y-4">
+          <JobDetailHeader job={job} />
+          <JobDetailNav items={navItems} />
+          <JobOverviewSection job={job} index="01" />
+          <JobDetailSection id="description" title="Job description" index="02" lines={description} />
+          <JobDetailSection id="requirements" title="Candidate requirements" index="03" lines={requirements}>
+            {job.skills.length > 0 && (
+              <div className={requirements.length > 0 ? 'border-outline-variant mt-6 border-t pt-5' : ''}>
+                <p className="text-label-lg text-on-surface-variant mb-3 font-semibold">Skills</p>
+                <JobSkillTags skills={job.skills} max={MAX_SKILLS} />
+              </div>
+            )}
+          </JobDetailSection>
+          <JobCompensationSection job={job} similar={related.similar} index="04" />
+          <JobDetailSection id="benefits" title="Benefits" index="05" lines={benefits} />
+          <JobLocationSection job={job} index="06" />
+          <JobApplySteps job={job} />
+          <RelatedJobsSection
+            job={job}
+            similar={related.similarShown}
+            sameCompany={related.sameCompany}
+            isLoading={related.isLoading}
           />
         </div>
-        {hasQuestions && (
-          <p className="text-body-md mt-5 flex items-center gap-2 text-white/70">
-            <FileQuestion className="h-4 w-4" aria-hidden />
-            The recruiter has {job.screening.questionCount} screening questions
-            {job.screening.requiredCount > 0 && ` (${job.screening.requiredCount} required)`}, about{' '}
-            {job.screening.estimatedMinutes} minutes.
-          </p>
-        )}
-      </PageHero>
 
-      <div className="container-page relative -mt-16 space-y-5 pb-16">
-        <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-12">
-          <div className="space-y-5 lg:col-span-8">
-            <Section title="Job description" text={job.description} />
-            <Section title="Requirements" text={job.requirements} />
-            <Section title="Benefits" text={job.benefits} />
-
-            {job.skills.length > 0 && (
-              <section className="bg-surface shadow-card rounded-3xl p-6 sm:p-8">
-                <h2 className="text-on-surface text-headline-sm mb-4 font-bold">Skills</h2>
-                <div className="flex flex-wrap gap-2">
-                  {job.skills.map((skill) => (
-                    <span
-                      key={skill.id}
-                      className="bg-surface-container-high text-on-surface rounded-lg px-3 py-1 text-xs font-semibold"
-                    >
-                      {skill.name}
-                    </span>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            <div className="border-primary/30 flex flex-wrap items-center justify-center gap-3 rounded-2xl border bg-emerald-50/60 p-5 text-center">
-              <Button leftIcon={<Send className="h-4 w-4" />} onClick={() => setIsApplyOpen(true)}>
-                Apply for this position
-              </Button>
-              <Link
-                href={`/cv-review?jobId=${job.id}&level=3`}
-                className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-4 py-2.5 text-sm font-bold text-emerald-800 shadow-sm transition hover:bg-emerald-50"
-              >
-                <Sparkles className="h-4 w-4 text-emerald-600" />
-                Kiểm tra độ khớp CV (AI)
-              </Link>
-            </div>
-          </div>
-
-          <aside className="space-y-5 lg:sticky lg:top-24 lg:col-span-4">
-            <div className="bg-surface shadow-card rounded-3xl p-6">
-              <div className="flex items-center gap-3">
-                <CompanyLogo name={job.company.name} src={job.company.logoUrl} />
-                <p className="text-on-surface text-sm font-bold">{job.company.name}</p>
-              </div>
-              {job.company.address && (
-                <p className="text-on-surface-variant mt-3 text-xs leading-relaxed">{job.company.address}</p>
-              )}
-              <Link
-                href={`/companies/${job.company.id}`}
-                className="text-primary mt-3 inline-block text-xs font-bold hover:underline"
-              >
-                View company page
-              </Link>
-              <FollowCompanyButton companyId={job.company.id} className="mt-3 w-full" />
-            </div>
-
-            <div className="border-outline-variant space-y-3 rounded-2xl border bg-white p-5 shadow-2xs">
-              <h3 className="text-on-surface text-sm font-bold">General information</h3>
-              <dl className="text-body-md space-y-2.5">
-                {facts.map((fact) => (
-                  <dd key={fact} className="text-on-surface font-medium">
-                    {fact}
-                  </dd>
-                ))}
-                <div className="text-on-surface-variant flex items-center gap-1.5">
-                  <Users className="text-outline h-4 w-4" aria-hidden />
-                  Openings: {job.openings}
-                </div>
-                {address && (
-                  <div className="text-on-surface-variant flex items-start gap-1.5">
-                    <MapPin className="text-outline mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-                    {address}
-                  </div>
-                )}
-              </dl>
-            </div>
-          </aside>
-        </div>
-
-        <CandidateApplyModal
-          job={{
-            id: job.id,
-            title: job.title,
-            companyName: job.company.name,
-            requirements: textLines(job.requirements),
-            description: job.description,
-          }}
-          isOpen={isApplyOpen}
-          onClose={() => setIsApplyOpen(false)}
-        />
+        <JobDetailSidebar job={job} onApply={openApply} />
       </div>
+
+      <div className="bg-surface border-outline-variant fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t px-4 py-3 lg:hidden">
+        <p className="font-display text-title-md text-primary min-w-0 truncate font-bold">{formatSalary(job.salary)}</p>
+        <Button size="lg" leftIcon={<Send className="h-4 w-4" aria-hidden />} onClick={openApply}>
+          Apply now
+        </Button>
+      </div>
+
+      <CandidateApplyModal
+        job={{
+          id: job.id,
+          title: job.title,
+          companyName: job.company.name,
+          requirements,
+          description: job.description,
+        }}
+        isOpen={isApplyOpen}
+        onClose={() => setIsApplyOpen(false)}
+      />
     </>
   );
 }

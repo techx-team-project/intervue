@@ -1,6 +1,8 @@
 'use client';
 
 import Button from '@/components/ui/Button';
+import { hasMobileActionBar } from '@/constants/ai-chat';
+import { cn } from '@/lib/utils';
 import { ShieldCheck, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -40,15 +42,20 @@ export default function CookieConsentBanner() {
   if (!isVisible || isAdmin) return null;
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 fixed right-4 bottom-4 left-4 z-50 mx-auto max-w-3xl duration-300 sm:right-6 sm:bottom-6 sm:left-6">
-      <div className="border-outline-variant/90 shadow-elevation-2 flex flex-col gap-3.5 rounded-2xl border bg-white/95 p-4 shadow-slate-900/5 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-3.5">
+    <div
+      className={cn(
+        'animate-fade-in-up fixed right-4 left-4 z-50 sm:right-auto sm:bottom-6 sm:left-6 sm:w-[26rem]',
+        hasMobileActionBar(pathname) ? 'bottom-20' : 'bottom-4',
+      )}
+    >
+      <div className="border-outline-variant bg-surface shadow-float flex flex-col gap-4 rounded-2xl border p-5">
         <div className="flex items-start gap-3">
-          <div className="bg-primary-light text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl">
-            <ShieldCheck className="h-4 w-4" />
+          <div className="bg-primary-light text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
+            <ShieldCheck className="h-4 w-4" aria-hidden />
           </div>
           <div className="space-y-0.5">
-            <h4 className="text-on-surface text-xs font-bold">Privacy & Cookies</h4>
-            <p className="text-label-sm text-on-surface-variant leading-relaxed">
+            <h4 className="font-display text-title-sm text-on-surface font-bold">Privacy & Cookies</h4>
+            <p className="text-body-sm text-on-surface-variant leading-relaxed">
               InterVue uses security cookies to keep your session and complies with Decree 13/2023/ND-CP. See the{' '}
               <Link href="/data-processing-agreement" className="text-primary font-semibold hover:underline">
                 data processing agreement
@@ -58,22 +65,17 @@ export default function CookieConsentBanner() {
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2 sm:self-center">
+        <div className="flex items-center gap-2">
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={handleEssentialOnly}
-            className="text-label-sm text-on-surface-variant h-8 rounded-lg px-2.5 font-semibold"
+            className="flex-1 font-semibold"
           >
             Essential only
           </Button>
-          <Button
-            type="button"
-            size="sm"
-            onClick={handleAcceptAll}
-            className="bg-primary text-label-sm hover:bg-primary h-8 rounded-lg px-3 font-bold text-white"
-          >
+          <Button type="button" size="sm" onClick={handleAcceptAll} className="flex-1 font-semibold">
             Accept
           </Button>
           <button

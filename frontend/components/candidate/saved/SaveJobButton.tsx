@@ -29,16 +29,16 @@ export default function SaveJobButton({ jobId, variant = 'icon', className }: Sa
       return;
     }
     if (!hasRole('CANDIDATE')) {
-      toast.info('Chỉ tài khoản ứng viên mới lưu được việc làm.');
+      toast.info('Only candidate accounts can save jobs.');
       return;
     }
     toggle.mutate(
       { id: jobId, active: !saved },
-      { onSuccess: () => toast.success(saved ? 'Đã bỏ lưu việc làm.' : 'Đã lưu việc làm.') },
+      { onSuccess: () => toast.success(saved ? 'Job removed from your saved list.' : 'Job saved.') },
     );
   };
 
-  const label = saved ? 'Bỏ lưu việc làm' : 'Lưu việc làm';
+  const label = saved ? 'Unsave job' : 'Save job';
 
   if (variant === 'labeled') {
     return (
@@ -51,7 +51,7 @@ export default function SaveJobButton({ jobId, variant = 'icon', className }: Sa
         leftIcon={<Heart className={cn('h-4 w-4', saved && 'fill-current')} />}
         onClick={onClick}
       >
-        {saved ? 'Đã lưu' : 'Lưu việc làm'}
+        {saved ? 'Saved' : 'Save job'}
       </Button>
     );
   }

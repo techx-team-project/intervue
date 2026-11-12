@@ -28,6 +28,10 @@ export const DEFAULT_GREETING =
 
 export const AI_CHAT_SESSION_KEY = 'intervue.ai.chat.sessionId';
 
+export function hasMobileActionBar(pathname: string | null | undefined): boolean {
+  return Boolean(pathname && /^\/jobs\/\d+/.test(pathname));
+}
+
 export function hasBottomBar(pathname: string | null | undefined): boolean {
   if (!pathname) return false;
   return (

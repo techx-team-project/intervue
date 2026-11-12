@@ -11,6 +11,7 @@ export type PublicJobSearchParams = {
   salaryFrom?: number;
   currency?: string;
   skillIds?: number[];
+  companyId?: number;
   postedWithinDays?: number;
   sort?: string;
   page?: number;
@@ -29,6 +30,7 @@ function toQuery(params: PublicJobSearchParams) {
   params.skillIds?.forEach((id) => query.append('skillIds', String(id)));
   if (params.postedWithinDays) query.set('postedWithinDays', String(params.postedWithinDays));
   if (params.sort) query.set('sort', params.sort);
+  if (params.companyId) query.set('companyId', String(params.companyId));
   query.set('page', String(params.page ?? 0));
   query.set('size', String(params.size ?? 12));
   return query.toString();

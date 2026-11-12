@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { ArrowRight, Briefcase, Clock, MapPin, Search } from 'lucide-react';
 import type { CompanyJobItem } from '@/types/company';
+import { foldDiacritics } from '@/utils/text';
+import { Clock, MapPin, Search, SearchX } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 
 interface CompanyJobsSectionProps {
   jobs: CompanyJobItem[];
@@ -12,109 +13,82 @@ interface CompanyJobsSectionProps {
 
 export default function CompanyJobsSection({ jobs, companyName }: CompanyJobsSectionProps) {
   const [searchTerm, setSearchTerm] = useState('');
-
-  const filteredJobs = jobs.filter((job) => {
-    const matchSearch =
-      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-
-    return matchSearch;
-  });
+  const needle = foldDiacritics(searchTerm.trim());
+  const filteredJobs = jobs.filter(
+    (job) => foldDiacritics(job.title).includes(needle) || job.tags.some((tag) => foldDiacritics(tag).includes(needle)),
+  );
 
   return (
-    <section id="section-jobs" className="border-outline-variant/90 rounded-2xl border bg-white p-5 shadow-2xs sm:p-7">
-      <div className="border-outline-variant flex flex-wrap items-center justify-between gap-3 border-b pb-4">
-        <div className="flex items-center gap-2.5">
-          <div className="text-primary bg-primary-light flex h-8 w-8 items-center justify-center rounded-lg">
-            <Briefcase className="h-4.5 w-4.5" />
-          </div>
-          <div>
-            <h2 className="text-on-surface text-lg font-bold sm:text-xl">Open positions</h2>
-            <p className="text-on-surface-variant mt-0.5 text-xs">Latest job opportunities from {companyName}</p>
-          </div>
+    <section id="section-jobs" className="space-y-4">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="font-display text-title-lg text-on-surface font-bold">Open positions</h2>
+          <p className="text-body-md text-on-surface-variant mt-0.5">
+            {jobs.length} {jobs.length === 1 ? 'job' : 'jobs'} at {companyName}
+          </p>
         </div>
-
-        <span className="bg-primary-container text-primary rounded-full px-3 py-1 text-xs font-bold">
-          {jobs.length} open positions
-        </span>
-      </div>
-
-      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
-          <Search className="text-outline absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search by job title or skill keyword..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="focus:border-primary focus:ring-primary border-outline-variant bg-surface-container-low/60 text-on-surface w-full rounded-xl border py-2.5 pr-4 pl-10 text-xs placeholder-slate-400 transition focus:bg-white focus:ring-1 focus:outline-none"
+        <label className="relative block w-full sm:w-72">
+          <Search
+            className="text-on-surface-variant pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2"
+            aria-hidden
           />
+          <input
+            type="search"
+            placeholder="Search by title or skill"
+            aria-label="Search open positions"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            className="text-body-md text-on-surface placeholder:text-on-surface-variant border-outline hover:border-on-surface-variant/60 focus:border-primary h-10 w-full rounded-full border bg-white pr-4 pl-10 transition-colors outline-none focus:ring-2 focus:ring-emerald-600/15"
+          />
+        </label>
+      </div>
+
+      {filteredJobs.length === 0 ? (
+        <div className="bg-surface border-outline-variant flex flex-col items-center gap-2 rounded-2xl border px-6 py-14 text-center">
+          <SearchX className="text-outline h-9 w-9" aria-hidden />
+          <p className="text-title-md text-on-surface font-semibold">No open positions match your search</p>
+          <p className="text-body-md text-on-surface-variant">Try a different keyword.</p>
         </div>
-      </div>
-
-      <div className="mt-5 space-y-3.5">
-        {filteredJobs.length === 0 ? (
-          <div className="text-on-surface-variant py-12 text-center">
-            <Briefcase className="text-outline mx-auto mb-2 h-10 w-10" />
-            <p className="text-sm font-semibold">No open positions match this keyword.</p>
-            <p className="text-outline mt-1 text-xs">Please try a different keyword.</p>
-          </div>
-        ) : (
-          filteredJobs.map((job) => (
-            <div
-              key={job.id}
-              className="group hover:border-primary/70 border-outline-variant/90 hover:shadow-elevation-1 rounded-xl border bg-white p-4.5 transition duration-200"
-            >
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div className="min-w-0 flex-1">
-                  <Link href={`/jobs/${job.id}`}>
-                    <h3 className="group-hover:text-primary text-body-lg text-on-surface mt-1 font-bold transition-colors">
+      ) : (
+        <ul className="space-y-4">
+          {filteredJobs.map((job) => (
+            <li key={job.id}>
+              <article className="group bg-surface border-outline-variant ease-standard hover:border-primary hover:shadow-card relative flex flex-wrap items-start justify-between gap-4 rounded-2xl border p-5 transition-all duration-200 hover:-translate-y-0.5">
+                <div className="min-w-0 flex-1 space-y-3">
+                  <h3 className="font-display text-title-md text-on-surface font-bold">
+                    <Link href={`/jobs/${job.id}`} className="after:absolute after:inset-0 after:content-['']">
                       {job.title}
-                    </h3>
-                  </Link>
-
-                  <div className="text-on-surface-variant mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs">
-                    <span className="bg-primary-light text-primary rounded border border-emerald-100 px-2 py-0.5 font-extrabold">
-                      {job.salary}
-                    </span>
-
-                    <span className="text-on-surface-variant flex items-center gap-1">
-                      <MapPin className="text-outline h-3.5 w-3.5" />
-                      <span>{job.location}</span>
-                    </span>
-
-                    <span className="text-on-surface-variant flex items-center gap-1">
-                      <Clock className="text-outline h-3.5 w-3.5" />
-                      <span>{job.deadline}</span>
-                    </span>
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {job.tags.map((tag, idx) => (
-                      <span
-                        key={idx}
-                        className="bg-surface-container-high text-label-sm text-on-surface-variant rounded-md px-2 py-0.5 font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                    </Link>
+                  </h3>
+                  <ul className="text-body-md text-on-surface-variant flex flex-wrap gap-x-5 gap-y-1.5">
+                    <li className="flex items-center gap-1.5">
+                      <MapPin className="text-primary h-4 w-4" aria-hidden />
+                      {job.location}
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <Clock className="text-primary h-4 w-4" aria-hidden />
+                      {job.deadline}
+                    </li>
+                  </ul>
+                  {job.tags.length > 0 && (
+                    <ul className="flex flex-wrap gap-1.5" aria-label="Skills">
+                      {job.tags.map((tag) => (
+                        <li
+                          key={tag}
+                          className="border-outline-variant text-label-md text-on-surface-variant rounded-md border px-2 py-0.5 font-medium"
+                        >
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-
-                <div className="shrink-0 pt-2 sm:pt-0">
-                  <Link
-                    href={`/jobs/${job.id}`}
-                    className="hover:bg-primary-hover bg-primary inline-flex cursor-pointer items-center gap-1 rounded-xl px-4 py-2 text-xs font-bold text-white shadow-xs transition group-hover:shadow-sm"
-                  >
-                    <span>Apply</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+                <p className="font-display text-title-md text-primary font-bold">{job.salary}</p>
+              </article>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   );
 }

@@ -52,7 +52,7 @@ export function ChatPanel({
       role="dialog"
       aria-label="InterVue support chat"
       aria-hidden={!isOpen}
-      className={`fixed right-3 bottom-[125px] left-3 z-50 flex h-[540px] max-h-[calc(100dvh-145px)] w-auto origin-bottom-right flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white/95 shadow-2xl shadow-emerald-950/20 backdrop-blur-md transition-all duration-300 ease-out sm:right-6 sm:bottom-[135px] sm:left-auto sm:w-[410px] ${
+      className={`fixed right-3 bottom-[105px] left-3 z-50 flex h-[540px] max-h-[calc(100dvh-125px)] w-auto origin-bottom-right flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white/95 shadow-2xl shadow-emerald-950/20 backdrop-blur-md transition-all duration-300 ease-out sm:right-6 sm:bottom-[115px] sm:left-auto sm:w-[410px] ${
         isOpen
           ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
           : 'pointer-events-none translate-y-3 scale-95 opacity-0'

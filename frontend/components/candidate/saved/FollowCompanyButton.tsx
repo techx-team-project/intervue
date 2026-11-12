@@ -28,7 +28,7 @@ export default function FollowCompanyButton({ companyId, className }: FollowComp
       return;
     }
     if (!hasRole('CANDIDATE')) {
-      toast.info('Chỉ tài khoản ứng viên mới theo dõi được công ty.');
+      toast.info('Only candidate accounts can follow companies.');
       return;
     }
     toggle.mutate(
@@ -36,7 +36,9 @@ export default function FollowCompanyButton({ companyId, className }: FollowComp
       {
         onSuccess: () =>
           toast.success(
-            following ? 'Đã bỏ theo dõi công ty.' : 'Đã theo dõi công ty. Bạn sẽ nhận thông báo khi có tin mới.',
+            following
+              ? 'You unfollowed this company.'
+              : 'You are following this company. We will notify you about new jobs.',
           ),
       },
     );
@@ -56,7 +58,7 @@ export default function FollowCompanyButton({ companyId, className }: FollowComp
       )}
     >
       <Icon className="h-4 w-4" aria-hidden />
-      <span>{following ? 'Đang theo dõi' : 'Theo dõi'}</span>
+      <span>{following ? 'Following' : 'Follow'}</span>
     </button>
   );
 }

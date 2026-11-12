@@ -48,7 +48,7 @@ export interface PublicJobResource {
   level?: JobLevel;
   contractType?: ContractType;
   workingArrangement?: WorkingArrangement;
-  location: { city?: string; address?: string };
+  location: { city?: string; address?: string; latitude?: number; longitude?: number };
   salary: JobSalary;
   skills: SkillResource[];
   description?: string;
