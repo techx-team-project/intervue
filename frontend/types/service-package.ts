@@ -35,7 +35,6 @@ export interface ServicePackageSection {
 
 export interface ServicePackageCard {
   id: number;
-  code: string;
   slug: string;
   name: string;
   shortDescription: string | null;

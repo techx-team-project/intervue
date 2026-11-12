@@ -37,9 +37,6 @@ public class ServicePackage extends BaseEntity {
     @JoinColumn(name = "category_id", nullable = false)
     private ServiceCategory category;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String code;
-
     @Column(nullable = false, unique = true, length = 120)
     private String slug;
 

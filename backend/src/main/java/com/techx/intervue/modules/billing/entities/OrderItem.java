@@ -37,9 +37,6 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "package_id")
     private ServicePackage servicePackage;
 
-    @Column(name = "package_code", nullable = false, length = 50)
-    private String packageCode;
-
     @Column(name = "package_name", nullable = false, length = 150)
     private String packageName;
 

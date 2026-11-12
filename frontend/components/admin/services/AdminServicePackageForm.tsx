@@ -17,7 +17,6 @@ import { serviceCatalogKeys } from '@/hooks/useServiceCatalog';
 import { adminServicePackageKeys } from '@/lib/admin-service-packages';
 import {
   buildSamplePackageFormData,
-  codeifyPackageName,
   PACKAGE_FIELD_LIMITS,
   saveServicePackageSchema,
   slugifyPackageName,
@@ -82,7 +81,6 @@ export default function AdminServicePackageForm({
 
   const isEditing = Boolean(initial);
   const [slugTouched, setSlugTouched] = useState(Boolean(initial?.slug));
-  const [codeTouched, setCodeTouched] = useState(Boolean(initial?.code));
   const [orderTouched, setOrderTouched] = useState(Boolean(initial));
 
   const defaultCategoryId =
@@ -126,7 +124,6 @@ export default function AdminServicePackageForm({
   }, [creditBenefitSum, setValue, watchedValues.bonusCredits]);
 
   const nameField = register('name');
-  const codeField = register('code');
   const slugField = register('slug');
   const displayOrderField = register('displayOrder');
 
@@ -150,7 +147,6 @@ export default function AdminServicePackageForm({
     } catch (cause) {
       applyFormError(cause, setError, [
         'categoryId',
-        'code',
         'slug',
         'name',
         'shortDescription',
@@ -184,7 +180,6 @@ export default function AdminServicePackageForm({
     });
 
     reset(sample);
-    setCodeTouched(true);
     setSlugTouched(true);
     setOrderTouched(true);
     toast.success('Sample package fields filled. Upload section images manually if needed.');
@@ -358,23 +353,7 @@ export default function AdminServicePackageForm({
                     if (!slugTouched) {
                       setValue('slug', slugifyPackageName(nextName), { shouldValidate: Boolean(nextName) });
                     }
-                    if (!codeTouched) {
-                      setValue('code', codeifyPackageName(nextName), { shouldValidate: Boolean(nextName) });
-                    }
                   }
-                }}
-              />
-
-              <Input
-                label="Code *"
-                placeholder="PRO_MAX_PLUS"
-                helperText="Uppercase letters, digits and underscores"
-                error={errors.code?.message}
-                className={`font-mono uppercase ${CONTROL_DARK_CLASS}`}
-                {...codeField}
-                onChange={(event) => {
-                  codeField.onChange(event);
-                  setCodeTouched(event.target.value.trim().length > 0);
                 }}
               />
 

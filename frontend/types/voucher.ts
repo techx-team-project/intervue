@@ -6,7 +6,6 @@ export type VoucherAccentColor = 'EMERALD' | 'AMBER' | 'ROSE' | 'BLUE';
 
 export interface VoucherPackageSummary {
   id: number;
-  code: string;
   slug: string;
   name: string;
 }

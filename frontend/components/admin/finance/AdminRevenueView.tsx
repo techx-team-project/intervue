@@ -123,10 +123,9 @@ export default function AdminRevenueView({ report }: { report: RevenueReport }) 
             <table className="mt-3 w-full text-sm">
               <tbody>
                 {report.byPackage.map((row) => (
-                  <tr key={row.packageCode} className="border-outline-variant border-b last:border-0">
+                  <tr key={row.packageName} className="border-outline-variant border-b last:border-0">
                     <td className="py-2">
                       <p className="text-on-surface font-semibold">{row.packageName}</p>
-                      <p className="text-on-surface-variant text-xs">{row.packageCode}</p>
                     </td>
                     <td className="text-on-surface-variant py-2 text-xs">×{row.quantity}</td>
                     <td className="text-on-surface py-2 text-right font-semibold">{money(row.collected)}</td>

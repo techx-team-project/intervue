@@ -121,7 +121,7 @@ export function getVoucherRibbonText(
   const custom = ribbonLabel?.trim();
   if (custom) return custom.toUpperCase();
   if (applicablePackages && applicablePackages.length === 1) {
-    return applicablePackages[0].code.toUpperCase();
+    return applicablePackages[0].name.toUpperCase();
   }
   if (applicablePackages && applicablePackages.length > 1) {
     return `${applicablePackages.length} PACKAGES`;

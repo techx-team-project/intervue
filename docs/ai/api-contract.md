@@ -354,17 +354,17 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `PUT` | `/admin/service-categories/reorder` | admin | Body `{ items: [{ id, displayOrder }] }`. Updates category display order atomically and returns sorted `AdminServiceCategoryResource[]`. |
 | `POST` | `/admin/service-categories/{id}/activate` · `/deactivate` | admin | Toggles category visibility (`isActive`). When hidden, all packages in that category are unavailable on detail, cart, voucher, and checkout endpoints. |
 | `DELETE` | `/admin/service-categories/{id}` | admin | `409 SERVICE_CATEGORY_IN_USE` while any package still points at it. |
-| `GET` | `/admin/service-packages?query=&categoryId=&status=&page=&size=` | admin | `PageResource<AdminServicePackageResource>`; `query` matches name or code. |
+| `GET` | `/admin/service-packages?query=&categoryId=&status=&page=&size=` | admin | `PageResource<AdminServicePackageResource>`; `query` matches name or slug. |
 | `GET` | `/admin/service-packages/{id}` | admin | `AdminServicePackageResource`. |
-| `POST` · `PUT` | `/admin/service-packages` · `/{id}` | admin | Body `SaveServicePackageRequest`. `benefits` and `sections` are a **full replace**; omit them to clear. `409 DUPLICATE_PACKAGE_CODE` when `code` or `slug` is taken. |
+| `POST` · `PUT` | `/admin/service-packages` · `/{id}` | admin | Body `SaveServicePackageRequest`. `benefits` and `sections` are a **full replace**; omit them to clear. `409 DUPLICATE_PACKAGE_CODE` when `slug` is taken. |
 | `POST` | `/admin/service-packages/upload-image` | admin | Multipart `file` (`JPEG`/`PNG`, max 5 MB). Returns `{ url, publicId }` stored in Cloudinary for hero or detail section artwork. |
 | `POST` | `/admin/service-packages/{id}/activate` · `/deactivate` | admin | Packages are never deleted; a non-`ACTIVE` package disappears from the recruiter catalog. |
 
 - `ServiceCategoryResource`: `{ id, code, name, headline, description, needKey, packages: [ServicePackageCardResource] }`. `needKey` is what the "suggest a package" modal maps a recruiter's chosen need onto (`REACH`, `CONNECT`, `HIGHLIGHT`, `BRANDING`); it is data, never hard-coded in the frontend.
-- `ServicePackageCardResource`: `{ id, code, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, validityDays, bonusCredits, oneTimePerCompany, benefits }`. `badge` is `NONE`, `NEW` or `SPECIAL_OFFER`. `price` is an integer amount of `currency` (`VND`), **excluding VAT** — the UI shows it with the red asterisk.
+- `ServicePackageCardResource`: `{ id, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, validityDays, bonusCredits, oneTimePerCompany, benefits }`. `badge` is `NONE`, `NEW` or `SPECIAL_OFFER`. `price` is an integer amount of `currency` (`VND`), **excluding VAT** — the UI shows it with the red asterisk.
 - `ServicePackageDetailResource` adds `heroImageUrl`, `categoryCode`, `categoryName`, `categoryHeadline` and `sections: [{ heading, iconName, accentColor, body, imageUrl }]`, where `body` is markdown.
 - `ServicePackageBenefitResource`: `{ entitlementType, quantity, tier, durationDays, label }`. `tier` must be `1–3` for `JOB_BOOST` and `1` for every other `entitlementType`. Time-boxed types (`JOB_POST_SLOT`, `JOB_BOOST`, `JOB_LABEL_URGENT`, `JOB_LABEL_HOT`, `JOB_HIGHLIGHT`, `BRAND_PAGE`, `FEATURED_COMPANY`, `AD_SLOT_WEEK`) require `durationDays` in `1–3650` (`400 VALIDATION_FAILED` otherwise). `entitlementType` is the machine-readable right a purchase grants (`JOB_POST_SLOT`, `JOB_BOOST`, `JOB_LABEL_URGENT`, `JOB_LABEL_HOT`, `JOB_HIGHLIGHT`, `JOB_RETOP`, `JOB_ALERT_PUSH`, `AI_RESUME_MATCH`, `AI_JD_GENERATE`, `BRAND_PAGE`, `FEATURED_COMPANY`, `AD_SLOT_WEEK`, `CREDIT`); `label` is the Vietnamese line shown on the card. When `CREDIT` benefit rows are present, `bonusCredits` is synced from their quantity sum; updating a banner package price also syncs `AdSlot.pricePerWeek`.
-- `SaveServicePackageRequest`: `{ categoryId, code, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, heroImageUrl, validityDays, bonusCredits, oneTimePerCompany, status, displayOrder, benefits: [{ entitlementType, quantity, tier, durationDays, label }], sections: [{ heading, iconName, accentColor, body, imageUrl }] }`. `code` is `^[A-Z0-9_]+$`, `slug` is `^[a-z0-9-]+$`.
+- `SaveServicePackageRequest`: `{ categoryId, slug, name, shortDescription, price, currency, badge, vipRibbon, accentColor, heroImageUrl, validityDays, bonusCredits, oneTimePerCompany, status, displayOrder, benefits: [{ entitlementType, quantity, tier, durationDays, label }], sections: [{ heading, iconName, accentColor, body, imageUrl }] }`. `slug` (`^[a-z0-9-]+$`) is the package's only identifier string; the `oneTimePerCompany` repeat-purchase check keys off the package's numeric id, not a string code.
 - Every admin write is audited (`SERVICE_CATEGORY_*`, `SERVICE_PACKAGE_*`).
 
 ## Cart and orders (billing)
@@ -381,7 +381,7 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `POST` | `/recruiter/orders` | recruiter | Checkout. Send `packageId` (+ optional `quantity`) to buy one package without touching the cart. Otherwise the cart is used: `cartItemIds` buys only those lines and leaves the rest in the cart, omitting it buys everything. |
 | `POST` | `/recruiter/orders/{code}/cancel` | recruiter | Only the recruiter who created the order may cancel it (`403 FORBIDDEN` otherwise), and only while `PENDING_PAYMENT` or `UNDERPAID` (`422 ORDER_NOT_PAYABLE`). |
 
-- `CartResource`: `{ items, subtotal, vatRate, vatAmount, totalAmount, currency }`. `CartItemResource`: `{ id, packageId, code, slug, name, shortDescription, unitPrice, currency, quantity, lineTotal, validityDays, oneTimePerCompany, adSlotItem, weeks }`.
+- `CartResource`: `{ items, subtotal, vatRate, vatAmount, totalAmount, currency }`. `CartItemResource`: `{ id, packageId, slug, name, shortDescription, unitPrice, currency, quantity, lineTotal, validityDays, oneTimePerCompany, adSlotItem, weeks }`.
 - `CheckoutRequest`: `{ packageId?, quantity?, cartItemIds?, invoiceType: BUSINESS | PERSONAL, taxId?, companyName?, companyAddress?, fullName?, identityNumber?, personalAddress?, recipientEmail, termsAccepted }`. A `BUSINESS` invoice requires `taxId` and `companyName`; a `PERSONAL` invoice requires `fullName`; `termsAccepted` must be true. All three surface as `400 VALIDATION_FAILED`.
 - **Money:** `totalAmount = (subtotal − discountAmount) + vatAmount`, where `vatAmount` is the VAT rate applied to the amount **after** discount and rounded `HALF_UP` to whole đồng. Catalog prices exclude VAT; the order stores all five figures plus the `vatRate` used, so changing the rate later never alters an existing order.
 - **Ownership:** an order belongs to `company_id` and records `purchased_by_recruiter_id`. A recruiter with no company gets `403 NOT_COMPANY_MEMBER` on checkout and on every order read.
@@ -634,7 +634,7 @@ from the wave 1 design during implementation:
 | `REFUND_ALREADY_REQUESTED` | 409 | This order already has a refund request |
 | `REFUND_ALREADY_REVIEWED` | 409 | The request was already approved or rejected |
 | `NOTHING_LEFT_TO_REFUND` | 422 | Every service on the order has been activated |
-| `DUPLICATE_PACKAGE_CODE` | 409 | A service category or package already uses this `code`/`slug` |
+| `DUPLICATE_PACKAGE_CODE` | 409 | A service package already uses this `slug` |
 | `SERVICE_CATEGORY_IN_USE` | 409 | The category still has packages and cannot be deleted |
 | `BILLING_NOT_CONFIGURED` | 503 | `billing_settings` has no row |
 | `CART_EMPTY` | 422 | Checkout with nothing to buy |

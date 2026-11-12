@@ -336,7 +336,7 @@ public class OrderService implements OrderServiceInterface {
             }
             if (Boolean.TRUE.equals(servicePackage.getOneTimePerCompany())
                     && orderItemRepository.existsForCompanyAndPackage(
-                            companyId, servicePackage.getCode(), ONE_TIME_BLOCKING)) {
+                            companyId, servicePackage.getId(), ONE_TIME_BLOCKING)) {
                 throw new AppException(ErrorCode.TRIAL_ALREADY_USED);
             }
         }
@@ -351,7 +351,6 @@ public class OrderService implements OrderServiceInterface {
                     OrderItem.builder()
                             .order(order)
                             .servicePackage(servicePackage)
-                            .packageCode(servicePackage.getCode())
                             .packageName(servicePackage.getName())
                             .unitPrice(servicePackage.getPrice())
                             .quantity(quantity)

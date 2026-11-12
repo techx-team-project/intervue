@@ -1,7 +1,6 @@
 export interface RecruiterCartItem {
   id: number;
   packageId: number;
-  code: string;
   slug: string;
   name: string;
   shortDescription: string | null;

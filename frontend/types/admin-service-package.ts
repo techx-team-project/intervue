@@ -29,7 +29,6 @@ export interface AdminServicePackage {
   id: number;
   categoryId: number;
   categoryCode: string;
-  code: string;
   slug: string;
   name: string;
   shortDescription: string | null;
@@ -60,7 +59,6 @@ export interface SaveServiceCategoryInput {
 
 export interface SaveServicePackageInput {
   categoryId: number;
-  code: string;
   slug: string;
   name: string;
   shortDescription?: string | null;

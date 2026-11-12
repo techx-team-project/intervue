@@ -46,10 +46,6 @@ public interface ServicePackageRepository
 
     long countByCategoryIdAndStatus(Long categoryId, ServicePackageStatus status);
 
-    boolean existsByCode(String code);
-
-    boolean existsByCodeAndIdNot(String code, Long id);
-
     boolean existsBySlug(String slug);
 
     boolean existsBySlugAndIdNot(String slug, Long id);

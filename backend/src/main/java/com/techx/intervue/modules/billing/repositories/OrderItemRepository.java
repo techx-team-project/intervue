@@ -18,11 +18,11 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
             """
             select count(item) > 0 from OrderItem item
             where item.order.companyId = :companyId
-              and item.packageCode = :packageCode
+              and item.servicePackage.id = :packageId
               and item.order.status in :statuses
             """)
     boolean existsForCompanyAndPackage(
             @Param("companyId") Long companyId,
-            @Param("packageCode") String packageCode,
+            @Param("packageId") Long packageId,
             @Param("statuses") Collection<OrderStatus> statuses);
 }
