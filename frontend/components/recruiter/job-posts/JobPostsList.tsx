@@ -32,6 +32,7 @@ interface JobPostsListProps {
   isAllSelected: boolean;
   onConfirm: (request: { title: string; message: string; run: () => void }) => void;
   onRenew: (job: RecruiterJobPost) => void;
+  onExtend: (job: RecruiterJobPost) => void;
   onHistory: (job: RecruiterJobPost) => void;
   onStats: (job: RecruiterJobPost) => void;
 }
@@ -53,6 +54,7 @@ export default function JobPostsList({
   isAllSelected,
   onConfirm,
   onRenew,
+  onExtend,
   onHistory,
   onStats,
 }: JobPostsListProps) {
@@ -98,6 +100,7 @@ export default function JobPostsList({
               }
               onDuplicate={() => actions.duplicateJob(job.id)}
               onRenew={() => onRenew(job)}
+              onExtend={() => onExtend(job)}
               onHistory={() => onHistory(job)}
               onStats={() => onStats(job)}
               onDelete={() =>
