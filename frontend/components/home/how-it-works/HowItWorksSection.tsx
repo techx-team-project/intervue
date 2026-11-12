@@ -27,38 +27,34 @@ const STEPS: Step[] = [
 
 export default function HowItWorksSection() {
   return (
-    <section aria-labelledby="how-title" className="bg-surface-container-low py-24">
+    <section aria-labelledby="how-title" className="bg-surface py-24">
       <div className="container-page">
         <Reveal>
           <SectionHeader
             id="how-title"
+            index="02"
             eyebrow="How InterVue works"
             title="Three steps to the right job"
             description="A clear, transparent process with a human behind every decision."
-            align="center"
           />
         </Reveal>
 
-        <ol className="medium:grid-cols-3 relative grid grid-cols-1 gap-6">
-          <div
-            aria-hidden
-            className="border-outline medium:block absolute top-16 right-[16%] left-[16%] hidden border-t-2 border-dashed"
-          />
+        <ol className="medium:grid-cols-3 grid grid-cols-1 gap-x-10 gap-y-12">
           {STEPS.map(({ id, icon: Icon, title, description }, index) => (
             <li key={id}>
               <Reveal delay={index === 0 ? 0 : index === 1 ? 1 : 2} className="h-full">
-                <div className="bg-surface shadow-card relative h-full rounded-3xl p-8">
-                  <span
-                    aria-hidden
-                    className="font-display text-primary/15 absolute top-6 right-8 text-[72px] leading-none font-extrabold"
-                  >
-                    {id}
-                  </span>
-                  <span className="bg-primary relative flex h-16 w-16 items-center justify-center rounded-2xl text-white">
-                    <Icon className="h-8 w-8" aria-hidden />
-                  </span>
-                  <h3 className="font-display text-headline-sm text-on-surface mt-6 font-bold">{title}</h3>
-                  <p className="text-body-lg text-on-surface-variant mt-3">{description}</p>
+                <div className="border-primary-deeper h-full border-t-2 pt-6">
+                  <div className="flex items-start justify-between">
+                    <span
+                      aria-hidden
+                      className="font-display text-primary text-[56px] leading-[0.9] font-extrabold tracking-tighter"
+                    >
+                      {id}
+                    </span>
+                    <Icon className="text-on-surface h-6 w-6" aria-hidden />
+                  </div>
+                  <h3 className="font-display text-title-lg text-on-surface mt-6 font-bold">{title}</h3>
+                  <p className="text-body-lg text-on-surface-variant mt-3 max-w-sm">{description}</p>
                 </div>
               </Reveal>
             </li>

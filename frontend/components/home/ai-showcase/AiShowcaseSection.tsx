@@ -36,34 +36,33 @@ const STRENGTHS = ['Skills match the Backend role', 'Experience is described wit
 
 export default function AiShowcaseSection() {
   return (
-    <section aria-labelledby="ai-title" className="bg-forest-950 relative overflow-hidden py-24">
+    <section aria-labelledby="ai-title" className="bg-primary-deeper relative overflow-hidden py-24">
       <div aria-hidden className="bg-grid mask-fade-b absolute inset-0 opacity-60" />
 
       <div className="container-page relative grid items-center gap-16 lg:grid-cols-2">
         <Reveal>
           <SectionHeader
             id="ai-title"
+            index="03"
             eyebrow="AI tools"
             title="AI by your side at every step of applying"
             description="Prepare better, apply with confidence, and always know how your data is used."
             tone="dark"
           />
 
-          <ul className="space-y-6">
+          <ul className="border-t border-white/10">
             {CAPABILITIES.map(({ id, icon: Icon, title, description }) => (
-              <li key={id} className="flex gap-4">
-                <span className="bg-primary/15 text-primary-bright flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl">
-                  <Icon className="h-6 w-6" aria-hidden />
-                </span>
+              <li key={id} className="flex gap-5 border-b border-white/10 py-6">
+                <Icon className="text-primary-bright mt-1 h-6 w-6 shrink-0" aria-hidden />
                 <div>
-                  <h3 className="text-title-lg font-bold text-white">{title}</h3>
-                  <p className="text-body-lg mt-1 text-white/65">{description}</p>
+                  <h3 className="font-display text-title-lg font-bold text-white">{title}</h3>
+                  <p className="text-body-lg mt-1 text-white/60">{description}</p>
                 </div>
               </li>
             ))}
           </ul>
 
-          <p className="text-body-md mt-8 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-white/75">
+          <p className="text-body-md mt-8 flex items-start gap-3 text-white/70">
             <ShieldCheck className="text-primary-bright mt-0.5 h-5 w-5 shrink-0" aria-hidden />
             AI only assists. InterVue never automatically accepts or rejects an application. Recruiters make the final
             decision.
@@ -76,7 +75,7 @@ export default function AiShowcaseSection() {
 
         <Reveal delay={2}>
           <div aria-hidden className="relative mx-auto w-full max-w-[520px] space-y-5">
-            <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-sm">
+            <div className="bg-forest-900 rounded-[28px] border border-white/10 p-6">
               <div className="flex items-center gap-5">
                 <svg viewBox="0 0 100 100" className="h-24 w-24 shrink-0 -rotate-90">
                   <circle cx="50" cy="50" r={RING_RADIUS} fill="none" strokeWidth="9" className="stroke-white/10" />
@@ -112,7 +111,7 @@ export default function AiShowcaseSection() {
               </ul>
             </div>
 
-            <div className="space-y-3 rounded-3xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-sm">
+            <div className="bg-forest-900 space-y-3 rounded-[28px] border border-white/10 p-6">
               <p className="text-label-md text-white/60">Mock interview</p>
               <p className="text-body-md max-w-[85%] rounded-2xl rounded-tl-md bg-white/10 px-4 py-3 text-white">
                 Describe a time you improved the performance of a live system.

@@ -32,7 +32,8 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={selectId}
             className={cn(
-              'text-on-surface w-full appearance-none rounded-xl border bg-white px-3.5 py-2.5 pr-10 text-sm transition-colors',
+              'text-on-surface min-h-11 w-full cursor-pointer appearance-none rounded-xl border bg-white px-3.5 py-2.5 pr-10 text-sm transition-colors',
+              'hover:border-on-surface-variant/60 disabled:bg-surface-container-low disabled:text-on-surface-variant disabled:cursor-not-allowed',
               'focus:border-primary focus:ring-2 focus:ring-emerald-600/15 focus:outline-none',
               error ? 'border-error focus:border-error focus:ring-rose-500/15' : 'border-outline',
               className,

@@ -5,6 +5,7 @@ import Link from 'next/link';
 type SectionHeaderProps = {
   id: string;
   eyebrow?: string;
+  index?: string;
   title: string;
   description?: string;
   actionHref?: string;
@@ -16,6 +17,7 @@ type SectionHeaderProps = {
 export default function SectionHeader({
   id,
   eyebrow,
+  index,
   title,
   description,
   actionHref,
@@ -33,22 +35,30 @@ export default function SectionHeader({
         isCentered && 'mx-auto max-w-3xl flex-col items-center text-center',
       )}
     >
-      <div className="space-y-3">
+      <div className="space-y-4">
         {eyebrow && (
           <p
             className={cn(
-              'text-label-lg font-bold tracking-widest uppercase',
+              'text-label-lg flex items-center gap-3 font-bold tracking-widest uppercase',
               isDark ? 'text-primary-bright' : 'text-primary',
             )}
           >
+            {index && <span className="tabular-nums">{index}</span>}
+            <span aria-hidden className={cn('h-px w-8', isDark ? 'bg-primary-bright/60' : 'bg-primary/50')} />
             {eyebrow}
           </p>
         )}
-        <h2 id={id} className={cn('font-display text-display-md', isDark ? 'text-white' : 'text-on-surface')}>
+        <h2
+          id={id}
+          className={cn(
+            'font-display text-headline-lg max-w-2xl font-bold tracking-tight',
+            isDark ? 'text-white' : 'text-on-surface',
+          )}
+        >
           {title}
         </h2>
         {description && (
-          <p className={cn('text-title-md font-normal', isDark ? 'text-white/70' : 'text-on-surface-variant')}>
+          <p className={cn('text-title-md max-w-xl font-normal', isDark ? 'text-white/65' : 'text-on-surface-variant')}>
             {description}
           </p>
         )}

@@ -1,10 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
-import { POPULAR_KEYWORDS, SEARCH_CITIES } from '@/constants/home/search';
+import ListboxSelect from '@/components/ui/ListboxSelect';
+import { CITY_OPTIONS, POPULAR_KEYWORDS } from '@/constants/home/search';
 import { useDismissable } from '@/hooks/useDismissable';
 import { useRecentSearches } from '@/hooks/useRecentSearches';
-import { ChevronDown, MapPin, Search, X } from 'lucide-react';
+import { MapPin, Search, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useId, useRef, useState, useTransition } from 'react';
 
@@ -94,7 +95,7 @@ export default function SearchBar() {
             onFocus={() => setIsOpen(true)}
             onKeyDown={handleKeyDown}
             placeholder="Job title or company name"
-            className="text-body-lg text-on-surface placeholder:text-on-surface-variant min-w-0 flex-1 bg-transparent outline-none"
+            className="text-body-lg text-on-surface placeholder:text-on-surface-variant caret-primary min-w-0 flex-1 bg-transparent outline-none"
           />
           {keyword && (
             <button
@@ -134,22 +135,18 @@ export default function SearchBar() {
         )}
       </div>
 
-      <div className="medium:w-64 medium:border-outline-variant medium:border-l relative flex h-14 items-center gap-3 px-5">
-        <MapPin className="text-on-surface h-5 w-5 shrink-0" aria-hidden />
-        <select
-          aria-label="Location"
+      <div className="medium:w-64 medium:border-outline-variant medium:border-l flex h-14 items-center gap-3 px-5">
+        <MapPin className="text-on-surface-variant h-5 w-5 shrink-0" aria-hidden />
+        <ListboxSelect
+          ariaLabel="Location"
+          placeholder="Location"
+          searchable
+          searchPlaceholder="Search province or city"
           value={city}
-          onChange={(event) => setCity(event.target.value)}
-          className="text-body-lg text-on-surface h-full w-full cursor-pointer appearance-none bg-transparent pr-8 outline-none"
-        >
-          <option value="">Location</option>
-          {SEARCH_CITIES.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-        <ChevronDown className="text-on-surface pointer-events-none absolute right-5 h-5 w-5" aria-hidden />
+          onChange={setCity}
+          options={CITY_OPTIONS}
+          className="h-full min-w-0 flex-1"
+        />
       </div>
 
       <Button type="submit" size="2xl" isLoading={isPending} leftIcon={<Search className="h-5 w-5" aria-hidden />}>

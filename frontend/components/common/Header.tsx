@@ -23,7 +23,7 @@ import NavMenu from './header/NavMenu';
 import RecruiterEntryButton from './header/RecruiterEntryButton';
 
 const NAV_LINK_CLASS =
-  'text-title-md text-on-surface hover:text-primary ease-standard flex h-12 items-center px-4 whitespace-nowrap transition-colors duration-150';
+  'text-title-sm text-on-surface hover:text-primary hover:bg-surface-container-low ease-standard flex h-10 items-center rounded-full px-4 font-medium whitespace-nowrap transition-colors duration-150';
 
 interface HeaderProps {
   portal?: 'candidate' | 'recruiter';
@@ -54,8 +54,13 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
       )}
     >
       <EmailVerificationBanner />
-      <div className="flex h-22.5 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-10">
+      <div
+        className={cn(
+          'container-page ease-standard flex w-full items-center justify-between transition-[height] duration-200',
+          isScrolled ? 'h-16' : 'h-18',
+        )}
+      >
+        <div className="flex items-center gap-8">
           <Link
             href={isRecruiterPortal ? ROUTES.RECRUITER_LANDING : ROUTES.HOME}
             className="flex shrink-0 items-center gap-3"
@@ -66,7 +71,7 @@ export default function Header({ portal = 'candidate' }: HeaderProps) {
               width={176}
               height={48}
               priority
-              className="h-12 w-auto object-contain"
+              className="h-10 w-auto object-contain"
             />
             {isRecruiterPortal && (
               <span className="bg-primary-container text-on-primary-container text-label-md rounded-shape-sm px-2 py-1">

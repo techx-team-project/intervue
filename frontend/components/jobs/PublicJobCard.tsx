@@ -1,4 +1,3 @@
-import { JOB_HIGHLIGHT_LABEL, JOB_HIGHLIGHT_STYLE } from '@/constants/job-highlight';
 import { cn } from '@/lib/utils';
 import type { PublicJobSummaryResource } from '@/types/public-job';
 import { jobFacts } from '@/utils/public-job';
@@ -6,6 +5,7 @@ import { formatSalary } from '@/utils/public-company';
 import SaveJobButton from '@/components/candidate/saved/SaveJobButton';
 import Link from 'next/link';
 import CompanyLogo from './CompanyLogo';
+import JobHighlightBadge from './JobHighlightBadge';
 
 const MAX_FACT_TAGS = 2;
 const TAG_CLASS = 'bg-surface-container-low text-body-md text-on-surface rounded-full px-3 py-1';
@@ -31,16 +31,7 @@ export default function PublicJobCard({ job }: PublicJobCardProps) {
 
         <div className="min-w-0 flex-1 space-y-1 pr-8">
           <h3 className="text-title-md text-on-surface line-clamp-2 font-bold">
-            {job.highlightLabel && (
-              <span
-                className={cn(
-                  'mr-1.5 inline-block rounded px-1.5 py-0.5 align-middle text-[11px] font-extrabold',
-                  JOB_HIGHLIGHT_STYLE[job.highlightLabel],
-                )}
-              >
-                {JOB_HIGHLIGHT_LABEL[job.highlightLabel]}
-              </span>
-            )}
+            {job.highlightLabel && <JobHighlightBadge label={job.highlightLabel} />}
             <Link href={`/jobs/${job.id}`} className="hover:text-primary">
               {job.title}
             </Link>
