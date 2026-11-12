@@ -1,7 +1,10 @@
 package com.techx.intervue.modules.job.requests;
 
 import com.techx.intervue.modules.job.enums.ContractType;
+import com.techx.intervue.modules.job.enums.JobBenefitTag;
 import com.techx.intervue.modules.job.enums.JobLevel;
+import com.techx.intervue.modules.job.enums.JobRole;
+import com.techx.intervue.modules.job.enums.SalaryBasis;
 import com.techx.intervue.modules.job.enums.SalaryCurrency;
 import com.techx.intervue.modules.job.enums.ScreeningQuestionType;
 import com.techx.intervue.modules.job.enums.WorkingArrangement;
@@ -23,6 +26,8 @@ import java.util.List;
 public record SaveJobRequest(
         @NotBlank @Size(max = 150) String title,
         JobLevel level,
+        JobRole jobRole,
+        @Valid Experience experience,
         ContractType contractType,
         WorkingArrangement workingArrangement,
         @Valid Location location,
@@ -31,6 +36,8 @@ public record SaveJobRequest(
         @Size(max = 20000) String description,
         @Size(max = 20000) String requirements,
         @Size(max = 20000) String benefits,
+        @Size(max = 10) List<@NotNull JobBenefitTag> benefitTags,
+        @Size(max = 6) List<@NotBlank @Size(max = 80) String> hiringSteps,
         @FutureOrPresent LocalDate deadline,
         @Min(1) @Max(1000) Integer openings,
         @Valid @Size(max = 5) List<@NotNull ScreeningQuestion> screeningQuestions) {
@@ -57,5 +64,14 @@ public record SaveJobRequest(
             boolean negotiable,
             @PositiveOrZero Long min,
             @PositiveOrZero Long max,
-            SalaryCurrency currency) {}
+            SalaryCurrency currency,
+            SalaryBasis basis) {}
+
+    public record Experience(@Min(0) @Max(30) Integer minYears, @Min(0) @Max(30) Integer maxYears) {
+
+        @AssertTrue
+        public boolean isRangeValid() {
+            return minYears == null || maxYears == null || minYears <= maxYears;
+        }
+    }
 }

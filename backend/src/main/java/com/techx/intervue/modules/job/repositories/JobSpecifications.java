@@ -97,6 +97,17 @@ public final class JobSpecifications {
             if (request.level() != null) {
                 predicates.add(builder.equal(root.get("level"), request.level()));
             }
+            if (request.jobRole() != null) {
+                predicates.add(builder.equal(root.get("jobRole"), request.jobRole()));
+            }
+            if (request.experienceYears() != null) {
+                predicates.add(
+                        builder.or(
+                                builder.isNull(root.get("experienceMinYears")),
+                                builder.lessThanOrEqualTo(
+                                        root.get("experienceMinYears"),
+                                        request.experienceYears())));
+            }
             if (request.salaryFrom() != null) {
                 SalaryCurrency currency =
                         request.currency() == null ? SalaryCurrency.VND : request.currency();

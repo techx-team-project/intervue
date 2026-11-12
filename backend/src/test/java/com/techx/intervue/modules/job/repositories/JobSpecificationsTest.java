@@ -109,7 +109,9 @@ class JobSpecificationsTest {
                         null,
                         null,
                         postedWithinDays,
-                        sort);
+                        sort,
+                        null,
+                        null);
 
         JobSpecifications.publicListing(request, TODAY, NOW).toPredicate(root, query, builder);
 
