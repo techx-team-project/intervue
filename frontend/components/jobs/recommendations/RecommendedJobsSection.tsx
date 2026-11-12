@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles, ArrowRight, RefreshCw } from 'lucide-react';
+import { ArrowRight, RefreshCw } from 'lucide-react';
 import Skeleton from '@/components/ui/Skeleton';
 import { useJobRecommendations } from '@/hooks/useJobRecommendations';
 import RecommendedJobCard from './RecommendedJobCard';
@@ -30,10 +30,6 @@ export default function RecommendedJobsSection({
       {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="space-y-2">
-          <div className="bg-primary/10 text-label-sm text-primary inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-bold">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>AI MATCHING ENGINE</span>
-          </div>
           <h2 id="recommended-jobs-title" className="font-display text-display-sm sm:text-display-md text-on-surface">
             {isFallback ? 'Latest Job Opportunities' : 'Recommended for You'}
           </h2>
@@ -62,7 +58,7 @@ export default function RecommendedJobsSection({
       {isLoading ? (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: limit }, (_, index) => (
-            <Skeleton key={index} className="h-56 w-full rounded-2xl" />
+            <Skeleton key={index} className="h-32 w-full rounded-xl" />
           ))}
         </div>
       ) : isError ? (
@@ -84,7 +80,7 @@ export default function RecommendedJobsSection({
       ) : (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
-            <RecommendedJobCard key={item.job.id} item={item} isFallback={isFallback} />
+            <RecommendedJobCard key={item.job.id} item={item} />
           ))}
         </div>
       )}
