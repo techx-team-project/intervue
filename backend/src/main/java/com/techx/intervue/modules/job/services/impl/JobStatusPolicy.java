@@ -27,6 +27,8 @@ public class JobStatusPolicy extends StatusTransitionPolicy<JobStatus> {
                                         JobStatus.EXPIRED,
                                         JobStatus.HIDDEN_BY_ADMIN),
                         JobStatus.HIDDEN_BY_ADMIN,
-                                Set.of(JobStatus.PUBLISHED, JobStatus.EXPIRED, JobStatus.CLOSED)));
+                                Set.of(JobStatus.PUBLISHED, JobStatus.EXPIRED, JobStatus.CLOSED),
+                        JobStatus.CLOSED, Set.of(JobStatus.PUBLISHED),
+                        JobStatus.EXPIRED, Set.of(JobStatus.PUBLISHED)));
     }
 }

@@ -1,11 +1,13 @@
 package com.techx.intervue.modules.job.services.impl;
 
+import com.techx.intervue.common.audit.enums.AuditAction;
 import com.techx.intervue.common.policy.FreeQuotaPolicyInterface;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.company.resources.CompanyResource;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyVerificationServiceInterface;
+import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
 import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.entities.Skill;
@@ -17,8 +19,10 @@ import com.techx.intervue.modules.job.repositories.JobRepository;
 import com.techx.intervue.modules.job.repositories.JobRepository.StatusCount;
 import com.techx.intervue.modules.job.repositories.JobSpecifications;
 import com.techx.intervue.modules.job.repositories.SkillRepository;
+import com.techx.intervue.modules.job.requests.RenewJobRequest;
 import com.techx.intervue.modules.job.requests.SaveJobRequest;
 import com.techx.intervue.modules.job.requests.SearchRecruiterJobsRequest;
+import com.techx.intervue.modules.job.resources.JobQuotaResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.resources.JobSummaryResource;
@@ -46,6 +50,7 @@ public class JobService implements JobServiceInterface {
     private static final Set<JobStatus> EDITABLE =
             Set.of(JobStatus.DRAFT, JobStatus.PUBLISHED, JobStatus.PAUSED);
     private static final Set<JobStatus> CLOSABLE = Set.of(JobStatus.PUBLISHED, JobStatus.PAUSED);
+    private static final Set<JobStatus> RENEWABLE = Set.of(JobStatus.CLOSED, JobStatus.EXPIRED);
 
     private final JobRepository jobRepository;
     private final SkillRepository skillRepository;
@@ -53,6 +58,7 @@ public class JobService implements JobServiceInterface {
     private final JobStatusPolicy statusPolicy;
     private final JobPublishRules publishRules;
     private final JobContentScreener contentScreener;
+    private final JobActivityRecorder activityRecorder;
     private final ScreeningQuestionRules screeningRules;
     private final JobApplicationLookupInterface applicationLookup;
     private final ApplicationEventPublisher eventPublisher;
@@ -73,7 +79,9 @@ public class JobService implements JobServiceInterface {
                         .build();
         jobMapper.apply(job, request, resolveSkills(request.skillIds()));
         applyScreeningQuestions(job, request);
-        return jobMapper.toResource(jobRepository.save(job));
+        Job saved = jobRepository.save(job);
+        activityRecorder.record(recruiterId, AuditAction.JOB_CREATED, saved, saved.getTitle());
+        return jobMapper.toResource(saved);
     }
 
     @Override
@@ -83,6 +91,7 @@ public class JobService implements JobServiceInterface {
         if (!EDITABLE.contains(job.getStatus())) {
             throw new AppException(ErrorCode.JOB_NOT_EDITABLE);
         }
+        JobResource before = jobMapper.toResource(job);
         jobMapper.apply(job, request, resolveSkills(request.skillIds()));
         applyScreeningQuestions(job, request);
         if (job.getStatus() != JobStatus.DRAFT) {
@@ -93,7 +102,12 @@ public class JobService implements JobServiceInterface {
                     .ifPresent(endsAt -> assertDeadlineWithinSlot(job.getDeadline(), endsAt));
             contentScreener.flagForReview(job);
         }
-        return jobMapper.toResource(job);
+        JobResource after = jobMapper.toResource(job);
+        String changed = activityRecorder.changedFields(before, after);
+        if (job.getStatus() != JobStatus.DRAFT && !changed.isEmpty()) {
+            activityRecorder.record(recruiterId, AuditAction.JOB_UPDATED, job, changed);
+        }
+        return after;
     }
 
     @Override
@@ -135,6 +149,7 @@ public class JobService implements JobServiceInterface {
         consumeJobSlot(job, recruiterId);
         JobResource published = markLive(job);
         contentScreener.flagForReview(job);
+        activityRecorder.record(recruiterId, AuditAction.JOB_PUBLISHED, job, null);
         eventPublisher.publishEvent(
                 new JobPublishedEvent(
                         job.getId(),
@@ -159,7 +174,9 @@ public class JobService implements JobServiceInterface {
                             }
                             assertDeadlineWithinSlot(job.getDeadline(), endsAt);
                         });
-        return markLive(job);
+        JobResource resumed = markLive(job);
+        activityRecorder.record(recruiterId, AuditAction.JOB_RESUMED, job, null);
+        return resumed;
     }
 
     @Override
@@ -175,7 +192,40 @@ public class JobService implements JobServiceInterface {
             throw new AppException(ErrorCode.ENTITLEMENT_EXHAUSTED);
         }
         job.setRetoppedAt(Instant.now());
+        activityRecorder.record(recruiterId, AuditAction.JOB_RETOPPED, job, null);
         return jobMapper.toResource(job);
+    }
+
+    @Override
+    @Transactional
+    public JobResource renew(Long jobId, RenewJobRequest request, Long recruiterId) {
+        Job job = requireOwned(jobId, recruiterId);
+        requireStatus(job, RENEWABLE);
+        job.setDeadline(request.deadline());
+        assertReadyToGoLive(job, recruiterId);
+        consumeJobSlot(job, recruiterId);
+        job.setPublishedAt(null);
+        job.setRetoppedAt(null);
+        JobResource renewed = markLive(job);
+        contentScreener.flagForReview(job);
+        activityRecorder.record(
+                recruiterId, AuditAction.JOB_RENEWED, job, "deadline " + request.deadline());
+        eventPublisher.publishEvent(
+                new JobPublishedEvent(
+                        job.getId(),
+                        job.getCompanyId(),
+                        job.getTitle(),
+                        companyService.findSummary(job.getCompanyId()).name()));
+        return renewed;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public JobQuotaResource quota(Long recruiterId) {
+        CompanyResource company = requireCompany(recruiterId);
+        return new JobQuotaResource(
+                entitlementService.remainingOf(company.id(), EntitlementType.JOB_POST_SLOT),
+                freeQuotaPolicy.current().requireJobSlot());
     }
 
     @Override
@@ -185,6 +235,7 @@ public class JobService implements JobServiceInterface {
         requireStatus(job, Set.of(JobStatus.PUBLISHED));
         statusPolicy.requireTransition(job.getStatus(), JobStatus.PAUSED);
         job.setStatus(JobStatus.PAUSED);
+        activityRecorder.record(recruiterId, AuditAction.JOB_PAUSED, job, null);
         return jobMapper.toResource(job);
     }
 
@@ -196,6 +247,7 @@ public class JobService implements JobServiceInterface {
         statusPolicy.requireTransition(job.getStatus(), JobStatus.CLOSED);
         job.setStatus(JobStatus.CLOSED);
         eventPublisher.publishEvent(new JobClosedEvent(job.getId()));
+        activityRecorder.record(recruiterId, AuditAction.JOB_CLOSED, job, null);
         return jobMapper.toResource(job);
     }
 
