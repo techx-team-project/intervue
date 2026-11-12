@@ -16,6 +16,7 @@ export interface BillingSettings {
 export interface SupportedBank {
   code: string;
   name: string;
+  contentKeyword?: string | null;
 }
 
 export interface SaveBillingSettingsInput {

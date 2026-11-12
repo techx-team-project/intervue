@@ -41,6 +41,7 @@ public class AdminPaymentService implements AdminPaymentServiceInterface {
 
     private static final Set<OrderStatus> PAYABLE =
             Set.of(OrderStatus.PENDING_PAYMENT, OrderStatus.UNDERPAID);
+    private static final String ACCOUNT_NUMBER_PATTERN = "^[A-Za-z0-9]{4,30}$";
 
     private final BillingSettingsRepository settingsRepository;
     private final BillingSettingsServiceInterface billingSettings;
@@ -60,7 +61,10 @@ public class AdminPaymentService implements AdminPaymentServiceInterface {
     @Override
     public List<SupportedBankResource> supportedBanks() {
         return Arrays.stream(SupportedBank.values())
-                .map(bank -> new SupportedBankResource(bank.getCode(), bank.getName()))
+                .map(
+                        bank ->
+                                new SupportedBankResource(
+                                        bank.getCode(), bank.getName(), bank.getContentKeyword()))
                 .toList();
     }
 
@@ -72,16 +76,53 @@ public class AdminPaymentService implements AdminPaymentServiceInterface {
                 settingsRepository
                         .findFirstByOrderByIdAsc()
                         .orElseThrow(() -> new AppException(ErrorCode.BILLING_NOT_CONFIGURED));
+
+        String rawBankCode = trimToNull(request.bankCode());
+        String canonicalBankCode = null;
+        if (rawBankCode != null) {
+            canonicalBankCode =
+                    SupportedBank.byCode(rawBankCode)
+                            .map(SupportedBank::getCode)
+                            .orElseThrow(
+                                    () ->
+                                            AppException.validation(
+                                                    "bankCode",
+                                                    "This bank is not supported by SePay"));
+        }
+
+        String accountNumber = normalizeAccountNumber(request.bankAccountNumber());
+        if (accountNumber != null && !accountNumber.matches(ACCOUNT_NUMBER_PATTERN)) {
+            throw AppException.validation(
+                    "bankAccountNumber",
+                    "Account number must be 4-30 alphanumeric characters with no spaces");
+        }
+        if (accountNumber != null && canonicalBankCode == null) {
+            throw AppException.validation("bankCode", "Select the bank for this account number");
+        }
+        if (canonicalBankCode != null && accountNumber == null) {
+            throw AppException.validation(
+                    "bankAccountNumber", "Enter the receiving bank account number");
+        }
+        if (Boolean.TRUE.equals(request.paymentSyncEnabled())) {
+            if (sepayProperties.apiToken() == null || sepayProperties.apiToken().isBlank()) {
+                throw AppException.validation(
+                        "paymentSyncEnabled",
+                        "SEPAY_API_TOKEN must be configured on the server before enabling"
+                                + " reconciliation");
+            }
+            if (canonicalBankCode == null || accountNumber == null) {
+                throw AppException.validation(
+                        "paymentSyncEnabled",
+                        "Bank and account number are required before enabling reconciliation");
+            }
+        }
+
         settings.setVatRate(request.vatRate());
         settings.setOrderExpireHours(request.orderExpireHours());
         settings.setOrderCodePrefix(request.orderCodePrefix().trim().toUpperCase());
         settings.setMaxPendingOrders(request.maxPendingOrders());
-        String bankCode = trimToNull(request.bankCode());
-        if (bankCode != null && !SupportedBank.isSupported(bankCode)) {
-            throw AppException.validation("bankCode", "This bank is not supported by SePay");
-        }
-        settings.setBankCode(bankCode);
-        settings.setBankAccountNumber(trimToNull(request.bankAccountNumber()));
+        settings.setBankCode(canonicalBankCode);
+        settings.setBankAccountNumber(accountNumber);
         settings.setBankAccountName(trimToNull(request.bankAccountName()));
         settings.setPaymentSyncEnabled(request.paymentSyncEnabled());
         // Set once, never re-baselined: a payment made while sync was off must still be found
@@ -195,6 +236,14 @@ public class AdminPaymentService implements AdminPaymentServiceInterface {
 
     private String trimToNull(String value) {
         return value == null || value.isBlank() ? null : value.trim();
+    }
+
+    private String normalizeAccountNumber(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        String normalized = value.replaceAll("\\s+", "");
+        return normalized.isEmpty() ? null : normalized;
     }
 
     private void audit(

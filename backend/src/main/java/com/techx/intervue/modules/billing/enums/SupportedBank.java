@@ -63,11 +63,17 @@ public enum SupportedBank {
     }
 
     public static Optional<SupportedBank> byCode(String code) {
-        return Arrays.stream(values()).filter(bank -> bank.code.equals(code)).findFirst();
+        if (code == null || code.isBlank()) {
+            return Optional.empty();
+        }
+        String normalized = code.trim();
+        return Arrays.stream(values())
+                .filter(bank -> bank.code.equalsIgnoreCase(normalized))
+                .findFirst();
     }
 
     public static boolean isSupported(String code) {
-        return code != null && byCode(code).isPresent();
+        return byCode(code).isPresent();
     }
 
     public static String transferContent(String bankCode, String orderCode) {

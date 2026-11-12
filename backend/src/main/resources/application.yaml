@@ -114,6 +114,10 @@ sepay:
   sync:
     cron: "0 */2 * * * *"
     limit: 100
+  default-bank:
+    code: ${SEPAY_BANK_CODE:}
+    account-number: ${SEPAY_BANK_ACCOUNT:}
+    account-name: ${SEPAY_BANK_NAME:}
 
 sms:
   esms:
