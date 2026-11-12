@@ -17,14 +17,14 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public record SaveJobRequest(
-        @NotBlank @Size(max = 150) String title,
+        @NotBlank @Size(min = 5, max = 150) String title,
         JobLevel level,
         JobRole jobRole,
         @Valid Experience experience,
@@ -39,8 +39,13 @@ public record SaveJobRequest(
         @Size(max = 10) List<@NotNull JobBenefitTag> benefitTags,
         @Size(max = 6) List<@NotBlank @Size(max = 80) String> hiringSteps,
         @FutureOrPresent LocalDate deadline,
-        @Min(1) @Max(1000) Integer openings,
+        @Min(1) @Max(100) Integer openings,
         @Valid @Size(max = 5) List<@NotNull ScreeningQuestion> screeningQuestions) {
+
+    @AssertTrue
+    public boolean isDeadlineWithinLimit() {
+        return JobLimits.isDeadlineWithinLimit(deadline);
+    }
 
     public record Location(
             @Size(max = 100) String city,
@@ -62,10 +67,22 @@ public record SaveJobRequest(
 
     public record Salary(
             boolean negotiable,
-            @PositiveOrZero Long min,
-            @PositiveOrZero Long max,
+            @Positive Long min,
+            @Positive Long max,
             SalaryCurrency currency,
-            SalaryBasis basis) {}
+            SalaryBasis basis) {
+
+        @AssertTrue
+        public boolean isRangeValid() {
+            return min == null || max == null || min <= max;
+        }
+
+        @AssertTrue
+        public boolean isWithinLimit() {
+            return JobLimits.isSalaryWithinLimit(currency, min)
+                    && JobLimits.isSalaryWithinLimit(currency, max);
+        }
+    }
 
     public record Experience(@Min(0) @Max(30) Integer minYears, @Min(0) @Max(30) Integer maxYears) {
 

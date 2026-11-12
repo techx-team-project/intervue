@@ -1,6 +1,8 @@
 package com.techx.intervue.modules.application.requests;
 
+import com.techx.intervue.common.validation.DateWindows;
 import com.techx.intervue.modules.application.enums.InterviewFormat;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -14,4 +16,10 @@ public record ScheduleInterviewRequest(
         @NotNull @Min(15) @Max(480) Integer durationMinutes,
         @NotNull InterviewFormat format,
         @NotBlank @Size(max = 500) String location,
-        @Size(max = 1000) String note) {}
+        @Size(max = 1000) String note) {
+
+    @AssertTrue
+    public boolean isStartWithinWindow() {
+        return DateWindows.isWithinFutureWindow(startsAt, DateWindows.INTERVIEW_MAX_DAYS);
+    }
+}
