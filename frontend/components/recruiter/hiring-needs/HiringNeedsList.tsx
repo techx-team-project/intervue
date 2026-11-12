@@ -14,7 +14,7 @@ type HiringNeedsListProps = {
 export default function HiringNeedsList({ needs, onAdd, onEdit, onDelete }: HiringNeedsListProps) {
   if (needs.length === 0) {
     return (
-      <div className="border-outline flex flex-col items-center rounded-2xl border border-dashed bg-white px-6 py-12 text-center">
+      <div className="border-outline flex flex-col items-center rounded-xl border border-dashed bg-white px-6 py-12 text-center">
         <ClipboardList className="text-outline h-10 w-10" />
         <h2 className="text-on-surface mt-3 text-base font-bold">No hiring needs yet</h2>
         <p className="text-on-surface-variant mt-1 max-w-md text-sm">
@@ -29,7 +29,7 @@ export default function HiringNeedsList({ needs, onAdd, onEdit, onDelete }: Hiri
 
   return (
     <>
-      <div className="border-outline-variant hidden rounded-2xl border bg-white shadow-xs lg:block">
+      <div className="border-outline-variant hidden rounded-xl border bg-white lg:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <caption className="sr-only">Hiring needs</caption>
@@ -88,7 +88,7 @@ export default function HiringNeedsList({ needs, onAdd, onEdit, onDelete }: Hiri
           const details = describeHiringNeed(need);
           const label = `${details.role} (${details.level})`;
           return (
-            <li key={need.id} className="border-outline-variant rounded-2xl border bg-white p-4 shadow-xs">
+            <li key={need.id} className="border-outline-variant rounded-xl border bg-white p-4">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h2 className="text-on-surface text-sm font-bold">{details.role}</h2>

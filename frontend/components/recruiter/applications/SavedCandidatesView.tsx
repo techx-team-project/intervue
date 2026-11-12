@@ -40,7 +40,7 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
 
   if (applications.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-2.5 rounded-2xl border border-[#e5e9ef] bg-white py-20 text-center shadow-xs">
+      <div className="flex flex-col items-center justify-center gap-2.5 rounded-xl border border-[#e5e9ef] bg-white py-20 text-center">
         <Bookmark className="text-outline h-10 w-10" />
         <p className="text-navy text-body-md font-bold">You have not saved any candidates yet</p>
         <p className="text-body-sm text-on-surface-variant max-w-sm">
@@ -73,17 +73,14 @@ export default function SavedCandidatesView({ initialApplications }: SavedCandid
       </div>
 
       {visibleApplications.length === 0 ? (
-        <div className="rounded-2xl border border-[#e5e9ef] bg-white py-16 text-center shadow-xs">
+        <div className="rounded-xl border border-[#e5e9ef] bg-white py-16 text-center">
           <p className="text-navy text-body-md font-bold">No matching candidates found</p>
           <p className="text-body-sm text-on-surface-variant mt-1">Try another keyword or clear the search box.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3.5 lg:grid-cols-2 2xl:grid-cols-3">
           {visibleApplications.map((application) => (
-            <article
-              key={application.id}
-              className="flex flex-col rounded-2xl border border-[#e5e9ef] bg-white p-4 shadow-xs"
-            >
+            <article key={application.id} className="flex flex-col rounded-xl border border-[#e5e9ef] bg-white p-4">
               <div className="flex items-start gap-3">
                 <CandidateAvatar fullName={application.candidate.fullName} size="md" />
 

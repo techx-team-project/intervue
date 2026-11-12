@@ -90,7 +90,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
       <OrderPaymentPanel code={data.code} status={data.status} />
 
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="border-outline-variant overflow-hidden rounded-2xl border bg-white shadow-2xs">
+        <div className="border-outline-variant overflow-hidden rounded-xl border bg-white">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-outline-variant bg-surface-container-low/70 text-on-surface-variant border-b text-xs font-semibold tracking-wider uppercase">
@@ -129,7 +129,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
         </div>
 
         <div className="space-y-4">
-          <dl className="border-outline-variant divide-outline-variant divide-y rounded-2xl border bg-white shadow-2xs">
+          <dl className="border-outline-variant divide-outline-variant divide-y rounded-xl border bg-white">
             <div className="flex items-center justify-between px-4 py-3 text-sm">
               <dt className="text-on-surface-variant">Tạm tính</dt>
               <dd className="text-on-surface font-semibold">{formatServicePrice(data.subtotal, data.currency)}</dd>
@@ -147,7 +147,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
           </dl>
 
           {invoice && (
-            <div className="border-outline-variant rounded-2xl border bg-white p-4 shadow-2xs">
+            <div className="border-outline-variant rounded-xl border bg-white p-4">
               <p className="text-on-surface text-sm font-bold">
                 Hoá đơn {invoice.invoiceType === 'BUSINESS' ? 'doanh nghiệp' : 'cá nhân'}
               </p>
@@ -176,7 +176,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
             <button
               type="button"
               onClick={downloadInvoice}
-              className="border-outline-variant text-on-surface-variant inline-flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white text-sm font-semibold transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700"
+              className="border-outline-variant text-on-surface-variant hover:border-primary hover:bg-primary-light hover:text-primary inline-flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white text-sm font-semibold transition"
             >
               <FileDown className="h-4 w-4" aria-hidden />
               Tải hoá đơn (PDF)
