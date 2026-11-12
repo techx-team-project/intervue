@@ -162,40 +162,40 @@ public class EngagementSeedStep implements DemoSeedStep {
                     "IDENTITY_VERIFIED",
                     "ACCOUNT",
                     "INFO",
-                    "Danh tính đã được xác thực",
-                    "Bạn có thể ứng tuyển ngay bây giờ.",
+                    "Identity verified",
+                    "You can apply to jobs now.",
                     "/candidate/identity-verification",
-                    "Xem chi tiết",
+                    "View details",
                     "USER",
                     userId);
             event(
                     "INTERVIEW_INVITED",
                     "APPLICATIONS",
                     "INFO",
-                    "Lời mời phỏng vấn mới",
-                    "Một nhà tuyển dụng vừa mời bạn phỏng vấn, hãy xác nhận thời gian.",
+                    "New interview invitation",
+                    "A recruiter invited you to an interview. Please confirm the time.",
                     "/candidate/interviews",
-                    "Xem lịch",
+                    "View schedule",
                     "USER",
                     userId);
             event(
                     "APPLICATION_STATUS_CHANGED",
                     "APPLICATIONS",
                     "INFO",
-                    "Hồ sơ của bạn được cập nhật",
-                    "Nhà tuyển dụng vừa chuyển hồ sơ sang bước tiếp theo.",
+                    "Your application was updated",
+                    "The recruiter moved your application to the next step.",
                     "/candidate/applications",
-                    "Xem hồ sơ",
+                    "View application",
                     "USER",
                     userId);
             event(
                     "FOLLOWED_COMPANY_NEW_JOB",
                     "JOBS",
                     "INFO",
-                    "Công ty bạn theo dõi có việc mới",
-                    "Có tin tuyển dụng mới phù hợp với hồ sơ của bạn.",
+                    "A company you follow has a new job",
+                    "A new job matches your profile.",
                     "/jobs",
-                    "Xem việc làm",
+                    "View job",
                     "USER",
                     userId);
         }
@@ -205,20 +205,20 @@ public class EngagementSeedStep implements DemoSeedStep {
                     "APPLICATION_RECEIVED",
                     "APPLICATIONS",
                     "INFO",
-                    "Có hồ sơ ứng tuyển mới",
-                    "Một ứng viên vừa ứng tuyển vào tin của bạn.",
+                    "New application received",
+                    "A candidate just applied to your job.",
                     "/recruiter/applications",
-                    "Xem hồ sơ",
+                    "View application",
                     "RECRUITER",
                     recruiterId);
             event(
                     "COMPANY_VERIFIED",
                     "COMPANY",
                     "SUCCESS",
-                    "Công ty đã được xác minh",
-                    "Bạn có thể đăng tin tuyển dụng.",
+                    "Company verified",
+                    "You can now post jobs.",
                     "/recruiter/company",
-                    "Xem công ty",
+                    "View company",
                     "RECRUITER",
                     recruiterId);
         }
@@ -228,10 +228,10 @@ public class EngagementSeedStep implements DemoSeedStep {
                     "ADMIN_REVIEW_QUEUE_ITEM",
                     "MODERATION",
                     "INFO",
-                    "Hồ sơ chờ duyệt",
-                    "Có hồ sơ xác thực danh tính và xác minh công ty đang chờ bạn xử lý.",
+                    "Pending reviews",
+                    "Identity and company verification requests are waiting for your review.",
                     "/admin/verification/identity",
-                    "Mở hàng chờ",
+                    "Open queue",
                     "USER",
                     adminUserId);
         }
@@ -239,11 +239,11 @@ public class EngagementSeedStep implements DemoSeedStep {
         void broadcastToCandidates(List<Long> userIds) {
             broadcast(
                     "CANDIDATE",
-                    "Chào mừng đến với InterVue",
-                    "Nền tảng tuyển dụng IT có AI hỗ trợ đã sẵn sàng. Hoàn thiện hồ sơ để nhận gợi ý"
-                            + " việc làm phù hợp.",
+                    "Welcome to InterVue",
+                    "The AI-assisted IT recruitment platform is ready. Complete your profile to get"
+                            + " matching job suggestions.",
                     "/candidate/profile",
-                    "Cập nhật hồ sơ",
+                    "Update profile",
                     "USER",
                     userIds,
                     random.ago(5, 6));
@@ -252,8 +252,8 @@ public class EngagementSeedStep implements DemoSeedStep {
         void broadcastToRecruiters(List<Long> recruiterIds) {
             broadcast(
                     "RECRUITER",
-                    "Bảo trì hệ thống cuối tuần",
-                    "Hệ thống sẽ bảo trì ngắn vào 23:00 Chủ nhật, mong bạn thông cảm.",
+                    "Weekend system maintenance",
+                    "A short maintenance window starts at 23:00 on Sunday. Thank you for your patience.",
                     null,
                     null,
                     "RECRUITER",

@@ -202,8 +202,8 @@ public class CandidateSeedStep implements DemoSeedStep {
                         educationIds.next(),
                         profileId,
                         random.pick(DemoSeedData.SCHOOLS),
-                        "Cử nhân",
-                        "Công nghệ thông tin",
+                        "Bachelor",
+                        "Information Technology",
                         2016 + index % 5,
                         2020 + index % 5,
                         random.pick(List.of("3.2/4.0", "3.5/4.0", "8.1/10", "7.6/10")),
@@ -263,9 +263,9 @@ public class CandidateSeedStep implements DemoSeedStep {
             candidate.id(),
             level.charAt(0) + level.substring(1).toLowerCase() + " " + role.title(),
             role.title()
-                    + " với "
+                    + " with "
                     + yearsOfExperience
-                    + " năm kinh nghiệm, thích làm sản phẩm thực tế và học công nghệ mới.",
+                    + " years of experience, enjoys building real products and learning new technologies.",
             candidate.email(),
             random.pick(List.of("MALE", "FEMALE")),
             random.between(1996, 2004),
@@ -338,9 +338,9 @@ public class CandidateSeedStep implements DemoSeedStep {
                         LocalDate.of(firstYear + index, random.between(1, 12), 1),
                         current ? null : LocalDate.of(firstYear + index + 1, 6, 1),
                         current,
-                        "Phát triển và bảo trì tính năng, tham gia code review, làm việc theo"
-                                + " Agile/Scrum.",
-                        "Giảm thời gian phản hồi API 30%, hoàn thành dự án đúng hạn.",
+                        "Built and maintained features, took part in code reviews and worked in"
+                                + " Agile/Scrum teams.",
+                        "Reduced API response time by 30% and delivered projects on schedule.",
                         createdAt,
                         createdAt
                     });

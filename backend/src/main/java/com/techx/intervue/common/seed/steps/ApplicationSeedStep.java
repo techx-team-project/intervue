@@ -320,12 +320,12 @@ public class ApplicationSeedStep implements DemoSeedStep {
                             + random.between(1000, 9999)
                             + "-"
                             + random.pick(List.of("uvw", "qrs"))
-                    : "Tầng 5, " + random.pick(DemoSeedData.STREETS),
-            "Phỏng vấn kỹ thuật kết hợp trao đổi về kinh nghiệm dự án.",
+                    : "Floor 5, " + random.pick(DemoSeedData.STREETS),
+            "Technical interview covering past project experience.",
             interviewStatus,
             rescheduling ? startsAt.plusDays(2) : null,
-            rescheduling ? "Em xin phép dời sang chiều hôm sau ạ." : null,
-            "CANCELLED".equals(interviewStatus) ? "Công ty điều chỉnh lịch tuyển dụng" : null,
+            rescheduling ? "Could we move the interview to the next afternoon, please?" : null,
+            "CANCELLED".equals(interviewStatus) ? "The company adjusted its hiring schedule" : null,
             true,
             true,
             lastChange,
