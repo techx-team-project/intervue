@@ -38,6 +38,14 @@ public class LocalDemoCompanyService implements LocalDemoCompanyServiceInterface
     private static final String DEMO_PROOF_FILE = "demo-business-license.pdf";
     private static final String DEMO_PROOF_ID = "demo/business-license";
     private static final String BLANK_CHECKSUM = "0".repeat(64);
+    private static final String LEGACY_SHORT_DESCRIPTION =
+            "TechX Global builds AI-powered recruitment and SaaS products for companies across"
+                    + " Southeast Asia. Our engineers ship to production every week.";
+    private static final String DEMO_DESCRIPTION =
+            "TechX Global builds AI-powered recruitment, technical interview, and SaaS platforms for"
+                    + " enterprises across Southeast Asia. Our engineering teams ship reliable"
+                    + " cloud services, automated resume matching, and real-time hiring analytics"
+                    + " every week.";
 
     private final CompanyRepository companyRepository;
     private final CompanyMemberRepository companyMemberRepository;
@@ -76,23 +84,33 @@ public class LocalDemoCompanyService implements LocalDemoCompanyServiceInterface
     private void fillProfile(CompanyMember membership) {
         CompanyProfile profile =
                 companyProfileRepository.findByMemberId(membership.getId()).orElseThrow();
-        if (profile.getTradingName() != null && !profile.getTradingName().isBlank()) {
+        boolean hasTradingName =
+                profile.getTradingName() != null && !profile.getTradingName().isBlank();
+        String currentDescription =
+                profile.getDescription() == null ? "" : profile.getDescription().trim();
+        boolean needsDemoDescription =
+                currentDescription.length() < CompanyProfileCompleteness.MIN_DESCRIPTION_LENGTH
+                        && (currentDescription.isEmpty()
+                                || LEGACY_SHORT_DESCRIPTION.equals(currentDescription));
+        if (hasTradingName && !needsDemoDescription) {
             return;
         }
-        profile.setTradingName("TechX Global");
-        profile.setBusinessType(BusinessType.ENTERPRISE);
-        profile.setIndustry("Software & Information Technology");
-        profile.setSize("100-499 employees");
-        profile.setAddress(DEMO_ADDRESS);
-        profile.setEmail("careers@techx.example.com");
-        profile.setPhone("02812345678");
-        profile.setWebsite("https://techx.example.com");
-        profile.setDescription(
-                "TechX Global builds AI-powered recruitment and SaaS products for companies across"
-                        + " Southeast Asia. Our engineers ship to production every week.");
-        profile.setBenefits(
-                "13th-month salary and performance bonus\nPremium health insurance\nMacBook Pro and"
-                        + " learning budget\nFlexible hybrid working");
+        if (!hasTradingName) {
+            profile.setTradingName("TechX Global");
+            profile.setBusinessType(BusinessType.ENTERPRISE);
+            profile.setIndustry("Software & Information Technology");
+            profile.setSize("100-499 employees");
+            profile.setAddress(DEMO_ADDRESS);
+            profile.setEmail("careers@techx.example.com");
+            profile.setPhone("02812345678");
+            profile.setWebsite("https://techx.example.com");
+            profile.setBenefits(
+                    "13th-month salary and performance bonus\nPremium health insurance\nMacBook Pro"
+                            + " and learning budget\nFlexible hybrid working");
+        }
+        if (needsDemoDescription || !hasTradingName) {
+            profile.setDescription(DEMO_DESCRIPTION);
+        }
         companyProfileRepository.save(profile);
     }
 
