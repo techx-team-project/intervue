@@ -265,7 +265,7 @@ export default function RecruiterLandingView() {
               <button
                 type="button"
                 onClick={() => setConsultModalOpen(true)}
-                className="shadow-elevation-1 hover:shadow-elevation-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#263A4D] px-7 py-3 text-center text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1a2936] sm:w-auto sm:text-base"
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#263A4D] px-7 py-3 text-center text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1a2936] sm:w-auto sm:text-base"
               >
                 <Headphones className="h-4 w-4" />
                 <span>Talk to our team</span>
@@ -273,7 +273,7 @@ export default function RecruiterLandingView() {
 
               <Link
                 href={postJobUrl}
-                className="shadow-elevation-1 hover:bg-primary hover:shadow-elevation-2 flex w-full items-center justify-center gap-2 rounded-full bg-[#009D46] px-8 py-3 text-center text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 sm:w-auto sm:text-base"
+                className="hover:bg-primary flex w-full items-center justify-center gap-2 rounded-full bg-[#009D46] px-8 py-3 text-center text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 sm:w-auto sm:text-base"
               >
                 <span>Post a job</span>
                 <ArrowRight className="h-4 w-4" />
@@ -327,11 +327,11 @@ export default function RecruiterLandingView() {
 
             <div className="mt-14 grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
               <div className="lg:col-span-5">
-                <div className="border-outline-variant relative mx-auto flex max-w-md flex-col items-center justify-center rounded-3xl border bg-gradient-to-b from-[#f8fafc] to-[#eef9f2] p-8 text-center shadow-xs">
+                <div className="border-outline-variant bg-primary-light relative mx-auto flex max-w-md flex-col items-center justify-center rounded-2xl border p-8 text-center">
                   <div className="relative flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72">
                     <Image src="/srp/analytics/globe-grid.svg" alt="" fill className="object-contain opacity-70" />
 
-                    <div className="shadow-elevation-2 absolute inset-0 m-auto flex h-36 w-36 flex-col items-center justify-center rounded-full border border-emerald-300 bg-white/95 p-4 backdrop-blur-xs">
+                    <div className="shadow-elevation-2 border-primary/30 absolute inset-0 m-auto flex h-36 w-36 flex-col items-center justify-center rounded-full border bg-white/95 p-4 backdrop-blur-xs">
                       <div className="text-3xl font-extrabold text-[#009D46] sm:text-4xl">IT</div>
                       <div className="mt-1 text-center text-xs font-semibold text-[#263a4d]">
                         Candidates focused on IT roles
@@ -339,10 +339,10 @@ export default function RecruiterLandingView() {
                     </div>
                   </div>
 
-                  <div className="text-on-surface mt-4 flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-semibold shadow-2xs">
+                  <div className="text-on-surface mt-4 flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-semibold">
                     <span className="relative flex h-2 w-2">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                      <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
+                      <span className="bg-primary relative inline-flex h-2 w-2 rounded-full" />
                     </span>
                     <span>Profile data updated in real time</span>
                   </div>
@@ -350,14 +350,14 @@ export default function RecruiterLandingView() {
               </div>
 
               <div className="space-y-6 lg:col-span-7">
-                <div className="relative pl-6 before:absolute before:top-4 before:bottom-4 before:left-3.5 before:w-0.5 before:bg-gradient-to-b before:from-emerald-500 before:via-emerald-400 before:to-emerald-200">
+                <div className="before:bg-primary/30 relative pl-6 before:absolute before:top-4 before:bottom-4 before:left-3.5 before:w-0.5">
                   {TOUCHPOINTS.map((tp) => (
                     <div key={tp.step} className="group relative mb-6 last:mb-0">
-                      <div className="group-hover:bg-primary absolute -left-6 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-emerald-600 text-xs font-bold text-white shadow-sm transition-colors">
+                      <div className="group-hover:bg-primary bg-primary absolute -left-6 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-xs font-bold text-white transition-colors">
                         {tp.step}
                       </div>
 
-                      <div className="border-outline-variant group-hover:shadow-elevation-1 rounded-2xl border bg-white p-5 shadow-xs transition duration-200 group-hover:border-emerald-300">
+                      <div className="border-outline-variant group-hover:shadow-elevation-1 group-hover:border-primary rounded-xl border bg-white p-5 transition duration-200">
                         <h3 className="text-navy group-hover:text-primary text-base font-bold transition-colors">
                           {tp.title}
                         </h3>
@@ -371,7 +371,7 @@ export default function RecruiterLandingView() {
           </div>
         </section>
 
-        <div className="border-y border-emerald-100 bg-gradient-to-r from-emerald-50 via-teal-50 to-green-50 py-6 sm:py-8">
+        <div className="border-primary/20 bg-primary-light border-y py-6 sm:py-8">
           <div className="container-page flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="text-center md:text-left">
               <p className="text-navy text-base font-bold sm:text-lg">
@@ -386,14 +386,14 @@ export default function RecruiterLandingView() {
               <button
                 type="button"
                 onClick={() => setConsultModalOpen(true)}
-                className="border-outline text-on-surface hover:bg-surface-container-low rounded-full border bg-white px-5 py-2.5 text-xs font-bold shadow-xs transition sm:text-sm"
+                className="border-outline text-on-surface hover:bg-surface-container-low rounded-full border bg-white px-5 py-2.5 text-xs font-bold transition sm:text-sm"
               >
                 Talk to our team
               </button>
 
               <Link
                 href={ROUTES.RECRUITER_REGISTER}
-                className="bg-primary hover:bg-primary-hover shadow-primary/20 flex items-center gap-1.5 rounded-full px-6 py-2.5 text-xs font-bold text-white shadow-sm transition sm:text-sm"
+                className="bg-primary hover:bg-primary-hover flex items-center gap-1.5 rounded-full px-6 py-2.5 text-xs font-bold text-white transition sm:text-sm"
               >
                 <span>Sign up</span>
                 <ArrowRight className="h-4 w-4" />
@@ -421,7 +421,7 @@ export default function RecruiterLandingView() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
               {UNIVERSITIES.map((univ) => (
                 <div key={univ.code} className="flex flex-col items-center gap-1.5">
-                  <div className="border-outline-variant hover:shadow-elevation-1 flex h-14 w-14 items-center justify-center rounded-full border bg-white p-2 shadow-xs transition-transform duration-200 hover:scale-105 sm:h-16 sm:w-16">
+                  <div className="border-outline-variant hover:shadow-elevation-1 flex h-14 w-14 items-center justify-center rounded-full border bg-white p-2 transition-transform duration-200 hover:scale-105 sm:h-16 sm:w-16">
                     <Image
                       src={univ.logo}
                       alt={univ.name}
@@ -435,7 +435,7 @@ export default function RecruiterLandingView() {
               ))}
             </div>
 
-            <div className="mt-10 rounded-3xl border-2 border-emerald-300 bg-white p-6 shadow-sm sm:p-10">
+            <div className="border-primary/30 mt-10 rounded-2xl border-2 bg-white p-6 sm:p-10">
               <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
                 <div role="tablist" aria-label="University partnership modules" className="space-y-4 lg:col-span-7">
                   {UNIVERSITY_TABS.map((tab, idx) => {
@@ -447,9 +447,9 @@ export default function RecruiterLandingView() {
                         role="tab"
                         aria-selected={isActive}
                         onClick={() => setActiveUnivTab(idx)}
-                        className={`w-full cursor-pointer rounded-2xl border p-5 text-left transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+                        className={`focus-visible:ring-primary w-full cursor-pointer rounded-xl border p-5 text-left transition-all focus:outline-none focus-visible:ring-2 ${
                           isActive
-                            ? 'border-emerald-500 bg-emerald-50/40 shadow-xs ring-1 ring-emerald-500/30'
+                            ? 'border-primary bg-primary-light ring-primary/30 ring-1'
                             : 'border-outline-variant hover:border-outline bg-white'
                         }`}
                       >
@@ -480,7 +480,7 @@ export default function RecruiterLandingView() {
                 </div>
 
                 <div className="lg:col-span-5">
-                  <div className="shadow-elevation-1 relative overflow-hidden rounded-2xl border border-emerald-200 bg-slate-900">
+                  <div className="shadow-elevation-1 border-primary/30 relative overflow-hidden rounded-xl border bg-slate-900">
                     <div className="relative h-72 w-full sm:h-80">
                       <Image
                         src={currentUnivTab.image}
@@ -492,7 +492,7 @@ export default function RecruiterLandingView() {
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent" />
 
                       <div className="absolute right-4 bottom-4 left-4 text-white">
-                        <span className="text-label-sm inline-block rounded-md bg-emerald-500 px-2.5 py-1 font-bold text-white shadow-xs">
+                        <span className="text-label-sm bg-primary inline-block rounded-md px-2.5 py-1 font-bold text-white">
                           {currentUnivTab.badge}
                         </span>
                         <h3 className="mt-2 text-sm font-bold text-white sm:text-base">{currentUnivTab.eventTitle}</h3>
@@ -522,7 +522,7 @@ export default function RecruiterLandingView() {
               </p>
             </div>
 
-            <div className="shadow-elevation-2 relative mt-10 overflow-hidden rounded-3xl border border-amber-500/40 bg-gradient-to-br from-[#0f1722] via-[#162330] to-[#0a1017] p-8 text-white sm:p-12">
+            <div className="shadow-elevation-2 relative mt-10 overflow-hidden rounded-2xl border border-amber-500/40 bg-[#0f1722] p-8 text-white sm:p-12">
               <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
                 <div className="space-y-6 lg:col-span-7">
                   <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-extrabold text-amber-300">
@@ -530,7 +530,7 @@ export default function RecruiterLandingView() {
                     <span>INTERVUE PRO TALENT SUITE</span>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xs transition hover:border-amber-400/50">
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-xs transition hover:border-amber-400/50">
                     <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-amber-300 uppercase">
                       <ShieldCheck className="h-4 w-4" />
                       <span>PLATFORM FOR HIGHLY EXPERIENCED CANDIDATES</span>
@@ -542,7 +542,7 @@ export default function RecruiterLandingView() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xs transition hover:border-amber-400/50">
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-xs transition hover:border-amber-400/50">
                     <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-amber-300 uppercase">
                       <Zap className="h-4 w-4" />
                       <span>EXCLUSIVE TARGETED CAMPAIGNS</span>
@@ -557,7 +557,7 @@ export default function RecruiterLandingView() {
                     <button
                       type="button"
                       onClick={() => setConsultModalOpen(true)}
-                      className="text-on-surface shadow-elevation-2 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 px-7 py-3 text-xs font-extrabold shadow-amber-500/20 transition hover:from-amber-300 hover:to-amber-400 sm:text-sm"
+                      className="text-on-surface shadow-elevation-2 inline-flex items-center gap-2 rounded-full bg-amber-400 px-7 py-3 text-xs font-extrabold transition hover:bg-amber-300 sm:text-sm"
                     >
                       <span>Talk to us about InterVue Pro</span>
                       <ArrowRight className="h-4 w-4" />
@@ -566,7 +566,7 @@ export default function RecruiterLandingView() {
                 </div>
 
                 <div className="lg:col-span-5">
-                  <div className="bg-primary-deeper shadow-elevation-2 relative overflow-hidden rounded-2xl border border-amber-500/30 p-2">
+                  <div className="bg-primary-deeper shadow-elevation-2 relative overflow-hidden rounded-xl border border-amber-500/30 p-2">
                     <div className="relative h-72 w-full overflow-hidden rounded-xl sm:h-80">
                       <Image
                         src="/landing/banner-company.jpg"
@@ -614,10 +614,10 @@ export default function RecruiterLandingView() {
             <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-2">
               <div
                 id="job-posting"
-                className="border-outline-variant hover:shadow-elevation-1 scroll-mt-24 rounded-3xl border bg-white p-8 shadow-xs transition sm:p-10"
+                className="border-outline-variant hover:shadow-elevation-1 scroll-mt-24 rounded-2xl border bg-white p-8 transition sm:p-10"
               >
                 <div className="flex items-center gap-3">
-                  <div className="bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <div className="bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-xl">
                     <Briefcase className="h-6 w-6" />
                   </div>
                   <div>
@@ -658,7 +658,7 @@ export default function RecruiterLandingView() {
                 <div className="border-outline-variant mt-8 border-t pt-6">
                   <Link
                     href={postJobUrl}
-                    className="bg-primary hover:bg-primary-hover inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white shadow-sm transition"
+                    className="bg-primary hover:bg-primary-hover inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white transition"
                   >
                     <span>Create a job post now</span>
                     <ArrowRight className="h-4 w-4" />
@@ -668,10 +668,10 @@ export default function RecruiterLandingView() {
 
               <div
                 id="candidate-sourcing"
-                className="border-outline-variant hover:shadow-elevation-1 scroll-mt-24 rounded-3xl border bg-white p-8 shadow-xs transition sm:p-10"
+                className="border-outline-variant hover:shadow-elevation-1 scroll-mt-24 rounded-2xl border bg-white p-8 transition sm:p-10"
               >
                 <div className="flex items-center gap-3">
-                  <div className="bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-2xl">
+                  <div className="bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-xl">
                     <Search className="h-6 w-6" />
                   </div>
                   <div>
@@ -716,7 +716,7 @@ export default function RecruiterLandingView() {
                         ? ROUTES.RECRUITER_CANDIDATES
                         : `${ROUTES.RECRUITER_LOGIN}?redirect=${encodeURIComponent(ROUTES.RECRUITER_CANDIDATES)}`
                     }
-                    className="border-primary text-primary hover:bg-primary-light inline-flex items-center gap-2 rounded-xl border-2 bg-white px-6 py-3 text-sm font-bold shadow-sm transition"
+                    className="border-primary text-primary hover:bg-primary-light inline-flex items-center gap-2 rounded-xl border-2 bg-white px-6 py-3 text-sm font-bold transition"
                   >
                     <span>Explore candidate profiles</span>
                     <ArrowRight className="h-4 w-4" />
@@ -749,11 +749,11 @@ export default function RecruiterLandingView() {
                 return (
                   <div
                     key={feat.title}
-                    className="hover:border-primary group border-outline-variant flex flex-col justify-between rounded-2xl border bg-[#fbfcfc] p-6 transition duration-300 hover:bg-white hover:shadow-[0_12px_32px_rgba(0,177,79,0.12)]"
+                    className="hover:border-primary group border-outline-variant flex flex-col justify-between rounded-xl border bg-[#fbfcfc] p-6 transition duration-300 hover:bg-white hover:shadow-[0_12px_32px_rgba(0,177,79,0.12)]"
                   >
                     <div>
                       <div className="mb-4 flex items-center justify-between">
-                        <div className="border-primary/20 bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-2xl border">
+                        <div className="border-primary/20 bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-xl border">
                           <IconComponent className="h-6 w-6" />
                         </div>
                         <span className="border-primary/20 bg-primary-light text-primary text-label-sm rounded-full border px-2.5 py-0.5 font-bold">
@@ -803,7 +803,7 @@ export default function RecruiterLandingView() {
             </div>
 
             <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-3">
-              <div className="border-primary/40 flex flex-col justify-between rounded-3xl border-2 bg-white p-8 shadow-sm">
+              <div className="border-primary/40 flex flex-col justify-between rounded-2xl border-2 bg-white p-8">
                 <div>
                   <div className="border-primary/20 bg-primary-tag text-primary inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold">
                     <Zap className="h-3.5 w-3.5" />
@@ -844,8 +844,8 @@ export default function RecruiterLandingView() {
                 </Link>
               </div>
 
-              <div className="border-primary shadow-elevation-2 relative flex flex-col justify-between rounded-3xl border-2 bg-white p-8">
-                <span className="bg-primary absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3.5 py-1 text-xs font-bold text-white uppercase shadow-sm">
+              <div className="border-primary shadow-elevation-2 relative flex flex-col justify-between rounded-2xl border-2 bg-white p-8">
+                <span className="bg-primary absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3.5 py-1 text-xs font-bold text-white uppercase">
                   Most popular
                 </span>
                 <div>
@@ -884,13 +884,13 @@ export default function RecruiterLandingView() {
                 </div>
                 <Link
                   href={ROUTES.RECRUITER_LOGIN}
-                  className="bg-primary hover:bg-primary-hover shadow-primary/20 shadow-elevation-1 mt-8 block w-full rounded-xl py-3 text-center text-sm font-bold text-white transition"
+                  className="bg-primary hover:bg-primary-hover shadow-elevation-1 mt-8 block w-full rounded-xl py-3 text-center text-sm font-bold text-white transition"
                 >
                   Sign up for Growth
                 </Link>
               </div>
 
-              <div className="border-outline-variant flex flex-col justify-between rounded-3xl border bg-white p-8 shadow-xs">
+              <div className="border-outline-variant flex flex-col justify-between rounded-2xl border bg-white p-8">
                 <div>
                   <div className="bg-surface-container-low text-on-surface-variant inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold">
                     <Users className="h-3.5 w-3.5" />
@@ -951,7 +951,7 @@ export default function RecruiterLandingView() {
               {TESTIMONIALS.map((item) => (
                 <div
                   key={item.name}
-                  className="hover:border-primary group border-outline-variant flex h-full flex-col justify-between rounded-2xl border bg-white p-6 shadow-xs transition duration-300"
+                  className="hover:border-primary group border-outline-variant flex h-full flex-col justify-between rounded-xl border bg-white p-6 transition duration-300"
                 >
                   <div>
                     <div className="mb-4 flex items-center justify-between">
@@ -960,7 +960,7 @@ export default function RecruiterLandingView() {
                           <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
                         ))}
                       </div>
-                      <Quote className="group-hover:text-primary h-7 w-7 text-emerald-200 transition-colors" />
+                      <Quote className="group-hover:text-primary text-primary/30 h-7 w-7 transition-colors" />
                     </div>
 
                     <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -1011,7 +1011,7 @@ export default function RecruiterLandingView() {
                 {PARTNERS.map((partner) => (
                   <div
                     key={partner.name}
-                    className="hover:border-primary/50 border-outline-variant flex items-center gap-2 rounded-xl border bg-white px-5 py-3 shadow-2xs transition hover:shadow-sm"
+                    className="hover:border-primary/50 border-outline-variant flex items-center gap-2 rounded-xl border bg-white px-5 py-3 transition hover:shadow-sm"
                   >
                     <span className="text-navy font-extrabold">{partner.name}</span>
                     <span className="bg-surface-container-low text-label-sm text-on-surface-variant rounded-md px-2 py-0.5 font-medium">
@@ -1024,7 +1024,7 @@ export default function RecruiterLandingView() {
           </div>
         </section>
 
-        <section className="bg-gradient-to-r from-[#00b14f] to-[#009643] px-4 py-16 text-white sm:px-6 lg:px-8">
+        <section className="bg-primary px-4 py-16 text-white sm:px-6 lg:px-8">
           <div className="container-page text-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1 text-xs font-bold text-white backdrop-blur-xs">
               <Sparkles className="h-3.5 w-3.5" />
@@ -1064,7 +1064,7 @@ export default function RecruiterLandingView() {
       >
         {consultSubmitted ? (
           <div className="py-6 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+            <div className="bg-primary-tag text-primary mx-auto flex h-14 w-14 items-center justify-center rounded-full">
               <CheckCircle2 className="h-8 w-8" />
             </div>
             <h3 className="text-navy mt-4 text-lg font-bold">Request sent!</h3>
@@ -1182,7 +1182,7 @@ export default function RecruiterLandingView() {
               </button>
               <button
                 type="submit"
-                className="bg-primary hover:bg-primary-hover shadow-primary/20 inline-flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-xs font-bold text-white shadow-sm transition"
+                className="bg-primary hover:bg-primary-hover inline-flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-xs font-bold text-white transition"
               >
                 <Send className="h-3.5 w-3.5" />
                 <span>Send request</span>
