@@ -373,6 +373,7 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `PATCH` | `/recruiter/cart/items/{id}` | recruiter | Body `{ quantity }`. `404 NOT_FOUND` for another recruiter's cart item; `422 AD_BANNER_QUANTITY_LOCKED` on ad slot items (whose quantity tracks the booked weeks). |
 | `DELETE` | `/recruiter/cart/items/{id}` · `/recruiter/cart` | recruiter | Remove one line, or empty the cart. |
 | `GET` | `/recruiter/orders?page=&size=` | recruiter | `PageResource<OrderSummaryResource>` of the **company's** orders, newest first — every recruiter of the company sees them all. |
+| `GET` | `/recruiter/orders/summary` | recruiter | `OrderStatusCountsResource`: `{ total, byStatus: { PENDING_PAYMENT, UNDERPAID, PAID, FULFILLED, EXPIRED, CANCELLED, REFUND_REQUESTED, REFUNDED } }` for the company's orders. |
 | `GET` | `/recruiter/orders/{code}` | recruiter | `OrderResource`. `404 NOT_FOUND` for another company's order. |
 | `POST` | `/recruiter/orders` | recruiter | Checkout. Send `packageId` (+ optional `quantity`) to buy one package without touching the cart. Otherwise the cart is used: `cartItemIds` buys only those lines and leaves the rest in the cart, omitting it buys everything. |
 | `POST` | `/recruiter/orders/{code}/cancel` | recruiter | Only the recruiter who created the order may cancel it (`403 FORBIDDEN` otherwise), and only while `PENDING_PAYMENT` or `UNDERPAID` (`422 ORDER_NOT_PAYABLE`). |
@@ -463,8 +464,8 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 | `GET` | `/recruiter/vouchers/used?page=&size=` | recruiter | `PageResource<UsedVoucherResource>` of company voucher redemptions excluding `CANCELLED` / `EXPIRED` orders ("Đã sử dụng"). |
 | `POST` | `/recruiter/vouchers/validate` | recruiter | `{ code, cartItemIds[] }` or `{ code, packageId, quantity }` → the discount preview calculated on eligible package lines (`422 VOUCHER_NOT_APPLICABLE` if restricted to other packages). |
 | `GET`/`POST`/`PUT` | `/admin/vouchers[/{id}]` | admin | Filterable by `keyword`, `status`, `discountType`; includes `ribbonLabel`, `accentColor`, `conditions[]`, and `applicablePackageIds[]`. Code is never rewritten after creation. `POST /admin/vouchers/{id}/activate` and `/deactivate` toggle availability. |
-| `GET` | `/recruiter/orders/{code}/invoice` | recruiter | Metadata. `422 INVOICE_NOT_ISSUED_YET` until the order is paid. |
-| `GET` | `/recruiter/orders/{code}/invoice/pdf` | recruiter | The document itself, `application/pdf`. |
+| `GET` | `/recruiter/orders/{code}/invoice` | recruiter | VAT invoice metadata. `422 INVOICE_NOT_ISSUED_YET` until the order is paid. |
+| `GET` | `/recruiter/orders/{code}/invoice/pdf` | recruiter | `application/pdf`, always available. Once `PAID`/`FULFILLED`/`REFUND_REQUESTED`/`REFUNDED`, the real numbered VAT invoice. For `PENDING_PAYMENT`, `UNDERPAID` or `CANCELLED` (no invoice issued yet), an **order confirmation** document instead — same layout and InterVue logo, titled "ORDER CONFIRMATION" with a status line underneath (`AWAITING PAYMENT` / `UNDERPAID` / `CANCELLED`), no invoice number, so a recruiter can show it to their finance team before or instead of payment. Still `404 NOT_FOUND` for `EXPIRED` and other statuses with neither document. |
 | `GET` | `/admin/invoices`, `/admin/invoices/{id}/pdf` | admin | Every issued document. |
 | `GET`/`POST` | `/recruiter/orders/{code}/refund` | recruiter | `GET` quotes what would come back; `POST` submits `{ reason }`. |
 | `GET` | `/admin/refunds` | admin | Optional `?status=PENDING\|APPROVED\|REJECTED`. |
@@ -621,7 +622,7 @@ from the wave 1 design during implementation:
 | `VOUCHER_MIN_ORDER_NOT_MET` | 422 | The order is below the voucher's minimum |
 | `VOUCHER_NOT_APPLICABLE` | 422 | No selected package qualifies for this voucher |
 | `DUPLICATE_VOUCHER_CODE` | 409 | A voucher already uses this code |
-| `INVOICE_NOT_ISSUED_YET` | 422 | The order has not been paid, so no document exists |
+| `INVOICE_NOT_ISSUED_YET` | 422 | `GET .../invoice` (JSON) only: no VAT invoice exists yet for an unpaid order — `.../invoice/pdf` never returns this (see below) |
 | `ORDER_NOT_REFUNDABLE` | 422 | Only a `PAID` or `FULFILLED` order can be refunded |
 | `REFUND_ALREADY_REQUESTED` | 409 | This order already has a refund request |
 | `REFUND_ALREADY_REVIEWED` | 409 | The request was already approved or rejected |
