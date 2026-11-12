@@ -1,11 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Coins, Sparkles, Check, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
-import Button from '@/components/ui/Button';
+import { TOPUP_PACKAGES } from '@/constants/cv-review';
 import { useTopupCandidateCredits } from '@/hooks/useCandidateCredits';
+import { cn } from '@/lib/utils';
+import { Check } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
+
+const DEFAULT_PACKAGE_AMOUNT = 10;
 
 interface TopupCreditModalProps {
   isOpen: boolean;
@@ -13,25 +17,19 @@ interface TopupCreditModalProps {
   currentBalance?: number;
 }
 
-const PACKAGES = [
-  { amount: 5, price: '50.000đ', popular: false, desc: '5 lượt đánh giá so khớp công việc (Level 3)' },
-  { amount: 10, price: '90.000đ', popular: true, desc: 'Tiết kiệm 10% · Phù hợp đang ứng tuyển tích cực' },
-  { amount: 20, price: '160.000đ', popular: false, desc: 'Tiết kiệm 20% · Đánh giá không giới hạn chiến dịch' },
-];
-
 export function TopupCreditModal({ isOpen, onClose, currentBalance = 0 }: TopupCreditModalProps) {
-  const [selectedAmount, setSelectedAmount] = useState(10);
+  const [selectedAmount, setSelectedAmount] = useState(DEFAULT_PACKAGE_AMOUNT);
   const topupMutation = useTopupCandidateCredits();
 
   const handleTopup = () => {
     topupMutation.mutate(selectedAmount, {
       onSuccess: () => {
-        toast.success(`Nạp thành công ${selectedAmount} credit vào tài khoản!`);
+        toast.success(`${selectedAmount} credits added to your account.`);
         onClose();
       },
       onError: (err: unknown) => {
         const error = err as { message?: string };
-        toast.error(error?.message || 'Không thể nạp credit lúc này. Vui lòng thử lại.');
+        toast.error(error?.message || 'Could not top up credits right now. Please try again.');
       },
     });
   };
@@ -41,79 +39,57 @@ export function TopupCreditModal({ isOpen, onClose, currentBalance = 0 }: TopupC
       isOpen={isOpen}
       onClose={onClose}
       maxWidth="md"
-      title={
-        <div className="flex items-center gap-2">
-          <Coins className="h-5 w-5 text-amber-500" />
-          <span className="font-extrabold text-slate-900">Nạp Credit Đánh Giá CV (Level 3)</span>
-        </div>
-      }
-      description={`Số dư khả dụng hiện tại: ${currentBalance} credit. Mỗi lượt đánh giá so khớp chi tiết sử dụng 1 credit.`}
+      title="Top up review credits"
+      description={`Current balance: ${currentBalance} credits. A job match review uses 1 credit.`}
     >
-      <div className="space-y-4 pt-2">
-        <div className="grid gap-3 sm:grid-cols-3">
-          {PACKAGES.map((pkg) => (
-            <button
-              key={pkg.amount}
-              type="button"
-              onClick={() => setSelectedAmount(pkg.amount)}
-              className={`relative flex flex-col justify-between rounded-2xl border p-4 text-left transition ${
-                selectedAmount === pkg.amount
-                  ? 'border-emerald-600 bg-emerald-50/70 shadow-sm ring-2 ring-emerald-500/30'
-                  : 'border-slate-200 bg-white hover:border-slate-300'
-              }`}
-            >
-              {pkg.popular && (
-                <span className="absolute -top-2.5 right-3 rounded-full bg-emerald-600 px-2 py-0.5 text-[10px] font-extrabold text-white">
-                  Phổ biến nhất
-                </span>
-              )}
-              <div>
-                <div className="flex items-center gap-1.5 font-bold text-slate-900">
-                  <Coins className="h-4 w-4 text-amber-500" />
-                  <span>{pkg.amount} Credit</span>
-                </div>
-                <p className="mt-1 text-lg font-black text-emerald-700">{pkg.price}</p>
-                <p className="mt-2 text-xs leading-relaxed text-slate-500">{pkg.desc}</p>
-              </div>
-              <div className="mt-3 flex items-center justify-end">
-                <div
-                  className={`flex h-5 w-5 items-center justify-center rounded-full border ${
-                    selectedAmount === pkg.amount ? 'border-emerald-600 bg-emerald-600 text-white' : 'border-slate-300'
-                  }`}
+      <div className="space-y-5">
+        <div role="radiogroup" aria-label="Credit package" className="grid gap-3 sm:grid-cols-3">
+          {TOPUP_PACKAGES.map((pkg) => {
+            const isSelected = selectedAmount === pkg.amount;
+            return (
+              <button
+                key={pkg.amount}
+                type="button"
+                role="radio"
+                aria-checked={isSelected}
+                onClick={() => setSelectedAmount(pkg.amount)}
+                className={cn(
+                  'relative flex cursor-pointer flex-col gap-1 rounded-2xl border p-4 text-left transition-colors',
+                  isSelected ? 'border-primary bg-primary-light' : 'border-outline-variant hover:border-primary/60',
+                )}
+              >
+                {pkg.popular && (
+                  <span className="bg-primary-container text-on-primary-container absolute -top-2.5 right-3 rounded-full px-2 py-0.5 text-[11px] font-bold">
+                    Popular
+                  </span>
+                )}
+                <span className="font-display text-title-md text-on-surface font-bold">{pkg.amount} credits</span>
+                <span className="font-display text-title-lg text-primary font-bold">{pkg.price}</span>
+                <span className="text-body-sm text-on-surface-variant">{pkg.description}</span>
+                <span
+                  className={cn(
+                    'mt-2 flex h-5 w-5 items-center justify-center self-end rounded-full border',
+                    isSelected ? 'border-primary bg-primary text-on-primary' : 'border-outline',
+                  )}
+                  aria-hidden
                 >
-                  {selectedAmount === pkg.amount && <Check className="h-3 w-3" />}
-                </div>
-              </div>
-            </button>
-          ))}
+                  {isSelected && <Check className="h-3 w-3" />}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        <div className="rounded-xl border border-emerald-100 bg-emerald-50/50 p-3.5 text-xs text-slate-600">
-          <div className="flex items-center gap-1.5 font-bold text-emerald-900">
-            <ShieldCheck className="h-4 w-4 text-emerald-600" />
-            <span>Chính sách minh bạch & Hoàn tiền tự động:</span>
-          </div>
-          <p className="mt-1 text-slate-600">
-            Credit được kích hoạt ngay lập tức. Nếu hệ thống AI gặp lỗi kỹ thuật trong quá trình phân tích CV, hệ thống
-            sẽ
-            <strong> tự động hoàn trả 100% credit</strong> ngay lập tức.
-          </p>
-        </div>
+        <p className="text-body-md text-on-surface-variant">
+          Credits are available immediately. If the AI fails during an analysis, the credit is refunded automatically.
+        </p>
 
-        <div className="flex items-center justify-end gap-3 pt-3">
-          <Button variant="ghost" onClick={onClose} disabled={topupMutation.isPending}>
-            Hủy
+        <div className="flex justify-end gap-3">
+          <Button variant="outline" onClick={onClose} disabled={topupMutation.isPending}>
+            Cancel
           </Button>
-          <Button onClick={handleTopup} disabled={topupMutation.isPending} className="flex items-center gap-2">
-            {topupMutation.isPending ? (
-              'Đang xử lý...'
-            ) : (
-              <>
-                <Sparkles className="h-4 w-4" />
-                <span>Nạp ngay {selectedAmount} Credit</span>
-                <ArrowRight className="h-4 w-4" />
-              </>
-            )}
+          <Button onClick={handleTopup} isLoading={topupMutation.isPending}>
+            Buy {selectedAmount} credits
           </Button>
         </div>
       </div>

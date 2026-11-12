@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
-import { CvTemplateStyle, CvTemplateIndustry } from '@/types/cv-template';
+import ListboxSelect from '@/components/ui/ListboxSelect';
 import { CV_TEMPLATE_MESSAGES } from '@/constants/cv-templates';
-import { Search, Filter, Globe } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import type { CvTemplateIndustry, CvTemplateStyle } from '@/types/cv-template';
+import { Search, X } from 'lucide-react';
 
 interface CvFilterBarProps {
   styles: CvTemplateStyle[];
@@ -17,6 +18,8 @@ interface CvFilterBarProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
 }
+
+const ALL_INDUSTRIES = 'all';
 
 export default function CvFilterBar({
   styles,
@@ -38,31 +41,31 @@ export default function CvFilterBar({
     { key: languages.vi, label: languages.vi },
     { key: languages.en, label: languages.en },
   ];
+  const industryOptions = industries.map((industry) => ({ value: industry.slug, label: industry.name }));
 
   return (
-    <div className="sticky top-18 z-20 border-b border-gray-200 bg-white/95 shadow-xs">
-      <div className="mx-auto max-w-7xl space-y-3 px-4 py-3.5 sm:px-6 lg:px-8">
-        <div className="no-scrollbar flex items-center justify-between gap-4 overflow-x-auto">
-          <div className="flex shrink-0 items-center gap-1.5">
+    <div className="bg-surface border-outline-variant sticky top-16 z-20 border-y">
+      <div className="container-page space-y-3 py-3.5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div role="tablist" aria-label="CV style" className="no-scrollbar flex gap-2 overflow-x-auto">
             {styles.map((style) => {
               const isActive = selectedStyleSlug === style.slug;
               return (
                 <button
                   key={style.id}
                   type="button"
+                  role="tab"
+                  aria-selected={isActive}
                   onClick={() => onSelectStyle(style.slug)}
-                  className={`flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition sm:text-sm ${
+                  className={cn(
+                    'text-label-lg ease-standard flex h-9 shrink-0 cursor-pointer items-center gap-2 rounded-full border px-4 font-semibold transition-colors duration-150',
                     isActive
-                      ? 'bg-primary text-white shadow-xs'
-                      : 'hover:bg-primary-light hover:text-primary text-on-surface-variant'
-                  }`}
+                      ? 'border-primary bg-primary text-on-primary'
+                      : 'border-outline-variant text-on-surface hover:border-primary hover:text-primary',
+                  )}
                 >
-                  <span>{style.name}</span>
-                  <span
-                    className={`py-0.2 text-label-sm rounded-full px-1.5 font-bold ${
-                      isActive ? 'bg-white/25 text-white' : 'text-on-surface-variant bg-gray-100'
-                    }`}
-                  >
+                  {style.name}
+                  <span className={cn('text-label-md', isActive ? 'text-on-primary/80' : 'text-on-surface-variant')}>
                     {style.count}
                   </span>
                 </button>
@@ -70,69 +73,69 @@ export default function CvFilterBar({
             })}
           </div>
 
-          <div className="relative hidden w-72 shrink-0 md:block">
-            <Search className="text-outline absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2" />
+          <label className="relative block w-full md:w-96">
+            <Search
+              className="text-on-surface-variant pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2"
+              aria-hidden
+            />
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => onSearchChange(e.target.value)}
+              onChange={(event) => onSearchChange(event.target.value)}
               placeholder={searchPlaceholder}
-              className="focus:border-primary focus:ring-primary text-on-surface placeholder:text-outline w-full rounded-xl border border-gray-200 bg-gray-50/60 py-2 pr-8 pl-9.5 text-xs focus:bg-white focus:ring-1 focus:outline-hidden"
+              aria-label="Search templates"
+              className="text-body-md text-on-surface placeholder:text-on-surface-variant border-outline hover:border-on-surface-variant/60 focus:border-primary h-10 w-full rounded-full border bg-white pr-9 pl-10 transition-colors outline-none focus:ring-2 focus:ring-emerald-600/15"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => onSearchChange('')}
-                className="text-outline absolute top-1/2 right-2.5 -translate-y-1/2 text-xs hover:text-gray-700"
+                aria-label="Clear search"
+                className="text-on-surface-variant hover:text-on-surface absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
               >
-                ✕
+                <X className="h-4 w-4" aria-hidden />
               </button>
             )}
-          </div>
+          </label>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-2 text-xs">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-on-surface-variant flex items-center gap-1 font-semibold">
-              <Filter className="text-primary h-3.5 w-3.5" />
-              {industryLabel}
-            </span>
-            <select
-              value={selectedIndustrySlug}
-              onChange={(e) => onSelectIndustry(e.target.value)}
-              className="text-navy focus:border-primary rounded-lg border border-gray-200 bg-white px-3 py-1.5 font-medium focus:outline-hidden"
-            >
-              {industries.map((ind) => (
-                <option key={ind.id} value={ind.slug}>
-                  {ind.name}
-                </option>
-              ))}
-            </select>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-label-lg text-on-surface-variant font-semibold">{industryLabel}</span>
+            <div className="border-outline-variant flex h-9 w-52 items-center rounded-full border px-4">
+              <ListboxSelect
+                ariaLabel="Industry"
+                placeholder="All industries"
+                searchable
+                searchPlaceholder="Search industry"
+                value={selectedIndustrySlug === ALL_INDUSTRIES ? '' : selectedIndustrySlug}
+                onChange={(value) => onSelectIndustry(value || ALL_INDUSTRIES)}
+                options={industryOptions.filter((option) => option.value !== ALL_INDUSTRIES)}
+                className="h-full min-w-0 flex-1"
+                triggerClassName="text-label-lg"
+              />
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-on-surface-variant flex items-center gap-1 font-semibold">
-              <Globe className="text-primary h-3.5 w-3.5" />
-              {languageLabel}
-            </span>
-            <div className="flex rounded-lg border border-gray-200 bg-gray-50 p-0.5">
-              {languageOptions.map((opt) => {
-                const isSelected = selectedLanguage === opt.key;
-                return (
-                  <button
-                    key={opt.key}
-                    type="button"
-                    onClick={() => onSelectLanguage(opt.key)}
-                    className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
-                      isSelected
-                        ? 'text-primary bg-white font-bold shadow-xs'
-                        : 'text-on-surface-variant hover:text-on-surface'
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                );
-              })}
+            <span className="text-label-lg text-on-surface-variant font-semibold">{languageLabel}</span>
+            <div role="group" aria-label="Language" className="flex gap-1.5">
+              {languageOptions.map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  aria-pressed={selectedLanguage === option.key}
+                  onClick={() => onSelectLanguage(option.key)}
+                  className={cn(
+                    'text-label-lg h-8 cursor-pointer rounded-full border px-3.5 font-medium transition-colors',
+                    selectedLanguage === option.key
+                      ? 'border-primary bg-primary-light text-primary'
+                      : 'border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary',
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
