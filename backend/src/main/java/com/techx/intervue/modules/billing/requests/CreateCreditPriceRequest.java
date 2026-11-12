@@ -12,7 +12,7 @@ import jakarta.validation.constraints.Size;
 public record CreateCreditPriceRequest(
         @NotNull EntitlementType entitlementType,
         @NotNull @Min(1) @Max(3) Integer tier,
-        @NotNull @Positive Integer creditCost,
+        @NotNull @Positive @Max(1_000_000) Integer creditCost,
         @Min(1) @Max(3650) Integer durationDays,
         @NotBlank @Size(max = 255) String label,
         @NotNull Boolean active,

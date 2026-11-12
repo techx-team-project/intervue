@@ -407,7 +407,9 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                         .filter(benefit -> benefit.entitlementType() == EntitlementType.CREDIT)
                         .mapToInt(SaveServicePackageRequest.Benefit::quantity)
                         .sum();
-        if (creditSum > 0) {
+        if (creditSum > 0
+                && (servicePackage.getBonusCredits() == null
+                        || servicePackage.getBonusCredits() < creditSum)) {
             servicePackage.setBonusCredits(creditSum);
         }
     }

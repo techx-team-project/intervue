@@ -7,6 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.techx.intervue.common.policy.FreeQuotaPolicyInterface;
+import com.techx.intervue.common.policy.FreeQuotaValues;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.candidate.credits.entities.CandidateCreditBalance;
@@ -27,6 +29,7 @@ class CandidateCreditServiceTest {
     private CandidateCreditBalanceRepository balanceRepository;
     private CandidateCreditTransactionRepository transactionRepository;
     private CandidateProfileLookup candidateProfileLookup;
+    private FreeQuotaPolicyInterface freeQuotaPolicy;
     private CandidateCreditService creditService;
 
     @BeforeEach
@@ -34,9 +37,14 @@ class CandidateCreditServiceTest {
         balanceRepository = mock(CandidateCreditBalanceRepository.class);
         transactionRepository = mock(CandidateCreditTransactionRepository.class);
         candidateProfileLookup = mock(CandidateProfileLookup.class);
+        freeQuotaPolicy = mock(FreeQuotaPolicyInterface.class);
+        when(freeQuotaPolicy.current()).thenReturn(FreeQuotaValues.DEFAULTS);
         creditService =
                 new CandidateCreditService(
-                        balanceRepository, transactionRepository, candidateProfileLookup);
+                        balanceRepository,
+                        transactionRepository,
+                        candidateProfileLookup,
+                        freeQuotaPolicy);
     }
 
     @Test
@@ -49,7 +57,7 @@ class CandidateCreditServiceTest {
 
         int balance = creditService.getBalance(12L);
 
-        assertThat(balance).isEqualTo(CandidateCreditService.INITIAL_STARTER_CREDITS);
+        assertThat(balance).isEqualTo(FreeQuotaValues.DEFAULTS.candidateStarterCredits());
         verify(transactionRepository).save(any(CandidateCreditTransaction.class));
     }
 

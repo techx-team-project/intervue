@@ -52,7 +52,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             className={cn(
               'text-on-surface placeholder:text-on-surface-variant/70 min-h-11 w-full border bg-white px-3.5 py-2.5 text-sm transition-colors',
-              'disabled:bg-surface-container-low disabled:text-on-surface-variant disabled:cursor-not-allowed',
+              'disabled:bg-surface-container-low disabled:text-on-surface-variant dark:disabled:bg-forest-900/60 dark:disabled:text-forest-400 disabled:cursor-not-allowed disabled:opacity-75',
               radiusStyles[radius],
               leftIcon ? 'pl-10' : 'pl-3.5',
               rightElement ? 'pr-11' : 'pr-3.5',

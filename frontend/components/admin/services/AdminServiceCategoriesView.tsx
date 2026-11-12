@@ -163,33 +163,32 @@ export default function AdminServiceCategoriesView({ initialCategories }: AdminS
   };
 
   return (
-    <div className="space-y-5 pb-12">
-      <div className="pb-1">
-        <AdminPageHeader
-          description="Organize sections and display order on the recruiter buy-services page."
-          count={categories.length}
-          countLabel="categories"
-          actions={
-            <>
-              <Link
-                href={ROUTES.ADMIN_SERVICE_PACKAGES}
-                className={buttonClassName({
-                  variant: 'outline',
-                  size: 'md',
-                  className: 'dark:border-forest-700 dark:text-forest-100 dark:hover:bg-forest-850',
-                })}
-              >
-                <FolderKanban className="h-4 w-4" />
-                <span>Service packages</span>
-              </Link>
-              <Link href={ROUTES.ADMIN_SERVICE_CATEGORIES_CREATE} className={buttonClassName({ size: 'md' })}>
-                <Plus className="h-4 w-4" />
-                <span>New category</span>
-              </Link>
-            </>
-          }
-        />
-      </div>
+    <div className="space-y-4 pb-12">
+      <AdminPageHeader
+        className="mb-0"
+        description="Organize sections and display order on the recruiter buy-services page."
+        count={categories.length}
+        countLabel="categories"
+        actions={
+          <>
+            <Link
+              href={ROUTES.ADMIN_SERVICE_PACKAGES}
+              className={buttonClassName({
+                variant: 'outline',
+                size: 'md',
+                className: 'dark:border-forest-700 dark:text-forest-100 dark:hover:bg-forest-850',
+              })}
+            >
+              <FolderKanban className="h-4 w-4" />
+              <span>Service packages</span>
+            </Link>
+            <Link href={ROUTES.ADMIN_SERVICE_CATEGORIES_CREATE} className={buttonClassName({ size: 'md' })}>
+              <Plus className="h-4 w-4" />
+              <span>New category</span>
+            </Link>
+          </>
+        }
+      />
 
       <AdminServiceCategoriesFilterBar filters={filters} onPatchFilters={patchFilters} onResetFilters={resetFilters} />
 

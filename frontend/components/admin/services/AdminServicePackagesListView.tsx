@@ -129,33 +129,32 @@ export default function AdminServicePackagesListView({
   };
 
   return (
-    <div className="space-y-5 pb-12">
-      <div className="pb-1">
-        <AdminPageHeader
-          description="Manage service packages, benefits, pricing, and recruiter catalog visibility."
-          count={result.totalItems}
-          countLabel={hasFilters ? 'matching packages' : 'packages'}
-          actions={
-            <>
-              <Link
-                href={ROUTES.ADMIN_SERVICE_CATEGORIES}
-                className={buttonClassName({
-                  variant: 'outline',
-                  size: 'md',
-                  className: 'dark:border-forest-700 dark:text-forest-100 dark:hover:bg-forest-850',
-                })}
-              >
-                <FolderCog className="h-4 w-4" />
-                <span>Service categories</span>
-              </Link>
-              <Link href={createPackageHref} className={buttonClassName({ size: 'md' })}>
-                <Plus className="h-4 w-4" />
-                <span>New package</span>
-              </Link>
-            </>
-          }
-        />
-      </div>
+    <div className="space-y-4 pb-12">
+      <AdminPageHeader
+        className="mb-0"
+        description="Manage service packages, benefits, pricing, and recruiter catalog visibility."
+        count={result.totalItems}
+        countLabel={hasFilters ? 'matching packages' : 'packages'}
+        actions={
+          <>
+            <Link
+              href={ROUTES.ADMIN_SERVICE_CATEGORIES}
+              className={buttonClassName({
+                variant: 'outline',
+                size: 'md',
+                className: 'dark:border-forest-700 dark:text-forest-100 dark:hover:bg-forest-850',
+              })}
+            >
+              <FolderCog className="h-4 w-4" />
+              <span>Service categories</span>
+            </Link>
+            <Link href={createPackageHref} className={buttonClassName({ size: 'md' })}>
+              <Plus className="h-4 w-4" />
+              <span>New package</span>
+            </Link>
+          </>
+        }
+      />
 
       <AdminServicePackagesFilterBar
         query={query}

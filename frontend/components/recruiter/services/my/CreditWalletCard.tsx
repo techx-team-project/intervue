@@ -16,7 +16,8 @@ export default function CreditWalletCard({ onConverted }: { onConverted: (messag
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showLedger, setShowLedger] = useState(false);
-  const ledger = useCreditLedger(showLedger);
+  const [ledgerPage, setLedgerPage] = useState(0);
+  const ledger = useCreditLedger(showLedger, ledgerPage, 10);
 
   if (wallet.isPending || wallet.isError) return null;
 
@@ -63,30 +64,61 @@ export default function CreditWalletCard({ onConverted }: { onConverted: (messag
       </button>
 
       {showLedger && (
-        <div className="mt-2 max-h-56 overflow-y-auto rounded-xl border border-dashed border-slate-200">
+        <div className="mt-2 overflow-hidden rounded-xl border border-dashed border-slate-200">
           {ledger.isPending ? (
             <p className="text-on-surface-variant px-4 py-3 text-xs">Đang tải...</p>
-          ) : ledger.isError || !ledger.data || ledger.data.length === 0 ? (
+          ) : ledger.isError || !ledger.data || ledger.data.items.length === 0 ? (
             <p className="text-on-surface-variant px-4 py-3 text-xs">Chưa có giao dịch credits nào.</p>
           ) : (
-            <table className="w-full text-xs">
-              <tbody className="divide-y divide-slate-100">
-                {ledger.data.map((entry, index) => (
-                  <tr key={`${entry.at}-${index}`}>
-                    <td className="text-on-surface-variant px-4 py-2 whitespace-nowrap">{formatDateTime(entry.at)}</td>
-                    <td className="text-on-surface px-4 py-2">{entry.label}</td>
-                    <td
-                      className={`px-4 py-2 text-right font-semibold whitespace-nowrap ${
-                        entry.credit ? 'text-emerald-700' : 'text-rose-600'
-                      }`}
+            <>
+              <div className="max-h-56 overflow-y-auto">
+                <table className="w-full text-xs">
+                  <tbody className="divide-y divide-slate-100">
+                    {ledger.data.items.map((entry, index) => (
+                      <tr key={`${entry.at}-${index}`}>
+                        <td className="text-on-surface-variant px-4 py-2 whitespace-nowrap">
+                          {formatDateTime(entry.at)}
+                        </td>
+                        <td className="text-on-surface px-4 py-2">{entry.label}</td>
+                        <td
+                          className={`px-4 py-2 text-right font-semibold whitespace-nowrap ${
+                            entry.credit ? 'text-emerald-700' : 'text-rose-600'
+                          }`}
+                        >
+                          {entry.credit ? '+' : '−'}
+                          {entry.quantity.toLocaleString('vi-VN')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {ledger.data.totalPages > 1 && (
+                <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50/70 px-4 py-2 text-[11px] text-slate-600">
+                  <span>
+                    Trang {ledger.data.page + 1}/{ledger.data.totalPages} ({ledger.data.totalItems} giao dịch)
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      disabled={ledger.data.page === 0}
+                      onClick={() => setLedgerPage((p) => Math.max(0, p - 1))}
+                      className="cursor-pointer rounded border border-slate-200 bg-white px-2 py-0.5 font-semibold hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      {entry.credit ? '+' : '−'}
-                      {entry.quantity.toLocaleString('vi-VN')}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      Trước
+                    </button>
+                    <button
+                      type="button"
+                      disabled={ledger.data.page + 1 >= ledger.data.totalPages}
+                      onClick={() => setLedgerPage((p) => p + 1)}
+                      className="cursor-pointer rounded border border-slate-200 bg-white px-2 py-0.5 font-semibold hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Sau
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

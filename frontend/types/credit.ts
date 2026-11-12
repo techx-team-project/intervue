@@ -42,3 +42,52 @@ export interface CreateCreditPriceInput extends SaveCreditPriceInput {
   entitlementType: EntitlementType;
   tier: number;
 }
+
+export interface FreeQuotaSettings {
+  aiResumeMatchFreePerMonth: number;
+  aiJdGenerateFreePerMonth: number;
+  cvReviewFreePerDay: number;
+  candidateStarterCredits: number;
+  connectDailyInviteLimit: number;
+  companyFreePhotoLimit: number;
+  requireJobSlot: boolean;
+  updatedAt: string | null;
+}
+
+export type SaveFreeQuotaSettingsInput = Omit<FreeQuotaSettings, 'updatedAt'>;
+
+export type EntitlementStatus = 'AVAILABLE' | 'CONSUMED' | 'EXPIRED' | 'REVOKED';
+
+export interface AdminCompanyCreditSummary {
+  companyId: number;
+  companyName: string;
+  taxCode: string | null;
+  address: string | null;
+  availableBalance: number;
+  lifetimeGranted: number;
+  lifetimeSpent: number;
+  expiredBalance: number;
+  nearestExpiryAt: string | null;
+}
+
+export interface AdminCompanyCreditLot {
+  id: number;
+  sourceOrderItemId: number | null;
+  label: string;
+  totalQuantity: number;
+  remainingQuantity: number;
+  bonus: boolean;
+  status: EntitlementStatus;
+  activationDeadline: string | null;
+  createdAt: string;
+}
+
+export interface AdminCompanyCreditDetail extends AdminCompanyCreditSummary {
+  lots: AdminCompanyCreditLot[];
+}
+
+export interface AdjustCompanyCreditsInput {
+  amount: number;
+  reason: string;
+  validityDays?: number | null;
+}

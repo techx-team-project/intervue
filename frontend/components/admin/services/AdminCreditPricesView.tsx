@@ -1,381 +1,434 @@
 'use client';
 
 import { adminCreditPriceApi } from '@/apiRequest/credit';
-import { Button } from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import AdminCompanyCreditsTab from '@/components/admin/services/credit-prices/AdminCompanyCreditsTab';
+import AdminCreditPricesFilterBar from '@/components/admin/services/credit-prices/AdminCreditPricesFilterBar';
+import AdminCreditPricesMobileList from '@/components/admin/services/credit-prices/AdminCreditPricesMobileList';
+import AdminCreditPricesTable from '@/components/admin/services/credit-prices/AdminCreditPricesTable';
+import AdminFreeQuotasTab from '@/components/admin/services/credit-prices/AdminFreeQuotasTab';
+import CreateCreditPriceModal from '@/components/admin/services/credit-prices/CreateCreditPriceModal';
+import Pagination from '@/components/common/Pagination';
+import { Button, buttonClassName } from '@/components/ui/Button';
 import Select from '@/components/ui/Select';
-import Switch from '@/components/ui/Switch';
 import { ROUTES } from '@/constants/routes';
-import { BOOST_TIER_OPTIONS, ENTITLEMENT_TYPE_OPTIONS } from '@/constants/service-package';
-import { DURATION_REQUIRED_ENTITLEMENT_TYPES } from '@/schemas/service-package.schema';
-import type { CreateCreditPriceInput, CreditPrice, SaveCreditPriceInput } from '@/types/credit';
-import type { EntitlementType } from '@/types/service-package';
+import { creditKeys } from '@/hooks/useCredits';
+import {
+  CREDIT_PRICE_PAGE_SIZE_OPTIONS,
+  EMPTY_CREDIT_PRICE_FILTERS,
+  filterAndSortCreditPrices,
+  getEntitlementTypeLabel,
+  isCreditPriceDraftDirty,
+  sortCreditPrices,
+  toCreditPriceDraft,
+  validateCreditPriceDraft,
+  type CreditPriceDraft,
+  type CreditPriceFilters,
+} from '@/lib/admin-credit-prices';
+import { cn } from '@/lib/utils';
+import type { CreateCreditPriceInput, CreditPrice } from '@/types/credit';
 import { getErrorMessage } from '@/utils/error';
-import { AlertCircle, ArrowLeft, Check, Plus } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { Building2, Coins, FolderKanban, Info, Plus, Save, SearchX, Sliders } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
+
+type CreditPricingTab = 'PRICES' | 'QUOTAS' | 'WALLETS';
 
 interface AdminCreditPricesViewProps {
   initialPrices: CreditPrice[];
 }
 
-type Draft = {
-  creditCost: string;
-  durationDays: string;
-  label: string;
-  active: boolean;
-  displayOrder: string;
-};
-
-type CreateDraft = Draft & {
-  entitlementType: EntitlementType;
-  tier: string;
-};
-
-const CONVERTIBLE_TYPE_OPTIONS = ENTITLEMENT_TYPE_OPTIONS.filter(
-  (option) => option.value !== 'CREDIT' && option.value !== 'AD_SLOT_WEEK',
-);
-
-const MAX_DURATION_DAYS = 3650;
-
-function createEmptyDraft(displayOrder: number): CreateDraft {
-  return {
-    entitlementType: 'JOB_POST_SLOT',
-    tier: '1',
-    creditCost: '10',
-    durationDays: '30',
-    label: '',
-    active: true,
-    displayOrder: String(displayOrder),
-  };
-}
-
-function toDraft(price: CreditPrice): Draft {
-  return {
-    creditCost: String(price.creditCost),
-    durationDays: price.durationDays === null ? '' : String(price.durationDays),
-    label: price.label,
-    active: price.active,
-    displayOrder: String(price.displayOrder),
-  };
-}
-
-function validateAndBuildPayload(entitlementType: EntitlementType, draft: Draft): SaveCreditPriceInput | string {
-  const creditCost = Number(draft.creditCost);
-  if (!Number.isInteger(creditCost) || creditCost < 1) {
-    return 'Credits must be a positive whole number.';
-  }
-
-  const trimmedDuration = draft.durationDays.trim();
-  const requiresDuration = DURATION_REQUIRED_ENTITLEMENT_TYPES.has(entitlementType);
-  if (requiresDuration && trimmedDuration === '') {
-    return `Duration in days is required for ${entitlementType}.`;
-  }
-
-  let durationDays: number | null = null;
-  if (trimmedDuration !== '') {
-    const parsedDuration = Number(trimmedDuration);
-    if (!Number.isInteger(parsedDuration) || parsedDuration < 1 || parsedDuration > MAX_DURATION_DAYS) {
-      return `Duration in days must be a whole number between 1 and ${MAX_DURATION_DAYS}.`;
-    }
-    durationDays = parsedDuration;
-  }
-
-  const label = draft.label.trim();
-  if (!label) {
-    return 'Label shown to recruiters is required.';
-  }
-
-  const displayOrder = Number(draft.displayOrder);
-  if (!Number.isInteger(displayOrder) || displayOrder < 0) {
-    return 'Display order must be 0 or greater.';
-  }
-
-  return {
-    creditCost,
-    durationDays,
-    label,
-    active: draft.active,
-    displayOrder,
-  };
-}
-
 export default function AdminCreditPricesView({ initialPrices }: AdminCreditPricesViewProps) {
-  const [prices, setPrices] = useState(initialPrices);
-  const [drafts, setDrafts] = useState<Record<number, Draft>>(() =>
-    Object.fromEntries(initialPrices.map((price) => [price.id, toDraft(price)])),
-  );
-  const [savingId, setSavingId] = useState<number | null>(null);
-  const [savedId, setSavedId] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [createOpen, setCreateOpen] = useState(false);
-  const [creating, setCreating] = useState(false);
-  const [newPrice, setNewPrice] = useState<CreateDraft>(() => createEmptyDraft(initialPrices.length + 1));
+  const queryClient = useQueryClient();
 
-  const patch = (id: number, change: Partial<Draft>) => {
-    setDrafts((current) => ({ ...current, [id]: { ...current[id], ...change } }));
-    setSavedId(null);
+  const [activeTab, setActiveTab] = useState<CreditPricingTab>('PRICES');
+  const [prices, setPrices] = useState<CreditPrice[]>(() => sortCreditPrices(initialPrices));
+  const [drafts, setDrafts] = useState<Record<number, CreditPriceDraft>>(() =>
+    Object.fromEntries(initialPrices.map((price) => [price.id, toCreditPriceDraft(price)])),
+  );
+  const [filters, setFilters] = useState<CreditPriceFilters>(EMPTY_CREDIT_PRICE_FILTERS);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const [savingIds, setSavingIds] = useState<Set<number>>(() => new Set());
+  const [isBatchSaving, setIsBatchSaving] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+
+  const invalidateCreditCaches = async () => {
+    await queryClient.invalidateQueries({ queryKey: creditKeys.wallet });
   };
 
-  const handleCreate = async () => {
-    const payloadOrError = validateAndBuildPayload(newPrice.entitlementType, newPrice);
-    if (typeof payloadOrError === 'string') {
-      setError(payloadOrError);
+  const activeCount = useMemo(() => prices.filter((price) => price.active).length, [prices]);
+  const dirtyPrices = useMemo(
+    () => prices.filter((price) => isCreditPriceDraftDirty(price, drafts[price.id])),
+    [prices, drafts],
+  );
+  const filteredPrices = useMemo(() => filterAndSortCreditPrices(prices, filters), [prices, filters]);
+
+  const pageCount = Math.max(1, Math.ceil(filteredPrices.length / pageSize));
+  const safePage = Math.min(page, pageCount);
+  const pagedPrices = useMemo(() => {
+    const start = (safePage - 1) * pageSize;
+    return filteredPrices.slice(start, start + pageSize);
+  }, [filteredPrices, safePage, pageSize]);
+
+  const patchFilters = (patch: Partial<CreditPriceFilters>) => {
+    setFilters((current) => ({ ...current, ...patch }));
+    setPage(1);
+  };
+
+  const resetFilters = () => {
+    setFilters(EMPTY_CREDIT_PRICE_FILTERS);
+    setPage(1);
+  };
+
+  const patchDraft = (id: number, change: Partial<CreditPriceDraft>) => {
+    setDrafts((current) => ({
+      ...current,
+      [id]: {
+        ...(current[id] ?? { creditCost: '', durationDays: '', label: '', active: true, displayOrder: '0' }),
+        ...change,
+      },
+    }));
+  };
+
+  const resetRow = (id: number) => {
+    const original = prices.find((item) => item.id === id);
+    if (!original) return;
+    setDrafts((current) => ({ ...current, [id]: toCreditPriceDraft(original) }));
+  };
+
+  const discardAllChanges = () => {
+    setDrafts(Object.fromEntries(prices.map((price) => [price.id, toCreditPriceDraft(price)])));
+    toast.success('Discarded unsaved row changes.');
+  };
+
+  const handleSaveRow = async (price: CreditPrice) => {
+    const draft = drafts[price.id] ?? toCreditPriceDraft(price);
+    const serviceLabel = getEntitlementTypeLabel(price.entitlementType);
+    const { payload } = validateCreditPriceDraft(price.entitlementType, draft);
+    if (!payload) {
+      toast.error(`Please fix invalid fields for ${serviceLabel} (${price.entitlementType}).`);
       return;
     }
 
-    const tier = newPrice.entitlementType === 'JOB_BOOST' ? Number(newPrice.tier) : 1;
-    if (!Number.isInteger(tier) || tier < 1 || tier > 3) {
-      setError('Boost tier must be between 1 and 3.');
+    setSavingIds((current) => new Set(current).add(price.id));
+    try {
+      const saved = await adminCreditPriceApi.update(price.id, payload);
+      setPrices((current) => sortCreditPrices(current.map((item) => (item.id === price.id ? saved : item))));
+      setDrafts((current) => ({ ...current, [price.id]: toCreditPriceDraft(saved) }));
+      await invalidateCreditCaches();
+      toast.success(`Saved credit price for ${serviceLabel} (Tier ${saved.tier}).`);
+    } catch (cause) {
+      toast.error(getErrorMessage(cause));
+    } finally {
+      setSavingIds((current) => {
+        const next = new Set(current);
+        next.delete(price.id);
+        return next;
+      });
+    }
+  };
+
+  const handleSaveAll = async () => {
+    if (dirtyPrices.length === 0 || isBatchSaving) return;
+
+    const validated = dirtyPrices.map((price) => ({
+      price,
+      result: validateCreditPriceDraft(price.entitlementType, drafts[price.id] ?? toCreditPriceDraft(price)),
+    }));
+    const firstInvalid = validated.find((entry) => entry.result.payload === null);
+    if (firstInvalid) {
+      const serviceLabel = getEntitlementTypeLabel(firstInvalid.price.entitlementType);
+      toast.error(`Cannot save: ${serviceLabel} (${firstInvalid.price.entitlementType}) has invalid fields.`);
       return;
     }
 
-    const payload: CreateCreditPriceInput = {
-      ...payloadOrError,
-      entitlementType: newPrice.entitlementType,
-      tier,
-    };
+    setIsBatchSaving(true);
+    try {
+      const results = await Promise.allSettled(
+        validated.map((entry) => adminCreditPriceApi.update(entry.price.id, entry.result.payload!)),
+      );
 
-    setCreating(true);
-    setError(null);
+      const savedById = new Map<number, CreditPrice>();
+      let failedCount = 0;
+      let firstError: string | null = null;
+
+      results.forEach((result) => {
+        if (result.status === 'fulfilled') {
+          savedById.set(result.value.id, result.value);
+        } else {
+          failedCount += 1;
+          firstError ??= getErrorMessage(result.reason);
+        }
+      });
+
+      if (savedById.size > 0) {
+        setPrices((current) => sortCreditPrices(current.map((item) => savedById.get(item.id) ?? item)));
+        setDrafts((current) => {
+          const next = { ...current };
+          savedById.forEach((saved, id) => {
+            next[id] = toCreditPriceDraft(saved);
+          });
+          return next;
+        });
+        await invalidateCreditCaches();
+      }
+
+      if (failedCount === 0) {
+        toast.success(`Saved ${savedById.size} updated credit ${savedById.size === 1 ? 'rule' : 'rules'}.`);
+      } else {
+        toast.error(`Saved ${savedById.size} rules, ${failedCount} failed${firstError ? `: ${firstError}` : '.'}`);
+      }
+    } finally {
+      setIsBatchSaving(false);
+    }
+  };
+
+  const handleCreate = async (payload: CreateCreditPriceInput): Promise<boolean> => {
+    setIsCreating(true);
     try {
       const created = await adminCreditPriceApi.create(payload);
-      setPrices((current) => [...current, created].sort((a, b) => a.displayOrder - b.displayOrder || a.id - b.id));
-      setDrafts((current) => ({ ...current, [created.id]: toDraft(created) }));
-      setNewPrice(createEmptyDraft(prices.length + 2));
-      setCreateOpen(false);
-      setSavedId(created.id);
+      setPrices((current) => sortCreditPrices([...current, created]));
+      setDrafts((current) => ({ ...current, [created.id]: toCreditPriceDraft(created) }));
+      await invalidateCreditCaches();
+      toast.success(`Created credit price for ${getEntitlementTypeLabel(created.entitlementType)}.`);
+      return true;
     } catch (cause) {
-      setError(getErrorMessage(cause));
+      toast.error(getErrorMessage(cause));
+      return false;
     } finally {
-      setCreating(false);
+      setIsCreating(false);
     }
   };
-
-  const save = async (price: CreditPrice) => {
-    const payloadOrError = validateAndBuildPayload(price.entitlementType, drafts[price.id]);
-    if (typeof payloadOrError === 'string') {
-      setError(payloadOrError);
-      return;
-    }
-
-    setSavingId(price.id);
-    setError(null);
-    try {
-      const saved = await adminCreditPriceApi.update(price.id, payloadOrError);
-      setPrices((current) => current.map((item) => (item.id === price.id ? saved : item)));
-      setDrafts((current) => ({ ...current, [price.id]: toDraft(saved) }));
-      setSavedId(price.id);
-    } catch (cause) {
-      setError(getErrorMessage(cause));
-    } finally {
-      setSavingId(null);
-    }
-  };
-
-  const createRequiresDuration = DURATION_REQUIRED_ENTITLEMENT_TYPES.has(newPrice.entitlementType);
-  const createIsBoost = newPrice.entitlementType === 'JOB_BOOST';
 
   return (
-    <div className="space-y-5 pb-16">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <Link
-            href={ROUTES.ADMIN_SERVICE_PACKAGES}
-            className="text-on-surface-variant hover:text-on-surface inline-flex items-center gap-1.5 text-sm font-medium"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden />
-            Service packages
-          </Link>
-          <h1 className="text-on-surface mt-2 text-xl font-bold">Credit prices</h1>
-          <p className="text-on-surface-variant mt-1 text-sm">
-            What a recruiter pays in credits for one unit of each service. Credits are bought through the FLEX packages;
-            this table is the only place that decides what they are worth.
-          </p>
-        </div>
-        <Button
-          type="button"
-          size="sm"
-          leftIcon={<Plus className="h-4 w-4" />}
-          onClick={() => {
-            setError(null);
-            setCreateOpen((open) => !open);
-          }}
-        >
-          {createOpen ? 'Cancel create' : 'Create credit price'}
-        </Button>
-      </div>
-
-      {createOpen && (
-        <div className="border-primary/40 space-y-4 rounded-2xl border bg-white p-5 shadow-2xs">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <h2 className="text-on-surface text-base font-bold">New credit exchange rule</h2>
-              <p className="text-on-surface-variant text-xs">
-                Only JOB_BOOST supports tiers 1–3; time-boxed entitlements require a positive duration in days.
-              </p>
-            </div>
-            <Button size="sm" isLoading={creating} onClick={handleCreate}>
-              Create rule
-            </Button>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Select
-              label="Service *"
-              value={newPrice.entitlementType}
-              onChange={(event) => {
-                const nextType = event.target.value as EntitlementType;
-                setNewPrice((current) => ({
-                  ...current,
-                  entitlementType: nextType,
-                  tier: nextType === 'JOB_BOOST' ? current.tier : '1',
-                  durationDays:
-                    DURATION_REQUIRED_ENTITLEMENT_TYPES.has(nextType) && !current.durationDays.trim()
-                      ? '30'
-                      : current.durationDays,
-                }));
-              }}
-              options={CONVERTIBLE_TYPE_OPTIONS}
-            />
-            {createIsBoost ? (
-              <Select
-                label="Boost tier *"
-                value={newPrice.tier}
-                onChange={(event) => setNewPrice((current) => ({ ...current, tier: event.target.value }))}
-                options={BOOST_TIER_OPTIONS}
-              />
-            ) : (
-              <Input label="Tier" value="1 (default)" disabled />
+    <div className="space-y-4 pb-12">
+      <AdminPageHeader
+        className="mb-0"
+        description={
+          activeTab === 'PRICES'
+            ? 'Set how many credits recruiters spend per unit when exchanging wallet credits.'
+            : activeTab === 'QUOTAS'
+              ? 'Configure platform-wide free usage allowances and job publishing slot requirements.'
+              : 'Inspect company credit wallets, credit lot expiries, and apply manual credit adjustments.'
+        }
+        count={activeTab === 'PRICES' ? prices.length : undefined}
+        countLabel={activeTab === 'PRICES' ? `rules (${activeCount} active)` : undefined}
+        actions={
+          <>
+            <Link
+              href={ROUTES.ADMIN_SERVICE_PACKAGES}
+              className={buttonClassName({
+                variant: 'outline',
+                size: 'md',
+                className: 'dark:border-forest-700 dark:text-forest-100 dark:hover:bg-forest-850',
+              })}
+            >
+              <FolderKanban className="h-4 w-4" />
+              <span>Service packages</span>
+            </Link>
+            {activeTab === 'PRICES' && dirtyPrices.length > 0 && (
+              <Button
+                type="button"
+                variant="outline"
+                size="md"
+                isLoading={isBatchSaving}
+                disabled={savingIds.size > 0}
+                onClick={() => void handleSaveAll()}
+                leftIcon={<Save className="h-4 w-4" />}
+                className="border-amber-500 text-amber-700 hover:bg-amber-50 dark:border-amber-400 dark:text-amber-300 dark:hover:bg-amber-950/40"
+              >
+                Save all ({dirtyPrices.length})
+              </Button>
             )}
-            <Input
-              label="Credits *"
-              type="number"
-              min={1}
-              value={newPrice.creditCost}
-              onChange={(event) => setNewPrice((current) => ({ ...current, creditCost: event.target.value }))}
-            />
-            <Input
-              label={createRequiresDuration ? 'Duration (days) *' : 'Duration (days)'}
-              type="number"
-              min={1}
-              max={MAX_DURATION_DAYS}
-              placeholder={createRequiresDuration ? 'Required (e.g. 30)' : 'Optional'}
-              value={newPrice.durationDays}
-              onChange={(event) => setNewPrice((current) => ({ ...current, durationDays: event.target.value }))}
-            />
-          </div>
+            {activeTab === 'PRICES' && (
+              <Button
+                type="button"
+                size="md"
+                onClick={() => setCreateOpen(true)}
+                leftIcon={<Plus className="h-4 w-4" />}
+              >
+                New credit price
+              </Button>
+            )}
+          </>
+        }
+      />
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="sm:col-span-2">
-              <Input
-                label="Label shown to recruiters *"
-                placeholder="e.g. Tin đăng tiêu chuẩn (30 ngày)"
-                value={newPrice.label}
-                onChange={(event) => setNewPrice((current) => ({ ...current, label: event.target.value }))}
-              />
-            </div>
-            <Input
-              label="Display order"
-              type="number"
-              min={0}
-              value={newPrice.displayOrder}
-              onChange={(event) => setNewPrice((current) => ({ ...current, displayOrder: event.target.value }))}
-            />
-            <div className="flex items-center gap-3 pt-6">
-              <Switch
-                checked={newPrice.active}
-                onChange={(value) => setNewPrice((current) => ({ ...current, active: value }))}
-                ariaLabel="Active credit price"
-              />
-              <span className="text-on-surface text-sm font-medium">Active for exchange</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {error && (
-        <div className="flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800">
-          <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" aria-hidden />
-          {error}
-        </div>
-      )}
-
-      <div className="border-outline-variant overflow-x-auto rounded-2xl border bg-white shadow-2xs">
-        <table className="w-full min-w-[920px] text-sm">
-          <thead className="border-outline-variant text-on-surface-variant border-b text-xs">
-            <tr>
-              <th className="px-4 py-3 text-left font-semibold">Service</th>
-              <th className="px-4 py-3 text-left font-semibold">Tier</th>
-              <th className="px-4 py-3 text-left font-semibold">Credits</th>
-              <th className="px-4 py-3 text-left font-semibold">Days</th>
-              <th className="px-4 py-3 text-left font-semibold">Label shown to recruiters</th>
-              <th className="px-4 py-3 text-left font-semibold">Active</th>
-              <th className="px-4 py-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {prices.map((price) => {
-              const draft = drafts[price.id];
-              const requiresDuration = DURATION_REQUIRED_ENTITLEMENT_TYPES.has(price.entitlementType);
-              return (
-                <tr key={price.id} className="border-outline-variant border-b last:border-0">
-                  <td className="text-on-surface px-4 py-3 font-semibold">{price.entitlementType}</td>
-                  <td className="text-on-surface-variant px-4 py-3">{price.tier}</td>
-                  <td className="px-4 py-3">
-                    <Input
-                      type="number"
-                      min={1}
-                      value={draft.creditCost}
-                      onChange={(event) => patch(price.id, { creditCost: event.target.value })}
-                      className="w-28"
-                    />
-                  </td>
-                  <td className="px-4 py-3">
-                    <Input
-                      type="number"
-                      min={1}
-                      max={MAX_DURATION_DAYS}
-                      value={draft.durationDays}
-                      onChange={(event) => patch(price.id, { durationDays: event.target.value })}
-                      placeholder={requiresDuration ? 'Required' : '—'}
-                      className="w-24"
-                    />
-                  </td>
-                  <td className="px-4 py-3">
-                    <Input
-                      value={draft.label}
-                      onChange={(event) => patch(price.id, { label: event.target.value })}
-                      className="min-w-[260px]"
-                    />
-                  </td>
-                  <td className="px-4 py-3">
-                    <Switch
-                      checked={draft.active}
-                      onChange={(value) => patch(price.id, { active: value })}
-                      ariaLabel={`Active: ${price.entitlementType}`}
-                      size="sm"
-                    />
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <span className="inline-flex items-center gap-2">
-                      {savedId === price.id && (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
-                          <Check className="h-3.5 w-3.5" aria-hidden />
-                          Saved
-                        </span>
-                      )}
-                      <Button size="sm" variant="neutral" isLoading={savingId === price.id} onClick={() => save(price)}>
-                        Save
-                      </Button>
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <div className="dark:border-forest-800 border-outline-variant flex gap-6 border-b">
+        <button
+          type="button"
+          onClick={() => setActiveTab('PRICES')}
+          className={cn(
+            'flex cursor-pointer items-center gap-2 border-b-2 py-2.5 text-xs font-bold transition-colors',
+            activeTab === 'PRICES'
+              ? 'border-primary text-primary'
+              : 'dark:text-forest-300 dark:hover:text-forest-100 border-transparent text-slate-500 hover:text-slate-800',
+          )}
+        >
+          <Coins className="h-3.5 w-3.5" />
+          <span>Credit prices</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('QUOTAS')}
+          className={cn(
+            'flex cursor-pointer items-center gap-2 border-b-2 py-2.5 text-xs font-bold transition-colors',
+            activeTab === 'QUOTAS'
+              ? 'border-primary text-primary'
+              : 'dark:text-forest-300 dark:hover:text-forest-100 border-transparent text-slate-500 hover:text-slate-800',
+          )}
+        >
+          <Sliders className="h-3.5 w-3.5" />
+          <span>Free quotas</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('WALLETS')}
+          className={cn(
+            'flex cursor-pointer items-center gap-2 border-b-2 py-2.5 text-xs font-bold transition-colors',
+            activeTab === 'WALLETS'
+              ? 'border-primary text-primary'
+              : 'dark:text-forest-300 dark:hover:text-forest-100 border-transparent text-slate-500 hover:text-slate-800',
+          )}
+        >
+          <Building2 className="h-3.5 w-3.5" />
+          <span>Company wallets</span>
+        </button>
       </div>
+
+      {activeTab === 'QUOTAS' ? (
+        <AdminFreeQuotasTab />
+      ) : activeTab === 'WALLETS' ? (
+        <AdminCompanyCreditsTab />
+      ) : (
+        <>
+          <AdminCreditPricesFilterBar filters={filters} onPatchFilters={patchFilters} onResetFilters={resetFilters} />
+
+          {prices.length === 0 ? (
+            <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex flex-col items-center justify-center gap-3 rounded-lg border bg-white px-6 py-16 text-center shadow-xs">
+              <Coins className="text-outline h-10 w-10" />
+              <p className="text-navy dark:text-forest-50 text-body-md font-bold">No credit exchange rules yet</p>
+              <p className="dark:text-forest-300 text-body-sm text-on-surface-variant max-w-sm">
+                Create conversion rules so recruiters can exchange wallet credits from FLEX or bonus packages into
+                services.
+              </p>
+              <Button
+                type="button"
+                size="md"
+                onClick={() => setCreateOpen(true)}
+                leftIcon={<Plus className="h-4 w-4" />}
+              >
+                New credit price
+              </Button>
+            </div>
+          ) : filteredPrices.length === 0 ? (
+            <div className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant flex flex-col items-center justify-center gap-3 rounded-lg border bg-white px-6 py-16 text-center shadow-xs">
+              <SearchX className="text-outline h-10 w-10" />
+              <p className="text-navy dark:text-forest-50 text-body-md font-bold">No rules match these filters</p>
+              <p className="dark:text-forest-300 text-body-sm text-on-surface-variant max-w-sm">
+                Try a different service keyword or reset the status and billing type filters.
+              </p>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="text-primary text-body-sm mt-1 cursor-pointer font-bold hover:underline"
+              >
+                Clear all filters
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="rounded-lg border border-l-4 border-amber-200/75 border-l-amber-500 bg-amber-50 px-4 py-3.5 dark:border-amber-800/60 dark:border-l-amber-400 dark:bg-amber-950/35">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex gap-3">
+                    <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-amber-600 dark:text-amber-400" />
+                    <div>
+                      <p className="text-sm font-bold text-amber-900 dark:text-amber-200">
+                        How recruiters see this pricing table
+                      </p>
+                      <p className="text-on-surface-variant mt-1 text-sm leading-relaxed dark:text-amber-100/80">
+                        Only active rows appear when recruiters exchange credits, ordered from lowest Order to highest.
+                        Edit any row inline and click Save (or Save all) to publish changes.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {dirtyPrices.length > 0 && (
+                  <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 border-t border-amber-200/80 pt-2.5 pl-7.5 dark:border-amber-800/50">
+                    <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+                      {dirtyPrices.length} {dirtyPrices.length === 1 ? 'rule has' : 'rules have'} unsaved changes.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={discardAllChanges}
+                      className="cursor-pointer text-xs font-bold text-amber-900 underline underline-offset-2 hover:text-amber-700 dark:text-amber-200 dark:hover:text-amber-100"
+                    >
+                      Discard all changes
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <AdminCreditPricesTable
+                prices={pagedPrices}
+                drafts={drafts}
+                savingIds={savingIds}
+                isBatchSaving={isBatchSaving}
+                onPatch={patchDraft}
+                onResetRow={resetRow}
+                onSaveRow={(price) => void handleSaveRow(price)}
+              />
+
+              <AdminCreditPricesMobileList
+                prices={pagedPrices}
+                drafts={drafts}
+                savingIds={savingIds}
+                isBatchSaving={isBatchSaving}
+                onPatch={patchDraft}
+                onResetRow={resetRow}
+                onSaveRow={(price) => void handleSaveRow(price)}
+              />
+
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <Pagination
+                  page={safePage}
+                  pageCount={pageCount}
+                  totalItems={filteredPrices.length}
+                  pageSize={pageSize}
+                  onPageChange={setPage}
+                  className="flex-1"
+                />
+                <div className="w-32 shrink-0 self-end sm:self-auto">
+                  <Select
+                    aria-label="Rows per page"
+                    value={String(pageSize)}
+                    onChange={(event) => {
+                      setPageSize(Number(event.target.value));
+                      setPage(1);
+                    }}
+                    options={CREDIT_PRICE_PAGE_SIZE_OPTIONS}
+                    className="dark:border-forest-700 dark:bg-forest-900 dark:text-forest-100 py-1.5 text-xs"
+                  />
+                </div>
+              </div>
+            </>
+          )}
+
+          <CreateCreditPriceModal
+            isOpen={createOpen}
+            prices={prices}
+            isCreating={isCreating}
+            onClose={() => setCreateOpen(false)}
+            onCreate={handleCreate}
+          />
+        </>
+      )}
     </div>
   );
 }

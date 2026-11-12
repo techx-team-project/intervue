@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.candidate.credits.services;
 
+import com.techx.intervue.common.policy.FreeQuotaPolicyInterface;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.candidate.credits.entities.CandidateCreditBalance;
@@ -23,11 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CandidateCreditService implements CandidateCreditServiceInterface {
 
-    public static final int INITIAL_STARTER_CREDITS = 5;
-
     private final CandidateCreditBalanceRepository balanceRepository;
     private final CandidateCreditTransactionRepository transactionRepository;
     private final CandidateProfileLookup candidateProfileLookup;
+    private final FreeQuotaPolicyInterface freeQuotaPolicy;
 
     @Override
     @Transactional
@@ -178,24 +178,27 @@ public class CandidateCreditService implements CandidateCreditServiceInterface {
     }
 
     private CandidateCreditBalance initializeStarterBalance(CandidateProfile profile) {
+        int starterCredits = freeQuotaPolicy.current().candidateStarterCredits();
         CandidateCreditBalance newBalance =
-                CandidateCreditBalance.builder()
-                        .candidate(profile)
-                        .balance(INITIAL_STARTER_CREDITS)
-                        .build();
+                CandidateCreditBalance.builder().candidate(profile).balance(starterCredits).build();
         CandidateCreditBalance saved = balanceRepository.save(newBalance);
 
-        CandidateCreditTransaction grantTx =
-                CandidateCreditTransaction.builder()
-                        .candidate(profile)
-                        .amount(INITIAL_STARTER_CREDITS)
-                        .balanceAfter(INITIAL_STARTER_CREDITS)
-                        .type(CreditTransactionType.INITIAL_GRANT)
-                        .feature("STARTER_PACKAGE")
-                        .referenceId("WELCOME")
-                        .description("Tặng 5 credit trải nghiệm đánh giá CV ban đầu")
-                        .build();
-        transactionRepository.save(grantTx);
+        if (starterCredits > 0) {
+            CandidateCreditTransaction grantTx =
+                    CandidateCreditTransaction.builder()
+                            .candidate(profile)
+                            .amount(starterCredits)
+                            .balanceAfter(starterCredits)
+                            .type(CreditTransactionType.INITIAL_GRANT)
+                            .feature("STARTER_PACKAGE")
+                            .referenceId("WELCOME")
+                            .description(
+                                    "Tặng "
+                                            + starterCredits
+                                            + " credit trải nghiệm đánh giá CV ban đầu")
+                            .build();
+            transactionRepository.save(grantTx);
+        }
 
         return saved;
     }
