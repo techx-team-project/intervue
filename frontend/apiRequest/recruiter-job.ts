@@ -57,6 +57,9 @@ export const recruiterJobApi = {
   renew: (id: number, deadline: string) =>
     request<RecruiterJobResource>(`/recruiter/jobs/${id}/renew`, { method: 'POST', body: { deadline } }),
 
+  extend: (id: number, deadline: string) =>
+    request<RecruiterJobResource>(`/recruiter/jobs/${id}/extend`, { method: 'POST', body: { deadline } }),
+
   history: (id: number, page: number, size: number) =>
     request<Page<JobHistoryEntry>>(`/recruiter/jobs/${id}/history?page=${page}&size=${size}`),
 

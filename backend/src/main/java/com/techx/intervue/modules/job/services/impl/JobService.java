@@ -254,6 +254,26 @@ public class JobService implements JobServiceInterface {
     }
 
     @Override
+    @Transactional
+    public JobResource extend(Long jobId, RenewJobRequest request, Long recruiterId) {
+        Job job = requireOwned(jobId, recruiterId);
+        requireStatus(job, Set.of(JobStatus.PUBLISHED, JobStatus.PAUSED));
+        LocalDate previousDeadline = job.getDeadline();
+        if (previousDeadline != null && !request.deadline().isAfter(previousDeadline)) {
+            throw AppException.validation("deadline", "Choose a date after the current deadline");
+        }
+        job.setDeadline(request.deadline());
+        entitlementService
+                .jobSlotExpiresAt(job.getId())
+                .ifPresentOrElse(
+                        endsAt -> assertDeadlineWithinSlot(request.deadline(), endsAt),
+                        () -> assertFreeDeadlineUnchangedOrAllowed(job, previousDeadline));
+        activityRecorder.record(
+                recruiterId, AuditAction.JOB_UPDATED, job, "deadline " + request.deadline());
+        return jobMapper.toResource(job);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public JobQuotaResource quota(Long recruiterId) {
         CompanyResource company = requireCompany(recruiterId);

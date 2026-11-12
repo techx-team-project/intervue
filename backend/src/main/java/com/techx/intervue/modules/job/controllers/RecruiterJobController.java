@@ -136,6 +136,16 @@ public class RecruiterJobController extends BaseController {
         return ok(jobService.renew(id, request, principal.getId()), "Job renewed successfully!");
     }
 
+    @PostMapping("/{id}/extend")
+    public ResponseEntity<ApiResource<JobResource>> extend(
+            @PathVariable Long id,
+            @Valid @RequestBody RenewJobRequest request,
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                jobService.extend(id, request, principal.getId()),
+                "Job deadline extended successfully!");
+    }
+
     @GetMapping("/{id}/stats")
     public ResponseEntity<ApiResource<JobStatsResource>> stats(
             @PathVariable Long id,

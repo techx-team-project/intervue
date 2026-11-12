@@ -19,6 +19,7 @@ public enum NotificationType {
     APPLICATIONS_WAITING_REVIEW(
             NotificationCategory.APPLICATIONS, NotificationSeverity.INFO, false),
     SAVED_JOBS_CLOSING_SOON(NotificationCategory.JOBS, NotificationSeverity.INFO, false),
+    JOB_EXPIRING_SOON(NotificationCategory.JOBS, NotificationSeverity.WARNING, true),
     JOB_APPROVED(NotificationCategory.JOBS, NotificationSeverity.SUCCESS, true),
     JOB_REJECTED(NotificationCategory.JOBS, NotificationSeverity.DANGER, true),
     JOB_HIDDEN_BY_ADMIN(NotificationCategory.JOBS, NotificationSeverity.DANGER, true),

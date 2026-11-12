@@ -128,6 +128,15 @@ templates:
       Review the reports and hide the post if it breaks the rules.
     actionLabel: "Open reports"
 
+  JOB_EXPIRING_SOON:
+    title: "{jobTitle} expires in {days} days"
+    summary: "Your job post {jobTitle} stops accepting applications in {days} days."
+    body: |
+      Your job post **{jobTitle}** stops accepting applications in **{days} days**.
+
+      Extend the deadline now to keep receiving candidates.
+    actionLabel: "Extend deadline"
+
   JOB_APPROVED:
     title: "{jobTitle} was approved"
     summary: "Your job post {jobTitle} passed review and is now live."

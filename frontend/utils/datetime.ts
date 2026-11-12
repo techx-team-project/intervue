@@ -98,3 +98,9 @@ export function isoDateAfterDays(days: number): string {
 export function localInputValueAfterDays(days: number): string {
   return toLocalInputValue(new Date(Date.now() + days * DAY_MS).toISOString());
 }
+
+export function shiftIsoDate(isoDate: string, days: number): string {
+  const date = new Date(`${isoDate}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
