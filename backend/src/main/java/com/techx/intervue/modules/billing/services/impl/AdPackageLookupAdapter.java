@@ -61,11 +61,28 @@ public class AdPackageLookupAdapter implements AdPackageLookupPortInterface {
 
     @Override
     @Transactional
+    public void syncAvailability(Long servicePackageId, boolean active) {
+        if (servicePackageId == null) {
+            return;
+        }
+        packageRepository
+                .findById(servicePackageId)
+                .ifPresent(
+                        servicePackage ->
+                                servicePackage.setStatus(
+                                        active
+                                                ? ServicePackageStatus.ACTIVE
+                                                : ServicePackageStatus.INACTIVE));
+    }
+
+    @Override
+    @Transactional
     public Long createBannerPackageForSlot(
             String slotCode,
             String slotName,
             String description,
             Long pricePerWeek,
+            boolean active,
             Integer displayOrder) {
         ServiceCategory bannerCategory =
                 categoryRepository
@@ -93,7 +110,10 @@ public class AdPackageLookupAdapter implements AdPackageLookupPortInterface {
                                                         + " bán theo tuần.")
                                 .price(pricePerWeek)
                                 .accentColor("#16a34a")
-                                .status(ServicePackageStatus.ACTIVE)
+                                .status(
+                                        active
+                                                ? ServicePackageStatus.ACTIVE
+                                                : ServicePackageStatus.INACTIVE)
                                 .displayOrder(displayOrder == null ? 0 : displayOrder)
                                 .build());
 

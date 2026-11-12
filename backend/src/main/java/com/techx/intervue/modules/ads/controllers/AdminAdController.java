@@ -9,6 +9,7 @@ import com.techx.intervue.modules.ads.resources.AdSlotResource;
 import com.techx.intervue.modules.ads.resources.AdminAdCreativeResource;
 import com.techx.intervue.modules.ads.services.interfaces.AdCreativeServiceInterface;
 import com.techx.intervue.modules.ads.services.interfaces.AdminAdSlotServiceInterface;
+import com.techx.intervue.modules.ads.services.interfaces.AdminAdSlotServiceInterface.UploadedHouseImageResource;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/admin/ads")
@@ -62,6 +64,13 @@ public class AdminAdController extends BaseController {
         return ok(
                 adminAdSlotService.update(id, request, actor(principal, httpRequest)),
                 "Ad slot updated successfully!");
+    }
+
+    @PostMapping("/upload-image")
+    public ResponseEntity<ApiResource<UploadedHouseImageResource>> uploadHouseImage(
+            @RequestParam("file") MultipartFile file) {
+        return created(
+                adminAdSlotService.uploadHouseImage(file), "House ad image uploaded successfully!");
     }
 
     @GetMapping("/creatives")
