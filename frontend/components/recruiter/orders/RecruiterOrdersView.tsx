@@ -36,8 +36,8 @@ export default function RecruiterOrdersView() {
 
   if (data.items.length === 0) {
     return (
-      <div className="border-outline-variant flex flex-col items-center justify-center rounded-2xl border border-dashed bg-white py-16 text-center">
-        <div className="bg-surface-container-high text-outline flex h-12 w-12 items-center justify-center rounded-2xl">
+      <div className="border-outline-variant flex flex-col items-center justify-center rounded-xl border border-dashed bg-white py-16 text-center">
+        <div className="bg-surface-container-high text-outline flex h-12 w-12 items-center justify-center rounded-xl">
           <Receipt className="h-6 w-6" />
         </div>
         <h4 className="text-on-surface mt-3 text-sm font-bold">Chưa có đơn hàng nào</h4>
@@ -60,7 +60,7 @@ export default function RecruiterOrdersView() {
         </div>
       )}
 
-      <div className="border-outline-variant overflow-hidden rounded-2xl border bg-white shadow-2xs">
+      <div className="border-outline-variant overflow-hidden rounded-xl border bg-white">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead>
