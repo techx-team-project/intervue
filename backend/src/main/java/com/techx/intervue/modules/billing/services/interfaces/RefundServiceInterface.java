@@ -6,6 +6,7 @@ import com.techx.intervue.modules.billing.requests.CreateRefundRequest;
 import com.techx.intervue.modules.billing.requests.ReviewRefundRequest;
 import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
+import com.techx.intervue.modules.billing.resources.RefundStatusCountsResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,6 +18,8 @@ public interface RefundServiceInterface {
     RefundRequestResource request(String orderCode, CreateRefundRequest request, Long recruiterId);
 
     Page<RefundRequestResource> listMine(Long recruiterId, Pageable pageable);
+
+    RefundStatusCountsResource summaryForRecruiter(Long recruiterId);
 
     Page<RefundRequestResource> search(RefundStatus status, Pageable pageable);
 

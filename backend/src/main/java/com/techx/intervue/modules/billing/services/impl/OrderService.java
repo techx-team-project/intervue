@@ -27,6 +27,7 @@ import com.techx.intervue.modules.billing.resources.OrderResource;
 import com.techx.intervue.modules.billing.resources.OrderStatusCountsResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
 import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
+import com.techx.intervue.modules.billing.resources.PaymentTransactionSummaryResource;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.VoucherServiceInterface;
@@ -256,6 +257,16 @@ public class OrderService implements OrderServiceInterface {
         return paymentTransactionRepository
                 .findAllByMatchedOrder_CompanyIdOrderByTransactionAtDesc(companyId, pageable)
                 .map(this::toPaymentResource);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PaymentTransactionSummaryResource summarizePayments(Long recruiterId) {
+        Long companyId = companyResolver.requireId(recruiterId);
+        long totalCount = paymentTransactionRepository.countByMatchedOrder_CompanyId(companyId);
+        long totalAmount =
+                paymentTransactionRepository.sumAmountInByMatchedOrder_CompanyId(companyId);
+        return new PaymentTransactionSummaryResource(totalCount, totalAmount);
     }
 
     private PaymentTransactionResource toPaymentResource(PaymentTransaction transaction) {

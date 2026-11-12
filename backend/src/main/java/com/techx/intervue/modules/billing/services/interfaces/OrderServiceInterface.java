@@ -5,6 +5,7 @@ import com.techx.intervue.modules.billing.resources.OrderResource;
 import com.techx.intervue.modules.billing.resources.OrderStatusCountsResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
 import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
+import com.techx.intervue.modules.billing.resources.PaymentTransactionSummaryResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,4 +22,6 @@ public interface OrderServiceInterface {
     OrderResource cancel(String code, Long recruiterId);
 
     Page<PaymentTransactionResource> searchPayments(Pageable pageable, Long recruiterId);
+
+    PaymentTransactionSummaryResource summarizePayments(Long recruiterId);
 }
