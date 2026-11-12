@@ -1,6 +1,7 @@
 import { ROUTES } from '@/constants/routes';
+import { cn } from '@/lib/utils';
 import type { SuggestedServicePackage } from '@/types/recruiter';
-import { Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 interface SuggestedServicePackagesProps {
@@ -9,33 +10,64 @@ interface SuggestedServicePackagesProps {
 
 export default function SuggestedServicePackages({ services }: SuggestedServicePackagesProps) {
   return (
-    <div className="border-outline-variant rounded-2xl border bg-white p-6 shadow-xs sm:p-7">
+    <section>
       <div className="flex items-center justify-between">
-        <h2 className="text-navy text-body-lg font-bold">Suggested packages</h2>
-        <Link href={ROUTES.RECRUITER_SERVICES} className="text-primary text-body-sm font-bold hover:underline">
-          View all
+        <h2 className="text-navy text-body-lg font-bold">Gói dịch vụ gợi ý</h2>
+        <Link href={ROUTES.RECRUITER_SERVICES} className="text-primary text-body-sm font-semibold hover:underline">
+          Xem tất cả
         </Link>
       </div>
 
       {services.length === 0 ? (
-        <p className="text-body-md text-on-surface-variant mt-4">No suggested packages right now.</p>
+        <p className="text-body-md text-on-surface-variant mt-4">Chưa có gói nào được gợi ý.</p>
       ) : (
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {services.map((service) => (
-            <div key={service.id} className="border-outline-variant rounded-xl border p-4">
-              <div className="flex items-center gap-2">
-                <Sparkles className="text-primary h-4 w-4" />
-                <h3 className="text-navy text-body-md font-bold">{service.name}</h3>
-              </div>
-              <p className="text-body-sm text-on-surface-variant mt-1.5 leading-relaxed">{service.description}</p>
-              <div className="mt-3 flex items-center justify-between">
-                <span className="text-primary text-body-md font-bold">{service.priceLabel}</span>
-                {service.highlight && <span className="text-label-sm text-outline">{service.highlight}</span>}
-              </div>
-            </div>
-          ))}
+          {services.map((service, index) => {
+            const isFeatured = index === 0;
+
+            return (
+              <Link
+                key={service.id}
+                href={ROUTES.RECRUITER_SERVICES}
+                className={cn(
+                  'group flex flex-col rounded-xl border p-6 transition',
+                  isFeatured
+                    ? 'bg-primary-deep border-primary-deep text-white'
+                    : 'border-outline-variant hover:border-navy bg-white',
+                )}
+              >
+                {service.highlight && (
+                  <span
+                    className={cn(
+                      'text-label-sm w-fit font-semibold tracking-wide uppercase',
+                      isFeatured ? 'text-primary-bright' : 'text-primary',
+                    )}
+                  >
+                    {service.highlight}
+                  </span>
+                )}
+                <h3 className={cn('text-lg font-bold', service.highlight && 'mt-1', !isFeatured && 'text-navy')}>
+                  {service.name}
+                </h3>
+                <p
+                  className={cn(
+                    'text-body-sm mt-1.5 leading-relaxed',
+                    isFeatured ? 'text-white/75' : 'text-on-surface-variant',
+                  )}
+                >
+                  {service.description}
+                </p>
+                <div className="mt-5 flex items-center justify-between">
+                  <span className={cn('text-body-lg font-bold tabular-nums', !isFeatured && 'text-navy')}>
+                    {service.priceLabel}
+                  </span>
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
-    </div>
+    </section>
   );
 }
