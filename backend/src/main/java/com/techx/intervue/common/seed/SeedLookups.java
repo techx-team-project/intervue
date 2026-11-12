@@ -83,16 +83,14 @@ public class SeedLookups {
         return skills;
     }
 
-    public List<SeedRecruiter> approvedRecruiters() {
+    public List<SeedRecruiter> showcaseRecruiters() {
         return database.jdbc()
                 .query(
                         "SELECT r.id, r.name, cm.company_id, cp.trading_name, r.province"
                                 + " FROM recruiters r"
                                 + " JOIN company_members cm ON cm.user_id = r.id"
                                 + " JOIN company_profiles cp ON cp.company_member_id = cm.id"
-                                + " JOIN business_documents d"
-                                + " ON d.company_id = cm.company_id AND d.submitted_by = r.id"
-                                + " WHERE d.review_status = 'APPROVED' ORDER BY r.id",
+                                + " WHERE cp.logo_public_id LIKE '/company-logos/%' ORDER BY r.id",
                         (rs, rowNum) ->
                                 new SeedRecruiter(
                                         rs.getLong("id"),

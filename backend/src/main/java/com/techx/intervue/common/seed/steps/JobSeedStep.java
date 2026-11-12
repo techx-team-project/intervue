@@ -69,7 +69,13 @@ public class JobSeedStep implements DemoSeedStep {
                     "experience_max_years",
                     "salary_basis",
                     "benefit_tags",
-                    "hiring_steps");
+                    "hiring_steps",
+                    "boost_level",
+                    "boost_expires_at",
+                    "highlight_label",
+                    "highlight_label_expires_at",
+                    "highlighted",
+                    "highlight_expires_at");
 
     private static final List<String> QUESTION_COLUMNS =
             List.of(
@@ -113,7 +119,7 @@ public class JobSeedStep implements DemoSeedStep {
             return;
         }
         SeedRandom random = new SeedRandom(DemoSeedData.RANDOM_SEED + 4);
-        List<SeedRecruiter> recruiters = lookups.approvedRecruiters();
+        List<SeedRecruiter> recruiters = lookups.showcaseRecruiters();
         Map<String, SeedSkill> skills = lookups.skillsByName();
         long adminId = lookups.firstAdminId();
 
@@ -190,6 +196,8 @@ public class JobSeedStep implements DemoSeedStep {
                 index % 13 == 0 && ("SENIOR".equals(spec.level()) || "LEAD".equals(spec.level()));
         long baseSalary = baseSalary(spec.level());
         boolean closedOrExpired = "EXPIRED".equals(status) || "CLOSED".equals(status);
+        Promotion promotion = promotionFor(index, status);
+        LocalDateTime promotionEnd = random.now().plusDays(random.between(7, 30));
         LocalDate deadline =
                 closedOrExpired
                         ? random.now().toLocalDate().minusDays(random.between(1, 15))
@@ -212,17 +220,9 @@ public class JobSeedStep implements DemoSeedStep {
             negotiable ? null : (usd ? 2000L : baseSalary),
             negotiable ? null : (usd ? 3500L : (long) (baseSalary * 1.5)),
             negotiable ? null : (usd ? "USD" : "VND"),
-            "We are looking for a "
-                    + title
-                    + " to build products used by millions of people.\n"
-                    + "You will work with an experienced engineering team on the design,"
-                    + " development and operation of our systems.",
-            skillNames.stream()
-                            .map(name -> "- Experience with " + name)
-                            .collect(Collectors.joining("\n"))
-                    + "\n- Problem-solving mindset and good communication",
-            "- 13th-month salary and performance bonus\n- Health insurance and annual trip\n"
-                    + "- Training and certification budget",
+            description(title, spec, recruiter, city, random),
+            requirements(spec, skillNames),
+            random.pick(DemoSeedData.BENEFIT_PACKAGES),
             withQuestions ? "CV_AND_QUESTIONS" : "CV_ONLY",
             random.between(1, 5),
             deadline,
@@ -237,8 +237,52 @@ public class JobSeedStep implements DemoSeedStep {
             experienceMaxYears(spec.level()),
             negotiable ? null : (index % 4 == 0 ? "NET" : "GROSS"),
             jsonArray(benefitTags(index)),
-            jsonArray(HIRING_STEPS)
+            jsonArray(HIRING_STEPS),
+            promotion.boostLevel(),
+            promotion.boostLevel() > 0 ? promotionEnd : null,
+            promotion.label(),
+            promotion.label() == null ? null : promotionEnd,
+            promotion.highlighted(),
+            promotion.highlighted() ? promotionEnd : null
         };
+    }
+
+    private record Promotion(int boostLevel, String label, boolean highlighted) {}
+
+    private Promotion promotionFor(int index, String status) {
+        if (!"PUBLISHED".equals(status)) {
+            return new Promotion(0, null, false);
+        }
+        String label = index % 10 == 0 ? "HOT" : index % 14 == 0 ? "URGENT" : null;
+        int boost = index % 21 == 0 ? 2 : index % 7 == 0 ? 1 : 0;
+        return new Promotion(boost, label, index % 12 == 0);
+    }
+
+    private String description(
+            String title, JobSpec spec, SeedRecruiter recruiter, City city, SeedRandom random) {
+        List<String> duties = DemoSeedData.ROLE_RESPONSIBILITIES.get(spec.role());
+        return recruiter.companyName()
+                + " is hiring a "
+                + title
+                + " to join our engineering team in "
+                + city.name()
+                + ".\n\nWhat you will do\n"
+                + random.sample(duties, 4).stream()
+                        .map(duty -> "- " + duty)
+                        .collect(Collectors.joining("\n"))
+                + "\n\nYou will work with an experienced team that values clean code, ownership"
+                + " and continuous learning.";
+    }
+
+    private String requirements(JobSpec spec, Set<String> skillNames) {
+        return "- "
+                + experienceMinYears(spec.level())
+                + "+ years of relevant experience\n"
+                + skillNames.stream()
+                        .map(name -> "- Hands-on experience with " + name)
+                        .collect(Collectors.joining("\n"))
+                + "\n- Strong problem-solving skills and clear communication"
+                + "\n- Comfortable reading and writing technical English";
     }
 
     private City cityFor(int index, String recruiterCity, SeedRandom random) {
