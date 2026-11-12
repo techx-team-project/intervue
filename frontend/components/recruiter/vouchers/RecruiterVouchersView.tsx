@@ -86,6 +86,20 @@ export default function RecruiterVouchersView() {
 
   const activeQuery = activeTab === 'available' ? availableQuery : usedQuery;
   const pageData = activeQuery.data;
+
+  useEffect(() => {
+    if (!activeQuery.isFetching && pageData && pageData.totalPages > 0 && currentPage > pageData.totalPages) {
+      updateRoute(activeTab, pageData.totalPages);
+    }
+  }, [activeQuery.isFetching, activeTab, currentPage, pageData, updateRoute]);
+
+  const handlePageChange = useCallback(
+    (nextPage: number) => {
+      updateRoute(activeTab, nextPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    [activeTab, updateRoute],
+  );
   const groupedAvailable = useMemo(
     () => groupAvailableByColor(availableQuery.data?.items ?? []),
     [availableQuery.data?.items],
@@ -223,13 +237,16 @@ export default function RecruiterVouchersView() {
             )}
 
             {pageData.totalPages > 1 && (
-              <div className="mt-6 border-t border-slate-100 pt-4">
+              <div className="mt-6 border-t border-slate-100 pt-5">
                 <Pagination
                   page={currentPage}
                   pageCount={pageData.totalPages}
                   totalItems={pageData.totalItems}
                   pageSize={WALLET_PAGE_SIZE}
-                  onPageChange={(nextPage) => updateRoute(activeTab, nextPage)}
+                  onPageChange={handlePageChange}
+                  showEdges
+                  centered
+                  hideSummary
                 />
               </div>
             )}
