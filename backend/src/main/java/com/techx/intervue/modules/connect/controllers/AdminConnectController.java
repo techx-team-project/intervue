@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.connect.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.connect.enums.FilterScope;
 import com.techx.intervue.modules.connect.requests.CreateFilterWordRequest;
 import com.techx.intervue.modules.connect.requests.UpdateFilterWordRequest;
 import com.techx.intervue.modules.connect.resources.ConnectFilterWordResource;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,8 +45,9 @@ public class AdminConnectController extends BaseController {
 
     @GetMapping("/filter-words")
     public ResponseEntity<ApiResource<PageResource<ConnectFilterWordResource>>> listFilterWords(
-            Pageable pageable) {
-        return page(filterWordService.list(pageable), "Filter words retrieved successfully!");
+            @RequestParam(defaultValue = "CONNECT") FilterScope scope, Pageable pageable) {
+        return page(
+                filterWordService.list(scope, pageable), "Filter words retrieved successfully!");
     }
 
     @PostMapping("/filter-words")

@@ -1,17 +1,17 @@
 package com.techx.intervue.modules.connect.services.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.connect.entities.ConnectMute;
 import com.techx.intervue.modules.connect.entities.ConnectViolation;
 import com.techx.intervue.modules.connect.enums.ConnectActorType;
 import com.techx.intervue.modules.connect.enums.ConnectFilterSeverity;
-import com.techx.intervue.modules.connect.repositories.ConnectFilterWordRepository;
+import com.techx.intervue.modules.connect.enums.FilterScope;
 import com.techx.intervue.modules.connect.repositories.ConnectMuteRepository;
 import com.techx.intervue.modules.connect.repositories.ConnectViolationRepository;
 import com.techx.intervue.modules.connect.resources.ConnectMuteStatusResource;
+import com.techx.intervue.modules.connect.services.interfaces.ConnectFilterWordServiceInterface;
+import com.techx.intervue.modules.connect.services.interfaces.ConnectFilterWordServiceInterface.ActiveFilterWord;
 import com.techx.intervue.modules.connect.services.interfaces.ConnectModerationServiceInterface;
 import com.techx.intervue.modules.moderation.enums.ReportReasonCode;
 import com.techx.intervue.modules.moderation.enums.ReportTargetType;
@@ -19,13 +19,11 @@ import com.techx.intervue.modules.moderation.enums.ReporterType;
 import com.techx.intervue.modules.moderation.services.interfaces.ReportServiceInterface;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -38,16 +36,11 @@ public class ConnectModerationService implements ConnectModerationServiceInterfa
     private static final Duration STRIKE_WINDOW = Duration.ofDays(30);
     private static final Duration FIRST_MUTE_DURATION = Duration.ofHours(24);
     private static final Duration REPEAT_MUTE_DURATION = Duration.ofDays(7);
-    private static final Duration CACHE_TTL = Duration.ofHours(1);
 
-    private final ConnectFilterWordRepository filterWordRepository;
+    private final ConnectFilterWordServiceInterface filterWordService;
     private final ConnectViolationRepository violationRepository;
     private final ConnectMuteRepository muteRepository;
     private final ReportServiceInterface reportService;
-    private final StringRedisTemplate redis;
-    private final ObjectMapper objectMapper;
-
-    public record CachedFilterWord(String pattern, boolean regex, ConnectFilterSeverity severity) {}
 
     @Override
     public boolean isMuted(ConnectActorType actorType, Long actorId) {
@@ -80,7 +73,7 @@ public class ConnectModerationService implements ConnectModerationServiceInterfa
             return;
         }
         String normalized = text.toLowerCase();
-        for (CachedFilterWord word : getActiveFilterWords()) {
+        for (ActiveFilterWord word : filterWordService.activeWords(FilterScope.CONNECT)) {
             boolean matched;
             if (word.regex()) {
                 try {
@@ -102,36 +95,6 @@ public class ConnectModerationService implements ConnectModerationServiceInterfa
                 throw new AppException(ErrorCode.MESSAGE_BLOCKED_BY_FILTER);
             }
         }
-    }
-
-    private List<CachedFilterWord> getActiveFilterWords() {
-        try {
-            String json = redis.opsForValue().get(ConnectFilterWordService.ACTIVE_WORDS_CACHE_KEY);
-            if (json != null && !json.isBlank()) {
-                return objectMapper.readValue(json, new TypeReference<List<CachedFilterWord>>() {});
-            }
-        } catch (Exception e) {
-            log.debug("Active filter words cache read failed: {}", e.getMessage());
-        }
-
-        List<CachedFilterWord> words =
-                filterWordRepository.findByActiveTrue().stream()
-                        .map(
-                                w ->
-                                        new CachedFilterWord(
-                                                w.getPattern(), w.isRegex(), w.getSeverity()))
-                        .toList();
-
-        try {
-            redis.opsForValue()
-                    .set(
-                            ConnectFilterWordService.ACTIVE_WORDS_CACHE_KEY,
-                            objectMapper.writeValueAsString(words),
-                            CACHE_TTL);
-        } catch (Exception e) {
-            log.debug("Active filter words cache write failed: {}", e.getMessage());
-        }
-        return words;
     }
 
     private void recordViolation(
