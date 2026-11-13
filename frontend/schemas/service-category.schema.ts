@@ -9,12 +9,6 @@ export const CATEGORY_FIELD_LIMITS = {
 } as const;
 
 export const saveServiceCategorySchema = z.object({
-  code: z
-    .string()
-    .trim()
-    .min(1, 'Category code is required.')
-    .max(CATEGORY_FIELD_LIMITS.code, `Code must be at most ${CATEGORY_FIELD_LIMITS.code} characters.`)
-    .regex(/^[A-Za-z0-9_]+$/, 'Use letters, digits and underscores only (e.g. TOP_JOBS).'),
   name: z
     .string()
     .trim()
@@ -43,9 +37,12 @@ export const saveServiceCategorySchema = z.object({
 
 export type SaveServiceCategoryFormData = z.infer<typeof saveServiceCategorySchema>;
 
-export function toSaveServiceCategoryPayload(values: SaveServiceCategoryFormData): SaveServiceCategoryInput {
+export function toSaveServiceCategoryPayload(
+  code: string,
+  values: SaveServiceCategoryFormData,
+): SaveServiceCategoryInput {
   return {
-    code: values.code.trim().toUpperCase(),
+    code,
     name: values.name.trim(),
     headline: values.headline.trim(),
     description: values.description.trim() || null,
@@ -53,4 +50,40 @@ export function toSaveServiceCategoryPayload(values: SaveServiceCategoryFormData
     displayOrder: Number(values.displayOrder),
     isActive: values.isActive,
   };
+}
+
+function stripVietnameseDiacritics(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D');
+}
+
+export function codeifyCategoryName(name: string): string {
+  return stripVietnameseDiacritics(name)
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, CATEGORY_FIELD_LIMITS.code);
+}
+
+export function resolveUniqueCategoryCode(name: string, existingCodes: Iterable<string>): string {
+  const used = new Set(Array.from(existingCodes, (code) => code.toUpperCase()));
+  const base = codeifyCategoryName(name) || 'CATEGORY';
+  if (!used.has(base)) return base;
+
+  let attempt = 2;
+  let candidate = withSuffix(base, attempt);
+  while (used.has(candidate)) {
+    attempt += 1;
+    candidate = withSuffix(base, attempt);
+  }
+  return candidate;
+}
+
+function withSuffix(base: string, attempt: number): string {
+  const suffix = `_${attempt}`;
+  const maxBaseLength = Math.max(1, CATEGORY_FIELD_LIMITS.code - suffix.length);
+  return `${base.slice(0, maxBaseLength)}${suffix}`;
 }

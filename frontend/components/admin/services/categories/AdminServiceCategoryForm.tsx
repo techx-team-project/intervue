@@ -13,6 +13,7 @@ import { serviceCatalogKeys } from '@/hooks/useServiceCatalog';
 import { getNeedKeySelectOptions, isKnownServiceNeedKey } from '@/lib/admin-service-categories';
 import {
   CATEGORY_FIELD_LIMITS,
+  resolveUniqueCategoryCode,
   saveServiceCategorySchema,
   toSaveServiceCategoryPayload,
   type SaveServiceCategoryFormData,
@@ -21,7 +22,7 @@ import type { AdminServiceCategory } from '@/types/admin-service-package';
 import { applyFormError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { AlertCircle, ArrowLeft, EyeOff, FolderKanban, Info, Lock } from 'lucide-react';
+import { AlertCircle, ArrowLeft, EyeOff, FolderKanban, Info } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useId } from 'react';
@@ -47,19 +48,16 @@ export default function AdminServiceCategoryForm({
   const queryClient = useQueryClient();
 
   const isEditing = Boolean(editingCategory);
-  const isCodeLocked = Boolean(editingCategory && editingCategory.packageCount > 0);
 
   const {
     control,
     register,
     handleSubmit,
-    setValue,
     setError,
     formState: { errors, isSubmitting },
   } = useForm<SaveServiceCategoryFormData>({
     resolver: zodResolver(saveServiceCategorySchema),
     defaultValues: {
-      code: editingCategory?.code ?? '',
       name: editingCategory?.name ?? '',
       headline: editingCategory?.headline ?? '',
       description: editingCategory?.description ?? '',
@@ -69,9 +67,9 @@ export default function AdminServiceCategoryForm({
     },
   });
 
-  const [codeValue, nameValue, headlineValue, descriptionValue, needKeyValue, isActiveValue] = useWatch({
+  const [nameValue, headlineValue, descriptionValue, needKeyValue, isActiveValue] = useWatch({
     control,
-    name: ['code', 'name', 'headline', 'description', 'needKey', 'isActive'],
+    name: ['name', 'headline', 'description', 'needKey', 'isActive'],
   });
 
   const needOptions = getNeedKeySelectOptions(editingCategory?.needKey);
@@ -84,7 +82,13 @@ export default function AdminServiceCategoryForm({
     : [];
 
   const submitForm = handleSubmit(async (values) => {
-    const payload = toSaveServiceCategoryPayload(values);
+    const code = editingCategory
+      ? editingCategory.code
+      : resolveUniqueCategoryCode(
+          values.name,
+          categories.map((item) => item.code),
+        );
+    const payload = toSaveServiceCategoryPayload(code, values);
     try {
       if (editingCategory) {
         await adminServicePackageApi.updateCategory(editingCategory.id, payload);
@@ -96,7 +100,7 @@ export default function AdminServiceCategoryForm({
       await queryClient.invalidateQueries({ queryKey: serviceCatalogKeys.catalog });
       router.push(ROUTES.ADMIN_SERVICE_CATEGORIES);
     } catch (cause) {
-      applyFormError(cause, setError, ['code', 'name', 'headline', 'description', 'needKey', 'displayOrder']);
+      applyFormError(cause, setError, ['name', 'headline', 'description', 'needKey', 'displayOrder']);
     }
   });
 
@@ -106,7 +110,7 @@ export default function AdminServiceCategoryForm({
         className="mb-0"
         description={
           editingCategory
-            ? `Update configuration for ${editingCategory.name} (${editingCategory.code}).`
+            ? `Update configuration for ${editingCategory.name}.`
             : 'Create a section for grouping and ordering packages on the recruiter buy-services page.'
         }
         actions={
@@ -142,37 +146,21 @@ export default function AdminServiceCategoryForm({
             <div className="dark:border-forest-800 border-outline-variant border-b pb-3">
               <h2 className="text-navy dark:text-forest-50 text-sm font-bold">Basic details</h2>
               <p className="text-on-surface-variant dark:text-forest-400 mt-0.5 text-xs">
-                Code, heading, and description shown to recruiters.
+                Heading and description shown to recruiters.
               </p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <Input
-                label={`Code * (${(codeValue ?? '').length}/${CATEGORY_FIELD_LIMITS.code})`}
-                value={codeValue ?? ''}
-                disabled={isCodeLocked}
-                onChange={(event) =>
-                  setValue('code', event.target.value.toUpperCase(), { shouldDirty: true, shouldValidate: true })
-                }
-                placeholder="e.g. TOP_JOBS"
-                rightElement={isCodeLocked ? <Lock className="text-outline h-4 w-4" /> : undefined}
-                helperText={
-                  isCodeLocked
-                    ? `Locked while ${editingCategory?.packageCount} package(s) reference this category.`
-                    : 'Unique key for #service-category-<code> URL anchors and logs (A–Z, 0–9, _).'
-                }
-                error={errors.code?.message}
-                className={`${INPUT_DARK_CLASS} font-mono uppercase disabled:cursor-not-allowed disabled:opacity-65`}
-              />
-
-              <Input
-                label={`Display name * (${(nameValue ?? '').length}/${CATEGORY_FIELD_LIMITS.name})`}
-                placeholder="e.g. TOP JOBS"
-                helperText="Short label displayed in green before the headline separator"
-                error={errors.name?.message}
-                className={INPUT_DARK_CLASS}
-                {...register('name')}
-              />
+              <div className="sm:col-span-2">
+                <Input
+                  label={`Display name * (${(nameValue ?? '').length}/${CATEGORY_FIELD_LIMITS.name})`}
+                  placeholder="e.g. TOP JOBS"
+                  helperText="Short label displayed in green before the headline separator"
+                  error={errors.name?.message}
+                  className={INPUT_DARK_CLASS}
+                  {...register('name')}
+                />
+              </div>
 
               <div className="sm:col-span-2">
                 <Input
@@ -341,7 +329,7 @@ export default function AdminServiceCategoryForm({
                 <p className="text-on-surface-variant dark:text-forest-300 leading-relaxed">
                   Also mapped to{' '}
                   <span className="text-on-surface dark:text-forest-100 font-semibold">
-                    {sharedActivePeers.map((peer) => peer.code).join(', ')}
+                    {sharedActivePeers.map((peer) => peer.name).join(', ')}
                   </span>
                   . Selecting this goal in the suggestion popup highlights all matching sections.
                 </p>
