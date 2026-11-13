@@ -4,6 +4,7 @@ import FollowCompanyButton from '@/components/candidate/saved/FollowCompanyButto
 import SaveJobButton from '@/components/candidate/saved/SaveJobButton';
 import CompanyLogo from '@/components/jobs/CompanyLogo';
 import { Button, buttonClassName } from '@/components/ui/Button';
+import { ROUTES } from '@/constants/routes';
 import { useHasApplied } from '@/hooks/useCandidateApplication';
 import type { PublicJobResource } from '@/types/public-job';
 import { Check, ClipboardList, MapPin, Send, Sparkles } from 'lucide-react';
@@ -37,7 +38,7 @@ export default function JobDetailSidebar({ job, onApply }: JobDetailSidebarProps
         <div className="space-y-2.5">
           {hasApplied ? (
             <Link
-              href="/candidate/applications"
+              href={ROUTES.CANDIDATE_APPLIED_JOBS}
               className={buttonClassName({ variant: 'outline', size: 'xl', className: 'w-full' })}
             >
               <Check className="h-4 w-4" aria-hidden />
