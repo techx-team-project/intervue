@@ -6,14 +6,14 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CvUnreadableReason {
-    EMPTY_FILE("Tệp tin PDF trống hoặc không có nội dung."),
-    FILE_SIZE_EXCEEDED("Tệp tin PDF vượt quá dung lượng cho phép (tối đa 5 MB)."),
-    CORRUPTED_PDF("Tệp tin PDF bị hỏng hoặc sai định dạng, không thể đọc."),
-    PASSWORD_PROTECTED("Tệp tin PDF có mật khẩu bảo vệ. Vui lòng gỡ mật khẩu trước khi tải lên."),
-    PAGE_LIMIT_EXCEEDED("Tệp tin PDF vượt quá số trang cho phép (tối đa 5 trang)."),
-    SCANNED_PDF(
-            "Tệp tin PDF là dạng ảnh quét (scan), không chứa lớp văn bản để trích xuất nội dung."),
-    NO_TEXT_FOUND("Không tìm thấy nội dung văn bản nào trong tệp tin PDF.");
+    EMPTY_FILE("The PDF is empty or has no content."),
+    FILE_SIZE_EXCEEDED("The PDF is larger than the allowed 5 MB."),
+    CORRUPTED_PDF("The PDF is damaged or not a valid PDF, so it cannot be read."),
+    PASSWORD_PROTECTED(
+            "The PDF needs a password to open. Remove the password and upload it again."),
+    PAGE_LIMIT_EXCEEDED("The PDF has more than the allowed 5 pages."),
+    SCANNED_PDF("The PDF is a scanned image with no text layer to read."),
+    NO_TEXT_FOUND("No text was found in the PDF.");
 
     private final String defaultMessage;
 }
