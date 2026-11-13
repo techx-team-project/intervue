@@ -2,6 +2,7 @@ package com.techx.intervue.modules.candidate.services.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.techx.intervue.common.storage.FileType;
 import com.techx.intervue.modules.candidate.enums.CvUnreadableReason;
 import com.techx.intervue.modules.candidate.resources.CvTextExtractionResult;
 import com.techx.intervue.modules.candidate.services.interfaces.CvTextExtractorServiceInterface;
@@ -27,13 +28,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class CvTextExtractorService implements CvTextExtractorServiceInterface {
 
-    private static final String CACHE_KEY_PREFIX = "cv:text:cache:";
+    private static final String CACHE_KEY_PREFIX = "cv:text:cache:v2:";
     private static final Duration CACHE_TTL = Duration.ofDays(30);
 
     public static final long MAX_FILE_SIZE_BYTES = 5L * 1024L * 1024L;
     public static final int MAX_PAGES = 5;
-
-    private static final byte[] PDF_HEADER_MAGIC = new byte[] {0x25, 0x50, 0x44, 0x46};
 
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
@@ -138,17 +137,12 @@ public class CvTextExtractorService implements CvTextExtractorServiceInterface {
                     fileHash, CvUnreadableReason.FILE_SIZE_EXCEEDED, 0, false);
         }
 
-        if (!hasPdfHeader(pdfBytes)) {
+        if (FileType.detect(pdfBytes).filter(type -> type == FileType.PDF).isEmpty()) {
             return CvTextExtractionResult.unreadable(
                     fileHash, CvUnreadableReason.CORRUPTED_PDF, 0, false);
         }
 
         try (PDDocument document = Loader.loadPDF(pdfBytes)) {
-            if (document.isEncrypted()) {
-                return CvTextExtractionResult.unreadable(
-                        fileHash, CvUnreadableReason.PASSWORD_PROTECTED, 0, false);
-            }
-
             int pageCount = document.getNumberOfPages();
             if (pageCount == 0) {
                 return CvTextExtractionResult.unreadable(
@@ -179,18 +173,6 @@ public class CvTextExtractorService implements CvTextExtractorServiceInterface {
             return CvTextExtractionResult.unreadable(
                     fileHash, CvUnreadableReason.CORRUPTED_PDF, 0, false);
         }
-    }
-
-    private boolean hasPdfHeader(byte[] bytes) {
-        if (bytes.length < PDF_HEADER_MAGIC.length) {
-            return false;
-        }
-        for (int i = 0; i < PDF_HEADER_MAGIC.length; i++) {
-            if (bytes[i] != PDF_HEADER_MAGIC[i]) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private void cacheResult(String fileHash, CvTextExtractionResult result) {

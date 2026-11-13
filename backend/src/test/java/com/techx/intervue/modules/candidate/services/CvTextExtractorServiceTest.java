@@ -121,7 +121,7 @@ class CvTextExtractorServiceTest {
 
         verify(valueOperations)
                 .set(
-                        eq("cv:text:cache:" + result.fileHash()),
+                        eq("cv:text:cache:v2:" + result.fileHash()),
                         anyString(),
                         eq(Duration.ofDays(30)));
     }
@@ -139,7 +139,7 @@ class CvTextExtractorServiceTest {
         String cachedJson = objectMapper.writeValueAsString(cachedResult);
 
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-        when(valueOperations.get("cv:text:cache:" + hash)).thenReturn(cachedJson);
+        when(valueOperations.get("cv:text:cache:v2:" + hash)).thenReturn(cachedJson);
 
         CvTextExtractionResult result = service.extractText(pdfBytes);
 
@@ -196,7 +196,7 @@ class CvTextExtractorServiceTest {
     @DisplayName("Evicts cache entry by file hash")
     void evictsCacheSuccessfully() {
         service.evictCache("abc123hash");
-        verify(redisTemplate).delete("cv:text:cache:abc123hash");
+        verify(redisTemplate).delete("cv:text:cache:v2:abc123hash");
     }
 
     private byte[] createPdfWithText(String text, int pages) throws IOException {

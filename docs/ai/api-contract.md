@@ -240,7 +240,7 @@ A ban with an `expiresAt` lifts itself: a sweep runs every 5 minutes and clears 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
 | `GET` | `/candidate/cvs` | candidate | `CandidateResumeResource[] { id, fileName, url, fileSizeBytes, contentType, isDefault, parsedSummary?, createdAt }`, newest first. `url` is the download path. |
-| `POST` | `/candidate/cvs` | candidate | multipart `file`. PDF only (checked by the file signature, not the extension) and max 5 MB; the file is not parsed on upload, so page count and passwords are not checked. A rejected file returns `400 VALIDATION_FAILED` on field `file` with the reason. Max 3 CVs per candidate (`409 RESUME_LIMIT_REACHED`). The first CV becomes the default. |
+| `POST` | `/candidate/cvs` | candidate | multipart `file`. PDF only (the `%PDF` header must appear in the first 1024 bytes; the extension is ignored), max 5 MB and max 5 pages, the same limits the AI CV tools use. A PDF locked only against copying or printing is accepted; one that needs a password to open, is damaged or has no pages is rejected. A rejected file returns `400 VALIDATION_FAILED` on field `file` with the reason. Max 3 CVs per candidate (`409 RESUME_LIMIT_REACHED`). The first CV becomes the default. |
 | `PATCH` | `/candidate/cvs/{id}` | candidate | Body `{ fileName }` (max 150). |
 | `POST` | `/candidate/cvs/{id}/default` | candidate | Makes this CV the default. |
 | `DELETE` | `/candidate/cvs/{id}` | candidate | Deleting the default promotes the newest remaining CV. The stored file is removed after commit. |
