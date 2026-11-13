@@ -2,6 +2,7 @@ import { ROUTES } from '@/constants/routes';
 import type { AdminNavSection } from '@/types/admin';
 import {
   BadgeCheck,
+  ClipboardCheck,
   Megaphone,
   Bell,
   Building2,
@@ -52,6 +53,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             comingSoon: true,
           },
         ],
+      },
+      {
+        label: 'Job review',
+        href: ROUTES.ADMIN_MODERATION_JOB_REVIEW,
+        icon: ClipboardCheck,
+        permission: 'moderation.jobs',
       },
       {
         label: 'Job posts',

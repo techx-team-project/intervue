@@ -67,6 +67,7 @@ export const ROUTES = {
   ADMIN_VERIFICATION_COMPANY_CHANGES: '/admin/verification/company-changes',
   ADMIN_VERIFICATION_IDENTITY: '/admin/verification/identity',
   ADMIN_MODERATION_JOBS: '/admin/moderation/job-posts',
+  ADMIN_MODERATION_JOB_REVIEW: '/admin/moderation/job-review',
   ADMIN_MODERATION_REPORTS: '/admin/moderation/reports',
   ADMIN_USERS: '/admin/users',
   ADMIN_COMPANIES: '/admin/companies',
