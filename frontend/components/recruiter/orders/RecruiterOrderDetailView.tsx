@@ -26,7 +26,7 @@ interface RecruiterOrderDetailViewProps {
 }
 
 export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailViewProps) {
-  const { data, isPending, isError, error, refetch } = useRecruiterOrder(code);
+  const { data, isPending, error, refetch } = useRecruiterOrder(code);
   const { cancel } = useRecruiterOrderMutations();
   const [actionError, setActionError] = useState<string | null>(null);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
@@ -60,7 +60,7 @@ export default function RecruiterOrderDetailView({ code }: RecruiterOrderDetailV
     );
   }
 
-  if (isError || !data) {
+  if (!data) {
     return (
       <div className="border-outline-variant rounded-xl border border-dashed px-6 py-16 text-center">
         <AlertCircle className="text-on-surface-variant mx-auto h-8 w-8" />

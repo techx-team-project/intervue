@@ -59,7 +59,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
                             List.of("/api/v1/recruiter/vouchers/validate"),
                             10,
                             Duration.ofMinutes(1)),
-                    new Policy("api", List.of("/api/**"), 300, Duration.ofMinutes(1)));
+                    new Policy("api", List.of("/api/**"), 600, Duration.ofMinutes(1)));
 
     private final RateLimitServiceInterface rateLimitService;
     private final ObjectMapper objectMapper;

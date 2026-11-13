@@ -17,7 +17,7 @@ import { useState } from 'react';
 
 export default function RecruiterOrdersView() {
   const [page, setPage] = useState(0);
-  const { data, isPending, isError, error } = useRecruiterOrderList(page);
+  const { data, isPending, error } = useRecruiterOrderList(page);
   const countsQuery = useRecruiterOrderCounts();
   const { cancel } = useRecruiterOrderMutations();
   const [actionError, setActionError] = useState<string | null>(null);
@@ -59,7 +59,7 @@ export default function RecruiterOrdersView() {
         <div className="flex min-h-[50vh] items-center justify-center">
           <Spinner />
         </div>
-      ) : isError ? (
+      ) : !data ? (
         <div className="flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800">
           <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
           {getErrorMessage(error)}
