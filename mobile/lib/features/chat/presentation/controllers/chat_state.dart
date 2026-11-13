@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intervue_flutter/features/chat/data/models/chat_request.dart';
+import 'package:intervue_flutter/features/chat/domain/entities/chat_suggestion.dart';
 
 class ChatAction extends Equatable {
   const ChatAction({
@@ -8,15 +9,17 @@ class ChatAction extends Equatable {
     required this.icon,
     this.route,
     this.query,
+    this.faqCode,
   });
 
   final String label;
   final IconData icon;
   final String? route;
   final String? query;
+  final String? faqCode;
 
   @override
-  List<Object?> get props => [label, icon, route, query];
+  List<Object?> get props => [label, icon, route, query, faqCode];
 }
 
 class ChatMessageItem extends Equatable {
@@ -37,7 +40,7 @@ class ChatMessageItem extends Equatable {
   final bool isUser;
   final DateTime timestamp;
   final List<ChatAction>? actions;
-  final List<String>? suggestedChips;
+  final List<ChatSuggestion>? suggestedChips;
   final String? badge;
   final List<String>? sources;
   final bool isError;
@@ -60,7 +63,6 @@ class ChatState extends Equatable {
   const ChatState({
     this.messages = const [],
     this.isLoading = false,
-    this.remainingQuota,
     required this.sessionId,
     this.errorMessage,
     this.chatContext,
@@ -68,7 +70,6 @@ class ChatState extends Equatable {
 
   final List<ChatMessageItem> messages;
   final bool isLoading;
-  final int? remainingQuota;
   final String sessionId;
   final String? errorMessage;
   final ChatContext? chatContext;
@@ -76,7 +77,6 @@ class ChatState extends Equatable {
   ChatState copyWith({
     List<ChatMessageItem>? messages,
     bool? isLoading,
-    int? remainingQuota,
     String? sessionId,
     String? errorMessage,
     ChatContext? chatContext,
@@ -84,7 +84,6 @@ class ChatState extends Equatable {
     return ChatState(
       messages: messages ?? this.messages,
       isLoading: isLoading ?? this.isLoading,
-      remainingQuota: remainingQuota ?? this.remainingQuota,
       sessionId: sessionId ?? this.sessionId,
       errorMessage: errorMessage,
       chatContext: chatContext ?? this.chatContext,
@@ -95,7 +94,6 @@ class ChatState extends Equatable {
   List<Object?> get props => [
     messages,
     isLoading,
-    remainingQuota,
     sessionId,
     errorMessage,
     chatContext,

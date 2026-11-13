@@ -39,20 +39,20 @@ class JobFeedScreen extends StatefulWidget {
 class _JobFeedScreenState extends State<JobFeedScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _currentTabIndex = 0;
-  String _selectedLocation = 'Toàn quốc';
+  String _selectedLocation = 'Nationwide';
   String _selectedKeyword = '';
-  String _selectedCategory = 'Gợi ý cho bạn';
+  String _selectedCategory = 'Recommended';
   TopCvFilterData _filterData = const TopCvFilterData();
   final TextEditingController _searchController = TextEditingController();
   final Set<String> _bookmarkedJobIds = {};
   int get _unreadCount => context.read<NotificationsCubit>().state.unreadCount;
 
   static const List<String> _jobCategories = [
-    'Gợi ý cho bạn',
-    'Việc làm Hot',
-    'Tuyển gấp (24h)',
-    'Thực tập / Fresher',
-    'Làm từ xa (Remote)',
+    'Recommended',
+    'Hot Jobs',
+    'Urgent Hiring (24h)',
+    'Internship / Fresher',
+    'Remote',
   ];
 
   @override
@@ -74,7 +74,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
     context.read<JobListCubit>().loadJobs(
       filter: JobFilterParams(
         keyword: query.isNotEmpty ? query : null,
-        location: _selectedLocation != 'Toàn quốc' ? _selectedLocation : null,
+        location: _selectedLocation != 'Nationwide' ? _selectedLocation : null,
       ),
       silent: true,
     );
@@ -86,9 +86,9 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
         ..hideCurrentSnackBar()
         ..showSnackBar(
           SnackBar(
-            content: const Text('Vui lòng đăng nhập để lưu việc làm'),
+            content: const Text('Please sign in to save jobs'),
             action: SnackBarAction(
-              label: 'Đăng nhập',
+              label: 'Sign in',
               onPressed: () => context.push(RouteNames.login),
             ),
           ),
@@ -101,7 +101,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             duration: const Duration(seconds: 1),
-            content: Text('Đã bỏ lưu việc làm: ${job.title}'),
+            content: Text('Removed from saved jobs: ${job.title}'),
           ),
         );
       } else {
@@ -110,7 +110,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
           SnackBar(
             duration: const Duration(seconds: 1),
             backgroundColor: AppColors.primary,
-            content: Text('Đã lưu việc làm: ${job.title}'),
+            content: Text('Saved job: ${job.title}'),
           ),
         );
       }
@@ -135,56 +135,49 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
 
   void _handleServiceTap(String serviceName) {
     switch (serviceName) {
-      case 'Tạo CV':
+      case 'Create CV':
         setState(() => _currentTabIndex = 2);
-      case 'AI Chấm CV':
+      case 'AI CV Scoring':
         context.push(RouteNames.resume);
-      case 'AI Phỏng Vấn':
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Color(0xFF8B5CF6),
-            content: Text('🤖 Mở phòng Luyện Phỏng Vấn 1:1 cùng InterVue AI'),
-          ),
-        );
-      case 'Việc làm IT':
+      case 'AI Interview':
+        context.push(RouteNames.mockInterviews);
+      case 'IT Jobs':
         _onKeywordSelected('IT');
-      case 'Top Doanh Nghiệp':
-        _onKeywordSelected('Công nghệ');
+      case 'Top Companies':
+        _onKeywordSelected('Technology');
       case 'Gross - Net':
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text(
-              '📊 Mở công cụ tính lương Gross sang Net chuẩn quy định 2026',
-            ),
+            content: Text('📊 Opening the 2026 Gross to Net salary calculator'),
           ),
         );
-      case 'Trắc nghiệm MBTI':
+      case 'MBTI Test':
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              '🧠 Mở bài trắc nghiệm 16 nhóm tính cách nghề nghiệp MBTI',
+              '🧠 Opening the 16-type MBTI career personality test',
             ),
           ),
         );
-      case 'Bật tìm việc':
+      case 'Open to Work':
         setState(() => _currentTabIndex = 4);
       default:
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đang mở tiện ích: $serviceName')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Opening tool: $serviceName')));
     }
   }
 
   static const Map<String, (double, double)> _salaryRanges = {
-    'Dưới 10 triệu': (0, 10),
-    '10 - 15 triệu': (10, 15),
-    '15 - 25 triệu': (15, 25),
-    '25 - 40 triệu': (25, 40),
-    'Trên 40 triệu': (40, double.infinity),
+    'Under 10M VND': (0, 10),
+    '10 - 15M VND': (10, 15),
+    '15 - 25M VND': (15, 25),
+    '25 - 40M VND': (25, 40),
+    'Over 40M VND': (40, double.infinity),
   };
 
   bool _matchesSalary(JobEntity job, String range) {
-    if (range == 'Thỏa thuận') return job.isSalaryNegotiable;
+    if (range == 'Negotiable') return job.isSalaryNegotiable;
     final bounds = _salaryRanges[range];
     final min = job.salaryMinMillions ?? job.salaryMaxMillions;
     final max = job.salaryMaxMillions ?? job.salaryMinMillions;
@@ -194,7 +187,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
 
   List<String> _skillOptions() {
     final state = context.read<JobListCubit>().state;
-    if (state is! JobListLoaded) return const ['Tất cả'];
+    if (state is! JobListLoaded) return const ['All'];
     final counts = <String, int>{};
     for (final job in state.jobs) {
       for (final tag in job.tags) {
@@ -206,40 +199,41 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
         final byCount = counts[b]!.compareTo(counts[a]!);
         return byCount != 0 ? byCount : a.compareTo(b);
       });
-    return ['Tất cả', ...skills.take(14)];
+    return ['All', ...skills.take(14)];
   }
 
   List<JobEntity> _filterJobs(List<JobEntity> rawJobs) {
     var list = rawJobs;
 
     // Filter by category tab
-    if (_selectedCategory == 'Việc làm Hot') {
+    if (_selectedCategory == 'Hot Jobs') {
       list = list.where((j) => j.isHot).toList();
-    } else if (_selectedCategory == 'Tuyển gấp (24h)') {
+    } else if (_selectedCategory == 'Urgent Hiring (24h)') {
       list = list.where((j) => j.isUrgent).toList();
-    } else if (_selectedCategory == 'Thực tập / Fresher') {
+    } else if (_selectedCategory == 'Internship / Fresher') {
       list = list
           .where(
             (j) =>
-                (j.experience?.toLowerCase().contains('chưa') ?? false) ||
-                (j.jobLevel?.toLowerCase().contains('thực tập') ?? false) ||
+                (j.experience?.toLowerCase().contains('no experience') ??
+                    false) ||
+                (j.jobLevel?.toLowerCase().contains('intern') ?? false) ||
                 (j.title.toLowerCase().contains('fresher') ||
-                    j.title.toLowerCase().contains('thực tập')),
+                    j.title.toLowerCase().contains('intern')),
           )
           .toList();
-    } else if (_selectedCategory == 'Làm từ xa (Remote)') {
+    } else if (_selectedCategory == 'Remote') {
       list = list
           .where(
             (j) =>
                 (j.location?.toLowerCase().contains('remote') ?? false) ||
-                (j.location?.toLowerCase().contains('từ xa') ?? false) ||
+                (j.location?.toLowerCase().contains('remote') ?? false) ||
                 j.tags.any((t) => t.toLowerCase() == 'remote'),
           )
           .toList();
     }
 
     // Filter by location
-    if (_selectedLocation != 'Toàn quốc') {
+    if (_selectedLocation != 'Nationwide') {
       list = list.where((j) {
         if (j.location == null) return false;
         return j.location!.toLowerCase().contains(
@@ -262,7 +256,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
 
     // Filter by advanced filter sheet
     if (_filterData.hasFilter) {
-      if (_filterData.location != 'Toàn quốc') {
+      if (_filterData.location != 'Nationwide') {
         list = list.where((j) {
           if (j.location == null) return false;
           return j.location!.toLowerCase().contains(
@@ -271,7 +265,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
         }).toList();
       }
 
-      if (_filterData.skill != 'Tất cả') {
+      if (_filterData.skill != 'All') {
         final skillQuery = _filterData.skill.toLowerCase();
         list = list.where((j) {
           final inTitle = j.title.toLowerCase().contains(skillQuery);
@@ -286,7 +280,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
         }).toList();
       }
 
-      if (_filterData.level != 'Tất cả') {
+      if (_filterData.level != 'All') {
         final levelQuery = _filterData.level.toLowerCase();
         list = list.where((j) {
           final inLevel =
@@ -296,7 +290,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
         }).toList();
       }
 
-      if (_filterData.workMode != 'Tất cả') {
+      if (_filterData.workMode != 'All') {
         final mode = _filterData.backendWorkMode;
         list = list.where((j) {
           if (mode != null && j.workingArrangement != null) {
@@ -306,19 +300,19 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
           final title = j.title.toLowerCase();
           if (mode == 'REMOTE') {
             return loc.contains('remote') ||
-                loc.contains('từ xa') ||
+                loc.contains('remote') ||
                 title.contains('remote');
           } else if (mode == 'HYBRID') {
             return loc.contains('hybrid') ||
-                loc.contains('linh hoạt') ||
+                loc.contains('flexible') ||
                 title.contains('hybrid');
           } else {
-            return !loc.contains('remote') && !loc.contains('từ xa');
+            return !loc.contains('remote') && !loc.contains('remote');
           }
         }).toList();
       }
 
-      if (_filterData.salaryRange != 'Tất cả') {
+      if (_filterData.salaryRange != 'All') {
         list = list
             .where((j) => _matchesSalary(j, _filterData.salaryRange))
             .toList();
@@ -336,14 +330,12 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
       key: _scaffoldKey,
       drawer: IntervueGlassDrawer(
         onSelectTab: (idx) => setState(() => _currentTabIndex = idx),
-        onMockInterviewTap: () => _handleServiceTap('AI Phỏng Vấn'),
-        onCvScoreTap: () => _handleServiceTap('AI Chấm CV'),
+        onMockInterviewTap: () => _handleServiceTap('AI Interview'),
+        onCvScoreTap: () => _handleServiceTap('AI CV Scoring'),
         onSavedJobsTap: () {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                'Bạn đang lưu ${_bookmarkedJobIds.length} việc làm',
-              ),
+              content: Text('You have ${_bookmarkedJobIds.length} saved jobs'),
             ),
           );
         },
@@ -378,7 +370,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
         padding: const EdgeInsets.only(bottom: 56),
         child: FloatingActionButton(
           heroTag: 'intervue_ai_mascot_fab',
-          tooltip: 'Trợ lý InterVue AI',
+          tooltip: 'InterVue AI Assistant',
           onPressed: () => context.push(RouteNames.aiChat),
           elevation: 6,
           backgroundColor: AppColors.primary,
@@ -418,15 +410,15 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
 
   Widget _buildLiquidGlassBottomNav() {
     final navItems = [
-      (Icons.home_outlined, Icons.home_rounded, 'Trang chủ'),
-      (Icons.work_outline_rounded, Icons.work_rounded, 'Việc làm'),
-      (Icons.description_outlined, Icons.description_rounded, 'Tạo CV'),
+      (Icons.home_outlined, Icons.home_rounded, 'Home'),
+      (Icons.work_outline_rounded, Icons.work_rounded, 'Jobs'),
+      (Icons.description_outlined, Icons.description_rounded, 'Create CV'),
       (
         Icons.notifications_none_rounded,
         Icons.notifications_rounded,
-        'Thông báo',
+        'Notifications',
       ),
-      (Icons.person_outline_rounded, Icons.person_rounded, 'Cá nhân'),
+      (Icons.person_outline_rounded, Icons.person_rounded, 'Profile'),
     ];
 
     return SafeArea(
@@ -570,7 +562,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  'Bạn đang lưu ${_bookmarkedJobIds.length} việc làm',
+                  'You have ${_bookmarkedJobIds.length} saved jobs',
                 ),
               ),
             );
@@ -630,8 +622,8 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
 
                   // InterVue AI Spotlight Card
                   IntervueAiSpotlightCard(
-                    onMockInterviewTap: () => _handleServiceTap('AI Phỏng Vấn'),
-                    onCvScoringTap: () => _handleServiceTap('AI Chấm CV'),
+                    onMockInterviewTap: () => _handleServiceTap('AI Interview'),
+                    onCvScoringTap: () => _handleServiceTap('AI CV Scoring'),
                   ),
 
                   const SizedBox(height: 14),
@@ -642,7 +634,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
-                            'Đang tải Báo cáo thị trường tuyển dụng IT 2026...',
+                            'Loading the 2026 IT hiring market report...',
                           ),
                         ),
                       );
@@ -705,7 +697,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                                   const SizedBox(width: 8),
                                   const Expanded(
                                     child: Text(
-                                      'Chế độ xem trước (Dữ liệu việc làm chuẩn InterVue IT)',
+                                      'Preview mode (InterVue IT sample job data)',
                                       style: TextStyle(
                                         fontSize: 11.5,
                                         fontWeight: FontWeight.w600,
@@ -717,7 +709,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                                     onTap: () =>
                                         context.read<JobListCubit>().loadJobs(),
                                     child: const Text(
-                                      'Tải lại',
+                                      'Reload',
                                       style: TextStyle(
                                         fontSize: 11.5,
                                         fontWeight: FontWeight.bold,
@@ -740,7 +732,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Tìm thấy ${filteredJobs.length} cơ hội việc làm',
+                                  'Found ${filteredJobs.length} job opportunities',
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
@@ -748,19 +740,19 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                                   ),
                                 ),
                                 if (_selectedKeyword.isNotEmpty ||
-                                    _selectedLocation != 'Toàn quốc' ||
+                                    _selectedLocation != 'Nationwide' ||
                                     _filterData.hasFilter)
                                   InkWell(
                                     onTap: () {
                                       setState(() {
                                         _selectedKeyword = '';
-                                        _selectedLocation = 'Toàn quốc';
+                                        _selectedLocation = 'Nationwide';
                                         _searchController.clear();
                                         _filterData = const TopCvFilterData();
                                       });
                                     },
                                     child: const Text(
-                                      'Xóa bộ lọc',
+                                      'Clear filters',
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
@@ -790,7 +782,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                                   ),
                                   const SizedBox(height: 10),
                                   const Text(
-                                    'Không tìm thấy việc làm phù hợp',
+                                    'No matching jobs found',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -799,7 +791,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   const Text(
-                                    'Hãy thử tìm với từ khóa khác hoặc điều chỉnh bộ lọc',
+                                    'Try a different keyword or adjust the filters',
                                     style: TextStyle(
                                       fontSize: 12.5,
                                       color: AppColors.textSecondary,
@@ -886,7 +878,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                             ),
                             const SizedBox(width: 8),
                             const Text(
-                              'Tiếp lợi thế - Nối thành công',
+                              'Boost your edge - Connect to success',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: AppColors.textSecondary,
@@ -897,7 +889,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                         ),
                         const SizedBox(height: 5),
                         const Text(
-                          'Nền tảng Tuyển dụng & Luyện Phỏng vấn AI hàng đầu Việt Nam',
+                          'The leading AI recruitment and interview practice platform in Vietnam',
                           style: TextStyle(
                             fontSize: 11,
                             color: AppColors.textMuted,

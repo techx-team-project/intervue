@@ -19,7 +19,6 @@ void main() {
         envelope({
           'answer': 'Xin chào, tôi là trợ lý AI!',
           'sources': ['Source A', 'Source B'],
-          'remainingQuota': 29,
         }),
       );
     });
@@ -30,7 +29,6 @@ void main() {
 
     expect(res.answer, 'Xin chào, tôi là trợ lý AI!');
     expect(res.sources, ['Source A', 'Source B']);
-    expect(res.remainingQuota, 29);
   });
 
   test('data trả về không phải Map -> ném ServerException', () async {

@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 
-/// Ngoại lệ ném ra từ tầng data (Dio, storage...). Tầng presentation không bắt
-/// trực tiếp mà chuyển qua `Failure.fromException`.
+/// Exception thrown from the data layer (Dio, storage...). The presentation layer does not catch it
+/// directly but maps it through `Failure.fromException`.
 class AppException implements Exception {
   const AppException(this.message, {this.statusCode});
 
-  /// Ánh xạ lỗi Dio sang ngoại lệ nghiệp vụ, ưu tiên `message` do Spring Boot trả về.
+  /// Maps Dio errors to domain exceptions, preferring the `message` returned by Spring Boot.
   factory AppException.fromDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -17,24 +17,41 @@ class AppException implements Exception {
       case DioExceptionType.badResponse:
         final status = e.response?.statusCode;
         final message = _messageFromBody(e.response?.data);
+        final code = _codeFromBody(e.response?.data);
+        final retryAfter = int.tryParse(
+          e.response?.headers.value('retry-after') ?? '',
+        );
         return switch (status) {
           401 => UnauthorizedException(message, statusCode: status),
           403 => ForbiddenException(message, statusCode: status),
           _ => ServerException(
-            message ?? 'Máy chủ gặp sự cố, vui lòng thử lại sau',
+            message ?? 'Server error, please try again later',
             statusCode: status,
+            code: code,
+            retryAfterSeconds: retryAfter,
           ),
         };
       case DioExceptionType.cancel:
-        return const AppException('Yêu cầu đã bị huỷ');
+        return const AppException('Request cancelled');
       case DioExceptionType.badCertificate:
       case DioExceptionType.unknown:
-        return const AppException('Đã xảy ra lỗi không xác định');
+        return const AppException('An unknown error occurred');
     }
   }
 
   final String message;
   final int? statusCode;
+
+  static String? _codeFromBody(Object? body) {
+    if (body is Map<String, dynamic>) {
+      final error = body['error'];
+      if (error is Map<String, dynamic>) {
+        final code = error['code'];
+        if (code is String && code.isNotEmpty) return code;
+      }
+    }
+    return null;
+  }
 
   static String? _messageFromBody(Object? body) {
     if (body is Map<String, dynamic>) {
@@ -49,24 +66,32 @@ class AppException implements Exception {
 }
 
 class ServerException extends AppException {
-  const ServerException(super.message, {super.statusCode});
+  const ServerException(
+    super.message, {
+    super.statusCode,
+    this.code,
+    this.retryAfterSeconds,
+  });
+
+  final String? code;
+  final int? retryAfterSeconds;
 }
 
 class UnauthorizedException extends AppException {
   const UnauthorizedException(String? message, {super.statusCode})
-    : super(message ?? 'Phiên đăng nhập đã hết hạn');
+    : super(message ?? 'Your session has expired');
 }
 
 class ForbiddenException extends AppException {
   const ForbiddenException(String? message, {super.statusCode})
-    : super(message ?? 'Bạn không có quyền thực hiện thao tác này');
+    : super(message ?? 'You do not have permission to perform this action');
 }
 
 class NetworkException extends AppException {
   const NetworkException()
-    : super('Không thể kết nối, vui lòng kiểm tra mạng và thử lại');
+    : super('Unable to connect, please check your network and try again');
 }
 
 class CacheException extends AppException {
-  const CacheException([super.message = 'Không đọc được dữ liệu lưu trên máy']);
+  const CacheException([super.message = 'Unable to read locally stored data']);
 }

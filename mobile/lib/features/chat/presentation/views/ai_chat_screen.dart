@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,8 +6,11 @@ import 'package:intervue_flutter/app/routes/route_names.dart';
 import 'package:intervue_flutter/core/di/injection_container.dart';
 import 'package:intervue_flutter/core/theme/app_colors.dart';
 import 'package:intervue_flutter/features/chat/data/models/chat_request.dart';
+import 'package:intervue_flutter/features/chat/domain/entities/chat_suggestion.dart';
 import 'package:intervue_flutter/features/chat/presentation/controllers/chat_cubit.dart';
 import 'package:intervue_flutter/features/chat/presentation/controllers/chat_state.dart';
+import 'package:intervue_flutter/features/chat/presentation/widgets/chat_link_resolver.dart';
+import 'package:intervue_flutter/features/chat/presentation/widgets/chat_markdown.dart';
 
 class AiChatScreen extends StatelessWidget {
   const AiChatScreen({super.key, this.initialContext});
@@ -53,24 +54,11 @@ class _AiChatViewState extends State<_AiChatView> {
   final _scrollController = ScrollController();
   final _focusNode = FocusNode();
 
-  bool _isRecording = false;
-  Timer? _recordingTimer;
-  int _recordingSeconds = 0;
-
-  final List<String> _quickPrompts = const [
-    '📄 Chấm điểm CV & Tối ưu chuẩn ATS',
-    '🎙️ Luyện phỏng vấn giả lập câu hỏi khó',
-    '💰 Tra cứu mức lương lập trình viên 2026',
-    '🎯 Tư vấn lộ trình từ Junior lên Senior',
-    '🔍 Gợi ý việc làm đãi ngộ tốt gần tôi',
-  ];
-
   @override
   void dispose() {
     _textController.dispose();
     _scrollController.dispose();
     _focusNode.dispose();
-    _recordingTimer?.cancel();
     super.dispose();
   }
 
@@ -86,7 +74,7 @@ class _AiChatViewState extends State<_AiChatView> {
     });
   }
 
-  void _handleSend([String? presetText]) {
+  void _handleSend([String? presetText, String? faqCode]) {
     final query = presetText ?? _textController.text.trim();
     if (query.isEmpty) return;
 
@@ -94,74 +82,89 @@ class _AiChatViewState extends State<_AiChatView> {
       _textController.clear();
     }
 
-    context.read<ChatCubit>().sendMessage(query);
+    context.read<ChatCubit>().sendMessage(query, faqCode: faqCode);
   }
 
   void _showTopicSelector() {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (ctx) => Container(
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFCBD5E1),
-                  borderRadius: BorderRadius.circular(2),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFCBD5E1),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Chọn chủ đề bạn muốn tư vấn',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF0F172A),
+              const SizedBox(height: 16),
+              const Text(
+                'Choose a topic to ask about',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF0F172A),
+                ),
               ),
-            ),
-            const SizedBox(height: 14),
-            _topicTile(
-              icon: Icons.description_rounded,
-              color: const Color(0xFF0284C7),
-              title: 'Tối ưu & Chấm điểm CV chuẩn ATS',
-              subtitle:
-                  'Cách dùng từ khóa, bố cục và số liệu gây ấn tượng mạnh',
-              prompt: 'Tư vấn cách tối ưu CV và vượt qua bộ lọc ATS',
-            ),
-            _topicTile(
-              icon: Icons.record_voice_over_rounded,
-              color: AppColors.primary,
-              title: 'Luyện phỏng vấn giả lập 1:1',
-              subtitle: 'Câu hỏi chuyên môn, tình huống và mô hình STAR',
-              prompt: 'Hãy phỏng vấn thử tôi một câu hỏi tình huống khó',
-            ),
-            _topicTile(
-              icon: Icons.monetization_on_rounded,
-              color: const Color(0xFFF59E0B),
-              title: 'Khảo sát lương & Kỹ năng deal lương',
-              subtitle: 'Mức lương thị trường 2026 và cách đàm phán đãi ngộ',
-              prompt: 'Tra cứu mức lương lập trình viên năm 2026',
-            ),
-            _topicTile(
-              icon: Icons.trending_up_rounded,
-              color: const Color(0xFF8B5CF6),
-              title: 'Định hướng lộ trình nghề nghiệp',
-              subtitle: 'Kế hoạch học tập, chuyển ngành và lên vị trí Senior',
-              prompt:
-                  'Tư vấn lộ trình phát triển sự nghiệp công nghệ thông tin',
-            ),
-          ],
+              const SizedBox(height: 14),
+              _topicTile(
+                icon: Icons.search_rounded,
+                color: const Color(0xFF0284C7),
+                title: 'Find matching jobs',
+                subtitle: 'Job suggestions by skills, level and location',
+                suggestion: ChatSuggestions.assistant[0],
+              ),
+              _topicTile(
+                icon: Icons.assignment_turned_in_rounded,
+                color: AppColors.primary,
+                title: 'My applications',
+                subtitle: 'Check the status of submitted applications',
+                suggestion: ChatSuggestions.assistant[1],
+              ),
+              _topicTile(
+                icon: Icons.apartment_rounded,
+                color: const Color(0xFF8B5CF6),
+                title: 'Company lookup',
+                subtitle: 'Company info and open positions',
+                suggestion: ChatSuggestions.assistant[2],
+              ),
+              _topicTile(
+                icon: Icons.description_rounded,
+                color: const Color(0xFFF59E0B),
+                title: 'ATS-ready CV',
+                subtitle: 'How to create and optimize a CV that passes ATS',
+                suggestion: ChatSuggestions.faq[1],
+              ),
+              _topicTile(
+                icon: Icons.record_voice_over_rounded,
+                color: const Color(0xFFEF4444),
+                title: 'AI Mock Interview',
+                subtitle: 'How InterVue supports AI interview practice',
+                suggestion: ChatSuggestions.faq[4],
+              ),
+              _topicTile(
+                icon: Icons.lock_outline_rounded,
+                color: const Color(0xFF475569),
+                title: 'Account security',
+                subtitle: 'Turn on two-factor authentication (2FA)',
+                suggestion: ChatSuggestions.faq[3],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -172,7 +175,7 @@ class _AiChatViewState extends State<_AiChatView> {
     required Color color,
     required String title,
     required String subtitle,
-    required String prompt,
+    required ChatSuggestion suggestion,
   }) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
@@ -200,8 +203,35 @@ class _AiChatViewState extends State<_AiChatView> {
       ),
       onTap: () {
         Navigator.pop(context);
-        _handleSend(prompt);
+        _handleSend(suggestion.text, suggestion.faqCode);
       },
+    );
+  }
+
+  void _openLink(String url) {
+    final route = ChatLinkResolver.routeFor(url);
+    if (route != null) {
+      context.push(route);
+      return;
+    }
+    final messenger = ScaffoldMessenger.of(context);
+    if (ChatLinkResolver.isExternal(url)) {
+      Clipboard.setData(ClipboardData(text: url));
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Link copied to clipboard.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text(
+          'This section is only available on the InterVue website.',
+        ),
+        behavior: SnackBarBehavior.floating,
+      ),
     );
   }
 
@@ -210,14 +240,14 @@ class _AiChatViewState extends State<_AiChatView> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Làm mới cuộc trò chuyện?'),
+        title: const Text('Start a new conversation?'),
         content: const Text(
-          'Toàn bộ tin nhắn trong phiên chat hiện tại sẽ được khởi tạo lại. Bạn có chắc chắn muốn làm mới?',
+          'All messages in the current chat session will be cleared. Are you sure?',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Hủy'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -232,137 +262,11 @@ class _AiChatViewState extends State<_AiChatView> {
               Navigator.pop(ctx);
               context.read<ChatCubit>().resetSession();
             },
-            child: const Text('Làm mới'),
+            child: const Text('Start new'),
           ),
         ],
       ),
     );
-  }
-
-  void _simulateUploadCv() {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
-        padding: const EdgeInsets.all(22),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.cloud_upload_outlined,
-              size: 48,
-              color: AppColors.primary,
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Tải lên CV để AI phân tích',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 6),
-            const Text(
-              'Hỗ trợ file PDF, DOCX (tối đa 10MB)',
-              style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
-            ),
-            const SizedBox(height: 18),
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFCBD5E1)),
-              ),
-              child: const Row(
-                children: [
-                  Icon(
-                    Icons.picture_as_pdf_rounded,
-                    color: Colors.redAccent,
-                    size: 30,
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Nguyen_Van_A_Resume_Senior_Dev.pdf',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                        ),
-                        Text(
-                          '2.4 MB • Đã sẵn sàng gửi cho AI',
-                          style: TextStyle(
-                            fontSize: 11.5,
-                            color: Color(0xFF64748B),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              height: 46,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pop(ctx);
-                  _handleSend(
-                    'Tôi vừa tải lên CV Nguyen_Van_A_Resume_Senior_Dev.pdf, nhờ InterVue AI phân tích các tiêu chí chuẩn ATS và gợi ý cải thiện.',
-                  );
-                },
-                icon: const Icon(Icons.auto_awesome),
-                label: const Text(
-                  'Bắt đầu phân tích bằng AI',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _toggleRecording() {
-    if (_isRecording) {
-      _recordingTimer?.cancel();
-      setState(() {
-        _isRecording = false;
-      });
-      _handleSend(
-        'Tôi muốn tìm hiểu các câu hỏi thường gặp khi ứng tuyển vị trí Tech Lead.',
-      );
-    } else {
-      setState(() {
-        _isRecording = true;
-        _recordingSeconds = 0;
-      });
-      _recordingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (!mounted) return;
-        setState(() {
-          _recordingSeconds++;
-        });
-        if (_recordingSeconds >= 4) {
-          _toggleRecording();
-        }
-      });
-    }
   }
 
   @override
@@ -463,11 +367,11 @@ class _AiChatViewState extends State<_AiChatView> {
             ],
           ),
           const SizedBox(width: 10),
-          Expanded(
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   children: [
                     Text(
                       'InterVue Bot AI',
@@ -486,18 +390,8 @@ class _AiChatViewState extends State<_AiChatView> {
                   ],
                 ),
                 Text(
-                  state.remainingQuota != null
-                      ? 'Còn ${state.remainingQuota} lượt hỏi hôm nay'
-                      : 'Trợ lý tư vấn việc làm & phỏng vấn',
-                  style: TextStyle(
-                    fontSize: 11.5,
-                    color: state.remainingQuota != null
-                        ? AppColors.primaryDarker
-                        : const Color(0xFF64748B),
-                    fontWeight: state.remainingQuota != null
-                        ? FontWeight.w600
-                        : FontWeight.normal,
-                  ),
+                  'Jobs & platform support assistant',
+                  style: TextStyle(fontSize: 11.5, color: Color(0xFF64748B)),
                 ),
               ],
             ),
@@ -505,47 +399,13 @@ class _AiChatViewState extends State<_AiChatView> {
         ],
       ),
       actions: [
-        if (state.remainingQuota != null) ...[
-          Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              margin: const EdgeInsets.only(right: 4),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE6F4EA),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.3),
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    Icons.bolt_rounded,
-                    size: 14,
-                    color: AppColors.primary,
-                  ),
-                  const SizedBox(width: 2),
-                  Text(
-                    '${state.remainingQuota}',
-                    style: const TextStyle(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryDarker,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
         IconButton(
-          tooltip: 'Chọn chủ đề tư vấn',
+          tooltip: 'Choose a topic',
           icon: const Icon(Icons.tune_rounded, color: Color(0xFF475569)),
           onPressed: _showTopicSelector,
         ),
         IconButton(
-          tooltip: 'Làm mới hội thoại',
+          tooltip: 'Start a new conversation',
           icon: const Icon(Icons.refresh_rounded, color: Color(0xFF475569)),
           onPressed: _clearChatHistory,
         ),
@@ -575,28 +435,26 @@ class _AiChatViewState extends State<_AiChatView> {
               ),
               borderRadius: BorderRadius.circular(18),
             ),
-            child: Row(
+            child: const Row(
               children: [
-                const Icon(Icons.auto_awesome, color: Colors.white, size: 28),
-                const SizedBox(width: 12),
+                Icon(Icons.auto_awesome, color: Colors.white, size: 28),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'InterVue AI 4.0',
+                      Text(
+                        'InterVue AI',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
                         ),
                       ),
-                      const SizedBox(height: 3),
+                      SizedBox(height: 3),
                       Text(
-                        state.remainingQuota != null
-                            ? 'Hạn mức: ${state.remainingQuota} lượt còn lại'
-                            : 'Đã phân tích 320.000+ hồ sơ & kịch bản',
-                        style: const TextStyle(
+                        'Ask about jobs, companies, applications',
+                        style: TextStyle(
                           color: Color(0xFFA7F3D0),
                           fontSize: 11,
                         ),
@@ -609,7 +467,7 @@ class _AiChatViewState extends State<_AiChatView> {
           ),
           const SizedBox(height: 20),
           const Text(
-            'CHỦ ĐỀ TƯ VẤN HOT',
+            'SUGGESTED QUESTIONS',
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.bold,
@@ -620,12 +478,12 @@ class _AiChatViewState extends State<_AiChatView> {
           const SizedBox(height: 10),
           Expanded(
             child: ListView(
-              children: _quickPrompts.map((prompt) {
+              children: ChatSuggestions.all.map((prompt) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
-                    onTap: () => _handleSend(prompt),
+                    onTap: () => _handleSend(prompt.text, prompt.faqCode),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -640,7 +498,7 @@ class _AiChatViewState extends State<_AiChatView> {
                         children: [
                           Expanded(
                             child: Text(
-                              prompt,
+                              prompt.text,
                               style: const TextStyle(
                                 fontSize: 12.5,
                                 fontWeight: FontWeight.w600,
@@ -659,57 +517,6 @@ class _AiChatViewState extends State<_AiChatView> {
                   ),
                 );
               }).toList(),
-            ),
-          ),
-          const Divider(color: Color(0xFFE2E8F0)),
-          const SizedBox(height: 8),
-          InkWell(
-            borderRadius: BorderRadius.circular(14),
-            onTap: () => context.push(RouteNames.upgrade),
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFEF3C7),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFFDE68A)),
-              ),
-              child: const Row(
-                children: [
-                  Icon(
-                    Icons.workspace_premium_rounded,
-                    color: Color(0xFFD97706),
-                    size: 24,
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Tài khoản VIP',
-                          style: TextStyle(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF78350F),
-                          ),
-                        ),
-                        Text(
-                          'Mở khóa không giới hạn kịch bản AI',
-                          style: TextStyle(
-                            fontSize: 10.5,
-                            color: Color(0xFF92400E),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 16,
-                    color: Color(0xFF78350F),
-                  ),
-                ],
-              ),
             ),
           ),
         ],
@@ -759,7 +566,7 @@ class _AiChatViewState extends State<_AiChatView> {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Đang xem: ${ctx.jobTitle ?? "Việc làm"}${ctx.companyName != null ? " • ${ctx.companyName}" : ""}',
+              'Viewing: ${ctx.jobTitle ?? "Job"}${ctx.companyName != null ? " • ${ctx.companyName}" : ""}',
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -777,14 +584,13 @@ class _AiChatViewState extends State<_AiChatView> {
   Widget _buildQuickPromptsBar(ChatState state) {
     final hasJobContext =
         state.chatContext != null && state.chatContext?.jobTitle != null;
-    final prompts = hasJobContext
-        ? [
-            '🎯 So khớp CV với việc này',
-            '✍️ Soạn thư ứng tuyển mẫu',
-            '💡 Phân tích yêu cầu công việc này',
-            ..._quickPrompts,
+    final contextPrompts = hasJobContext
+        ? const [
+            ChatSuggestion('🎯 Match my resume to this job'),
+            ChatSuggestion('✍️ Draft a cover letter for this job opening'),
           ]
-        : _quickPrompts;
+        : const <ChatSuggestion>[];
+    final prompts = [...contextPrompts, ...ChatSuggestions.all];
 
     return Container(
       height: 44,
@@ -796,10 +602,10 @@ class _AiChatViewState extends State<_AiChatView> {
         separatorBuilder: (_, _) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final prompt = prompts[index];
-          final isContextPrompt = hasJobContext && index < 3;
+          final isContextPrompt = index < contextPrompts.length;
           return ActionChip(
             label: Text(
-              prompt,
+              prompt.text,
               style: TextStyle(
                 fontSize: 11.5,
                 fontWeight: FontWeight.w600,
@@ -821,23 +627,12 @@ class _AiChatViewState extends State<_AiChatView> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(999),
             ),
-            onPressed: () {
-              if (prompt == '🎯 So khớp CV với việc này') {
-                _handleSend(
-                  'So khớp CV của tôi với vị trí ${state.chatContext!.jobTitle}',
-                );
-              } else if (prompt == '✍️ Soạn thư ứng tuyển mẫu') {
-                _handleSend(
-                  'Soạn thư ứng tuyển cho vị trí ${state.chatContext!.jobTitle}',
-                );
-              } else if (prompt == '💡 Phân tích yêu cầu công việc này') {
-                _handleSend(
-                  'Phân tích yêu cầu và tiêu chí quan trọng của vị trí ${state.chatContext!.jobTitle}',
-                );
-              } else {
-                _handleSend(prompt);
-              }
-            },
+            onPressed: () => _handleSend(
+              isContextPrompt
+                  ? prompt.text.substring(prompt.text.indexOf(' ') + 1)
+                  : prompt.text,
+              prompt.faqCode,
+            ),
           );
         },
       ),
@@ -1006,7 +801,7 @@ class _AiChatViewState extends State<_AiChatView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildFormattedText(msg.text),
+                      ChatMarkdown(text: msg.text, onLinkTap: _openLink),
 
                       if (msg.sources != null && msg.sources!.isNotEmpty) ...[
                         const SizedBox(height: 12),
@@ -1032,7 +827,7 @@ class _AiChatViewState extends State<_AiChatView> {
                                   ),
                                   SizedBox(width: 5),
                                   Text(
-                                    'Nguồn dữ liệu tham khảo:',
+                                    'Sources:',
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
@@ -1083,9 +878,7 @@ class _AiChatViewState extends State<_AiChatView> {
                               Clipboard.setData(ClipboardData(text: msg.text));
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text(
-                                    'Đã sao chép phản hồi vào bộ nhớ tạm.',
-                                  ),
+                                  content: Text('Reply copied to clipboard.'),
                                   duration: Duration(seconds: 2),
                                   behavior: SnackBarBehavior.floating,
                                 ),
@@ -1106,7 +899,7 @@ class _AiChatViewState extends State<_AiChatView> {
                                   ),
                                   SizedBox(width: 4),
                                   Text(
-                                    'Sao chép',
+                                    'Copy',
                                     style: TextStyle(
                                       fontSize: 11,
                                       color: Color(0xFF94A3B8),
@@ -1157,7 +950,7 @@ class _AiChatViewState extends State<_AiChatView> {
                           if (action.route != null) {
                             context.push(action.route!);
                           } else if (action.query != null) {
-                            _handleSend(action.query!);
+                            _handleSend(action.query!, action.faqCode);
                           }
                         },
                       );
@@ -1172,7 +965,7 @@ class _AiChatViewState extends State<_AiChatView> {
                     runSpacing: 6,
                     children: msg.suggestedChips!.map((chip) {
                       return InkWell(
-                        onTap: () => _handleSend(chip),
+                        onTap: () => _handleSend(chip.text, chip.faqCode),
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -1194,7 +987,7 @@ class _AiChatViewState extends State<_AiChatView> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                chip,
+                                chip.text,
                                 style: const TextStyle(
                                   fontSize: 11.5,
                                   fontWeight: FontWeight.w600,
@@ -1262,7 +1055,7 @@ class _AiChatViewState extends State<_AiChatView> {
                 _PulsingDot(delay: 400),
                 SizedBox(width: 8),
                 Text(
-                  'InterVue AI đang xử lý...',
+                  'InterVue AI is thinking...',
                   style: TextStyle(
                     fontSize: 12,
                     fontStyle: FontStyle.italic,
@@ -1274,50 +1067,6 @@ class _AiChatViewState extends State<_AiChatView> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildFormattedText(String text) {
-    final lines = text.split('\n');
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: lines.map((line) {
-        if (line.isEmpty) {
-          return const SizedBox(height: 6);
-        }
-
-        final spans = <TextSpan>[];
-        final parts = line.split('**');
-        for (var i = 0; i < parts.length; i++) {
-          final isBold = i % 2 == 1;
-          spans.add(
-            TextSpan(
-              text: parts[i],
-              style: TextStyle(
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: isBold
-                    ? const Color(0xFF0F172A)
-                    : const Color(0xFF334155),
-              ),
-            ),
-          );
-        }
-
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 2),
-          child: RichText(
-            text: TextSpan(
-              style: const TextStyle(
-                fontSize: 13.8,
-                height: 1.5,
-                color: Color(0xFF334155),
-                fontFamily: 'Inter',
-              ),
-              children: spans,
-            ),
-          ),
-        );
-      }).toList(),
     );
   }
 
@@ -1340,24 +1089,6 @@ class _AiChatViewState extends State<_AiChatView> {
         top: false,
         child: Row(
           children: [
-            IconButton(
-              tooltip: 'Tải file CV lên để AI phân tích',
-              icon: const Icon(
-                Icons.attach_file_rounded,
-                color: Color(0xFF64748B),
-              ),
-              onPressed: isBlocked ? null : _simulateUploadCv,
-            ),
-            IconButton(
-              tooltip: _isRecording ? 'Đang ghi âm...' : 'Nói với InterVue AI',
-              icon: Icon(
-                _isRecording ? Icons.mic_rounded : Icons.mic_none_rounded,
-                color: _isRecording
-                    ? Colors.redAccent
-                    : const Color(0xFF64748B),
-              ),
-              onPressed: isBlocked ? null : _toggleRecording,
-            ),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -1375,8 +1106,8 @@ class _AiChatViewState extends State<_AiChatView> {
                   onSubmitted: (_) => _handleSend(),
                   decoration: InputDecoration(
                     hintText: isBlocked
-                        ? 'InterVue AI đang trả lời...'
-                        : 'Hỏi bất kỳ điều gì về CV, phỏng vấn, lương...',
+                        ? 'InterVue AI is replying...'
+                        : 'Ask about jobs, companies, applications...',
                     hintStyle: const TextStyle(
                       fontSize: 13,
                       color: Color(0xFF94A3B8),

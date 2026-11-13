@@ -23,8 +23,18 @@ abstract final class ApiEndpoints {
   static const String notificationsReadAll = '$_v1/notifications/read-all';
   static String notificationRead(int id) => '$_v1/notifications/$id/read';
 
+  static const String cvReviews = '$_v1/ai/cv-reviews';
+  static const String candidateCredits = '$_v1/candidate/credits';
+  static const String candidateCreditsTopup = '$_v1/candidate/credits/topup';
   static const String cvReviewUpload = '$_v1/ai/cv-reviews/upload';
   static const String cvReviewQuota = '$_v1/ai/cv-reviews/quota';
+
+  static const String mockInterviews = '$_v1/candidate/mock-interviews';
+  static String mockInterview(int id) => '$_v1/candidate/mock-interviews/$id';
+  static String mockInterviewAnswer(int id, int questionId) =>
+      '$_v1/candidate/mock-interviews/$id/questions/$questionId/answer';
+  static String mockInterviewFollowUp(int id, int questionId) =>
+      '$_v1/candidate/mock-interviews/$id/questions/$questionId/follow-up';
 
   static const String candidateCvs = '$_v1/candidate/cvs';
   static String candidateCv(int id) => '$_v1/candidate/cvs/$id';

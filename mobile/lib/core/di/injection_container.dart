@@ -36,6 +36,12 @@ import 'package:intervue_flutter/features/job/presentation/controllers/job_list_
 import 'package:intervue_flutter/features/job_alert/data/datasources/job_alert_remote_data_source.dart';
 import 'package:intervue_flutter/features/job_alert/data/repositories/job_alert_repository_impl.dart';
 import 'package:intervue_flutter/features/job_alert/presentation/controllers/job_alert_list_cubit.dart';
+import 'package:intervue_flutter/features/mock_interview/data/datasources/mock_interview_remote_data_source.dart';
+import 'package:intervue_flutter/features/mock_interview/data/models/mock_interview_detail.dart';
+import 'package:intervue_flutter/features/mock_interview/data/repositories/mock_interview_repository_impl.dart';
+import 'package:intervue_flutter/features/mock_interview/presentation/controllers/mock_interview_history_cubit.dart';
+import 'package:intervue_flutter/features/mock_interview/presentation/controllers/mock_interview_setup_cubit.dart';
+import 'package:intervue_flutter/features/mock_interview/presentation/controllers/mock_interview_room_cubit.dart';
 import 'package:intervue_flutter/features/notification/data/datasources/notification_remote_data_source.dart';
 import 'package:intervue_flutter/features/notification/data/repositories/notification_repository_impl.dart';
 import 'package:intervue_flutter/features/notification/presentation/controllers/notifications_cubit.dart';
@@ -118,7 +124,9 @@ void configureDependencies({AppConfig? config}) {
     ..registerLazySingleton<ResumeRepositoryImpl>(
       () => ResumeRepositoryImpl(getIt()),
     )
-    ..registerFactory<ResumeReviewCubit>(() => ResumeReviewCubit(getIt()))
+    ..registerFactory<ResumeReviewCubit>(
+      () => ResumeReviewCubit(getIt(), getIt()),
+    )
     ..registerFactory<CandidateCvCubit>(
       () => CandidateCvCubit(getIt(), getIt()),
     )
@@ -130,6 +138,21 @@ void configureDependencies({AppConfig? config}) {
     )
     ..registerFactory<CoverLetterCubit>(
       () => CoverLetterCubit(getIt(), getIt(), getIt()),
+    )
+    ..registerLazySingleton<MockInterviewRemoteDataSource>(
+      () => MockInterviewRemoteDataSource(getIt()),
+    )
+    ..registerLazySingleton<MockInterviewRepositoryImpl>(
+      () => MockInterviewRepositoryImpl(getIt()),
+    )
+    ..registerFactory<MockInterviewHistoryCubit>(
+      () => MockInterviewHistoryCubit(getIt()),
+    )
+    ..registerFactory<MockInterviewSetupCubit>(
+      () => MockInterviewSetupCubit(getIt(), getIt()),
+    )
+    ..registerFactoryParam<MockInterviewRoomCubit, MockInterviewDetail?, void>(
+      (initial, _) => MockInterviewRoomCubit(getIt(), initial: initial),
     )
     ..registerLazySingleton<NotificationRemoteDataSource>(
       () => NotificationRemoteDataSource(getIt()),

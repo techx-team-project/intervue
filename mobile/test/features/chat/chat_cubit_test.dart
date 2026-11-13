@@ -25,38 +25,44 @@ void main() {
     expect(cubit.state.isLoading, false);
   });
 
-  test('gửi tin nhắn thành công: nhận câu trả lời và hạn mức', () async {
-    when(
-      () => repository.sendMessage(
-        message: any(named: 'message'),
-        sessionId: any(named: 'sessionId'),
-      ),
-    ).thenAnswer(
-      (_) async => const ChatResponse(
-        answer: 'Đây là câu trả lời của AI',
-        sources: ['Tài liệu nội bộ'],
-        remainingQuota: 15,
-      ),
-    );
+  test(
+    'gửi tin nhắn thành công: nhận câu trả lời và nguồn tham khảo',
+    () async {
+      when(
+        () => repository.sendMessage(
+          message: any(named: 'message'),
+          sessionId: any(named: 'sessionId'),
+        ),
+      ).thenAnswer(
+        (_) async => const ChatResponse(
+          answer: 'Đây là câu trả lời của AI',
+          sources: ['Tài liệu nội bộ'],
+        ),
+      );
 
-    await cubit.sendMessage('Tôi muốn tối ưu CV');
+      await cubit.sendMessage('Tôi muốn tối ưu CV');
 
-    expect(cubit.state.isLoading, false);
-    expect(cubit.state.remainingQuota, 15);
-    final lastMessage = cubit.state.messages.last;
-    expect(lastMessage.isUser, false);
-    expect(lastMessage.text, 'Đây là câu trả lời của AI');
-    expect(lastMessage.sources, ['Tài liệu nội bộ']);
-  });
+      expect(cubit.state.isLoading, false);
+      final lastMessage = cubit.state.messages.last;
+      expect(lastMessage.isUser, false);
+      expect(lastMessage.text, 'Đây là câu trả lời của AI');
+      expect(lastMessage.sources, ['Tài liệu nội bộ']);
+    },
+  );
 
-  test('lỗi hết hạn mức (quota) -> hiển thị thông báo nâng cấp VIP', () async {
+  test('lỗi RATE_LIMITED -> thông báo gửi quá nhanh kèm số giây chờ', () async {
     when(
       () => repository.sendMessage(
         message: any(named: 'message'),
         sessionId: any(named: 'sessionId'),
       ),
     ).thenThrow(
-      const ServerException('AI quota exceeded for today', statusCode: 429),
+      const ServerException(
+        'Too many requests, please try again later!',
+        statusCode: 429,
+        code: 'RATE_LIMITED',
+        retryAfterSeconds: 30,
+      ),
     );
 
     await cubit.sendMessage('Hỏi tiếp');
@@ -64,8 +70,31 @@ void main() {
     expect(cubit.state.isLoading, false);
     final lastMessage = cubit.state.messages.last;
     expect(lastMessage.isError, true);
-    expect(lastMessage.text.contains('hạn mức'), true);
-    expect(lastMessage.badge, 'HẾT LƯỢT HÔM NAY');
+    expect(lastMessage.text.contains('30 seconds'), true);
+    expect(lastMessage.badge, 'TOO MANY REQUESTS');
+  });
+
+  test('gửi faqCode của gợi ý FAQ tới repository', () async {
+    when(
+      () => repository.sendMessage(
+        message: any(named: 'message'),
+        sessionId: any(named: 'sessionId'),
+        faqCode: any(named: 'faqCode'),
+      ),
+    ).thenAnswer((_) async => const ChatResponse(answer: 'FAQ answer'));
+
+    await cubit.sendMessage(
+      'How do I verify a company?',
+      faqCode: 'sq-company-verification',
+    );
+
+    verify(
+      () => repository.sendMessage(
+        message: 'How do I verify a company?',
+        sessionId: any(named: 'sessionId'),
+        faqCode: 'sq-company-verification',
+      ),
+    ).called(1);
   });
 
   test('lỗi mạng -> thông báo lỗi kết nối', () async {
@@ -81,7 +110,7 @@ void main() {
     expect(cubit.state.isLoading, false);
     final lastMessage = cubit.state.messages.last;
     expect(lastMessage.isError, true);
-    expect(lastMessage.badge, 'LỖI KẾT NỐI');
+    expect(lastMessage.badge, 'CONNECTION ERROR');
   });
 
   test('resetSession làm mới danh sách tin nhắn và tạo session mới', () {
