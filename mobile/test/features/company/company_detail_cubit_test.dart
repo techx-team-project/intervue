@@ -16,7 +16,7 @@ void main() {
     id: 1,
     name: 'TechX Corporation',
     industry: 'Software / IT Services',
-    address: 'Hà Nội',
+    address: 'Hanoi',
     website: 'https://techx.com',
     description: 'Tập đoàn công nghệ hàng đầu',
   );

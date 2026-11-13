@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// Pure Dart: không phụ thuộc Flutter, Dio hay JSON.
+/// Pure Dart: independent of Flutter, Dio and JSON.
 class JobEntity extends Equatable {
   const JobEntity({
     required this.id,

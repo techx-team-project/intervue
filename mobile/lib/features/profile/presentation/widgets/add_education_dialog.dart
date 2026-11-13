@@ -61,7 +61,7 @@ class _AddEducationDialogState extends State<AddEducationDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: const Text(
-        'Thêm thông tin học vấn',
+        'Add education',
         style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
       ),
       content: SingleChildScrollView(
@@ -73,27 +73,27 @@ class _AddEducationDialogState extends State<AddEducationDialog> {
               TextFormField(
                 controller: _schoolController,
                 decoration: const InputDecoration(
-                  labelText: 'Trường học *',
-                  hintText: 'VD: Đại học Bách Khoa',
+                  labelText: 'School *',
+                  hintText: 'e.g. Hanoi University of Science and Technology',
                 ),
                 validator: (v) => v == null || v.trim().isEmpty
-                    ? 'Vui lòng nhập trường học'
+                    ? 'Please enter the school'
                     : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _majorController,
                 decoration: const InputDecoration(
-                  labelText: 'Chuyên ngành',
-                  hintText: 'VD: Công nghệ thông tin',
+                  labelText: 'Major',
+                  hintText: 'VD: Information Technology',
                 ),
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _degreeController,
                 decoration: const InputDecoration(
-                  labelText: 'Hệ / Bằng cấp',
-                  hintText: 'VD: Kỹ sư, Cử nhân',
+                  labelText: 'Degree',
+                  hintText: 'e.g. Engineer, Bachelor',
                 ),
               ),
               const SizedBox(height: 12),
@@ -104,10 +104,10 @@ class _AddEducationDialogState extends State<AddEducationDialog> {
                       controller: _startYearController,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                        labelText: 'Năm bắt đầu *',
+                        labelText: 'Start year *',
                       ),
                       validator: (v) => v == null || int.tryParse(v) == null
-                          ? 'Không hợp lệ'
+                          ? 'Invalid'
                           : null,
                     ),
                   ),
@@ -117,7 +117,7 @@ class _AddEducationDialogState extends State<AddEducationDialog> {
                       controller: _endYearController,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                        labelText: 'Năm tốt nghiệp',
+                        labelText: 'Graduation year',
                       ),
                     ),
                   ),
@@ -130,7 +130,7 @@ class _AddEducationDialogState extends State<AddEducationDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _submit,
@@ -138,7 +138,7 @@ class _AddEducationDialogState extends State<AddEducationDialog> {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
           ),
-          child: const Text('Lưu'),
+          child: const Text('Save'),
         ),
       ],
     );

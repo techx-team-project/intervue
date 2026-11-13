@@ -17,7 +17,7 @@ class BlogListScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
-          'Cẩm nang nghề nghiệp',
+          'Career handbook',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -49,20 +49,20 @@ class BlogListScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(state.errorMessage ?? 'Không tải được bài viết'),
+              Text(state.errorMessage ?? 'Unable to load the article'),
               const SizedBox(height: 12),
               OutlinedButton(
                 onPressed: () => context.read<BlogListCubit>().load(
                   categorySlug: state.selectedCategory,
                 ),
-                child: const Text('Thử lại'),
+                child: const Text('Try again'),
               ),
             ],
           ),
         );
       case BlogListStatus.loaded:
         if (state.posts.isEmpty) {
-          return const Center(child: Text('Chưa có bài viết trong mục này'));
+          return const Center(child: Text('No articles in this category yet'));
         }
         return ListView.separated(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
@@ -91,7 +91,7 @@ class _CategoryChips extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ChoiceChip(
-              label: const Text('Tất cả'),
+              label: const Text('All'),
               selected: state.selectedCategory == null,
               onSelected: (_) => cubit.load(),
             ),
@@ -183,7 +183,7 @@ class _PostCard extends StatelessWidget {
                     ],
                     const SizedBox(height: 8),
                     Text(
-                      '${post.readTimeMinutes} phút đọc • ${Formatters.compactCount(post.viewsCount)} lượt xem',
+                      '${post.readTimeMinutes} min read • ${Formatters.compactCount(post.viewsCount)} views',
                       style: const TextStyle(
                         fontSize: 11.5,
                         color: AppColors.textMuted,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Hiệu ứng shimmer cho mọi widget con (thường là các [ShimmerBox]).
+/// Shimmer effect for any child widget (usually [ShimmerBox] items).
 class ShimmerLoading extends StatefulWidget {
   const ShimmerLoading({required this.child, super.key});
 
@@ -48,7 +48,7 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
   }
 }
 
-/// Khối placeholder hình chữ nhật bo góc.
+/// Rounded rectangle placeholder block.
 class ShimmerBox extends StatelessWidget {
   const ShimmerBox({this.width, this.height = 16, this.radius = 8, super.key});
 

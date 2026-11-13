@@ -158,7 +158,7 @@ void main() {
       expect(cubit.state, isA<CandidateProfileLoaded>());
       final loaded = cubit.state as CandidateProfileLoaded;
       expect(loaded.profile.jobSearchStatus, 'NOT_LOOKING');
-      expect(loaded.actionMessage, 'Đã tắt chế độ tìm việc.');
+      expect(loaded.actionMessage, 'Open to work is off.');
     });
 
     test('addExperience adds new experience to profile', () async {
@@ -188,7 +188,7 @@ void main() {
       expect(cubit.state, isA<CandidateProfileLoaded>());
       final loaded = cubit.state as CandidateProfileLoaded;
       expect(loaded.profile.experiences.length, 2);
-      expect(loaded.actionMessage, 'Thêm kinh nghiệm làm việc thành công!');
+      expect(loaded.actionMessage, 'Work experience added!');
     });
 
     test('deleteExperience removes experience from profile', () async {
@@ -205,7 +205,7 @@ void main() {
       expect(cubit.state, isA<CandidateProfileLoaded>());
       final loaded = cubit.state as CandidateProfileLoaded;
       expect(loaded.profile.experiences, isEmpty);
-      expect(loaded.actionMessage, 'Đã xóa kinh nghiệm làm việc.');
+      expect(loaded.actionMessage, 'Work experience deleted.');
     });
 
     test('addSkill and deleteSkill operate correctly', () async {
@@ -230,7 +230,7 @@ void main() {
 
       final loaded = cubit.state as CandidateProfileLoaded;
       expect(loaded.profile.skills.length, 2);
-      expect(loaded.actionMessage, 'Thêm kỹ năng thành công!');
+      expect(loaded.actionMessage, 'Skill added!');
 
       when(() => mockRepo.deleteSkill(31))
           .thenAnswer((_) async => sampleProfile);
@@ -238,7 +238,7 @@ void main() {
       await cubit.deleteSkill(31);
       final afterDelete = cubit.state as CandidateProfileLoaded;
       expect(afterDelete.profile.skills.length, 1);
-      expect(afterDelete.actionMessage, 'Đã xóa kỹ năng.');
+      expect(afterDelete.actionMessage, 'Skill deleted.');
     });
 
     test('addProject and deleteProject operate correctly', () async {
@@ -267,7 +267,7 @@ void main() {
 
       final loaded = cubit.state as CandidateProfileLoaded;
       expect(loaded.profile.projects.length, 2);
-      expect(loaded.actionMessage, 'Thêm dự án thành công!');
+      expect(loaded.actionMessage, 'Project added!');
 
       when(() => mockRepo.deleteProject(41))
           .thenAnswer((_) async => sampleProfile);
@@ -275,7 +275,7 @@ void main() {
       await cubit.deleteProject(41);
       final afterDelete = cubit.state as CandidateProfileLoaded;
       expect(afterDelete.profile.projects.length, 1);
-      expect(afterDelete.actionMessage, 'Đã xóa dự án.');
+      expect(afterDelete.actionMessage, 'Project deleted.');
     });
 
     test(
@@ -304,7 +304,7 @@ void main() {
 
         final loaded = cubit.state as CandidateProfileLoaded;
         expect(loaded.profile.certifications.length, 2);
-        expect(loaded.actionMessage, 'Thêm chứng chỉ thành công!');
+        expect(loaded.actionMessage, 'Certification added!');
 
         when(() => mockRepo.deleteCertification(51))
             .thenAnswer((_) async => sampleProfile);
@@ -312,7 +312,7 @@ void main() {
         await cubit.deleteCertification(51);
         final afterDelete = cubit.state as CandidateProfileLoaded;
         expect(afterDelete.profile.certifications.length, 1);
-        expect(afterDelete.actionMessage, 'Đã xóa chứng chỉ.');
+        expect(afterDelete.actionMessage, 'Certification deleted.');
       },
     );
 
@@ -340,7 +340,7 @@ void main() {
 
       final loaded = cubit.state as CandidateProfileLoaded;
       expect(loaded.profile.languages.length, 2);
-      expect(loaded.actionMessage, 'Thêm ngoại ngữ thành công!');
+      expect(loaded.actionMessage, 'Language added!');
 
       when(() => mockRepo.deleteLanguage(61))
           .thenAnswer((_) async => sampleProfile);
@@ -348,7 +348,7 @@ void main() {
       await cubit.deleteLanguage(61);
       final afterDelete = cubit.state as CandidateProfileLoaded;
       expect(afterDelete.profile.languages.length, 1);
-      expect(afterDelete.actionMessage, 'Đã xóa ngoại ngữ.');
+      expect(afterDelete.actionMessage, 'Language deleted.');
     });
 
     test('updateProfile updates general candidate information', () async {
@@ -371,7 +371,7 @@ void main() {
       final loaded = cubit.state as CandidateProfileLoaded;
       expect(loaded.profile.name, 'Nguyễn Văn B');
       expect(loaded.profile.headline, 'Lead Mobile Architect');
-      expect(loaded.actionMessage, 'Cập nhật thông tin hồ sơ thành công!');
+      expect(loaded.actionMessage, 'Profile updated successfully!');
     });
 
     test('uploadAvatar and removeAvatar operate correctly', () async {
@@ -392,17 +392,14 @@ void main() {
         loadedWithAvatar.profile.avatarUrl,
         'https://example.com/new-avatar.jpg',
       );
-      expect(
-        loadedWithAvatar.actionMessage,
-        'Cập nhật ảnh đại diện thành công!',
-      );
+      expect(loadedWithAvatar.actionMessage, 'Avatar updated successfully!');
 
       when(() => mockRepo.removeAvatar())
           .thenAnswer((_) async => sampleProfile);
 
       await cubit.removeAvatar();
       final afterRemove = cubit.state as CandidateProfileLoaded;
-      expect(afterRemove.actionMessage, 'Đã gỡ ảnh đại diện.');
+      expect(afterRemove.actionMessage, 'Avatar removed.');
     });
   });
 }

@@ -79,7 +79,7 @@ final class ApplyJobSuccess extends ApplyJobState {
   const ApplyJobSuccess({
     required this.application,
     this.isDraft = false,
-    this.message = 'Ứng tuyển thành công!',
+    this.message = 'Applied successfully!',
   });
 
   final ApplicationModel application;

@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-/// Lưu JWT trong Keychain (iOS) / EncryptedSharedPreferences (Android).
+/// Stores the JWT in the Keychain (iOS) / EncryptedSharedPreferences (Android).
 class SecureStorage {
   SecureStorage([FlutterSecureStorage? storage])
     : _storage =
@@ -18,7 +18,7 @@ class SecureStorage {
 
   Future<String?> getRefreshToken() => _storage.read(key: _refreshTokenKey);
 
-  /// [refreshToken] null nghĩa là giữ nguyên refresh token hiện tại.
+  /// A null [refreshToken] keeps the current refresh token.
   Future<void> saveTokens({
     required String accessToken,
     String? refreshToken,

@@ -14,7 +14,7 @@ void main() {
         },
         'level': 'SENIOR',
         'workingArrangement': 'HYBRID',
-        'city': 'Hà Nội',
+        'city': 'Hanoi',
         'salary': {
           'negotiable': false,
           'min': 30000000,
@@ -30,12 +30,12 @@ void main() {
 
       expect(dto.id, '42');
       expect(dto.companyName, 'Intervue');
-      expect(dto.city, 'Hà Nội');
+      expect(dto.city, 'Hanoi');
       expect(dto.skills, ['Flutter', 'Dart']);
       expect(dto.deadline, DateTime(2030, 12, 31));
 
       final entity = dto.toEntity();
-      expect(entity.displaySalary, '30 - 45 triệu');
+      expect(entity.displaySalary, '30 - 45M VND');
       expect(entity.salaryMinMillions, 30);
       expect(entity.salaryMaxMillions, 45);
       expect(entity.isSalaryNegotiable, isFalse);
@@ -49,13 +49,13 @@ void main() {
         'id': 7,
         'title': 'Dev',
         'company': {'name': 'ACME'},
-        'location': {'city': 'Đà Nẵng', 'address': '1 Đường A'},
+        'location': {'city': 'Da Nang', 'address': '1 Đường A'},
         'description': 'Mô tả',
         'requirements': 'Yêu cầu',
         'benefits': 'Quyền lợi',
       });
 
-      expect(dto.city, 'Đà Nẵng');
+      expect(dto.city, 'Da Nang');
       expect(dto.toEntity().description, 'Mô tả');
       expect(dto.toEntity().requirements, 'Yêu cầu');
       expect(dto.toEntity().benefits, 'Quyền lợi');
@@ -71,19 +71,19 @@ void main() {
 
       expect(
         withSalary({'negotiable': true}).toEntity().displaySalary,
-        'Thỏa thuận',
+        'Negotiable',
       );
       expect(
         withSalary({'negotiable': false, 'max': 30000000, 'currency': 'VND'})
             .toEntity()
             .displaySalary,
-        'Tới 30 triệu',
+        'Up to 30M VND',
       );
       expect(
         withSalary({'negotiable': false, 'min': 10000000, 'currency': 'VND'})
             .toEntity()
             .displaySalary,
-        'Từ 10 triệu',
+        'From 10M VND',
       );
       expect(
         withSalary({
@@ -104,7 +104,7 @@ void main() {
         'workingArrangement': 'REMOTE',
       }).toEntity();
 
-      expect(entity.location, 'Làm việc từ xa');
+      expect(entity.location, 'Remote');
     });
 
     test('isExpired và isUrgent dựa trên deadline', () {

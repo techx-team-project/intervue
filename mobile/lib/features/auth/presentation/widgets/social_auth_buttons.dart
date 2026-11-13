@@ -48,7 +48,7 @@ class SocialAuthButtons extends StatelessWidget {
         _SocialPillButton(
           onTap: onGooglePressed,
           icon: SvgPicture.string(_googleSvg, width: 18, height: 18),
-          label: isRegister ? 'Đăng ký bằng Google' : 'Đăng nhập bằng Google',
+          label: isRegister ? 'Sign up with Google' : 'Sign in with Google',
         ),
         const SizedBox(height: 12),
 

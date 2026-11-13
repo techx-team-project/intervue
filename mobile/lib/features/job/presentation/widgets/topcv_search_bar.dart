@@ -35,9 +35,9 @@ class TopCvSearchBar extends StatefulWidget {
     'NodeJS',
     'Golang',
     'Marketing',
-    'Kế toán',
-    'Bán hàng',
-    'Thực tập sinh',
+    'Accounting',
+    'Sales',
+    'Intern',
     'Remote',
   ];
 
@@ -152,7 +152,7 @@ class _TopCvSearchBarState extends State<TopCvSearchBar> {
                             color: AppColors.primary,
                             size: 22,
                           ),
-                          hintText: 'Tìm việc làm, công ty, kỹ năng...',
+                          hintText: 'Search jobs, companies, skills...',
                           hintStyle: const TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 13.5,
@@ -283,8 +283,8 @@ class _TopCvSearchBarState extends State<TopCvSearchBar> {
                               const SizedBox(width: 6),
                               Text(
                                 widget.controller.text.trim().isEmpty
-                                    ? 'Gợi ý tìm kiếm phổ biến'
-                                    : 'Từ khóa phù hợp',
+                                    ? 'Popular searches'
+                                    : 'Matching keywords',
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
@@ -311,7 +311,7 @@ class _TopCvSearchBarState extends State<TopCvSearchBar> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4),
                           child: Text(
-                            'Nhấn Enter để tìm kiếm "${widget.controller.text.trim()}"',
+                            'Press Enter to search "${widget.controller.text.trim()}"',
                             style: const TextStyle(
                               fontSize: 12,
                               color: AppColors.textMuted,

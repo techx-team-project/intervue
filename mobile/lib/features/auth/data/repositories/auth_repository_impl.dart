@@ -50,7 +50,7 @@ class AuthRepositoryImpl {
     if (session.auth.requiresTwoFactor) return;
     final accessToken = session.auth.accessToken;
     if (accessToken == null || accessToken.isEmpty) {
-      throw const ServerException('Phản hồi đăng nhập không chứa access token');
+      throw const ServerException('The sign-in response has no access token');
     }
     await _storage.saveTokens(
       accessToken: accessToken,
@@ -60,17 +60,17 @@ class AuthRepositoryImpl {
 
   Future<void> register(RegisterRequest request) => _remote.register(request);
 
-  /// Luôn xoá token cục bộ, kể cả khi gọi API đăng xuất thất bại.
+  /// Always clears the local token, even if the sign-out API call fails.
   Future<void> logout() async {
     try {
       await _remote.logout(refreshToken: await _storage.getRefreshToken());
     } on AppException {
-      // Token sẽ bị xoá bên dưới; lỗi mạng không được chặn việc đăng xuất.
+      // The token is cleared below; a network error must not block sign-out.
     } finally {
       await _storage.clearTokens();
     }
   }
 
-  /// Dùng khi server báo phiên hết hạn (interceptor đã xoá token).
+  /// Used when the server reports an expired session (the interceptor already cleared the token).
   Future<void> clearSession() => _storage.clearTokens();
 }

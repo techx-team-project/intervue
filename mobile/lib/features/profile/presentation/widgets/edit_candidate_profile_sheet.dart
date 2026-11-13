@@ -54,25 +54,25 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
   late bool _salaryNegotiable;
 
   static const _genders = [
-    {'value': 'MALE', 'label': 'Nam'},
-    {'value': 'FEMALE', 'label': 'Nữ'},
-    {'value': 'OTHER', 'label': 'Khác'},
+    {'value': 'MALE', 'label': 'Male'},
+    {'value': 'FEMALE', 'label': 'Female'},
+    {'value': 'OTHER', 'label': 'Other'},
   ];
 
   static const _levels = [
-    {'value': 'INTERN', 'label': 'Thực tập sinh (Intern)'},
-    {'value': 'FRESHER', 'label': 'Mới đi làm (Fresher)'},
-    {'value': 'JUNIOR', 'label': 'Junior (1 - 2 năm)'},
-    {'value': 'MIDDLE', 'label': 'Middle (2 - 4 năm)'},
-    {'value': 'SENIOR', 'label': 'Senior (5+ năm)'},
-    {'value': 'LEAD', 'label': 'Trưởng nhóm (Lead)'},
-    {'value': 'MANAGER', 'label': 'Quản lý (Manager)'},
+    {'value': 'INTERN', 'label': 'Intern'},
+    {'value': 'FRESHER', 'label': 'Entry level (Fresher)'},
+    {'value': 'JUNIOR', 'label': 'Junior (1 - 2 years)'},
+    {'value': 'MIDDLE', 'label': 'Middle (2 - 4 years)'},
+    {'value': 'SENIOR', 'label': 'Senior (5+ years)'},
+    {'value': 'LEAD', 'label': 'Lead'},
+    {'value': 'MANAGER', 'label': 'Manager'},
   ];
 
   static const _workModes = [
-    {'value': 'ONSITE', 'label': 'Làm tại văn phòng (Onsite)'},
-    {'value': 'REMOTE', 'label': 'Làm từ xa (Remote)'},
-    {'value': 'HYBRID', 'label': 'Linh hoạt (Hybrid)'},
+    {'value': 'ONSITE', 'label': 'Onsite'},
+    {'value': 'REMOTE', 'label': 'Remote'},
+    {'value': 'HYBRID', 'label': 'Hybrid'},
   ];
 
   @override
@@ -194,7 +194,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Chỉnh sửa thông tin hồ sơ',
+                  'Edit profile information',
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -215,16 +215,16 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionHeader('1. Thông tin cá nhân cơ bản'),
+                      _buildSectionHeader('1. Basic personal information'),
                       TextFormField(
                         controller: _nameController,
                         decoration: const InputDecoration(
-                          labelText: 'Họ và tên *',
-                          hintText: 'VD: Nguyễn Văn A',
+                          labelText: 'Full name *',
+                          hintText: 'e.g. Nguyen Van A',
                         ),
                         validator: (v) {
                           if (v == null || v.trim().length < 2) {
-                            return 'Vui lòng nhập tên từ 2 đến 50 ký tự';
+                            return 'Please enter a name of 2 to 50 characters';
                           }
                           return null;
                         },
@@ -233,7 +233,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                       TextFormField(
                         controller: _headlineController,
                         decoration: const InputDecoration(
-                          labelText: 'Chức danh ngắn gọn / Headline',
+                          labelText: 'Headline',
                           hintText: 'VD: Senior Flutter Developer | Clean Architecture',
                         ),
                       ),
@@ -244,7 +244,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                             child: DropdownButtonFormField<String>(
                               initialValue: _gender,
                               decoration: const InputDecoration(
-                                labelText: 'Giới tính',
+                                labelText: 'Gender',
                               ),
                               items: _genders
                                   .map(
@@ -262,7 +262,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                             child: TextFormField(
                               controller: _birthYearController,
                               decoration: const InputDecoration(
-                                labelText: 'Năm sinh',
+                                labelText: 'Birth year',
                                 hintText: '1998',
                               ),
                               keyboardType: TextInputType.number,
@@ -274,7 +274,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                       TextFormField(
                         controller: _contactEmailController,
                         decoration: const InputDecoration(
-                          labelText: 'Email liên hệ',
+                          labelText: 'Contact email',
                           hintText: 'contact@example.com',
                         ),
                         keyboardType: TextInputType.emailAddress,
@@ -283,8 +283,8 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                       TextFormField(
                         controller: _addressController,
                         decoration: const InputDecoration(
-                          labelText: 'Địa chỉ / Khu vực làm việc',
-                          hintText: 'VD: Cầu Giấy, Hà Nội',
+                          labelText: 'Address / Work area',
+                          hintText: 'VD: Cau Giay, Hanoi',
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -292,21 +292,21 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                         controller: _bioController,
                         maxLines: 3,
                         decoration: const InputDecoration(
-                          labelText: 'Giới thiệu bản thân (Bio)',
-                          hintText: 'Mô tả ngắn gọn về kinh nghiệm, thế mạnh và đam mê công nghệ...',
+                          labelText: 'About me (Bio)',
+                          hintText: 'A short description of your experience, strengths and passion for technology...',
                         ),
                       ),
                       const SizedBox(height: 20),
 
-                      _buildSectionHeader('2. Mục tiêu & Kỳ vọng nghề nghiệp'),
+                      _buildSectionHeader('2. Career goals & expectations'),
                       TextFormField(
                         controller: _desiredRoleController,
                         decoration: const InputDecoration(
-                          labelText: 'Vị trí công việc mong muốn *',
+                          labelText: 'Desired position *',
                           hintText: 'VD: Flutter Developer, Mobile Tech Lead',
                         ),
                         validator: (v) => v == null || v.trim().isEmpty
-                            ? 'Vui lòng nhập vị trí'
+                            ? 'Please enter the position'
                             : null,
                       ),
                       const SizedBox(height: 12),
@@ -316,7 +316,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                             child: DropdownButtonFormField<String>(
                               initialValue: _desiredLevel,
                               decoration: const InputDecoration(
-                                labelText: 'Cấp bậc mong muốn',
+                                labelText: 'Desired level',
                               ),
                               items: _levels
                                   .map(
@@ -339,7 +339,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                             child: TextFormField(
                               controller: _yoeController,
                               decoration: const InputDecoration(
-                                labelText: 'Số năm kinh nghiệm (YOE)',
+                                labelText: 'Years of experience (YOE)',
                                 hintText: 'VD: 3.5',
                               ),
                               keyboardType:
@@ -354,7 +354,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                       DropdownButtonFormField<String>(
                         initialValue: _workMode,
                         decoration: const InputDecoration(
-                          labelText: 'Hình thức làm việc',
+                          labelText: 'Work mode',
                         ),
                         items: _workModes
                             .map(
@@ -373,7 +373,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                             child: TextFormField(
                               controller: _salaryMinController,
                               decoration: const InputDecoration(
-                                labelText: 'Lương tối thiểu (Triệu VND)',
+                                labelText: 'Minimum salary (million VND)',
                                 hintText: '15',
                               ),
                               keyboardType: TextInputType.number,
@@ -384,7 +384,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                             child: TextFormField(
                               controller: _salaryMaxController,
                               decoration: const InputDecoration(
-                                labelText: 'Lương tối đa (Triệu VND)',
+                                labelText: 'Maximum salary (million VND)',
                                 hintText: '30',
                               ),
                               keyboardType: TextInputType.number,
@@ -395,7 +395,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                       SwitchListTile(
                         contentPadding: EdgeInsets.zero,
                         title: const Text(
-                          'Mức lương có thể thương lượng',
+                          'Salary is negotiable',
                           style: TextStyle(fontSize: 13),
                         ),
                         value: _salaryNegotiable,
@@ -405,7 +405,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                       ),
                       const SizedBox(height: 20),
 
-                      _buildSectionHeader('3. Liên kết xã hội & Portfolio'),
+                      _buildSectionHeader('3. Social links & Portfolio'),
                       TextFormField(
                         controller: _githubController,
                         decoration: const InputDecoration(
@@ -427,7 +427,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                       TextFormField(
                         controller: _portfolioController,
                         decoration: const InputDecoration(
-                          labelText: 'Website / Portfolio cá nhân',
+                          labelText: 'Personal website / Portfolio',
                           hintText: 'https://myportfolio.dev',
                         ),
                         keyboardType: TextInputType.url,
@@ -451,7 +451,7 @@ class _EditCandidateProfileSheetState extends State<EditCandidateProfileSheet> {
                   ),
                 ),
                 child: const Text(
-                  'Lưu thay đổi hồ sơ',
+                  'Save profile changes',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,

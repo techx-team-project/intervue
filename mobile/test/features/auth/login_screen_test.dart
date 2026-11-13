@@ -50,11 +50,11 @@ void main() {
 
     await pumpScreen(tester);
 
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Đăng nhập'));
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Sign in'));
     await tester.pump();
 
-    expect(find.text('Email không hợp lệ'), findsOneWidget);
-    expect(find.textContaining('Mật khẩu tối thiểu'), findsOneWidget);
+    expect(find.text('Invalid email'), findsOneWidget);
+    expect(find.textContaining('Password must be at least'), findsOneWidget);
     verifyNever(() => repository.login(any()));
   });
 
@@ -72,7 +72,7 @@ void main() {
 
     await tester.enterText(find.byType(TextFormField).at(0), 'a@b.com');
     await tester.enterText(find.byType(TextFormField).at(1), '123456');
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Đăng nhập'));
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Sign in'));
     await tester.pumpAndSettle();
 
     expect(authBloc.state, const AuthAuthenticated());

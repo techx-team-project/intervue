@@ -89,7 +89,7 @@ void main() {
       cubit.state,
       const CandidateCvLoaded(
         cvs: [sampleCv],
-        actionMessage: 'Tải lên CV thành công!',
+        actionMessage: 'CV uploaded successfully!',
       ),
     );
   });
@@ -103,7 +103,10 @@ void main() {
     expect(ok, true);
     expect(
       cubit.state,
-      const CandidateCvLoaded(cvs: [], actionMessage: 'Đã xóa CV thành công!'),
+      const CandidateCvLoaded(
+        cvs: [],
+        actionMessage: 'CV deleted successfully!',
+      ),
     );
   });
 }

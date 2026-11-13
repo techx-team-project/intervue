@@ -2,9 +2,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intervue_flutter/core/theme/app_colors.dart';
-import 'package:intervue_flutter/core/utils/file_helpers.dart';
-import 'package:intervue_flutter/features/resume/data/models/cv_review.dart';
+import 'package:intervue_flutter/core/widgets/ai_consent_dialog.dart';
 import 'package:intervue_flutter/features/resume/presentation/controllers/resume_review_cubit.dart';
+import 'package:intervue_flutter/features/resume/presentation/widgets/credit_sheets.dart';
+import 'package:intervue_flutter/features/resume/presentation/widgets/cv_review_options.dart';
+import 'package:intervue_flutter/features/resume/presentation/widgets/review_form_pickers.dart';
+import 'package:intervue_flutter/features/resume/presentation/widgets/review_result_views.dart';
 
 class ResumeScreen extends StatefulWidget {
   const ResumeScreen({super.key});
@@ -14,14 +17,39 @@ class ResumeScreen extends StatefulWidget {
 }
 
 class _ResumeScreenState extends State<ResumeScreen> {
-  final _positionController = TextEditingController();
+  final _positionController = TextEditingController(
+    text: CvReviewOptions.popularPositions.first,
+  );
+  final _cvTextController = TextEditingController();
+
+  int _level = 2;
+  CvSource? _source;
+  int? _resumeId;
+  String? _jobId;
   PlatformFile? _pickedFile;
 
   @override
   void dispose() {
     _positionController.dispose();
+    _cvTextController.dispose();
     super.dispose();
   }
+
+  bool get _isPaid => _level == CvReviewOptions.paidLevel;
+
+  CvSource _effectiveSource(ResumeReviewState state) =>
+      _source ?? (state.resumes.isNotEmpty ? CvSource.saved : CvSource.upload);
+
+  int? _effectiveResumeId(ResumeReviewState state) {
+    if (state.resumes.isEmpty) return null;
+    if (_resumeId != null) return _resumeId;
+    return state.resumes
+        .firstWhere((cv) => cv.isDefault, orElse: () => state.resumes.first)
+        .id;
+  }
+
+  String? _effectiveJobId(ResumeReviewState state) =>
+      _jobId ?? (state.jobs.isEmpty ? null : state.jobs.first.id);
 
   Future<void> _pickFile() async {
     final result = await FilePicker.platform.pickFiles(
@@ -34,16 +62,66 @@ class _ResumeScreenState extends State<ResumeScreen> {
     setState(() => _pickedFile = file);
   }
 
-  Future<void> _submit() async {
+  void _toast(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _submit(ResumeReviewState state) async {
+    final source = _effectiveSource(state);
+    final resumeId = _effectiveResumeId(state);
+    final jobId = _effectiveJobId(state);
     final file = _pickedFile;
-    final bytes = file?.bytes;
-    if (file == null || bytes == null) return;
-    await context.read<ResumeReviewCubit>().reviewCv(
-      bytes: bytes,
-      fileName: file.name,
-      sizeBytes: file.size,
-      targetPosition: _positionController.text,
-    );
+
+    if (_level == 2 && _positionController.text.trim().isEmpty) {
+      return _toast('Enter the target job position.');
+    }
+    if (_isPaid && jobId == null) {
+      return _toast('Choose a job post to match against.');
+    }
+    if (_isPaid && state.creditBalance < 1) {
+      _toast('You do not have enough credits. Please top up to continue.');
+      return CreditSheets.showTopup(context);
+    }
+    if (source == CvSource.saved && resumeId == null) {
+      return _toast('Choose a saved CV or upload a new file.');
+    }
+    if (source == CvSource.upload && (file == null || file.bytes == null)) {
+      return _toast('Choose a PDF CV to review.');
+    }
+    if (source == CvSource.text && _cvTextController.text.trim().isEmpty) {
+      return _toast('Paste the text of your CV.');
+    }
+    if (!await AiConsent.ensure(context) || !mounted) return;
+
+    final cubit = context.read<ResumeReviewCubit>();
+    final targetPosition = _positionController.text;
+    final parsedJobId = jobId == null ? null : int.tryParse(jobId);
+    switch (source) {
+      case CvSource.upload:
+        await cubit.reviewFile(
+          bytes: file!.bytes!,
+          fileName: file.name,
+          sizeBytes: file.size,
+          level: _level,
+          targetPosition: targetPosition,
+          jobId: parsedJobId,
+        );
+      case CvSource.saved:
+        await cubit.reviewSaved(
+          level: _level,
+          resumeId: resumeId,
+          targetPosition: targetPosition,
+          jobId: parsedJobId,
+        );
+      case CvSource.text:
+        await cubit.reviewSaved(
+          level: _level,
+          cvText: _cvTextController.text,
+          targetPosition: targetPosition,
+          jobId: parsedJobId,
+        );
+    }
   }
 
   @override
@@ -52,7 +130,7 @@ class _ResumeScreenState extends State<ResumeScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
-          'AI chấm điểm CV',
+          'AI CV review',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -60,27 +138,30 @@ class _ResumeScreenState extends State<ResumeScreen> {
           ),
         ),
       ),
-      body: BlocBuilder<ResumeReviewCubit, ResumeReviewState>(
+      body: BlocConsumer<ResumeReviewCubit, ResumeReviewState>(
+        listenWhen: (previous, current) =>
+            previous.errorCode != current.errorCode &&
+            current.errorCode == ResumeReviewCubit.insufficientCreditsCode,
+        listener: (context, state) => CreditSheets.showTopup(context),
         builder: (context, state) {
+          final review = state.review;
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              _QuotaChip(quota: state.quota),
-              const SizedBox(height: 12),
-              _buildUploadCard(state),
-              if (state.status == ResumeReviewStatus.failure &&
-                  state.errorMessage != null) ...[
-                const SizedBox(height: 12),
-                _ErrorBanner(message: state.errorMessage!),
-              ],
-              if (state.isUploading) ...[
-                const SizedBox(height: 24),
-                const _AnalyzingIndicator(),
-              ],
-              if (state.review != null) ...[
-                const SizedBox(height: 16),
-                _ReviewResult(review: state.review!),
-              ],
+              if (review != null)
+                review.isJobFit
+                    ? JobFitReport(
+                        review: review,
+                        onReset: context.read<ResumeReviewCubit>().reset,
+                        onOpenCreditHistory: () =>
+                            CreditSheets.showHistory(context),
+                      )
+                    : AtsReviewReport(
+                        review: review,
+                        onReset: context.read<ResumeReviewCubit>().reset,
+                      )
+              else
+                ..._buildForm(state),
             ],
           );
         },
@@ -88,9 +169,70 @@ class _ResumeScreenState extends State<ResumeScreen> {
     );
   }
 
-  Widget _buildUploadCard(ResumeReviewState state) {
-    final file = _pickedFile;
-    final isBusy = state.isUploading;
+  List<Widget> _buildForm(ResumeReviewState state) {
+    final source = _effectiveSource(state);
+    return [
+      const Padding(
+        padding: EdgeInsets.only(bottom: 14),
+        child: Text(
+          'Get an ATS score and concrete rewrites for your CV, tailored to a target role or matched against a real job post.',
+          style: TextStyle(
+            fontSize: 13,
+            height: 1.45,
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ),
+      ReviewStepCard(
+        step: '01',
+        title: 'Choose a review level',
+        child: ReviewLevelPicker(
+          value: _level,
+          onChanged: (level) => setState(() => _level = level),
+        ),
+      ),
+      if (_level == 2)
+        ReviewStepCard(
+          step: '02',
+          title: 'Target position',
+          hint: 'The role you want your CV to be optimized for.',
+          child: ReviewTargetPositionField(controller: _positionController),
+        ),
+      if (_isPaid)
+        ReviewStepCard(
+          step: '02',
+          title: 'Job to match',
+          hint: 'Pick the job post your CV will be compared against.',
+          child: ReviewJobPicker(
+            jobs: state.jobs,
+            selectedJobId: _effectiveJobId(state),
+            onSelected: (id) => setState(() => _jobId = id),
+          ),
+        ),
+      ReviewStepCard(
+        step: _level == 1 ? '02' : '03',
+        title: 'Your CV',
+        child: ReviewCvSourcePicker(
+          source: source,
+          onSourceChanged: (value) => setState(() => _source = value),
+          resumes: state.resumes,
+          selectedResumeId: _effectiveResumeId(state),
+          onResumeSelected: (id) => setState(() => _resumeId = id),
+          file: _pickedFile,
+          onPickFile: _pickFile,
+          textController: _cvTextController,
+        ),
+      ),
+      if (state.status == ResumeReviewStatus.failure &&
+          state.errorMessage != null)
+        _ErrorBanner(message: state.errorMessage!),
+      _buildActionCard(state),
+    ];
+  }
+
+  Widget _buildActionCard(ResumeReviewState state) {
+    final quota = state.quota;
+    final isBusy = state.isReviewing;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -99,89 +241,78 @@ class _ResumeScreenState extends State<ResumeScreen> {
         border: Border.all(color: AppColors.border),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InkWell(
-            onTap: isBusy ? null : _pickFile,
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 12),
-              decoration: BoxDecoration(
-                color: AppColors.primaryLight,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.4),
+          Row(
+            children: [
+              Expanded(
+                child: _Stat(
+                  label: 'Free runs today',
+                  value: quota == null
+                      ? '3/3'
+                      : '${quota.remaining}/${quota.maxDaily}',
                 ),
               ),
-              child: Column(
-                children: [
-                  Icon(
-                    file == null
-                        ? Icons.upload_file_rounded
-                        : Icons.picture_as_pdf_rounded,
-                    size: 36,
-                    color: AppColors.primaryDark,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    file == null ? 'Chạm để chọn file CV (PDF)' : file.name,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primaryDarker,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    file == null
-                        ? 'Chọn từ thiết bị • tối đa 5 MB • PDF dạng văn bản'
-                        : FileHelpers.formatSize(file.size),
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ],
+              Expanded(
+                child: _Stat(label: 'Credits', value: '${state.creditBalance}'),
               ),
-            ),
-          ),
-          const SizedBox(height: 14),
-          TextField(
-            controller: _positionController,
-            enabled: !isBusy,
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(
-              labelText: 'Vị trí ứng tuyển mong muốn (không bắt buộc)',
-              hintText: 'Ví dụ: Flutter Developer',
-              prefixIcon: const Icon(Icons.work_outline_rounded),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            ],
           ),
           const SizedBox(height: 14),
           SizedBox(
             width: double.infinity,
-            height: 46,
-            child: ElevatedButton.icon(
-              onPressed: (file == null || isBusy) ? null : _submit,
-              icon: const Icon(Icons.auto_awesome_rounded),
+            height: 48,
+            child: FilledButton.icon(
+              onPressed: isBusy ? null : () => _submit(state),
+              icon: isBusy
+                  ? const SizedBox.square(
+                      dimension: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(Icons.auto_awesome_rounded),
               label: Text(
                 isBusy
-                    ? 'Đang tải lên & phân tích...'
-                    : 'Tải lên & chấm điểm CV',
+                    ? 'Analyzing…'
+                    : _isPaid
+                    ? 'Match with job (1 credit)'
+                    : 'Review my CV',
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _isPaid
+                ? 'A failed AI run is refunded automatically. Re-running the same CV on the same job is free.'
+                : 'Free runs reset every day.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const Divider(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton.icon(
+                onPressed: () => CreditSheets.showTopup(context),
+                icon: const Icon(Icons.toll_rounded, size: 18),
+                label: const Text('Top up credits'),
               ),
+              TextButton(
+                onPressed: () => CreditSheets.showHistory(context),
+                child: const Text('History'),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 4),
+            child: Text(
+              'AI only assists. Your CV is processed privately and is never shared with recruiters by this tool.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 11.5, color: AppColors.textMuted),
             ),
           ),
         ],
@@ -190,38 +321,33 @@ class _ResumeScreenState extends State<ResumeScreen> {
   }
 }
 
-class _QuotaChip extends StatelessWidget {
-  const _QuotaChip({required this.quota});
+class _Stat extends StatelessWidget {
+  const _Stat({required this.label, required this.value});
 
-  final CvReviewQuota? quota;
+  final String label;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
-    final text = quota == null
-        ? 'Mỗi ngày bạn có một số lượt chấm CV miễn phí'
-        : 'Còn ${quota!.remaining}/${quota!.maxDaily} lượt chấm CV hôm nay';
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.accentBlueLight,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.bolt_rounded, size: 18, color: AppColors.accentBlue),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                fontSize: 12.5,
-                fontWeight: FontWeight.w600,
-                color: AppColors.accentBlue,
-              ),
-            ),
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 11.5,
+            color: AppColors.textSecondary,
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -234,6 +360,7 @@ class _ErrorBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.badgeUrgentLight,
@@ -261,245 +388,6 @@ class _ErrorBanner extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _AnalyzingIndicator extends StatelessWidget {
-  const _AnalyzingIndicator();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        CircularProgressIndicator(color: AppColors.primary),
-        SizedBox(height: 12),
-        Text(
-          'AI đang đọc và phân tích CV của bạn...',
-          style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
-        ),
-      ],
-    );
-  }
-}
-
-class _ReviewResult extends StatelessWidget {
-  const _ReviewResult({required this.review});
-
-  final CvReview review;
-
-  static Color _scoreColor(int score) {
-    if (score >= 80) return AppColors.success;
-    if (score >= 60) return AppColors.star;
-    return AppColors.error;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final color = _scoreColor(review.overallScore);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 84,
-                height: 84,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox.expand(
-                      child: CircularProgressIndicator(
-                        value: review.overallScore.clamp(0, 100) / 100,
-                        strokeWidth: 8,
-                        color: color,
-                        backgroundColor: AppColors.chipBackground,
-                      ),
-                    ),
-                    Text(
-                      '${review.overallScore}',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w900,
-                        color: color,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Điểm tổng quan',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      review.summary,
-                      style: const TextStyle(
-                        fontSize: 12.5,
-                        color: AppColors.textSecondary,
-                        height: 1.4,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (review.fromCache) ...[
-          const SizedBox(height: 8),
-          const Text(
-            'CV không thay đổi nên dùng lại kết quả đã lưu, không trừ lượt.',
-            style: TextStyle(fontSize: 11.5, color: AppColors.textMuted),
-          ),
-        ],
-        if (review.comments.isNotEmpty) ...[
-          const SizedBox(height: 16),
-          const Text(
-            'Góp ý chi tiết',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          for (final comment in review.comments) _CommentCard(comment: comment),
-        ],
-      ],
-    );
-  }
-}
-
-class _CommentCard extends StatelessWidget {
-  const _CommentCard({required this.comment});
-
-  final CvReviewComment comment;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-            decoration: BoxDecoration(
-              color: AppColors.accentOrangeLight,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              comment.section,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: AppColors.accentOrange,
-              ),
-            ),
-          ),
-          if (comment.quote.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: AppColors.background,
-                borderRadius: BorderRadius.circular(8),
-                border: const Border(
-                  left: BorderSide(color: AppColors.textMuted, width: 3),
-                ),
-              ),
-              child: Text(
-                '“${comment.quote}”',
-                style: const TextStyle(
-                  fontSize: 12.5,
-                  fontStyle: FontStyle.italic,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ),
-          ],
-          const SizedBox(height: 8),
-          _LabeledLine(
-            icon: Icons.warning_amber_rounded,
-            color: AppColors.error,
-            label: 'Vấn đề',
-            text: comment.problem,
-          ),
-          const SizedBox(height: 6),
-          _LabeledLine(
-            icon: Icons.lightbulb_outline_rounded,
-            color: AppColors.primaryDark,
-            label: 'Gợi ý sửa',
-            text: comment.fix,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LabeledLine extends StatelessWidget {
-  const _LabeledLine({
-    required this.icon,
-    required this.color,
-    required this.label,
-    required this.text,
-  });
-
-  final IconData icon;
-  final Color color;
-  final String label;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, size: 16, color: color),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: '$label: ',
-                  style: TextStyle(fontWeight: FontWeight.bold, color: color),
-                ),
-                TextSpan(
-                  text: text,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                ),
-              ],
-            ),
-            style: const TextStyle(fontSize: 12.5, height: 1.4),
-          ),
-        ),
-      ],
     );
   }
 }

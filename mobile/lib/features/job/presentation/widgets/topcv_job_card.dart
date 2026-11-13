@@ -339,7 +339,7 @@ class TopCvJobCard extends StatelessWidget {
                       Icon(Icons.bolt, size: 12, color: AppColors.badgeUrgent),
                       SizedBox(width: 2),
                       Text(
-                        'Tuyển gấp',
+                        'Urgent',
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -410,7 +410,7 @@ class TopCvJobCard extends StatelessWidget {
                     Icon(Icons.error_outline, size: 13, color: AppColors.error),
                     SizedBox(width: 4),
                     Text(
-                      'Đã hết hạn ứng tuyển',
+                      'Application closed',
                       style: TextStyle(
                         fontSize: 11,
                         color: AppColors.error,
@@ -429,7 +429,7 @@ class TopCvJobCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      'Hạn nộp: ${Formatters.date(deadline)}',
+                      'Deadline: ${Formatters.date(deadline)}',
                       style: const TextStyle(
                         fontSize: 11,
                         color: AppColors.textSecondary,
@@ -443,7 +443,7 @@ class TopCvJobCard extends StatelessWidget {
                     Icon(Icons.bolt, size: 13, color: AppColors.primary),
                     SizedBox(width: 4),
                     Text(
-                      'Cập nhật hôm nay',
+                      'Updated today',
                       style: TextStyle(
                         fontSize: 11,
                         color: AppColors.primary,
@@ -485,7 +485,7 @@ class TopCvJobCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Ứng tuyển ngay',
+                        'Apply now',
                         style: TextStyle(
                           fontSize: 11.5,
                           fontWeight: FontWeight.bold,

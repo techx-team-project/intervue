@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Ghi log chuyển trạng thái của Bloc/Cubit (chỉ ở chế độ debug).
+/// Logs Bloc/Cubit state transitions (debug mode only).
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
 

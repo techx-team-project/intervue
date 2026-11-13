@@ -24,7 +24,7 @@ class BlogDetailScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          'Bài viết',
+          'Article',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -44,14 +44,14 @@ class BlogDetailScreen extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(state.errorMessage ?? 'Không tải được bài viết'),
+                    Text(state.errorMessage ?? 'Unable to load the article'),
                     const SizedBox(height: 12),
                     OutlinedButton(
                       onPressed: () => context.read<BlogDetailCubit>().load(
                         categorySlug,
                         slug,
                       ),
-                      child: const Text('Thử lại'),
+                      child: const Text('Try again'),
                     ),
                   ],
                 ),
@@ -122,8 +122,8 @@ class _Article extends StatelessWidget {
         Text(
           [
             if (post.authorName != null) post.authorName!,
-            '${post.readTimeMinutes} phút đọc',
-            '${Formatters.compactCount(post.viewsCount)} lượt xem',
+            '${post.readTimeMinutes} min read',
+            '${Formatters.compactCount(post.viewsCount)} views',
           ].join(' • '),
           style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
         ),

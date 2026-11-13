@@ -25,6 +25,13 @@ import 'package:intervue_flutter/features/job/presentation/controllers/job_list_
 import 'package:intervue_flutter/features/job/presentation/views/job_feed_screen.dart';
 import 'package:intervue_flutter/features/job_alert/presentation/controllers/job_alert_list_cubit.dart';
 import 'package:intervue_flutter/features/job_alert/presentation/views/job_alert_screen.dart';
+import 'package:intervue_flutter/features/mock_interview/data/models/mock_interview_detail.dart';
+import 'package:intervue_flutter/features/mock_interview/presentation/controllers/mock_interview_history_cubit.dart';
+import 'package:intervue_flutter/features/mock_interview/presentation/controllers/mock_interview_room_cubit.dart';
+import 'package:intervue_flutter/features/mock_interview/presentation/controllers/mock_interview_setup_cubit.dart';
+import 'package:intervue_flutter/features/mock_interview/presentation/views/mock_interview_history_screen.dart';
+import 'package:intervue_flutter/features/mock_interview/presentation/views/mock_interview_room_screen.dart';
+import 'package:intervue_flutter/features/mock_interview/presentation/views/mock_interview_setup_screen.dart';
 import 'package:intervue_flutter/features/notification/presentation/controllers/notifications_cubit.dart';
 import 'package:intervue_flutter/features/profile/presentation/controllers/candidate_profile_cubit.dart';
 import 'package:intervue_flutter/features/profile/presentation/controllers/profile_cubit.dart';
@@ -121,7 +128,7 @@ abstract final class AppRouter {
         GoRoute(
           path: RouteNames.resume,
           builder: (_, _) => BlocProvider(
-            create: (_) => getIt<ResumeReviewCubit>()..loadQuota(),
+            create: (_) => getIt<ResumeReviewCubit>()..loadInitial(),
             child: const ResumeScreen(),
           ),
         ),
@@ -138,6 +145,33 @@ abstract final class AppRouter {
             create: (_) => getIt<JobAlertListCubit>(),
             child: const JobAlertScreen(),
           ),
+        ),
+        GoRoute(
+          path: RouteNames.mockInterviews,
+          builder: (_, _) => BlocProvider(
+            create: (_) => getIt<MockInterviewHistoryCubit>(),
+            child: const MockInterviewHistoryScreen(),
+          ),
+        ),
+        GoRoute(
+          path: RouteNames.mockInterviewNew,
+          builder: (_, _) => BlocProvider(
+            create: (_) => getIt<MockInterviewSetupCubit>(),
+            child: const MockInterviewSetupScreen(),
+          ),
+        ),
+        GoRoute(
+          path: '${RouteNames.mockInterviews}/:id',
+          builder: (_, state) {
+            final id = int.tryParse(state.pathParameters['id'] ?? '');
+            final extra = state.extra;
+            return BlocProvider(
+              create: (_) => getIt<MockInterviewRoomCubit>(
+                param1: extra is MockInterviewDetail ? extra : null,
+              ),
+              child: MockInterviewRoomScreen(sessionId: id ?? 0),
+            );
+          },
         ),
         GoRoute(
           path: RouteNames.security,

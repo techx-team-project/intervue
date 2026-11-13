@@ -64,7 +64,7 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
         ..hideCurrentSnackBar()
         ..showSnackBar(
           const SnackBar(
-            content: Text('Vui lòng đăng nhập để nộp hồ sơ ứng tuyển'),
+            content: Text('Please sign in to apply'),
             backgroundColor: AppColors.accentOrange,
           ),
         );
@@ -78,7 +78,7 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
         ..hideCurrentSnackBar()
         ..showSnackBar(
           const SnackBar(
-            content: Text('Mã việc làm không hợp lệ'),
+            content: Text('Invalid job id'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -132,7 +132,7 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Chi tiết việc làm',
+                      'Job details',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -216,15 +216,15 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
                               _buildInfoTile(
                                 icon: Icons.payments_outlined,
                                 iconColor: AppColors.primary,
-                                label: 'Mức lương',
+                                label: 'Salary',
                                 value: job.displaySalary,
                                 isPrimaryValue: true,
                               ),
                               _buildInfoTile(
                                 icon: Icons.location_on_outlined,
                                 iconColor: AppColors.accentBlue,
-                                label: 'Địa điểm',
-                                value: job.location ?? 'Thỏa thuận',
+                                label: 'Location',
+                                value: job.location ?? 'Negotiable',
                               ),
                             ],
                           ),
@@ -234,16 +234,16 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
                               _buildInfoTile(
                                 icon: Icons.work_outline,
                                 iconColor: AppColors.accentOrange,
-                                label: 'Kinh nghiệm',
-                                value: job.experience ?? 'Không yêu cầu',
+                                label: 'Experience',
+                                value: job.experience ?? 'Not required',
                               ),
                               _buildInfoTile(
                                 icon: Icons.schedule,
                                 iconColor: AppColors.textSecondary,
-                                label: 'Hạn nộp hồ sơ',
+                                label: 'Application deadline',
                                 value: deadline != null
                                     ? Formatters.date(deadline)
-                                    : 'Tuyển liên tục',
+                                    : 'Open until filled',
                               ),
                             ],
                           ),
@@ -256,7 +256,7 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
                     // Tags
                     if (job.tags.isNotEmpty) ...[
                       const Text(
-                        'Kỹ năng & Chuyên môn',
+                        'Skills & Expertise',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -298,46 +298,46 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
 
                     // Description Section
                     _buildSectionCard(
-                      title: 'Mô tả công việc',
+                      title: 'Job description',
                       icon: Icons.description_outlined,
                       content:
                           job.description ??
-                          '• Tham gia phát triển và duy trì hệ thống ứng dụng đáp ứng yêu cầu kinh doanh.\n'
-                              '• Phối hợp chặt chẽ cùng các thành viên trong nhóm Product, Design, QA để tối ưu trải nghiệm người dùng.\n'
-                              '• Nghiên cứu và áp dụng các công nghệ mới nhằm nâng cao hiệu suất và chất lượng sản phẩm.',
+                          '• Take part in developing and maintaining application systems that meet business needs.\n'
+                              '• Work closely with Product, Design and QA team members to optimize the user experience.\n'
+                              '• Research and apply new technologies to improve product performance and quality.',
                     ),
 
                     const SizedBox(height: 14),
 
                     // Requirements Section
                     _buildSectionCard(
-                      title: 'Yêu cầu ứng viên',
+                      title: 'Requirements',
                       icon: Icons.checklist_outlined,
                       content:
                           job.requirements ??
-                          '• Nắm vững kiến thức nền tảng và có kinh nghiệm thực tế phù hợp với vị trí ứng tuyển.\n'
-                              '• Tư duy logic tốt, khả năng làm việc nhóm và giao tiếp hiệu quả.\n'
-                              '• Tinh thần trách nhiệm cao, chủ động trong công việc và sẵn sàng học hỏi cái mới.',
+                          '• Solid fundamentals and practical experience relevant to the position.\n'
+                              '• Strong logical thinking, teamwork and communication skills.\n'
+                              '• High sense of responsibility, proactive and eager to learn.',
                     ),
 
                     const SizedBox(height: 14),
 
                     // Benefits Section
                     _buildSectionCard(
-                      title: 'Quyền lợi được hưởng',
+                      title: 'Benefits',
                       icon: Icons.card_giftcard_outlined,
                       content:
                           job.benefits ??
-                          '• Mức thu nhập cạnh tranh, xem xét tăng lương định kỳ 1-2 lần/năm.\n'
-                              '• Thưởng tháng 13, thưởng hiệu quả kinh doanh và các dịp lễ tết.\n'
-                              '• Đầy đủ chế độ BHXH, BHYT theo quy định pháp luật cùng gói bảo hiểm sức khỏe cao cấp.\n'
-                              '• Du lịch thường niên, teambuilding, môi trường làm việc cởi mở, sáng tạo.',
+                          '• Competitive income with salary reviews 1-2 times a year.\n'
+                              '• 13th-month bonus, performance bonus and holiday bonuses.\n'
+                              '• Full social and health insurance as required by law, plus a premium health insurance package.\n'
+                              '• Annual trips, team building and an open, creative work environment.',
                     ),
 
                     OutlinedButton.icon(
                       onPressed: () => CoverLetterSheet.show(context, _job),
                       icon: const Icon(Icons.auto_awesome_rounded),
-                      label: const Text('Viết thư xin việc bằng AI'),
+                      label: const Text('Write a cover letter with AI'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.primary,
                         side: const BorderSide(color: AppColors.primary),
@@ -355,7 +355,7 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
                         context.push(
                           RouteNames.aiChat,
                           extra: ChatContext(
-                            pageType: 'job_detail',
+                            pageType: 'JOB_DETAIL',
                             entityId: int.tryParse(_job.id),
                             jobTitle: _job.title,
                             companyName: _job.companyName,
@@ -363,7 +363,9 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
                         );
                       },
                       icon: const Icon(Icons.smart_toy_outlined),
-                      label: const Text('Hỏi InterVue Bot về việc này'),
+                      label: const Text(
+                        'Ask the InterVue assistant about this job',
+                      ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: const Color(0xFF0284C7),
                         side: const BorderSide(color: Color(0xFF0284C7)),
@@ -433,7 +435,7 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
                           ),
                           onPressed: () => _onApplyPressed(context),
                           child: const Text(
-                            'Ứng tuyển ngay',
+                            'Apply now',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 15,
@@ -472,7 +474,7 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Đánh giá & tối ưu CV bằng AI',
+                  'Review & optimize your CV with AI',
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.bold,
@@ -482,8 +484,8 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
                 const SizedBox(height: 2),
                 Text(
                   isAuthenticated
-                      ? 'Kiểm tra điểm mạnh, lỗ hổng kỹ năng trước khi nộp đơn'
-                      : 'Đăng nhập để sử dụng AI chấm điểm và gợi ý sửa CV',
+                      ? 'Check strengths and skill gaps before applying'
+                      : 'Sign in to use AI scoring and CV improvement tips',
                   style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -507,7 +509,7 @@ class _TopCvJobDetailSheetState extends State<TopCvJobDetailSheet> {
               ),
             ),
             child: Text(
-              isAuthenticated ? 'Chấm điểm CV' : 'Đăng nhập',
+              isAuthenticated ? 'CV Scoring' : 'Sign in',
               style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
             ),
           ),

@@ -18,17 +18,17 @@ abstract final class Formatters {
     return '${text.endsWith('.0') ? text.substring(0, text.length - 2) : text}K';
   }
 
-  /// Khoảng thời gian tính từ [value] đến hiện tại, ví dụ "5 phút trước".
+  /// Time elapsed from [value] until now, for example "5 minutes ago".
   static String timeAgo(DateTime value) {
     final diff = DateTime.now().difference(value);
-    if (diff.inMinutes < 1) return 'Vừa xong';
-    if (diff.inHours < 1) return '${diff.inMinutes} phút trước';
-    if (diff.inDays < 1) return '${diff.inHours} giờ trước';
-    if (diff.inDays < 7) return '${diff.inDays} ngày trước';
+    if (diff.inMinutes < 1) return 'Just now';
+    if (diff.inHours < 1) return '${diff.inMinutes} minutes ago';
+    if (diff.inDays < 1) return '${diff.inHours} hours ago';
+    if (diff.inDays < 7) return '${diff.inDays} days ago';
     return date(value);
   }
 
-  /// Số triệu gọn: 15.0 -> "15", 12.5 -> "12.5"
+  /// Compact millions: 15.0 -> "15", 12.5 -> "12.5"
   static String millions(double value) =>
       value == value.roundToDouble() ? value.toInt().toString() : '$value';
 }

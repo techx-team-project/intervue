@@ -40,7 +40,7 @@ void main() {
     final jobs = await repository.fetchJobs(page: 1, size: 5);
 
     expect(jobs.single.title, 'Flutter Dev');
-    expect(jobs.single.displaySalary, 'Tới 30 triệu');
+    expect(jobs.single.displaySalary, 'Up to 30M VND');
     verify(
       () => remote.getJobs(page: 1, size: 5, filter: const JobFilterParams()),
     ).called(1);

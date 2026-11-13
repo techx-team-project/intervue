@@ -9,27 +9,27 @@ class TopCvServiceGrid extends StatelessWidget {
 
   static const List<_ServiceItem> _services = [
     _ServiceItem(
-      title: 'Tạo CV',
+      title: 'Create CV',
       icon: Icons.description_outlined,
       iconColor: Color(0xFF00B14F),
       bgColor: Color(0xFFECFDF5),
     ),
     _ServiceItem(
-      title: 'AI Chấm CV',
+      title: 'AI CV Scoring',
       icon: Icons.document_scanner_outlined,
       iconColor: Color(0xFF0284C7),
       bgColor: Color(0xFFE0F2FE),
       isAi: true,
     ),
     _ServiceItem(
-      title: 'AI Phỏng Vấn',
+      title: 'AI Interview',
       icon: Icons.smart_toy_outlined,
       iconColor: Color(0xFF8B5CF6),
       bgColor: Color(0xFFF3E8FF),
       isAi: true,
     ),
     _ServiceItem(
-      title: 'Việc làm IT',
+      title: 'IT Jobs',
       icon: Icons.code_rounded,
       iconColor: Color(0xFF0F172A),
       bgColor: Color(0xFFF1F5F9),
@@ -41,7 +41,7 @@ class TopCvServiceGrid extends StatelessWidget {
       bgColor: Color(0xFFECFDF5),
     ),
     _ServiceItem(
-      title: 'Top Công Ty',
+      title: 'Top Companies',
       icon: Icons.apartment_rounded,
       iconColor: Color(0xFFD97706),
       bgColor: Color(0xFFFEF3C7),
@@ -53,7 +53,7 @@ class TopCvServiceGrid extends StatelessWidget {
       bgColor: Color(0xFFFAF5FF),
     ),
     _ServiceItem(
-      title: 'Bật tìm việc',
+      title: 'Open to Work',
       icon: Icons.bolt_rounded,
       iconColor: Color(0xFFE11D48),
       bgColor: Color(0xFFFFF1F2),
@@ -88,7 +88,7 @@ class TopCvServiceGrid extends StatelessWidget {
                     SizedBox(width: 6),
                     Expanded(
                       child: Text(
-                        'Tiện ích thông minh InterVue',
+                        'InterVue smart tools',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 15,
@@ -102,9 +102,9 @@ class TopCvServiceGrid extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               InkWell(
-                onTap: () => onServiceTap('Tất cả tiện ích'),
+                onTap: () => onServiceTap('All tools'),
                 child: const Text(
-                  'Xem tất cả',
+                  'View all',
                   style: TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w600,

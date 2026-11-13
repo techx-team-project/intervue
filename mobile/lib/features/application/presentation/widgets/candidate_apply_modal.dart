@@ -79,7 +79,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
       messenger.showSnackBar(
         const SnackBar(
           content: Text(
-            'Bạn đã đạt giới hạn 3 CV lưu trữ. Vui lòng chọn một trong các CV đã có.',
+            'You have reached the limit of 3 stored CVs. Please choose one of your existing CVs.',
           ),
           backgroundColor: AppColors.accentOrange,
         ),
@@ -99,7 +99,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
       if (!FileHelpers.isValidCv(path: file.name, sizeBytes: file.size)) {
         messenger.showSnackBar(
           const SnackBar(
-            content: Text('File phải là định dạng PDF và dung lượng dưới 5MB'),
+            content: Text('The file must be a PDF under 5MB'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -118,7 +118,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
       messenger.showSnackBar(
         SnackBar(
           content: Text(
-            'Đã tải lên "${newCv.fileName}" và chọn làm CV ứng tuyển',
+            'Uploaded "${newCv.fileName}" and selected it as your application CV',
           ),
           backgroundColor: AppColors.primary,
         ),
@@ -128,7 +128,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
       setState(() => _isUploadingCv = false);
       messenger.showSnackBar(
         const SnackBar(
-          content: Text('Không thể tải file lên. Vui lòng thử lại.'),
+          content: Text('Unable to upload the file. Please try again.'),
           backgroundColor: AppColors.error,
         ),
       );
@@ -140,7 +140,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
     if (job == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Chức năng AI cần đầy đủ thông tin tin tuyển dụng'),
+          content: Text('The AI feature needs the complete job information'),
         ),
       );
       return;
@@ -233,7 +233,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Ứng tuyển: ${widget.jobTitle}',
+                      'Apply: ${widget.jobTitle}',
                       style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
@@ -288,7 +288,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Thử lại'),
+              child: const Text('Try again'),
             ),
           ],
         ),
@@ -334,8 +334,8 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
           const SizedBox(height: 8),
           Text(
             isDraft
-                ? 'Thông tin ứng tuyển của bạn đã được lưu nháp. Bạn có thể quay lại hoàn tất bất cứ lúc nào.'
-                : 'Nhà tuyển dụng đã nhận được hồ sơ của bạn và sẽ liên hệ sớm nếu hồ sơ phù hợp.',
+                ? 'Your application has been saved as a draft. You can come back to finish it anytime.'
+                : 'The recruiter has received your application and will contact you soon if it is a match.',
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 14,
@@ -360,7 +360,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                 ),
               ),
               child: const Text(
-                'Xem danh sách việc đã ứng tuyển',
+                'View applied jobs',
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
               ),
             ),
@@ -369,7 +369,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text(
-              'Đóng',
+              'Close',
               style: TextStyle(color: AppColors.textSecondary),
             ),
           ),
@@ -452,13 +452,13 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
     dynamic existingApp,
   ) {
     final statusLabel = switch (existingApp.status as String) {
-      'APPLIED' => 'Đã nộp đơn ứng tuyển',
-      'VIEWED' => 'Nhà tuyển dụng đã xem hồ sơ',
-      'IN_REVIEW' => 'Đang đánh giá hồ sơ',
-      'INTERVIEW' => 'Đã gửi lời mời phỏng vấn',
-      'OFFER' => 'Đã gửi đề nghị nhận việc',
-      'HIRED' => 'Đã trúng tuyển',
-      'REJECTED' => 'Hồ sơ chưa phù hợp',
+      'APPLIED' => 'Application submitted',
+      'VIEWED' => 'Viewed by the recruiter',
+      'IN_REVIEW' => 'Under evaluation',
+      'INTERVIEW' => 'Interview invitation sent',
+      'OFFER' => 'Offer sent',
+      'HIRED' => 'Hired',
+      'REJECTED' => 'Application not a match',
       _ => existingApp.status as String,
     };
 
@@ -481,7 +481,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
           ),
           const SizedBox(height: 20),
           const Text(
-            'Bạn đã nộp hồ sơ vị trí này',
+            'You have applied for this position',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -506,7 +506,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
           ),
           const SizedBox(height: 12),
           const Text(
-            'Hồ sơ của bạn hiện đang được quản lý trên hệ thống. Bạn có thể theo dõi tiến trình trong phần Lịch sử ứng tuyển.',
+            'Your application is being managed in the system. You can track its progress in the application history.',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: AppColors.textSecondary,
@@ -533,7 +533,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                 ),
               ),
               child: const Text(
-                'Xem chi tiết hồ sơ đã nộp',
+                'View submitted application',
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
@@ -561,7 +561,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text('Rút hồ sơ ứng tuyển'),
+                  : const Text('Withdraw application'),
             ),
         ],
       ),
@@ -593,7 +593,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
           SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Bạn đã từng rút hồ sơ cho công việc này. Bạn có thể chọn CV bên dưới để nộp lại.',
+              'You previously withdrew your application for this job. You can choose a CV below to reapply.',
               style: TextStyle(fontSize: 13, color: AppColors.textPrimary),
             ),
           ),
@@ -610,7 +610,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
-              'Chọn CV để ứng tuyển *',
+              'Choose a CV to apply *',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -633,7 +633,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                       color: AppColors.primary,
                     ),
               label: Text(
-                _isUploadingCv ? 'Đang tải...' : 'Tải CV mới',
+                _isUploadingCv ? 'Uploading...' : 'Upload new CV',
                 style: const TextStyle(
                   fontSize: 13,
                   color: AppColors.primary,
@@ -661,7 +661,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Bạn chưa có CV nào trên hệ thống',
+                  'You do not have any CV in the system yet',
                   style: TextStyle(
                     fontSize: 13,
                     color: AppColors.textSecondary,
@@ -673,7 +673,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                       ? null
                       : () => _handleUploadNewCv(context),
                   icon: const Icon(Icons.upload_file, size: 16),
-                  label: const Text('Tải lên CV dạng PDF'),
+                  label: const Text('Upload a PDF CV'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
@@ -774,7 +774,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: const Text(
-                                    'Mặc định',
+                                    'Default',
                                     style: TextStyle(
                                       fontSize: 10,
                                       color: AppColors.primary,
@@ -806,7 +806,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Câu hỏi từ nhà tuyển dụng',
+          'Questions from the recruiter',
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
@@ -815,7 +815,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
         ),
         const SizedBox(height: 4),
         const Text(
-          'Vui lòng trả lời để nhà tuyển dụng hiểu rõ hơn về bạn',
+          'Please answer so the recruiter can get to know you better',
           style: TextStyle(fontSize: 12, color: AppColors.textMuted),
         ),
         const SizedBox(height: 12),
@@ -904,7 +904,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                     maxLines: 2,
                     style: const TextStyle(fontSize: 13),
                     decoration: InputDecoration(
-                      hintText: 'Nhập câu trả lời...',
+                      hintText: 'Enter your answer...',
                       hintStyle: const TextStyle(
                         fontSize: 13,
                         color: AppColors.textMuted,
@@ -937,7 +937,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
-              'Thư giới thiệu (Cover Letter)',
+              'Cover letter',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -953,7 +953,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                   color: AppColors.accentPurple,
                 ),
                 label: const Text(
-                  'Tạo bằng AI',
+                  'Generate with AI',
                   style: TextStyle(
                     fontSize: 12,
                     color: AppColors.accentPurple,
@@ -970,7 +970,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
           maxLength: 5000,
           style: const TextStyle(fontSize: 13),
           decoration: InputDecoration(
-            hintText: 'Giới thiệu ngắn gọn kinh nghiệm, kỹ năng và lý do bạn muốn ứng tuyển vị trí này...',
+            hintText: 'Briefly introduce your experience, skills and why you want this position...',
             hintStyle: const TextStyle(
               fontSize: 13,
               color: AppColors.textMuted,
@@ -1034,7 +1034,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Text(
-                          'Lưu nháp',
+                          'Save draft',
                           style: TextStyle(
                             color: AppColors.textSecondary,
                             fontWeight: FontWeight.w600,
@@ -1079,7 +1079,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
                         ),
                       )
                     : Text(
-                        isReapplying ? 'Nộp lại hồ sơ' : 'Nộp hồ sơ ngay',
+                        isReapplying ? 'Reapply' : 'Apply now',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
@@ -1099,17 +1099,17 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
       builder: (dialogCtx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text(
-          'Rút hồ sơ ứng tuyển?',
+          'Withdraw application?',
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
         ),
         content: const Text(
-          'Bạn có chắc chắn muốn rút hồ sơ cho vị trí này không? Nhà tuyển dụng sẽ không còn thấy hồ sơ của bạn.',
+          'Are you sure you want to withdraw your application for this position? The recruiter will no longer see it.',
           style: TextStyle(fontSize: 14),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogCtx).pop(false),
-            child: const Text('Không'),
+            child: const Text('No'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -1120,7 +1120,7 @@ class _CandidateApplyModalState extends State<CandidateApplyModal> {
               backgroundColor: AppColors.error,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Rút hồ sơ'),
+            child: const Text('Withdraw'),
           ),
         ],
       ),

@@ -24,38 +24,38 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
   final _keywordController = TextEditingController();
   final _salaryMinController = TextEditingController(text: '15');
 
-  String _selectedCity = 'Toàn quốc';
+  String _selectedCity = 'Nationwide';
   String _selectedLevel = 'ALL';
   String _selectedWorkMode = 'ALL';
   String _selectedFrequency = 'DAILY';
 
   static const List<String> _cities = [
-    'Toàn quốc',
-    'Hà Nội',
-    'TP. Hồ Chí Minh',
-    'Đà Nẵng',
-    'Bình Dương',
-    'Hải Phòng',
-    'Cần Thơ',
-    'Làm từ xa (Remote)',
+    'Nationwide',
+    'Hanoi',
+    'Ho Chi Minh City',
+    'Da Nang',
+    'Binh Duong',
+    'Hai Phong',
+    'Can Tho',
+    'Remote',
   ];
 
   static const Map<String, String> _levels = {
-    'ALL': 'Tất cả cấp bậc',
-    'INTERN': 'Thực tập sinh (Intern)',
+    'ALL': 'All levels',
+    'INTERN': 'Intern',
     'FRESHER': 'Fresher',
     'JUNIOR': 'Junior',
     'MIDDLE': 'Middle',
     'SENIOR': 'Senior',
-    'LEAD': 'Trưởng nhóm (Lead)',
-    'MANAGER': 'Quản lý (Manager)',
+    'LEAD': 'Lead',
+    'MANAGER': 'Manager',
   };
 
   static const Map<String, String> _workModes = {
-    'ALL': 'Tất cả hình thức',
-    'ONSITE': 'Tại văn phòng (Onsite)',
-    'REMOTE': 'Làm từ xa (Remote)',
-    'HYBRID': 'Linh hoạt (Hybrid)',
+    'ALL': 'All work modes',
+    'ONSITE': 'Onsite',
+    'REMOTE': 'Remote',
+    'HYBRID': 'Hybrid',
   };
 
   @override
@@ -77,7 +77,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
       keyword: _keywordController.text.trim().isNotEmpty
           ? _keywordController.text.trim()
           : null,
-      city: _selectedCity != 'Toàn quốc' ? _selectedCity : null,
+      city: _selectedCity != 'Nationwide' ? _selectedCity : null,
       careerLevel: _selectedLevel != 'ALL' ? _selectedLevel : null,
       workMode: _selectedWorkMode != 'ALL' ? _selectedWorkMode : null,
       salaryMin: salaryMin,
@@ -139,7 +139,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Tạo thông báo việc làm',
+                          'Create job alert',
                           style: TextStyle(
                             fontSize: 16.5,
                             fontWeight: FontWeight.bold,
@@ -148,7 +148,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
                         ),
                         SizedBox(height: 2),
                         Text(
-                          'Nhận việc làm phù hợp nhất ngay khi có tin mới',
+                          'Get the best matching jobs as soon as they are posted',
                           style: TextStyle(
                             fontSize: 11.5,
                             color: AppColors.textSecondary,
@@ -177,7 +177,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
                     children: [
                       // Alert Title
                       const Text(
-                        'Tên thông báo *',
+                        'Alert name *',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -188,7 +188,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
                       TextFormField(
                         controller: _titleController,
                         decoration: InputDecoration(
-                          hintText: 'VD: Flutter Developer Hà Nội',
+                          hintText: 'e.g. Flutter Developer in Hanoi',
                           prefixIcon: const Icon(
                             Icons.badge_outlined,
                             size: 20,
@@ -202,14 +202,14 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
                           ),
                         ),
                         validator: (v) => v == null || v.trim().isEmpty
-                            ? 'Vui lòng nhập tên thông báo'
+                            ? 'Please enter an alert name'
                             : null,
                       ),
                       const SizedBox(height: 14),
 
                       // Keyword
                       const Text(
-                        'Từ khóa chuyên môn',
+                        'Keywords',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -235,7 +235,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
 
                       // City Dropdown
                       const Text(
-                        'Khu vực làm việc',
+                        'Work area',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -281,7 +281,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'Cấp bậc',
+                                  'Level',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
@@ -326,7 +326,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'Hình thức',
+                                  'Work mode',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
@@ -371,7 +371,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
 
                       // Salary Min
                       const Text(
-                        'Mức lương tối thiểu (triệu VND / tháng)',
+                        'Minimum salary (million VND / month)',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -383,7 +383,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
                         controller: _salaryMinController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                          hintText: 'VD: 15 (tương đương 15.000.000 đ)',
+                          hintText: 'e.g. 15 (equals 15,000,000 VND)',
                           prefixIcon: const Icon(Icons.attach_money, size: 20),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -398,7 +398,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
 
                       // Frequency Selector
                       const Text(
-                        'Tần suất nhận thông báo',
+                        'Alert frequency',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -408,19 +408,15 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          _buildFrequencyChip(
-                            'DAILY',
-                            'Hàng ngày',
-                            Icons.today,
-                          ),
+                          _buildFrequencyChip('DAILY', 'Daily', Icons.today),
                           const SizedBox(width: 8),
                           _buildFrequencyChip(
                             'WEEKLY',
-                            'Hàng tuần',
+                            'Weekly',
                             Icons.date_range,
                           ),
                           const SizedBox(width: 8),
-                          _buildFrequencyChip('INSTANT', 'Tức thì', Icons.bolt),
+                          _buildFrequencyChip('INSTANT', 'Instant', Icons.bolt),
                         ],
                       ),
                       const SizedBox(height: 24),
@@ -444,7 +440,7 @@ class _CreateJobAlertModalState extends State<CreateJobAlertModal> {
                             size: 20,
                           ),
                           label: const Text(
-                            'Lưu thông báo việc làm',
+                            'Save job alert',
                             style: TextStyle(
                               fontSize: 14.5,
                               fontWeight: FontWeight.bold,

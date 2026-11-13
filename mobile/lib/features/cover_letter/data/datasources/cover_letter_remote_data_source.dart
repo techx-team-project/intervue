@@ -28,7 +28,7 @@ class CoverLetterRemoteDataSource {
       },
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Dữ liệu thư xin việc không hợp lệ');
+      throw const ServerException('Invalid cover letter data');
     }
     return CoverLetterResult.fromJson(data);
   }

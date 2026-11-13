@@ -149,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(width: 6),
                     Text(
-                      'Trang chủ',
+                      'Home',
                       style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w600,
@@ -166,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
           InkWell(
             borderRadius: BorderRadius.circular(999),
             onTap: () =>
-                _showNotice('Tổng đài hỗ trợ ứng viên: 1900 068 889 (nhánh 2)'),
+                _showNotice('Candidate support hotline: 1900 068 889 (ext. 2)'),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
@@ -184,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(width: 6),
                   Text(
-                    'Hỗ trợ',
+                    'Support',
                     style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,
@@ -230,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Title
                 const Center(
                   child: Text(
-                    'Chào mừng bạn trở lại',
+                    'Welcome back',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -244,11 +244,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Social Logins (Google, Facebook, LinkedIn)
                 SocialAuthButtons(
                   onGooglePressed: () =>
-                      _showNotice('Đang kết nối tài khoản Google...'),
+                      _showNotice('Connecting your Google account...'),
                   onFacebookPressed: () =>
-                      _showNotice('Đang kết nối tài khoản Facebook...'),
+                      _showNotice('Connecting your Facebook account...'),
                   onLinkedInPressed: () =>
-                      _showNotice('Đang kết nối tài khoản LinkedIn...'),
+                      _showNotice('Connecting your LinkedIn account...'),
                 ),
                 const SizedBox(height: 20),
 
@@ -265,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: const Text(
-                        'Hoặc đăng nhập bằng email',
+                        'Or sign in with email',
                         style: TextStyle(
                           color: Color(0xFF94A3B8),
                           fontSize: 12,
@@ -296,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Color(0xFF1E293B),
                   ),
                   decoration: InputDecoration(
-                    hintText: 'Nhập email của bạn',
+                    hintText: 'Enter your email',
                     hintStyle: const TextStyle(
                       color: Color(0xFF94A3B8),
                       fontSize: 14,
@@ -338,7 +338,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: (value) =>
                       AppConstants.emailRegex.hasMatch(value?.trim() ?? '')
                       ? null
-                      : 'Email không hợp lệ',
+                      : 'Invalid email',
                 ),
                 const SizedBox(height: 16),
 
@@ -347,7 +347,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Mật khẩu',
+                      'Password',
                       style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w600,
@@ -356,10 +356,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     GestureDetector(
                       onTap: () => _showNotice(
-                        'Vui lòng liên hệ quản trị viên hoặc sử dụng tính năng trên web để đặt lại mật khẩu.',
+                        'Please contact an administrator or use the web version to reset your password.',
                       ),
                       child: const Text(
-                        'Quên mật khẩu?',
+                        'Forgot password?',
                         style: TextStyle(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w600,
@@ -380,7 +380,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Color(0xFF1E293B),
                   ),
                   decoration: InputDecoration(
-                    hintText: 'Nhập mật khẩu của bạn',
+                    hintText: 'Enter your password',
                     hintStyle: const TextStyle(
                       color: Color(0xFF94A3B8),
                       fontSize: 14,
@@ -436,7 +436,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: (value) =>
                       (value?.length ?? 0) >= AppConstants.minPasswordLength
                       ? null
-                      : 'Mật khẩu tối thiểu ${AppConstants.minPasswordLength} ký tự',
+                      : 'Password must be at least ${AppConstants.minPasswordLength} characters',
                 ),
                 const SizedBox(height: 22),
 
@@ -468,7 +468,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Đăng nhập',
+                                    'Sign in',
                                     style: TextStyle(
                                       fontSize: 14.5,
                                       fontWeight: FontWeight.bold,
@@ -495,7 +495,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     const Text(
-                      'Chưa có tài khoản? ',
+                      'Do not have an account? ',
                       style: TextStyle(
                         fontSize: 13.5,
                         color: Color(0xFF475569),
@@ -504,7 +504,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     GestureDetector(
                       onTap: () => context.go(RouteNames.register),
                       child: const Text(
-                        'Đăng ký ngay',
+                        'Sign up now',
                         style: TextStyle(
                           fontSize: 13.5,
                           fontWeight: FontWeight.bold,
@@ -523,7 +523,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: TextButton(
                     onPressed: () => context.go(RouteNames.jobs),
                     child: const Text(
-                      'Bỏ qua & Khám phá việc làm ngay',
+                      'Skip & explore jobs now',
                       style: TextStyle(
                         fontSize: 13,
                         color: Color(0xFF64748B),
@@ -555,7 +555,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       children: [
                         TextSpan(
-                          text: 'Gặp khó khăn khi tạo tài khoản? Vui lòng gọi ',
+                          text: 'Having trouble creating an account? Please call ',
                         ),
                         TextSpan(
                           text: '1900 068 889',
@@ -572,7 +572,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        TextSpan(text: ' (giờ hành chính).'),
+                        TextSpan(text: ' (office hours).'),
                       ],
                     ),
                   ),
@@ -605,7 +605,7 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(height: 12),
           const Center(
             child: Text(
-              'Xác thực 2 lớp (2FA)',
+              'Two-factor authentication (2FA)',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -615,7 +615,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Nhập mã OTP 6 chữ số từ ứng dụng xác thực hoặc mã dự phòng để hoàn tất đăng nhập.',
+            'Enter the 6-digit OTP from your authenticator app or a backup code to finish signing in.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,
@@ -642,7 +642,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 14),
           ],
           const Text(
-            'Mã xác thực',
+            'Verification code',
             style: TextStyle(
               fontSize: 13.5,
               fontWeight: FontWeight.w600,
@@ -662,7 +662,7 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Color(0xFF1E293B),
             ),
             decoration: InputDecoration(
-              hintText: 'Nhập mã OTP hoặc mã dự phòng',
+              hintText: 'Enter OTP or backup code',
               hintStyle: const TextStyle(
                 color: Color(0xFF94A3B8),
                 fontSize: 14,
@@ -703,7 +703,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             validator: (value) => (value?.trim().isEmpty ?? true)
-                ? 'Vui lòng nhập mã xác thực'
+                ? 'Please enter the verification code'
                 : null,
           ),
           const SizedBox(height: 18),
@@ -730,7 +730,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     )
                   : const Text(
-                      'Xác nhận đăng nhập',
+                      'Confirm sign in',
                       style: TextStyle(
                         fontSize: 14.5,
                         fontWeight: FontWeight.bold,
@@ -748,7 +748,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     context.read<LoginCubit>().cancelTwoFactor();
                   },
             child: const Text(
-              'Quay lại đăng nhập',
+              'Back to sign in',
               style: TextStyle(
                 fontSize: 13,
                 color: Color(0xFF64748B),

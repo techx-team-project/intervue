@@ -13,7 +13,7 @@ class ProfileRemoteDataSource {
   Future<UserModel> getCurrentUser() async {
     final data = await _client.get(ApiEndpoints.currentUser);
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Dữ liệu tài khoản không hợp lệ');
+      throw const ServerException('Invalid account data');
     }
     return UserModel.fromJson(data);
   }
@@ -21,7 +21,7 @@ class ProfileRemoteDataSource {
   Future<CandidateProfileModel> getCandidateProfile() async {
     final data = await _client.get(ApiEndpoints.candidateProfile);
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Dữ liệu hồ sơ ứng viên không hợp lệ');
+      throw const ServerException('Invalid candidate profile data');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -31,7 +31,7 @@ class ProfileRemoteDataSource {
   ) async {
     final data = await _client.put(ApiEndpoints.candidateProfile, data: body);
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể cập nhật hồ sơ ứng viên');
+      throw const ServerException('Unable to update the candidate profile');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -42,7 +42,7 @@ class ProfileRemoteDataSource {
       data: body,
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể thêm kinh nghiệm làm việc');
+      throw const ServerException('Unable to add work experience');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -52,7 +52,7 @@ class ProfileRemoteDataSource {
       ApiEndpoints.candidateProfileExperience(id),
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể xóa kinh nghiệm làm việc');
+      throw const ServerException('Unable to delete work experience');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -63,7 +63,7 @@ class ProfileRemoteDataSource {
       data: body,
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể thêm thông tin học vấn');
+      throw const ServerException('Unable to add education');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -73,7 +73,7 @@ class ProfileRemoteDataSource {
       ApiEndpoints.candidateProfileEducation(id),
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể xóa thông tin học vấn');
+      throw const ServerException('Unable to delete education');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -84,7 +84,7 @@ class ProfileRemoteDataSource {
       data: body,
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể thêm kỹ năng');
+      throw const ServerException('Unable to add the skill');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -92,7 +92,7 @@ class ProfileRemoteDataSource {
   Future<CandidateProfileModel> deleteSkill(int id) async {
     final data = await _client.delete(ApiEndpoints.candidateProfileSkill(id));
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể xóa kỹ năng');
+      throw const ServerException('Unable to delete the skill');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -103,7 +103,7 @@ class ProfileRemoteDataSource {
       data: body,
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể thêm dự án');
+      throw const ServerException('Unable to add the project');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -111,7 +111,7 @@ class ProfileRemoteDataSource {
   Future<CandidateProfileModel> deleteProject(int id) async {
     final data = await _client.delete(ApiEndpoints.candidateProfileProject(id));
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể xóa dự án');
+      throw const ServerException('Unable to delete the project');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -124,7 +124,7 @@ class ProfileRemoteDataSource {
       data: body,
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể thêm chứng chỉ');
+      throw const ServerException('Unable to add the certification');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -134,7 +134,7 @@ class ProfileRemoteDataSource {
       ApiEndpoints.candidateProfileCertification(id),
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể xóa chứng chỉ');
+      throw const ServerException('Unable to delete the certification');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -145,7 +145,7 @@ class ProfileRemoteDataSource {
       data: body,
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể thêm ngôn ngữ');
+      throw const ServerException('Unable to add the language');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -155,7 +155,7 @@ class ProfileRemoteDataSource {
       ApiEndpoints.candidateProfileLanguage(id),
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể xóa ngôn ngữ');
+      throw const ServerException('Unable to delete the language');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -169,7 +169,7 @@ class ProfileRemoteDataSource {
       data: formData,
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể tải lên ảnh đại diện');
+      throw const ServerException('Unable to upload the avatar');
     }
     return CandidateProfileModel.fromJson(data);
   }
@@ -177,7 +177,7 @@ class ProfileRemoteDataSource {
   Future<CandidateProfileModel> removeAvatar() async {
     final data = await _client.delete(ApiEndpoints.candidateProfileAvatar);
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể xóa ảnh đại diện');
+      throw const ServerException('Unable to remove the avatar');
     }
     return CandidateProfileModel.fromJson(data);
   }

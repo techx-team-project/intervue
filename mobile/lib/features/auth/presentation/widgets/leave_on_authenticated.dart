@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intervue_flutter/app/routes/route_names.dart';
 import 'package:intervue_flutter/features/auth/presentation/controllers/auth_bloc.dart';
 
-/// Rời màn đăng nhập ngay khi đăng nhập thành công, dù màn được mở bằng `go` hay `push`.
+/// Leaves the sign-in screen as soon as sign-in succeeds, whether it was opened with `go` or `push`.
 class LeaveOnAuthenticated extends StatelessWidget {
   const LeaveOnAuthenticated({required this.child, super.key});
 

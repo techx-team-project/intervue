@@ -48,7 +48,7 @@ class JobAlertListCubit extends Cubit<JobAlertListState> {
           current.copyWith(
             alerts: updatedAlerts,
             summary: updatedSummary,
-            actionMessage: 'Tạo thông báo việc làm mới thành công!',
+            actionMessage: 'Job alert created successfully!',
           ),
         );
       } else {
@@ -89,8 +89,8 @@ class JobAlertListCubit extends Cubit<JobAlertListState> {
             totalDeliveries: current.summary.totalDeliveries,
           ),
           actionMessage: updated.isActive
-              ? 'Đã bật thông báo: ${updated.title}'
-              : 'Đã tạm dừng thông báo: ${updated.title}',
+              ? 'Alert enabled: ${updated.title}'
+              : 'Alert paused: ${updated.title}',
         ),
       );
     } catch (e) {
@@ -117,7 +117,7 @@ class JobAlertListCubit extends Cubit<JobAlertListState> {
             pausedAlerts: pausedCount,
             totalDeliveries: current.summary.totalDeliveries,
           ),
-          actionMessage: 'Đã xóa thông báo việc làm.',
+          actionMessage: 'Job alert deleted.',
         ),
       );
     } catch (e) {
@@ -134,8 +134,8 @@ class JobAlertListCubit extends Cubit<JobAlertListState> {
       emit(
         current.copyWith(
           actionMessage: sent
-              ? 'Đã gửi email việc làm phù hợp thử nghiệm! Vui lòng kiểm tra hộp thư.'
-              : 'Chưa có việc làm nào khớp hoàn toàn với tiêu chí để gửi thử nghiệm.',
+              ? 'Test email with matching jobs sent! Please check your inbox.'
+              : 'No job fully matches the criteria to send a test.',
         ),
       );
     } catch (e) {

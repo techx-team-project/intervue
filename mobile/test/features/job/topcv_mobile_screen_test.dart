@@ -56,8 +56,8 @@ void main() {
     id: 'test-1',
     title: 'Senior Flutter Engineer',
     companyName: 'TopCV Tech',
-    displaySalary: '25 - 40 triệu',
-    location: 'Cầu Giấy, Hà Nội',
+    displaySalary: '25 - 40M VND',
+    location: 'Cau Giay, Hanoi',
     experience: '3 năm',
     isHot: true,
     isUrgent: true,
@@ -164,18 +164,18 @@ void main() {
 
     // Verify Header
     expect(find.byType(TopCvHeader), findsOneWidget);
-    expect(find.text('Toàn quốc'), findsOneWidget);
+    expect(find.text('Nationwide'), findsOneWidget);
 
     // Verify Search Bar
     expect(find.byType(TopCvSearchBar), findsOneWidget);
-    expect(find.text('Tìm việc làm, công ty, kỹ năng...'), findsOneWidget);
+    expect(find.text('Search jobs, companies, skills...'), findsOneWidget);
 
     // Verify Banner Carousel
     expect(find.byType(TopCvBannerCarousel), findsOneWidget);
 
     // Verify Services Grid
     expect(find.byType(TopCvServiceGrid), findsOneWidget);
-    expect(find.text('Tạo CV'), findsWidgets);
+    expect(find.text('Create CV'), findsWidgets);
     expect(find.text('Gross - Net'), findsOneWidget);
 
     // Verify Market Insights
@@ -187,10 +187,10 @@ void main() {
     expect(find.text('Senior Flutter Engineer'), findsOneWidget);
 
     // Verify Bottom Navigation Bar
-    expect(find.text('Trang chủ'), findsOneWidget);
-    expect(find.text('Tạo CV'), findsWidgets);
-    expect(find.text('Thông báo'), findsOneWidget);
-    expect(find.text('Cá nhân'), findsOneWidget);
+    expect(find.text('Home'), findsOneWidget);
+    expect(find.text('Create CV'), findsWidgets);
+    expect(find.text('Notifications'), findsOneWidget);
+    expect(find.text('Profile'), findsOneWidget);
   });
 
   testWidgets('Bottom navigation switches tabs cleanly', (tester) async {
@@ -203,18 +203,18 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tap "Thông báo" tab (index 3)
-    await tester.tap(find.text('Thông báo').last);
+    await tester.tap(find.text('Notifications').last);
     await tester.pumpAndSettle();
 
-    expect(find.text('Đọc tất cả'), findsOneWidget);
+    expect(find.text('Read all'), findsOneWidget);
     expect(find.text('VNPAY đã xem hồ sơ của bạn'), findsOneWidget);
 
     // Tap "Cá nhân" tab (index 4)
-    await tester.tap(find.text('Cá nhân').last);
+    await tester.tap(find.text('Profile').last);
     await tester.pumpAndSettle();
 
-    expect(find.text('Tài khoản cá nhân'), findsOneWidget);
-    expect(find.text('Đang BẬT tìm việc'), findsOneWidget);
-    expect(find.text('Hồ sơ năng lực cá nhân'), findsOneWidget);
+    expect(find.text('My account'), findsOneWidget);
+    expect(find.text('Open to work: ON'), findsOneWidget);
+    expect(find.text('Personal profile'), findsOneWidget);
   });
 }

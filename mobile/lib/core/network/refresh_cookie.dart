@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-/// Backend giữ refresh token trong cookie HttpOnly; mobile không có cookie jar
-/// nên tự đọc `Set-Cookie` và gửi lại qua header `Cookie`.
+/// The backend keeps the refresh token in an HttpOnly cookie; mobile has no cookie jar,
+/// so it reads `Set-Cookie` itself and sends it back via the `Cookie` header.
 abstract final class RefreshCookie {
   static const String name = 'refresh_token';
 

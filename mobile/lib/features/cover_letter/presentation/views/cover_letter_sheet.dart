@@ -84,7 +84,7 @@ class CoverLetterSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Thư xin việc bằng AI',
+                  'AI Cover Letter',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -142,7 +142,7 @@ class CoverLetterSheet extends StatelessWidget {
               CircularProgressIndicator(color: AppColors.primary),
               SizedBox(height: 14),
               Text(
-                'AI đang soạn thư xin việc cho bạn...',
+                'AI is writing your cover letter...',
                 style: TextStyle(color: AppColors.textSecondary),
               ),
             ],
@@ -160,7 +160,7 @@ class CoverLetterSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                state.errorMessage ?? 'Không tạo được thư xin việc.',
+                state.errorMessage ?? 'Unable to generate the cover letter.',
                 style: const TextStyle(color: AppColors.error, height: 1.4),
               ),
               const SizedBox(height: 10),
@@ -170,7 +170,7 @@ class CoverLetterSheet extends StatelessWidget {
                   language: state.language,
                 ),
                 icon: const Icon(Icons.refresh_rounded),
-                label: const Text('Thử lại'),
+                label: const Text('Try again'),
               ),
             ],
           ),
@@ -217,13 +217,11 @@ class CoverLetterSheet extends StatelessWidget {
                       await Clipboard.setData(ClipboardData(text: letter.text));
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Đã sao chép thư xin việc'),
-                        ),
+                        const SnackBar(content: Text('Cover letter copied')),
                       );
                     },
                     icon: const Icon(Icons.copy_rounded),
-                    label: const Text('Sao chép'),
+                    label: const Text('Copy'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
@@ -239,7 +237,7 @@ class CoverLetterSheet extends StatelessWidget {
                       language: state.language,
                     ),
                     icon: const Icon(Icons.refresh_rounded),
-                    label: const Text('Viết lại'),
+                    label: const Text('Rewrite'),
                   ),
                 ),
               ],

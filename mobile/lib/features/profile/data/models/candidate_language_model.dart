@@ -31,15 +31,15 @@ class CandidateLanguageModel extends Equatable {
   String get proficiencyLabelVi {
     switch (proficiency) {
       case 'BASIC':
-        return 'Sơ cấp';
+        return 'Basic';
       case 'INTERMEDIATE':
-        return 'Trung cấp';
+        return 'Intermediate';
       case 'ADVANCED':
-        return 'Nâng cao';
+        return 'Advanced';
       case 'FLUENT':
-        return 'Thành thạo';
+        return 'Fluent';
       case 'NATIVE':
-        return 'Bản ngữ';
+        return 'Native';
       default:
         return proficiency;
     }

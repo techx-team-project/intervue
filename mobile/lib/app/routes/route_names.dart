@@ -10,16 +10,20 @@ abstract final class RouteNames {
   static String blogPost(String categorySlug, String slug) =>
       '/blog/$categorySlug/$slug';
 
-  // Protected (yêu cầu đăng nhập)
+  // Protected (sign-in required)
   static const String resume = '/resume';
   static const String applications = '/applications';
   static const String jobAlerts = '/job-alerts';
   static const String security = '/security';
+  static const String mockInterviews = '/mock-interviews';
+  static const String mockInterviewNew = '/mock-interviews/new';
+  static String mockInterview(int id) => '/mock-interviews/$id';
 
   static const List<String> protectedRoutes = [
     resume,
     applications,
     jobAlerts,
     security,
+    mockInterviews,
   ];
 }

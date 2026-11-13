@@ -80,7 +80,7 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: const Text(
-        'Thêm dự án nổi bật',
+        'Add featured project',
         style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
       ),
       content: SingleChildScrollView(
@@ -92,18 +92,18 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Tên dự án *',
+                  labelText: 'Project name *',
                   hintText: 'VD: Intervue Mobile App',
                 ),
                 validator: (v) => v == null || v.trim().isEmpty
-                    ? 'Vui lòng nhập tên dự án'
+                    ? 'Please enter the project name'
                     : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _roleController,
                 decoration: const InputDecoration(
-                  labelText: 'Vai trò trong dự án',
+                  labelText: 'Role in the project',
                   hintText: 'VD: Lead Mobile Developer',
                 ),
               ),
@@ -111,7 +111,7 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
                 title: const Text(
-                  'Dự án đang thực hiện',
+                  'Ongoing project',
                   style: TextStyle(fontSize: 13),
                 ),
                 value: _isCurrent,
@@ -125,7 +125,7 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
                     child: OutlinedButton.icon(
                       icon: const Icon(Icons.calendar_month, size: 16),
                       label: Text(
-                        'Bắt đầu: ${dateFmt.format(_startDate)}',
+                        'Start: ${dateFmt.format(_startDate)}',
                         style: const TextStyle(fontSize: 11),
                       ),
                       onPressed: () async {
@@ -148,8 +148,8 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
                         icon: const Icon(Icons.calendar_month, size: 16),
                         label: Text(
                           _endDate != null
-                              ? 'Kết thúc: ${dateFmt.format(_endDate!)}'
-                              : 'Chọn ngày',
+                              ? 'End: ${dateFmt.format(_endDate!)}'
+                              : 'Select date',
                           style: const TextStyle(fontSize: 11),
                         ),
                         onPressed: () async {
@@ -174,7 +174,7 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
               TextFormField(
                 controller: _techController,
                 decoration: const InputDecoration(
-                  labelText: 'Công nghệ sử dụng (cách nhau dấu phẩy)',
+                  labelText: 'Technologies used (comma-separated)',
                   hintText: 'VD: Flutter, Dart, Bloc, REST API',
                 ),
               ),
@@ -182,7 +182,7 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
               TextFormField(
                 controller: _githubController,
                 decoration: const InputDecoration(
-                  labelText: 'GitHub URL (tùy chọn)',
+                  labelText: 'GitHub URL (optional)',
                   hintText: 'https://github.com/username/project',
                 ),
                 keyboardType: TextInputType.url,
@@ -191,7 +191,7 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
               TextFormField(
                 controller: _demoController,
                 decoration: const InputDecoration(
-                  labelText: 'Demo URL (tùy chọn)',
+                  labelText: 'Demo URL (optional)',
                   hintText: 'https://project-demo.com',
                 ),
                 keyboardType: TextInputType.url,
@@ -201,8 +201,9 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
                 controller: _descController,
                 maxLines: 2,
                 decoration: const InputDecoration(
-                  labelText: 'Mô tả dự án',
-                  hintText: 'Giới thiệu ngắn về dự án và mục tiêu...',
+                  labelText: 'Project description',
+                  hintText:
+                      'A short introduction to the project and its goals...',
                 ),
               ),
               const SizedBox(height: 12),
@@ -210,9 +211,8 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
                 controller: _highlightsController,
                 maxLines: 2,
                 decoration: const InputDecoration(
-                  labelText: 'Kết quả / Điểm nổi bật',
-                  hintText:
-                      'VD: Đạt 10,000 users, cải thiện 30% performance...',
+                  labelText: 'Results / Highlights',
+                  hintText: 'e.g. Reached 10,000 users, improved performance by 30%...',
                 ),
               ),
             ],
@@ -222,7 +222,7 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _submit,
@@ -230,7 +230,7 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
           ),
-          child: const Text('Lưu dự án'),
+          child: const Text('Save project'),
         ),
       ],
     );

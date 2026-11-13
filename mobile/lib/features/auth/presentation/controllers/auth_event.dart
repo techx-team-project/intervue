@@ -7,12 +7,12 @@ sealed class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Kiểm tra token đã lưu khi mở app.
+/// Checks the stored token when the app opens.
 final class AuthStarted extends AuthEvent {
   const AuthStarted();
 }
 
-/// Đăng nhập thành công (token đã được lưu bởi repository).
+/// Sign-in succeeded (the token was stored by the repository).
 final class AuthSignedIn extends AuthEvent {
   const AuthSignedIn();
 }
@@ -21,7 +21,7 @@ final class AuthSignedOut extends AuthEvent {
   const AuthSignedOut();
 }
 
-/// Refresh token thất bại, buộc đăng nhập lại.
+/// Token refresh failed, forcing a new sign-in.
 final class AuthSessionExpired extends AuthEvent {
   const AuthSessionExpired();
 }

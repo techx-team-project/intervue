@@ -55,7 +55,7 @@ class _TwoFactorSetupDialogState extends State<TwoFactorSetupDialog> {
           Icon(Icons.security, color: AppColors.primary, size: 22),
           SizedBox(width: 8),
           Text(
-            'Kích hoạt 2FA',
+            'Enable 2FA',
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           ),
         ],
@@ -68,7 +68,7 @@ class _TwoFactorSetupDialogState extends State<TwoFactorSetupDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                '1. Mở ứng dụng xác thực (Google Authenticator, Authy, Microsoft Authenticator) và nhập khóa bí mật bên dưới:',
+                '1. Open your authenticator app (Google Authenticator, Authy, Microsoft Authenticator) and enter the secret key below:',
                 style: TextStyle(
                   fontSize: 12.5,
                   color: AppColors.textSecondary,
@@ -100,16 +100,14 @@ class _TwoFactorSetupDialogState extends State<TwoFactorSetupDialog> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.copy, size: 18),
-                      tooltip: 'Sao chép khóa',
+                      tooltip: 'Copy key',
                       onPressed: () {
                         Clipboard.setData(
                           ClipboardData(text: widget.setupData.secret),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text(
-                              'Đã sao chép khóa bí mật vào bộ nhớ đệm!',
-                            ),
+                            content: Text('Secret key copied to clipboard!'),
                             duration: Duration(seconds: 2),
                           ),
                         );
@@ -120,7 +118,7 @@ class _TwoFactorSetupDialogState extends State<TwoFactorSetupDialog> {
               ),
               const SizedBox(height: 14),
               const Text(
-                '2. Nhập mã OTP 6 chữ số hiển thị trên ứng dụng xác thực để kích hoạt:',
+                '2. Enter the 6-digit OTP shown in your authenticator app to enable:',
                 style: TextStyle(
                   fontSize: 12.5,
                   color: AppColors.textSecondary,
@@ -143,7 +141,7 @@ class _TwoFactorSetupDialogState extends State<TwoFactorSetupDialog> {
                 ),
                 validator: (v) {
                   if (v == null || v.trim().length != 6) {
-                    return 'Vui lòng nhập đủ 6 chữ số';
+                    return 'Please enter all 6 digits';
                   }
                   return null;
                 },
@@ -151,7 +149,7 @@ class _TwoFactorSetupDialogState extends State<TwoFactorSetupDialog> {
               if (widget.setupData.backupCodes.isNotEmpty) ...[
                 const SizedBox(height: 14),
                 const Text(
-                  'Mã dự phòng (Lưu lại khi mất thiết bị):',
+                  'Backup codes (save them in case you lose your device):',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -194,7 +192,7 @@ class _TwoFactorSetupDialogState extends State<TwoFactorSetupDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _submit,
@@ -202,7 +200,7 @@ class _TwoFactorSetupDialogState extends State<TwoFactorSetupDialog> {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
           ),
-          child: const Text('Xác nhận & Bật 2FA'),
+          child: const Text('Confirm & Enable 2FA'),
         ),
       ],
     );

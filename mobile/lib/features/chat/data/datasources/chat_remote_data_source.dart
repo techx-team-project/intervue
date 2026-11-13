@@ -16,7 +16,7 @@ class ChatRemoteDataSource {
       receiveTimeout: const Duration(seconds: 60),
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Dữ liệu phản hồi AI không hợp lệ');
+      throw const ServerException('Invalid AI response data');
     }
     return ChatResponse.fromJson(data);
   }

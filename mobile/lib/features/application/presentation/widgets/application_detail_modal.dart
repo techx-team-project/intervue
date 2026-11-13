@@ -65,7 +65,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'Không thể tải chi tiết hồ sơ: $e';
+          _error = 'Unable to load application details: $e';
           _isLoading = false;
         });
       }
@@ -77,14 +77,14 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Xác nhận rút hồ sơ'),
+        title: const Text('Confirm withdrawal'),
         content: const Text(
-          'Bạn có chắc chắn muốn rút hồ sơ ứng tuyển này? Nhà tuyển dụng sẽ không tiếp tục xét duyệt hồ sơ của bạn.',
+          'Are you sure you want to withdraw this application? The recruiter will stop reviewing it.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Hủy'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(ctx).pop(true),
@@ -92,7 +92,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
               backgroundColor: AppColors.error,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Rút hồ sơ'),
+            child: const Text('Withdraw'),
           ),
         ],
       ),
@@ -112,7 +112,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
         widget.onStatusChanged?.call();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Đã rút hồ sơ thành công'),
+            content: Text('Application withdrawn successfully'),
             backgroundColor: AppColors.primary,
           ),
         );
@@ -122,7 +122,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
         setState(() => _isActionProcessing = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Không thể rút hồ sơ: $e'),
+            content: Text('Unable to withdraw the application: $e'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -163,7 +163,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    final title = _detail?.jobTitle ?? 'Chi tiết hồ sơ ứng tuyển';
+    final title = _detail?.jobTitle ?? 'Application details';
     final company = _detail?.companyName ?? '';
 
     return Container(
@@ -234,7 +234,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
             const Icon(Icons.error_outline, size: 48, color: AppColors.error),
             const SizedBox(height: 12),
             Text(
-              _error ?? 'Lỗi không xác định',
+              _error ?? 'Unknown error',
               textAlign: TextAlign.center,
               style: const TextStyle(color: AppColors.textSecondary),
             ),
@@ -245,7 +245,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Thử lại'),
+              child: const Text('Try again'),
             ),
           ],
         ),
@@ -292,15 +292,15 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
 
   Widget _buildStatusBanner(ApplicationModel detail) {
     final label = switch (detail.status) {
-      'APPLIED' => 'Đã nộp đơn',
-      'VIEWED' => 'Đã xem hồ sơ',
-      'IN_REVIEW' => 'Đang duyệt hồ sơ',
-      'INTERVIEW' => 'Mời phỏng vấn',
-      'OFFER' => 'Đề nghị nhận việc',
-      'HIRED' => 'Đã trúng tuyển',
-      'REJECTED' => 'Chưa phù hợp',
-      'WITHDRAWN' => 'Đã rút hồ sơ',
-      'JOB_CLOSED' => 'Tin đã đóng',
+      'APPLIED' => 'Applied',
+      'VIEWED' => 'Viewed',
+      'IN_REVIEW' => 'In review',
+      'INTERVIEW' => 'Interview invited',
+      'OFFER' => 'Offer',
+      'HIRED' => 'Hired',
+      'REJECTED' => 'Not a match',
+      'WITHDRAWN' => 'Withdrawn',
+      'JOB_CLOSED' => 'Job closed',
       _ => detail.status,
     };
 
@@ -340,7 +340,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Trạng thái hồ sơ',
+                'Application status',
                 style: TextStyle(
                   fontSize: 12,
                   color: color,
@@ -370,7 +370,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
           if (detail.submittedAt != null) ...[
             const SizedBox(height: 10),
             Text(
-              'Thời gian nộp: ${dateFmt.format(detail.submittedAt!.toLocal())}',
+              'Submitted at: ${dateFmt.format(detail.submittedAt!.toLocal())}',
               style: const TextStyle(
                 fontSize: 12,
                 color: AppColors.textSecondary,
@@ -380,7 +380,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
           if (detail.viewedAt != null) ...[
             const SizedBox(height: 4),
             Text(
-              'Nhà tuyển dụng đã xem lúc: ${dateFmt.format(detail.viewedAt!.toLocal())}',
+              'Viewed by the recruiter at: ${dateFmt.format(detail.viewedAt!.toLocal())}',
               style: const TextStyle(
                 fontSize: 12,
                 color: AppColors.textSecondary,
@@ -404,7 +404,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'CV đã dùng ứng tuyển',
+            'CV used to apply',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -425,7 +425,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      detail.cv?.fileName ?? 'Bản CV đã lưu',
+                      detail.cv?.fileName ?? 'Saved CV',
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -465,7 +465,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Thư giới thiệu (Cover Letter)',
+            'Cover letter',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -498,7 +498,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Câu trả lời của bạn',
+            'Your answers',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -513,7 +513,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    a.prompt ?? 'Câu hỏi #${a.questionId}',
+                    a.prompt ?? 'Question #${a.questionId}',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -561,7 +561,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Lịch sử trạng thái',
+            'Status history',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -571,14 +571,14 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
           const SizedBox(height: 12),
           ...history.map((entry) {
             final toLabel = switch (entry.to) {
-              'APPLIED' => 'Nộp hồ sơ thành công',
-              'VIEWED' => 'Nhà tuyển dụng đã xem',
-              'IN_REVIEW' => 'Đang đánh giá hồ sơ',
-              'INTERVIEW' => 'Mời phỏng vấn',
-              'OFFER' => 'Đề nghị nhận việc',
-              'HIRED' => 'Đã tuyển dụng',
-              'REJECTED' => 'Chưa phù hợp',
-              'WITHDRAWN' => 'Ứng viên rút hồ sơ',
+              'APPLIED' => 'Application submitted',
+              'VIEWED' => 'Viewed by the recruiter',
+              'IN_REVIEW' => 'Under evaluation',
+              'INTERVIEW' => 'Interview invited',
+              'OFFER' => 'Offer',
+              'HIRED' => 'Hired',
+              'REJECTED' => 'Not a match',
+              'WITHDRAWN' => 'Withdrawn by the candidate',
               _ => entry.to,
             };
 
@@ -665,7 +665,7 @@ class _ApplicationDetailModalState extends State<ApplicationDetailModal> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Text(
-                    'Rút hồ sơ ứng tuyển',
+                    'Withdraw application',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   ),
           ),

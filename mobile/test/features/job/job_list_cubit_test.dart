@@ -13,7 +13,7 @@ void main() {
     id: '1',
     title: 'Flutter Dev',
     companyName: 'ACME',
-    displaySalary: '15 - 25 triệu',
+    displaySalary: '15 - 25M VND',
   );
 
   late MockJobRepository repository;
@@ -62,7 +62,7 @@ void main() {
       emitsInOrder([
         const JobListLoading(),
         const JobListError(
-          'Không thể kết nối, vui lòng kiểm tra mạng và thử lại',
+          'Unable to connect, please check your network and try again',
         ),
       ]),
     );

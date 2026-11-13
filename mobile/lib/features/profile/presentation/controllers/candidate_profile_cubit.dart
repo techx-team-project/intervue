@@ -67,7 +67,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
 
     try {
       final updateData = <String, dynamic>{
-        'name': current.name ?? 'Ứng viên',
+        'name': current.name ?? 'Candidate',
         'headline': current.headline ?? '',
         'desiredRole': current.desiredRole ?? 'Software Engineer',
         'jobSearchStatus': newStatus,
@@ -81,8 +81,8 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
         CandidateProfileLoaded(
           profile: updated,
           actionMessage: isSeeking
-              ? 'Đã bật chế độ tìm việc. Nhà tuyển dụng có thể tiếp cận bạn!'
-              : 'Đã tắt chế độ tìm việc.',
+              ? 'Open to work is on. Recruiters can reach you!'
+              : 'Open to work is off.',
         ),
       );
     } catch (e) {
@@ -99,7 +99,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Thêm kinh nghiệm làm việc thành công!',
+          actionMessage: 'Work experience added!',
         ),
       );
     } catch (e) {
@@ -116,7 +116,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Đã xóa kinh nghiệm làm việc.',
+          actionMessage: 'Work experience deleted.',
         ),
       );
     } catch (e) {
@@ -133,7 +133,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Thêm học vấn thành công!',
+          actionMessage: 'Education added!',
         ),
       );
     } catch (e) {
@@ -150,7 +150,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Đã xóa thông tin học vấn.',
+          actionMessage: 'Education deleted.',
         ),
       );
     } catch (e) {
@@ -165,10 +165,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
     try {
       final updated = await _repo.addSkill(data);
       emit(
-        CandidateProfileLoaded(
-          profile: updated,
-          actionMessage: 'Thêm kỹ năng thành công!',
-        ),
+        CandidateProfileLoaded(profile: updated, actionMessage: 'Skill added!'),
       );
     } catch (e) {
       emit(state.copyWith(actionError: Failure.fromException(e).message));
@@ -184,7 +181,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Đã xóa kỹ năng.',
+          actionMessage: 'Skill deleted.',
         ),
       );
     } catch (e) {
@@ -201,7 +198,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Thêm dự án thành công!',
+          actionMessage: 'Project added!',
         ),
       );
     } catch (e) {
@@ -218,7 +215,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Đã xóa dự án.',
+          actionMessage: 'Project deleted.',
         ),
       );
     } catch (e) {
@@ -235,7 +232,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Thêm chứng chỉ thành công!',
+          actionMessage: 'Certification added!',
         ),
       );
     } catch (e) {
@@ -252,7 +249,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Đã xóa chứng chỉ.',
+          actionMessage: 'Certification deleted.',
         ),
       );
     } catch (e) {
@@ -269,7 +266,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Thêm ngoại ngữ thành công!',
+          actionMessage: 'Language added!',
         ),
       );
     } catch (e) {
@@ -286,7 +283,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Đã xóa ngoại ngữ.',
+          actionMessage: 'Language deleted.',
         ),
       );
     } catch (e) {
@@ -303,7 +300,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Cập nhật thông tin hồ sơ thành công!',
+          actionMessage: 'Profile updated successfully!',
         ),
       );
     } catch (e) {
@@ -320,7 +317,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Cập nhật ảnh đại diện thành công!',
+          actionMessage: 'Avatar updated successfully!',
         ),
       );
     } catch (e) {
@@ -337,7 +334,7 @@ class CandidateProfileCubit extends Cubit<CandidateProfileState> {
       emit(
         CandidateProfileLoaded(
           profile: updated,
-          actionMessage: 'Đã gỡ ảnh đại diện.',
+          actionMessage: 'Avatar removed.',
         ),
       );
     } catch (e) {

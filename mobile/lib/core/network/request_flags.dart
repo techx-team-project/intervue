@@ -1,8 +1,8 @@
-/// Khoá trong `RequestOptions.extra` để điều khiển interceptor.
+/// Keys in `RequestOptions.extra` that control the interceptors.
 abstract final class RequestFlags {
-  /// Request công khai: không đính kèm Bearer token, không refresh khi 401.
+  /// Public request: no Bearer token attached, no refresh on 401.
   static const String skipAuth = 'skipAuth';
 
-  /// Request đã được retry sau khi refresh token, tránh lặp vô hạn.
+  /// Request already retried after a token refresh, to avoid infinite loops.
   static const String retried = 'retried';
 }

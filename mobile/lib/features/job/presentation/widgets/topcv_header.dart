@@ -24,14 +24,14 @@ class TopCvHeader extends StatelessWidget {
   final VoidCallback? onMenuTap;
 
   static const List<String> availableLocations = [
-    'Toàn quốc',
-    'Hà Nội',
-    'TP. Hồ Chí Minh',
-    'Đà Nẵng',
-    'Bình Dương',
-    'Hải Phòng',
-    'Cần Thơ',
-    'Làm từ xa (Remote)',
+    'Nationwide',
+    'Hanoi',
+    'Ho Chi Minh City',
+    'Da Nang',
+    'Binh Duong',
+    'Hai Phong',
+    'Can Tho',
+    'Remote',
   ];
 
   void _showLocationPicker(BuildContext context) {
@@ -54,7 +54,7 @@ class TopCvHeader extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Chọn tỉnh / thành phố',
+                        'Select province / city',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -78,7 +78,7 @@ class TopCvHeader extends StatelessWidget {
                       final isSelected = loc == selectedLocation;
                       return ListTile(
                         leading: Icon(
-                          loc == 'Toàn quốc'
+                          loc == 'Nationwide'
                               ? Icons.public
                               : loc.contains('Remote')
                               ? Icons.laptop_mac
@@ -157,7 +157,7 @@ class TopCvHeader extends StatelessWidget {
                   ),
                 ),
                 child: IconButton(
-                  tooltip: 'Menu tính năng',
+                  tooltip: 'Feature menu',
                   onPressed: onMenuTap,
                   visualDensity: VisualDensity.compact,
                   padding: const EdgeInsets.all(6),
@@ -257,7 +257,7 @@ class TopCvHeader extends StatelessWidget {
                   ),
                 ),
                 child: IconButton(
-                  tooltip: 'Việc làm đã lưu',
+                  tooltip: 'Saved jobs',
                   onPressed: onSavedJobsTap,
                   visualDensity: VisualDensity.compact,
                   padding: const EdgeInsets.all(7),
@@ -288,7 +288,7 @@ class TopCvHeader extends StatelessWidget {
                   ),
                 ),
                 child: IconButton(
-                  tooltip: 'Thông báo',
+                  tooltip: 'Notifications',
                   onPressed: onNotificationsTap,
                   visualDensity: VisualDensity.compact,
                   padding: const EdgeInsets.all(7),

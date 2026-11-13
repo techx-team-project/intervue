@@ -72,7 +72,7 @@ class ApiClient {
     ),
   );
 
-  /// Như [post] nhưng trả thêm response headers (cần để đọc cookie `Set-Cookie`).
+  /// Like [post] but also returns the response headers (needed to read the `Set-Cookie` cookie).
   Future<({dynamic data, Headers headers})> postWithHeaders(
     String path, {
     Object? data,
@@ -144,7 +144,7 @@ class ApiClient {
     if (body is Map<String, dynamic> && body.containsKey('success')) {
       if (body['success'] != true) {
         throw ServerException(
-          body['message']?.toString() ?? 'Yêu cầu không thành công',
+          body['message']?.toString() ?? 'Request failed',
           statusCode:
               (body['statusCode'] as num?)?.toInt() ?? response.statusCode,
         );

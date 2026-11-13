@@ -13,7 +13,7 @@ class SecurityRemoteDataSource {
   Future<TwoFactorStatusModel> get2FaStatus() async {
     final data = await _client.get(ApiEndpoints.userTwoFactor);
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Dữ liệu xác thực 2 bước không hợp lệ');
+      throw const ServerException('Invalid two-factor data');
     }
     return TwoFactorStatusModel.fromJson(data);
   }
@@ -21,7 +21,7 @@ class SecurityRemoteDataSource {
   Future<TwoFactorSetupModel> setup2Fa() async {
     final data = await _client.post(ApiEndpoints.userTwoFactorSetup);
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Không thể khởi tạo xác thực 2 bước');
+      throw const ServerException('Unable to start two-factor setup');
     }
     return TwoFactorSetupModel.fromJson(data);
   }
@@ -32,7 +32,9 @@ class SecurityRemoteDataSource {
       data: {'code': code},
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Mã xác thực không đúng hoặc đã hết hạn');
+      throw const ServerException(
+        'The verification code is incorrect or has expired',
+      );
     }
     return TwoFactorStatusModel.fromJson(data);
   }
@@ -62,7 +64,7 @@ class SecurityRemoteDataSource {
   Future<List<AccountSessionModel>> getSessions() async {
     final data = await _client.get(ApiEndpoints.userSessions);
     if (data is! List<dynamic>) {
-      throw const ServerException('Dữ liệu phiên đăng nhập không hợp lệ');
+      throw const ServerException('Invalid session data');
     }
     return data
         .map((e) => AccountSessionModel.fromJson(e as Map<String, dynamic>))

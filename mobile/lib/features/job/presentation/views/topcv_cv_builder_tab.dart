@@ -24,32 +24,32 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
 
   static const List<_TemplateItem> _templates = [
     _TemplateItem(
-      title: 'Mẫu CV Chuẩn ATS Quốc Tế',
-      category: 'Khuyên dùng cho IT & Tech',
-      downloads: '250K+ lượt dùng',
+      title: 'International ATS-ready CV Template',
+      category: 'Recommended for IT & Tech',
+      downloads: '250K+ uses',
       color: Color(0xFF00B14F),
       badge: 'TOP 1',
     ),
     _TemplateItem(
-      title: 'Mẫu CV Senior Chuyên Nghiệp',
-      category: 'Kinh doanh & Quản lý',
-      downloads: '180K+ lượt dùng',
+      title: 'Professional Senior CV Template',
+      category: 'Business & Management',
+      downloads: '180K+ uses',
       color: Color(0xFF1E88E5),
       badge: 'HOT',
     ),
     _TemplateItem(
-      title: 'Mẫu CV Sáng Tạo (Creative)',
-      category: 'Marketing & Thiết kế UI/UX',
-      downloads: '140K+ lượt dùng',
+      title: 'Creative CV Template',
+      category: 'Marketing & UI/UX Design',
+      downloads: '140K+ uses',
       color: Color(0xFF8E24AA),
       badge: 'TREND',
     ),
     _TemplateItem(
-      title: 'Mẫu CV Fresher / Sinh Viên',
-      category: 'Thực tập & Mới tốt nghiệp',
-      downloads: '320K+ lượt dùng',
+      title: 'Fresher / Student CV Template',
+      category: 'Internship & New Graduates',
+      downloads: '320K+ uses',
       color: Color(0xFFFF6F00),
-      badge: 'DỄ DÙNG',
+      badge: 'EASY TO USE',
     ),
   ];
 
@@ -70,9 +70,9 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
     if (!isAuthenticated) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Vui lòng đăng nhập để quản lý và tải lên CV'),
+          content: const Text('Please sign in to manage and upload CVs'),
           action: SnackBarAction(
-            label: 'Đăng nhập',
+            label: 'Sign in',
             onPressed: () => context.push(RouteNames.login),
           ),
         ),
@@ -85,7 +85,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Bạn đã đạt giới hạn lưu trữ tối đa (3 CV). Vui lòng xóa bớt CV cũ để tải lên CV mới.',
+            'You have reached the maximum storage limit (3 CVs). Please delete an old CV to upload a new one.',
           ),
           backgroundColor: AppColors.accentOrange,
         ),
@@ -105,7 +105,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
       if (!FileHelpers.isValidCv(path: file.name, sizeBytes: file.size)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('File phải là định dạng PDF và dung lượng dưới 5MB'),
+            content: Text('The file must be a PDF under 5MB'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -120,7 +120,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Không thể chọn file. Vui lòng thử lại.'),
+          content: Text('Unable to pick the file. Please try again.'),
           backgroundColor: AppColors.error,
         ),
       );
@@ -135,23 +135,23 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
       context: context,
       builder: (dialogCtx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Đổi tên file CV'),
+        title: const Text('Rename CV file'),
         content: Form(
           key: formKey,
           child: TextFormField(
             controller: controller,
             autofocus: true,
             decoration: const InputDecoration(
-              labelText: 'Tên file mới',
+              labelText: 'New file name',
               hintText: 'VD: NguyenVanA_CV_Flutter.pdf',
               border: OutlineInputBorder(),
             ),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Tên file không được để trống';
+                return 'File name must not be empty';
               }
               if (!value.toLowerCase().endsWith('.pdf')) {
-                return 'Tên file phải có đuôi .pdf';
+                return 'File name must end with .pdf';
               }
               return null;
             },
@@ -160,7 +160,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogCtx).pop(false),
-            child: const Text('Hủy'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -172,7 +172,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                 Navigator.of(dialogCtx).pop(true);
               }
             },
-            child: const Text('Lưu thay đổi'),
+            child: const Text('Save changes'),
           ),
         ],
       ),
@@ -192,14 +192,14 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
       context: context,
       builder: (dialogCtx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Xác nhận xóa CV'),
+        title: const Text('Confirm CV deletion'),
         content: Text(
-          'Bạn có chắc chắn muốn xóa file "${cv.fileName}" khỏi kho CV không? Thao tác này không thể hoàn tác.',
+          'Are you sure you want to delete "${cv.fileName}" from your CV storage? This action cannot be undone.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogCtx).pop(false),
-            child: const Text('Hủy'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -207,7 +207,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
               foregroundColor: Colors.white,
             ),
             onPressed: () => Navigator.of(dialogCtx).pop(true),
-            child: const Text('Xóa vĩnh viễn'),
+            child: const Text('Delete permanently'),
           ),
         ],
       ),
@@ -246,7 +246,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
         backgroundColor: AppColors.background,
         appBar: AppBar(
           title: const Text(
-            'Quản lý CV & Mẫu Hồ sơ',
+            'CV Management & Templates',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
@@ -255,7 +255,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
           ),
           actions: [
             IconButton(
-              tooltip: 'Tải CV lên',
+              tooltip: 'Upload CV',
               icon: const Icon(Icons.upload_file_rounded),
               onPressed: _pickAndUploadCv,
             ),
@@ -271,8 +271,8 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
               fontSize: 14,
             ),
             tabs: const [
-              Tab(text: 'CV của tôi'),
-              Tab(text: 'Mẫu CV Chuẩn ATS'),
+              Tab(text: 'My CVs'),
+              Tab(text: 'ATS-ready CV templates'),
             ],
           ),
         ),
@@ -310,7 +310,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
               ),
               const SizedBox(height: 16),
               const Text(
-                'Đăng nhập để xem kho CV',
+                'Sign in to view your CV storage',
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -319,7 +319,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
               ),
               const SizedBox(height: 8),
               const Text(
-                'Lưu trữ tối đa 3 CV PDF chuẩn ATS trong tài khoản để nộp đơn ứng tuyển nhanh chóng.',
+                'Store up to 3 ATS-ready PDF CVs in your account to apply quickly.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 13,
@@ -342,7 +342,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                 ),
                 icon: const Icon(Icons.login_rounded, size: 18),
                 label: const Text(
-                  'Đăng nhập ngay',
+                  'Sign in now',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 onPressed: () => context.push(RouteNames.login),
@@ -380,7 +380,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                   const SizedBox(height: 16),
                   OutlinedButton.icon(
                     icon: const Icon(Icons.refresh_rounded, size: 18),
-                    label: const Text('Thử lại'),
+                    label: const Text('Try again'),
                     onPressed: () => context.read<CandidateCvCubit>().loadCvs(),
                   ),
                 ],
@@ -423,7 +423,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                           Row(
                             children: [
                               const Text(
-                                'Kho lưu trữ CV:',
+                                'CV storage:',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -457,7 +457,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                           ),
                           const SizedBox(height: 4),
                           const Text(
-                            'Chấp nhận file PDF tối đa 5MB.',
+                            'PDF files up to 5MB are accepted.',
                             style: TextStyle(
                               fontSize: 12,
                               color: AppColors.textSecondary,
@@ -491,7 +491,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                             )
                           : const Icon(Icons.add_rounded, size: 18),
                       label: Text(
-                        isUploading ? 'Đang tải...' : 'Thêm CV',
+                        isUploading ? 'Uploading...' : 'Add CV',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       onPressed: isUploading || cvs.length >= 3
@@ -524,7 +524,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                       ),
                       const SizedBox(height: 16),
                       const Text(
-                        'Chưa có file CV nào trong kho',
+                        'No CV files in storage yet',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -533,7 +533,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                       ),
                       const SizedBox(height: 6),
                       const Text(
-                        'Tải lên file PDF CV của bạn để sẵn sàng ứng tuyển các việc làm mong muốn.',
+                        'Upload your PDF CV to be ready to apply for the jobs you want.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 12.5,
@@ -547,7 +547,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                           side: const BorderSide(color: AppColors.primary),
                         ),
                         icon: const Icon(Icons.upload_file_rounded),
-                        label: const Text('Tải lên CV đầu tiên'),
+                        label: const Text('Upload your first CV'),
                         onPressed: _pickAndUploadCv,
                       ),
                     ],
@@ -555,7 +555,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                 ),
               ] else ...[
                 const Text(
-                  'Danh sách CV của bạn',
+                  'Your CV list',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -632,7 +632,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: const Text(
-                  'Mặc định',
+                  'Default',
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
@@ -672,7 +672,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                 children: [
                   Icon(Icons.auto_awesome, size: 18, color: AppColors.primary),
                   SizedBox(width: 10),
-                  Text('AI Chấm điểm CV'),
+                  Text('AI CV Scoring'),
                 ],
               ),
             ),
@@ -682,7 +682,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                 children: [
                   Icon(Icons.edit_outlined, size: 18),
                   SizedBox(width: 10),
-                  Text('Đổi tên file'),
+                  Text('Rename file'),
                 ],
               ),
             ),
@@ -692,7 +692,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                 children: [
                   Icon(Icons.delete_outline, size: 18, color: AppColors.error),
                   SizedBox(width: 10),
-                  Text('Xóa CV', style: TextStyle(color: AppColors.error)),
+                  Text('Delete CV', style: TextStyle(color: AppColors.error)),
                 ],
               ),
             ),
@@ -743,7 +743,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      'Chấm điểm CV cùng AI',
+                      'Score your CV with AI',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
@@ -752,7 +752,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                     ),
                     const SizedBox(height: 4),
                     const Text(
-                      'So khớp CV với yêu cầu tuyển dụng để tăng 80% tỷ lệ phỏng vấn.',
+                      'Match your CV with job requirements to boost your interview rate.',
                       style: TextStyle(color: Colors.white70, fontSize: 12),
                     ),
                   ],
@@ -773,7 +773,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                 ),
                 onPressed: () => context.push(RouteNames.resume),
                 child: const Text(
-                  'Chấm điểm',
+                  'Score',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                 ),
               ),
@@ -788,7 +788,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Mẫu CV xin việc phổ biến',
+              'Popular CV templates',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -796,7 +796,7 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
               ),
             ),
             Text(
-              '50+ mẫu',
+              '50+ templates',
               style: TextStyle(
                 fontSize: 12.5,
                 color: AppColors.textSecondary,
@@ -977,12 +977,12 @@ class _TopCvBuilderTabState extends State<TopCvBuilderTab>
                             onPressed: () {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('Đang mở ${tpl.title}...'),
+                                  content: Text('Opening ${tpl.title}...'),
                                 ),
                               );
                             },
                             child: Text(
-                              'Dùng mẫu này',
+                              'Use this template',
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,

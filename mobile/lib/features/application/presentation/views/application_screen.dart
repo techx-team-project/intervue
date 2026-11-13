@@ -29,7 +29,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
-          'Việc đã ứng tuyển',
+          'Applied jobs',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         elevation: 0,
@@ -93,7 +93,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Thử lại'),
+              child: const Text('Try again'),
             ),
           ],
         ),
@@ -103,10 +103,10 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
 
   Widget _buildLoadedView(ApplicationListLoaded state) {
     final filters = [
-      {'key': 'ALL', 'label': 'Tất cả (${state.applications.length})'},
-      {'key': 'IN_PROGRESS', 'label': 'Đang xử lý'},
-      {'key': 'INTERVIEW', 'label': 'Phỏng vấn / Tuyển dụng'},
-      {'key': 'ENDED', 'label': 'Đã kết thúc'},
+      {'key': 'ALL', 'label': 'All (${state.applications.length})'},
+      {'key': 'IN_PROGRESS', 'label': 'In progress'},
+      {'key': 'INTERVIEW', 'label': 'Interview / Hired'},
+      {'key': 'ENDED', 'label': 'Ended'},
     ];
 
     final items = state.filteredItems;
@@ -288,7 +288,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                   ),
                   if (app.submittedAt != null)
                     Text(
-                      'Nộp ngày ${dateFmt.format(app.submittedAt!.toLocal())}',
+                      'Submitted on ${dateFmt.format(app.submittedAt!.toLocal())}',
                       style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.textMuted,
@@ -327,7 +327,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Chưa có đơn ứng tuyển nào',
+                  'No applications yet',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -336,7 +336,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Hồ sơ bạn nộp cho các vị trí công việc sẽ xuất hiện ở đây để bạn tiện theo dõi tình trạng.',
+                  'Applications you submit to jobs will appear here so you can track their status.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
@@ -358,7 +358,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                       vertical: 12,
                     ),
                   ),
-                  child: const Text('Khám phá việc làm ngay'),
+                  child: const Text('Explore jobs now'),
                 ),
               ],
             ),

@@ -57,7 +57,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
         backgroundColor: AppColors.background,
         appBar: AppBar(
           title: const Text(
-            'Tài khoản cá nhân',
+            'My account',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
@@ -67,8 +67,8 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
         ),
         body: const LoginRequiredView(
           icon: Icons.person_outline_rounded,
-          title: 'Vui lòng đăng nhập',
-          message: 'Đăng nhập để quản lý hồ sơ, chấm điểm CV bằng AI và nhận thông báo từ InterVue.',
+          title: 'Please sign in',
+          message: 'Sign in to manage your profile, score your CV with AI and receive InterVue notifications.',
         ),
       );
     }
@@ -106,7 +106,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
         backgroundColor: LiquidGlassTheme.glassCanvas,
         appBar: AppBar(
           title: const Text(
-            'Tài khoản cá nhân',
+            'My account',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
@@ -118,7 +118,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
               icon: const Icon(Icons.settings_outlined),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Cài đặt tài khoản')),
+                  const SnackBar(content: Text('Account settings')),
                 );
               },
             ),
@@ -180,7 +180,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                                       Icons.photo_library_outlined,
                                       color: AppColors.primary,
                                     ),
-                                    title: const Text('Tải ảnh đại diện mới'),
+                                    title: const Text('Upload new avatar'),
                                     onTap: () async {
                                       Navigator.pop(ctx);
                                       final result = await FilePicker.platform
@@ -205,7 +205,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                                         color: AppColors.error,
                                       ),
                                       title: const Text(
-                                        'Xóa ảnh đại diện',
+                                        'Remove avatar',
                                         style: TextStyle(
                                           color: AppColors.error,
                                         ),
@@ -335,7 +335,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                           size: 20,
                           color: AppColors.primary,
                         ),
-                        tooltip: 'Chỉnh sửa thông tin',
+                        tooltip: 'Edit information',
                         onPressed: () {
                           if (candidateProfileState is CandidateProfileLoaded) {
                             EditCandidateProfileSheet.show(
@@ -358,7 +358,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
 
                 const SizedBox(height: 14),
 
-                // "Bật Chế Độ Tìm Việc" Toggle Card (TopCV hallmark feature)
+                // Open-to-work toggle card
                 LiquidGlassCard(
                   borderRadius: 16,
                   blur: 14,
@@ -386,8 +386,8 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                           children: [
                             Text(
                               isJobSeeking
-                                  ? 'Đang BẬT tìm việc'
-                                  : 'Đang TẮT tìm việc',
+                                  ? 'Open to work: ON'
+                                  : 'Open to work: OFF',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -399,8 +399,8 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                             const SizedBox(height: 2),
                             Text(
                               isJobSeeking
-                                  ? 'Cho phép 320.000+ HR tìm kiếm và gửi lời mời phỏng vấn'
-                                  : 'Hồ sơ của bạn đang ẩn với các nhà tuyển dụng',
+                                  ? 'Let recruiters find you and send interview invitations'
+                                  : 'Your profile is hidden from recruiters',
                               style: const TextStyle(
                                 fontSize: 11,
                                 color: AppColors.textSecondary,
@@ -488,7 +488,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                                     children: [
                                       Flexible(
                                         child: Text(
-                                          'Tài khoản VIP InterVue',
+                                          'InterVue VIP account',
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             fontSize: 15,
@@ -510,7 +510,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                                   ),
                                   SizedBox(height: 3),
                                   Text(
-                                    'Đẩy Top hồ sơ, tạo CV không giới hạn & luyện AI',
+                                    'Boost your profile, unlimited CVs & AI practice',
                                     style: TextStyle(
                                       fontSize: 11.5,
                                       color: Color(0xFF94A3B8),
@@ -530,7 +530,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: const Text(
-                                'Nâng cấp',
+                                'Upgrade',
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -597,7 +597,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                                     children: [
                                       Flexible(
                                         child: Text(
-                                          'Trợ Lý Ảo InterVue AI 4.0',
+                                          'InterVue AI Assistant',
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             fontSize: 14.5,
@@ -616,7 +616,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                                   ),
                                   SizedBox(height: 3),
                                   Text(
-                                    'Tư vấn CV chuẩn ATS, luyện phỏng vấn & khảo sát lương',
+                                    'ATS-ready CV advice, interview practice & job help',
                                     style: TextStyle(
                                       fontSize: 11,
                                       color: Color(0xFFA7F3D0),
@@ -636,7 +636,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: const Text(
-                                'Chat ngay',
+                                'Chat now',
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -665,8 +665,8 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                       _buildListTile(
                         icon: Icons.description_outlined,
                         iconColor: AppColors.primary,
-                        title: 'AI chấm điểm CV',
-                        subtitle: 'Tải CV PDF để nhận điểm và góp ý',
+                        title: 'AI CV scoring',
+                        subtitle: 'Upload a PDF CV to get a score and feedback',
                         onTap: () => context.push(RouteNames.resume),
                       ),
                       Divider(
@@ -677,8 +677,8 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                       _buildListTile(
                         icon: Icons.work_history_outlined,
                         iconColor: AppColors.accentBlue,
-                        title: 'Việc đã ứng tuyển',
-                        subtitle: 'Theo dõi tình trạng hồ sơ',
+                        title: 'Applied jobs',
+                        subtitle: 'Track your application status',
                         onTap: () => context.push(RouteNames.applications),
                       ),
                       Divider(
@@ -689,8 +689,8 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                       _buildListTile(
                         icon: Icons.notifications_active_outlined,
                         iconColor: const Color(0xFF10B981),
-                        title: 'Cài đặt nhận việc làm (Job Alert)',
-                        subtitle: 'Tự động gợi ý việc phù hợp qua email',
+                        title: 'Job alert settings',
+                        subtitle: 'Get matching jobs suggested by email',
                         onTap: () => context.push(RouteNames.jobAlerts),
                       ),
                       Divider(
@@ -701,13 +701,11 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                       _buildListTile(
                         icon: Icons.bookmark_border_rounded,
                         iconColor: AppColors.accentOrange,
-                        title: 'Việc làm đã lưu',
-                        subtitle: 'Danh sách việc yêu thích',
+                        title: 'Saved jobs',
+                        subtitle: 'Your favorite jobs',
                         onTap: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Danh sách việc đã lưu'),
-                            ),
+                            const SnackBar(content: Text('Saved jobs list')),
                           );
                         },
                       ),
@@ -719,13 +717,13 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                       _buildListTile(
                         icon: Icons.calculate_outlined,
                         iconColor: AppColors.accentPurple,
-                        title: 'Công cụ tính lương Gross - Net',
-                        subtitle: 'Quy đổi thu nhập theo luật BHXH 2025',
+                        title: 'Gross - Net salary calculator',
+                        subtitle: 'Convert income under the 2025 social insurance law',
                         onTap: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
-                                'Mở công cụ tính lương Gross - Net',
+                                'Opening the Gross - Net salary calculator',
                               ),
                             ),
                           );
@@ -749,8 +747,8 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                       _buildListTile(
                         icon: Icons.person_outline,
                         iconColor: AppColors.primary,
-                        title: 'Chỉnh sửa hồ sơ cá nhân',
-                        subtitle: 'Cập nhật mục tiêu nghề nghiệp & liên hệ',
+                        title: 'Edit personal profile',
+                        subtitle: 'Update career goals & contact info',
                         onTap: () {
                           if (candidateProfileState is CandidateProfileLoaded) {
                             EditCandidateProfileSheet.show(
@@ -775,9 +773,8 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                       _buildListTile(
                         icon: Icons.shield_outlined,
                         iconColor: const Color(0xFF0284C7),
-                        title: 'Bảo mật tài khoản & 2FA',
-                        subtitle:
-                            'Đổi mật khẩu, xác thực 2 bước, quản lý phiên',
+                        title: 'Account security & 2FA',
+                        subtitle: 'Change password, 2-step verification, manage sessions',
                         onTap: () => context.push(RouteNames.security),
                       ),
                       Divider(
@@ -788,7 +785,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                       _buildListTile(
                         icon: Icons.help_outline,
                         iconColor: AppColors.textSecondary,
-                        title: 'Trợ giúp & Phản hồi',
+                        title: 'Help & Feedback',
                         subtitle: 'Hotline: 1900 1234',
                         onTap: () {},
                       ),
@@ -801,8 +798,8 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                         _buildListTile(
                           icon: Icons.logout,
                           iconColor: AppColors.error,
-                          title: 'Đăng xuất',
-                          subtitle: 'Thoát tài khoản hiện tại',
+                          title: 'Sign out',
+                          subtitle: 'Sign out of the current account',
                           onTap: () {
                             context.read<AuthBloc>().add(const AuthSignedOut());
                           },
@@ -811,8 +808,8 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                         _buildListTile(
                           icon: Icons.login,
                           iconColor: AppColors.primary,
-                          title: 'Đăng nhập / Đăng ký',
-                          subtitle: 'Trải nghiệm trọn vẹn tiện ích',
+                          title: 'Sign in / Sign up',
+                          subtitle: 'Get the full experience',
                           onTap: () => context.go(RouteNames.login),
                         ),
                     ],
@@ -857,7 +854,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Bạn cần hỗ trợ từ InterVue AI Bot?',
+                                  'Need help from the InterVue AI assistant?',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
@@ -866,7 +863,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                                 ),
                                 SizedBox(height: 2),
                                 Text(
-                                  'Chat 24/7 để nhận gợi ý việc làm IT và sửa lỗi hồ sơ.',
+                                  'Chat 24/7 for IT job suggestions and profile tips.',
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: AppColors.textSecondary,
@@ -889,7 +886,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 const SizedBox(height: 20),
                 const Center(
                   child: Text(
-                    'InterVue AI • Nền tảng tuyển dụng IT hàng đầu (Phiên bản 2026)',
+                    'InterVue AI • Leading IT recruitment platform (2026 edition)',
                     style: TextStyle(fontSize: 11, color: AppColors.textMuted),
                   ),
                 ),
@@ -945,7 +942,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hồ sơ năng lực cá nhân',
+                        'Personal profile',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -954,7 +951,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                       ),
                       SizedBox(height: 2),
                       Text(
-                        'Kinh nghiệm, học vấn & kỹ năng hiển thị với NTD',
+                        'Experience, education & skills visible to recruiters',
                         style: TextStyle(
                           fontSize: 11,
                           color: AppColors.textSecondary,
@@ -1003,7 +1000,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Kinh nghiệm làm việc (${experiences.length})',
+                'Work experience (${experiences.length})',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -1030,7 +1027,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 },
                 icon: const Icon(Icons.add, size: 16, color: AppColors.primary),
                 label: const Text(
-                  'Thêm',
+                  'Add',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -1051,7 +1048,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 border: Border.all(color: Colors.grey.shade200),
               ),
               child: const Text(
-                'Chưa có kinh nghiệm làm việc. Bấm "+ Thêm" để cập nhật hồ sơ.',
+                'No work experience yet. Tap "+ Add" to update your profile.',
                 style: TextStyle(fontSize: 12, color: AppColors.textMuted),
               ),
             )
@@ -1059,7 +1056,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
             ...experiences.map((exp) {
               final startStr = dateFmt.format(exp.startDate);
               final endStr = exp.current
-                  ? 'Hiện tại'
+                  ? 'Present'
                   : (exp.endDate != null ? dateFmt.format(exp.endDate!) : '');
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
@@ -1129,19 +1126,19 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                         final confirm = await showDialog<bool>(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            title: const Text('Xác nhận xóa'),
+                            title: const Text('Confirm deletion'),
                             content: Text(
-                              'Bạn có chắc muốn xóa kinh nghiệm tại "${exp.companyName}"?',
+                              'Are you sure you want to delete the experience at "${exp.companyName}"?',
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx, false),
-                                child: const Text('Hủy'),
+                                child: const Text('Cancel'),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx, true),
                                 child: const Text(
-                                  'Xóa',
+                                  'Delete',
                                   style: TextStyle(color: AppColors.error),
                                 ),
                               ),
@@ -1184,7 +1181,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Học vấn & Bằng cấp (${educations.length})',
+                'Education & Degrees (${educations.length})',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -1211,7 +1208,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 },
                 icon: const Icon(Icons.add, size: 16, color: AppColors.primary),
                 label: const Text(
-                  'Thêm',
+                  'Add',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -1232,7 +1229,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 border: Border.all(color: Colors.grey.shade200),
               ),
               child: const Text(
-                'Chưa có thông tin học vấn. Bấm "+ Thêm" để cập nhật.',
+                'No education yet. Tap "+ Add" to update.',
                 style: TextStyle(fontSize: 12, color: AppColors.textMuted),
               ),
             )
@@ -1242,8 +1239,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 if (edu.degree != null && edu.degree!.isNotEmpty) edu.degree!,
                 if (edu.major != null && edu.major!.isNotEmpty) edu.major!,
               ].join(' - ');
-              final yearsStr =
-                  '${edu.startYear} - ${edu.endYear ?? 'Hiện tại'}';
+              final yearsStr = '${edu.startYear} - ${edu.endYear ?? 'Present'}';
 
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
@@ -1301,19 +1297,19 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                         final confirm = await showDialog<bool>(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            title: const Text('Xác nhận xóa'),
+                            title: const Text('Confirm deletion'),
                             content: Text(
-                              'Bạn có chắc muốn xóa học vấn tại "${edu.school}"?',
+                              'Are you sure you want to delete the education at "${edu.school}"?',
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx, false),
-                                child: const Text('Hủy'),
+                                child: const Text('Cancel'),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx, true),
                                 child: const Text(
-                                  'Xóa',
+                                  'Delete',
                                   style: TextStyle(color: AppColors.error),
                                 ),
                               ),
@@ -1356,7 +1352,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Kỹ năng chuyên môn (${skills.length})',
+                'Professional skills (${skills.length})',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -1383,7 +1379,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 },
                 icon: const Icon(Icons.add, size: 16, color: AppColors.primary),
                 label: const Text(
-                  'Thêm',
+                  'Add',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -1404,7 +1400,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 border: Border.all(color: Colors.grey.shade200),
               ),
               child: const Text(
-                'Chưa có kỹ năng nào. Bấm "+ Thêm" để AI matching chính xác hơn.',
+                'No skills yet. Tap "+ Add" for more accurate AI matching.',
                 style: TextStyle(fontSize: 12, color: AppColors.textMuted),
               ),
             )
@@ -1440,17 +1436,17 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                     final confirm = await showDialog<bool>(
                       context: context,
                       builder: (ctx) => AlertDialog(
-                        title: const Text('Xác nhận xóa'),
-                        content: Text('Xóa kỹ năng "${skill.name}"?'),
+                        title: const Text('Confirm deletion'),
+                        content: Text('Delete skill "${skill.name}"?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, false),
-                            child: const Text('Hủy'),
+                            child: const Text('Cancel'),
                           ),
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, true),
                             child: const Text(
-                              'Xóa',
+                              'Delete',
                               style: TextStyle(color: AppColors.error),
                             ),
                           ),
@@ -1493,7 +1489,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Dự án nổi bật (${projects.length})',
+                'Featured projects (${projects.length})',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -1520,7 +1516,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 },
                 icon: const Icon(Icons.add, size: 16, color: AppColors.primary),
                 label: const Text(
-                  'Thêm',
+                  'Add',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -1541,7 +1537,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 border: Border.all(color: Colors.grey.shade200),
               ),
               child: const Text(
-                'Chưa có dự án nào. Bấm "+ Thêm" để cập nhật sản phẩm nổi bật.',
+                'No projects yet. Tap "+ Add" to showcase your work.',
                 style: TextStyle(fontSize: 12, color: AppColors.textMuted),
               ),
             )
@@ -1549,7 +1545,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
             ...projects.map((proj) {
               final startStr = dateFmt.format(proj.startDate);
               final endStr = proj.current
-                  ? 'Hiện tại'
+                  ? 'Present'
                   : (proj.endDate != null ? dateFmt.format(proj.endDate!) : '');
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
@@ -1652,19 +1648,19 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                         final confirm = await showDialog<bool>(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            title: const Text('Xác nhận xóa'),
+                            title: const Text('Confirm deletion'),
                             content: Text(
-                              'Bạn có chắc muốn xóa dự án "${proj.name}"?',
+                              'Are you sure you want to delete the project "${proj.name}"?',
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx, false),
-                                child: const Text('Hủy'),
+                                child: const Text('Cancel'),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx, true),
                                 child: const Text(
-                                  'Xóa',
+                                  'Delete',
                                   style: TextStyle(color: AppColors.error),
                                 ),
                               ),
@@ -1709,7 +1705,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Chứng chỉ nghề nghiệp (${certifications.length})',
+                'Certifications (${certifications.length})',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -1738,7 +1734,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 },
                 icon: const Icon(Icons.add, size: 16, color: AppColors.primary),
                 label: const Text(
-                  'Thêm',
+                  'Add',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -1759,7 +1755,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 border: Border.all(color: Colors.grey.shade200),
               ),
               child: const Text(
-                'Chưa có chứng chỉ nào. Bấm "+ Thêm" để gia tăng độ tin cậy.',
+                'No certifications yet. Tap "+ Add" to build trust.',
                 style: TextStyle(fontSize: 12, color: AppColors.textMuted),
               ),
             )
@@ -1805,9 +1801,10 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                             const SizedBox(height: 2),
                             Text(
                               [
-                                if (issueDateStr != null) 'Cấp: $issueDateStr',
+                                if (issueDateStr != null)
+                                  'Issued: $issueDateStr',
                                 if (cert.credentialId != null)
-                                  'Mã: ${cert.credentialId}',
+                                  'ID: ${cert.credentialId}',
                               ].join(' • '),
                               style: const TextStyle(
                                 fontSize: 11,
@@ -1829,19 +1826,19 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                         final confirm = await showDialog<bool>(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            title: const Text('Xác nhận xóa'),
+                            title: const Text('Confirm deletion'),
                             content: Text(
-                              'Bạn có chắc muốn xóa chứng chỉ "${cert.name}"?',
+                              'Are you sure you want to delete the certification "${cert.name}"?',
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx, false),
-                                child: const Text('Hủy'),
+                                child: const Text('Cancel'),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx, true),
                                 child: const Text(
-                                  'Xóa',
+                                  'Delete',
                                   style: TextStyle(color: AppColors.error),
                                 ),
                               ),
@@ -1884,7 +1881,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Ngoại ngữ (${languages.length})',
+                'Languages (${languages.length})',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -1911,7 +1908,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 },
                 icon: const Icon(Icons.add, size: 16, color: AppColors.primary),
                 label: const Text(
-                  'Thêm',
+                  'Add',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -1932,7 +1929,7 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                 border: Border.all(color: Colors.grey.shade200),
               ),
               child: const Text(
-                'Chưa có ngoại ngữ. Bấm "+ Thêm" để hoàn thiện hồ sơ.',
+                'No languages yet. Tap "+ Add" to complete your profile.',
                 style: TextStyle(fontSize: 12, color: AppColors.textMuted),
               ),
             )
@@ -1972,17 +1969,17 @@ class _TopCvProfileTabState extends State<TopCvProfileTab> {
                     final confirm = await showDialog<bool>(
                       context: context,
                       builder: (ctx) => AlertDialog(
-                        title: const Text('Xác nhận xóa'),
-                        content: Text('Xóa ngoại ngữ "${lang.language}"?'),
+                        title: const Text('Confirm deletion'),
+                        content: Text('Delete language "${lang.language}"?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, false),
-                            child: const Text('Hủy'),
+                            child: const Text('Cancel'),
                           ),
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, true),
                             child: const Text(
-                              'Xóa',
+                              'Delete',
                               style: TextStyle(color: AppColors.error),
                             ),
                           ),

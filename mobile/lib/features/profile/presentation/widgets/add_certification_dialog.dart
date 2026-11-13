@@ -57,7 +57,7 @@ class _AddCertificationDialogState extends State<AddCertificationDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: const Text(
-        'Thêm chứng chỉ',
+        'Add certification',
         style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
       ),
       content: SingleChildScrollView(
@@ -69,22 +69,22 @@ class _AddCertificationDialogState extends State<AddCertificationDialog> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Tên chứng chỉ *',
+                  labelText: 'Certification name *',
                   hintText: 'VD: AWS Certified Solutions Architect',
                 ),
                 validator: (v) => v == null || v.trim().isEmpty
-                    ? 'Vui lòng nhập tên chứng chỉ'
+                    ? 'Please enter the certification name'
                     : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _issuerController,
                 decoration: const InputDecoration(
-                  labelText: 'Tổ chức cấp *',
+                  labelText: 'Issuing organization *',
                   hintText: 'VD: Amazon Web Services (AWS)',
                 ),
                 validator: (v) => v == null || v.trim().isEmpty
-                    ? 'Vui lòng nhập tổ chức cấp'
+                    ? 'Please enter the issuing organization'
                     : null,
               ),
               const SizedBox(height: 12),
@@ -92,8 +92,8 @@ class _AddCertificationDialogState extends State<AddCertificationDialog> {
                 icon: const Icon(Icons.calendar_month, size: 16),
                 label: Text(
                   _issueDate != null
-                      ? 'Ngày cấp: ${dateFmt.format(_issueDate!)}'
-                      : 'Chọn ngày cấp',
+                      ? 'Issued: ${dateFmt.format(_issueDate!)}'
+                      : 'Select issue date',
                   style: const TextStyle(fontSize: 12),
                 ),
                 onPressed: () async {
@@ -112,7 +112,7 @@ class _AddCertificationDialogState extends State<AddCertificationDialog> {
               TextFormField(
                 controller: _credentialIdController,
                 decoration: const InputDecoration(
-                  labelText: 'Mã số chứng chỉ (tùy chọn)',
+                  labelText: 'Credential ID (optional)',
                   hintText: 'VD: AWS-12345678',
                 ),
               ),
@@ -120,7 +120,7 @@ class _AddCertificationDialogState extends State<AddCertificationDialog> {
               TextFormField(
                 controller: _credentialUrlController,
                 decoration: const InputDecoration(
-                  labelText: 'Đường dẫn xác thực (tùy chọn)',
+                  labelText: 'Verification URL (optional)',
                   hintText: 'https://verify.cert.com/...',
                 ),
                 keyboardType: TextInputType.url,
@@ -132,7 +132,7 @@ class _AddCertificationDialogState extends State<AddCertificationDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _submit,
@@ -140,7 +140,7 @@ class _AddCertificationDialogState extends State<AddCertificationDialog> {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
           ),
-          child: const Text('Lưu chứng chỉ'),
+          child: const Text('Save certification'),
         ),
       ],
     );

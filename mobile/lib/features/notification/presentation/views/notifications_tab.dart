@@ -22,8 +22,8 @@ class NotificationsTab extends StatelessWidget {
             ? const _NotificationsBody()
             : const LoginRequiredView(
                 icon: Icons.notifications_none_rounded,
-                title: 'Vui lòng đăng nhập',
-                message: 'Đăng nhập để xem thông báo về việc làm, nhà tuyển dụng và gợi ý từ InterVue AI.',
+                title: 'Please sign in',
+                message: 'Sign in to see notifications about jobs, recruiters and suggestions from InterVue AI.',
               ),
       ),
     );
@@ -54,9 +54,9 @@ class _NotificationsBody extends StatelessWidget {
       case NotificationsStatus.failure:
         return _Message(
           icon: Icons.cloud_off_rounded,
-          title: 'Không tải được thông báo',
-          message: state.errorMessage ?? 'Vui lòng thử lại.',
-          actionLabel: 'Thử lại',
+          title: 'Unable to load notifications',
+          message: state.errorMessage ?? 'Please try again.',
+          actionLabel: 'Try again',
           onAction: () => context.read<NotificationsCubit>().load(),
         );
       case NotificationsStatus.loaded:
@@ -70,8 +70,9 @@ class _NotificationsBody extends StatelessWidget {
                 SizedBox(height: 120),
                 _Message(
                   icon: Icons.notifications_none_rounded,
-                  title: 'Chưa có thông báo',
-                  message: 'Khi có cập nhật từ InterVue hoặc nhà tuyển dụng, bạn sẽ thấy chúng ở đây.',
+                  title: 'No notifications yet',
+                  message:
+                      'Updates from InterVue or recruiters will show up here.',
                 ),
               ],
             ),
@@ -108,12 +109,15 @@ class _Header extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 14, 8, 8),
       child: Row(
         children: [
-          const Text(
-            'Thông báo',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-              color: AppColors.textPrimary,
+          const Flexible(
+            child: Text(
+              'Notifications',
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
           if (unreadCount > 0) ...[
@@ -128,7 +132,7 @@ class _Header extends StatelessWidget {
                 ),
               ),
               child: Text(
-                '$unreadCount mới',
+                '$unreadCount new',
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -142,7 +146,7 @@ class _Header extends StatelessWidget {
             TextButton.icon(
               onPressed: () => context.read<NotificationsCubit>().markAllRead(),
               icon: const Icon(Icons.done_all_rounded, size: 18),
-              label: const Text('Đọc tất cả'),
+              label: const Text('Read all'),
             ),
         ],
       ),

@@ -7,7 +7,7 @@ sealed class AuthState extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Chưa kiểm tra xong token lưu trên máy (đang ở splash).
+/// The stored token has not been checked yet (on splash).
 final class AuthUnknown extends AuthState {
   const AuthUnknown();
 }

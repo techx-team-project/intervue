@@ -38,7 +38,7 @@ class JobRemoteDataSource {
       List<dynamic>() => data,
       {'items': final List<dynamic> items} => items,
       {'content': final List<dynamic> content} => content,
-      _ => throw const ServerException('Dữ liệu việc làm không hợp lệ'),
+      _ => throw const ServerException('Invalid job data'),
     };
     return items
         .map((e) => JobDTO.fromJson(e as Map<String, dynamic>))
@@ -51,7 +51,7 @@ class JobRemoteDataSource {
       skipAuth: true,
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Dữ liệu việc làm không hợp lệ');
+      throw const ServerException('Invalid job data');
     }
     return JobDTO.fromJson(data);
   }

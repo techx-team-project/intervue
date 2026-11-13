@@ -40,7 +40,7 @@ class TopCvMarketInsights extends StatelessWidget {
               const SizedBox(width: 8),
               const Expanded(
                 child: Text(
-                  'Thị trường IT & Việc làm sôi động hôm nay',
+                  'The IT job market is buzzing today',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -56,7 +56,7 @@ class TopCvMarketInsights extends StatelessWidget {
                 child: const Row(
                   children: [
                     Text(
-                      'Báo cáo 2026',
+                      '2026 report',
                       style: TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w700,
@@ -77,7 +77,7 @@ class TopCvMarketInsights extends StatelessWidget {
           Row(
             children: [
               _buildStatItem(
-                label: 'Việc làm mới',
+                label: 'New jobs',
                 value: '48.250+',
                 color: AppColors.primary,
               ),
@@ -87,7 +87,7 @@ class TopCvMarketInsights extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.8),
               ),
               _buildStatItem(
-                label: 'Doanh nghiệp',
+                label: 'Companies',
                 value: '320.000+',
                 color: AppColors.accentBlue,
               ),
@@ -97,7 +97,7 @@ class TopCvMarketInsights extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.8),
               ),
               _buildStatItem(
-                label: 'Phản hồi 24h',
+                label: '24h response',
                 value: '95%',
                 color: AppColors.accentOrange,
               ),

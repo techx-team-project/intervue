@@ -25,7 +25,7 @@ void main() {
     userId: 10,
     title: 'Senior Flutter Developer',
     keyword: 'Flutter, Dart, BLoC',
-    city: 'Hà Nội',
+    city: 'Hanoi',
     careerLevel: 'SENIOR',
     workMode: 'HYBRID',
     salaryMin: 25000000,
@@ -40,7 +40,7 @@ void main() {
     userId: 10,
     title: 'Backend Java Developer',
     keyword: 'Java, Spring Boot',
-    city: 'TP. Hồ Chí Minh',
+    city: 'Ho Chi Minh City',
     careerLevel: 'MIDDLE',
     workMode: 'ONSITE',
     salaryMin: 20000000,
@@ -153,7 +153,7 @@ void main() {
         expect(loaded.alerts.first.id, 3);
         expect(loaded.summary.totalAlerts, 2);
         expect(loaded.summary.activeAlerts, 2);
-        expect(loaded.actionMessage, 'Tạo thông báo việc làm mới thành công!');
+        expect(loaded.actionMessage, 'Job alert created successfully!');
       },
     );
 
@@ -174,10 +174,7 @@ void main() {
       expect(loaded.alerts.first.isActive, isFalse);
       expect(loaded.summary.activeAlerts, 0);
       expect(loaded.summary.pausedAlerts, 2);
-      expect(
-        loaded.actionMessage,
-        'Đã tạm dừng thông báo: Senior Flutter Developer',
-      );
+      expect(loaded.actionMessage, 'Alert paused: Senior Flutter Developer');
     });
 
     test('deleteAlert removes alert from list and updates summary', () async {
@@ -198,7 +195,7 @@ void main() {
       expect(loaded.summary.totalAlerts, 1);
       expect(loaded.summary.activeAlerts, 0);
       expect(loaded.summary.pausedAlerts, 1);
-      expect(loaded.actionMessage, 'Đã xóa thông báo việc làm.');
+      expect(loaded.actionMessage, 'Job alert deleted.');
     });
 
     test('sendTestEmail emits actionMessage on success', () async {
@@ -214,7 +211,7 @@ void main() {
       final loaded = cubit.state as JobAlertListLoaded;
       expect(
         loaded.actionMessage,
-        'Đã gửi email việc làm phù hợp thử nghiệm! Vui lòng kiểm tra hộp thư.',
+        'Test email with matching jobs sent! Please check your inbox.',
       );
     });
 

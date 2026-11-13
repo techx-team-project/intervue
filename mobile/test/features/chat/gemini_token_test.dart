@@ -26,7 +26,6 @@ void main() {
                 'recruiter_flows.md',
                 'support_faq.md (ATS Guidelines)',
               ],
-              'remainingQuota': 28,
             }),
           );
         });
@@ -44,25 +43,17 @@ void main() {
 
         expect(response.answer, contains('85/100'));
         expect(response.sources.length, 2);
-        expect(response.remainingQuota, 28);
       },
     );
 
-    test(
-      'ChatResponse chịu lỗi tốt khi quota trả về dạng num hoặc thiếu trường',
-      () {
-        final jsonWithDouble = {
-          'answer': 'Câu trả lời từ Gemini',
-          'sources': null,
-          'remaining_quota': 15.0,
-        };
-
-        final parsed = ChatResponse.fromJson(jsonWithDouble);
-        expect(parsed.answer, 'Câu trả lời từ Gemini');
-        expect(parsed.sources, isEmpty);
-        expect(parsed.remainingQuota, 15);
-      },
-    );
+    test('ChatResponse chịu lỗi tốt khi thiếu trường sources', () {
+      final parsed = ChatResponse.fromJson({
+        'answer': 'Câu trả lời từ Gemini',
+        'sources': null,
+      });
+      expect(parsed.answer, 'Câu trả lời từ Gemini');
+      expect(parsed.sources, isEmpty);
+    });
 
     test(
       'Xử lý lỗi AI_PROVIDER_BUSY (503 Service Unavailable) từ Gemini',
@@ -79,6 +70,7 @@ void main() {
           const ServerException(
             'The AI service is busy, please try again later!',
             statusCode: 503,
+            code: 'AI_PROVIDER_BUSY',
           ),
         );
 
@@ -87,9 +79,9 @@ void main() {
         expect(cubit.state.isLoading, false);
         final lastMessage = cubit.state.messages.last;
         expect(lastMessage.isError, true);
-        expect(lastMessage.badge, 'LỖI KẾT NỐI');
+        expect(lastMessage.badge, 'AI BUSY');
         expect(
-          lastMessage.actions?.any((a) => a.label.contains('Thử lại')),
+          lastMessage.actions?.any((a) => a.label.contains('Retry')),
           true,
         );
         expect(lastMessage.actions?.first.query, 'Tư vấn mức lương');
@@ -97,35 +89,5 @@ void main() {
         await cubit.close();
       },
     );
-
-    test('Xử lý lỗi AI_USER_QUOTA_EXCEEDED (429 Too Many Requests)', () async {
-      final repository = MockChatRepository();
-      final cubit = ChatCubit(repository);
-
-      when(
-        () => repository.sendMessage(
-          message: any(named: 'message'),
-          sessionId: any(named: 'sessionId'),
-        ),
-      ).thenThrow(
-        const ServerException(
-          'You have reached your daily AI usage limit!',
-          statusCode: 429,
-        ),
-      );
-
-      await cubit.sendMessage('Hỏi tiếp câu nữa');
-
-      expect(cubit.state.isLoading, false);
-      final lastMessage = cubit.state.messages.last;
-      expect(lastMessage.isError, true);
-      expect(lastMessage.badge, 'HẾT LƯỢT HÔM NAY');
-      expect(
-        lastMessage.actions?.any((a) => a.label.contains('Nâng cấp VIP')),
-        true,
-      );
-
-      await cubit.close();
-    });
   });
 }
