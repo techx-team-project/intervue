@@ -21,10 +21,13 @@ const optionalUrl = z
   .max(255, 'Link must be at most 255 characters.')
   .refine((value) => value === '' || /^https?:\/\/.+/.test(value), 'Link must start with http:// or https://.');
 
-const optionalMonth = z
-  .string()
-  .refine((value) => value === '' || MONTH_PATTERN.test(value), 'Use the format YYYY-MM.');
-const requiredMonth = z.string().regex(MONTH_PATTERN, 'Use the format YYYY-MM.');
+const currentMonth = () => new Date().toISOString().slice(0, 7);
+const monthInRange = (value: string) =>
+  MONTH_PATTERN.test(value) && value >= `${SECTION_MIN_YEAR}-01` && value <= currentMonth();
+const MONTH_RANGE_MESSAGE = `Pick a month between ${SECTION_MIN_YEAR}-01 and today.`;
+
+const optionalMonth = z.string().refine((value) => value === '' || monthInRange(value), MONTH_RANGE_MESSAGE);
+const requiredMonth = z.string().refine(monthInRange, MONTH_RANGE_MESSAGE);
 
 const tags = z
   .array(z.string().trim().min(1).max(60, 'Each item must be at most 60 characters.'))

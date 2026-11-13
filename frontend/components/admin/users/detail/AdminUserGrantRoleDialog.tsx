@@ -1,11 +1,13 @@
 'use client';
 
+import { isoDateAfterDays } from '@/utils/datetime';
 import { Button } from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
 import Select from '@/components/ui/Select';
 import Textarea from '@/components/ui/Textarea';
 import { USER_ROLE_META } from '@/constants/admin-user';
+import { ADMIN_EXPIRY_MAX_DAYS } from '@/constants/admin-user';
 import { ROLES } from '@/constants/auth';
 import { grantRoleSchema, type GrantRoleFormData } from '@/schemas/admin-user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -81,6 +83,8 @@ export default function AdminUserGrantRoleDialog({
         {isTemporary && (
           <Input
             type="date"
+            min={isoDateAfterDays(1)}
+            max={isoDateAfterDays(ADMIN_EXPIRY_MAX_DAYS)}
             label="Expires on"
             error={formState.errors.expiresAt?.message}
             {...register('expiresAt')}

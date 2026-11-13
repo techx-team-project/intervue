@@ -7,6 +7,7 @@ import com.techx.intervue.modules.candidate.enums.JobSearchStatus;
 import com.techx.intervue.modules.candidate.enums.WorkMode;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -41,8 +42,8 @@ public record SaveCandidateProfileRequest(
         CareerLevel desiredLevel,
         @PositiveOrZero BigDecimal totalYoe,
         @NotNull Boolean salaryNegotiable,
-        @PositiveOrZero Long salaryMin,
-        @PositiveOrZero Long salaryMax,
+        @PositiveOrZero @Max(250_000_000) Long salaryMin,
+        @PositiveOrZero @Max(250_000_000) Long salaryMax,
         @Size(max = 10) String currency,
         @Size(max = 20) String salaryPeriod,
         WorkMode workMode,

@@ -1,5 +1,7 @@
 'use client';
 
+import { isoDateAfterDays } from '@/utils/datetime';
+import { ADMIN_EXPIRY_MAX_DAYS } from '@/constants/admin-user';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import { Button } from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -69,6 +71,8 @@ export default function AdminAccountCreateView() {
 
               <Input
                 type="date"
+                min={isoDateAfterDays(1)}
+                max={isoDateAfterDays(ADMIN_EXPIRY_MAX_DAYS)}
                 label="Admin role expires on"
                 helperText="Leave empty for a permanent grant. A dated grant stops being active on its own."
                 error={formState.errors.expiresAt?.message}

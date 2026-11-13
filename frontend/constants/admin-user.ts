@@ -172,3 +172,5 @@ export const ADMIN_PERMISSION_ORDER = [
 ] as const satisfies readonly AdminPermission[];
 
 export const SECURITY_ACTION_ICON = { passwordReset: KeyRound, twoFactorReset: ShieldOff, revokeSessions: LogOut };
+
+export const ADMIN_EXPIRY_MAX_DAYS = 365;

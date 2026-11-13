@@ -1,4 +1,9 @@
-import { PROFILE_LIST_LIMIT, PROFILE_MIN_AGE, PROFILE_MIN_BIRTH_YEAR } from '@/constants/candidate-profile';
+import {
+  PROFILE_LIST_LIMIT,
+  PROFILE_MAX_SALARY_VND,
+  PROFILE_MIN_AGE,
+  PROFILE_MIN_BIRTH_YEAR,
+} from '@/constants/candidate-profile';
 import { CAREER_LEVELS, CONTRACT_TYPES, GENDERS, JOB_SEARCH_STATUSES, WORK_MODES } from '@/types/candidate-profile';
 import { z } from 'zod';
 
@@ -66,9 +71,16 @@ export const candidateProfileSchema = z
     }
     if (values.salaryNegotiable) return;
     const salaryFields = ['salaryMin', 'salaryMax'] as const;
-    const invalid = salaryFields.filter((field) => values[field] !== '' && !SALARY_PATTERN.test(values[field]));
+    const invalid = salaryFields.filter(
+      (field) =>
+        values[field] !== '' && (!SALARY_PATTERN.test(values[field]) || Number(values[field]) > PROFILE_MAX_SALARY_VND),
+    );
     invalid.forEach((field) =>
-      ctx.addIssue({ code: 'custom', path: [field], message: 'Enter a whole, non-negative amount.' }),
+      ctx.addIssue({
+        code: 'custom',
+        path: [field],
+        message: `Enter a whole amount from 0 to ${PROFILE_MAX_SALARY_VND.toLocaleString('en-US')}.`,
+      }),
     );
     const hasRange = invalid.length === 0 && values.salaryMin !== '' && values.salaryMax !== '';
     if (hasRange && Number(values.salaryMin) > Number(values.salaryMax)) {
