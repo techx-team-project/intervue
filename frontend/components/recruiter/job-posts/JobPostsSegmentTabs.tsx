@@ -6,12 +6,11 @@ import type { RecruiterJobSegment } from '@/types/recruiter-job';
 interface JobPostsSegmentTabsProps {
   segment: RecruiterJobSegment;
   onSegmentChange: (segment: RecruiterJobSegment) => void;
-  counts: Record<RecruiterJobSegment, number>;
 }
 
 const SEGMENT_KEYS = Object.keys(JOB_SEGMENT_META) as RecruiterJobSegment[];
 
-export default function JobPostsSegmentTabs({ segment, onSegmentChange, counts }: JobPostsSegmentTabsProps) {
+export default function JobPostsSegmentTabs({ segment, onSegmentChange }: JobPostsSegmentTabsProps) {
   return (
     <div className="flex scrollbar-none items-center gap-1.5 overflow-x-auto pb-1">
       <div className="bg-surface-container-high flex items-center gap-1 rounded-xl p-1">
@@ -29,14 +28,7 @@ export default function JobPostsSegmentTabs({ segment, onSegmentChange, counts }
                   : 'text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface'
               }`}
             >
-              <span>{JOB_SEGMENT_META[key].label}</span>
-              <span
-                className={`text-label-sm flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 font-bold ${
-                  isActive ? 'bg-emerald-100 text-emerald-800' : 'bg-surface-container-high/80 text-on-surface-variant'
-                }`}
-              >
-                {counts[key] ?? 0}
-              </span>
+              {JOB_SEGMENT_META[key].label}
             </button>
           );
         })}
