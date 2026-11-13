@@ -15,6 +15,7 @@ import { Search, SearchX } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import AdminJobInsightsPanel from './AdminJobInsightsPanel';
+import AdminJobApproveModal from './AdminJobApproveModal';
 import AdminJobReasonDialog from './AdminJobReasonDialog';
 import AdminJobPreviewModal from './AdminJobPreviewModal';
 import AdminJobsList from './AdminJobsList';
@@ -214,25 +215,12 @@ export default function AdminJobsPageClient() {
         />
       )}
 
-      <Modal
-        isOpen={approving !== null}
+      <AdminJobApproveModal
+        job={approving}
+        isPending={approve.isPending}
         onClose={() => setApproving(null)}
-        maxWidth="sm"
-        title="Approve this job?"
-        description={approving ? `"${approving.title}" goes live for candidates right away.` : undefined}
-        footer={
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setApproving(null)} disabled={approve.isPending}>
-              Cancel
-            </Button>
-            <Button isLoading={approve.isPending} onClick={confirmApprove}>
-              Approve
-            </Button>
-          </div>
-        }
-      >
-        <p className="text-on-surface-variant text-sm">The recruiter is notified when the job is approved.</p>
-      </Modal>
+        onConfirm={confirmApprove}
+      />
 
       <Modal
         isOpen={restoring !== null}
