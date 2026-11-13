@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import type { AdminWorkItem, AdminWorkItemKind } from '@/types/admin';
 import { Inbox } from 'lucide-react';
 import { useState } from 'react';
+import AdminJobReviewQueue from './AdminJobReviewQueue';
 import AdminWorkItemRow from './AdminWorkItemRow';
 
 interface AdminWorklistProps {
@@ -18,7 +19,7 @@ export default function AdminWorklist({ items, initialKind, onApprove, onReject 
   const [kindFilter, setKindFilter] = useState<AdminWorkItemKind | 'all'>(initialKind ?? 'all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const kinds = Array.from(new Set(items.map((item) => item.kind)));
+  const kinds = Array.from(new Set<AdminWorkItemKind>([...items.map((item) => item.kind), 'jobPost']));
   const visible = kindFilter === 'all' ? items : items.filter((item) => item.kind === kindFilter);
 
   const chipClass = (isActive: boolean) =>
@@ -29,6 +30,29 @@ export default function AdminWorklist({ items, initialKind, onApprove, onReject 
         : 'text-on-surface-variant hover:bg-surface-container-low dark:text-forest-300 dark:hover:bg-forest-850',
     );
 
+  const filterChips = (
+    <div className="flex flex-wrap items-center gap-1">
+      <button type="button" onClick={() => setKindFilter('all')} className={chipClass(kindFilter === 'all')}>
+        All
+      </button>
+
+      {kinds.map((kind) => (
+        <button key={kind} type="button" onClick={() => setKindFilter(kind)} className={chipClass(kindFilter === kind)}>
+          {WORK_ITEM_KIND_LABEL[kind]}
+        </button>
+      ))}
+    </div>
+  );
+
+  if (kindFilter === 'jobPost') {
+    return (
+      <div className="space-y-3">
+        {filterChips}
+        <AdminJobReviewQueue />
+      </div>
+    );
+  }
+
   return (
     <section className="dark:border-forest-800 dark:bg-forest-900 border-outline-variant overflow-hidden rounded-2xl border bg-white shadow-xs">
       <header className="dark:border-forest-800 border-outline-variant flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3.5">
@@ -37,22 +61,7 @@ export default function AdminWorklist({ items, initialKind, onApprove, onReject 
           <span className="text-label-sm text-outline">{visible.length} shown</span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1">
-          <button type="button" onClick={() => setKindFilter('all')} className={chipClass(kindFilter === 'all')}>
-            All
-          </button>
-
-          {kinds.map((kind) => (
-            <button
-              key={kind}
-              type="button"
-              onClick={() => setKindFilter(kind)}
-              className={chipClass(kindFilter === kind)}
-            >
-              {WORK_ITEM_KIND_LABEL[kind]}
-            </button>
-          ))}
-        </div>
+        {filterChips}
       </header>
 
       {visible.length === 0 ? (

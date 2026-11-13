@@ -123,20 +123,6 @@ const WORK_ITEMS: AdminWorkItem[] = [
     ],
   },
   {
-    id: 'job-9120',
-    kind: 'jobPost',
-    subject: 'Senior Flutter Developer · VNG',
-    context: 'Salary range contradicts the description',
-    waitingLabel: '9 hours',
-    submittedAt: '28 Oct 2026, 00:32',
-    facts: [
-      { label: 'Salary field', value: 'VND 25M – 35M / month' },
-      { label: 'Description says', value: '“up to 60 triệu cho ứng viên xuất sắc”' },
-      { label: 'Contract', value: 'Full-time · Hybrid · Hanoi' },
-      { label: 'Company', value: 'VNG Corporation · verified' },
-    ],
-  },
-  {
     id: 'report-4812',
     kind: 'report',
     subject: 'Report #4812 · FPT Software',

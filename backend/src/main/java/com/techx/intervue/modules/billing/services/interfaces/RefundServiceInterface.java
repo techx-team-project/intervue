@@ -6,6 +6,9 @@ import com.techx.intervue.modules.billing.requests.CreateRefundRequest;
 import com.techx.intervue.modules.billing.requests.ReviewRefundRequest;
 import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
+import com.techx.intervue.modules.billing.resources.RefundStatusCountsResource;
+import com.techx.intervue.modules.billing.resources.SupportedBankResource;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,11 +17,18 @@ public interface RefundServiceInterface {
     /** What the order would give back today, so the recruiter sees it before asking. */
     RefundQuoteResource quote(String orderCode, Long recruiterId);
 
+    /** Banks a recruiter can pick as the refund destination when requesting one. */
+    List<SupportedBankResource> supportedBanks();
+
     RefundRequestResource request(String orderCode, CreateRefundRequest request, Long recruiterId);
 
     Page<RefundRequestResource> listMine(Long recruiterId, Pageable pageable);
 
-    Page<RefundRequestResource> search(RefundStatus status, Pageable pageable);
+    RefundStatusCountsResource summaryForRecruiter(Long recruiterId);
+
+    RefundStatusCountsResource summaryForAdmin();
+
+    Page<RefundRequestResource> search(RefundStatus status, String orderCode, Pageable pageable);
 
     RefundRequestResource approve(Long id, ReviewRefundRequest request, RequestActor actor);
 

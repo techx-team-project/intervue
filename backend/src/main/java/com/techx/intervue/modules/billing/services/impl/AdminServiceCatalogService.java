@@ -30,7 +30,6 @@ import com.techx.intervue.modules.billing.requests.SaveServicePackageRequest;
 import com.techx.intervue.modules.billing.resources.AdminServiceCategoryResource;
 import com.techx.intervue.modules.billing.resources.AdminServicePackageResource;
 import com.techx.intervue.modules.billing.services.interfaces.AdminServiceCatalogServiceInterface;
-import com.techx.intervue.modules.entitlement.enums.EntitlementType;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -214,14 +213,12 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
     @Transactional
     public AdminServicePackageResource createPackage(
             SaveServicePackageRequest request, RequestActor actor) {
-        if (packageRepository.existsByCode(request.code())
-                || packageRepository.existsBySlug(request.slug())) {
+        if (packageRepository.existsBySlug(request.slug())) {
             throw new AppException(ErrorCode.DUPLICATE_PACKAGE_CODE);
         }
         validateBenefits(request.benefits());
         ServicePackage servicePackage = new ServicePackage();
         mapper.apply(servicePackage, request, requireCategory(request.categoryId()));
-        syncBonusCreditsFromBenefits(servicePackage, request);
         ServicePackage saved = packageRepository.save(servicePackage);
         replaceChildren(saved, request);
         audit(
@@ -229,7 +226,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 AuditAction.SERVICE_PACKAGE_CREATED,
                 AuditTargetType.SERVICE_PACKAGE,
                 saved.getId(),
-                saved.getCode());
+                saved.getSlug());
         return toResource(saved);
     }
 
@@ -238,13 +235,11 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
     public AdminServicePackageResource updatePackage(
             Long id, SaveServicePackageRequest request, RequestActor actor) {
         ServicePackage servicePackage = requirePackage(id);
-        if (packageRepository.existsByCodeAndIdNot(request.code(), id)
-                || packageRepository.existsBySlugAndIdNot(request.slug(), id)) {
+        if (packageRepository.existsBySlugAndIdNot(request.slug(), id)) {
             throw new AppException(ErrorCode.DUPLICATE_PACKAGE_CODE);
         }
         validateBenefits(request.benefits());
         mapper.apply(servicePackage, request, requireCategory(request.categoryId()));
-        syncBonusCreditsFromBenefits(servicePackage, request);
         adSlotRepository
                 .findByServicePackageId(servicePackage.getId())
                 .ifPresent(slot -> slot.setPricePerWeek(servicePackage.getPrice()));
@@ -254,7 +249,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 AuditAction.SERVICE_PACKAGE_UPDATED,
                 AuditTargetType.SERVICE_PACKAGE,
                 id,
-                servicePackage.getCode());
+                servicePackage.getSlug());
         return toResource(servicePackage);
     }
 
@@ -297,7 +292,6 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                             .servicePackage(servicePackage)
                             .entitlementType(benefit.entitlementType())
                             .quantity(benefit.quantity())
-                            .tier(benefit.tier())
                             .durationDays(benefit.durationDays())
                             .label(benefit.label().trim())
                             .displayOrder(index)
@@ -342,7 +336,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
                 predicates.add(
                         builder.or(
                                 builder.like(builder.lower(root.get("name")), pattern),
-                                builder.like(builder.lower(root.get("code")), pattern)));
+                                builder.like(builder.lower(root.get("slug")), pattern)));
             }
             if (request.categoryId() != null) {
                 predicates.add(builder.equal(root.get("category").get("id"), request.categoryId()));
@@ -393,24 +387,7 @@ public class AdminServiceCatalogService implements AdminServiceCatalogServiceInt
         for (int i = 0; i < benefits.size(); i++) {
             SaveServicePackageRequest.Benefit benefit = benefits.get(i);
             EntitlementConfigRules.validateBenefit(
-                    i, benefit.entitlementType(), benefit.tier(), benefit.durationDays());
-        }
-    }
-
-    private void syncBonusCreditsFromBenefits(
-            ServicePackage servicePackage, SaveServicePackageRequest request) {
-        if (request.benefits() == null) {
-            return;
-        }
-        int creditSum =
-                request.benefits().stream()
-                        .filter(benefit -> benefit.entitlementType() == EntitlementType.CREDIT)
-                        .mapToInt(SaveServicePackageRequest.Benefit::quantity)
-                        .sum();
-        if (creditSum > 0
-                && (servicePackage.getBonusCredits() == null
-                        || servicePackage.getBonusCredits() < creditSum)) {
-            servicePackage.setBonusCredits(creditSum);
+                    i, benefit.entitlementType(), benefit.durationDays());
         }
     }
 

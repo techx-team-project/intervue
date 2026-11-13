@@ -1,9 +1,21 @@
+'use client';
+
 import JobHighlightBadge from '@/components/jobs/JobHighlightBadge';
+import { useHasApplied } from '@/hooks/useCandidateApplication';
 import { CLOSING_SOON_DAYS, NEW_JOB_DAYS } from '@/constants/job-filters';
 import { cn } from '@/lib/utils';
 import type { PublicJobSummaryResource } from '@/types/public-job';
 import { dayDifferenceFromToday, formatRelativeDay } from '@/utils/datetime';
 import { daysLeft, deadlineLabel, jobFacts } from '@/utils/public-job';
+
+export function AppliedBadge({ jobId }: { jobId: number }) {
+  if (!useHasApplied(jobId)) return null;
+  return (
+    <span className="bg-surface-container-high text-on-surface-variant mr-1.5 inline-block rounded px-1.5 py-0.5 align-middle text-[11px] font-extrabold">
+      APPLIED
+    </span>
+  );
+}
 
 export function JobStatusBadges({ job }: { job: PublicJobSummaryResource }) {
   const isNew = job.publishedAt !== undefined && Math.abs(dayDifferenceFromToday(job.publishedAt)) <= NEW_JOB_DAYS;

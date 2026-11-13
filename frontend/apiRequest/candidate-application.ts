@@ -5,6 +5,8 @@ import type { ApplyForm, CandidateApplication, SaveApplicationPayload } from '@/
 const BASE = '/candidate/applications';
 
 export const candidateApplicationApi = {
+  appliedJobIds: () => request<number[]>(`${BASE}/applied-job-ids`),
+
   form: (jobId: number) => request<ApplyForm>(`${BASE}/form?jobId=${jobId}`),
 
   list: (page = 0, size = 10) =>

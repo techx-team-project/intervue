@@ -10,7 +10,6 @@ import lombok.Builder;
 public record MockInterviewDetailResource(
         Long id,
         Long candidateId,
-        Long resumeId,
         String targetRole,
         String seniorityLevel,
         MockInterviewFocusArea focusArea,

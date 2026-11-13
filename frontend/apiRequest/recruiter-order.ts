@@ -5,21 +5,31 @@ import type {
   OrderInvoice,
   OrderPayment,
   OrderRefundRequest,
+  OrderStatusCounts,
+  PaymentTransactionSummary,
   RecruiterPaymentTransaction,
+  RefundBank,
   RefundQuote,
   RecruiterOrder,
   RecruiterOrderSummary,
+  RefundStatusCounts,
 } from '@/types/recruiter-order';
 
 export const recruiterOrderApi = {
   search: (page: number, size: number) =>
     request<Page<RecruiterOrderSummary>>(`/recruiter/orders?page=${page}&size=${size}`),
 
+  counts: () => request<OrderStatusCounts>('/recruiter/orders/summary'),
+
   searchPayments: (page: number, size: number) =>
     request<Page<RecruiterPaymentTransaction>>(`/recruiter/orders/payments?page=${page}&size=${size}`),
 
+  paymentsSummary: () => request<PaymentTransactionSummary>('/recruiter/orders/payments/summary'),
+
   searchRefunds: (page: number, size: number) =>
     request<Page<OrderRefundRequest>>(`/recruiter/orders/refunds?page=${page}&size=${size}`),
+
+  refundsSummary: () => request<RefundStatusCounts>('/recruiter/orders/refunds/summary'),
 
   get: (code: string) => request<RecruiterOrder>(`/recruiter/orders/${code}`),
 
@@ -34,8 +44,12 @@ export const recruiterOrderApi = {
 
   refundQuote: (code: string) => request<RefundQuote>(`/recruiter/orders/${code}/refund`),
 
-  requestRefund: (code: string, reason: string) =>
-    request<OrderRefundRequest>(`/recruiter/orders/${code}/refund`, { method: 'POST', body: { reason } }),
+  refundBanks: () => request<RefundBank[]>('/recruiter/orders/refund-banks'),
+
+  requestRefund: (
+    code: string,
+    payload: { reason: string; bankCode: string; bankAccountNumber: string; bankAccountName: string },
+  ) => request<OrderRefundRequest>(`/recruiter/orders/${code}/refund`, { method: 'POST', body: payload }),
 
   cancel: (code: string) => request<RecruiterOrder>(`/recruiter/orders/${code}/cancel`, { method: 'POST' }),
 };

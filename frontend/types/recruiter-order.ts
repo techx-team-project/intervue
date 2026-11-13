@@ -6,13 +6,11 @@ export type RecruiterOrderStatus =
 export interface RecruiterOrderItem {
   id: number;
   packageId: number | null;
-  packageCode: string;
   packageName: string;
   unitPrice: number;
   quantity: number;
   lineTotal: number;
   validityDays: number | null;
-  bonusCredits: number;
   benefits: ServicePackageBenefit[];
   bookedWeeks: string[];
 }
@@ -46,6 +44,11 @@ export interface RecruiterOrder {
   createdAt: string;
   items: RecruiterOrderItem[];
   invoice: RecruiterOrderInvoice | null;
+}
+
+export interface OrderStatusCounts {
+  total: number;
+  byStatus: Record<RecruiterOrderStatus, number>;
 }
 
 export interface RecruiterOrderSummary {
@@ -119,6 +122,16 @@ export interface RefundQuote {
 
 export type PaymentTransactionStatus = 'MATCHED' | 'UNMATCHED';
 
+export interface PaymentTransactionSummary {
+  totalCount: number;
+  totalAmount: number;
+}
+
+export interface RefundStatusCounts {
+  total: number;
+  byStatus: Record<RefundStatus, number>;
+}
+
 export interface RecruiterPaymentTransaction {
   id: number;
   sepayId: string;
@@ -141,8 +154,17 @@ export interface OrderRefundRequest {
   status: RefundStatus;
   orderTotal: number;
   refundableAmount: number;
+  bankCode: string | null;
+  bankAccountNumber: string | null;
+  bankAccountName: string | null;
   approvedAmount: number | null;
   adminNote: string | null;
   reviewedAt: string | null;
   createdAt: string;
+}
+
+export interface RefundBank {
+  code: string;
+  name: string;
+  contentKeyword: string | null;
 }

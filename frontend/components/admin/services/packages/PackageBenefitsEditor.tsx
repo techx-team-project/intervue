@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
-import { BOOST_TIER_OPTIONS, ENTITLEMENT_TYPE_OPTIONS } from '@/constants/service-package';
+import { ENTITLEMENT_TYPE_OPTIONS } from '@/constants/service-package';
 import {
   DURATION_REQUIRED_ENTITLEMENT_TYPES,
   type PackageBenefitFormData,
@@ -38,7 +38,6 @@ interface PackageBenefitsEditorProps {
 const DEFAULT_BENEFIT: PackageBenefitFormData = {
   entitlementType: 'JOB_POST_SLOT',
   quantity: '1',
-  tier: '1',
   durationDays: '30',
   label: '',
 };
@@ -83,10 +82,8 @@ export default function PackageBenefitsEditor({
       <div className="dark:border-forest-800 dark:bg-forest-950/60 border-outline-variant bg-surface-container-low/60 flex items-start gap-2.5 rounded-lg border px-3.5 py-2.5 text-xs">
         <Info className="text-on-surface-variant dark:text-forest-300 mt-0.5 h-4 w-4 shrink-0" />
         <p className="dark:text-forest-300 text-on-surface-variant leading-relaxed">
-          <strong className="text-on-surface dark:text-forest-100">Tip:</strong> Only{' '}
-          <code className="font-mono">JOB_BOOST</code> uses ranking tier (1–3). For spendable credit grants (like Trial
-          bonus credits), add a <code className="font-mono">CREDIT</code> row here — the{' '}
-          <span className="italic">Bonus credits</span> field above is catalog/order display metadata.
+          <strong className="text-on-surface dark:text-forest-100">Tip:</strong> Benefits with a time-boxed entitlement
+          type require a duration in days.
         </p>
       </div>
 
@@ -101,7 +98,6 @@ export default function PackageBenefitsEditor({
           {fields.map((field, index) => {
             const currentType = watchedBenefits?.[index]?.entitlementType ?? field.entitlementType;
             const currentDuration = watchedBenefits?.[index]?.durationDays ?? field.durationDays;
-            const isBoost = currentType === 'JOB_BOOST';
             const requiresDuration = DURATION_REQUIRED_ENTITLEMENT_TYPES.has(currentType);
             const rowErrors = errors.benefits?.[index];
 
@@ -143,7 +139,7 @@ export default function PackageBenefitsEditor({
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-12">
-                  <div className="lg:col-span-4">
+                  <div className="lg:col-span-5">
                     <Controller
                       control={control}
                       name={`benefits.${index}.entitlementType`}
@@ -154,9 +150,6 @@ export default function PackageBenefitsEditor({
                           onChange={(event) => {
                             const nextType = event.target.value as EntitlementType;
                             typeField.onChange(nextType);
-                            if (nextType !== 'JOB_BOOST') {
-                              setValue(`benefits.${index}.tier`, '1', { shouldValidate: true });
-                            }
                             if (DURATION_REQUIRED_ENTITLEMENT_TYPES.has(nextType) && !currentDuration?.trim()) {
                               setValue(`benefits.${index}.durationDays`, '30', { shouldValidate: true });
                             }
@@ -169,7 +162,7 @@ export default function PackageBenefitsEditor({
                     />
                   </div>
 
-                  <div className="lg:col-span-2">
+                  <div className="lg:col-span-3">
                     <Input
                       label="Quantity"
                       type="number"
@@ -180,27 +173,7 @@ export default function PackageBenefitsEditor({
                     />
                   </div>
 
-                  <div className="lg:col-span-3">
-                    {isBoost ? (
-                      <Select
-                        label="Boost tier"
-                        {...register(`benefits.${index}.tier`)}
-                        options={BOOST_TIER_OPTIONS}
-                        error={rowErrors?.tier?.message}
-                        className={CONTROL_DARK_CLASS}
-                      />
-                    ) : (
-                      <Input
-                        label="Tier"
-                        value="1 (default)"
-                        readOnly
-                        disabled
-                        className="dark:border-forest-800 dark:bg-forest-900/60 dark:text-forest-400 bg-surface-container-low text-on-surface-variant cursor-not-allowed"
-                      />
-                    )}
-                  </div>
-
-                  <div className="lg:col-span-3">
+                  <div className="lg:col-span-4">
                     <Input
                       label={requiresDuration ? 'Duration (days) *' : 'Duration (days)'}
                       type="number"

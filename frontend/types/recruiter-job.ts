@@ -93,9 +93,7 @@ export interface RecruiterJobSummaryResource {
   openings: number;
   deadline?: string;
   publishedAt?: string;
-  retoppedAt?: string;
-  boostLevel?: number;
-  highlightLabel?: 'URGENT' | 'HOT' | null;
+  highlightLabel?: 'HOT' | null;
   updatedAt: string;
 }
 
@@ -121,14 +119,11 @@ export interface RecruiterJobResource {
   openings: number;
   deadline?: string;
   publishedAt?: string;
-  retoppedAt?: string;
   hiddenReason?: string;
   hiddenAt?: string;
   createdAt: string;
   updatedAt: string;
-  boostLevel?: number;
-  boostExpiresAt?: string;
-  highlightLabel?: 'URGENT' | 'HOT' | null;
+  highlightLabel?: 'HOT' | null;
   highlightLabelExpiresAt?: string;
   highlighted?: boolean;
   highlightExpiresAt?: string;
@@ -142,7 +137,6 @@ export type JobHistoryAction =
   | 'JOB_RESUMED'
   | 'JOB_CLOSED'
   | 'JOB_RENEWED'
-  | 'JOB_RETOPPED'
   | 'JOB_HIDDEN'
   | 'JOB_RESTORED';
 
@@ -170,6 +164,9 @@ export interface JobStats {
 export interface JobQuota {
   slotsRemaining: number;
   slotRequired: boolean;
+  freeLimit: number;
+  freeMaxDays: number;
+  freePostsUsed: number;
 }
 
 export interface RecruiterJobCounts {
@@ -221,9 +218,7 @@ export interface RecruiterJobPost {
   updatedAt: string;
   expiresAt?: string;
   publishedAt?: string;
-  retoppedAt?: string;
-  boostLevel?: number;
-  highlightLabel?: 'URGENT' | 'HOT' | null;
+  highlightLabel?: 'HOT' | null;
 }
 
 export interface SimilarJob {

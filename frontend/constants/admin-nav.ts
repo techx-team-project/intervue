@@ -145,14 +145,14 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
             comingSoon: false,
           },
           {
-            label: 'Credit prices',
-            href: ROUTES.ADMIN_SERVICE_PRICING,
+            label: 'Vouchers',
+            href: ROUTES.ADMIN_SERVICE_VOUCHERS,
             permission: 'services.manage',
             comingSoon: false,
           },
           {
-            label: 'Vouchers',
-            href: ROUTES.ADMIN_SERVICE_VOUCHERS,
+            label: 'Free quotas',
+            href: ROUTES.ADMIN_SERVICE_QUOTAS,
             permission: 'services.manage',
             comingSoon: false,
           },

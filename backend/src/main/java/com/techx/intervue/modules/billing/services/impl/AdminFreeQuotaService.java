@@ -62,9 +62,10 @@ public class AdminFreeQuotaService
         settings.setConnectDailyInviteLimit(request.connectDailyInviteLimit());
         settings.setCompanyFreePhotoLimit(request.companyFreePhotoLimit());
         settings.setRequireJobSlot(Boolean.TRUE.equals(request.requireJobSlot()));
-        settings.setJobFreeActiveLimit(request.jobFreeActiveLimit());
+        settings.setJobFreePostLimit(request.jobFreePostLimit());
         settings.setJobFreeMaxDays(request.jobFreeMaxDays());
         settings.setJobReviewFirstCount(request.jobReviewFirstCount());
+        settings.setCandidateDailyApplicationLimit(request.candidateDailyApplicationLimit());
         FreeQuotaSettings saved = settingsRepository.save(settings);
 
         auditLogService.record(
@@ -85,7 +86,7 @@ public class AdminFreeQuotaService
                                                 saved.getConnectDailyInviteLimit(),
                                                 saved.getCompanyFreePhotoLimit(),
                                                 saved.isRequireJobSlot(),
-                                                saved.getJobFreeActiveLimit(),
+                                                saved.getJobFreePostLimit(),
                                                 saved.getJobFreeMaxDays(),
                                                 saved.getJobReviewFirstCount()))
                         .ip(actor.ip())
@@ -112,9 +113,10 @@ public class AdminFreeQuotaService
                 defaults.connectDailyInviteLimit(),
                 defaults.companyFreePhotoLimit(),
                 billingProperties.requiresJobSlot(),
-                defaults.jobFreeActiveLimit(),
+                defaults.jobFreePostLimit(),
                 defaults.jobFreeMaxDays(),
-                defaults.jobReviewFirstCount());
+                defaults.jobReviewFirstCount(),
+                defaults.candidateDailyApplicationLimit());
     }
 
     private static FreeQuotaValues toValues(FreeQuotaSettings s) {
@@ -126,9 +128,10 @@ public class AdminFreeQuotaService
                 s.getConnectDailyInviteLimit(),
                 s.getCompanyFreePhotoLimit(),
                 s.isRequireJobSlot(),
-                s.getJobFreeActiveLimit(),
+                s.getJobFreePostLimit(),
                 s.getJobFreeMaxDays(),
-                s.getJobReviewFirstCount());
+                s.getJobReviewFirstCount(),
+                s.getCandidateDailyApplicationLimit());
     }
 
     private static FreeQuotaSettingsResource toResource(FreeQuotaSettings s) {
@@ -140,9 +143,10 @@ public class AdminFreeQuotaService
                 .connectDailyInviteLimit(s.getConnectDailyInviteLimit())
                 .companyFreePhotoLimit(s.getCompanyFreePhotoLimit())
                 .requireJobSlot(s.isRequireJobSlot())
-                .jobFreeActiveLimit(s.getJobFreeActiveLimit())
+                .jobFreePostLimit(s.getJobFreePostLimit())
                 .jobFreeMaxDays(s.getJobFreeMaxDays())
                 .jobReviewFirstCount(s.getJobReviewFirstCount())
+                .candidateDailyApplicationLimit(s.getCandidateDailyApplicationLimit())
                 .updatedAt(s.getUpdatedAt())
                 .build();
     }
@@ -156,9 +160,10 @@ public class AdminFreeQuotaService
                 .connectDailyInviteLimit(values.connectDailyInviteLimit())
                 .companyFreePhotoLimit(values.companyFreePhotoLimit())
                 .requireJobSlot(values.requireJobSlot())
-                .jobFreeActiveLimit(values.jobFreeActiveLimit())
+                .jobFreePostLimit(values.jobFreePostLimit())
                 .jobFreeMaxDays(values.jobFreeMaxDays())
                 .jobReviewFirstCount(values.jobReviewFirstCount())
+                .candidateDailyApplicationLimit(values.candidateDailyApplicationLimit())
                 .build();
     }
 }

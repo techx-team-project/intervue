@@ -13,8 +13,6 @@ import com.techx.intervue.modules.ai.resources.PromptTemplate;
 import com.techx.intervue.modules.ai.services.interfaces.AiGatewayServiceInterface;
 import com.techx.intervue.modules.ai.services.interfaces.CandidatePrivacySanitizerInterface;
 import com.techx.intervue.modules.ai.services.interfaces.PromptServiceInterface;
-import com.techx.intervue.modules.candidate.entities.CandidateProfile;
-import com.techx.intervue.modules.candidate.entities.CandidateResume;
 import com.techx.intervue.modules.candidate.mockinterview.entities.AiMockInterview;
 import com.techx.intervue.modules.candidate.mockinterview.entities.AiMockInterviewQuestion;
 import com.techx.intervue.modules.candidate.mockinterview.enums.MockInterviewStatus;
@@ -27,18 +25,18 @@ import com.techx.intervue.modules.candidate.mockinterview.resources.MockIntervie
 import com.techx.intervue.modules.candidate.mockinterview.resources.MockInterviewQuestionResource;
 import com.techx.intervue.modules.candidate.mockinterview.resources.MockInterviewSummaryResource;
 import com.techx.intervue.modules.candidate.mockinterview.resources.SubmitAnswerResultResource;
-import com.techx.intervue.modules.candidate.repositories.CandidateProfileRepository;
-import com.techx.intervue.modules.candidate.repositories.CandidateResumeRepository;
-import com.techx.intervue.modules.candidate.services.interfaces.CandidateResumeServiceInterface;
+import com.techx.intervue.modules.candidate.resources.CvTextExtractionResult;
 import com.techx.intervue.modules.candidate.services.interfaces.CvTextExtractorServiceInterface;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -53,71 +51,29 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
     private static final String PROMPT_EVAL_NAME = "mock-interview-evaluate";
     private static final String PROMPT_SUMMARY_NAME = "mock-interview-summary";
     private static final int PROMPT_VERSION = 1;
+    private static final int MIN_QUESTIONS = 5;
+    private static final int MAX_QUESTIONS = 10;
 
     private final AiMockInterviewRepository interviewRepository;
     private final AiMockInterviewQuestionRepository questionRepository;
-    private final CandidateProfileRepository profileRepository;
-    private final CandidateResumeRepository resumeRepository;
-    private final CandidateResumeServiceInterface resumeService;
     private final CvTextExtractorServiceInterface cvTextExtractorService;
     private final CandidatePrivacySanitizerInterface privacySanitizer;
     private final AiGatewayServiceInterface aiGatewayService;
     private final PromptServiceInterface promptService;
     private final ObjectMapper objectMapper;
+    private final TransactionTemplate transactionTemplate;
 
     @Override
-    @Transactional
     public MockInterviewDetailResource startSession(
-            Long candidateId, StartMockInterviewRequest request, String ip) {
-        CandidateProfile profile =
-                profileRepository
-                        .findByUserId(candidateId)
-                        .orElseGet(
-                                () ->
-                                        profileRepository.save(
-                                                CandidateProfile.builder()
-                                                        .userId(candidateId)
-                                                        .build()));
-
-        Long resumeId = request.resumeId();
-        String cvText = "";
-
-        if (resumeId != null) {
-            CandidateResume resume =
-                    resumeRepository
-                            .findByIdAndCandidateProfileId(resumeId, profile.getId())
-                            .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-            try {
-                byte[] bytes = resumeService.download(resume.getId(), candidateId).bytes();
-                var extraction = cvTextExtractorService.extractText(bytes);
-                if (extraction.readable() && extraction.text() != null) {
-                    cvText = extraction.text();
-                }
-            } catch (Exception e) {
-                log.warn(
-                        "Could not extract CV text from resumeId {}: {}", resumeId, e.getMessage());
-            }
-        } else {
-            Optional<CandidateResume> defaultResume =
-                    resumeRepository.findByCandidateProfileIdAndIsDefaultTrue(profile.getId());
-            if (defaultResume.isPresent()) {
-                resumeId = defaultResume.get().getId();
-                try {
-                    byte[] bytes = resumeService.download(resumeId, candidateId).bytes();
-                    var extraction = cvTextExtractorService.extractText(bytes);
-                    if (extraction.readable() && extraction.text() != null) {
-                        cvText = extraction.text();
-                    }
-                } catch (Exception e) {
-                    log.warn("Could not extract text from default resume: {}", e.getMessage());
-                }
-            }
-        }
-
+            Long candidateId, StartMockInterviewRequest request, MultipartFile cvFile, String ip) {
+        String cvText = cvFile == null || cvFile.isEmpty() ? "" : readableCvText(cvFile);
         String sanitizedCv = privacySanitizer.sanitizeCandidateData(null, cvText);
 
         int questionCount =
-                Math.clamp(request.questionCount() != null ? request.questionCount() : 5, 5, 10);
+                Math.clamp(
+                        request.questionCount() != null ? request.questionCount() : MIN_QUESTIONS,
+                        MIN_QUESTIONS,
+                        MAX_QUESTIONS);
 
         String userPrompt =
                 String.format(
@@ -139,10 +95,28 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
         List<GeneratedQuestion> generatedQuestions =
                 parseGeneratedQuestions(aiResult.text(), questionCount);
 
+        AiMockInterview savedInterview =
+                transactionTemplate.execute(
+                        status -> persistNewSession(candidateId, request, generatedQuestions));
+
+        return mapToDetail(savedInterview);
+    }
+
+    private String readableCvText(MultipartFile cvFile) {
+        CvTextExtractionResult extraction = cvTextExtractorService.extractText(cvFile);
+        if (!extraction.readable() || extraction.text() == null || extraction.text().isBlank()) {
+            throw new AppException(ErrorCode.CV_TEXT_NOT_READABLE);
+        }
+        return extraction.text();
+    }
+
+    private AiMockInterview persistNewSession(
+            Long candidateId,
+            StartMockInterviewRequest request,
+            List<GeneratedQuestion> generatedQuestions) {
         AiMockInterview interview =
                 AiMockInterview.builder()
                         .candidateId(candidateId)
-                        .resumeId(resumeId)
                         .targetRole(request.targetRole())
                         .seniorityLevel(request.seniorityLevel())
                         .focusArea(request.focusArea())
@@ -164,8 +138,7 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
                             .build();
             savedInterview.getQuestions().add(questionRepository.save(q));
         }
-
-        return mapToDetail(savedInterview);
+        return savedInterview;
     }
 
     @Override
@@ -187,54 +160,42 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
     }
 
     @Override
-    @Transactional
     public SubmitAnswerResultResource submitAnswer(
             Long candidateId,
             Long sessionId,
             Long questionId,
             SubmitMockAnswerRequest request,
             String ip) {
-        AiMockInterview interview =
-                interviewRepository
-                        .findByIdAndCandidateId(sessionId, candidateId)
-                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-
-        if (interview.getStatus() != MockInterviewStatus.IN_PROGRESS) {
+        AiMockInterview interview = requireInProgress(candidateId, sessionId);
+        List<AiMockInterviewQuestion> questions = loadQuestions(interview);
+        AiMockInterviewQuestion question = requireCurrentQuestion(interview, questions, questionId);
+        if (question.getCandidateAnswer() != null) {
             throw new AppException(ErrorCode.VALIDATION_FAILED);
         }
 
-        AiMockInterviewQuestion question =
-                questionRepository
-                        .findByIdAndMockInterviewId(questionId, sessionId)
-                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-
-        question.setCandidateAnswer(request.answer().trim());
-        question.setAnsweredAt(Instant.now());
-
+        String answer = request.answer().trim();
         String evalPrompt =
                 String.format(
                         "Target Role: %s (%s)\nQuestion: %s\nCandidate Answer: %s\nIs this a follow-up answer: false",
                         interview.getTargetRole(),
                         interview.getSeniorityLevel(),
                         question.getQuestionText(),
-                        question.getCandidateAnswer());
+                        answer);
+        AnswerEvaluation evaluation = evaluate(candidateId, ip, evalPrompt);
 
-        PromptTemplate systemPrompt = promptService.load(PROMPT_EVAL_NAME, PROMPT_VERSION);
-        AiCallContext callContext = new AiCallContext(FEATURE_EVAL, candidateId, ip, true);
-        AiChatRequest chatRequest =
-                new AiChatRequest(systemPrompt, List.of(AiChatMessage.user(evalPrompt)), List.of());
-
-        AiChatResult aiResult = aiGatewayService.chat(callContext, chatRequest);
-        AnswerEvaluation evaluation = parseAnswerEvaluation(aiResult.text());
-
+        question.setCandidateAnswer(answer);
+        question.setAnsweredAt(Instant.now());
         question.setScore(evaluation.score());
         question.setFeedback(evaluation.feedback());
         question.setIdealAnswer(evaluation.idealAnswer());
 
-        boolean hasFollowUp = evaluation.needsFollowUp() && evaluation.followUpQuestion() != null;
+        boolean hasFollowUp =
+                evaluation.needsFollowUp()
+                        && evaluation.followUpQuestion() != null
+                        && !evaluation.followUpQuestion().isBlank();
         if (hasFollowUp) {
             question.setFollowUpQuestion(evaluation.followUpQuestion().trim());
-            questionRepository.save(question);
+            transactionTemplate.executeWithoutResult(status -> questionRepository.save(question));
 
             return SubmitAnswerResultResource.builder()
                     .questionId(question.getId())
@@ -250,39 +211,27 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
                     .build();
         }
 
-        questionRepository.save(question);
-        return advanceToNextQuestionOrComplete(interview, question, candidateId, ip);
+        return advanceToNextQuestionOrComplete(interview, questions, question, candidateId, ip);
     }
 
     @Override
-    @Transactional
     public SubmitAnswerResultResource submitFollowUp(
             Long candidateId,
             Long sessionId,
             Long questionId,
             SubmitMockFollowUpRequest request,
             String ip) {
-        AiMockInterview interview =
-                interviewRepository
-                        .findByIdAndCandidateId(sessionId, candidateId)
-                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        AiMockInterview interview = requireInProgress(candidateId, sessionId);
+        List<AiMockInterviewQuestion> questions = loadQuestions(interview);
+        AiMockInterviewQuestion question = requireCurrentQuestion(interview, questions, questionId);
 
-        if (interview.getStatus() != MockInterviewStatus.IN_PROGRESS) {
+        if (question.getFollowUpQuestion() == null
+                || question.getFollowUpQuestion().isBlank()
+                || question.getFollowUpAnswer() != null) {
             throw new AppException(ErrorCode.VALIDATION_FAILED);
         }
 
-        AiMockInterviewQuestion question =
-                questionRepository
-                        .findByIdAndMockInterviewId(questionId, sessionId)
-                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-
-        if (question.getFollowUpQuestion() == null || question.getFollowUpQuestion().isBlank()) {
-            throw new AppException(ErrorCode.VALIDATION_FAILED);
-        }
-
-        question.setFollowUpAnswer(request.followUpAnswer().trim());
-        question.setFollowUpAnsweredAt(Instant.now());
-
+        String followUpAnswer = request.followUpAnswer().trim();
         String evalPrompt =
                 String.format(
                         "Target Role: %s (%s)\nQuestion: %s\nInitial Answer: %s\nFollow-up Question: %s\nFollow-up Answer: %s\nIs this a follow-up answer: true",
@@ -291,58 +240,78 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
                         question.getQuestionText(),
                         question.getCandidateAnswer(),
                         question.getFollowUpQuestion(),
-                        question.getFollowUpAnswer());
+                        followUpAnswer);
+        AnswerEvaluation evaluation = evaluate(candidateId, ip, evalPrompt);
 
+        question.setFollowUpAnswer(followUpAnswer);
+        question.setFollowUpAnsweredAt(Instant.now());
+        question.setScore(evaluation.score());
+        if (!evaluation.feedback().isBlank()) {
+            question.setFeedback(evaluation.feedback());
+        }
+        if (!evaluation.idealAnswer().isBlank()) {
+            question.setIdealAnswer(evaluation.idealAnswer());
+        }
+
+        return advanceToNextQuestionOrComplete(interview, questions, question, candidateId, ip);
+    }
+
+    private AiMockInterview requireInProgress(Long candidateId, Long sessionId) {
+        AiMockInterview interview =
+                interviewRepository
+                        .findByIdAndCandidateId(sessionId, candidateId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        if (interview.getStatus() != MockInterviewStatus.IN_PROGRESS) {
+            throw new AppException(ErrorCode.VALIDATION_FAILED);
+        }
+        return interview;
+    }
+
+    private List<AiMockInterviewQuestion> loadQuestions(AiMockInterview interview) {
+        return questionRepository.findAllByMockInterviewIdOrderByQuestionOrderAsc(
+                interview.getId());
+    }
+
+    private AiMockInterviewQuestion requireCurrentQuestion(
+            AiMockInterview interview, List<AiMockInterviewQuestion> questions, Long questionId) {
+        int currentIndex = interview.getCurrentQuestionIndex();
+        if (currentIndex >= questions.size()
+                || !questions.get(currentIndex).getId().equals(questionId)) {
+            throw new AppException(ErrorCode.VALIDATION_FAILED);
+        }
+        return questions.get(currentIndex);
+    }
+
+    private AnswerEvaluation evaluate(Long candidateId, String ip, String evalPrompt) {
         PromptTemplate systemPrompt = promptService.load(PROMPT_EVAL_NAME, PROMPT_VERSION);
         AiCallContext callContext = new AiCallContext(FEATURE_EVAL, candidateId, ip, true);
         AiChatRequest chatRequest =
                 new AiChatRequest(systemPrompt, List.of(AiChatMessage.user(evalPrompt)), List.of());
-
         AiChatResult aiResult = aiGatewayService.chat(callContext, chatRequest);
-        AnswerEvaluation evaluation = parseAnswerEvaluation(aiResult.text());
-
-        question.setScore(evaluation.score());
-        if (evaluation.feedback() != null && !evaluation.feedback().isBlank()) {
-            question.setFeedback(evaluation.feedback());
-        }
-        if (evaluation.idealAnswer() != null && !evaluation.idealAnswer().isBlank()) {
-            question.setIdealAnswer(evaluation.idealAnswer());
-        }
-        questionRepository.save(question);
-
-        return advanceToNextQuestionOrComplete(interview, question, candidateId, ip);
+        return parseAnswerEvaluation(aiResult.text());
     }
 
     private SubmitAnswerResultResource advanceToNextQuestionOrComplete(
             AiMockInterview interview,
+            List<AiMockInterviewQuestion> questions,
             AiMockInterviewQuestion answeredQuestion,
             Long candidateId,
             String ip) {
         int nextIndex = interview.getCurrentQuestionIndex() + 1;
-        interview.setCurrentQuestionIndex(nextIndex);
+        boolean lastQuestion = nextIndex >= interview.getQuestionCount();
+        SessionSummary summary =
+                lastQuestion ? summarize(interview, questions, candidateId, ip) : null;
 
-        if (nextIndex >= interview.getQuestionCount()) {
-            completeSession(interview, candidateId, ip);
-            AiMockInterview completed = interviewRepository.save(interview);
-
-            return SubmitAnswerResultResource.builder()
-                    .questionId(answeredQuestion.getId())
-                    .questionOrder(answeredQuestion.getQuestionOrder())
-                    .needsFollowUp(false)
-                    .followUpQuestion(null)
-                    .feedback(answeredQuestion.getFeedback())
-                    .score(answeredQuestion.getScore())
-                    .idealAnswer(answeredQuestion.getIdealAnswer())
-                    .sessionCompleted(true)
-                    .nextQuestion(null)
-                    .completedSession(mapToDetail(completed))
-                    .build();
-        }
-
-        AiMockInterview updated = interviewRepository.save(interview);
-        List<AiMockInterviewQuestion> questions =
-                questionRepository.findAllByMockInterviewIdOrderByQuestionOrderAsc(updated.getId());
-        AiMockInterviewQuestion nextQuestion = questions.get(nextIndex);
+        AiMockInterview updated =
+                transactionTemplate.execute(
+                        status -> {
+                            questionRepository.save(answeredQuestion);
+                            interview.setCurrentQuestionIndex(nextIndex);
+                            if (lastQuestion) {
+                                applySummary(interview, questions, summary);
+                            }
+                            return interviewRepository.save(interview);
+                        });
 
         return SubmitAnswerResultResource.builder()
                 .questionId(answeredQuestion.getId())
@@ -352,21 +321,18 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
                 .feedback(answeredQuestion.getFeedback())
                 .score(answeredQuestion.getScore())
                 .idealAnswer(answeredQuestion.getIdealAnswer())
-                .sessionCompleted(false)
-                .nextQuestion(mapQuestion(nextQuestion))
-                .completedSession(null)
+                .sessionCompleted(lastQuestion)
+                .nextQuestion(lastQuestion ? null : mapQuestion(questions.get(nextIndex)))
+                .completedSession(lastQuestion ? mapToDetail(updated) : null)
                 .build();
     }
 
-    private void completeSession(AiMockInterview interview, Long candidateId, String ip) {
-        List<AiMockInterviewQuestion> questions =
-                questionRepository.findAllByMockInterviewIdOrderByQuestionOrderAsc(
-                        interview.getId());
-
+    private SessionSummary summarize(
+            AiMockInterview interview,
+            List<AiMockInterviewQuestion> questions,
+            Long candidateId,
+            String ip) {
         StringBuilder transcript = new StringBuilder();
-        int totalScore = 0;
-        int scoredCount = 0;
-
         for (AiMockInterviewQuestion q : questions) {
             transcript.append(
                     String.format(
@@ -389,11 +355,6 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
                             "Score: %s | Feedback: %s\n\n",
                             q.getScore() != null ? q.getScore() : "N/A",
                             q.getFeedback() != null ? q.getFeedback() : "N/A"));
-
-            if (q.getScore() != null) {
-                totalScore += q.getScore();
-                scoredCount++;
-            }
         }
 
         String userPrompt =
@@ -410,45 +371,49 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
                 new AiChatRequest(systemPrompt, List.of(AiChatMessage.user(userPrompt)), List.of());
 
         try {
-            AiChatResult aiResult = aiGatewayService.chat(callContext, chatRequest);
-            SessionSummary summary = parseSessionSummary(aiResult.text());
+            return parseSessionSummary(aiGatewayService.chat(callContext, chatRequest).text());
+        } catch (RuntimeException | JsonProcessingException ex) {
+            log.warn(
+                    "Interview summary unavailable for session {}: {}",
+                    interview.getId(),
+                    ex.getMessage());
+            return null;
+        }
+    }
 
+    // Without an AI summary only the real per-question average is stored; no text is invented.
+    private void applySummary(
+            AiMockInterview interview,
+            List<AiMockInterviewQuestion> questions,
+            SessionSummary summary) {
+        if (summary != null) {
             interview.setOverallScore(summary.overallScore());
             interview.setOverallFeedback(summary.overallFeedback());
-            interview.setStrengthsJson(objectMapper.writeValueAsString(summary.strengths()));
-            interview.setImprovementsJson(objectMapper.writeValueAsString(summary.improvements()));
-        } catch (Exception ex) {
-            log.warn(
-                    "Failed to generate AI summary, using calculated average: {}", ex.getMessage());
-            int average = scoredCount > 0 ? (totalScore / scoredCount) : 75;
-            interview.setOverallScore(average);
-            interview.setOverallFeedback(
-                    "The interview session has been completed. The candidate answered all required questions.");
-            try {
-                interview.setStrengthsJson(
-                        objectMapper.writeValueAsString(
-                                List.of(
-                                        "Trả lời đầy đủ tất cả các câu hỏi của buổi phỏng vấn",
-                                        "Nắm bắt được các kiến thức nền tảng của vị trí ứng tuyển",
-                                        "Có tinh thần cầu tiến và phong thái giao tiếp tự tin")));
-                interview.setImprovementsJson(
-                        objectMapper.writeValueAsString(
-                                List.of(
-                                        "Cần bổ sung các ví dụ thực tế và số liệu định lượng trong câu trả lời",
-                                        "Đi sâu hơn vào các giải pháp tối ưu hiệu năng và xử lý lỗi",
-                                        "Luyện tập thêm phương pháp trả lời có cấu trúc (STAR model)")));
-            } catch (JsonProcessingException ignored) {
-            }
+            interview.setStrengthsJson(writeJson(summary.strengths()));
+            interview.setImprovementsJson(writeJson(summary.improvements()));
+        } else {
+            questions.stream()
+                    .map(AiMockInterviewQuestion::getScore)
+                    .filter(Objects::nonNull)
+                    .mapToInt(Integer::intValue)
+                    .average()
+                    .ifPresent(average -> interview.setOverallScore((int) Math.round(average)));
         }
-
         interview.setStatus(MockInterviewStatus.COMPLETED);
+    }
+
+    private String writeJson(List<String> values) {
+        try {
+            return objectMapper.writeValueAsString(values);
+        } catch (JsonProcessingException ex) {
+            throw new IllegalStateException("Summary is not serializable", ex);
+        }
     }
 
     private List<GeneratedQuestion> parseGeneratedQuestions(String text, int expectedCount) {
         List<GeneratedQuestion> questions = new ArrayList<>();
         try {
-            String cleanJson = cleanJsonOutput(text);
-            JsonNode root = objectMapper.readTree(cleanJson);
+            JsonNode root = objectMapper.readTree(cleanJsonOutput(text));
             JsonNode arrayNode = root.has("questions") ? root.get("questions") : root;
 
             if (arrayNode != null && arrayNode.isArray()) {
@@ -470,110 +435,64 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
                     }
                 }
             }
-        } catch (Exception ex) {
+        } catch (JsonProcessingException ex) {
             log.error("Failed to parse generated questions: {}", ex.getMessage());
         }
 
-        if (questions.size() < 5) {
-            questions.clear();
-            questions.add(
-                    new GeneratedQuestion(
-                            1,
-                            "TECHNICAL",
-                            "Please introduce yourself and walk us through the most impactful technical project you have worked on."));
-            questions.add(
-                    new GeneratedQuestion(
-                            2,
-                            "TECHNICAL",
-                            "In that project, what was the most complex technical challenge you encountered, and how did you resolve it?"));
-            questions.add(
-                    new GeneratedQuestion(
-                            3,
-                            "TECHNICAL",
-                            "How do you approach performance optimization and ensure high availability in your backend/system architecture?"));
-            questions.add(
-                    new GeneratedQuestion(
-                            4,
-                            "SYSTEM_DESIGN",
-                            "How would you design a scalable service required to handle high-throughput traffic with low latency and strong security?"));
-            questions.add(
-                    new GeneratedQuestion(
-                            5,
-                            "BEHAVIORAL",
-                            "Tell me about a time you had a technical disagreement with a teammate or stakeholder. How did you handle it?"));
+        if (questions.size() < MIN_QUESTIONS) {
+            throw new AppException(ErrorCode.AI_PROVIDER_ERROR);
         }
-
         return questions;
     }
 
     private AnswerEvaluation parseAnswerEvaluation(String text) {
+        JsonNode root;
         try {
-            String cleanJson = cleanJsonOutput(text);
-            JsonNode root = objectMapper.readTree(cleanJson);
-
-            int score = root.has("score") ? root.get("score").asInt(75) : 75;
-            boolean needsFollowUp =
-                    root.has("needsFollowUp") && root.get("needsFollowUp").asBoolean(false);
-            String followUp =
-                    root.has("followUpQuestion") && !root.get("followUpQuestion").isNull()
-                            ? root.get("followUpQuestion").asText()
-                            : null;
-            String feedback =
-                    root.has("feedback")
-                            ? root.get("feedback").asText()
-                            : "Good answer with solid foundational reasoning.";
-            String ideal = root.has("idealAnswer") ? root.get("idealAnswer").asText() : "";
-
-            return new AnswerEvaluation(score, needsFollowUp, followUp, feedback, ideal);
-        } catch (Exception ex) {
+            root = objectMapper.readTree(cleanJsonOutput(text));
+        } catch (JsonProcessingException ex) {
             log.warn("Failed to parse evaluation JSON: {}", ex.getMessage());
-            return new AnswerEvaluation(
-                    75,
-                    false,
-                    null,
-                    "The answer meets fundamental requirements.",
-                    "Structure your response with concrete metrics and clear engineering trade-offs.");
+            throw new AppException(ErrorCode.AI_PROVIDER_ERROR);
         }
+        if (!root.path("score").isNumber() || root.path("feedback").asText("").isBlank()) {
+            log.warn("Evaluation JSON is missing a score or feedback");
+            throw new AppException(ErrorCode.AI_PROVIDER_ERROR);
+        }
+
+        String followUp =
+                root.hasNonNull("followUpQuestion") ? root.get("followUpQuestion").asText() : null;
+        return new AnswerEvaluation(
+                Math.clamp(root.get("score").asInt(), 0, 100),
+                root.path("needsFollowUp").asBoolean(false),
+                followUp,
+                root.get("feedback").asText(),
+                root.path("idealAnswer").asText(""));
     }
 
     private SessionSummary parseSessionSummary(String text) throws JsonProcessingException {
-        String cleanJson = cleanJsonOutput(text);
-        JsonNode root = objectMapper.readTree(cleanJson);
+        JsonNode root = objectMapper.readTree(cleanJsonOutput(text));
+        if (!root.path("overallScore").isNumber()
+                || root.path("overallFeedback").asText("").isBlank()) {
+            throw new IllegalStateException("Summary JSON is missing a score or feedback");
+        }
 
-        int score = root.has("overallScore") ? root.get("overallScore").asInt(75) : 75;
-        String feedback =
-                root.has("overallFeedback")
-                        ? root.get("overallFeedback").asText()
-                        : "Successfully completed the mock interview session.";
+        return new SessionSummary(
+                Math.clamp(root.get("overallScore").asInt(), 0, 100),
+                root.get("overallFeedback").asText(),
+                firstThree(root.path("strengths")),
+                firstThree(root.path("improvements")));
+    }
 
-        List<String> strengths = new ArrayList<>();
-        if (root.has("strengths") && root.get("strengths").isArray()) {
-            for (JsonNode s : root.get("strengths")) {
-                strengths.add(s.asText());
+    private List<String> firstThree(JsonNode arrayNode) {
+        List<String> values = new ArrayList<>();
+        if (arrayNode.isArray()) {
+            for (JsonNode item : arrayNode) {
+                if (values.size() == 3) {
+                    break;
+                }
+                values.add(item.asText());
             }
         }
-        while (strengths.size() < 3) {
-            strengths.add("Demonstrates solid core engineering fundamentals in the target domain.");
-        }
-        if (strengths.size() > 3) {
-            strengths = strengths.subList(0, 3);
-        }
-
-        List<String> improvements = new ArrayList<>();
-        if (root.has("improvements") && root.get("improvements").isArray()) {
-            for (JsonNode i : root.get("improvements")) {
-                improvements.add(i.asText());
-            }
-        }
-        while (improvements.size() < 3) {
-            improvements.add(
-                    "Practice structured communication and incorporate measurable impact metrics.");
-        }
-        if (improvements.size() > 3) {
-            improvements = improvements.subList(0, 3);
-        }
-
-        return new SessionSummary(score, feedback, strengths, improvements);
+        return values;
     }
 
     private String cleanJsonOutput(String raw) {
@@ -618,7 +537,6 @@ public class CandidateMockInterviewService implements CandidateMockInterviewServ
         return MockInterviewDetailResource.builder()
                 .id(interview.getId())
                 .candidateId(interview.getCandidateId())
-                .resumeId(interview.getResumeId())
                 .targetRole(interview.getTargetRole())
                 .seniorityLevel(interview.getSeniorityLevel())
                 .focusArea(interview.getFocusArea())

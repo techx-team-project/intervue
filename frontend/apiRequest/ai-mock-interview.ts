@@ -9,11 +9,17 @@ import type {
 } from '@/types/ai-mock-interview';
 
 export const candidateMockInterviewApi = {
-  startSession: (payload: StartMockInterviewRequest) =>
-    request<MockInterviewDetailResource>('/candidate/mock-interviews', {
-      method: 'POST',
-      body: payload,
-    }),
+  startSession: (payload: StartMockInterviewRequest, cvFile?: File | null) => {
+    const formData = new FormData();
+    formData.append('targetRole', payload.targetRole);
+    formData.append('seniorityLevel', payload.seniorityLevel);
+    formData.append('focusArea', payload.focusArea);
+    formData.append('questionCount', String(payload.questionCount));
+    if (cvFile) {
+      formData.append('file', cvFile);
+    }
+    return request<MockInterviewDetailResource>('/candidate/mock-interviews', { method: 'POST', body: formData });
+  },
 
   listHistory: () =>
     request<MockInterviewSummaryResource[]>('/candidate/mock-interviews', {

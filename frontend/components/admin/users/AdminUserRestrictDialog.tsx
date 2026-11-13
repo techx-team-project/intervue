@@ -1,10 +1,12 @@
 'use client';
 
+import { isoDateAfterDays } from '@/utils/datetime';
 import { Button } from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
 import Textarea from '@/components/ui/Textarea';
 import { RESTRICTION_META, RESTRICTION_REASON_PRESETS } from '@/constants/admin-user';
+import { ADMIN_EXPIRY_MAX_DAYS } from '@/constants/admin-user';
 import { cn } from '@/lib/utils';
 import { restrictUserSchema, type RestrictUserFormData } from '@/schemas/admin-user.schema';
 import type { AdminUserListItem, AdminUserRestrictionKind } from '@/types/admin-user';
@@ -186,7 +188,14 @@ export default function AdminUserRestrictDialog({ kind, users, onClose, onConfir
         </label>
 
         {isTemporary && (
-          <Input type="date" label="Lifts on" error={formState.errors.expiresAt?.message} {...register('expiresAt')} />
+          <Input
+            type="date"
+            min={isoDateAfterDays(1)}
+            max={isoDateAfterDays(ADMIN_EXPIRY_MAX_DAYS)}
+            label="Lifts on"
+            error={formState.errors.expiresAt?.message}
+            {...register('expiresAt')}
+          />
         )}
 
         <label className="text-body-md text-on-surface flex cursor-pointer items-center gap-2.5">

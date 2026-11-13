@@ -40,13 +40,11 @@ public class OrderMapper {
         return new OrderItemResource(
                 item.getId(),
                 item.getServicePackage() == null ? null : item.getServicePackage().getId(),
-                item.getPackageCode(),
                 item.getPackageName(),
                 item.getUnitPrice(),
                 item.getQuantity(),
                 item.getLineTotal(),
                 item.getValidityDays(),
-                item.getBonusCredits(),
                 readBenefits(item.getBenefitsJson()),
                 adCartMeta.readWeeks(item.getMetaJson()));
     }

@@ -58,7 +58,7 @@ export function useServicePackageActions(options: UseServicePackageActionsOption
       { packageId: item.id, quantity: 1 },
       {
         onSuccess: () => {
-          const message = `Đã thêm "${item.name}" vào giỏ hàng.`;
+          const message = `Added "${item.name}" to cart.`;
           onFeedback?.({ type: 'success', message });
           toast.success(message);
         },

@@ -89,9 +89,9 @@ public class AdPackageLookupAdapter implements AdPackageLookupPortInterface {
                         .findByCode("BANNER")
                         .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         String rawCode = slotCode.startsWith("BANNER_") ? slotCode : "BANNER_" + slotCode;
-        String packageCode = rawCode.length() > 50 ? rawCode.substring(0, 50) : rawCode;
-        String slug = packageCode.toLowerCase(Locale.ROOT).replace('_', '-');
-        if (packageRepository.existsByCode(packageCode) || packageRepository.existsBySlug(slug)) {
+        String rawSlug = rawCode.toLowerCase(Locale.ROOT).replace('_', '-');
+        String slug = rawSlug.length() > 120 ? rawSlug.substring(0, 120) : rawSlug;
+        if (packageRepository.existsBySlug(slug)) {
             throw new AppException(ErrorCode.DUPLICATE_PACKAGE_CODE);
         }
 
@@ -99,15 +99,14 @@ public class AdPackageLookupAdapter implements AdPackageLookupPortInterface {
                 packageRepository.save(
                         ServicePackage.builder()
                                 .category(bannerCategory)
-                                .code(packageCode)
                                 .slug(slug)
                                 .name("BANNER " + slotName.trim().toUpperCase(Locale.ROOT))
                                 .shortDescription(
                                         description != null && !description.isBlank()
                                                 ? description.trim()
-                                                : "Vị trí banner "
+                                                : "Banner position "
                                                         + slotName.trim()
-                                                        + " bán theo tuần.")
+                                                        + " sold by week.")
                                 .price(pricePerWeek)
                                 .accentColor("#16a34a")
                                 .status(
@@ -122,9 +121,8 @@ public class AdPackageLookupAdapter implements AdPackageLookupPortInterface {
                         .servicePackage(saved)
                         .entitlementType(EntitlementType.AD_SLOT_WEEK)
                         .quantity(1)
-                        .tier(1)
                         .durationDays(7)
-                        .label("01 tuần hiển thị banner " + slotName.trim())
+                        .label("1 week of " + slotName.trim() + " banner display")
                         .displayOrder(0)
                         .build());
 

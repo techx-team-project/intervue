@@ -68,7 +68,6 @@ public class PublicJobService implements PublicJobServiceInterface {
                         BigDecimal.valueOf(request.lat() + latDelta),
                         BigDecimal.valueOf(request.lng() - lngDelta),
                         BigDecimal.valueOf(request.lng() + lngDelta),
-                        Instant.now(),
                         PageRequest.of(0, NEARBY_CANDIDATE_LIMIT));
         Map<Long, String> logos = logosOf(candidates);
         return candidates.stream()

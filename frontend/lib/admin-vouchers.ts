@@ -121,7 +121,7 @@ export function getVoucherRibbonText(
   const custom = ribbonLabel?.trim();
   if (custom) return custom.toUpperCase();
   if (applicablePackages && applicablePackages.length === 1) {
-    return applicablePackages[0].code.toUpperCase();
+    return applicablePackages[0].name.toUpperCase();
   }
   if (applicablePackages && applicablePackages.length > 1) {
     return `${applicablePackages.length} PACKAGES`;
@@ -203,6 +203,22 @@ export function getVoucherScheduleState(
     label: 'Active',
     pillClass: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300',
   };
+}
+
+// Shared by CartVoucherModal and VoucherConditionsModal so switching between the two never resizes the dialog.
+export const VOUCHER_MODAL_SIZE_CLASS = 'min-h-[620px]';
+
+export function subscribeVoucherTick(onStoreChange: () => void): () => void {
+  const timer = window.setInterval(onStoreChange, 30_000);
+  return () => window.clearInterval(timer);
+}
+
+export function getVoucherTickSnapshot(): number {
+  return Math.floor(Date.now() / 60_000) * 60_000;
+}
+
+export function getVoucherTickServerSnapshot(): number {
+  return 0;
 }
 
 export function formatVoucherCountdownVi(endsAtIso: string | null, nowMs: number): string | null {

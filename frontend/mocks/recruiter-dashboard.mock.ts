@@ -6,12 +6,6 @@ export const MOCK_RECRUITER_DASHBOARD: RecruiterDashboardData = {
   company: {
     name: 'InterVue Technology Co., Ltd',
   },
-  verification: {
-    level: 'basic',
-    stepsCompleted: 1,
-    stepsTotal: 3,
-    nextStepLabel: 'Verify your phone number',
-  },
   stats: [
     {
       kind: 'activeJobPosts',
@@ -36,14 +30,6 @@ export const MOCK_RECRUITER_DASHBOARD: RecruiterDashboardData = {
       trendPercent: 5,
       trendDirection: 'down',
       sparkline: [4, 3, 3, 2, 3, 2, 2],
-    },
-    {
-      kind: 'creditBalance',
-      label: 'Credit balance',
-      value: 150,
-      trendPercent: 9,
-      trendDirection: 'down',
-      sparkline: [200, 190, 180, 175, 165, 160, 150],
     },
   ],
   pipeline: [

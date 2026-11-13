@@ -1,10 +1,11 @@
 'use client';
 
+import OrderDetailRow from '@/components/recruiter/orders/OrderDetailRow';
 import { formatRemaining, useCountdown } from '@/hooks/useCountdown';
 import { useOrderPayment } from '@/hooks/useRecruiterOrders';
 import type { RecruiterOrderStatus } from '@/types/recruiter-order';
 import { formatServicePrice } from '@/utils/service-package';
-import { CheckCircle2, Clock, Copy, Info } from 'lucide-react';
+import { CheckCircle2, Clock, Info } from 'lucide-react';
 import { useState } from 'react';
 
 interface OrderPaymentPanelProps {
@@ -71,13 +72,6 @@ export default function OrderPaymentPanel({ code, status }: OrderPaymentPanelPro
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2.5">
           <h2 className="text-on-surface text-base font-bold">Transfer to complete payment</h2>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700">
-            <span className="relative flex h-2 w-2" aria-hidden>
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-            </span>
-            Auto-updating
-          </span>
         </div>
         {remaining !== null && (
           <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-300 px-3 py-1 text-xs font-bold text-rose-600">
@@ -104,17 +98,17 @@ export default function OrderPaymentPanel({ code, status }: OrderPaymentPanelPro
         )}
 
         <dl className="divide-outline-variant divide-y text-sm">
-          <Row label="Bank" value={data.bankCode ?? '—'} />
-          <Row
+          <OrderDetailRow label="Bank" value={data.bankCode ?? '—'} />
+          <OrderDetailRow
             label="Account number"
             value={data.accountNumber ?? '—'}
             onCopy={() => copy('acc', data.accountNumber ?? '')}
             copied={copied === 'acc'}
             mono
           />
-          <Row label="Account holder" value={data.accountName ?? '—'} />
-          <Row label="Amount" value={formatServicePrice(remainingAmount, data.currency)} highlight />
-          <Row
+          <OrderDetailRow label="Account holder" value={data.accountName ?? '—'} />
+          <OrderDetailRow label="Amount" value={formatServicePrice(remainingAmount, data.currency)} highlight />
+          <OrderDetailRow
             label="Transfer content"
             value={data.transferContent}
             onCopy={() => copy('content', data.transferContent)}
@@ -130,46 +124,6 @@ export default function OrderPaymentPanel({ code, status }: OrderPaymentPanelPro
         the order will not update. The order status updates automatically within seconds without refreshing once the
         bank records the payment.
       </p>
-    </div>
-  );
-}
-
-function Row({
-  label,
-  value,
-  onCopy,
-  copied,
-  mono,
-  highlight,
-}: {
-  label: string;
-  value: string;
-  onCopy?: () => void;
-  copied?: boolean;
-  mono?: boolean;
-  highlight?: boolean;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-3 py-2.5">
-      <dt className="text-on-surface-variant">{label}</dt>
-      <dd className="flex items-center gap-2">
-        <span
-          className={`font-bold ${mono ? 'font-mono' : ''} ${highlight ? 'text-primary text-base' : 'text-on-surface'}`}
-        >
-          {value}
-        </span>
-        {onCopy && (
-          <button
-            type="button"
-            onClick={onCopy}
-            className="text-outline hover:text-primary cursor-pointer transition"
-            aria-label={`Copy ${label}`}
-          >
-            <Copy className="h-3.5 w-3.5" />
-          </button>
-        )}
-        {copied && <span className="text-xs font-semibold text-emerald-600">Copied</span>}
-      </dd>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 'use client';
 
 import Modal from '@/components/ui/Modal';
-import type { BusinessInvoiceInfo, InvoiceType, PersonalInvoiceInfo } from '@/types/recruiter-cart';
-import { isInvoiceInfoComplete } from '@/utils/cart-invoice';
+import type { BusinessInvoiceInfo } from '@/types/recruiter-cart';
+import { isBusinessInvoiceComplete } from '@/utils/cart-invoice';
 import type { VoucherPreview } from '@/types/voucher';
 import { ChevronDown, ChevronUp, FileText, Receipt, SquarePen, Tag, Ticket } from 'lucide-react';
 import { useState } from 'react';
@@ -15,10 +15,8 @@ interface CartOrderSummaryProps {
   totalAmount: number;
   appliedVoucher: VoucherPreview | null;
   onOpenVoucherModal: () => void;
-  invoiceType: InvoiceType | null;
-  onOpenInvoiceModal: (type: InvoiceType) => void;
+  onOpenInvoiceModal: () => void;
   businessInvoice: BusinessInvoiceInfo;
-  personalInvoice: PersonalInvoiceInfo;
   termsAccepted: boolean;
   onToggleTerms: (accepted: boolean) => void;
   onSubmitOrder: () => void;
@@ -35,10 +33,8 @@ export default function CartOrderSummary({
   totalAmount,
   appliedVoucher,
   onOpenVoucherModal,
-  invoiceType,
   onOpenInvoiceModal,
   businessInvoice,
-  personalInvoice,
   termsAccepted,
   onToggleTerms,
   onSubmitOrder,
@@ -49,7 +45,7 @@ export default function CartOrderSummary({
   const [isInvoiceExpanded, setIsInvoiceExpanded] = useState(true);
   const [showTermsModal, setShowTermsModal] = useState(false);
 
-  const invoiceComplete = isInvoiceInfoComplete(invoiceType, businessInvoice, personalInvoice);
+  const invoiceComplete = isBusinessInvoiceComplete(businessInvoice);
   const canSubmit = selectedCount > 0 && invoiceComplete && termsAccepted && !isSubmitting;
 
   return (
@@ -121,205 +117,87 @@ export default function CartOrderSummary({
           </div>
         </div>
 
-        {/* Invoice selection */}
+        {/* Invoice information */}
         <div className="border-outline-variant mt-6 border-t pt-5">
           <div className="text-on-surface flex items-center gap-1.5">
             <Receipt className="text-primary h-4 w-4" />
             <h4 className="text-body-md font-bold">
-              Invoice type <span className="text-rose-500">*</span>
+              Corporate e-invoice <span className="text-rose-500">*</span>
             </h4>
           </div>
           <p className="text-label-sm text-on-surface-variant mt-0.5">
-            Please choose an invoice type to proceed with checkout
+            Every order is billed to your company as a VAT e-invoice
           </p>
 
-          <div className="mt-3 space-y-2.5">
-            {/* Enterprise invoice */}
-            <div
-              className={`rounded-lg border transition ${
-                invoiceType === 'business'
-                  ? 'border-primary bg-primary-light/35 ring-1 ring-[#00b14f]'
-                  : 'border-outline-variant hover:border-outline bg-white'
-              }`}
-            >
-              <button
-                type="button"
-                onClick={() => {
-                  setIsInvoiceExpanded(true);
-                  onOpenInvoiceModal('business');
-                }}
-                className="text-body-md flex w-full cursor-pointer items-center justify-between p-3 text-left"
-              >
-                <span className="flex items-center gap-2.5">
-                  <span
-                    className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
-                      invoiceType === 'business' ? 'border-primary' : 'border-outline'
-                    }`}
+          <div className="border-primary bg-primary-light/35 mt-3 rounded-lg border ring-1 ring-[#00b14f]">
+            <div className="flex items-center justify-between gap-2 p-3">
+              <span className="text-on-surface text-body-md font-semibold">E-invoice information</span>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={onOpenInvoiceModal}
+                  className="text-primary hover:bg-primary/10 cursor-pointer rounded p-1 transition"
+                  aria-label="Edit business invoice information"
+                  title="Edit information"
+                >
+                  <SquarePen className="h-3.5 w-3.5" />
+                </button>
+                {invoiceComplete && (
+                  <button
+                    type="button"
+                    onClick={() => setIsInvoiceExpanded((prev) => !prev)}
+                    className="text-on-surface-variant hover:bg-surface-container-high cursor-pointer rounded p-1 transition"
+                    aria-label={isInvoiceExpanded ? 'Collapse invoice information' : 'Expand invoice information'}
+                    aria-expanded={isInvoiceExpanded}
                   >
-                    {invoiceType === 'business' && <span className="bg-primary h-2 w-2 rounded-full" />}
-                  </span>
-                  <span className="text-on-surface font-semibold">Corporate e-invoice</span>
-                </span>
-              </button>
-
-              {invoiceType === 'business' && invoiceComplete && (
-                <div className="border-primary/20 border-t px-3 pt-2.5 pb-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-on-surface text-xs font-bold">E-invoice information</span>
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => onOpenInvoiceModal('business')}
-                        className="text-primary hover:bg-primary/10 cursor-pointer rounded p-1 transition"
-                        aria-label="Edit business invoice information"
-                        title="Edit information"
-                      >
-                        <SquarePen className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIsInvoiceExpanded((prev) => !prev)}
-                        className="text-on-surface-variant hover:bg-surface-container-high cursor-pointer rounded p-1 transition"
-                        aria-label={isInvoiceExpanded ? 'Collapse invoice information' : 'Expand invoice information'}
-                        aria-expanded={isInvoiceExpanded}
-                      >
-                        {isInvoiceExpanded ? (
-                          <ChevronUp className="h-3.5 w-3.5" />
-                        ) : (
-                          <ChevronDown className="h-3.5 w-3.5" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {isInvoiceExpanded && (
-                    <dl className="mt-2.5 space-y-1.5 text-xs">
-                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Tax ID</dt>
-                        <dd className="text-on-surface truncate font-medium" title={businessInvoice.taxId}>
-                          {businessInvoice.taxId}
-                        </dd>
-                      </div>
-                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Company name</dt>
-                        <dd className="text-on-surface truncate font-medium" title={businessInvoice.companyName}>
-                          {businessInvoice.companyName}
-                        </dd>
-                      </div>
-                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Address</dt>
-                        <dd className="text-on-surface truncate font-medium" title={businessInvoice.companyAddress}>
-                          {businessInvoice.companyAddress}
-                        </dd>
-                      </div>
-                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">E-invoice email</dt>
-                        <dd className="text-on-surface truncate font-medium" title={businessInvoice.recipientEmail}>
-                          {businessInvoice.recipientEmail}
-                        </dd>
-                      </div>
-                    </dl>
-                  )}
-                </div>
-              )}
+                    {isInvoiceExpanded ? (
+                      <ChevronUp className="h-3.5 w-3.5" />
+                    ) : (
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                )}
+              </div>
             </div>
 
-            {/* Personal invoice */}
-            <div
-              className={`rounded-lg border transition ${
-                invoiceType === 'personal'
-                  ? 'border-primary bg-primary-light/35 ring-1 ring-[#00b14f]'
-                  : 'border-outline-variant hover:border-outline bg-white'
-              }`}
-            >
+            {invoiceComplete && isInvoiceExpanded && (
+              <dl className="border-primary/20 space-y-1.5 border-t px-3 pt-2.5 pb-3 text-xs">
+                <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                  <dt className="text-on-surface-variant">Tax ID</dt>
+                  <dd className="text-on-surface truncate font-medium" title={businessInvoice.taxId}>
+                    {businessInvoice.taxId}
+                  </dd>
+                </div>
+                <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                  <dt className="text-on-surface-variant">Company name</dt>
+                  <dd className="text-on-surface truncate font-medium" title={businessInvoice.companyName}>
+                    {businessInvoice.companyName}
+                  </dd>
+                </div>
+                <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                  <dt className="text-on-surface-variant">Address</dt>
+                  <dd className="text-on-surface truncate font-medium" title={businessInvoice.companyAddress}>
+                    {businessInvoice.companyAddress}
+                  </dd>
+                </div>
+                <div className="grid grid-cols-[118px_1fr] items-start gap-2">
+                  <dt className="text-on-surface-variant">E-invoice email</dt>
+                  <dd className="text-on-surface truncate font-medium" title={businessInvoice.recipientEmail}>
+                    {businessInvoice.recipientEmail}
+                  </dd>
+                </div>
+              </dl>
+            )}
+
+            {!invoiceComplete && (
               <button
                 type="button"
-                onClick={() => {
-                  setIsInvoiceExpanded(true);
-                  onOpenInvoiceModal('personal');
-                }}
-                className="text-body-md flex w-full cursor-pointer items-center justify-between p-3 text-left"
+                onClick={onOpenInvoiceModal}
+                className="text-primary hover:bg-primary/10 w-full cursor-pointer rounded-b-lg px-3 pb-3 text-left text-xs font-semibold transition"
               >
-                <span className="flex items-center gap-2.5">
-                  <span
-                    className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
-                      invoiceType === 'personal' ? 'border-primary' : 'border-outline'
-                    }`}
-                  >
-                    {invoiceType === 'personal' && <span className="bg-primary h-2 w-2 rounded-full" />}
-                  </span>
-                  <span className="text-on-surface font-semibold">Individual invoice</span>
-                </span>
+                Complete your company&apos;s e-invoice information to continue
               </button>
-
-              {invoiceType === 'personal' && invoiceComplete && (
-                <div className="border-primary/20 border-t px-3 pt-2.5 pb-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-on-surface text-xs font-bold">E-invoice information</span>
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => onOpenInvoiceModal('personal')}
-                        className="text-primary hover:bg-primary/10 cursor-pointer rounded p-1 transition"
-                        aria-label="Edit personal invoice information"
-                        title="Edit information"
-                      >
-                        <SquarePen className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIsInvoiceExpanded((prev) => !prev)}
-                        className="text-on-surface-variant hover:bg-surface-container-high cursor-pointer rounded p-1 transition"
-                        aria-label={isInvoiceExpanded ? 'Collapse invoice information' : 'Expand invoice information'}
-                        aria-expanded={isInvoiceExpanded}
-                      >
-                        {isInvoiceExpanded ? (
-                          <ChevronUp className="h-3.5 w-3.5" />
-                        ) : (
-                          <ChevronDown className="h-3.5 w-3.5" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {isInvoiceExpanded && (
-                    <dl className="mt-2.5 space-y-1.5 text-xs">
-                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">
-                          {personalInvoice.personalDocumentType === 'passport'
-                            ? 'Passport number'
-                            : 'Citizen ID number'}
-                        </dt>
-                        <dd
-                          className="text-on-surface truncate font-medium"
-                          title={personalInvoice.taxOrIdentityNumber}
-                        >
-                          {personalInvoice.taxOrIdentityNumber}
-                        </dd>
-                      </div>
-                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Full name</dt>
-                        <dd className="text-on-surface truncate font-medium" title={personalInvoice.fullName}>
-                          {personalInvoice.fullName}
-                        </dd>
-                      </div>
-                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">Address</dt>
-                        <dd className="text-on-surface truncate font-medium" title={personalInvoice.personalAddress}>
-                          {personalInvoice.personalAddress}
-                        </dd>
-                      </div>
-                      <div className="grid grid-cols-[118px_1fr] items-start gap-2">
-                        <dt className="text-on-surface-variant">E-invoice email</dt>
-                        <dd className="text-on-surface truncate font-medium" title={personalInvoice.recipientEmail}>
-                          {personalInvoice.recipientEmail}
-                        </dd>
-                      </div>
-                    </dl>
-                  )}
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
 
@@ -364,8 +242,8 @@ export default function CartOrderSummary({
             <p className="text-label-sm text-outline mt-2 text-center">
               {selectedCount === 0
                 ? 'Please select at least 1 service'
-                : !invoiceType || !invoiceComplete
-                  ? 'Please select and complete the invoice information'
+                : !invoiceComplete
+                  ? 'Please complete the e-invoice information'
                   : 'Please agree to the Terms of Service'}
             </p>
           )}
@@ -391,7 +269,7 @@ export default function CartOrderSummary({
           </p>
           <p>
             2. <strong>Refund Policy:</strong> InterVue provides full refunds or package exchange within 24 hours if no
-            job posts have been published or activated using the purchased credits.
+            job posts have been published or activated using the purchased package.
           </p>
           <p>
             3. <strong>VAT E-Invoices:</strong> Official electronic VAT invoices are automatically generated and emailed

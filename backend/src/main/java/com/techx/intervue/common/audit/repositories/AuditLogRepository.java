@@ -3,7 +3,9 @@ package com.techx.intervue.common.audit.repositories;
 import com.techx.intervue.common.audit.entities.AuditLog;
 import com.techx.intervue.common.audit.enums.AuditAction;
 import com.techx.intervue.common.audit.enums.AuditTargetType;
+import java.time.Instant;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,4 +34,15 @@ public interface AuditLogRepository
 
     boolean existsByTargetTypeAndTargetIdAndAction(
             AuditTargetType targetType, Long targetId, AuditAction action);
+
+    @Query(
+            """
+                SELECT a FROM AuditLog a
+                WHERE a.targetType = :targetType AND a.action IN :actions AND a.createdAt >= :since
+                ORDER BY a.createdAt ASC, a.id ASC
+            """)
+    List<AuditLog> findByTargetTypeAndActionInSince(
+            @Param("targetType") AuditTargetType targetType,
+            @Param("actions") Collection<AuditAction> actions,
+            @Param("since") Instant since);
 }

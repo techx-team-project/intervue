@@ -8,6 +8,8 @@ import type {
   AdminOrder,
   AdminOrderStatus,
   AdminRefundRequest,
+  AdminRefundStatus,
+  AdminRefundStatusCounts,
   RevenueReport,
   SaveBillingSettingsInput,
   SupportedBank,
@@ -44,8 +46,17 @@ export const adminPaymentApi = {
 
   invoicePdf: (id: number) => request<Blob>(`/admin/invoices/${id}/pdf`, { responseType: 'blob' }),
 
-  searchRefunds: (page: number, size: number) =>
-    request<Page<AdminRefundRequest>>(`/admin/refunds?page=${page}&size=${size}`),
+  searchRefunds: (params: { status?: AdminRefundStatus | ''; orderCode?: string; page: number; size: number }) =>
+    request<Page<AdminRefundRequest>>(
+      `/admin/refunds?${new URLSearchParams({
+        ...(params.status ? { status: params.status } : {}),
+        ...(params.orderCode ? { orderCode: params.orderCode } : {}),
+        page: String(params.page),
+        size: String(params.size),
+      })}`,
+    ),
+
+  refundsSummary: () => request<AdminRefundStatusCounts>('/admin/refunds/summary'),
 
   approveRefund: (id: number, approvedAmount: number | null, adminNote: string) =>
     request<AdminRefundRequest>(`/admin/refunds/${id}/approve`, {

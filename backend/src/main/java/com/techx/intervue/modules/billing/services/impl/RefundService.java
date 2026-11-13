@@ -9,13 +9,12 @@ import com.techx.intervue.common.web.RequestActor;
 import com.techx.intervue.exceptions.AppException;
 import com.techx.intervue.exceptions.ErrorCode;
 import com.techx.intervue.modules.ads.services.interfaces.AdBookingServiceInterface;
-import com.techx.intervue.modules.billing.entities.CreditPrice;
 import com.techx.intervue.modules.billing.entities.Order;
 import com.techx.intervue.modules.billing.entities.OrderItem;
 import com.techx.intervue.modules.billing.entities.RefundRequest;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
 import com.techx.intervue.modules.billing.enums.RefundStatus;
-import com.techx.intervue.modules.billing.repositories.CreditPriceRepository;
+import com.techx.intervue.modules.billing.enums.SupportedBank;
 import com.techx.intervue.modules.billing.repositories.OrderItemRepository;
 import com.techx.intervue.modules.billing.repositories.OrderRepository;
 import com.techx.intervue.modules.billing.repositories.RefundRequestRepository;
@@ -23,22 +22,28 @@ import com.techx.intervue.modules.billing.requests.CreateRefundRequest;
 import com.techx.intervue.modules.billing.requests.ReviewRefundRequest;
 import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
+import com.techx.intervue.modules.billing.resources.RefundStatusCountsResource;
+import com.techx.intervue.modules.billing.resources.SupportedBankResource;
 import com.techx.intervue.modules.billing.services.interfaces.RefundServiceInterface;
-import com.techx.intervue.modules.entitlement.enums.EntitlementType;
+import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface.UnusedUnits;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,14 +54,15 @@ public class RefundService implements RefundServiceInterface {
 
     private static final Set<OrderStatus> REFUNDABLE =
             EnumSet.of(OrderStatus.PAID, OrderStatus.FULFILLED);
+    private static final String ACCOUNT_NUMBER_PATTERN = "^[A-Za-z0-9]{4,30}$";
 
     private final RefundRequestRepository refundRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final CreditPriceRepository creditPriceRepository;
     private final EntitlementServiceInterface entitlementService;
     private final AdBookingServiceInterface adBookingService;
     private final RecruiterCompanyResolver companyResolver;
+    private final CompanyServiceInterface companyService;
     private final AuditLogServiceInterface auditLogService;
     private final BillingNotifier billingNotifier;
 
@@ -80,6 +86,16 @@ public class RefundService implements RefundServiceInterface {
     }
 
     @Override
+    public List<SupportedBankResource> supportedBanks() {
+        return Arrays.stream(SupportedBank.values())
+                .map(
+                        bank ->
+                                new SupportedBankResource(
+                                        bank.getCode(), bank.getName(), bank.getContentKeyword()))
+                .toList();
+    }
+
+    @Override
     @Transactional
     public RefundRequestResource request(
             String orderCode, CreateRefundRequest request, Long recruiterId) {
@@ -95,6 +111,20 @@ public class RefundService implements RefundServiceInterface {
             throw new AppException(ErrorCode.NOTHING_LEFT_TO_REFUND);
         }
 
+        String bankCode =
+                SupportedBank.byCode(request.bankCode())
+                        .map(SupportedBank::getCode)
+                        .orElseThrow(
+                                () ->
+                                        AppException.validation(
+                                                "bankCode", "This bank is not supported"));
+        String accountNumber = request.bankAccountNumber().replaceAll("\\s+", "");
+        if (!accountNumber.matches(ACCOUNT_NUMBER_PATTERN)) {
+            throw AppException.validation(
+                    "bankAccountNumber",
+                    "Account number must be 4-30 alphanumeric characters with no spaces");
+        }
+
         RefundRequest saved =
                 refundRepository.save(
                         RefundRequest.builder()
@@ -103,6 +133,9 @@ public class RefundService implements RefundServiceInterface {
                                 .requestedByRecruiterId(recruiterId)
                                 .reason(request.reason().trim())
                                 .refundableAmount(refundable)
+                                .bankCode(bankCode)
+                                .bankAccountNumber(accountNumber)
+                                .bankAccountName(request.bankAccountName().trim())
                                 .build());
         order.setStatus(OrderStatus.REFUND_REQUESTED);
         return toResource(saved, order);
@@ -119,12 +152,97 @@ public class RefundService implements RefundServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<RefundRequestResource> search(RefundStatus status, Pageable pageable) {
+    public RefundStatusCountsResource summaryForRecruiter(Long recruiterId) {
+        Long companyId = companyResolver.requireId(recruiterId);
+        Map<RefundStatus, Long> counts = new EnumMap<>(RefundStatus.class);
+        for (RefundStatus status : RefundStatus.values()) {
+            counts.put(status, 0L);
+        }
+        long total = 0;
+        for (RefundRequestRepository.StatusCount row :
+                refundRepository.countByStatusForCompany(companyId)) {
+            counts.put(row.getStatus(), row.getTotal());
+            total += row.getTotal();
+        }
+        return new RefundStatusCountsResource(total, counts);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RefundStatusCountsResource summaryForAdmin() {
+        Map<RefundStatus, Long> counts = new EnumMap<>(RefundStatus.class);
+        for (RefundStatus status : RefundStatus.values()) {
+            counts.put(status, 0L);
+        }
+        long total = 0;
+        for (RefundRequestRepository.StatusCount row : refundRepository.countByStatus()) {
+            counts.put(row.getStatus(), row.getTotal());
+            total += row.getTotal();
+        }
+        return new RefundStatusCountsResource(total, counts);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<RefundRequestResource> search(
+            RefundStatus status, String orderCode, Pageable pageable) {
+        if (orderCode != null && !orderCode.isBlank()) {
+            return searchByOrderCode(status, orderCode.trim().toUpperCase(), pageable);
+        }
         Page<RefundRequest> page =
                 status == null
                         ? refundRepository.findAllByOrderByCreatedAtDesc(pageable)
                         : refundRepository.findAllByStatusOrderByCreatedAtDesc(status, pageable);
-        return page.map(refund -> toResource(refund, requireOrder(refund.getOrderId())));
+        Map<Long, Order> ordersByRefundId = new HashMap<>();
+        for (RefundRequest refund : page.getContent()) {
+            ordersByRefundId.put(refund.getId(), requireOrder(refund.getOrderId()));
+        }
+        Map<Long, String> names = companyNames(List.copyOf(ordersByRefundId.values()));
+        List<RefundRequestResource> items =
+                page.getContent().stream()
+                        .map(
+                                refund ->
+                                        toResource(
+                                                refund,
+                                                ordersByRefundId.get(refund.getId()),
+                                                names.get(refund.getCompanyId())))
+                        .toList();
+        return new PageImpl<>(items, pageable, page.getTotalElements());
+    }
+
+    // A refund request is 1:1 with its order, so looking one up by order code is a point lookup,
+    // not a text search — at most one row ever matches.
+    private Page<RefundRequestResource> searchByOrderCode(
+            RefundStatus status, String code, Pageable pageable) {
+        Optional<Order> order = orderRepository.findByCode(code);
+        if (order.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        List<RefundRequestResource> items =
+                refundRepository.findByOrderId(order.get().getId()).stream()
+                        .filter(refund -> status == null || refund.getStatus() == status)
+                        .map(
+                                refund ->
+                                        toResource(
+                                                refund,
+                                                order.get(),
+                                                companyNames(List.of(order.get()))
+                                                        .get(refund.getCompanyId())))
+                        .toList();
+        return new PageImpl<>(items, pageable, items.size());
+    }
+
+    private Map<Long, String> companyNames(List<Order> orders) {
+        Map<Long, String> names = new HashMap<>();
+        for (Long companyId :
+                orders.stream().map(Order::getCompanyId).collect(Collectors.toSet())) {
+            try {
+                names.put(companyId, companyService.findSummary(companyId).name());
+            } catch (AppException ignored) {
+                names.put(companyId, null);
+            }
+        }
+        return names;
     }
 
     @Override
@@ -188,13 +306,11 @@ public class RefundService implements RefundServiceInterface {
         }
         Map<Long, OrderItem> byId =
                 items.stream().collect(Collectors.toMap(OrderItem::getId, Function.identity()));
-        Map<String, Integer> unitWeights = loadUnitWeights();
 
         Map<Long, ItemRefundAccumulator> perItem = new HashMap<>();
         for (UnusedUnits unused : entitlementService.unusedFromOrderItems(byId.keySet())) {
-            long weight = weightOf(unused.type(), unused.tier(), unitWeights);
             perItem.computeIfAbsent(unused.sourceOrderItemId(), key -> new ItemRefundAccumulator())
-                    .add(unused, weight);
+                    .add(unused);
         }
 
         BigDecimal unusedValue = BigDecimal.ZERO;
@@ -219,56 +335,30 @@ public class RefundService implements RefundServiceInterface {
                 .longValueExact();
     }
 
-    private Map<String, Integer> loadUnitWeights() {
-        Map<String, Integer> weights = new HashMap<>();
-        for (CreditPrice price : creditPriceRepository.findAll()) {
-            weights.put(
-                    weightKey(price.getEntitlementType(), price.getTier()), price.getCreditCost());
-        }
-        return weights;
-    }
-
-    private static long weightOf(EntitlementType type, int tier, Map<String, Integer> unitWeights) {
-        if (type == EntitlementType.CREDIT) {
-            return 1L;
-        }
-        Integer weight = unitWeights.get(weightKey(type, tier));
-        if (weight == null && tier != 1) {
-            weight = unitWeights.get(weightKey(type, 1));
-        }
-        return weight != null && weight > 0 ? weight : 1L;
-    }
-
-    private static String weightKey(EntitlementType type, int tier) {
-        return type.name() + ":" + tier;
-    }
-
     private static final class ItemRefundAccumulator {
         private boolean hasCoreLots;
-        private long coreWeightedRemaining;
-        private long totalWeightedRemaining;
-        private long totalWeightedQuantity;
+        private long coreRemaining;
+        private long totalRemaining;
+        private long totalQuantity;
 
-        void add(UnusedUnits lot, long weight) {
-            long weightedTotal = (long) lot.totalQuantity() * weight;
-            long weightedRem = (long) lot.remainingQuantity() * weight;
-            totalWeightedQuantity += weightedTotal;
-            totalWeightedRemaining += weightedRem;
+        void add(UnusedUnits lot) {
+            totalQuantity += lot.totalQuantity();
+            totalRemaining += lot.remainingQuantity();
             if (!lot.bonus()) {
                 hasCoreLots = true;
-                coreWeightedRemaining += weightedRem;
+                coreRemaining += lot.remainingQuantity();
             }
         }
 
         BigDecimal refundableRatio() {
-            if (totalWeightedQuantity == 0 || totalWeightedRemaining == 0) {
+            if (totalQuantity == 0 || totalRemaining == 0) {
                 return BigDecimal.ZERO;
             }
-            if (hasCoreLots && coreWeightedRemaining == 0) {
+            if (hasCoreLots && coreRemaining == 0) {
                 return BigDecimal.ZERO;
             }
-            return BigDecimal.valueOf(totalWeightedRemaining)
-                    .divide(BigDecimal.valueOf(totalWeightedQuantity), 6, RoundingMode.HALF_UP);
+            return BigDecimal.valueOf(totalRemaining)
+                    .divide(BigDecimal.valueOf(totalQuantity), 6, RoundingMode.HALF_UP);
         }
     }
 
@@ -322,14 +412,23 @@ public class RefundService implements RefundServiceInterface {
     }
 
     private RefundRequestResource toResource(RefundRequest refund, Order order) {
+        return toResource(refund, order, null);
+    }
+
+    private RefundRequestResource toResource(
+            RefundRequest refund, Order order, String companyName) {
         return RefundRequestResource.builder()
                 .id(refund.getId())
                 .orderCode(order.getCode())
                 .companyId(refund.getCompanyId())
+                .companyName(companyName)
                 .reason(refund.getReason())
                 .status(refund.getStatus())
                 .orderTotal(order.getTotalAmount())
                 .refundableAmount(refund.getRefundableAmount())
+                .bankCode(refund.getBankCode())
+                .bankAccountNumber(refund.getBankAccountNumber())
+                .bankAccountName(refund.getBankAccountName())
                 .approvedAmount(refund.getApprovedAmount())
                 .adminNote(refund.getAdminNote())
                 .reviewedAt(refund.getReviewedAt())

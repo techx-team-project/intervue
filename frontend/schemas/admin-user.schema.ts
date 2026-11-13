@@ -1,6 +1,10 @@
-import { ADMIN_PERMISSION_ORDER } from '@/constants/admin-user';
+import { ADMIN_EXPIRY_MAX_DAYS, ADMIN_PERMISSION_ORDER } from '@/constants/admin-user';
 import { ROLES } from '@/constants/auth';
+import { isoDateAfterDays } from '@/utils/datetime';
 import { z } from 'zod';
+
+const expiryWithinLimit = (value: string | undefined) => !value || value <= isoDateAfterDays(ADMIN_EXPIRY_MAX_DAYS);
+const expiryLimitMessage = `The date can be at most ${ADMIN_EXPIRY_MAX_DAYS} days from today`;
 
 export const restrictUserSchema = z
   .object({
@@ -16,6 +20,10 @@ export const restrictUserSchema = z
   })
   .refine((data) => !data.isTemporary || Date.parse(data.expiresAt ?? '') > Date.now(), {
     message: 'The lift date must be in the future',
+    path: ['expiresAt'],
+  })
+  .refine((data) => !data.isTemporary || expiryWithinLimit(data.expiresAt), {
+    message: expiryLimitMessage,
     path: ['expiresAt'],
   });
 
@@ -35,15 +43,25 @@ export const grantRoleSchema = z
   .refine((data) => !data.isTemporary || Date.parse(data.expiresAt ?? '') > Date.now(), {
     message: 'The expiry date must be in the future',
     path: ['expiresAt'],
+  })
+  .refine((data) => !data.isTemporary || expiryWithinLimit(data.expiresAt), {
+    message: expiryLimitMessage,
+    path: ['expiresAt'],
   });
 
 export type GrantRoleFormData = z.infer<typeof grantRoleSchema>;
 
-export const adminAccountSchema = z.object({
-  name: z.string().trim().min(2, 'Enter the full name').max(50, 'Keep the name under 50 characters'),
-  email: z.string().trim().toLowerCase().min(1, 'Enter the email address').pipe(z.email('Email address is invalid.')),
-  permissions: z.array(z.enum(ADMIN_PERMISSION_ORDER)).min(1, 'Grant at least one permission'),
-  expiresAt: z.string().trim().optional(),
-});
+export const adminAccountSchema = z
+  .object({
+    name: z.string().trim().min(2, 'Enter the full name').max(50, 'Keep the name under 50 characters'),
+    email: z.string().trim().toLowerCase().min(1, 'Enter the email address').pipe(z.email('Email address is invalid.')),
+    permissions: z.array(z.enum(ADMIN_PERMISSION_ORDER)).min(1, 'Grant at least one permission'),
+    expiresAt: z.string().trim().optional(),
+  })
+  .refine((data) => !data.expiresAt || data.expiresAt > isoDateAfterDays(0), {
+    message: 'The expiry date must be in the future',
+    path: ['expiresAt'],
+  })
+  .refine((data) => expiryWithinLimit(data.expiresAt), { message: expiryLimitMessage, path: ['expiresAt'] });
 
 export type AdminAccountFormData = z.infer<typeof adminAccountSchema>;

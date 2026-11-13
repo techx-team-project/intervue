@@ -11,19 +11,23 @@ import com.techx.intervue.modules.billing.entities.OrderItem;
 import com.techx.intervue.modules.billing.entities.PaymentTransaction;
 import com.techx.intervue.modules.billing.entities.ServicePackage;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
+import com.techx.intervue.modules.billing.events.OrderCreatedEvent;
 import com.techx.intervue.modules.billing.mappers.OrderMapper;
 import com.techx.intervue.modules.billing.mappers.ServicePackageMapper;
 import com.techx.intervue.modules.billing.repositories.CartItemRepository;
 import com.techx.intervue.modules.billing.repositories.OrderInvoiceDetailRepository;
 import com.techx.intervue.modules.billing.repositories.OrderItemRepository;
 import com.techx.intervue.modules.billing.repositories.OrderRepository;
+import com.techx.intervue.modules.billing.repositories.OrderRepository.StatusCount;
 import com.techx.intervue.modules.billing.repositories.PaymentTransactionRepository;
 import com.techx.intervue.modules.billing.repositories.ServicePackageBenefitRepository;
 import com.techx.intervue.modules.billing.repositories.ServicePackageRepository;
 import com.techx.intervue.modules.billing.requests.CheckoutRequest;
 import com.techx.intervue.modules.billing.resources.OrderResource;
+import com.techx.intervue.modules.billing.resources.OrderStatusCountsResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
 import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
+import com.techx.intervue.modules.billing.resources.PaymentTransactionSummaryResource;
 import com.techx.intervue.modules.billing.services.interfaces.BillingSettingsServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.VoucherServiceInterface;
@@ -34,11 +38,13 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -78,6 +84,7 @@ public class OrderService implements OrderServiceInterface {
     private final AdCartMeta adCartMeta;
     private final AdBookingServiceInterface adBookingService;
     private final PaymentTransactionRepository paymentTransactionRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -183,6 +190,11 @@ public class OrderService implements OrderServiceInterface {
         }
 
         billingNotifier.orderCreated(order, recruiterService.getMe(recruiterId).name());
+        // A fully discounted order settles on the spot above, so there is nothing "awaiting
+        // payment" to confirm by email in that case
+        if (order.getStatus() == OrderStatus.PENDING_PAYMENT) {
+            eventPublisher.publishEvent(new OrderCreatedEvent(order.getId()));
+        }
         return toResource(order);
     }
 
@@ -197,6 +209,22 @@ public class OrderService implements OrderServiceInterface {
                 order ->
                         orderMapper.toSummaryResource(
                                 order, counts.getOrDefault(order.getId(), 0)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrderStatusCountsResource countByStatus(Long recruiterId) {
+        Long companyId = companyResolver.requireId(recruiterId);
+        Map<OrderStatus, Long> counts = new EnumMap<>(OrderStatus.class);
+        for (OrderStatus status : OrderStatus.values()) {
+            counts.put(status, 0L);
+        }
+        long total = 0;
+        for (StatusCount row : orderRepository.countByStatusForCompany(companyId)) {
+            counts.put(row.getStatus(), row.getTotal());
+            total += row.getTotal();
+        }
+        return new OrderStatusCountsResource(total, counts);
     }
 
     @Override
@@ -229,6 +257,16 @@ public class OrderService implements OrderServiceInterface {
         return paymentTransactionRepository
                 .findAllByMatchedOrder_CompanyIdOrderByTransactionAtDesc(companyId, pageable)
                 .map(this::toPaymentResource);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PaymentTransactionSummaryResource summarizePayments(Long recruiterId) {
+        Long companyId = companyResolver.requireId(recruiterId);
+        long totalCount = paymentTransactionRepository.countByMatchedOrder_CompanyId(companyId);
+        long totalAmount =
+                paymentTransactionRepository.sumAmountInByMatchedOrder_CompanyId(companyId);
+        return new PaymentTransactionSummaryResource(totalCount, totalAmount);
     }
 
     private PaymentTransactionResource toPaymentResource(PaymentTransaction transaction) {
@@ -298,7 +336,7 @@ public class OrderService implements OrderServiceInterface {
             }
             if (Boolean.TRUE.equals(servicePackage.getOneTimePerCompany())
                     && orderItemRepository.existsForCompanyAndPackage(
-                            companyId, servicePackage.getCode(), ONE_TIME_BLOCKING)) {
+                            companyId, servicePackage.getId(), ONE_TIME_BLOCKING)) {
                 throw new AppException(ErrorCode.TRIAL_ALREADY_USED);
             }
         }
@@ -313,14 +351,12 @@ public class OrderService implements OrderServiceInterface {
                     OrderItem.builder()
                             .order(order)
                             .servicePackage(servicePackage)
-                            .packageCode(servicePackage.getCode())
                             .packageName(servicePackage.getName())
                             .unitPrice(servicePackage.getPrice())
                             .quantity(quantity)
                             .lineTotal(servicePackage.getPrice() * quantity)
                             .metaJson(line.metaJson())
                             .validityDays(servicePackage.getValidityDays())
-                            .bonusCredits(servicePackage.getBonusCredits())
                             .benefitsJson(
                                     orderMapper.writeBenefits(
                                             benefitRepository

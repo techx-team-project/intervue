@@ -1,7 +1,6 @@
 export interface RecruiterCartItem {
   id: number;
   packageId: number;
-  code: string;
   slug: string;
   name: string;
   shortDescription: string | null;
@@ -25,19 +24,9 @@ export interface RecruiterCart {
   currency: string;
 }
 
-export type InvoiceType = 'business' | 'personal';
-
 export interface BusinessInvoiceInfo {
   taxId: string;
   companyName: string;
   companyAddress: string;
-  recipientEmail: string;
-}
-
-export interface PersonalInvoiceInfo {
-  personalDocumentType?: 'cccd' | 'passport';
-  fullName: string;
-  taxOrIdentityNumber: string;
-  personalAddress: string;
   recipientEmail: string;
 }

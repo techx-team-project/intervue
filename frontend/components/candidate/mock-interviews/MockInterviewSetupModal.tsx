@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
-import { useCandidateCvs } from '@/hooks/useCandidateCvs';
 import { useStartMockInterview } from '@/hooks/useAiMockInterview';
 import type { MockInterviewDetailResource, MockInterviewFocusArea } from '@/types/ai-mock-interview';
-import { Sparkles, FileText, CheckCircle2 } from 'lucide-react';
+import { isApiError } from '@/lib/api-error';
+import { Sparkles, FileText, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface MockInterviewSetupModalProps {
@@ -14,6 +14,8 @@ interface MockInterviewSetupModalProps {
   onClose: () => void;
   onSessionStarted: (session: MockInterviewDetailResource) => void;
 }
+
+const MAX_CV_SIZE_BYTES = 5 * 1024 * 1024;
 
 const SENIORITY_OPTIONS = ['Intern', 'Fresher', 'Junior', 'Middle', 'Senior', 'Lead'];
 
@@ -41,14 +43,29 @@ const FOCUS_AREAS: { value: MockInterviewFocusArea; label: string; desc: string 
 ];
 
 export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStarted }: MockInterviewSetupModalProps) {
-  const { data: resumes } = useCandidateCvs(isOpen);
   const startMutation = useStartMockInterview();
 
-  const [selectedResumeId, setSelectedResumeId] = useState<number | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [cvFile, setCvFile] = useState<File | null>(null);
   const [targetRole, setTargetRole] = useState('Senior Java Backend Engineer');
   const [seniorityLevel, setSeniorityLevel] = useState('Senior');
   const [focusArea, setFocusArea] = useState<MockInterviewFocusArea>('MIXED');
   const [questionCount, setQuestionCount] = useState(5);
+
+  const handleCvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (file.type !== 'application/pdf') {
+      toast.error('Please upload a PDF file.');
+      return;
+    }
+    if (file.size > MAX_CV_SIZE_BYTES) {
+      toast.error('The CV must be 5 MB or smaller.');
+      return;
+    }
+    setCvFile(file);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,17 +76,18 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
 
     try {
       const session = await startMutation.mutateAsync({
-        resumeId: selectedResumeId,
-        targetRole: targetRole.trim(),
-        seniorityLevel,
-        focusArea,
-        questionCount,
+        payload: { targetRole: targetRole.trim(), seniorityLevel, focusArea, questionCount },
+        cvFile,
       });
       toast.success('Mock interview started successfully!');
       onClose();
       onSessionStarted(session);
-    } catch {
-      toast.error('Failed to start mock interview. Please try again.');
+    } catch (error) {
+      toast.error(
+        isApiError(error) && error.code === 'CV_TEXT_NOT_READABLE'
+          ? 'We could not read text from this CV. Please upload a text-based PDF, not a scanned image.'
+          : 'Failed to start mock interview. Please try again.',
+      );
     }
   };
 
@@ -88,51 +106,44 @@ export default function MockInterviewSetupModal({ isOpen, onClose, onSessionStar
       maxWidth="2xl"
     >
       <form onSubmit={handleSubmit} className="space-y-5">
-        {/* CV Selection */}
+        {/* CV Upload */}
         <div>
-          <label className="text-navy mb-1.5 block text-xs font-bold">1. Select Resume Context (Optional):</label>
+          <label className="text-navy mb-1.5 block text-xs font-bold">1. Upload Your CV (Optional):</label>
           <p className="mb-2 text-[11px] text-slate-500">
-            AI analyzes your work experience and skills to ask highly realistic questions.
+            AI reads this CV only for this interview to ask realistic questions. It is not added to your profile.
           </p>
 
-          {resumes && resumes.length > 0 ? (
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <input ref={fileInputRef} type="file" accept="application/pdf" className="hidden" onChange={handleCvChange} />
+
+          {cvFile ? (
+            <div className="border-primary bg-primary/5 flex items-center justify-between rounded-xl border p-2.5 text-xs">
+              <div className="flex min-w-0 items-center gap-2">
+                <FileText className="text-primary h-4 w-4 shrink-0" />
+                <span className="text-navy truncate font-medium">{cvFile.name}</span>
+              </div>
               <button
                 type="button"
-                onClick={() => setSelectedResumeId(null)}
-                className={`flex items-center justify-between rounded-xl border p-2.5 text-left text-xs transition-all ${
-                  selectedResumeId === null
-                    ? 'border-primary bg-primary/5 ring-primary ring-1'
-                    : 'border-slate-200 bg-white hover:border-slate-300'
-                }`}
+                onClick={() => setCvFile(null)}
+                aria-label="Remove CV"
+                className="shrink-0 rounded-md p-1 text-slate-500 hover:bg-white hover:text-slate-800"
               >
-                <span className="font-medium text-slate-700">Use Profile Information (Default)</span>
-                {selectedResumeId === null && <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />}
+                <X className="h-4 w-4" />
               </button>
-
-              {resumes.map((cv) => (
-                <button
-                  key={cv.id}
-                  type="button"
-                  onClick={() => setSelectedResumeId(cv.id)}
-                  className={`flex items-center justify-between rounded-xl border p-2.5 text-left text-xs transition-all ${
-                    selectedResumeId === cv.id
-                      ? 'border-primary bg-primary/5 ring-primary ring-1'
-                      : 'border-slate-200 bg-white hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex min-w-0 items-center gap-2">
-                    <FileText className="h-4 w-4 shrink-0 text-slate-400" />
-                    <span className="text-navy truncate font-medium">{cv.fileName}</span>
-                  </div>
-                  {selectedResumeId === cv.id && <CheckCircle2 className="text-primary h-4 w-4 shrink-0" />}
-                </button>
-              ))}
             </div>
           ) : (
-            <p className="text-xs text-slate-400 italic">
-              No uploaded resume found. AI will interview based on your selected target role.
-            </p>
+            <>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="hover:border-primary hover:text-primary flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 p-3 text-xs font-medium text-slate-600 transition-colors"
+              >
+                <Upload className="h-4 w-4" />
+                Choose a PDF file (max 5 MB)
+              </button>
+              <p className="mt-1 text-[11px] text-slate-400 italic">
+                Without a CV, questions are based on your target role only.
+              </p>
+            </>
           )}
         </div>
 

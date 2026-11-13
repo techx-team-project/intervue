@@ -132,27 +132,14 @@ public final class JobSpecifications {
             if (query != null
                     && query.getResultType() != Long.class
                     && query.getResultType() != long.class) {
-                query.orderBy(ordering(request.sort(), root, builder, now));
+                query.orderBy(ordering(request.sort(), root, builder));
             }
             return builder.and(predicates.toArray(Predicate[]::new));
         };
     }
 
     private static Expression<Instant> recency(Root<Job> root, CriteriaBuilder builder) {
-        return builder.coalesce(root.<Instant>get("retoppedAt"), root.<Instant>get("publishedAt"));
-    }
-
-    private static Expression<Integer> activeBoost(
-            Root<Job> root, CriteriaBuilder builder, Instant now) {
-        return builder.<Integer>selectCase()
-                .when(
-                        builder.and(
-                                builder.greaterThan(root.get("boostLevel"), 0),
-                                builder.or(
-                                        builder.isNull(root.get("boostExpiresAt")),
-                                        builder.greaterThan(root.get("boostExpiresAt"), now))),
-                        root.get("boostLevel"))
-                .otherwise(0);
+        return root.get("publishedAt");
     }
 
     // Salaries are stored in their own currency, so USD is converted at a fixed rate to compare
@@ -164,17 +151,14 @@ public final class JobSpecifications {
                 .otherwise(root.<Long>get("salaryMax"));
     }
 
-    private static List<Order> ordering(
-            JobSort sort, Root<Job> root, CriteriaBuilder builder, Instant now) {
+    private static List<Order> ordering(JobSort sort, Root<Job> root, CriteriaBuilder builder) {
         Order newestFirst = builder.desc(recency(root, builder));
         Order latestId = builder.desc(root.get("id"));
         return switch (sort == null ? JobSort.RECOMMENDED : sort) {
-            case NEWEST -> List.of(newestFirst, latestId);
+            case NEWEST, RECOMMENDED -> List.of(newestFirst, latestId);
             case SALARY_DESC ->
                     List.of(builder.desc(salaryInVnd(root, builder)), newestFirst, latestId);
             case DEADLINE_ASC -> List.of(builder.asc(root.get("deadline")), newestFirst, latestId);
-            case RECOMMENDED ->
-                    List.of(builder.desc(activeBoost(root, builder, now)), newestFirst, latestId);
         };
     }
 

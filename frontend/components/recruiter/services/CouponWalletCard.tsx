@@ -10,8 +10,9 @@ import {
 } from '@/lib/admin-vouchers';
 import { cn } from '@/lib/utils';
 import type { AvailableVoucher, UsedVoucher, VoucherAccentColor, VoucherPackageSummary } from '@/types/voucher';
-import { Check, CheckCircle2, Copy } from 'lucide-react';
+import { Check, CheckCircle2, Copy, Info } from 'lucide-react';
 import Link from 'next/link';
+import type { CSSProperties } from 'react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -40,6 +41,11 @@ interface CouponWalletCardProps {
   isPreview?: boolean;
   hideTooltip?: boolean;
   className?: string;
+  /** When provided, the CTA applies the code in place instead of linking away. */
+  onApply?: () => void;
+  /** When provided, shows a "View conditions" link that opens a details modal instead of the hover tooltip. */
+  onViewConditions?: () => void;
+  applied?: boolean;
 }
 
 export function availableToCouponCardData(voucher: AvailableVoucher): CouponWalletCardData {
@@ -83,6 +89,9 @@ export default function CouponWalletCard({
   isPreview = false,
   hideTooltip = false,
   className,
+  onApply,
+  onViewConditions,
+  applied = false,
 }: CouponWalletCardProps) {
   const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const clipId = `coupon-clip-${rawId}`;
@@ -150,7 +159,13 @@ export default function CouponWalletCard({
       )}
 
       {/* Masked ticket frame */}
-      <div className="relative flex min-h-[144px] transition-transform duration-150 group-hover/coupon:-translate-y-0.5">
+      <div
+        className={cn(
+          'relative flex min-h-[144px] rounded-[4px] transition-transform duration-150 group-hover/coupon:-translate-y-0.5',
+          applied && 'ring-2 ring-offset-1',
+        )}
+        style={applied ? ({ '--tw-ring-color': strokeHex } as CSSProperties) : undefined}
+      >
         <svg aria-hidden className="drop-shadow-2xs pointer-events-none absolute inset-0 h-full w-full">
           <defs>
             <clipPath id={clipId}>
@@ -247,9 +262,24 @@ export default function CouponWalletCard({
             </p>
 
             {variant === 'available' ? (
-              <p className="dark:text-forest-300 mt-2 text-[12px] text-slate-600 tabular-nums">
-                {countdown ? `Time left: ${countdown}` : voucher.endsAt ? 'Expiring soon' : 'Validity: No time limit'}
-              </p>
+              <>
+                <p className="dark:text-forest-300 mt-2 text-[12px] text-slate-600 tabular-nums">
+                  {countdown ? `Time left: ${countdown}` : voucher.endsAt ? 'Expiring soon' : 'Validity: No time limit'}
+                </p>
+                {onViewConditions && (
+                  <button
+                    type="button"
+                    onClick={onViewConditions}
+                    className={cn(
+                      'mt-1 inline-flex cursor-pointer items-center gap-1 text-[11.5px] font-semibold underline-offset-2 hover:underline',
+                      theme.headlineTextClass,
+                    )}
+                  >
+                    <Info className="h-3 w-3" />
+                    Applicable conditions
+                  </button>
+                )}
+              </>
             ) : (
               <p className="dark:text-forest-300 mt-2 truncate text-[12px] text-slate-500">
                 {voucher.usedAt ? `Used ${new Date(voucher.usedAt).toLocaleDateString('vi-VN')}` : 'Used'}
@@ -280,7 +310,19 @@ export default function CouponWalletCard({
             </button>
 
             {variant === 'available' ? (
-              isPreview ? (
+              onApply ? (
+                <button
+                  type="button"
+                  onClick={onApply}
+                  disabled={applied}
+                  className={cn(
+                    'inline-flex shrink-0 cursor-pointer items-center justify-center rounded-[4px] px-4 py-1.5 text-[12px] font-bold text-white shadow-2xs transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70',
+                    theme.buttonBgClass,
+                  )}
+                >
+                  {applied ? 'Applied' : 'Apply'}
+                </button>
+              ) : isPreview ? (
                 <span
                   className={cn(
                     'inline-flex shrink-0 items-center justify-center rounded-[4px] px-4 py-1.5 text-[12px] font-bold text-white shadow-2xs',

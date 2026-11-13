@@ -22,7 +22,7 @@ export function DeactivatePackageDialog({ pkg, isUpdating, onClose, onConfirm }:
       maxWidth="sm"
       radius="2xl"
       title="Deactivate this service package?"
-      description={pkg ? `"${pkg.name}" (${pkg.code}) will be hidden from the recruiter catalog.` : undefined}
+      description={pkg ? `"${pkg.name}" will be hidden from the recruiter catalog.` : undefined}
       className="dark:border-forest-800 dark:bg-forest-900 dark:text-forest-50"
       footer={
         <>

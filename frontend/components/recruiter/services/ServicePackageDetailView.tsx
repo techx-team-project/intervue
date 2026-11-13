@@ -26,7 +26,6 @@ import {
   Check,
   CheckCircle2,
   Clock,
-  Gift,
   Loader2,
   ShoppingCart,
   X,
@@ -185,7 +184,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-2.5">
               <p className="text-on-surface text-2xl font-extrabold tracking-wide sm:text-3xl">{data.name}</p>
-              <ServicePackageBadges badge={data.badge} bonusCredits={data.bonusCredits} />
+              <ServicePackageBadges badge={data.badge} />
             </div>
             {data.shortDescription && (
               <p className="text-on-surface-variant mt-3 flex items-start gap-2 text-sm leading-relaxed">
@@ -290,19 +289,12 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
 
           <h2 className="text-on-surface text-xl font-bold">Service details</h2>
 
-          <div className="border-outline-variant grid gap-px overflow-hidden rounded-lg border bg-neutral-200 sm:grid-cols-2">
+          <div className="border-outline-variant grid gap-px overflow-hidden rounded-lg border bg-neutral-200">
             <div className="flex items-center gap-2.5 bg-white px-4 py-3.5 text-sm">
               <Clock className="text-primary h-4.5 w-4.5" />
               <span className="text-on-surface-variant">Validity:</span>
               <span className="text-on-surface font-semibold">
                 {data.validityDays ? `${data.validityDays} days` : 'Unlimited'}
-              </span>
-            </div>
-            <div className="flex items-center gap-2.5 bg-white px-4 py-3.5 text-sm">
-              <Gift className="h-4.5 w-4.5 text-amber-500" />
-              <span className="text-on-surface-variant">Bonus:</span>
-              <span className="text-on-surface font-semibold">
-                {data.bonusCredits > 0 ? `${data.bonusCredits.toLocaleString('vi-VN')} Credits` : 'None'}
               </span>
             </div>
           </div>
@@ -319,14 +311,7 @@ export default function ServicePackageDetailView({ slug }: ServicePackageDetailV
                     className="flex items-start gap-2.5 text-sm"
                   >
                     <CheckCircle2 className="text-primary mt-0.5 h-4.5 w-4.5 shrink-0" />
-                    <div className="flex flex-wrap items-center gap-2 leading-relaxed">
-                      <span className="text-on-surface-variant">{benefit.label}</span>
-                      {benefit.entitlementType === 'JOB_BOOST' && benefit.tier > 1 && (
-                        <span className="rounded bg-amber-50 px-1.5 py-0.5 text-[11px] font-semibold text-amber-700">
-                          Tier {benefit.tier}
-                        </span>
-                      )}
-                    </div>
+                    <span className="text-on-surface-variant leading-relaxed">{benefit.label}</span>
                   </li>
                 ))}
               </ul>

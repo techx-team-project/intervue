@@ -38,9 +38,6 @@ public class LocalDemoCompanyService implements LocalDemoCompanyServiceInterface
     private static final String DEMO_PROOF_FILE = "demo-business-license.pdf";
     private static final String DEMO_PROOF_ID = "demo/business-license";
     private static final String BLANK_CHECKSUM = "0".repeat(64);
-    private static final String LEGACY_SHORT_DESCRIPTION =
-            "TechX Global builds AI-powered recruitment and SaaS products for companies across"
-                    + " Southeast Asia. Our engineers ship to production every week.";
     private static final String DEMO_DESCRIPTION =
             "TechX Global builds AI-powered recruitment, technical interview, and SaaS platforms for"
                     + " enterprises across Southeast Asia. Our engineering teams ship reliable"
@@ -84,34 +81,60 @@ public class LocalDemoCompanyService implements LocalDemoCompanyServiceInterface
     private void fillProfile(CompanyMember membership) {
         CompanyProfile profile =
                 companyProfileRepository.findByMemberId(membership.getId()).orElseThrow();
-        boolean hasTradingName =
-                profile.getTradingName() != null && !profile.getTradingName().isBlank();
-        String currentDescription =
-                profile.getDescription() == null ? "" : profile.getDescription().trim();
-        boolean needsDemoDescription =
-                currentDescription.length() < CompanyProfileCompleteness.MIN_DESCRIPTION_LENGTH
-                        && (currentDescription.isEmpty()
-                                || LEGACY_SHORT_DESCRIPTION.equals(currentDescription));
-        if (hasTradingName && !needsDemoDescription) {
-            return;
-        }
-        if (!hasTradingName) {
+        boolean changed = false;
+        if (isBlank(profile.getTradingName())) {
             profile.setTradingName("TechX Global");
+            changed = true;
+        }
+        if (profile.getBusinessType() == null) {
             profile.setBusinessType(BusinessType.ENTERPRISE);
+            changed = true;
+        }
+        if (isBlank(profile.getIndustry())) {
             profile.setIndustry("Software & Information Technology");
+            changed = true;
+        }
+        if (isBlank(profile.getSize())) {
             profile.setSize("100-499 employees");
+            changed = true;
+        }
+        if (isBlank(profile.getAddress())) {
             profile.setAddress(DEMO_ADDRESS);
+            changed = true;
+        }
+        if (isBlank(profile.getEmail())) {
             profile.setEmail("careers@techx.example.com");
+            changed = true;
+        }
+        if (isBlank(profile.getPhone())) {
             profile.setPhone("02812345678");
+            changed = true;
+        }
+        if (isBlank(profile.getWebsite())) {
             profile.setWebsite("https://techx.example.com");
+            changed = true;
+        }
+        if (isBlank(profile.getBenefits())) {
             profile.setBenefits(
                     "13th-month salary and performance bonus\nPremium health insurance\nMacBook Pro"
                             + " and learning budget\nFlexible hybrid working");
+            changed = true;
         }
-        if (needsDemoDescription || !hasTradingName) {
+        String currentDescription =
+                profile.getDescription() == null ? "" : profile.getDescription().trim();
+        boolean needsDemoDescription =
+                currentDescription.length() < CompanyProfileCompleteness.MIN_DESCRIPTION_LENGTH;
+        if (needsDemoDescription) {
             profile.setDescription(DEMO_DESCRIPTION);
+            changed = true;
         }
-        companyProfileRepository.save(profile);
+        if (changed) {
+            companyProfileRepository.save(profile);
+        }
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private void acceptAgreements(Company company, Long recruiterId) {

@@ -5,7 +5,6 @@ import java.util.List;
 
 public record ServicePackageDetailResource(
         Long id,
-        String code,
         String slug,
         String name,
         String shortDescription,
@@ -16,7 +15,6 @@ public record ServicePackageDetailResource(
         String accentColor,
         String heroImageUrl,
         Integer validityDays,
-        Integer bonusCredits,
         Boolean oneTimePerCompany,
         String categoryCode,
         String categoryName,

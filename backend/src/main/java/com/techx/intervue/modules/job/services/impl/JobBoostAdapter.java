@@ -33,17 +33,6 @@ public class JobBoostAdapter implements JobBoostPortInterface {
 
     @Override
     @Transactional
-    public void applyBoost(Long jobId, int tier, Instant expiresAt) {
-        apply(
-                jobId,
-                job -> {
-                    job.setBoostLevel(Math.max(job.getBoostLevel(), tier));
-                    job.setBoostExpiresAt(expiresAt);
-                });
-    }
-
-    @Override
-    @Transactional
     public void applyLabel(Long jobId, String label, Instant expiresAt) {
         apply(
                 jobId,
@@ -61,26 +50,6 @@ public class JobBoostAdapter implements JobBoostPortInterface {
                 job -> {
                     job.setHighlighted(true);
                     job.setHighlightExpiresAt(expiresAt);
-                });
-    }
-
-    @Override
-    @Transactional
-    public void applyRetop(Long jobId, Instant retoppedAt) {
-        apply(jobId, job -> job.setRetoppedAt(retoppedAt));
-    }
-
-    @Override
-    @Transactional
-    public void clearExpiredBoost(Long jobId) {
-        Instant now = Instant.now();
-        apply(
-                jobId,
-                job -> {
-                    if (job.getBoostExpiresAt() == null || !job.getBoostExpiresAt().isAfter(now)) {
-                        job.setBoostLevel(0);
-                        job.setBoostExpiresAt(null);
-                    }
                 });
     }
 

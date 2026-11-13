@@ -2,21 +2,23 @@
 
 import { recruiterOrderApi } from '@/apiRequest/recruiter-order';
 import { adKeys } from '@/hooks/useAds';
-import { creditKeys } from '@/hooks/useCredits';
 import { entitlementKeys } from '@/hooks/useEntitlements';
 import { notificationKeys } from '@/hooks/useNotifications';
-import type { CheckoutPayload, RecruiterOrderStatus } from '@/types/recruiter-order';
+import type { CheckoutPayload, RecruiterOrder, RecruiterOrderStatus } from '@/types/recruiter-order';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
 export const recruiterOrderKeys = {
   all: ['recruiter', 'orders'] as const,
+  counts: ['recruiter', 'orders', 'counts'] as const,
   list: (page: number, size: number) => ['recruiter', 'orders', 'list', page, size] as const,
   detail: (code: string) => ['recruiter', 'orders', 'detail', code] as const,
   payment: (code: string) => ['recruiter', 'orders', 'payment', code] as const,
   payments: (page: number, size: number) => ['recruiter', 'orders', 'payments', page, size] as const,
+  paymentsSummary: ['recruiter', 'orders', 'payments', 'summary'] as const,
   refunds: (page: number, size: number) => ['recruiter', 'orders', 'refunds', page, size] as const,
+  refundsSummary: ['recruiter', 'orders', 'refunds', 'summary'] as const,
 };
 
 const PAYMENT_POLL_MS = 4000;
@@ -25,15 +27,13 @@ const PAID_ORDER_STATUSES: RecruiterOrderStatus[] = ['PAID', 'FULFILLED'];
 const SETTLED: RecruiterOrderStatus[] = ['PAID', 'FULFILLED', 'EXPIRED', 'CANCELLED'];
 
 function invalidateAfterOrderPaid(queryClient: ReturnType<typeof useQueryClient>, code?: string) {
-  queryClient.invalidateQueries({ queryKey: recruiterOrderKeys.all });
   if (code) {
     queryClient.invalidateQueries({ queryKey: recruiterOrderKeys.detail(code) });
   }
-  queryClient.invalidateQueries({ queryKey: entitlementKeys.all });
-  queryClient.invalidateQueries({ queryKey: creditKeys.wallet });
-  queryClient.invalidateQueries({ queryKey: creditKeys.ledgerRoot });
-  queryClient.invalidateQueries({ queryKey: adKeys.bookings });
-  queryClient.invalidateQueries({ queryKey: notificationKeys.all('recruiter') });
+  queryClient.invalidateQueries({ queryKey: recruiterOrderKeys.all, refetchType: 'none' });
+  queryClient.invalidateQueries({ queryKey: entitlementKeys.all, refetchType: 'none' });
+  queryClient.invalidateQueries({ queryKey: adKeys.bookings, refetchType: 'none' });
+  queryClient.invalidateQueries({ queryKey: notificationKeys.all('recruiter'), refetchType: 'none' });
 }
 
 export function useRecruiterOrderList(page: number, size = 10) {
@@ -66,6 +66,10 @@ export function useRecruiterOrderList(page: number, size = 10) {
   });
 }
 
+export function useRecruiterOrderCounts() {
+  return useQuery({ queryKey: recruiterOrderKeys.counts, queryFn: recruiterOrderApi.counts });
+}
+
 export function useRecruiterOrder(code: string) {
   return useQuery({
     queryKey: recruiterOrderKeys.detail(code),
@@ -81,6 +85,13 @@ export function useRecruiterPayments(page: number, size = 10) {
   });
 }
 
+export function useRecruiterPaymentsSummary() {
+  return useQuery({
+    queryKey: recruiterOrderKeys.paymentsSummary,
+    queryFn: recruiterOrderApi.paymentsSummary,
+  });
+}
+
 export function useRecruiterRefunds(page: number, size = 10) {
   return useQuery({
     queryKey: recruiterOrderKeys.refunds(page, size),
@@ -89,8 +100,15 @@ export function useRecruiterRefunds(page: number, size = 10) {
   });
 }
 
+export function useRecruiterRefundsSummary() {
+  return useQuery({
+    queryKey: recruiterOrderKeys.refundsSummary,
+    queryFn: recruiterOrderApi.refundsSummary,
+  });
+}
+
 // While an order is still awaiting money the panel polls; the moment the bank reports the payment
-// the order, list, entitlements, credits, and notifications are refreshed automatically
+// the order, list, entitlements, and notifications are refreshed automatically
 export function useOrderPayment(code: string, live: boolean) {
   const queryClient = useQueryClient();
   const sawPendingRef = useRef(false);
@@ -107,6 +125,9 @@ export function useOrderPayment(code: string, live: boolean) {
       if (PENDING_ORDER_STATUSES.includes(payment.status)) {
         sawPendingRef.current = true;
       } else if (SETTLED.includes(payment.status)) {
+        queryClient.setQueryData<RecruiterOrder>(recruiterOrderKeys.detail(code), (current) =>
+          current ? { ...current, status: payment.status } : current,
+        );
         if (sawPendingRef.current && PAID_ORDER_STATUSES.includes(payment.status) && notifiedCodeRef.current !== code) {
           notifiedCodeRef.current = code;
           toast.success(`Payment confirmed for order ${code}! Your service package is now active.`);

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface PaymentTransactionRepository extends JpaRepository<PaymentTransaction, Long> {
 
@@ -19,6 +20,13 @@ public interface PaymentTransactionRepository extends JpaRepository<PaymentTrans
 
     Page<PaymentTransaction> findAllByMatchedOrder_CompanyIdOrderByTransactionAtDesc(
             Long companyId, Pageable pageable);
+
+    long countByMatchedOrder_CompanyId(Long companyId);
+
+    @Query(
+            "select coalesce(sum(transaction.amountIn), 0) from PaymentTransaction transaction"
+                    + " where transaction.matchedOrder.companyId = :companyId")
+    long sumAmountInByMatchedOrder_CompanyId(@Param("companyId") Long companyId);
 
     Optional<PaymentTransaction> findBySepayId(String sepayId);
 

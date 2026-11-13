@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import type { SaveServicePackageFormData } from '@/schemas/service-package.schema';
 import type { AdminServiceCategory, AdminServicePackage } from '@/types/admin-service-package';
 import { formatServicePrice } from '@/utils/service-package';
-import { Clock, ExternalLink, Gift, ShoppingCart, TriangleAlert } from 'lucide-react';
+import { Clock, ExternalLink, ShoppingCart, TriangleAlert } from 'lucide-react';
 import Link from 'next/link';
 import { ROUTES } from '@/constants/routes';
 
@@ -24,7 +24,6 @@ export default function PackageLivePreview({ values, selectedCategory, editingPa
   const accent = HEX_COLOR_PATTERN.test(values.accentColor.trim()) ? values.accentColor.trim() : DEFAULT_ACCENT;
   const priceNumber = /^\d+$/.test(values.price.trim()) ? Number(values.price.trim()) : 0;
   const validityNumber = /^[1-9]\d*$/.test(values.validityDays.trim()) ? Number(values.validityDays.trim()) : null;
-  const bonusCreditsNumber = /^\d+$/.test(values.bonusCredits.trim()) ? Number(values.bonusCredits.trim()) : 0;
   const currency = values.currency.trim().toUpperCase() || 'VND';
 
   const visibilityState = getPackageVisibilityState({ status: values.status }, selectedCategory);
@@ -61,7 +60,7 @@ export default function PackageLivePreview({ values, selectedCategory, editingPa
               <h4 className="text-on-surface text-base font-bold tracking-wide">
                 {values.name.trim() || 'PACKAGE NAME'}
               </h4>
-              <ServicePackageBadges badge={values.badge} bonusCredits={bonusCreditsNumber} />
+              <ServicePackageBadges badge={values.badge} />
             </div>
 
             <p className="mt-1.5 text-xl font-bold tabular-nums" style={{ color: accent }}>
@@ -73,19 +72,12 @@ export default function PackageLivePreview({ values, selectedCategory, editingPa
               {values.shortDescription.trim() || 'Short package description shown to recruiters appears here.'}
             </p>
 
-            {(validityNumber || bonusCreditsNumber > 0) && (
+            {validityNumber && (
               <div className="mt-2.5 flex flex-wrap gap-1.5">
-                {validityNumber && (
-                  <span className="bg-surface-container-low text-on-surface-variant inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium">
-                    <Clock className="h-3 w-3 text-emerald-600" />
-                    Hiệu lực {validityNumber} ngày
-                  </span>
-                )}
-                {bonusCreditsNumber > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-800">
-                    <Gift className="h-3 w-3 text-amber-500" />+{bonusCreditsNumber.toLocaleString('vi-VN')} credits
-                  </span>
-                )}
+                <span className="bg-surface-container-low text-on-surface-variant inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium">
+                  <Clock className="h-3 w-3 text-emerald-600" />
+                  Hiệu lực {validityNumber} ngày
+                </span>
               </div>
             )}
 

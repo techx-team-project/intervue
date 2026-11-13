@@ -10,7 +10,6 @@ public record EntitlementResource(
         String label,
         Integer totalQuantity,
         Integer remainingQuantity,
-        Integer tier,
         Integer durationDays,
         EntitlementStatus status,
         Instant activationDeadline,

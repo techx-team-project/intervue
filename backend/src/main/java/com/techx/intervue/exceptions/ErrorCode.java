@@ -113,6 +113,9 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "This job can no longer be edited or deleted!"),
     SAVED_LIMIT_REACHED(HttpStatus.CONFLICT, "You have reached the maximum number of saved items!"),
     ALREADY_APPLIED(HttpStatus.CONFLICT, "You have already applied to this job!"),
+    APPLICATION_DAILY_LIMIT_REACHED(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "You have reached today's application limit, please try again tomorrow!"),
     JOB_NOT_OPEN(HttpStatus.UNPROCESSABLE_CONTENT, "This job is not accepting applications!"),
     CANNOT_APPLY_TO_OWN_COMPANY(
             HttpStatus.UNPROCESSABLE_CONTENT, "You cannot apply to a job of your own company!"),
@@ -165,8 +168,7 @@ public enum ErrorCode {
             HttpStatus.FORBIDDEN, "This account cannot sign in with a social provider!"),
     PASSWORD_NOT_SET(HttpStatus.UNPROCESSABLE_CONTENT, "Set a password first!"),
     PACKAGE_NOT_AVAILABLE(HttpStatus.NOT_FOUND, "This service package is not available!"),
-    DUPLICATE_PACKAGE_CODE(
-            HttpStatus.CONFLICT, "A service package with this code or slug already exists!"),
+    DUPLICATE_PACKAGE_CODE(HttpStatus.CONFLICT, "A service package with this slug already exists!"),
     DUPLICATE_SERVICE_CATEGORY_CODE(
             HttpStatus.CONFLICT, "A service category with this code already exists!"),
     SERVICE_CATEGORY_IN_USE(
@@ -239,13 +241,7 @@ public enum ErrorCode {
     VOUCHER_NOT_APPLICABLE(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "This voucher does not apply to the selected service packages!"),
-    INSUFFICIENT_CREDITS(
-            HttpStatus.UNPROCESSABLE_CONTENT, "Your company does not have enough credits left!"),
-    CREDIT_PRICE_NOT_AVAILABLE(
-            HttpStatus.NOT_FOUND, "This service cannot be exchanged for credits right now!"),
-    DUPLICATE_CREDIT_PRICE(
-            HttpStatus.CONFLICT,
-            "A credit price for this entitlement type and tier already exists!"),
+    INSUFFICIENT_CREDITS(HttpStatus.UNPROCESSABLE_CONTENT, "You do not have enough credits left!"),
     ENTITLEMENT_NOT_ACTIVATABLE(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "This service is used automatically and cannot be applied to a job!"),
@@ -258,8 +254,6 @@ public enum ErrorCode {
     JOB_LABEL_CONFLICT(
             HttpStatus.CONFLICT,
             "This job already has an active highlight label; wait until it expires before applying another!"),
-    JOB_MUST_BE_PUBLISHED(
-            HttpStatus.UNPROCESSABLE_CONTENT, "Only published jobs can be pushed to the top!"),
     AD_BANNER_QUANTITY_LOCKED(
             HttpStatus.UNPROCESSABLE_CONTENT,
             "Banner slot duration cannot be changed from the cart!"),

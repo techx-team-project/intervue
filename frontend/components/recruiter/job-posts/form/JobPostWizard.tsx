@@ -3,16 +3,17 @@
 import { Button } from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import { ROUTES } from '@/constants/routes';
+import { useJobDraftAutosave } from '@/hooks/useJobDraftAutosave';
+import { useJobDraftPersistence } from '@/hooks/useJobDraftPersistence';
 import { useRecruiterJobMutations, useSimilarJobs } from '@/hooks/useRecruiterJobs';
 import { isApiError } from '@/lib/api-error';
 import { JobPostFormData, jobPostSchema } from '@/schemas/job.schema';
 import type { JobStatus } from '@/types/recruiter-job';
 import { getErrorMessage } from '@/utils/error';
-import { toSaveRequest } from '@/utils/recruiter-job';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertTriangle, ArrowLeft, ArrowRight, Save, SendHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FieldErrors, FormProvider, Path, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import JobBasicsStep from './JobBasicsStep';
@@ -80,7 +81,6 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
   const mutations = useRecruiterJobMutations();
   const [step, setStep] = useState(0);
   const [reached, setReached] = useState(0);
-  const [savedId, setSavedId] = useState(jobId);
   const [busy, setBusy] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -90,6 +90,11 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
     mode: 'onTouched',
   });
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [step]);
+
+  const { savedId, persist } = useJobDraftPersistence(form.getValues, jobId);
   const isLive = status !== undefined && LIVE_STATUSES.includes(status);
   const similarJobs = useSimilarJobs(form.getValues('title'), form.getValues('city'), savedId, confirmOpen).data;
 
@@ -98,16 +103,7 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
     setReached((current) => Math.max(current, target));
   };
 
-  const persist = async (): Promise<number> => {
-    const data = toSaveRequest(form.getValues());
-    if (savedId) {
-      await mutations.update.mutateAsync({ id: savedId, data });
-      return savedId;
-    }
-    const created = await mutations.create.mutateAsync(data);
-    setSavedId(created.id);
-    return created.id;
-  };
+  const autosaveStatus = useJobDraftAutosave({ control: form.control, enabled: !isLive && !busy, save: persist });
 
   const showServerError = (error: unknown) => {
     if (isApiError(error)) {
@@ -203,6 +199,11 @@ export default function JobPostWizard({ jobId, status, initialValues }: JobPostW
               </Button>
 
               <div className="flex items-center gap-2">
+                {!isLive && autosaveStatus !== 'idle' && (
+                  <span className="text-on-surface-variant text-xs" role="status">
+                    {autosaveStatus === 'saving' ? 'Saving…' : 'Draft saved'}
+                  </span>
+                )}
                 {!isLive && (
                   <Button
                     type="button"

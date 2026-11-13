@@ -528,8 +528,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     JOB_PAUSED,
                     JOB_RESUMED,
                     JOB_CLOSED,
-                    JOB_RENEWED,
-                    JOB_RETOPPED ->
+                    JOB_RENEWED ->
                     "moderation";
             case IDENTITY_VERIFICATION_APPROVED,
                     IDENTITY_VERIFICATION_REJECTED,
@@ -544,10 +543,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     SERVICE_PACKAGE_UPDATED,
                     SERVICE_PACKAGE_STATUS_CHANGED,
                     BILLING_SETTINGS_UPDATED,
-                    CREDIT_PRICE_CREATED,
-                    CREDIT_PRICE_UPDATED,
                     FREE_QUOTA_SETTINGS_UPDATED,
-                    COMPANY_CREDITS_ADJUSTED,
                     VOUCHER_CREATED,
                     VOUCHER_UPDATED,
                     REFUND_APPROVED,
@@ -630,7 +626,6 @@ public class UserAdminService implements UserAdminServiceInterface {
             case JOB_RESUMED -> "Job resumed";
             case JOB_CLOSED -> "Job closed";
             case JOB_RENEWED -> "Job renewed";
-            case JOB_RETOPPED -> "Job pushed to top";
             case JOB_RESTORED -> "Job restored by an admin";
             case IDENTITY_VERIFICATION_APPROVED -> "Identity verification approved";
             case IDENTITY_VERIFICATION_REJECTED -> "Identity verification rejected";
@@ -645,10 +640,7 @@ public class UserAdminService implements UserAdminServiceInterface {
                     SERVICE_PACKAGE_UPDATED,
                     SERVICE_PACKAGE_STATUS_CHANGED,
                     BILLING_SETTINGS_UPDATED,
-                    CREDIT_PRICE_CREATED,
-                    CREDIT_PRICE_UPDATED,
                     FREE_QUOTA_SETTINGS_UPDATED,
-                    COMPANY_CREDITS_ADJUSTED,
                     VOUCHER_CREATED,
                     VOUCHER_UPDATED,
                     REFUND_APPROVED,

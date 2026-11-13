@@ -177,7 +177,6 @@ export const JOB_HISTORY_ACTION_LABELS: Record<JobHistoryAction, string> = {
   JOB_RESUMED: 'Job reopened',
   JOB_CLOSED: 'Job closed',
   JOB_RENEWED: 'Renewed and republished',
-  JOB_RETOPPED: 'Job bumped to top',
   JOB_HIDDEN: 'Hidden by admin',
   JOB_RESTORED: 'Restored by admin',
 };
@@ -207,7 +206,7 @@ export const JOB_FORM_CURRENCY_OPTIONS = [
   { value: 'USD', label: 'USD' },
 ];
 
-export const JOB_CITY_SUGGESTIONS = VN_LOCATIONS;
+export const JOB_CITY_OPTIONS = VN_LOCATIONS.map((city) => ({ value: city, label: city }));
 
 export const SKILL_GROUP_LABELS: Record<SkillGroup, string> = {
   CORE: 'Core',

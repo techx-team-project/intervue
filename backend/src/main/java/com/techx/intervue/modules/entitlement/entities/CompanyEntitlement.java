@@ -60,10 +60,6 @@ public class CompanyEntitlement extends BaseEntity {
     @Builder.Default
     private boolean bonus = false;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private Integer tier = 1;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     @Builder.Default

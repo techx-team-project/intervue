@@ -29,7 +29,6 @@ export interface AdminServicePackage {
   id: number;
   categoryId: number;
   categoryCode: string;
-  code: string;
   slug: string;
   name: string;
   shortDescription: string | null;
@@ -40,7 +39,6 @@ export interface AdminServicePackage {
   accentColor: string | null;
   heroImageUrl: string | null;
   validityDays: number | null;
-  bonusCredits: number;
   oneTimePerCompany: boolean;
   status: ServicePackageStatus;
   displayOrder: number;
@@ -60,7 +58,6 @@ export interface SaveServiceCategoryInput {
 
 export interface SaveServicePackageInput {
   categoryId: number;
-  code: string;
   slug: string;
   name: string;
   shortDescription?: string | null;
@@ -71,14 +68,12 @@ export interface SaveServicePackageInput {
   accentColor?: string | null;
   heroImageUrl?: string | null;
   validityDays?: number | null;
-  bonusCredits: number;
   oneTimePerCompany: boolean;
   status: ServicePackageStatus;
   displayOrder: number;
   benefits: {
     entitlementType: EntitlementType;
     quantity: number;
-    tier: number;
     durationDays?: number | null;
     label: string;
   }[];

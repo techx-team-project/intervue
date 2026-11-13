@@ -2,7 +2,6 @@
 
 import Spinner from '@/components/common/Spinner';
 import ActivateEntitlementModal from '@/components/recruiter/services/my/ActivateEntitlementModal';
-import CreditWalletCard from '@/components/recruiter/services/my/CreditWalletCard';
 import { ROUTES } from '@/constants/routes';
 import { useActivateEntitlement, useActiveEntitlements, useEntitlementStock } from '@/hooks/useEntitlements';
 import { cn } from '@/lib/utils';
@@ -46,8 +45,6 @@ export default function MyServicesView() {
 
   return (
     <div className="space-y-5 pb-16">
-      <CreditWalletCard onConverted={setNotice} />
-
       <div className="border-outline-variant flex gap-1 border-b">
         {(
           [
@@ -110,11 +107,9 @@ export default function MyServicesView() {
                     }}
                     className="border-primary text-primary mt-4 inline-flex h-9 w-full cursor-pointer items-center justify-center rounded-lg border bg-white text-sm font-semibold transition hover:bg-emerald-50"
                   >
-                    {item.entitlementType === 'JOB_RETOP'
-                      ? 'Boost a job now'
-                      : item.entitlementType === 'BRAND_PAGE' || item.entitlementType === 'FEATURED_COMPANY'
-                        ? 'Activate for company'
-                        : 'Apply to a job'}
+                    {item.entitlementType === 'BRAND_PAGE' || item.entitlementType === 'FEATURED_COMPANY'
+                      ? 'Activate for company'
+                      : 'Apply to a job'}
                   </button>
                 ) : (
                   <p className="text-on-surface-variant mt-4 text-xs">

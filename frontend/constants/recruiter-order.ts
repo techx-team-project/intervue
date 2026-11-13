@@ -24,4 +24,14 @@ export const ORDER_STATUS_STYLE: Record<RecruiterOrderStatus, string> = {
 
 export const ORDER_CANCELLABLE: RecruiterOrderStatus[] = ['PENDING_PAYMENT', 'UNDERPAID'];
 
-export const INVOICED_STATUSES: RecruiterOrderStatus[] = ['PAID', 'FULFILLED', 'REFUND_REQUESTED', 'REFUNDED'];
+// Every status has a PDF to view: the real VAT invoice once paid, or an order-confirmation
+// document beforehand (or after cancellation) that a recruiter can show their finance team.
+export const ORDER_DOCUMENT_STATUSES: RecruiterOrderStatus[] = [
+  'PENDING_PAYMENT',
+  'UNDERPAID',
+  'PAID',
+  'FULFILLED',
+  'CANCELLED',
+  'REFUND_REQUESTED',
+  'REFUNDED',
+];

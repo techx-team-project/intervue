@@ -35,7 +35,7 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
     @EntityGraph(attributePaths = "skills")
     @Query(
             "SELECT j FROM Job j WHERE j.status = :status AND j.deadline >= :today"
-                    + " ORDER BY COALESCE(j.retoppedAt, j.publishedAt) DESC, j.id DESC")
+                    + " ORDER BY j.publishedAt DESC, j.id DESC")
     List<Job> findActiveWithSkills(
             @Param("status") JobStatus status, @Param("today") LocalDate today, Pageable pageable);
 
@@ -44,9 +44,7 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
             "SELECT j FROM Job j WHERE j.status = :status AND j.deadline >= :today"
                     + " AND j.latitude BETWEEN :minLat AND :maxLat"
                     + " AND j.longitude BETWEEN :minLng AND :maxLng"
-                    + " ORDER BY CASE WHEN j.boostLevel > 0 AND (j.boostExpiresAt IS NULL OR"
-                    + " j.boostExpiresAt > :now) THEN j.boostLevel ELSE 0 END DESC,"
-                    + " COALESCE(j.retoppedAt, j.publishedAt) DESC, j.id DESC")
+                    + " ORDER BY j.publishedAt DESC, j.id DESC")
     List<Job> findPublishedInBounds(
             @Param("status") JobStatus status,
             @Param("today") LocalDate today,
@@ -54,12 +52,16 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
             @Param("maxLat") BigDecimal maxLat,
             @Param("minLng") BigDecimal minLng,
             @Param("maxLng") BigDecimal maxLng,
-            @Param("now") Instant now,
             Pageable pageable);
 
-    long countByCompanyIdAndStatusAndIdNot(Long companyId, JobStatus status, Long id);
-
     long countByCompanyIdAndApprovedAtIsNotNull(Long companyId);
+
+    long countByStatus(JobStatus status);
+
+    @Query("SELECT j.publishedAt FROM Job j WHERE j.publishedAt >= :since")
+    List<Instant> findPublishedAtSince(@Param("since") Instant since);
+
+    List<Job> findByStatusAndDeadline(JobStatus status, LocalDate deadline);
 
     @Query("SELECT j.id FROM Job j WHERE j.status = :status AND j.deadline = :deadline")
     List<Long> findIdsByStatusAndDeadline(

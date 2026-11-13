@@ -94,7 +94,8 @@ export default function ReviewAiMatchPanel({ application }: { application: Revie
       ) : (
         <>
           <p className="text-xs text-slate-500">
-            AI only cites evidence from the CV. It does not score or decide for you. Each analysis uses 1 credit.
+            AI only cites evidence from the CV. It does not score or decide for you. Each analysis uses 1 AI Resume
+            Match unit.
           </p>
 
           <Button

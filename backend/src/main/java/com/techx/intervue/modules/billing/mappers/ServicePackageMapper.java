@@ -46,7 +46,6 @@ public class ServicePackageMapper {
             SaveServicePackageRequest request,
             ServiceCategory category) {
         servicePackage.setCategory(category);
-        servicePackage.setCode(request.code().trim());
         servicePackage.setSlug(request.slug().trim());
         servicePackage.setName(request.name().trim());
         servicePackage.setShortDescription(request.shortDescription());
@@ -60,7 +59,6 @@ public class ServicePackageMapper {
         servicePackage.setAccentColor(request.accentColor());
         servicePackage.setHeroImageUrl(request.heroImageUrl());
         servicePackage.setValidityDays(request.validityDays());
-        servicePackage.setBonusCredits(request.bonusCredits());
         servicePackage.setOneTimePerCompany(request.oneTimePerCompany());
         servicePackage.setStatus(request.status());
         servicePackage.setDisplayOrder(request.displayOrder());
@@ -70,7 +68,6 @@ public class ServicePackageMapper {
         return new ServicePackageBenefitResource(
                 benefit.getEntitlementType(),
                 benefit.getQuantity(),
-                benefit.getTier(),
                 benefit.getDurationDays(),
                 benefit.getLabel());
     }
@@ -88,7 +85,6 @@ public class ServicePackageMapper {
             ServicePackage servicePackage, List<ServicePackageBenefit> benefits) {
         return new ServicePackageCardResource(
                 servicePackage.getId(),
-                servicePackage.getCode(),
                 servicePackage.getSlug(),
                 servicePackage.getName(),
                 servicePackage.getShortDescription(),
@@ -98,7 +94,6 @@ public class ServicePackageMapper {
                 servicePackage.getVipRibbon(),
                 servicePackage.getAccentColor(),
                 servicePackage.getValidityDays(),
-                servicePackage.getBonusCredits(),
                 servicePackage.getOneTimePerCompany(),
                 benefits.stream().map(this::toBenefitResource).toList());
     }
@@ -122,7 +117,6 @@ public class ServicePackageMapper {
         ServiceCategory category = servicePackage.getCategory();
         return new ServicePackageDetailResource(
                 servicePackage.getId(),
-                servicePackage.getCode(),
                 servicePackage.getSlug(),
                 servicePackage.getName(),
                 servicePackage.getShortDescription(),
@@ -133,7 +127,6 @@ public class ServicePackageMapper {
                 servicePackage.getAccentColor(),
                 servicePackage.getHeroImageUrl(),
                 servicePackage.getValidityDays(),
-                servicePackage.getBonusCredits(),
                 servicePackage.getOneTimePerCompany(),
                 category.getCode(),
                 category.getName(),
@@ -166,7 +159,6 @@ public class ServicePackageMapper {
                 servicePackage.getId(),
                 category.getId(),
                 category.getCode(),
-                servicePackage.getCode(),
                 servicePackage.getSlug(),
                 servicePackage.getName(),
                 servicePackage.getShortDescription(),
@@ -177,7 +169,6 @@ public class ServicePackageMapper {
                 servicePackage.getAccentColor(),
                 servicePackage.getHeroImageUrl(),
                 servicePackage.getValidityDays(),
-                servicePackage.getBonusCredits(),
                 servicePackage.getOneTimePerCompany(),
                 servicePackage.getStatus(),
                 servicePackage.getDisplayOrder(),

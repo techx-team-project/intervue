@@ -14,8 +14,9 @@ import {
   localInputValueAfterDays,
   toLocalInputValue,
 } from '@/utils/datetime';
+import { isGoogleMeetLink } from '@/utils/google-meet';
 import { loadInterviewPreferences, saveInterviewPreferences } from '@/utils/interview-preferences';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Wand2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface InterviewFormModalProps {
@@ -25,6 +26,11 @@ interface InterviewFormModalProps {
   onClose: () => void;
   onSubmit: (values: InterviewFormValues) => void;
 }
+
+const DEMO_START_TIME = '10:00';
+const DEMO_MEETING_LINK = 'https://meet.google.com/abc-defg-hij';
+const DEMO_NOTE =
+  'Please join 5 minutes early and prepare to walk us through your most recent project. Bring a laptop with a stable internet connection.';
 
 function initialStart(interview?: Interview) {
   return interview ? toLocalInputValue(interview.startsAt) : '';
@@ -45,12 +51,24 @@ export default function InterviewFormModal({
   const [note, setNote] = useState(interview?.note ?? '');
   const [error, setError] = useState('');
 
+  const fillDemo = () => {
+    setStartsAt(`${localInputValueAfterDays(1).slice(0, 10)}T${DEMO_START_TIME}`);
+    setDuration('60');
+    setFormat('ONLINE');
+    setLocation(DEMO_MEETING_LINK);
+    setNote(DEMO_NOTE);
+    setError('');
+  };
+
   const submit = () => {
     if (!startsAt) return setError('Please choose the interview date and time.');
     if (startsAt <= currentLocalInputValue()) return setError('The interview time must be in the future.');
     if (startsAt > localInputValueAfterDays(30)) return setError('The interview time must be within the next 30 days.');
     if (!location.trim()) {
       return setError(format === 'ONLINE' ? 'Please enter the meeting link.' : 'Please enter the interview address.');
+    }
+    if (format === 'ONLINE' && !isGoogleMeetLink(location)) {
+      return setError('Please enter a valid Google Meet link, e.g. https://meet.google.com/abc-defg-hij.');
     }
     setError('');
     saveInterviewPreferences({ durationMinutes: Number(duration), format, location: location.trim() });
@@ -82,6 +100,20 @@ export default function InterviewFormModal({
       }
     >
       <div className="space-y-4">
+        {process.env.NODE_ENV !== 'production' && (
+          <div className="flex items-center gap-2 rounded-xl border border-dashed border-amber-300 bg-amber-50/70 px-3.5 py-2.5">
+            <span className="mr-auto text-xs font-bold tracking-wide text-amber-800 uppercase">Demo tools</span>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              leftIcon={<Wand2 className="h-4 w-4" />}
+              onClick={fillDemo}
+            >
+              Fill demo data
+            </Button>
+          </div>
+        )}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <QuickTimeField label="Interview date and time" value={startsAt} onChange={setStartsAt} />
           <Select

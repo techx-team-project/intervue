@@ -42,7 +42,7 @@ public class InvoiceMailListener {
 
         mailService.sendHtmlWithAttachment(
                 invoice.getRecipientEmail(),
-                "Hoá đơn đơn hàng " + order.getCode() + " - InterVue",
+                "Invoice for order " + order.getCode() + " - InterVue",
                 "invoice-issued",
                 Map.of(
                         "buyerName", invoice.getBuyerName(),

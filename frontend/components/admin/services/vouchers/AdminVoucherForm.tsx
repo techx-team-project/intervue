@@ -132,7 +132,7 @@ export default function AdminVoucherForm({ servicePackages, editingVoucher }: Ad
     return servicePackages.filter(
       (pkg) =>
         pkg.name.toLowerCase().includes(normalized) ||
-        pkg.code.toLowerCase().includes(normalized) ||
+        pkg.slug.toLowerCase().includes(normalized) ||
         pkg.categoryCode.toLowerCase().includes(normalized),
     );
   }, [packageQuery, servicePackages]);
@@ -141,7 +141,7 @@ export default function AdminVoucherForm({ servicePackages, editingVoucher }: Ad
     return (applicablePackageIdsValue ?? [])
       .map((id) => packagesById.get(id))
       .filter((pkg): pkg is AdminServicePackage => Boolean(pkg))
-      .map((pkg) => ({ id: pkg.id, code: pkg.code, slug: pkg.slug, name: pkg.name }));
+      .map((pkg) => ({ id: pkg.id, slug: pkg.slug, name: pkg.name }));
   }, [applicablePackageIdsValue, packagesById]);
 
   const previewEndsAtIso = useMemo(() => {
@@ -616,7 +616,7 @@ export default function AdminVoucherForm({ servicePackages, editingVoucher }: Ad
                               <div className="min-w-0">
                                 <p className="text-navy dark:text-forest-50 truncate font-semibold">{pkg.name}</p>
                                 <p className="text-on-surface-variant dark:text-forest-300 text-[11px]">
-                                  <span className="font-mono">{pkg.code}</span> · {pkg.categoryCode}
+                                  <span className="font-mono">/{pkg.slug}</span> · {pkg.categoryCode}
                                 </p>
                               </div>
                             </div>

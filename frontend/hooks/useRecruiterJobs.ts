@@ -83,19 +83,16 @@ export function useRecruiterJobMutations() {
     pause: useMutation({ mutationFn: recruiterJobApi.pause, onSuccess: invalidate }),
     resume: useMutation({ mutationFn: recruiterJobApi.resume, onSuccess: invalidate }),
     close: useMutation({ mutationFn: recruiterJobApi.close, onSuccess: invalidate }),
-    retop: useMutation({
-      mutationFn: recruiterJobApi.retop,
-      onSuccess: () => {
-        invalidate();
-        void queryClient.invalidateQueries({ queryKey: ['recruiter', 'entitlements'] });
-      },
-    }),
     renew: useMutation({
       mutationFn: ({ id, deadline }: { id: number; deadline: string }) => recruiterJobApi.renew(id, deadline),
       onSuccess: () => {
         invalidate();
         void queryClient.invalidateQueries({ queryKey: ['recruiter', 'entitlements'] });
       },
+    }),
+    extend: useMutation({
+      mutationFn: ({ id, deadline }: { id: number; deadline: string }) => recruiterJobApi.extend(id, deadline),
+      onSuccess: invalidate,
     }),
     remove: useMutation({ mutationFn: recruiterJobApi.remove, onSuccess: invalidate }),
   };

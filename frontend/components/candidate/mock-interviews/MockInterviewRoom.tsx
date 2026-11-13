@@ -11,13 +11,28 @@ import type {
 import { Sparkles, Send, HelpCircle, ChevronRight, Lightbulb, MessageSquare, Award } from 'lucide-react';
 import { toast } from 'sonner';
 
+function toPendingFollowUp(question?: MockInterviewQuestionResource): SubmitAnswerResultResource | null {
+  if (!question?.candidateAnswer || !question.followUpQuestion || question.followUpAnswer) return null;
+  return {
+    questionId: question.id,
+    questionOrder: question.questionOrder,
+    needsFollowUp: true,
+    followUpQuestion: question.followUpQuestion,
+    feedback: question.feedback ?? '',
+    score: question.score ?? null,
+    idealAnswer: question.idealAnswer ?? null,
+    sessionCompleted: false,
+    nextQuestion: null,
+    completedSession: null,
+  };
+}
+
 interface MockInterviewRoomProps {
   session: MockInterviewDetailResource;
-  onSessionUpdated: (session: MockInterviewDetailResource) => void;
   onFinish: (completedSession: MockInterviewDetailResource) => void;
 }
 
-export default function MockInterviewRoom({ session, onSessionUpdated, onFinish }: MockInterviewRoomProps) {
+export default function MockInterviewRoom({ session, onFinish }: MockInterviewRoomProps) {
   const submitAnswerMutation = useSubmitMockAnswer(session.id);
   const submitFollowUpMutation = useSubmitMockFollowUp(session.id);
 
@@ -25,9 +40,13 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
   const [currentFollowUpAnswer, setCurrentFollowUpAnswer] = useState('');
   const [activeResult, setActiveResult] = useState<SubmitAnswerResultResource | null>(null);
 
-  const currentIdx = session.currentQuestionIndex;
-  const currentQuestion: MockInterviewQuestionResource | undefined =
-    session.questions[currentIdx] || session.questions[session.questions.length - 1];
+  const serverQuestion: MockInterviewQuestionResource | undefined =
+    session.questions[session.currentQuestionIndex] || session.questions[session.questions.length - 1];
+  const pendingFollowUp = toPendingFollowUp(serverQuestion);
+  const result = activeResult ?? pendingFollowUp;
+  const currentQuestion = result
+    ? (session.questions.find((q) => q.id === result.questionId) ?? serverQuestion)
+    : serverQuestion;
 
   const handleSendAnswer = async () => {
     if (!currentAnswer.trim() || !currentQuestion) {
@@ -81,24 +100,6 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
       return;
     }
 
-    const updatedQuestions = [...session.questions];
-    const answeredIdx = updatedQuestions.findIndex((q) => q.id === activeResult.questionId);
-    if (answeredIdx !== -1) {
-      updatedQuestions[answeredIdx] = {
-        ...updatedQuestions[answeredIdx],
-        feedback: activeResult.feedback,
-        score: activeResult.score,
-        idealAnswer: activeResult.idealAnswer,
-      };
-    }
-
-    const nextIndex = session.currentQuestionIndex + 1;
-    onSessionUpdated({
-      ...session,
-      currentQuestionIndex: nextIndex,
-      questions: updatedQuestions,
-    });
-
     setActiveResult(null);
     setCurrentAnswer('');
     setCurrentFollowUpAnswer('');
@@ -112,7 +113,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
     );
   }
 
-  const progressPercent = Math.min(100, Math.round(((session.currentQuestionIndex + 1) / session.questionCount) * 100));
+  const progressPercent = Math.min(100, Math.round((currentQuestion.questionOrder / session.questionCount) * 100));
 
   return (
     <div className="space-y-6">
@@ -133,7 +134,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
 
           <div className="text-right">
             <span className="text-xs font-bold text-slate-500">
-              Question {session.currentQuestionIndex + 1} of {session.questionCount}
+              Question {currentQuestion.questionOrder} of {session.questionCount}
             </span>
             <div className="mt-1 h-2 w-36 overflow-hidden rounded-full bg-slate-100">
               <div className="bg-primary h-full transition-all duration-300" style={{ width: `${progressPercent}%` }} />
@@ -155,7 +156,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
         </div>
 
         {/* Answer Input Section (if not yet submitted) */}
-        {!activeResult && (
+        {!result && (
           <div className="space-y-4 pt-2">
             <div>
               <label className="text-navy mb-1.5 block text-xs font-bold">Your Answer:</label>
@@ -189,7 +190,7 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
         )}
 
         {/* Evaluation Feedback and Follow-Up Section */}
-        {activeResult && (
+        {result && (
           <div className="space-y-5 border-t border-slate-100 pt-4">
             {/* Candidate Answer Display */}
             <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
@@ -197,7 +198,9 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
                 <MessageSquare className="h-3.5 w-3.5" />
                 Your Answer:
               </p>
-              <p className="text-navy text-xs leading-relaxed whitespace-pre-wrap">{currentAnswer}</p>
+              <p className="text-navy text-xs leading-relaxed whitespace-pre-wrap">
+                {currentQuestion.candidateAnswer ?? currentAnswer}
+              </p>
             </div>
 
             {/* AI Feedback & Score Card */}
@@ -207,35 +210,35 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
                   <Sparkles className="text-primary h-4 w-4" />
                   <span className="text-navy text-xs font-bold">AI Feedback & Assessment:</span>
                 </div>
-                {activeResult.score !== null && activeResult.score !== undefined && (
+                {result.score !== null && result.score !== undefined && (
                   <span className="flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-bold text-emerald-800">
                     <Award className="h-3.5 w-3.5" />
-                    {activeResult.score}/100 pts
+                    {result.score}/100 pts
                   </span>
                 )}
               </div>
 
-              <p className="text-navy text-xs leading-relaxed">{activeResult.feedback}</p>
+              <p className="text-navy text-xs leading-relaxed">{result.feedback}</p>
 
-              {activeResult.idealAnswer && (
+              {result.idealAnswer && (
                 <div className="border-primary/10 border-t pt-2">
                   <p className="mb-1 flex items-center gap-1 text-xs font-bold text-emerald-800">
                     <Lightbulb className="h-3.5 w-3.5" />
                     Model Answer / Recommendation:
                   </p>
-                  <p className="text-xs leading-relaxed text-slate-600 italic">{activeResult.idealAnswer}</p>
+                  <p className="text-xs leading-relaxed text-slate-600 italic">{result.idealAnswer}</p>
                 </div>
               )}
             </div>
 
             {/* Follow-up question section (at most 1 follow-up) */}
-            {activeResult.needsFollowUp && activeResult.followUpQuestion && (
+            {result.needsFollowUp && result.followUpQuestion && (
               <div className="space-y-4 rounded-2xl border-2 border-amber-300 bg-amber-50/50 p-5">
                 <div className="flex items-center gap-2 text-xs font-bold text-amber-800">
                   <HelpCircle className="h-4 w-4" />
                   <span>AI Follow-Up Clarification (Max 1 follow-up question):</span>
                 </div>
-                <p className="text-navy text-sm leading-relaxed font-semibold">{activeResult.followUpQuestion}</p>
+                <p className="text-navy text-sm leading-relaxed font-semibold">{result.followUpQuestion}</p>
 
                 <div className="space-y-3">
                   <textarea
@@ -261,10 +264,10 @@ export default function MockInterviewRoom({ session, onSessionUpdated, onFinish 
             )}
 
             {/* Action button to proceed when no pending follow-up */}
-            {!activeResult.needsFollowUp && (
+            {!result.needsFollowUp && (
               <div className="flex items-center justify-end pt-3">
                 <Button variant="primary" onClick={handleNextQuestion} rightIcon={<ChevronRight className="h-4 w-4" />}>
-                  {activeResult.sessionCompleted ? 'View Full Interview Report' : 'Proceed to Next Question'}
+                  {result.sessionCompleted ? 'View Full Interview Report' : 'Proceed to Next Question'}
                 </Button>
               </div>
             )}

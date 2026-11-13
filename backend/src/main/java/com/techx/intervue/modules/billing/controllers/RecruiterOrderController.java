@@ -6,10 +6,14 @@ import com.techx.intervue.modules.billing.requests.CreateRefundRequest;
 import com.techx.intervue.modules.billing.resources.InvoiceResource;
 import com.techx.intervue.modules.billing.resources.OrderPaymentResource;
 import com.techx.intervue.modules.billing.resources.OrderResource;
+import com.techx.intervue.modules.billing.resources.OrderStatusCountsResource;
 import com.techx.intervue.modules.billing.resources.OrderSummaryResource;
 import com.techx.intervue.modules.billing.resources.PaymentTransactionResource;
+import com.techx.intervue.modules.billing.resources.PaymentTransactionSummaryResource;
 import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
+import com.techx.intervue.modules.billing.resources.RefundStatusCountsResource;
+import com.techx.intervue.modules.billing.resources.SupportedBankResource;
 import com.techx.intervue.modules.billing.services.interfaces.InvoiceServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderPaymentServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
@@ -18,6 +22,7 @@ import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ContentDisposition;
@@ -51,6 +56,14 @@ public class RecruiterOrderController extends BaseController {
                 orderService.search(pageable, principal.getId()), "Orders retrieved successfully!");
     }
 
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResource<OrderStatusCountsResource>> summary(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                orderService.countByStatus(principal.getId()),
+                "Order summary retrieved successfully!");
+    }
+
     @GetMapping("/payments")
     public ResponseEntity<ApiResource<PageResource<PaymentTransactionResource>>> payments(
             Pageable pageable, @AuthenticationPrincipal CustomUserDetails principal) {
@@ -59,12 +72,28 @@ public class RecruiterOrderController extends BaseController {
                 "Payments retrieved successfully!");
     }
 
+    @GetMapping("/payments/summary")
+    public ResponseEntity<ApiResource<PaymentTransactionSummaryResource>> paymentsSummary(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                orderService.summarizePayments(principal.getId()),
+                "Payment summary retrieved successfully!");
+    }
+
     @GetMapping("/refunds")
     public ResponseEntity<ApiResource<PageResource<RefundRequestResource>>> refunds(
             Pageable pageable, @AuthenticationPrincipal CustomUserDetails principal) {
         return page(
                 refundService.listMine(principal.getId(), pageable),
                 "Refund requests retrieved successfully!");
+    }
+
+    @GetMapping("/refunds/summary")
+    public ResponseEntity<ApiResource<RefundStatusCountsResource>> refundsSummary(
+            @AuthenticationPrincipal CustomUserDetails principal) {
+        return ok(
+                refundService.summaryForRecruiter(principal.getId()),
+                "Refund summary retrieved successfully!");
     }
 
     @GetMapping("/{code}")
@@ -113,6 +142,11 @@ public class RecruiterOrderController extends BaseController {
                                 .build()
                                 .toString())
                 .body(pdf);
+    }
+
+    @GetMapping("/refund-banks")
+    public ResponseEntity<ApiResource<List<SupportedBankResource>>> refundBanks() {
+        return ok(refundService.supportedBanks(), "Supported banks retrieved successfully!");
     }
 
     @GetMapping("/{code}/refund")

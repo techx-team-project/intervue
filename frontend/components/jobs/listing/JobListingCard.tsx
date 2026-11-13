@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import type { PublicJobSummaryResource } from '@/types/public-job';
 import { formatSalary } from '@/utils/public-company';
 import Link from 'next/link';
-import { JobFactChips, JobSkillTags, JobStatusBadges, JobTiming } from './JobCardParts';
+import { AppliedBadge, JobFactChips, JobSkillTags, JobStatusBadges, JobTiming } from './JobCardParts';
 
 const MAX_SKILLS = 6;
 
@@ -40,6 +40,7 @@ export default function JobListingCard({ job, matchedSkillIds, onQuickView }: Jo
           </Link>
           <h3 className="font-display text-title-md text-on-surface line-clamp-2 font-bold">
             <JobStatusBadges job={job} />
+            <AppliedBadge jobId={job.id} />
             <Link href={`/jobs/${job.id}`} className="after:absolute after:inset-0 after:content-['']">
               {job.title}
             </Link>

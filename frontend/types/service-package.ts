@@ -2,25 +2,20 @@ export type ServicePackageBadge = 'NONE' | 'NEW' | 'SPECIAL_OFFER';
 
 export type EntitlementType =
   | 'JOB_POST_SLOT'
-  | 'JOB_BOOST'
-  | 'JOB_LABEL_URGENT'
   | 'JOB_LABEL_HOT'
   | 'JOB_HIGHLIGHT'
-  | 'JOB_RETOP'
   | 'JOB_ALERT_PUSH'
   | 'AI_RESUME_MATCH'
   | 'AI_JD_GENERATE'
   | 'BRAND_PAGE'
   | 'FEATURED_COMPANY'
-  | 'AD_SLOT_WEEK'
-  | 'CREDIT';
+  | 'AD_SLOT_WEEK';
 
-export type ServiceNeedKey = 'REACH' | 'CONNECT' | 'HIGHLIGHT' | 'BRANDING';
+export type ServiceNeedKey = 'REACH' | 'HIGHLIGHT' | 'BRANDING';
 
 export interface ServicePackageBenefit {
   entitlementType: EntitlementType;
   quantity: number;
-  tier: number;
   durationDays: number | null;
   label: string;
 }
@@ -35,7 +30,6 @@ export interface ServicePackageSection {
 
 export interface ServicePackageCard {
   id: number;
-  code: string;
   slug: string;
   name: string;
   shortDescription: string | null;
@@ -45,7 +39,6 @@ export interface ServicePackageCard {
   vipRibbon: boolean;
   accentColor: string | null;
   validityDays: number | null;
-  bonusCredits: number;
   oneTimePerCompany: boolean;
   benefits: ServicePackageBenefit[];
 }

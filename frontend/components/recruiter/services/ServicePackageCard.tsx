@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import type { AdSlot } from '@/types/ads';
 import type { ServicePackageCard as ServicePackageCardType } from '@/types/service-package';
 import { formatServicePrice } from '@/utils/service-package';
-import { CalendarDays, Clock, Gift, Loader2, ShoppingCart } from 'lucide-react';
+import { CalendarDays, Clock, Loader2, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 
 interface ServicePackageCardProps {
@@ -27,7 +27,7 @@ export default function ServicePackageCard({
   disableActions = false,
 }: ServicePackageCardProps) {
   const accent = item.accentColor ?? DEFAULT_ACCENT;
-  const hasMetadata = Boolean(adSlot || item.validityDays || item.bonusCredits > 0);
+  const hasMetadata = Boolean(adSlot || item.validityDays);
   const actionsDisabled = disableActions || busyAction !== null;
 
   return (
@@ -43,7 +43,7 @@ export default function ServicePackageCard({
       <div className="flex flex-1 flex-col p-5">
         <div className="flex flex-wrap items-center gap-2 pr-10">
           <h3 className="text-on-surface text-lg font-bold tracking-wide">{item.name}</h3>
-          <ServicePackageBadges badge={item.badge} bonusCredits={item.bonusCredits} />
+          <ServicePackageBadges badge={item.badge} />
         </div>
 
         <p className="mt-2 text-2xl font-bold" style={{ color: accent }}>
@@ -67,12 +67,6 @@ export default function ServicePackageCard({
               <span className="bg-surface-container-low text-on-surface-variant inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium">
                 <Clock className="text-primary h-3.5 w-3.5 shrink-0" aria-hidden />
                 Valid for {item.validityDays} days
-              </span>
-            )}
-            {item.bonusCredits > 0 && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-800">
-                <Gift className="h-3.5 w-3.5 shrink-0 text-amber-500" aria-hidden />+
-                {item.bonusCredits.toLocaleString('vi-VN')} credits
               </span>
             )}
           </div>

@@ -50,6 +50,15 @@ public class RefundRequest extends BaseEntity {
     @Column(name = "refundable_amount", nullable = false)
     private Long refundableAmount;
 
+    @Column(name = "bank_code", length = 30)
+    private String bankCode;
+
+    @Column(name = "bank_account_number", length = 30)
+    private String bankAccountNumber;
+
+    @Column(name = "bank_account_name", length = 150)
+    private String bankAccountName;
+
     @Column(name = "approved_amount")
     private Long approvedAmount;
 

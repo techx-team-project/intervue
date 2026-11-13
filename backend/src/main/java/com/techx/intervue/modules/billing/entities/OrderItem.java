@@ -37,9 +37,6 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "package_id")
     private ServicePackage servicePackage;
 
-    @Column(name = "package_code", nullable = false, length = 50)
-    private String packageCode;
-
     @Column(name = "package_name", nullable = false, length = 150)
     private String packageName;
 
@@ -54,10 +51,6 @@ public class OrderItem extends BaseEntity {
 
     @Column(name = "validity_days")
     private Integer validityDays;
-
-    @Column(name = "bonus_credits", nullable = false)
-    @Builder.Default
-    private Integer bonusCredits = 0;
 
     @Column(name = "meta_json", columnDefinition = "TEXT")
     private String metaJson;

@@ -142,7 +142,6 @@ export function toSaveRequest(values: JobPostFormData): SaveJobRequest {
 
 export function summaryToJobPost(summary: RecruiterJobSummaryResource): RecruiterJobPost {
   return {
-    boostLevel: summary.boostLevel,
     highlightLabel: summary.highlightLabel,
     id: String(summary.id),
     title: summary.title,
@@ -157,13 +156,11 @@ export function summaryToJobPost(summary: RecruiterJobSummaryResource): Recruite
     updatedAt: summary.updatedAt,
     expiresAt: summary.deadline,
     publishedAt: summary.publishedAt,
-    retoppedAt: summary.retoppedAt,
   };
 }
 
 export function resourceToJobPost(job: RecruiterJobResource): RecruiterJobPost {
   return {
-    boostLevel: job.boostLevel,
     highlightLabel: job.highlightLabel,
     id: String(job.id),
     title: job.title,
@@ -184,6 +181,5 @@ export function resourceToJobPost(job: RecruiterJobResource): RecruiterJobPost {
     updatedAt: job.updatedAt,
     expiresAt: job.deadline,
     publishedAt: job.publishedAt,
-    retoppedAt: job.retoppedAt,
   };
 }

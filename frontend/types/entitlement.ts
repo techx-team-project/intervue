@@ -9,7 +9,6 @@ export interface Entitlement {
   label: string;
   totalQuantity: number;
   remainingQuantity: number;
-  tier: number;
   durationDays: number | null;
   status: EntitlementStatus;
   activationDeadline: string;

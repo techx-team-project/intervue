@@ -192,7 +192,6 @@ public class VoucherMapper {
     private VoucherPackageSummaryResource toPackageSummary(ServicePackage servicePackage) {
         return VoucherPackageSummaryResource.builder()
                 .id(servicePackage.getId())
-                .code(servicePackage.getCode())
                 .slug(servicePackage.getSlug())
                 .name(servicePackage.getName())
                 .build();

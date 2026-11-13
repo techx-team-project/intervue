@@ -22,7 +22,6 @@ public class CartMapper {
         return new CartItemResource(
                 item.getId(),
                 servicePackage.getId(),
-                servicePackage.getCode(),
                 servicePackage.getSlug(),
                 servicePackage.getName(),
                 servicePackage.getShortDescription(),

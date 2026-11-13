@@ -167,13 +167,11 @@ public class AdminOrderService implements AdminOrderServiceInterface {
         for (OrderItem item : items) {
             PackageRevenue current =
                     totals.getOrDefault(
-                            item.getPackageCode(),
-                            new PackageRevenue(
-                                    item.getPackageCode(), item.getPackageName(), 0, 0L));
+                            item.getPackageName(),
+                            new PackageRevenue(item.getPackageName(), 0, 0L));
             totals.put(
-                    item.getPackageCode(),
+                    item.getPackageName(),
                     new PackageRevenue(
-                            current.packageCode(),
                             current.packageName(),
                             current.quantity() + item.getQuantity(),
                             current.collected() + item.getLineTotal()));

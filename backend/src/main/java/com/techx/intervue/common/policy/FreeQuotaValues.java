@@ -8,10 +8,11 @@ public record FreeQuotaValues(
         int connectDailyInviteLimit,
         int companyFreePhotoLimit,
         boolean requireJobSlot,
-        int jobFreeActiveLimit,
+        int jobFreePostLimit,
         int jobFreeMaxDays,
-        int jobReviewFirstCount) {
+        int jobReviewFirstCount,
+        int candidateDailyApplicationLimit) {
 
     public static final FreeQuotaValues DEFAULTS =
-            new FreeQuotaValues(30, 10, 3, 5, 100, 3, false, 3, 60, 3);
+            new FreeQuotaValues(30, 10, 3, 5, 100, 3, false, 3, 60, 3, 10);
 }

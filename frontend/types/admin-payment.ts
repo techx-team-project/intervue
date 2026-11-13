@@ -76,14 +76,23 @@ export interface AdminRefundRequest {
   id: number;
   orderCode: string;
   companyId: number;
+  companyName: string | null;
   reason: string;
   status: AdminRefundStatus;
   orderTotal: number;
   refundableAmount: number;
+  bankCode: string | null;
+  bankAccountNumber: string | null;
+  bankAccountName: string | null;
   approvedAmount: number | null;
   adminNote: string | null;
   reviewedAt: string | null;
   createdAt: string;
+}
+
+export interface AdminRefundStatusCounts {
+  total: number;
+  byStatus: Record<AdminRefundStatus, number>;
 }
 
 export type AdminOrderStatus =
@@ -91,7 +100,6 @@ export type AdminOrderStatus =
 
 export interface AdminOrderItem {
   id: number;
-  packageCode: string;
   packageName: string;
   unitPrice: number;
   quantity: number;
@@ -127,5 +135,5 @@ export interface RevenueReport {
   paidOrderCount: number;
   ordersByStatus: Partial<Record<AdminOrderStatus, number>>;
   byMonth: Array<{ month: string; collected: number; orderCount: number }>;
-  byPackage: Array<{ packageCode: string; packageName: string; quantity: number; collected: number }>;
+  byPackage: Array<{ packageName: string; quantity: number; collected: number }>;
 }

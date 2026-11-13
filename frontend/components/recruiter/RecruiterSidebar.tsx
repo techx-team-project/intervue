@@ -23,7 +23,7 @@ interface RecruiterSidebarProps {
 export default function RecruiterSidebar({ isCollapsed, className, onNavigate }: RecruiterSidebarProps) {
   const pathname = usePathname();
   const { user } = useAuth();
-  const { profile, company } = useCompanyVerification();
+  const { profile, company, isLoading: isVerificationLoading } = useCompanyVerification();
   const { total: unreadNotificationsCount } = useUnreadCount('recruiter');
   const { data: applicationCounts } = useReviewCounts(undefined, Boolean(company));
   const rescheduleCount = useRecruiterRescheduleCount(Boolean(company));
@@ -60,7 +60,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
           )}
         </div>
 
-        {!isCollapsed && (
+        {!isCollapsed && !isVerificationLoading && (
           <div className="text-body-sm mt-3 flex items-center gap-1.5">
             <span className="text-on-surface-variant">Account verification:</span>
             <span
@@ -77,7 +77,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
           </div>
         )}
 
-        {!isCollapsed && isVerified && (
+        {!isCollapsed && !isVerificationLoading && isVerified && (
           <Link
             href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
             onClick={onNavigate}
@@ -88,7 +88,7 @@ export default function RecruiterSidebar({ isCollapsed, className, onNavigate }:
           </Link>
         )}
 
-        {!isCollapsed && !isVerified && (
+        {!isCollapsed && !isVerificationLoading && !isVerified && (
           <Link
             href={ROUTES.RECRUITER_COMPANY_VERIFICATION}
             onClick={onNavigate}

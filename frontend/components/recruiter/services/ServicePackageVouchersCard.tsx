@@ -4,7 +4,13 @@ import VoucherTicketCard, {
   ScallopedPercentBadge,
   renderHighlightedVoucherLabel,
 } from '@/components/recruiter/services/VoucherTicketCard';
-import { formatVoucherCountdownVi, resolveVoucherDisplayConditions } from '@/lib/admin-vouchers';
+import {
+  formatVoucherCountdownVi,
+  getVoucherTickServerSnapshot,
+  getVoucherTickSnapshot,
+  resolveVoucherDisplayConditions,
+  subscribeVoucherTick,
+} from '@/lib/admin-vouchers';
 import { cn } from '@/lib/utils';
 import type { AvailableVoucher } from '@/types/voucher';
 import { Check, CheckCircle2, ChevronDown, Copy } from 'lucide-react';
@@ -13,21 +19,6 @@ import { toast } from 'sonner';
 
 interface ServicePackageVouchersCardProps {
   vouchers: AvailableVoucher[];
-}
-
-function subscribeMinuteTick(callback: () => void) {
-  const timer = window.setInterval(callback, 30_000);
-  return () => {
-    window.clearInterval(timer);
-  };
-}
-
-function getMinuteSnapshot(): number {
-  return Math.floor(Date.now() / 60_000) * 60_000;
-}
-
-function getServerMinuteSnapshot(): number {
-  return 0;
 }
 
 function nearestExpiryIso(vouchers: AvailableVoucher[], nowMs: number): string | null {
@@ -46,7 +37,7 @@ function nearestExpiryIso(vouchers: AvailableVoucher[], nowMs: number): string |
 }
 
 export default function ServicePackageVouchersCard({ vouchers }: ServicePackageVouchersCardProps) {
-  const nowMs = useSyncExternalStore(subscribeMinuteTick, getMinuteSnapshot, getServerMinuteSnapshot);
+  const nowMs = useSyncExternalStore(subscribeVoucherTick, getVoucherTickSnapshot, getVoucherTickServerSnapshot);
   const [expandedCode, setExpandedCode] = useState<string | null>(null);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const copyTimerRef = useRef<number | null>(null);
