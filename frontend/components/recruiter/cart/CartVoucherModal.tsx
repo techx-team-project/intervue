@@ -111,7 +111,7 @@ export default function CartVoucherModal({
                 </span>
                 <span className="text-emerald-900">
                   Applied <strong className="font-bold text-emerald-800">{appliedVoucher.code}</strong> —{' '}
-                  {appliedVoucher.label}, {appliedVoucher.discountAmount.toLocaleString('vi-VN')}đ off
+                  {appliedVoucher.label}, {appliedVoucher.discountAmount.toLocaleString('en-US')} VND off
                 </span>
               </div>
               <button

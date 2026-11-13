@@ -97,7 +97,7 @@ export default function RecruiterCartView() {
     try {
       const preview = await voucherApi.validate({ code, cartItemIds: selectedItems.map((item) => item.id) });
       setVoucher(preview);
-      return { success: true, message: `Code applied, ${preview.discountAmount.toLocaleString('vi-VN')}đ off.` };
+      return { success: true, message: `Code applied, ${preview.discountAmount.toLocaleString('en-US')} VND off.` };
     } catch (cause) {
       setVoucher(null);
       return { success: false, message: getErrorMessage(cause) };

@@ -104,9 +104,9 @@ public class AdPackageLookupAdapter implements AdPackageLookupPortInterface {
                                 .shortDescription(
                                         description != null && !description.isBlank()
                                                 ? description.trim()
-                                                : "Vị trí banner "
+                                                : "Banner position "
                                                         + slotName.trim()
-                                                        + " bán theo tuần.")
+                                                        + " sold by week.")
                                 .price(pricePerWeek)
                                 .accentColor("#16a34a")
                                 .status(
@@ -122,7 +122,7 @@ public class AdPackageLookupAdapter implements AdPackageLookupPortInterface {
                         .entitlementType(EntitlementType.AD_SLOT_WEEK)
                         .quantity(1)
                         .durationDays(7)
-                        .label("01 tuần hiển thị banner " + slotName.trim())
+                        .label("1 week of " + slotName.trim() + " banner display")
                         .displayOrder(0)
                         .build());
 
