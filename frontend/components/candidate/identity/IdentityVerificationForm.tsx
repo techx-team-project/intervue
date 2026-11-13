@@ -4,7 +4,11 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/hooks/useAuth';
 import { useSubmitIdentityVerification } from '@/hooks/useIdentityVerification';
-import { identityMaxBirthDate, identityVerificationSchema } from '@/schemas/identity-verification.schema';
+import {
+  IDENTITY_MIN_BIRTH_DATE,
+  identityMaxBirthDate,
+  identityVerificationSchema,
+} from '@/schemas/identity-verification.schema';
 import { getErrorMessage } from '@/utils/error';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -37,7 +41,7 @@ export default function IdentityVerificationForm({ initialName }: { initialName?
     }
     setErrors({});
     submit.mutate(parsed.data, {
-      onSuccess: () => toast.success('Đã gửi hồ sơ xác thực. Quản trị viên sẽ duyệt trong vòng 24 giờ làm việc.'),
+      onSuccess: () => toast.success('Verification submitted. An admin will review it within 24 working hours.'),
       onError: (error) => toast.error(getErrorMessage(error)),
     });
   };
@@ -46,13 +50,13 @@ export default function IdentityVerificationForm({ initialName }: { initialName?
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
       <div className="grid gap-4 sm:grid-cols-2">
         <Input
-          label="Họ và tên (đúng như trên giấy tờ)"
+          label="Full name (as on the document)"
           value={fullName}
           error={errors.fullName}
           onChange={(event) => setFullName(event.target.value)}
         />
         <Input
-          label="Số CCCD / CMND"
+          label="ID number (CCCD / CMND)"
           inputMode="numeric"
           maxLength={12}
           value={idNumber}
@@ -60,8 +64,9 @@ export default function IdentityVerificationForm({ initialName }: { initialName?
           onChange={(event) => setIdNumber(event.target.value.replace(/\D/g, ''))}
         />
         <Input
-          label="Ngày sinh"
+          label="Date of birth"
           type="date"
+          min={IDENTITY_MIN_BIRTH_DATE}
           max={identityMaxBirthDate()}
           value={dateOfBirth}
           error={errors.dateOfBirth}
@@ -71,22 +76,22 @@ export default function IdentityVerificationForm({ initialName }: { initialName?
 
       <div className="grid gap-4 sm:grid-cols-3">
         <IdentityImageField
-          label="CCCD mặt trước"
-          hint="Chụp rõ, đủ bốn góc"
+          label="ID card, front"
+          hint="Clear photo, all four corners visible"
           file={front}
           error={errors.front}
           onChange={setFront}
         />
         <IdentityImageField
-          label="CCCD mặt sau"
-          hint="Chụp rõ, không chói sáng"
+          label="ID card, back"
+          hint="Clear photo, no glare"
           file={back}
           error={errors.back}
           onChange={setBack}
         />
         <IdentityImageField
-          label="Ảnh chân dung"
-          hint="Cầm CCCD cạnh khuôn mặt"
+          label="Selfie"
+          hint="Hold the ID card next to your face"
           file={selfie}
           error={errors.selfie}
           onChange={setSelfie}
@@ -94,11 +99,11 @@ export default function IdentityVerificationForm({ initialName }: { initialName?
       </div>
 
       <p className="text-on-surface-variant text-xs">
-        Ảnh JPG hoặc PNG, tối đa 5MB mỗi ảnh. Hồ sơ chỉ quản trị viên xem được và dùng để xác thực danh tính của bạn.
+        JPG or PNG images, up to 5 MB each. Only admins can see them, and they are used only to verify your identity.
       </p>
 
       <Button type="submit" disabled={submit.isPending}>
-        {submit.isPending ? 'Đang gửi...' : 'Gửi hồ sơ xác thực'}
+        {submit.isPending ? 'Sending...' : 'Submit for verification'}
       </Button>
     </form>
   );

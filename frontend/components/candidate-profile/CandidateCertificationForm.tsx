@@ -1,5 +1,6 @@
 'use client';
 
+import { SECTION_MIN_YEAR } from '@/constants/candidate-profile';
 import Input from '@/components/ui/Input';
 import { useCandidateItemForm } from '@/hooks/useCandidateItemForm';
 import { candidateCertificationSchema } from '@/schemas/candidate-sections.schema';
@@ -36,6 +37,8 @@ export default function CandidateCertificationForm({
         <Input
           label="Issue date"
           type="month"
+          min={`${SECTION_MIN_YEAR}-01`}
+          max={new Date().toISOString().slice(0, 7)}
           placeholder="YYYY-MM"
           error={errors.issueDate?.message}
           {...register('issueDate')}

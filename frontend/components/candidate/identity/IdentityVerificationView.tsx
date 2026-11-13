@@ -43,7 +43,7 @@ export default function IdentityVerificationView() {
 
   const requestManualReview = () =>
     manualReview.mutate(undefined, {
-      onSuccess: () => toast.success('Đã gửi yêu cầu. Quản trị viên sẽ xem xét hồ sơ của bạn.'),
+      onSuccess: () => toast.success('Request sent. An admin will review your submission.'),
       onError: (failure) => toast.error(getErrorMessage(failure)),
     });
 
@@ -59,7 +59,7 @@ export default function IdentityVerificationView() {
       <div className="flex flex-col items-center gap-3 py-14 text-center">
         <p className="text-sm font-semibold text-slate-700">{getErrorMessage(error)}</p>
         <Button variant="outline" onClick={() => refetch()}>
-          Thử lại
+          Try again
         </Button>
       </div>
     );
@@ -68,45 +68,44 @@ export default function IdentityVerificationView() {
   return (
     <div className="container-page max-w-3xl space-y-5 py-8">
       <header>
-        <h1 className="text-2xl font-black text-slate-900">Xác thực danh tính</h1>
+        <h1 className="text-2xl font-black text-slate-900">Identity verification</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Bạn cần xác thực danh tính bằng CCCD trước khi ứng tuyển. Việc này giúp nhà tuyển dụng tin tưởng hồ sơ của
-          bạn.
+          You need to verify your identity with your ID card before applying. This helps recruiters trust your
+          application.
         </p>
       </header>
 
       {data.status === 'APPROVED' && (
-        <StatusCard tone="success" icon={CheckCircle2} title="Tài khoản đã được xác thực">
-          {data.reviewedAt && <p>Duyệt lúc {formatDateTime(data.reviewedAt)}. Bạn có thể ứng tuyển ngay.</p>}
+        <StatusCard tone="success" icon={CheckCircle2} title="Your account is verified">
+          {data.reviewedAt && <p>Approved on {formatDateTime(data.reviewedAt)}. You can apply right away.</p>}
         </StatusCard>
       )}
 
       {data.status === 'PENDING' && (
-        <StatusCard tone="warning" icon={Clock} title="Hồ sơ đang chờ duyệt">
+        <StatusCard tone="warning" icon={Clock} title="Your submission is under review">
           <p>
-            Hồ sơ gửi lúc {data.submittedAt ? formatDateTime(data.submittedAt) : ''}. Thời gian xử lý dự kiến trong 24
-            giờ làm việc, bạn sẽ nhận thông báo khi có kết quả.
+            Submitted on {data.submittedAt ? formatDateTime(data.submittedAt) : ''}. Review usually takes up to 24
+            working hours and you will be notified of the result.
           </p>
         </StatusCard>
       )}
 
       {data.status === 'REJECTED' && (
-        <StatusCard tone="danger" icon={ShieldAlert} title="Hồ sơ chưa được duyệt">
-          <p>Lý do: {data.rejectReason}</p>
+        <StatusCard tone="danger" icon={ShieldAlert} title="Your submission was not approved">
+          <p>Reason: {data.rejectReason}</p>
           <p>
             {data.canSubmit
-              ? `Bạn còn ${data.attemptsLeft} lượt gửi lại.`
-              : 'Bạn đã dùng hết lượt gửi lại. Hãy gửi yêu cầu để quản trị viên xét duyệt thủ công.'}
+              ? `You have ${data.attemptsLeft} attempt(s) left.`
+              : 'You have used all your attempts. Request a manual review by an admin.'}
           </p>
           {data.canRequestManualReview && (
             <Button size="sm" className="mt-2" disabled={manualReview.isPending} onClick={requestManualReview}>
-              {manualReview.isPending ? 'Đang gửi...' : 'Yêu cầu duyệt thủ công'}
+              {manualReview.isPending ? 'Sending...' : 'Request manual review'}
             </Button>
           )}
           {data.manualReviewRequestedAt && (
             <p className="font-semibold">
-              Đã gửi yêu cầu duyệt thủ công lúc {formatDateTime(data.manualReviewRequestedAt)}. Chúng tôi sẽ phản hồi
-              sớm.
+              Manual review requested on {formatDateTime(data.manualReviewRequestedAt)}. We will reply soon.
             </p>
           )}
         </StatusCard>

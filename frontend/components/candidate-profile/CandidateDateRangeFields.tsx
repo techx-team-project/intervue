@@ -1,5 +1,6 @@
 'use client';
 
+import { SECTION_MIN_YEAR } from '@/constants/candidate-profile';
 import Input from '@/components/ui/Input';
 import type { DateRangeValues } from '@/schemas/candidate-sections.schema';
 import { useFormContext, useWatch } from 'react-hook-form';
@@ -24,6 +25,8 @@ export default function CandidateDateRangeFields({ currentLabel }: CandidateDate
         <Input
           label="Start date"
           type="month"
+          min={`${SECTION_MIN_YEAR}-01`}
+          max={new Date().toISOString().slice(0, 7)}
           placeholder="YYYY-MM"
           error={errors.startDate?.message}
           {...register('startDate', revalidateEnd)}
@@ -31,6 +34,8 @@ export default function CandidateDateRangeFields({ currentLabel }: CandidateDate
         <Input
           label="End date"
           type="month"
+          min={`${SECTION_MIN_YEAR}-01`}
+          max={new Date().toISOString().slice(0, 7)}
           placeholder="YYYY-MM"
           disabled={current}
           error={errors.endDate?.message}
