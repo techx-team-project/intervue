@@ -8,6 +8,7 @@ import com.techx.intervue.modules.connect.services.interfaces.ConnectFilterWordS
 import com.techx.intervue.modules.connect.services.interfaces.ConnectFilterWordServiceInterface.ActiveFilterWord;
 import com.techx.intervue.modules.job.entities.Job;
 import com.techx.intervue.modules.job.entities.JobScreeningQuestion;
+import com.techx.intervue.modules.job.resources.JobContentWarningResource;
 import com.techx.intervue.modules.moderation.enums.ReportReasonCode;
 import com.techx.intervue.modules.moderation.enums.ReportTargetType;
 import com.techx.intervue.modules.moderation.enums.ReporterType;
@@ -46,6 +47,20 @@ public class JobContentScreener {
         if (!problems.isEmpty()) {
             throw AppException.validation(problems);
         }
+    }
+
+    public List<JobContentWarningResource> warningsOf(Job job) {
+        List<JobContentWarningResource> warnings = new ArrayList<>();
+        for (ConnectFilterSeverity severity :
+                List.of(ConnectFilterSeverity.SEVERE, ConnectFilterSeverity.MILD)) {
+            scan(job, severity)
+                    .forEach(
+                            (field, terms) ->
+                                    warnings.add(
+                                            new JobContentWarningResource(
+                                                    field, severity.name(), terms)));
+        }
+        return warnings;
     }
 
     public void flagForReview(Job job) {

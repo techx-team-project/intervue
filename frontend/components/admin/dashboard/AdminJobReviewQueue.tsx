@@ -1,6 +1,7 @@
 'use client';
 
 import AdminJobApproveModal from '@/components/admin/jobs/AdminJobApproveModal';
+import AdminJobContentWarnings, { rejectionReasonFor } from '@/components/admin/jobs/AdminJobContentWarnings';
 import AdminJobPreviewModal from '@/components/admin/jobs/AdminJobPreviewModal';
 import AdminJobReasonDialog from '@/components/admin/jobs/AdminJobReasonDialog';
 import Pagination from '@/components/common/Pagination';
@@ -8,13 +9,14 @@ import Spinner from '@/components/common/Spinner';
 import CompanyLogo from '@/components/jobs/CompanyLogo';
 import { Button } from '@/components/ui/Button';
 import { JOB_FORM_LEVEL_OPTIONS } from '@/constants/recruiter-job';
+import { adminJobApi } from '@/apiRequest/admin-job';
 import { useAdminJobList, useAdminJobModeration } from '@/hooks/useAdminJobs';
 import type { AdminJobSummaryResource } from '@/types/admin-job';
 import { formatDate, formatWaitingTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
 import { formatSalary } from '@/utils/public-company';
 import { optionLabel } from '@/utils/recruiter-job';
-import { CalendarClock, Check, Clock, Eye, Inbox, MapPin, Wallet, X } from 'lucide-react';
+import { CalendarClock, Check, Clock, Eye, Inbox, MapPin, ShieldAlert, Wallet, X } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -34,6 +36,7 @@ export default function AdminJobReviewQueue() {
   const [viewing, setViewing] = useState<AdminJobSummaryResource | null>(null);
   const [approving, setApproving] = useState<AdminJobSummaryResource | null>(null);
   const [rejecting, setRejecting] = useState<AdminJobSummaryResource | null>(null);
+  const [rejectionDraft, setRejectionDraft] = useState('');
 
   const list = useAdminJobList({ status: 'PENDING_REVIEW', sort: 'updatedAt,asc', page: page - 1, size: PAGE_SIZE });
   const { approve, reject } = useAdminJobModeration();
@@ -43,6 +46,20 @@ export default function AdminJobReviewQueue() {
 
   const afterDecision = () => {
     if (jobs.length === 1 && page > 1) setPage(page - 1);
+  };
+
+  const openReject = async (job: AdminJobSummaryResource, withFlaggedReason: boolean) => {
+    let draft = '';
+    if (withFlaggedReason) {
+      try {
+        const warnings = await adminJobApi.contentWarnings(job.id);
+        if (warnings.length > 0) draft = rejectionReasonFor(warnings);
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+      }
+    }
+    setRejectionDraft(draft);
+    setRejecting(job);
   };
 
   const confirmApprove = () => {
@@ -105,58 +122,69 @@ export default function AdminJobReviewQueue() {
         <>
           <ul className="dark:divide-forest-800 divide-y divide-[#f1f5f9]">
             {jobs.map((job) => (
-              <li key={job.id} className="flex flex-col gap-4 px-4 py-4 lg:flex-row lg:items-center">
-                <div className="flex min-w-0 flex-1 items-start gap-3.5">
-                  <CompanyLogo name={job.companyName} className="h-12 w-12 shrink-0 rounded-xl" />
-                  <div className="min-w-0 space-y-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setViewing(job)}
-                      className="text-navy dark:text-forest-50 block max-w-full cursor-pointer truncate text-left text-sm font-bold hover:underline"
-                    >
-                      {job.title}
-                    </button>
-                    <p className="text-on-surface-variant truncate text-xs font-medium">{job.companyName}</p>
-                    <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1">
-                      {job.level && (
-                        <span className="bg-surface-container-high text-label-sm text-on-surface rounded-md px-1.5 py-0.5 font-semibold">
-                          {optionLabel(JOB_FORM_LEVEL_OPTIONS, job.level)}
-                        </span>
-                      )}
-                      {job.city && <Fact icon={MapPin}>{job.city}</Fact>}
-                      <Fact icon={Wallet}>{formatSalary(job.salary)}</Fact>
-                      {job.deadline && <Fact icon={CalendarClock}>Deadline {formatDate(job.deadline)}</Fact>}
+              <li key={job.id} className="space-y-3 px-4 py-4">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+                  <div className="flex min-w-0 flex-1 items-start gap-3.5">
+                    <CompanyLogo name={job.companyName} className="h-12 w-12 shrink-0 rounded-xl" />
+                    <div className="min-w-0 space-y-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setViewing(job)}
+                        className="text-navy dark:text-forest-50 block max-w-full cursor-pointer truncate text-left text-sm font-bold hover:underline"
+                      >
+                        {job.title}
+                      </button>
+                      <p className="text-on-surface-variant truncate text-xs font-medium">{job.companyName}</p>
+                      <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1">
+                        {job.level && (
+                          <span className="bg-surface-container-high text-label-sm text-on-surface rounded-md px-1.5 py-0.5 font-semibold">
+                            {optionLabel(JOB_FORM_LEVEL_OPTIONS, job.level)}
+                          </span>
+                        )}
+                        {job.city && <Fact icon={MapPin}>{job.city}</Fact>}
+                        <Fact icon={Wallet}>{formatSalary(job.salary)}</Fact>
+                        {job.deadline && <Fact icon={CalendarClock}>Deadline {formatDate(job.deadline)}</Fact>}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex shrink-0 flex-col gap-2.5 lg:items-end">
+                    <span className="text-label-sm text-outline inline-flex items-center gap-1">
+                      <Clock className="h-3 w-3" aria-hidden />
+                      Waiting {formatWaitingTime(job.updatedAt)}
+                    </span>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        leftIcon={<Eye className="h-4 w-4" />}
+                        onClick={() => setViewing(job)}
+                      >
+                        Preview
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        leftIcon={<X className="h-4 w-4" />}
+                        onClick={() => openReject(job, false)}
+                      >
+                        Reject
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        leftIcon={<ShieldAlert className="h-4 w-4" />}
+                        onClick={() => openReject(job, true)}
+                      >
+                        Reject for flagged content
+                      </Button>
+                      <Button size="sm" leftIcon={<Check className="h-4 w-4" />} onClick={() => setApproving(job)}>
+                        Approve
+                      </Button>
                     </div>
                   </div>
                 </div>
-
-                <div className="flex shrink-0 flex-col gap-2.5 lg:items-end">
-                  <span className="text-label-sm text-outline inline-flex items-center gap-1">
-                    <Clock className="h-3 w-3" aria-hidden />
-                    Waiting {formatWaitingTime(job.updatedAt)}
-                  </span>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      leftIcon={<Eye className="h-4 w-4" />}
-                      onClick={() => setViewing(job)}
-                    >
-                      Preview
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      leftIcon={<X className="h-4 w-4" />}
-                      onClick={() => setRejecting(job)}
-                    >
-                      Reject
-                    </Button>
-                    <Button size="sm" leftIcon={<Check className="h-4 w-4" />} onClick={() => setApproving(job)}>
-                      Approve
-                    </Button>
-                  </div>
-                </div>
+                <AdminJobContentWarnings jobId={job.id} />
               </li>
             ))}
           </ul>
@@ -181,6 +209,7 @@ export default function AdminJobReviewQueue() {
           description={`"${rejecting.title}" returns to the recruiter's drafts with your reason.`}
           confirmLabel="Reject job"
           placeholder="Tell the recruiter what to fix before submitting again"
+          initialReason={rejectionDraft}
           isPending={reject.isPending}
           onClose={() => setRejecting(null)}
           onConfirm={confirmReject}

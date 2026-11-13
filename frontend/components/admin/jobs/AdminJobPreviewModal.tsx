@@ -12,6 +12,7 @@ import {
   JOB_ROLE_LABELS,
 } from '@/constants/recruiter-job';
 import { useAdminJob } from '@/hooks/useAdminJobs';
+import AdminJobContentWarnings from './AdminJobContentWarnings';
 import { getErrorMessage } from '@/utils/error';
 import { formatSalary } from '@/utils/public-company';
 
@@ -55,6 +56,8 @@ export default function AdminJobPreviewModal({ jobId, onClose }: AdminJobPreview
         <p className="py-6 text-center text-sm font-semibold text-rose-600">{getErrorMessage(error)}</p>
       ) : (
         <div className="space-y-4">
+          <AdminJobContentWarnings jobId={jobId} />
+
           <div className="text-on-surface-variant flex flex-wrap items-center gap-2 text-xs">
             <JobPostStatusBadge status={job.status} />
             <span className="text-on-surface font-semibold">{job.companyName}</span>

@@ -85,10 +85,23 @@ export default function AdminJobInsightsPanel() {
                 {data.publishedPerDay.map((day) => (
                   <div
                     key={day.date}
-                    title={`${formatDate(day.date)}: ${day.count}`}
-                    className={cn('min-w-0 flex-1 rounded-t', day.count > 0 ? 'bg-emerald-500' : 'bg-emerald-100')}
-                    style={{ height: `${Math.max(4, (day.count / peak) * 100)}%` }}
-                  />
+                    tabIndex={0}
+                    aria-label={`${formatDate(day.date)}: ${day.count} ${day.count === 1 ? 'job' : 'jobs'}`}
+                    className="group relative flex h-full min-w-0 flex-1 items-end outline-none"
+                  >
+                    <div
+                      className={cn(
+                        'w-full rounded-t transition-colors',
+                        day.count > 0
+                          ? 'bg-emerald-500 group-hover:bg-emerald-600 group-focus:bg-emerald-600'
+                          : 'bg-emerald-100 group-hover:bg-emerald-200 group-focus:bg-emerald-200',
+                      )}
+                      style={{ height: `${Math.max(4, (day.count / peak) * 100)}%` }}
+                    />
+                    <span className="bg-navy pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 hidden -translate-x-1/2 rounded-md px-2 py-1 text-xs font-semibold whitespace-nowrap text-white shadow-lg group-hover:block group-focus:block">
+                      {formatDate(day.date)} · {day.count} {day.count === 1 ? 'job' : 'jobs'}
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>

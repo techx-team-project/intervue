@@ -6,6 +6,7 @@ import com.techx.intervue.modules.job.requests.HideJobRequest;
 import com.techx.intervue.modules.job.requests.RejectJobRequest;
 import com.techx.intervue.modules.job.resources.AdminJobInsightsResource;
 import com.techx.intervue.modules.job.resources.AdminJobSummaryResource;
+import com.techx.intervue.modules.job.resources.JobContentWarningResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.services.interfaces.AdminJobInsightsServiceInterface;
@@ -16,6 +17,7 @@ import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +61,12 @@ public class AdminJobController extends BaseController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResource<JobResource>> detail(@PathVariable Long id) {
         return ok(adminJobService.findOne(id), "Job retrieved successfully!");
+    }
+
+    @GetMapping("/{id}/content-warnings")
+    public ResponseEntity<ApiResource<List<JobContentWarningResource>>> contentWarnings(
+            @PathVariable Long id) {
+        return ok(adminJobService.contentWarnings(id), "Content warnings retrieved successfully!");
     }
 
     @PostMapping("/{id}/hide")

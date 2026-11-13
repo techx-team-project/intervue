@@ -15,6 +15,12 @@ export interface AdminJobSummaryResource {
   updatedAt: string;
 }
 
+export interface AdminJobContentWarning {
+  field: string;
+  severity: 'SEVERE' | 'MILD';
+  terms: string[];
+}
+
 export interface AdminJobDailyCount {
   date: string;
   count: number;

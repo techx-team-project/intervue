@@ -12,6 +12,7 @@ interface AdminJobReasonDialogProps {
   description: string;
   confirmLabel: string;
   placeholder: string;
+  initialReason?: string;
   isPending: boolean;
   onClose: () => void;
   onConfirm: (reason: string) => void;
@@ -22,11 +23,12 @@ export default function AdminJobReasonDialog({
   description,
   confirmLabel,
   placeholder,
+  initialReason = '',
   isPending,
   onClose,
   onConfirm,
 }: AdminJobReasonDialogProps) {
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState(initialReason);
   const trimmed = reason.trim();
 
   return (
