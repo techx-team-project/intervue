@@ -7,6 +7,7 @@ export const adminJobKeys = {
   all: ['admin', 'jobs'] as const,
   list: (params: AdminJobSearchParams) => ['admin', 'jobs', 'list', params] as const,
   counts: ['admin', 'jobs', 'counts'] as const,
+  insights: (days: number) => ['admin', 'jobs', 'insights', days] as const,
   detail: (id: number) => ['admin', 'jobs', 'detail', id] as const,
 };
 
@@ -46,4 +47,12 @@ export function useAdminJobModeration() {
   });
 
   return { hide, restore, approve, reject };
+}
+
+export function useAdminJobInsights(days: number) {
+  return useQuery({
+    queryKey: adminJobKeys.insights(days),
+    queryFn: () => adminJobApi.insights(days),
+    placeholderData: keepPreviousData,
+  });
 }

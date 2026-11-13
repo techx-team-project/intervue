@@ -4,9 +4,11 @@ import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.job.requests.AdminSearchJobsRequest;
 import com.techx.intervue.modules.job.requests.HideJobRequest;
 import com.techx.intervue.modules.job.requests.RejectJobRequest;
+import com.techx.intervue.modules.job.resources.AdminJobInsightsResource;
 import com.techx.intervue.modules.job.resources.AdminJobSummaryResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
+import com.techx.intervue.modules.job.services.interfaces.AdminJobInsightsServiceInterface;
 import com.techx.intervue.modules.job.services.interfaces.AdminJobServiceInterface;
 import com.techx.intervue.modules.job.services.interfaces.JobReviewServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,6 +37,7 @@ public class AdminJobController extends BaseController {
 
     private final AdminJobServiceInterface adminJobService;
     private final JobReviewServiceInterface jobReviewService;
+    private final AdminJobInsightsServiceInterface insightsService;
 
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<AdminJobSummaryResource>>> search(
@@ -44,6 +48,12 @@ public class AdminJobController extends BaseController {
     @GetMapping("/summary")
     public ResponseEntity<ApiResource<JobStatusCountsResource>> summary() {
         return ok(adminJobService.countByStatus(), "Job summary retrieved successfully!");
+    }
+
+    @GetMapping("/insights")
+    public ResponseEntity<ApiResource<AdminJobInsightsResource>> insights(
+            @RequestParam(defaultValue = "30") int days) {
+        return ok(insightsService.insights(days), "Job insights retrieved successfully!");
     }
 
     @GetMapping("/{id}")

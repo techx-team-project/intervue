@@ -30,11 +30,13 @@ import com.techx.intervue.modules.recruiter.services.interfaces.RecruiterService
 import com.techx.intervue.modules.user.requests.RestrictUserRequest;
 import com.techx.intervue.modules.user.services.interfaces.UserAdminServiceInterface;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,6 +110,16 @@ public class ReportService implements ReportServiceInterface {
     public long countPending(ReportTargetType targetType, Long targetId) {
         return reportRepository.countByTargetTypeAndTargetIdAndStatus(
                 targetType, targetId, ReportStatus.PENDING);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PendingTarget> mostReported(ReportTargetType targetType, int limit) {
+        return reportRepository
+                .countPendingByTarget(targetType, ReportStatus.PENDING, PageRequest.of(0, limit))
+                .stream()
+                .map(row -> new PendingTarget(row.getTargetId(), row.getTotal()))
+                .toList();
     }
 
     @Override

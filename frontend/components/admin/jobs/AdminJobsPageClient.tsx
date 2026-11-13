@@ -14,6 +14,7 @@ import { getErrorMessage } from '@/utils/error';
 import { Search, SearchX } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import AdminJobInsightsPanel from './AdminJobInsightsPanel';
 import AdminJobReasonDialog from './AdminJobReasonDialog';
 import AdminJobPreviewModal from './AdminJobPreviewModal';
 import AdminJobsList from './AdminJobsList';
@@ -109,6 +110,8 @@ export default function AdminJobsPageClient() {
         count={counts.data?.total}
         countLabel="jobs"
       />
+
+      <AdminJobInsightsPanel />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div role="tablist" aria-label="Job status" className="flex flex-wrap gap-1.5">
