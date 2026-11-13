@@ -81,6 +81,9 @@ export interface AdminRefundRequest {
   status: AdminRefundStatus;
   orderTotal: number;
   refundableAmount: number;
+  bankCode: string | null;
+  bankAccountNumber: string | null;
+  bankAccountName: string | null;
   approvedAmount: number | null;
   adminNote: string | null;
   reviewedAt: string | null;
