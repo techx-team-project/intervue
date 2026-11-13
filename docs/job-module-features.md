@@ -263,7 +263,7 @@ Xét tối đa 100 tin mới nhất đang mở.
 | Chức năng | Ràng buộc |
 |---|---|
 | Lưu tin (`/candidate/saved-jobs`) | Tối đa **200** tin đã lưu, quá thì `SAVED_LIMIT_REACHED` (409) |
-| Ứng tuyển | Tin phải đang mở (`JOB_NOT_OPEN` 422); ứng viên phải qua xác thực danh tính nếu cấu hình bật (`IDENTITY_NOT_VERIFIED`); không được ứng tuyển vào công ty mà email mình đang là thành viên (`CANNOT_APPLY_TO_OWN_COMPANY`); mỗi ứng viên chỉ ứng tuyển **một lần** cho mỗi tin (`ALREADY_APPLIED` 409) |
+| Ứng tuyển | Tin phải đang mở (`JOB_NOT_OPEN` 422); ứng viên phải qua xác thực danh tính nếu cấu hình bật (`IDENTITY_NOT_VERIFIED`); không được ứng tuyển vào công ty mà email mình đang là thành viên (`CANNOT_APPLY_TO_OWN_COMPANY`); mỗi ứng viên chỉ ứng tuyển **một lần** cho mỗi tin (`ALREADY_APPLIED` 409); mỗi ngày (giờ Việt Nam) tối đa `candidateDailyApplicationLimit` đơn, mặc định 10, tính khi nộp hoặc nộp lại, nháp không tính và rút đơn không hoàn lại (`APPLICATION_DAILY_LIMIT_REACHED` 422), admin chỉnh ở `/admin/services/quotas` |
 
 ## 4. Admin
 

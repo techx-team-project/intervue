@@ -454,7 +454,7 @@ Anything other than the stated source status returns `422 INVALID_STATUS_TRANSIT
 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
-| `GET`/`PUT` | `/admin/free-quotas` | admin | Reads or updates runtime free-tier limits (`aiResumeMatchFreePerMonth`, `aiJdGenerateFreePerMonth`, `cvReviewFreePerDay`, `candidateStarterCredits`, `connectDailyInviteLimit`, `companyFreePhotoLimit`, `requireJobSlot`, `jobFreePostLimit` 0-100 (lifetime free posts per company), `jobFreeMaxDays` 1-365, `jobReviewFirstCount` 0-100). Without a paid slot a job can stay open at most `jobFreeMaxDays` days from its publish date. Audited as `FREE_QUOTA_SETTINGS_UPDATED`. |
+| `GET`/`PUT` | `/admin/free-quotas` | admin | Reads or updates runtime free-tier limits (`aiResumeMatchFreePerMonth`, `aiJdGenerateFreePerMonth`, `cvReviewFreePerDay`, `candidateStarterCredits`, `connectDailyInviteLimit`, `companyFreePhotoLimit`, `requireJobSlot`, `jobFreePostLimit` 0-100 (lifetime free posts per company), `jobFreeMaxDays` 1-365, `jobReviewFirstCount` 0-100, `candidateDailyApplicationLimit` 1-500). Without a paid slot a job can stay open at most `jobFreeMaxDays` days from its publish date. Audited as `FREE_QUOTA_SETTINGS_UPDATED`. |
 | `GET` | `/recruiter/vouchers?packageId=` | recruiter | Lists active, non-exhausted vouchers usable by the recruiter's company (sorted soonest expiry first), optionally filtered to vouchers valid for `packageId`. Includes `ribbonLabel`, `accentColor`, `conditions[]`, and `applicablePackages[]`. |
 | `GET` | `/recruiter/vouchers/available?page=&size=` | recruiter | `PageResource<AvailableVoucherResource>` for the Recruiter coupon wallet ("Có hiệu lực"). |
 | `GET` | `/recruiter/vouchers/used?page=&size=` | recruiter | `PageResource<UsedVoucherResource>` of company voucher redemptions excluding `CANCELLED` / `EXPIRED` orders ("Đã sử dụng"). |
@@ -655,6 +655,7 @@ from the wave 1 design during implementation:
 | `DELETION_BLOCKED` | 422 | Account deletion is blocked while unresolved operations remain |
 | `JOB_NOT_EDITABLE` | 422 | The job is closed, expired, hidden, or not a draft (for delete) |
 | `ALREADY_APPLIED` | 409 | The candidate already has a submitted application for this job |
+| `APPLICATION_DAILY_LIMIT_REACHED` | 422 | The candidate already submitted `candidateDailyApplicationLimit` applications today (Asia/Ho_Chi_Minh day); applies to submit and reapply, drafts do not count and withdrawing does not give one back |
 | `JOB_NOT_OPEN` | 422 | The job is not published or its deadline has passed |
 | `CANNOT_APPLY_TO_OWN_COMPANY` | 422 | An active member of the job's company cannot apply to it |
 | `IDENTITY_NOT_VERIFIED` | 422 | The eKYC gate is on and the candidate is not verified |

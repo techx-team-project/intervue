@@ -15,4 +15,5 @@ public record FreeQuotaSettingsResource(
         int jobFreePostLimit,
         int jobFreeMaxDays,
         int jobReviewFirstCount,
+        int candidateDailyApplicationLimit,
         Instant updatedAt) {}

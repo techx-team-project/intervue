@@ -14,4 +14,5 @@ public record SaveFreeQuotaSettingsRequest(
         @NotNull Boolean requireJobSlot,
         @NotNull @Min(0) @Max(100) Integer jobFreePostLimit,
         @NotNull @Min(1) @Max(365) Integer jobFreeMaxDays,
-        @NotNull @Min(0) @Max(100) Integer jobReviewFirstCount) {}
+        @NotNull @Min(0) @Max(100) Integer jobReviewFirstCount,
+        @NotNull @Min(1) @Max(500) Integer candidateDailyApplicationLimit) {}
