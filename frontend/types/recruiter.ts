@@ -1,14 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
 
-export type VerificationLevel = 'unverified' | 'basic' | 'verified';
-
-export interface RecruiterVerificationStatus {
-  level: VerificationLevel;
-  stepsCompleted: number;
-  stepsTotal: number;
-  nextStepLabel: string;
-}
-
 export type DashboardStatKind = 'activeJobPosts' | 'newApplications' | 'scheduledInterviews';
 
 export interface RecruiterDashboardStat {
@@ -61,7 +52,6 @@ export interface RecruiterPriorityItem {
 
 export interface RecruiterDashboardData {
   company: RecruiterCompanySummary;
-  verification: RecruiterVerificationStatus;
   stats: RecruiterDashboardStat[];
   pipeline: RecruiterPipelineStage[];
   priorities: RecruiterPriorityItem[];
