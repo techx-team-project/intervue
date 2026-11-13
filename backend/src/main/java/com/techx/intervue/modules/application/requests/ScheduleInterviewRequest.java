@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.application.requests;
 
 import com.techx.intervue.common.validation.DateWindows;
+import com.techx.intervue.common.validation.GoogleMeetLinks;
 import com.techx.intervue.modules.application.enums.InterviewFormat;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Future;
@@ -21,5 +22,10 @@ public record ScheduleInterviewRequest(
     @AssertTrue
     public boolean isStartWithinWindow() {
         return DateWindows.isWithinFutureWindow(startsAt, DateWindows.INTERVIEW_MAX_DAYS);
+    }
+
+    @AssertTrue(message = "Meeting link must be a Google Meet link")
+    public boolean isMeetingLinkValid() {
+        return format != InterviewFormat.ONLINE || GoogleMeetLinks.isValid(location);
     }
 }
