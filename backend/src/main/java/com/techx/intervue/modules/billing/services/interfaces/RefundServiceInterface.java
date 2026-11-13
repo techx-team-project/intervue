@@ -21,7 +21,9 @@ public interface RefundServiceInterface {
 
     RefundStatusCountsResource summaryForRecruiter(Long recruiterId);
 
-    Page<RefundRequestResource> search(RefundStatus status, Pageable pageable);
+    RefundStatusCountsResource summaryForAdmin();
+
+    Page<RefundRequestResource> search(RefundStatus status, String orderCode, Pageable pageable);
 
     RefundRequestResource approve(Long id, ReviewRefundRequest request, RequestActor actor);
 
