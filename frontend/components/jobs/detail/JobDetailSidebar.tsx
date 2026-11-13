@@ -9,6 +9,7 @@ import type { PublicJobResource } from '@/types/public-job';
 import { Check, MapPin, Send, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import ReportJobButton from './ReportJobButton';
+import ShareJobButton from './ShareJobButton';
 
 type JobDetailSidebarProps = {
   job: PublicJobResource;
@@ -54,6 +55,7 @@ export default function JobDetailSidebar({ job, onApply }: JobDetailSidebarProps
             Check CV fit with AI
           </Link>
           <SaveJobButton jobId={job.id} variant="labeled" className="w-full justify-center" />
+          <ShareJobButton jobId={job.id} title={job.title} />
         </div>
 
         {address && (
