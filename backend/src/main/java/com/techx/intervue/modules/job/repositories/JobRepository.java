@@ -58,6 +58,11 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
 
     long countByCompanyIdAndApprovedAtIsNotNull(Long companyId);
 
+    long countByStatus(JobStatus status);
+
+    @Query("SELECT j.publishedAt FROM Job j WHERE j.publishedAt >= :since")
+    List<Instant> findPublishedAtSince(@Param("since") Instant since);
+
     List<Job> findByStatusAndDeadline(JobStatus status, LocalDate deadline);
 
     @Query("SELECT j.id FROM Job j WHERE j.status = :status AND j.deadline = :deadline")
