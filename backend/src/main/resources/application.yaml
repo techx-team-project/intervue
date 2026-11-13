@@ -70,6 +70,8 @@ ai:
   gemini:
     api-key: ${GEMINI_API_KEY:}
     base-url: https://generativelanguage.googleapis.com/v1beta
+    model: gemini-3.5-flash-lite
+    max-tokens: 4096
     timeout: 60s
     max-retries: 2
   openai:
@@ -84,6 +86,7 @@ ai:
     dimensions: 768
   quota:
     user-per-day: 30
+    ip-per-hour: 10
     resume-match-free-per-month: ${AI_RESUME_MATCH_FREE_PER_MONTH:30}
     jd-generate-free-per-month: ${AI_JD_GENERATE_FREE_PER_MONTH:10}
 
@@ -110,8 +113,8 @@ billing:
     name: ${BILLING_SELLER_NAME:InterVue}
     tax-code: ${BILLING_SELLER_TAX_CODE:}
     address: ${BILLING_SELLER_ADDRESS:}
-    email: ${BILLING_SELLER_EMAIL:support@intervue.vn}
-    phone: ${BILLING_SELLER_PHONE:0812.665.001}
+    email: ${BILLING_SELLER_EMAIL:}
+    phone: ${BILLING_SELLER_PHONE:}
 
 sepay:
   base-url: https://my.sepay.vn
@@ -119,7 +122,7 @@ sepay:
   api-token: ${SEPAY_API_TOKEN:}
   timeout: 15s
   sync:
-    cron: "*/10 * * * * *"
+    cron: "0 */2 * * * *"
     limit: 100
   default-bank:
     code: ${SEPAY_BANK_CODE:}
