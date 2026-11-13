@@ -4,7 +4,7 @@ import { recruiterOrderApi } from '@/apiRequest/recruiter-order';
 import { adKeys } from '@/hooks/useAds';
 import { entitlementKeys } from '@/hooks/useEntitlements';
 import { notificationKeys } from '@/hooks/useNotifications';
-import type { CheckoutPayload, RecruiterOrderStatus } from '@/types/recruiter-order';
+import type { CheckoutPayload, RecruiterOrder, RecruiterOrderStatus } from '@/types/recruiter-order';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
@@ -27,13 +27,13 @@ const PAID_ORDER_STATUSES: RecruiterOrderStatus[] = ['PAID', 'FULFILLED'];
 const SETTLED: RecruiterOrderStatus[] = ['PAID', 'FULFILLED', 'EXPIRED', 'CANCELLED'];
 
 function invalidateAfterOrderPaid(queryClient: ReturnType<typeof useQueryClient>, code?: string) {
-  queryClient.invalidateQueries({ queryKey: recruiterOrderKeys.all });
   if (code) {
     queryClient.invalidateQueries({ queryKey: recruiterOrderKeys.detail(code) });
   }
-  queryClient.invalidateQueries({ queryKey: entitlementKeys.all });
-  queryClient.invalidateQueries({ queryKey: adKeys.bookings });
-  queryClient.invalidateQueries({ queryKey: notificationKeys.all('recruiter') });
+  queryClient.invalidateQueries({ queryKey: recruiterOrderKeys.all, refetchType: 'none' });
+  queryClient.invalidateQueries({ queryKey: entitlementKeys.all, refetchType: 'none' });
+  queryClient.invalidateQueries({ queryKey: adKeys.bookings, refetchType: 'none' });
+  queryClient.invalidateQueries({ queryKey: notificationKeys.all('recruiter'), refetchType: 'none' });
 }
 
 export function useRecruiterOrderList(page: number, size = 10) {
@@ -125,6 +125,9 @@ export function useOrderPayment(code: string, live: boolean) {
       if (PENDING_ORDER_STATUSES.includes(payment.status)) {
         sawPendingRef.current = true;
       } else if (SETTLED.includes(payment.status)) {
+        queryClient.setQueryData<RecruiterOrder>(recruiterOrderKeys.detail(code), (current) =>
+          current ? { ...current, status: payment.status } : current,
+        );
         if (sawPendingRef.current && PAID_ORDER_STATUSES.includes(payment.status) && notifiedCodeRef.current !== code) {
           notifiedCodeRef.current = code;
           toast.success(`Payment confirmed for order ${code}! Your service package is now active.`);
