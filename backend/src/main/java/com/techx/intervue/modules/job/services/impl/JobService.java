@@ -259,9 +259,13 @@ public class JobService implements JobServiceInterface {
     @Transactional(readOnly = true)
     public JobQuotaResource quota(Long recruiterId) {
         CompanyResource company = requireCompany(recruiterId);
+        FreeQuotaValues free = freeQuotaPolicy.current();
         return new JobQuotaResource(
                 entitlementService.remainingOf(company.id(), EntitlementType.JOB_POST_SLOT),
-                freeQuotaPolicy.current().requireJobSlot());
+                free.requireJobSlot(),
+                free.jobFreeActiveLimit(),
+                free.jobFreeMaxDays(),
+                jobRepository.countByCompanyIdAndStatus(company.id(), JobStatus.PUBLISHED));
     }
 
     @Override
