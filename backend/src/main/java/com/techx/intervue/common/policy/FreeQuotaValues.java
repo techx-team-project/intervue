@@ -8,7 +8,7 @@ public record FreeQuotaValues(
         int connectDailyInviteLimit,
         int companyFreePhotoLimit,
         boolean requireJobSlot,
-        int jobFreeActiveLimit,
+        int jobFreePostLimit,
         int jobFreeMaxDays,
         int jobReviewFirstCount) {
 

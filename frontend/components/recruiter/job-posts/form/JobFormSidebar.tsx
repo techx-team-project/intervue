@@ -32,7 +32,8 @@ export default function JobFormSidebar() {
   const percent = Math.round((doneCount / items.length) * 100);
   const { data: quota } = useJobQuota();
   const outOfSlots = quota !== undefined && quota.slotRequired && quota.slotsRemaining === 0;
-  const freeLimitReached = quota !== undefined && !quota.slotRequired && quota.liveJobs >= quota.freeLimit;
+  const freeLimitReached =
+    quota !== undefined && !quota.slotRequired && quota.slotsRemaining === 0 && quota.freePostsUsed >= quota.freeLimit;
 
   return (
     <aside
@@ -78,10 +79,10 @@ export default function JobFormSidebar() {
         <div className="border-outline-variant mt-4 border-t pt-4">
           <div className="flex items-baseline justify-between">
             <span className="text-body-sm text-on-surface-variant">
-              {quota.slotRequired ? 'Remaining job posts' : 'Free live jobs'}
+              {quota.slotRequired ? 'Remaining job posts' : 'Free posts used'}
             </span>
             <span className="text-navy text-body-md font-bold tabular-nums">
-              {quota.slotRequired ? quota.slotsRemaining : `${quota.liveJobs} / ${quota.freeLimit}`}
+              {quota.slotRequired ? quota.slotsRemaining : `${quota.freePostsUsed} / ${quota.freeLimit}`}
             </span>
           </div>
           {!quota.slotRequired && (
@@ -91,11 +92,11 @@ export default function JobFormSidebar() {
           )}
           {freeLimitReached && (
             <p className="text-body-sm mt-2 rounded-lg bg-amber-50 px-3 py-2 text-amber-800">
-              You have reached the free limit. Close a live job or{' '}
+              You have used all your free posts.{' '}
               <Link href={ROUTES.RECRUITER_SERVICES} className="font-semibold underline">
-                buy a package
-              </Link>
-              .
+                Buy a package
+              </Link>{' '}
+              to post more jobs.
             </p>
           )}
           {outOfSlots && (

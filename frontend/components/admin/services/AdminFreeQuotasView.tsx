@@ -19,7 +19,7 @@ interface QuotaDraft {
   candidateStarterCredits: string;
   connectDailyInviteLimit: string;
   companyFreePhotoLimit: string;
-  jobFreeActiveLimit: string;
+  jobFreePostLimit: string;
   jobFreeMaxDays: string;
   jobReviewFirstCount: string;
   requireJobSlot: boolean;
@@ -48,10 +48,10 @@ const QUOTA_BOUNDS: Record<NumericQuotaKey, { max: number; label: string; helper
     label: 'Company free gallery photos',
     helper: 'Maximum company profile photos without an active Brand Page upgrade (minimum 10 with Brand Page).',
   },
-  jobFreeActiveLimit: {
+  jobFreePostLimit: {
     max: 100,
-    label: 'Free live jobs / company',
-    helper: 'Jobs a company can keep published at the same time without a paid job slot.',
+    label: 'Free job posts / company',
+    helper: 'Total job posts a company can publish for free, over its lifetime, before it must buy a package.',
   },
   jobReviewFirstCount: {
     max: 100,
@@ -84,7 +84,7 @@ function toDraft(settings: FreeQuotaSettings): QuotaDraft {
     candidateStarterCredits: String(settings.candidateStarterCredits),
     connectDailyInviteLimit: String(settings.connectDailyInviteLimit),
     companyFreePhotoLimit: String(settings.companyFreePhotoLimit),
-    jobFreeActiveLimit: String(settings.jobFreeActiveLimit),
+    jobFreePostLimit: String(settings.jobFreePostLimit),
     jobFreeMaxDays: String(settings.jobFreeMaxDays),
     jobReviewFirstCount: String(settings.jobReviewFirstCount),
     requireJobSlot: settings.requireJobSlot,
@@ -123,7 +123,7 @@ function validateQuotaDraft(draft: QuotaDraft):
       candidateStarterCredits: parsed.candidateStarterCredits,
       connectDailyInviteLimit: parsed.connectDailyInviteLimit,
       companyFreePhotoLimit: parsed.companyFreePhotoLimit,
-      jobFreeActiveLimit: parsed.jobFreeActiveLimit,
+      jobFreePostLimit: parsed.jobFreePostLimit,
       jobFreeMaxDays: parsed.jobFreeMaxDays,
       jobReviewFirstCount: parsed.jobReviewFirstCount,
       requireJobSlot: draft.requireJobSlot,
@@ -234,7 +234,7 @@ function FreeQuotasForm({ settings }: FreeQuotasFormProps) {
           />
         </div>
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-          {renderNumberField('jobFreeActiveLimit')}
+          {renderNumberField('jobFreePostLimit')}
           {renderNumberField('jobFreeMaxDays')}
           {renderNumberField('jobReviewFirstCount')}
         </div>

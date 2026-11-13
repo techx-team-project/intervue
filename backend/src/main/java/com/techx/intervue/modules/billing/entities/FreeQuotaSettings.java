@@ -54,9 +54,9 @@ public class FreeQuotaSettings extends BaseEntity {
     @Builder.Default
     private boolean requireJobSlot = false;
 
-    @Column(name = "job_free_active_limit", nullable = false)
+    @Column(name = "job_free_post_limit", nullable = false)
     @Builder.Default
-    private Integer jobFreeActiveLimit = 3;
+    private Integer jobFreePostLimit = 3;
 
     @Column(name = "job_free_max_days", nullable = false)
     @Builder.Default

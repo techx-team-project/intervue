@@ -54,13 +54,9 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
             @Param("maxLng") BigDecimal maxLng,
             Pageable pageable);
 
-    long countByCompanyIdAndStatusAndIdNot(Long companyId, JobStatus status, Long id);
-
     long countByCompanyIdAndApprovedAtIsNotNull(Long companyId);
 
     long countByStatus(JobStatus status);
-
-    long countByCompanyIdAndStatus(Long companyId, JobStatus status);
 
     @Query("SELECT j.publishedAt FROM Job j WHERE j.publishedAt >= :since")
     List<Instant> findPublishedAtSince(@Param("since") Instant since);
