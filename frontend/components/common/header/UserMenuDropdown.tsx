@@ -146,14 +146,14 @@ export function UserMenuDropdown({ portal = 'candidate', onClose, onMouseEnter, 
           {userAccordions.jobs && (
             <div className="mt-0.5 space-y-0.5 pr-1 pl-8">
               <Link
-                href="/account"
+                href={ROUTES.CANDIDATE_SAVED_JOBS}
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
                 Saved jobs
               </Link>
               <Link
-                href="/account"
+                href={ROUTES.CANDIDATE_APPLIED_JOBS}
                 onClick={onClose}
                 className="text-on-surface-variant hover:text-primary block rounded-lg px-2 py-1 text-xs transition-colors hover:bg-emerald-50/60"
               >
