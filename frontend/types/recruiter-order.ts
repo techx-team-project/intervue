@@ -154,8 +154,17 @@ export interface OrderRefundRequest {
   status: RefundStatus;
   orderTotal: number;
   refundableAmount: number;
+  bankCode: string | null;
+  bankAccountNumber: string | null;
+  bankAccountName: string | null;
   approvedAmount: number | null;
   adminNote: string | null;
   reviewedAt: string | null;
   createdAt: string;
+}
+
+export interface RefundBank {
+  code: string;
+  name: string;
+  contentKeyword: string | null;
 }

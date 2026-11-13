@@ -8,6 +8,7 @@ import type {
   OrderStatusCounts,
   PaymentTransactionSummary,
   RecruiterPaymentTransaction,
+  RefundBank,
   RefundQuote,
   RecruiterOrder,
   RecruiterOrderSummary,
@@ -43,8 +44,12 @@ export const recruiterOrderApi = {
 
   refundQuote: (code: string) => request<RefundQuote>(`/recruiter/orders/${code}/refund`),
 
-  requestRefund: (code: string, reason: string) =>
-    request<OrderRefundRequest>(`/recruiter/orders/${code}/refund`, { method: 'POST', body: { reason } }),
+  refundBanks: () => request<RefundBank[]>('/recruiter/orders/refund-banks'),
+
+  requestRefund: (
+    code: string,
+    payload: { reason: string; bankCode: string; bankAccountNumber: string; bankAccountName: string },
+  ) => request<OrderRefundRequest>(`/recruiter/orders/${code}/refund`, { method: 'POST', body: payload }),
 
   cancel: (code: string) => request<RecruiterOrder>(`/recruiter/orders/${code}/cancel`, { method: 'POST' }),
 };

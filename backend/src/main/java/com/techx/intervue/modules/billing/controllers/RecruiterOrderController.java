@@ -13,6 +13,7 @@ import com.techx.intervue.modules.billing.resources.PaymentTransactionSummaryRes
 import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
 import com.techx.intervue.modules.billing.resources.RefundStatusCountsResource;
+import com.techx.intervue.modules.billing.resources.SupportedBankResource;
 import com.techx.intervue.modules.billing.services.interfaces.InvoiceServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderPaymentServiceInterface;
 import com.techx.intervue.modules.billing.services.interfaces.OrderServiceInterface;
@@ -21,6 +22,7 @@ import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ContentDisposition;
@@ -140,6 +142,11 @@ public class RecruiterOrderController extends BaseController {
                                 .build()
                                 .toString())
                 .body(pdf);
+    }
+
+    @GetMapping("/refund-banks")
+    public ResponseEntity<ApiResource<List<SupportedBankResource>>> refundBanks() {
+        return ok(refundService.supportedBanks(), "Supported banks retrieved successfully!");
     }
 
     @GetMapping("/{code}/refund")

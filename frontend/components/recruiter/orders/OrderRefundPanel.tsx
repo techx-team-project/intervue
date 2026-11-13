@@ -2,6 +2,8 @@
 
 import { recruiterOrderApi } from '@/apiRequest/recruiter-order';
 import { Button } from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
+import Select from '@/components/ui/Select';
 import Textarea from '@/components/ui/Textarea';
 import { formatServicePrice } from '@/utils/service-package';
 import { getErrorMessage } from '@/utils/error';
@@ -25,8 +27,16 @@ export default function OrderRefundPanel({ code, onRequested }: OrderRefundPanel
     queryKey: ['recruiter', 'orders', code, 'refund'],
     queryFn: () => recruiterOrderApi.refundQuote(code),
   });
+  const banks = useQuery({
+    queryKey: ['recruiter', 'orders', 'refund-banks'],
+    queryFn: recruiterOrderApi.refundBanks,
+    staleTime: 60 * 60 * 1000,
+  });
 
   const [reason, setReason] = useState('');
+  const [bankCode, setBankCode] = useState('');
+  const [bankAccountNumber, setBankAccountNumber] = useState('');
+  const [bankAccountName, setBankAccountName] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,12 +45,26 @@ export default function OrderRefundPanel({ code, onRequested }: OrderRefundPanel
   const data = quote.data;
   if (data.existingStatus === null && !data.requestable) return null;
 
+  const canSubmit =
+    reason.trim().length > 0 &&
+    bankCode !== '' &&
+    bankAccountNumber.trim().length > 0 &&
+    bankAccountName.trim().length > 0;
+
   const send = async () => {
     setIsSending(true);
     setError(null);
     try {
-      await recruiterOrderApi.requestRefund(code, reason.trim());
+      await recruiterOrderApi.requestRefund(code, {
+        reason: reason.trim(),
+        bankCode,
+        bankAccountNumber: bankAccountNumber.trim(),
+        bankAccountName: bankAccountName.trim(),
+      });
       setReason('');
+      setBankCode('');
+      setBankAccountNumber('');
+      setBankAccountName('');
       await quote.refetch();
       onRequested();
     } catch (cause) {
@@ -76,9 +100,34 @@ export default function OrderRefundPanel({ code, onRequested }: OrderRefundPanel
             placeholder="Tell us why you want this refund"
           />
 
+          <div className="border-outline-variant space-y-3 rounded-xl border border-dashed p-3.5">
+            <p className="text-on-surface text-xs font-bold">Where should we send the money?</p>
+            <Select
+              label="Bank"
+              value={bankCode}
+              onChange={(event) => setBankCode(event.target.value)}
+              options={[
+                { value: '', label: banks.isPending ? 'Loading banks…' : 'Select a bank' },
+                ...(banks.data ?? []).map((bank) => ({ value: bank.code, label: `${bank.code} — ${bank.name}` })),
+              ]}
+            />
+            <Input
+              label="Account number"
+              value={bankAccountNumber}
+              onChange={(event) => setBankAccountNumber(event.target.value)}
+              placeholder="e.g. 0123456789"
+            />
+            <Input
+              label="Account holder name"
+              value={bankAccountName}
+              onChange={(event) => setBankAccountName(event.target.value)}
+              placeholder="As printed on the bank card"
+            />
+          </div>
+
           {error && <p className="text-xs font-semibold text-rose-600">{error}</p>}
 
-          <Button size="sm" disabled={reason.trim().length === 0} isLoading={isSending} onClick={send}>
+          <Button size="sm" disabled={!canSubmit} isLoading={isSending} onClick={send}>
             Submit refund request
           </Button>
 
