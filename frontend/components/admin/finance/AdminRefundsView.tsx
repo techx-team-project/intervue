@@ -11,7 +11,7 @@ import type { AdminRefundRequest, AdminRefundStatus, AdminRefundStatusCounts } f
 import type { Page } from '@/types/api';
 import { formatDateTime } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
-import { AlertCircle, Banknote, CheckCircle2, Clock, ReceiptText, XCircle } from 'lucide-react';
+import { AlertCircle, Banknote, Check, CheckCircle2, Clock, Copy, ReceiptText, XCircle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -62,6 +62,7 @@ export default function AdminRefundsView({
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [isReviewing, setIsReviewing] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const search = async (nextStatus: AdminRefundStatus | '' = status, nextOrderCode = orderCode, page = 0) => {
     setIsSearching(true);
@@ -101,6 +102,13 @@ export default function AdminRefundsView({
     setAmount(String(refund.refundableAmount));
     setNote('');
     setError(null);
+    setCopied(false);
+  };
+
+  const copyAccountNumber = async (value: string) => {
+    await navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const review = async (approve: boolean) => {
@@ -273,6 +281,42 @@ export default function AdminRefundsView({
               <div>Order total: {money(reviewing.orderTotal)}</div>
               <div>Refundable: {money(reviewing.refundableAmount)}</div>
             </dl>
+
+            <div className="mt-4 rounded-lg border-l-4 border-sky-500 bg-sky-50 px-4 py-3">
+              <p className="text-xs font-bold tracking-wide text-sky-900 uppercase">Refund destination</p>
+              {reviewing.bankCode && reviewing.bankAccountNumber && reviewing.bankAccountName ? (
+                <dl className="mt-2 space-y-1 text-sm text-sky-900">
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="text-xs text-sky-700">Bank</dt>
+                    <dd className="font-semibold">{reviewing.bankCode}</dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="text-xs text-sky-700">Account number</dt>
+                    <dd className="flex items-center gap-2 font-mono font-semibold">
+                      {reviewing.bankAccountNumber}
+                      <button
+                        type="button"
+                        onClick={() => copyAccountNumber(reviewing.bankAccountNumber ?? '')}
+                        className="text-sky-600 hover:text-sky-800"
+                        aria-label="Copy account number"
+                      >
+                        {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                      </button>
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="text-xs text-sky-700">Account holder</dt>
+                    <dd className="font-semibold">{reviewing.bankAccountName}</dd>
+                  </div>
+                </dl>
+              ) : (
+                <p className="mt-1 text-xs text-sky-800">
+                  No bank info provided — this request was submitted before this field existed. Contact the recruiter
+                  directly to get it.
+                </p>
+              )}
+            </div>
+
             <div className="mt-4 space-y-3">
               <Input
                 label="Amount to refund (VND)"
