@@ -4,6 +4,8 @@ import Spinner from '@/components/common/Spinner';
 import Modal from '@/components/ui/Modal';
 import { cn } from '@/lib/utils';
 import { useJobStats } from '@/hooks/useRecruiterJobs';
+import ExportApplicantsButton from './ExportApplicantsButton';
+import JobFunnel from './JobFunnel';
 import type { RecruiterJobPost } from '@/types/recruiter-job';
 import { formatDate } from '@/utils/datetime';
 import { getErrorMessage } from '@/utils/error';
@@ -70,6 +72,14 @@ export default function JobStatsModal({ job, onClose }: JobStatsModalProps) {
             <Tile label="Applications" value={numberFormatter.format(data.totalApplications)} />
             <Tile label="Conversion rate" value={conversion} />
           </dl>
+
+          {job && <JobFunnel jobId={Number(job.id)} views={data.totalViews} />}
+
+          {job && (
+            <div className="flex justify-end">
+              <ExportApplicantsButton jobId={Number(job.id)} jobTitle={job.title} />
+            </div>
+          )}
 
           {data.totalViews === 0 && data.totalApplications === 0 ? (
             <p className="text-on-surface-variant py-6 text-center text-sm">
