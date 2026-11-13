@@ -16,7 +16,7 @@ export default function RecruiterDashboardView({ data }: RecruiterDashboardViewP
   return (
     <div className="space-y-6">
       <DashboardHeader companyName={data.company.name} />
-      <VerificationStatusBanner verification={data.verification} />
+      <VerificationStatusBanner />
       <DashboardStatsRow stats={data.stats} />
 
       <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-5">

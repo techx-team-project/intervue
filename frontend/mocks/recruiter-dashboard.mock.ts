@@ -6,12 +6,6 @@ export const MOCK_RECRUITER_DASHBOARD: RecruiterDashboardData = {
   company: {
     name: 'InterVue Technology Co., Ltd',
   },
-  verification: {
-    level: 'basic',
-    stepsCompleted: 1,
-    stepsTotal: 3,
-    nextStepLabel: 'Verify your phone number',
-  },
   stats: [
     {
       kind: 'activeJobPosts',
