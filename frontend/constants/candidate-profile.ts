@@ -126,3 +126,4 @@ export const IMAGE_ERROR_MESSAGES: Record<string, string> = {
   FILE_TOO_LARGE: 'This image is too large, please choose a smaller one.',
   STORAGE_UNAVAILABLE: 'Image storage is unavailable right now, please try again later.',
 };
+export const PROFILE_MAX_SALARY_VND = 250_000_000;

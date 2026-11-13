@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const IDENTITY_MIN_AGE = 16;
+export const IDENTITY_MIN_BIRTH_DATE = '1950-01-01';
 export const IDENTITY_MAX_FILE_BYTES = 5 * 1024 * 1024;
 export const IDENTITY_ACCEPTED_TYPES = ['image/jpeg', 'image/png'];
 
@@ -11,20 +12,25 @@ function latestBirthDate() {
 }
 
 export const identityDocumentSchema = z
-  .instanceof(File, { message: 'Vui lòng chọn ảnh.' })
-  .refine((file) => IDENTITY_ACCEPTED_TYPES.includes(file.type), 'Chỉ nhận ảnh JPG hoặc PNG.')
-  .refine((file) => file.size <= IDENTITY_MAX_FILE_BYTES, 'Ảnh tối đa 5MB.');
+  .instanceof(File, { message: 'Please choose an image.' })
+  .refine((file) => IDENTITY_ACCEPTED_TYPES.includes(file.type), 'Only JPG or PNG images are accepted.')
+  .refine((file) => file.size <= IDENTITY_MAX_FILE_BYTES, 'The image can be at most 5 MB.');
 
 export const identityVerificationSchema = z.object({
-  fullName: z.string().trim().min(2, 'Nhập họ và tên trên giấy tờ.').max(120, 'Tối đa 120 ký tự.'),
+  fullName: z
+    .string()
+    .trim()
+    .min(2, 'Enter the full name on the document.')
+    .max(120, 'Keep the name under 120 characters.'),
   idNumber: z
     .string()
     .trim()
-    .regex(/^(\d{9}|\d{12})$/, 'Số CCCD gồm 12 chữ số (hoặc CMND 9 số).'),
+    .regex(/^(\d{9}|\d{12})$/, 'The ID number has 12 digits (or 9 digits for an old ID card).'),
   dateOfBirth: z
     .string()
-    .min(1, 'Chọn ngày sinh.')
-    .refine((value) => value <= latestBirthDate(), `Bạn cần từ ${IDENTITY_MIN_AGE} tuổi trở lên.`),
+    .min(1, 'Pick the date of birth.')
+    .refine((value) => value >= IDENTITY_MIN_BIRTH_DATE, 'Pick a realistic date of birth.')
+    .refine((value) => value <= latestBirthDate(), `You must be at least ${IDENTITY_MIN_AGE} years old.`),
   front: identityDocumentSchema,
   back: identityDocumentSchema,
   selfie: identityDocumentSchema,
