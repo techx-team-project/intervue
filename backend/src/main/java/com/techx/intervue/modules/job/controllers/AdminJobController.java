@@ -11,6 +11,7 @@ import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.services.interfaces.AdminJobInsightsServiceInterface;
 import com.techx.intervue.modules.job.services.interfaces.AdminJobServiceInterface;
+import com.techx.intervue.modules.job.services.interfaces.JobContentWarningServiceInterface;
 import com.techx.intervue.modules.job.services.interfaces.JobReviewServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminJobController extends BaseController {
 
     private final AdminJobServiceInterface adminJobService;
+    private final JobContentWarningServiceInterface contentWarningService;
     private final JobReviewServiceInterface jobReviewService;
     private final AdminJobInsightsServiceInterface insightsService;
 
@@ -66,7 +68,7 @@ public class AdminJobController extends BaseController {
     @GetMapping("/{id}/content-warnings")
     public ResponseEntity<ApiResource<List<JobContentWarningResource>>> contentWarnings(
             @PathVariable Long id) {
-        return ok(adminJobService.contentWarnings(id), "Content warnings retrieved successfully!");
+        return ok(contentWarningService.warningsOf(id), "Content warnings retrieved successfully!");
     }
 
     @PostMapping("/{id}/hide")
