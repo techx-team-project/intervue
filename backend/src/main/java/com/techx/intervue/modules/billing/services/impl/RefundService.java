@@ -14,6 +14,7 @@ import com.techx.intervue.modules.billing.entities.OrderItem;
 import com.techx.intervue.modules.billing.entities.RefundRequest;
 import com.techx.intervue.modules.billing.enums.OrderStatus;
 import com.techx.intervue.modules.billing.enums.RefundStatus;
+import com.techx.intervue.modules.billing.enums.SupportedBank;
 import com.techx.intervue.modules.billing.repositories.OrderItemRepository;
 import com.techx.intervue.modules.billing.repositories.OrderRepository;
 import com.techx.intervue.modules.billing.repositories.RefundRequestRepository;
@@ -22,6 +23,7 @@ import com.techx.intervue.modules.billing.requests.ReviewRefundRequest;
 import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
 import com.techx.intervue.modules.billing.resources.RefundStatusCountsResource;
+import com.techx.intervue.modules.billing.resources.SupportedBankResource;
 import com.techx.intervue.modules.billing.services.interfaces.RefundServiceInterface;
 import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
@@ -29,6 +31,7 @@ import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementSer
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -51,6 +54,7 @@ public class RefundService implements RefundServiceInterface {
 
     private static final Set<OrderStatus> REFUNDABLE =
             EnumSet.of(OrderStatus.PAID, OrderStatus.FULFILLED);
+    private static final String ACCOUNT_NUMBER_PATTERN = "^[A-Za-z0-9]{4,30}$";
 
     private final RefundRequestRepository refundRepository;
     private final OrderRepository orderRepository;
@@ -82,6 +86,16 @@ public class RefundService implements RefundServiceInterface {
     }
 
     @Override
+    public List<SupportedBankResource> supportedBanks() {
+        return Arrays.stream(SupportedBank.values())
+                .map(
+                        bank ->
+                                new SupportedBankResource(
+                                        bank.getCode(), bank.getName(), bank.getContentKeyword()))
+                .toList();
+    }
+
+    @Override
     @Transactional
     public RefundRequestResource request(
             String orderCode, CreateRefundRequest request, Long recruiterId) {
@@ -97,6 +111,20 @@ public class RefundService implements RefundServiceInterface {
             throw new AppException(ErrorCode.NOTHING_LEFT_TO_REFUND);
         }
 
+        String bankCode =
+                SupportedBank.byCode(request.bankCode())
+                        .map(SupportedBank::getCode)
+                        .orElseThrow(
+                                () ->
+                                        AppException.validation(
+                                                "bankCode", "This bank is not supported"));
+        String accountNumber = request.bankAccountNumber().replaceAll("\\s+", "");
+        if (!accountNumber.matches(ACCOUNT_NUMBER_PATTERN)) {
+            throw AppException.validation(
+                    "bankAccountNumber",
+                    "Account number must be 4-30 alphanumeric characters with no spaces");
+        }
+
         RefundRequest saved =
                 refundRepository.save(
                         RefundRequest.builder()
@@ -105,6 +133,9 @@ public class RefundService implements RefundServiceInterface {
                                 .requestedByRecruiterId(recruiterId)
                                 .reason(request.reason().trim())
                                 .refundableAmount(refundable)
+                                .bankCode(bankCode)
+                                .bankAccountNumber(accountNumber)
+                                .bankAccountName(request.bankAccountName().trim())
                                 .build());
         order.setStatus(OrderStatus.REFUND_REQUESTED);
         return toResource(saved, order);
@@ -395,6 +426,9 @@ public class RefundService implements RefundServiceInterface {
                 .status(refund.getStatus())
                 .orderTotal(order.getTotalAmount())
                 .refundableAmount(refund.getRefundableAmount())
+                .bankCode(refund.getBankCode())
+                .bankAccountNumber(refund.getBankAccountNumber())
+                .bankAccountName(refund.getBankAccountName())
                 .approvedAmount(refund.getApprovedAmount())
                 .adminNote(refund.getAdminNote())
                 .reviewedAt(refund.getReviewedAt())
