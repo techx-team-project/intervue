@@ -31,8 +31,6 @@ interface ConfirmRequest {
   run: () => void;
 }
 
-const SEGMENTS = Object.keys(JOB_SEGMENT_META) as RecruiterJobSegment[];
-
 export default function JobPostsListView() {
   const actions = useJobPostActions();
   const [search, setSearch] = useState('');
@@ -69,15 +67,6 @@ export default function JobPostsListView() {
   const jobs = useMemo(() => (listQuery.data?.items ?? []).map(summaryToJobPost), [listQuery.data]);
   const totalItems = listQuery.data?.totalItems ?? 0;
   const pageCount = Math.max(1, listQuery.data?.totalPages ?? 1);
-
-  const segmentCounts = useMemo(() => {
-    const counts = {} as Record<RecruiterJobSegment, number>;
-    for (const key of SEGMENTS) {
-      const status = JOB_SEGMENT_META[key].status;
-      counts[key] = status ? (countsQuery.data?.byStatus[status] ?? 0) : (countsQuery.data?.total ?? 0);
-    }
-    return counts;
-  }, [countsQuery.data]);
 
   const isFiltered = search.trim() !== '' || segment !== 'all';
   const isAllSelected = jobs.length > 0 && jobs.every((job) => selectedIds.has(job.id));
@@ -121,7 +110,7 @@ export default function JobPostsListView() {
     <div className="space-y-5">
       <JobPostsStatsRow counts={countsQuery.data} currentSegment={segment} onSelectSegment={changeFilter(setSegment)} />
 
-      <JobPostsSegmentTabs segment={segment} onSegmentChange={changeFilter(setSegment)} counts={segmentCounts} />
+      <JobPostsSegmentTabs segment={segment} onSegmentChange={changeFilter(setSegment)} />
 
       <JobPostsFilterBar
         search={search}
