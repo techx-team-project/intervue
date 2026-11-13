@@ -164,6 +164,9 @@ export interface JobStats {
 export interface JobQuota {
   slotsRemaining: number;
   slotRequired: boolean;
+  freeLimit: number;
+  freeMaxDays: number;
+  liveJobs: number;
 }
 
 export interface RecruiterJobCounts {

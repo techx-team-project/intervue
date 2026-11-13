@@ -32,6 +32,7 @@ export default function JobFormSidebar() {
   const percent = Math.round((doneCount / items.length) * 100);
   const { data: quota } = useJobQuota();
   const outOfSlots = quota !== undefined && quota.slotRequired && quota.slotsRemaining === 0;
+  const freeLimitReached = quota !== undefined && !quota.slotRequired && quota.liveJobs >= quota.freeLimit;
 
   return (
     <aside
@@ -76,9 +77,27 @@ export default function JobFormSidebar() {
       {quota && (
         <div className="border-outline-variant mt-4 border-t pt-4">
           <div className="flex items-baseline justify-between">
-            <span className="text-body-sm text-on-surface-variant">Remaining job posts</span>
-            <span className="text-navy text-body-md font-bold tabular-nums">{quota.slotsRemaining}</span>
+            <span className="text-body-sm text-on-surface-variant">
+              {quota.slotRequired ? 'Remaining job posts' : 'Free live jobs'}
+            </span>
+            <span className="text-navy text-body-md font-bold tabular-nums">
+              {quota.slotRequired ? quota.slotsRemaining : `${quota.liveJobs} / ${quota.freeLimit}`}
+            </span>
           </div>
+          {!quota.slotRequired && (
+            <p className="text-body-sm text-on-surface-variant mt-1">
+              Free posts can run up to {quota.freeMaxDays} days.
+            </p>
+          )}
+          {freeLimitReached && (
+            <p className="text-body-sm mt-2 rounded-lg bg-amber-50 px-3 py-2 text-amber-800">
+              You have reached the free limit. Close a live job or{' '}
+              <Link href={ROUTES.RECRUITER_SERVICES} className="font-semibold underline">
+                buy a package
+              </Link>
+              .
+            </p>
+          )}
           {outOfSlots && (
             <p className="text-body-sm mt-2 rounded-lg bg-amber-50 px-3 py-2 text-amber-800">
               You have no posts left.{' '}
