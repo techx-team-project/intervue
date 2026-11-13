@@ -40,7 +40,7 @@ export default function JobLocationPickerMap({ value, onChange }: JobLocationPic
       center={[center.lat, center.lng]}
       zoom={value ? MAP_PICKER_ZOOM : MAP_DEFAULT_ZOOM}
       scrollWheelZoom
-      className="h-64 w-full rounded-xl"
+      className="isolate h-64 w-full rounded-xl"
     >
       <TileLayer url={MAP_TILE_URL} attribution={MAP_ATTRIBUTION} />
       <ClickToPick onChange={onChange} />

@@ -2,10 +2,11 @@
 
 import JobLocationPicker from '@/components/map/JobLocationPicker';
 import { Input } from '@/components/ui/Input';
+import ListboxSelect from '@/components/ui/ListboxSelect';
 import { Select } from '@/components/ui/Select';
 import { Switch } from '@/components/ui/Switch';
 import {
-  JOB_CITY_SUGGESTIONS,
+  JOB_CITY_OPTIONS,
   JOB_FORM_ARRANGEMENT_OPTIONS,
   JOB_FORM_CONTRACT_OPTIONS,
   JOB_FORM_CURRENCY_OPTIONS,
@@ -20,13 +21,12 @@ import {
   JOB_MIN_SALARY,
   type JobPostFormData,
 } from '@/schemas/job.schema';
+import { cn } from '@/lib/utils';
 import { isoDateAfterDays, todayIsoDate } from '@/utils/datetime';
 import { blockInvalidDecimalKeys, blockInvalidIntegerKeys } from '@/utils/number-input';
 import { Controller, useFormContext } from 'react-hook-form';
 import FormSection from './FormSection';
 import SkillPicker from './SkillPicker';
-
-const CITY_LIST_ID = 'job-city-suggestions';
 
 function numberOrUndefined(raw: string): number | undefined {
   return raw === '' ? undefined : Number(raw);
@@ -82,19 +82,29 @@ export default function JobBasicsStep() {
 
       <FormSection title="Work location">
         <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <Input
-              label="Location"
-              placeholder="Select or enter a province / city"
-              list={CITY_LIST_ID}
-              error={errors.city?.message}
-              {...register('city')}
+          <div className="space-y-1.5">
+            <span className="text-on-surface block text-sm font-semibold">Location</span>
+            <Controller
+              control={control}
+              name="city"
+              render={({ field }) => (
+                <ListboxSelect
+                  ariaLabel="Location"
+                  placeholder="Select a province / city"
+                  searchable
+                  searchPlaceholder="Search province or city"
+                  value={field.value}
+                  onChange={field.onChange}
+                  options={JOB_CITY_OPTIONS}
+                  className={cn(
+                    'h-11 rounded-xl border bg-white px-3.5',
+                    errors.city ? 'border-error' : 'border-outline-variant',
+                  )}
+                  triggerClassName="text-sm"
+                />
+              )}
             />
-            <datalist id={CITY_LIST_ID}>
-              {JOB_CITY_SUGGESTIONS.map((suggestion) => (
-                <option key={suggestion} value={suggestion} />
-              ))}
-            </datalist>
+            {errors.city && <p className="text-xs font-medium text-rose-500">{errors.city.message}</p>}
           </div>
           <Input
             label="Street address (optional)"
