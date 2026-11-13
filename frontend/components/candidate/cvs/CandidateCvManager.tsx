@@ -5,7 +5,7 @@ import Spinner from '@/components/common/Spinner';
 import { Button } from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import AiCvProfileModal from '@/components/candidate-profile/AiCvProfileModal';
-import { MAX_RESUMES } from '@/constants/candidate-application';
+import { MAX_RESUME_BYTES, MAX_RESUMES } from '@/constants/candidate-application';
 import { useCandidateCvMutations, useCandidateCvs } from '@/hooks/useCandidateCvs';
 import type { CandidateResume } from '@/types/candidate-application';
 import { formatDate } from '@/utils/datetime';
@@ -71,7 +71,7 @@ export default function CandidateCvManager() {
         <div>
           <h1 className="text-navy text-2xl font-black">CV của tôi</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Tối đa {MAX_RESUMES} CV dạng PDF (5 MB). CV mặc định được chọn sẵn khi ứng tuyển.
+            Tối đa {MAX_RESUMES} CV dạng PDF (5 MB, tối đa 5 trang). CV mặc định được chọn sẵn khi ứng tuyển.
           </p>
         </div>
         <Button
@@ -91,7 +91,12 @@ export default function CandidateCvManager() {
           onChange={(event) => {
             const file = event.target.files?.[0];
             event.target.value = '';
-            if (file) upload.mutate(file, { onSuccess: () => toast.success('Đã tải CV lên.'), onError: fail });
+            if (!file) return;
+            if (file.size > MAX_RESUME_BYTES) {
+              toast.error('The PDF is larger than the allowed 5 MB.');
+              return;
+            }
+            upload.mutate(file, { onSuccess: () => toast.success('Đã tải CV lên.'), onError: fail });
           }}
         />
       </header>

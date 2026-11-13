@@ -22,3 +22,4 @@ export const WITHDRAWABLE_STATUSES: CandidateApplicationStatus[] = [
 ];
 
 export const MAX_RESUMES = 3;
+export const MAX_RESUME_BYTES = 5 * 1024 * 1024;
