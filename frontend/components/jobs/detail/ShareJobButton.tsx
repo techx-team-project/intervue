@@ -33,9 +33,9 @@ export default function ShareJobButton({ jobId, title }: ShareJobButtonProps) {
   };
 
   return (
-    <Button type="button" variant="outline" onClick={share} className="w-full justify-center">
+    <Button type="button" variant="outline" size="xl" onClick={share} className="w-full justify-center px-4">
       {copied ? <Check className="h-4 w-4" aria-hidden /> : <Share2 className="h-4 w-4" aria-hidden />}
-      {copied ? 'Link copied' : 'Share this job'}
+      {copied ? 'Copied' : 'Share'}
     </Button>
   );
 }
