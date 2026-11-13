@@ -23,6 +23,7 @@ import com.techx.intervue.modules.billing.resources.RefundQuoteResource;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
 import com.techx.intervue.modules.billing.resources.RefundStatusCountsResource;
 import com.techx.intervue.modules.billing.services.interfaces.RefundServiceInterface;
+import com.techx.intervue.modules.company.services.interfaces.CompanyServiceInterface;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface;
 import com.techx.intervue.modules.entitlement.services.interfaces.EntitlementServiceInterface.UnusedUnits;
 import java.math.BigDecimal;
@@ -33,11 +34,13 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +58,7 @@ public class RefundService implements RefundServiceInterface {
     private final EntitlementServiceInterface entitlementService;
     private final AdBookingServiceInterface adBookingService;
     private final RecruiterCompanyResolver companyResolver;
+    private final CompanyServiceInterface companyService;
     private final AuditLogServiceInterface auditLogService;
     private final BillingNotifier billingNotifier;
 
@@ -134,12 +138,80 @@ public class RefundService implements RefundServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<RefundRequestResource> search(RefundStatus status, Pageable pageable) {
+    public RefundStatusCountsResource summaryForAdmin() {
+        Map<RefundStatus, Long> counts = new EnumMap<>(RefundStatus.class);
+        for (RefundStatus status : RefundStatus.values()) {
+            counts.put(status, 0L);
+        }
+        long total = 0;
+        for (RefundRequestRepository.StatusCount row : refundRepository.countByStatus()) {
+            counts.put(row.getStatus(), row.getTotal());
+            total += row.getTotal();
+        }
+        return new RefundStatusCountsResource(total, counts);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<RefundRequestResource> search(
+            RefundStatus status, String orderCode, Pageable pageable) {
+        if (orderCode != null && !orderCode.isBlank()) {
+            return searchByOrderCode(status, orderCode.trim().toUpperCase(), pageable);
+        }
         Page<RefundRequest> page =
                 status == null
                         ? refundRepository.findAllByOrderByCreatedAtDesc(pageable)
                         : refundRepository.findAllByStatusOrderByCreatedAtDesc(status, pageable);
-        return page.map(refund -> toResource(refund, requireOrder(refund.getOrderId())));
+        Map<Long, Order> ordersByRefundId = new HashMap<>();
+        for (RefundRequest refund : page.getContent()) {
+            ordersByRefundId.put(refund.getId(), requireOrder(refund.getOrderId()));
+        }
+        Map<Long, String> names = companyNames(List.copyOf(ordersByRefundId.values()));
+        List<RefundRequestResource> items =
+                page.getContent().stream()
+                        .map(
+                                refund ->
+                                        toResource(
+                                                refund,
+                                                ordersByRefundId.get(refund.getId()),
+                                                names.get(refund.getCompanyId())))
+                        .toList();
+        return new PageImpl<>(items, pageable, page.getTotalElements());
+    }
+
+    // A refund request is 1:1 with its order, so looking one up by order code is a point lookup,
+    // not a text search — at most one row ever matches.
+    private Page<RefundRequestResource> searchByOrderCode(
+            RefundStatus status, String code, Pageable pageable) {
+        Optional<Order> order = orderRepository.findByCode(code);
+        if (order.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        List<RefundRequestResource> items =
+                refundRepository.findByOrderId(order.get().getId()).stream()
+                        .filter(refund -> status == null || refund.getStatus() == status)
+                        .map(
+                                refund ->
+                                        toResource(
+                                                refund,
+                                                order.get(),
+                                                companyNames(List.of(order.get()))
+                                                        .get(refund.getCompanyId())))
+                        .toList();
+        return new PageImpl<>(items, pageable, items.size());
+    }
+
+    private Map<Long, String> companyNames(List<Order> orders) {
+        Map<Long, String> names = new HashMap<>();
+        for (Long companyId :
+                orders.stream().map(Order::getCompanyId).collect(Collectors.toSet())) {
+            try {
+                names.put(companyId, companyService.findSummary(companyId).name());
+            } catch (AppException ignored) {
+                names.put(companyId, null);
+            }
+        }
+        return names;
     }
 
     @Override
@@ -309,10 +381,16 @@ public class RefundService implements RefundServiceInterface {
     }
 
     private RefundRequestResource toResource(RefundRequest refund, Order order) {
+        return toResource(refund, order, null);
+    }
+
+    private RefundRequestResource toResource(
+            RefundRequest refund, Order order, String companyName) {
         return RefundRequestResource.builder()
                 .id(refund.getId())
                 .orderCode(order.getCode())
                 .companyId(refund.getCompanyId())
+                .companyName(companyName)
                 .reason(refund.getReason())
                 .status(refund.getStatus())
                 .orderTotal(order.getTotalAmount())

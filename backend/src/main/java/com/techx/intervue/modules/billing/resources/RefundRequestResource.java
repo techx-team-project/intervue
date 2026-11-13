@@ -9,6 +9,7 @@ public record RefundRequestResource(
         Long id,
         String orderCode,
         Long companyId,
+        String companyName,
         String reason,
         RefundStatus status,
         Long orderTotal,

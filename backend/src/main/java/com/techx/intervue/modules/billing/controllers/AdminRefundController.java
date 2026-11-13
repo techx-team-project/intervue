@@ -4,6 +4,7 @@ import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.billing.enums.RefundStatus;
 import com.techx.intervue.modules.billing.requests.ReviewRefundRequest;
 import com.techx.intervue.modules.billing.resources.RefundRequestResource;
+import com.techx.intervue.modules.billing.resources.RefundStatusCountsResource;
 import com.techx.intervue.modules.billing.services.interfaces.RefundServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
@@ -34,9 +35,16 @@ public class AdminRefundController extends BaseController {
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<RefundRequestResource>>> search(
             @RequestParam(value = "status", required = false) RefundStatus status,
+            @RequestParam(value = "orderCode", required = false) String orderCode,
             Pageable pageable) {
         return page(
-                refundService.search(status, pageable), "Refund requests retrieved successfully!");
+                refundService.search(status, orderCode, pageable),
+                "Refund requests retrieved successfully!");
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResource<RefundStatusCountsResource>> summary() {
+        return ok(refundService.summaryForAdmin(), "Refund summary retrieved successfully!");
     }
 
     @PostMapping("/{id}/approve")

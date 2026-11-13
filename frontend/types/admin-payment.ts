@@ -76,6 +76,7 @@ export interface AdminRefundRequest {
   id: number;
   orderCode: string;
   companyId: number;
+  companyName: string | null;
   reason: string;
   status: AdminRefundStatus;
   orderTotal: number;
@@ -84,6 +85,11 @@ export interface AdminRefundRequest {
   adminNote: string | null;
   reviewedAt: string | null;
   createdAt: string;
+}
+
+export interface AdminRefundStatusCounts {
+  total: number;
+  byStatus: Record<AdminRefundStatus, number>;
 }
 
 export type AdminOrderStatus =

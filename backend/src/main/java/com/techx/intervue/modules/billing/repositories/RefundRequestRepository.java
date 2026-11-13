@@ -24,6 +24,9 @@ public interface RefundRequestRepository extends JpaRepository<RefundRequest, Lo
             "SELECT r.status AS status, COUNT(r) AS total FROM RefundRequest r WHERE r.companyId = :companyId GROUP BY r.status")
     List<StatusCount> countByStatusForCompany(@Param("companyId") Long companyId);
 
+    @Query("SELECT r.status AS status, COUNT(r) AS total FROM RefundRequest r GROUP BY r.status")
+    List<StatusCount> countByStatus();
+
     interface StatusCount {
         RefundStatus getStatus();
 
