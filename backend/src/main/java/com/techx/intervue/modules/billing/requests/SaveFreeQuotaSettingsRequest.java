@@ -12,6 +12,6 @@ public record SaveFreeQuotaSettingsRequest(
         @NotNull @Min(0) @Max(10_000) Integer connectDailyInviteLimit,
         @NotNull @Min(0) @Max(100) Integer companyFreePhotoLimit,
         @NotNull Boolean requireJobSlot,
-        @NotNull @Min(0) @Max(100) Integer jobFreeActiveLimit,
+        @NotNull @Min(0) @Max(100) Integer jobFreePostLimit,
         @NotNull @Min(1) @Max(365) Integer jobFreeMaxDays,
         @NotNull @Min(0) @Max(100) Integer jobReviewFirstCount) {}

@@ -62,7 +62,7 @@ public class AdminFreeQuotaService
         settings.setConnectDailyInviteLimit(request.connectDailyInviteLimit());
         settings.setCompanyFreePhotoLimit(request.companyFreePhotoLimit());
         settings.setRequireJobSlot(Boolean.TRUE.equals(request.requireJobSlot()));
-        settings.setJobFreeActiveLimit(request.jobFreeActiveLimit());
+        settings.setJobFreePostLimit(request.jobFreePostLimit());
         settings.setJobFreeMaxDays(request.jobFreeMaxDays());
         settings.setJobReviewFirstCount(request.jobReviewFirstCount());
         FreeQuotaSettings saved = settingsRepository.save(settings);
@@ -85,7 +85,7 @@ public class AdminFreeQuotaService
                                                 saved.getConnectDailyInviteLimit(),
                                                 saved.getCompanyFreePhotoLimit(),
                                                 saved.isRequireJobSlot(),
-                                                saved.getJobFreeActiveLimit(),
+                                                saved.getJobFreePostLimit(),
                                                 saved.getJobFreeMaxDays(),
                                                 saved.getJobReviewFirstCount()))
                         .ip(actor.ip())
@@ -112,7 +112,7 @@ public class AdminFreeQuotaService
                 defaults.connectDailyInviteLimit(),
                 defaults.companyFreePhotoLimit(),
                 billingProperties.requiresJobSlot(),
-                defaults.jobFreeActiveLimit(),
+                defaults.jobFreePostLimit(),
                 defaults.jobFreeMaxDays(),
                 defaults.jobReviewFirstCount());
     }
@@ -126,7 +126,7 @@ public class AdminFreeQuotaService
                 s.getConnectDailyInviteLimit(),
                 s.getCompanyFreePhotoLimit(),
                 s.isRequireJobSlot(),
-                s.getJobFreeActiveLimit(),
+                s.getJobFreePostLimit(),
                 s.getJobFreeMaxDays(),
                 s.getJobReviewFirstCount());
     }
@@ -140,7 +140,7 @@ public class AdminFreeQuotaService
                 .connectDailyInviteLimit(s.getConnectDailyInviteLimit())
                 .companyFreePhotoLimit(s.getCompanyFreePhotoLimit())
                 .requireJobSlot(s.isRequireJobSlot())
-                .jobFreeActiveLimit(s.getJobFreeActiveLimit())
+                .jobFreePostLimit(s.getJobFreePostLimit())
                 .jobFreeMaxDays(s.getJobFreeMaxDays())
                 .jobReviewFirstCount(s.getJobReviewFirstCount())
                 .updatedAt(s.getUpdatedAt())
@@ -156,7 +156,7 @@ public class AdminFreeQuotaService
                 .connectDailyInviteLimit(values.connectDailyInviteLimit())
                 .companyFreePhotoLimit(values.companyFreePhotoLimit())
                 .requireJobSlot(values.requireJobSlot())
-                .jobFreeActiveLimit(values.jobFreeActiveLimit())
+                .jobFreePostLimit(values.jobFreePostLimit())
                 .jobFreeMaxDays(values.jobFreeMaxDays())
                 .jobReviewFirstCount(values.jobReviewFirstCount())
                 .build();

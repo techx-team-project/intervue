@@ -43,7 +43,7 @@ export const ERROR_MESSAGES: Record<string, string> = {
   AD_SLOT_UNAVAILABLE: 'One of the chosen weeks has just been taken by someone else.',
   AD_WEEKS_REQUIRED: 'Choose at least one week for this banner package.',
   AD_BANNER_QUANTITY_LOCKED: 'Banner quantity is tied to the booked weeks and cannot be adjusted here.',
-  ENTITLEMENT_EXHAUSTED: 'No remaining quantity in this service entitlement.',
+  ENTITLEMENT_EXHAUSTED: 'You have used up your free quota or this service. Buy a package to continue.',
   ENTITLEMENT_EXPIRED: 'This service entitlement has expired.',
   ENTITLEMENT_NOT_ACTIVATABLE: 'This entitlement works automatically and does not need manual activation.',
   ADDON_REQUIRES_ACTIVE_JOB: 'Choose a published job from your company to apply this service to.',
