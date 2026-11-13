@@ -113,6 +113,9 @@ public enum ErrorCode {
             HttpStatus.UNPROCESSABLE_CONTENT, "This job can no longer be edited or deleted!"),
     SAVED_LIMIT_REACHED(HttpStatus.CONFLICT, "You have reached the maximum number of saved items!"),
     ALREADY_APPLIED(HttpStatus.CONFLICT, "You have already applied to this job!"),
+    APPLICATION_DAILY_LIMIT_REACHED(
+            HttpStatus.UNPROCESSABLE_CONTENT,
+            "You have reached today's application limit, please try again tomorrow!"),
     JOB_NOT_OPEN(HttpStatus.UNPROCESSABLE_CONTENT, "This job is not accepting applications!"),
     CANNOT_APPLY_TO_OWN_COMPANY(
             HttpStatus.UNPROCESSABLE_CONTENT, "You cannot apply to a job of your own company!"),

@@ -65,6 +65,7 @@ public class AdminFreeQuotaService
         settings.setJobFreePostLimit(request.jobFreePostLimit());
         settings.setJobFreeMaxDays(request.jobFreeMaxDays());
         settings.setJobReviewFirstCount(request.jobReviewFirstCount());
+        settings.setCandidateDailyApplicationLimit(request.candidateDailyApplicationLimit());
         FreeQuotaSettings saved = settingsRepository.save(settings);
 
         auditLogService.record(
@@ -114,7 +115,8 @@ public class AdminFreeQuotaService
                 billingProperties.requiresJobSlot(),
                 defaults.jobFreePostLimit(),
                 defaults.jobFreeMaxDays(),
-                defaults.jobReviewFirstCount());
+                defaults.jobReviewFirstCount(),
+                defaults.candidateDailyApplicationLimit());
     }
 
     private static FreeQuotaValues toValues(FreeQuotaSettings s) {
@@ -128,7 +130,8 @@ public class AdminFreeQuotaService
                 s.isRequireJobSlot(),
                 s.getJobFreePostLimit(),
                 s.getJobFreeMaxDays(),
-                s.getJobReviewFirstCount());
+                s.getJobReviewFirstCount(),
+                s.getCandidateDailyApplicationLimit());
     }
 
     private static FreeQuotaSettingsResource toResource(FreeQuotaSettings s) {
@@ -143,6 +146,7 @@ public class AdminFreeQuotaService
                 .jobFreePostLimit(s.getJobFreePostLimit())
                 .jobFreeMaxDays(s.getJobFreeMaxDays())
                 .jobReviewFirstCount(s.getJobReviewFirstCount())
+                .candidateDailyApplicationLimit(s.getCandidateDailyApplicationLimit())
                 .updatedAt(s.getUpdatedAt())
                 .build();
     }
@@ -159,6 +163,7 @@ public class AdminFreeQuotaService
                 .jobFreePostLimit(values.jobFreePostLimit())
                 .jobFreeMaxDays(values.jobFreeMaxDays())
                 .jobReviewFirstCount(values.jobReviewFirstCount())
+                .candidateDailyApplicationLimit(values.candidateDailyApplicationLimit())
                 .build();
     }
 }

@@ -65,4 +65,8 @@ public class FreeQuotaSettings extends BaseEntity {
     @Column(name = "job_review_first_count", nullable = false)
     @Builder.Default
     private Integer jobReviewFirstCount = 3;
+
+    @Column(name = "candidate_daily_application_limit", nullable = false)
+    @Builder.Default
+    private Integer candidateDailyApplicationLimit = 10;
 }

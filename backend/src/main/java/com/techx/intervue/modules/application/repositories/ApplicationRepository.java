@@ -22,6 +22,8 @@ public interface ApplicationRepository
 
     Optional<Application> findByJobIdAndCandidateId(Long jobId, Long candidateId);
 
+    long countByCandidateIdAndSubmittedAtGreaterThanEqual(Long candidateId, Instant since);
+
     @Query(
             "SELECT a.jobId FROM Application a WHERE a.candidateId = :candidateId"
                     + " AND a.status NOT IN :excluded")

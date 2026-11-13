@@ -22,6 +22,7 @@ interface QuotaDraft {
   jobFreePostLimit: string;
   jobFreeMaxDays: string;
   jobReviewFirstCount: string;
+  candidateDailyApplicationLimit: string;
   requireJobSlot: boolean;
 }
 
@@ -52,6 +53,11 @@ const QUOTA_BOUNDS: Record<NumericQuotaKey, { max: number; label: string; helper
     max: 100,
     label: 'Free job posts / company',
     helper: 'Total job posts a company can publish for free, over its lifetime, before it must buy a package.',
+  },
+  candidateDailyApplicationLimit: {
+    max: 500,
+    label: 'Applications / candidate / day',
+    helper: 'Applications a candidate can submit per day (Asia/Ho_Chi_Minh). Withdrawing does not give one back.',
   },
   jobReviewFirstCount: {
     max: 100,
@@ -87,6 +93,7 @@ function toDraft(settings: FreeQuotaSettings): QuotaDraft {
     jobFreePostLimit: String(settings.jobFreePostLimit),
     jobFreeMaxDays: String(settings.jobFreeMaxDays),
     jobReviewFirstCount: String(settings.jobReviewFirstCount),
+    candidateDailyApplicationLimit: String(settings.candidateDailyApplicationLimit),
     requireJobSlot: settings.requireJobSlot,
   };
 }
@@ -126,6 +133,7 @@ function validateQuotaDraft(draft: QuotaDraft):
       jobFreePostLimit: parsed.jobFreePostLimit,
       jobFreeMaxDays: parsed.jobFreeMaxDays,
       jobReviewFirstCount: parsed.jobReviewFirstCount,
+      candidateDailyApplicationLimit: parsed.candidateDailyApplicationLimit,
       requireJobSlot: draft.requireJobSlot,
     },
     errors: {},
@@ -212,6 +220,7 @@ function FreeQuotasForm({ settings }: FreeQuotasFormProps) {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {renderNumberField('cvReviewFreePerDay')}
           {renderNumberField('candidateStarterCredits')}
+          {renderNumberField('candidateDailyApplicationLimit')}
         </div>
       </div>
 

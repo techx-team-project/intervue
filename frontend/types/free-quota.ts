@@ -9,6 +9,7 @@ export interface FreeQuotaSettings {
   jobFreePostLimit: number;
   jobFreeMaxDays: number;
   jobReviewFirstCount: number;
+  candidateDailyApplicationLimit: number;
   updatedAt: string | null;
 }
 

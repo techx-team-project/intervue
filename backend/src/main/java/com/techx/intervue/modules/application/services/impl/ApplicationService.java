@@ -114,6 +114,7 @@ public class ApplicationService implements ApplicationServiceInterface {
         }
         ApplyTarget target = jobLookup.requireApplyTarget(request.jobId());
         eligibility.requireCanApply(target, actor);
+        eligibility.requireWithinDailyLimit(actor.userId());
         Map<ApplyQuestion, String> given =
                 answerRules.collect(target.questions(), request.answers());
         answerRules.requireComplete(target.questions(), given);
@@ -176,6 +177,7 @@ public class ApplicationService implements ApplicationServiceInterface {
         }
         ApplyTarget target = jobLookup.requireApplyTarget(current.getJobId());
         eligibility.requireCanApply(target, actor);
+        eligibility.requireWithinDailyLimit(actor.userId());
 
         String previousCopy = current.getCvStoragePublicId();
         ResumeSnapshot snapshot = cvSnapshots.copy(resumeId, actor.userId());
