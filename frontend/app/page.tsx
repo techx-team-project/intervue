@@ -10,6 +10,7 @@ import HomeHero from '@/components/home/hero/HomeHero';
 import HowItWorksSection from '@/components/home/how-it-works/HowItWorksSection';
 import MarketPulse from '@/components/home/pulse/MarketPulse';
 import RecommendedJobsSection from '@/components/jobs/recommendations/RecommendedJobsSection';
+import RecentlyViewedJobsSection from '@/components/jobs/recently-viewed/RecentlyViewedJobsSection';
 
 export default function Home() {
   return (
@@ -28,6 +29,9 @@ export default function Home() {
         <MarketPulse />
         <div className="container-page pt-12 pb-4">
           <RecommendedJobsSection limit={6} />
+        </div>
+        <div className="container-page pb-4">
+          <RecentlyViewedJobsSection />
         </div>
         <FeaturedJobsSection />
         <TopCategoriesSection />
