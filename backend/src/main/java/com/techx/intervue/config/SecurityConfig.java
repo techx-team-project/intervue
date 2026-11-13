@@ -9,6 +9,7 @@ import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
 import com.techx.intervue.services.interfaces.RateLimitServiceInterface;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -52,6 +53,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth ->
                                 auth
+                                        // SSE completion re-dispatches without the JWT
+                                        .dispatcherTypeMatchers(DispatcherType.ASYNC)
+                                        .permitAll()
                                         // 1. Route AUTH - No JWT
                                         .requestMatchers("/api/v1/auth/**")
                                         .permitAll()
