@@ -28,18 +28,15 @@ function round(value: number) {
 
 export default function JobLocationPicker({ latitude, longitude, addressQuery, onChange }: JobLocationPickerProps) {
   const [searching, setSearching] = useState(false);
+  const trimmedQuery = addressQuery.trim();
   const value = latitude !== undefined && longitude !== undefined ? { lat: latitude, lng: longitude } : null;
 
   const select = (point: MapPoint) => onChange({ lat: round(point.lat), lng: round(point.lng) });
 
   const findByAddress = async () => {
-    if (!addressQuery.trim()) {
-      toast.info('Enter an address or workplace before searching the map.');
-      return;
-    }
     setSearching(true);
     try {
-      const result = await geocodeAddress(addressQuery.trim());
+      const result = await geocodeAddress(trimmedQuery);
       if (result) select(result);
       else toast.info('Address not found. Click the map to drop a pin instead.');
     } catch {
@@ -54,8 +51,15 @@ export default function JobLocationPicker({ latitude, longitude, addressQuery, o
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="text-on-surface text-sm font-semibold">Map location (optional)</span>
         <div className="flex gap-2">
-          <Button type="button" size="sm" variant="outline" disabled={searching} onClick={findByAddress}>
-            <MapPin className="h-4 w-4" aria-hidden /> {searching ? 'Searching...' : 'Search by address'}
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            disabled={searching || trimmedQuery === ''}
+            onClick={findByAddress}
+            leftIcon={<MapPin className="h-4 w-4" aria-hidden />}
+          >
+            {searching ? 'Searching...' : 'Search by address'}
           </Button>
           {value && (
             <Button type="button" size="sm" variant="ghost" onClick={() => onChange(null)}>

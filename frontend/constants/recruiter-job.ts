@@ -206,7 +206,7 @@ export const JOB_FORM_CURRENCY_OPTIONS = [
   { value: 'USD', label: 'USD' },
 ];
 
-export const JOB_CITY_SUGGESTIONS = VN_LOCATIONS;
+export const JOB_CITY_OPTIONS = VN_LOCATIONS.map((city) => ({ value: city, label: city }));
 
 export const SKILL_GROUP_LABELS: Record<SkillGroup, string> = {
   CORE: 'Core',
