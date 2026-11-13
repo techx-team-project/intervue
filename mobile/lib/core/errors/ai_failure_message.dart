@@ -18,6 +18,8 @@ String _serverMessage(ServerFailure failure) {
       return wait != null && wait > 0
           ? 'Too many requests. Please try again in $wait seconds.'
           : 'Too many requests. Please try again in a few minutes.';
+    case 'CV_TEXT_NOT_READABLE':
+      return 'We could not read text from this CV. Please upload a text-based PDF, not a scanned image.';
     case 'AI_NOT_CONFIGURED':
     case 'AI_PROVIDER_BUSY':
     case 'AI_PROVIDER_TIMEOUT':

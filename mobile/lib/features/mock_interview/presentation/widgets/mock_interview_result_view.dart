@@ -18,7 +18,7 @@ class MockInterviewResultView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final score = session.overallScore ?? 75;
+    final score = session.overallScore;
     final tone = MockInterviewScoreTone.of(score);
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -78,7 +78,7 @@ class MockInterviewResultView extends StatelessWidget {
                       textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          '$score',
+                          '${score ?? '—'}',
                           style: TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.w900,

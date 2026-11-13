@@ -8,7 +8,15 @@ class MockInterviewScoreTone {
     required this.label,
   });
 
-  factory MockInterviewScoreTone.of(int score) {
+  factory MockInterviewScoreTone.of(int? score) {
+    if (score == null) {
+      return const MockInterviewScoreTone(
+        foreground: Color(0xFF334155),
+        background: Color(0xFFF8FAFC),
+        border: Color(0xFFE2E8F0),
+        label: 'Score unavailable',
+      );
+    }
     if (score >= 80) {
       return const MockInterviewScoreTone(
         foreground: Color(0xFF047857),

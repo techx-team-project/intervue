@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:intervue_flutter/core/constants/api_endpoints.dart';
 import 'package:intervue_flutter/core/errors/exceptions.dart';
 import 'package:intervue_flutter/core/network/api_client.dart';
@@ -16,9 +17,18 @@ class MockInterviewRemoteDataSource {
   Future<MockInterviewDetail> startSession(
     StartMockInterviewRequest request,
   ) async {
+    final form = FormData.fromMap({
+      ...request.toJson(),
+      if (request.hasCv)
+        'file': MultipartFile.fromBytes(
+          request.cvBytes!,
+          filename: request.cvFileName,
+          contentType: DioMediaType('application', 'pdf'),
+        ),
+    });
     final data = await _client.post(
       ApiEndpoints.mockInterviews,
-      data: request.toJson(),
+      data: form,
       receiveTimeout: _aiTimeout,
     );
     return MockInterviewDetail.fromJson(_asMap(data));

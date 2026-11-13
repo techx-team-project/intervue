@@ -149,7 +149,7 @@ void configureDependencies({AppConfig? config}) {
       () => MockInterviewHistoryCubit(getIt()),
     )
     ..registerFactory<MockInterviewSetupCubit>(
-      () => MockInterviewSetupCubit(getIt(), getIt()),
+      () => MockInterviewSetupCubit(getIt()),
     )
     ..registerFactoryParam<MockInterviewRoomCubit, MockInterviewDetail?, void>(
       (initial, _) => MockInterviewRoomCubit(getIt(), initial: initial),

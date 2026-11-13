@@ -1,8 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intervue_flutter/app/routes/route_names.dart';
+import 'package:intervue_flutter/core/constants/app_constants.dart';
 import 'package:intervue_flutter/core/theme/app_colors.dart';
+import 'package:intervue_flutter/core/utils/file_helpers.dart';
 import 'package:intervue_flutter/core/widgets/app_button.dart';
 import 'package:intervue_flutter/features/mock_interview/data/models/mock_interview_enums.dart';
 import 'package:intervue_flutter/features/mock_interview/data/models/start_mock_interview_request.dart';
@@ -30,21 +33,32 @@ class _MockInterviewSetupScreenState extends State<MockInterviewSetupScreen> {
   final _roleController = TextEditingController(
     text: 'Senior Java Backend Engineer',
   );
-  int? _resumeId;
+  PlatformFile? _cvFile;
   String _seniority = 'Senior';
   MockInterviewFocusArea _focusArea = MockInterviewFocusArea.mixed;
   int _questionCount = 5;
 
   @override
-  void initState() {
-    super.initState();
-    context.read<MockInterviewSetupCubit>().loadResumes();
-  }
-
-  @override
   void dispose() {
     _roleController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickCv() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: const ['pdf'],
+      withData: true,
+    );
+    final file = result?.files.single;
+    if (file == null || !mounted) return;
+    if (file.size > AppConstants.maxCvSizeBytes) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('The CV must be 5 MB or smaller.')),
+      );
+      return;
+    }
+    setState(() => _cvFile = file);
   }
 
   void _submit() {
@@ -57,7 +71,8 @@ class _MockInterviewSetupScreenState extends State<MockInterviewSetupScreen> {
     }
     context.read<MockInterviewSetupCubit>().start(
       StartMockInterviewRequest(
-        resumeId: _resumeId,
+        cvBytes: _cvFile?.bytes,
+        cvFileName: _cvFile?.name,
         targetRole: role,
         seniorityLevel: _seniority,
         focusArea: _focusArea,
@@ -104,9 +119,9 @@ class _MockInterviewSetupScreenState extends State<MockInterviewSetupScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
                 children: [
                   _section(
-                    '1. Select Resume Context (Optional)',
-                    'AI analyzes your work experience and skills to ask highly realistic questions.',
-                    _buildResumePicker(state),
+                    '1. Upload Your CV (Optional)',
+                    'AI reads this CV only for this interview to ask realistic questions. It is not added to your profile.',
+                    _buildCvPicker(),
                   ),
                   _section(
                     '2. Target Job Role',
@@ -194,40 +209,86 @@ class _MockInterviewSetupScreenState extends State<MockInterviewSetupScreen> {
     );
   }
 
-  Widget _buildResumePicker(MockInterviewSetupState state) {
-    if (state.isLoadingResumes) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        child: LinearProgressIndicator(),
-      );
-    }
-    if (state.resumes.isEmpty) {
-      return const Text(
-        'No uploaded resume found. AI will interview based on your selected target role.',
-        style: TextStyle(
-          fontSize: 12,
-          fontStyle: FontStyle.italic,
-          color: AppColors.textMuted,
+  Widget _buildCvPicker() {
+    final file = _cvFile;
+    if (file != null) {
+      return Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.primaryLight,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.primary),
+        ),
+        child: Row(
+          children: [
+            const Icon(
+              Icons.picture_as_pdf_rounded,
+              size: 20,
+              color: AppColors.primary,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    file.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    FileHelpers.formatSize(file.size),
+                    style: const TextStyle(
+                      fontSize: 11.5,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              tooltip: 'Remove CV',
+              icon: const Icon(Icons.close_rounded, size: 20),
+              onPressed: () => setState(() => _cvFile = null),
+            ),
+          ],
         ),
       );
     }
-    return Column(
-      children: [
-        _choiceTile(
-          icon: Icons.person_outline_rounded,
-          title: 'Use Profile Information (Default)',
-          selected: _resumeId == null,
-          onTap: () => setState(() => _resumeId = null),
+    return InkWell(
+      onTap: _pickCv,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.border),
         ),
-        ...state.resumes.map(
-          (cv) => _choiceTile(
-            icon: Icons.description_outlined,
-            title: cv.fileName,
-            selected: _resumeId == cv.id,
-            onTap: () => setState(() => _resumeId = cv.id),
-          ),
+        child: const Column(
+          children: [
+            Icon(Icons.upload_file_rounded, color: AppColors.textSecondary),
+            SizedBox(height: 4),
+            Text(
+              'Choose a PDF CV (max 5 MB)',
+              style: TextStyle(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            Text(
+              'Without a CV, AI interviews you based on your target role.',
+              style: TextStyle(fontSize: 11, color: AppColors.textMuted),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
