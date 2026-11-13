@@ -17,6 +17,7 @@ import com.techx.intervue.modules.job.repositories.JobRepository.StatusCount;
 import com.techx.intervue.modules.job.repositories.JobSpecifications;
 import com.techx.intervue.modules.job.requests.AdminSearchJobsRequest;
 import com.techx.intervue.modules.job.resources.AdminJobSummaryResource;
+import com.techx.intervue.modules.job.resources.JobContentWarningResource;
 import com.techx.intervue.modules.job.resources.JobResource;
 import com.techx.intervue.modules.job.resources.JobStatusCountsResource;
 import com.techx.intervue.modules.job.services.interfaces.AdminJobServiceInterface;
@@ -27,6 +28,7 @@ import com.techx.intervue.modules.notification.services.interfaces.NotificationP
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPublisherInterface.NotificationCommand;
 import java.time.Instant;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -47,6 +49,7 @@ public class AdminJobService implements AdminJobServiceInterface, JobContentPort
     private final AuditLogServiceInterface auditLogService;
     private final NotificationPublisherInterface notificationPublisher;
     private final ApplicationEventPublisher eventPublisher;
+    private final JobContentScreener contentScreener;
 
     @Override
     @Transactional(readOnly = true)
@@ -77,6 +80,12 @@ public class AdminJobService implements AdminJobServiceInterface, JobContentPort
     @Transactional(readOnly = true)
     public JobResource findOne(Long jobId) {
         return jobMapper.toResource(require(jobId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<JobContentWarningResource> contentWarnings(Long jobId) {
+        return contentScreener.warningsOf(require(jobId));
     }
 
     @Override

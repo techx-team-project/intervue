@@ -9,6 +9,7 @@ export const adminJobKeys = {
   counts: ['admin', 'jobs', 'counts'] as const,
   insights: (days: number) => ['admin', 'jobs', 'insights', days] as const,
   detail: (id: number) => ['admin', 'jobs', 'detail', id] as const,
+  warnings: (id: number) => ['admin', 'jobs', 'warnings', id] as const,
 };
 
 export function useAdminJobList(params: AdminJobSearchParams) {
@@ -29,6 +30,10 @@ export function useAdminJob(id: number | null) {
     queryFn: () => adminJobApi.get(id as number),
     enabled: id !== null,
   });
+}
+
+export function useAdminJobContentWarnings(id: number) {
+  return useQuery({ queryKey: adminJobKeys.warnings(id), queryFn: () => adminJobApi.contentWarnings(id) });
 }
 
 export function useAdminJobModeration() {

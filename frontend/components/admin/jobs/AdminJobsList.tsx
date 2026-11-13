@@ -6,6 +6,7 @@ import type { AdminJobSummaryResource } from '@/types/admin-job';
 import { formatDate } from '@/utils/datetime';
 import { formatSalary } from '@/utils/public-company';
 import { Check, Eye, EyeOff, RotateCcw, X } from 'lucide-react';
+import AdminJobContentWarnings from './AdminJobContentWarnings';
 
 interface AdminJobsListProps {
   jobs: AdminJobSummaryResource[];
@@ -40,6 +41,7 @@ export default function AdminJobsList({ jobs, onView, onHide, onRestore, onAppro
               {job.deadline && ` · Deadline ${formatDate(job.deadline)}`}
             </p>
             {job.hiddenReason && <p className="text-xs font-medium text-rose-600">Reason: {job.hiddenReason}</p>}
+            {job.status === 'PENDING_REVIEW' && <AdminJobContentWarnings jobId={job.id} />}
           </div>
 
           <div className="flex shrink-0 items-center gap-2">
