@@ -192,7 +192,7 @@ public class EntitlementService implements EntitlementServiceInterface {
                                 .companyId(entitlement.getCompanyId())
                                 .entitlementType(entitlement.getEntitlementType())
                                 .quantity(unused)
-                                .note("Thu hồi do hoàn tiền: " + entitlement.getLabel())
+                                .note("Revoked due to refund: " + entitlement.getLabel())
                                 .batchKey("revoke:" + entitlement.getId())
                                 .startedAt(now)
                                 .endsAt(now)
