@@ -3,11 +3,11 @@ import 'package:intervue_flutter/core/theme/app_colors.dart';
 
 class TopCvFilterData {
   const TopCvFilterData({
-    this.salaryRange = 'Tất cả',
-    this.location = 'Toàn quốc',
-    this.level = 'Tất cả',
-    this.skill = 'Tất cả',
-    this.workMode = 'Tất cả',
+    this.salaryRange = 'All',
+    this.location = 'Nationwide',
+    this.level = 'All',
+    this.skill = 'All',
+    this.workMode = 'All',
   });
 
   final String salaryRange;
@@ -17,15 +17,15 @@ class TopCvFilterData {
   final String workMode;
 
   bool get hasFilter =>
-      salaryRange != 'Tất cả' ||
-      location != 'Toàn quốc' ||
-      level != 'Tất cả' ||
-      skill != 'Tất cả' ||
-      workMode != 'Tất cả';
+      salaryRange != 'All' ||
+      location != 'Nationwide' ||
+      level != 'All' ||
+      skill != 'All' ||
+      workMode != 'All';
 
   String? get backendLevel {
     switch (level) {
-      case 'Thực tập sinh':
+      case 'Intern':
         return 'INTERN';
       case 'Junior':
         return 'JUNIOR';
@@ -42,11 +42,11 @@ class TopCvFilterData {
 
   String? get backendWorkMode {
     switch (workMode) {
-      case 'Trực tiếp (Onsite)':
+      case 'Onsite':
         return 'ONSITE';
-      case 'Từ xa (Remote)':
+      case 'Remote':
         return 'REMOTE';
-      case 'Linh hoạt (Hybrid)':
+      case 'Hybrid':
         return 'HYBRID';
       default:
         return null;
@@ -74,7 +74,7 @@ class TopCvFilterBottomSheet extends StatefulWidget {
   const TopCvFilterBottomSheet({
     required this.initialFilter,
     required this.onApply,
-    this.skillOptions = const ['Tất cả'],
+    this.skillOptions = const ['All'],
     super.key,
   });
 
@@ -83,27 +83,27 @@ class TopCvFilterBottomSheet extends StatefulWidget {
   final List<String> skillOptions;
 
   static const List<String> salaryOptions = [
-    'Tất cả',
-    'Dưới 10 triệu',
-    '10 - 15 triệu',
-    '15 - 25 triệu',
-    '25 - 40 triệu',
-    'Trên 40 triệu',
-    'Thỏa thuận',
+    'All',
+    'Under 10M VND',
+    '10 - 15M VND',
+    '15 - 25M VND',
+    '25 - 40M VND',
+    'Over 40M VND',
+    'Negotiable',
   ];
 
   static const List<String> locationOptions = [
-    'Toàn quốc',
-    'Hà Nội',
-    'TP. Hồ Chí Minh',
-    'Đà Nẵng',
-    'Bình Dương',
-    'Làm từ xa (Remote)',
+    'Nationwide',
+    'Hanoi',
+    'Ho Chi Minh City',
+    'Da Nang',
+    'Binh Duong',
+    'Remote',
   ];
 
   static const List<String> levelOptions = [
-    'Tất cả',
-    'Thực tập sinh',
+    'All',
+    'Intern',
     'Junior',
     'Middle',
     'Senior',
@@ -111,10 +111,10 @@ class TopCvFilterBottomSheet extends StatefulWidget {
   ];
 
   static const List<String> workModeOptions = [
-    'Tất cả',
-    'Trực tiếp (Onsite)',
-    'Từ xa (Remote)',
-    'Linh hoạt (Hybrid)',
+    'All',
+    'Onsite',
+    'Remote',
+    'Hybrid',
   ];
 
   @override
@@ -148,7 +148,7 @@ class _TopCvFilterBottomSheetState extends State<TopCvFilterBottomSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Bộ lọc tìm kiếm nâng cao',
+                  'Advanced search filters',
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -168,7 +168,7 @@ class _TopCvFilterBottomSheetState extends State<TopCvFilterBottomSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle('Hình thức làm việc'),
+                    _buildSectionTitle('Work mode'),
                     _buildChipWrap(
                       options: TopCvFilterBottomSheet.workModeOptions,
                       selected: _filter.workMode,
@@ -178,7 +178,7 @@ class _TopCvFilterBottomSheetState extends State<TopCvFilterBottomSheet> {
                     ),
                     const SizedBox(height: 16),
 
-                    _buildSectionTitle('Kỹ năng & Lĩnh vực'),
+                    _buildSectionTitle('Skills & Domain'),
                     _buildChipWrap(
                       options: widget.skillOptions,
                       selected: _filter.skill,
@@ -188,7 +188,7 @@ class _TopCvFilterBottomSheetState extends State<TopCvFilterBottomSheet> {
                     ),
                     const SizedBox(height: 16),
 
-                    _buildSectionTitle('Mức lương mong muốn'),
+                    _buildSectionTitle('Desired salary'),
                     _buildChipWrap(
                       options: TopCvFilterBottomSheet.salaryOptions,
                       selected: _filter.salaryRange,
@@ -198,7 +198,7 @@ class _TopCvFilterBottomSheetState extends State<TopCvFilterBottomSheet> {
                     ),
                     const SizedBox(height: 16),
 
-                    _buildSectionTitle('Địa điểm làm việc'),
+                    _buildSectionTitle('Work location'),
                     _buildChipWrap(
                       options: TopCvFilterBottomSheet.locationOptions,
                       selected: _filter.location,
@@ -208,7 +208,7 @@ class _TopCvFilterBottomSheetState extends State<TopCvFilterBottomSheet> {
                     ),
                     const SizedBox(height: 16),
 
-                    _buildSectionTitle('Cấp bậc'),
+                    _buildSectionTitle('Level'),
                     _buildChipWrap(
                       options: TopCvFilterBottomSheet.levelOptions,
                       selected: _filter.level,
@@ -240,7 +240,7 @@ class _TopCvFilterBottomSheetState extends State<TopCvFilterBottomSheet> {
                       setState(() => _filter = const TopCvFilterData());
                     },
                     child: const Text(
-                      'Đặt lại',
+                      'Reset',
                       style: TextStyle(
                         color: AppColors.textSecondary,
                         fontWeight: FontWeight.bold,
@@ -265,7 +265,7 @@ class _TopCvFilterBottomSheetState extends State<TopCvFilterBottomSheet> {
                       Navigator.pop(context);
                     },
                     child: const Text(
-                      'Áp dụng bộ lọc',
+                      'Apply filters',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

@@ -102,9 +102,7 @@ class ApplyJobCubit extends Cubit<ApplyJobState> {
 
     if (state.selectedResumeId == null) {
       emit(
-        state.copyWith(
-          actionError: 'Vui lòng chọn hoặc tải lên một CV để ứng tuyển',
-        ),
+        state.copyWith(actionError: 'Please choose or upload a CV to apply'),
       );
       return;
     }
@@ -115,7 +113,7 @@ class ApplyJobCubit extends Cubit<ApplyJobState> {
         if (ans.isEmpty) {
           emit(
             state.copyWith(
-              actionError: 'Vui lòng trả lời câu hỏi bắt buộc: "${q.prompt}"',
+              actionError: 'Please answer the required question: "${q.prompt}"',
             ),
           );
           return;
@@ -147,7 +145,7 @@ class ApplyJobCubit extends Cubit<ApplyJobState> {
       emit(
         ApplyJobSuccess(
           application: result,
-          message: 'Nộp hồ sơ ứng tuyển thành công!',
+          message: 'Application submitted successfully!',
         ),
       );
     } catch (e) {
@@ -189,7 +187,7 @@ class ApplyJobCubit extends Cubit<ApplyJobState> {
         ApplyJobSuccess(
           application: result,
           isDraft: true,
-          message: 'Lưu bản nháp thành công!',
+          message: 'Draft saved successfully!',
         ),
       );
     } catch (e) {
@@ -216,7 +214,7 @@ class ApplyJobCubit extends Cubit<ApplyJobState> {
       emit(
         ApplyJobSuccess(
           application: result,
-          message: 'Nộp lại hồ sơ thành công!',
+          message: 'Reapplied successfully!',
         ),
       );
     } catch (e) {
@@ -241,10 +239,7 @@ class ApplyJobCubit extends Cubit<ApplyJobState> {
     try {
       final result = await _appRepo.withdraw(app.id);
       emit(
-        ApplyJobSuccess(
-          application: result,
-          message: 'Đã rút hồ sơ ứng tuyển.',
-        ),
+        ApplyJobSuccess(application: result, message: 'Application withdrawn.'),
       );
     } catch (e) {
       emit(

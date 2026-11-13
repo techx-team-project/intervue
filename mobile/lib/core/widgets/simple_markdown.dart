@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intervue_flutter/core/theme/app_colors.dart';
 
-/// Hiển thị tập con Markdown mà bài viết blog dùng: tiêu đề, đoạn văn, danh sách,
-/// trích dẫn và chữ đậm/nghiêng.
+/// Renders the Markdown subset used by blog posts: headings, paragraphs, lists,
+/// quotes and bold/italic text.
 class SimpleMarkdown extends StatelessWidget {
   const SimpleMarkdown({required this.data, super.key});
 

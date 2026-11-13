@@ -35,13 +35,13 @@ class CandidateSkillModel extends Equatable {
   String get levelLabelVi {
     switch (level) {
       case 'BEGINNER':
-        return 'Cơ bản';
+        return 'Basic';
       case 'INTERMEDIATE':
-        return 'Trung cấp';
+        return 'Intermediate';
       case 'ADVANCED':
-        return 'Thành thạo';
+        return 'Fluent';
       case 'EXPERT':
-        return 'Chuyên gia';
+        return 'Expert';
       default:
         return level;
     }

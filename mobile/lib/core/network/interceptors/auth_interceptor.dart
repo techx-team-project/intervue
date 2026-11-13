@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:intervue_flutter/core/network/request_flags.dart';
 import 'package:intervue_flutter/core/storage/secure_storage.dart';
 
-/// Đính kèm `Authorization: Bearer <access_token>` vào mọi request.
+/// Attaches `Authorization: Bearer <access_token>` to every request.
 class AuthInterceptor extends Interceptor {
   AuthInterceptor(this._storage);
 

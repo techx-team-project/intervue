@@ -79,7 +79,7 @@ class IntervueAiSpotlightCard extends StatelessWidget {
                           ),
                           SizedBox(width: 4),
                           Text(
-                            'Trợ lý AI InterVue',
+                            'InterVue AI Assistant',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 11,
@@ -101,7 +101,7 @@ class IntervueAiSpotlightCard extends StatelessWidget {
 
                 // Basic clean headline
                 const Text(
-                  'Luyện Phỏng Vấn & Chấm Điểm CV',
+                  'Interview Practice & CV Scoring',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
@@ -111,7 +111,7 @@ class IntervueAiSpotlightCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 const Text(
-                  'Phân tích CV chuẩn ATS và luyện phỏng vấn kỹ thuật 1:1 theo JD.',
+                  'ATS-ready CV analysis and 1:1 technical interview practice based on the JD.',
                   style: TextStyle(
                     color: Color(0xFFCBD5E1),
                     fontSize: 11.5,
@@ -167,7 +167,7 @@ class IntervueAiSpotlightCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Phỏng vấn AI',
+                                      'AI Interview',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
@@ -176,7 +176,7 @@ class IntervueAiSpotlightCard extends StatelessWidget {
                                     ),
                                     SizedBox(height: 1),
                                     Text(
-                                      'Luyện tập 1:1',
+                                      '1:1 practice',
                                       style: TextStyle(
                                         color: Color(0xFF94A3B8),
                                         fontSize: 10.5,
@@ -236,7 +236,7 @@ class IntervueAiSpotlightCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Chấm điểm CV',
+                                      'CV Scoring',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
@@ -245,7 +245,7 @@ class IntervueAiSpotlightCard extends StatelessWidget {
                                     ),
                                     SizedBox(height: 1),
                                     Text(
-                                      'Chuẩn ATS',
+                                      'ATS-ready',
                                       style: TextStyle(
                                         color: Color(0xFF94A3B8),
                                         fontSize: 10.5,

@@ -4,8 +4,8 @@ enum CoverLetterStatus { loading, success, failure }
 
 enum CoverLetterLanguage {
   vietnamese(
-    'Tiếng Việt',
-    'Hãy viết thư xin việc hoàn toàn bằng tiếng Việt, giọng văn chuyên nghiệp, lịch sự.',
+    'Vietnamese',
+    'Write the cover letter entirely in Vietnamese, in a professional and polite tone.',
   ),
   english(
     'English',

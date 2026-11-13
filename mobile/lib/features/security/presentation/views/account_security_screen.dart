@@ -29,7 +29,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
-          'Bảo mật tài khoản',
+          'Account security',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,
@@ -94,7 +94,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                   ElevatedButton(
                     onPressed: () =>
                         context.read<SecurityCubit>().loadSecurityData(),
-                    child: const Text('Thử lại'),
+                    child: const Text('Try again'),
                   ),
                 ],
               ),
@@ -124,7 +124,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                           ),
                           SizedBox(width: 8),
                           Text(
-                            'Mật khẩu đăng nhập',
+                            'Sign-in password',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -135,7 +135,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                       ),
                       const SizedBox(height: 6),
                       const Text(
-                        'Nên đặt mật khẩu mạnh kết hợp chữ hoa, chữ thường, số và ký tự đặc biệt.',
+                        'Use a strong password that mixes upper and lower case letters, numbers and special characters.',
                         style: TextStyle(
                           fontSize: 12,
                           color: AppColors.textSecondary,
@@ -144,7 +144,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                       const SizedBox(height: 12),
                       OutlinedButton.icon(
                         icon: const Icon(Icons.edit, size: 16),
-                        label: const Text('Đổi mật khẩu'),
+                        label: const Text('Change password'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.primary,
                           side: const BorderSide(color: AppColors.primary),
@@ -182,7 +182,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                           ),
                           const SizedBox(width: 8),
                           const Text(
-                            'Xác thực 2 bước (2FA)',
+                            'Two-step verification (2FA)',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -202,7 +202,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              is2FaEnabled ? 'Đang bật' : 'Chưa bật',
+                              is2FaEnabled ? 'Enabled' : 'Not enabled',
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
@@ -217,8 +217,8 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                       const SizedBox(height: 8),
                       Text(
                         is2FaEnabled
-                            ? 'Tài khoản được bảo vệ bằng mã OTP từ ứng dụng xác thực mỗi khi đăng nhập.'
-                            : 'Thêm lớp bảo mật bổ sung bằng mã OTP từ Google Authenticator hoặc Authy.',
+                            ? 'Your account is protected by an OTP from your authenticator app at every sign-in.'
+                            : 'Add an extra layer of security with an OTP from Google Authenticator or Authy.',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.textSecondary,
@@ -228,7 +228,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                           loaded.status.confirmedAt != null) ...[
                         const SizedBox(height: 6),
                         Text(
-                          'Kích hoạt ngày: ${DateFormat('dd/MM/yyyy HH:mm').format(loaded.status.confirmedAt!.toLocal())}',
+                          'Enabled on: ${DateFormat('dd/MM/yyyy HH:mm').format(loaded.status.confirmedAt!.toLocal())}',
                           style: const TextStyle(
                             fontSize: 11,
                             color: AppColors.textMuted,
@@ -239,7 +239,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                       if (is2FaEnabled)
                         ElevatedButton.icon(
                           icon: const Icon(Icons.lock_open, size: 16),
-                          label: const Text('Tắt xác thực 2 bước'),
+                          label: const Text('Turn off two-step verification'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red.shade50,
                             foregroundColor: AppColors.error,
@@ -249,19 +249,19 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                             final confirm = await showDialog<bool>(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: const Text('Tắt 2FA?'),
+                                title: const Text('Turn off 2FA?'),
                                 content: const Text(
-                                  'Bạn có chắc muốn tắt bảo vệ 2 bước cho tài khoản?',
+                                  'Are you sure you want to turn off two-step protection for your account?',
                                 ),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx, false),
-                                    child: const Text('Hủy'),
+                                    child: const Text('Cancel'),
                                   ),
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx, true),
                                     child: const Text(
-                                      'Tắt 2FA',
+                                      'Turn off 2FA',
                                       style: TextStyle(color: AppColors.error),
                                     ),
                                   ),
@@ -278,7 +278,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                       else
                         ElevatedButton.icon(
                           icon: const Icon(Icons.qr_code, size: 16),
-                          label: const Text('Thiết lập 2FA ngay'),
+                          label: const Text('Set up 2FA now'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
                             foregroundColor: Colors.white,
@@ -309,7 +309,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Thiết bị đăng nhập (${sessions.length})',
+                            'Signed-in devices (${sessions.length})',
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -320,7 +320,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                       ),
                       const SizedBox(height: 6),
                       const Text(
-                        'Quản lý các thiết bị và trình duyệt đang duy trì phiên đăng nhập.',
+                        'Manage the devices and browsers that keep your account signed in.',
                         style: TextStyle(
                           fontSize: 12,
                           color: AppColors.textSecondary,
@@ -331,7 +331,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 8),
                           child: Text(
-                            'Không có phiên đăng nhập nào khác.',
+                            'There are no other active sessions.',
                             style: TextStyle(
                               fontSize: 12,
                               color: AppColors.textMuted,
@@ -400,7 +400,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                                                     BorderRadius.circular(4),
                                               ),
                                               child: const Text(
-                                                'Hiện tại',
+                                                'Present',
                                                 style: TextStyle(
                                                   fontSize: 9.5,
                                                   color: Colors.white,
@@ -417,7 +417,7 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                                           if (s.ipAddress != null) s.ipAddress!,
                                           if (s.location != null) s.location!,
                                           if (dateStr != null)
-                                            'Hoạt động: $dateStr',
+                                            'Active: $dateStr',
                                         ].join(' • '),
                                         style: const TextStyle(
                                           fontSize: 11,
@@ -434,28 +434,28 @@ class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
                                       size: 18,
                                       color: AppColors.error,
                                     ),
-                                    tooltip: 'Đăng xuất thiết bị này',
+                                    tooltip: 'Sign out this device',
                                     onPressed: () async {
                                       final confirm = await showDialog<bool>(
                                         context: context,
                                         builder: (ctx) => AlertDialog(
                                           title: const Text(
-                                            'Đăng xuất thiết bị?',
+                                            'Sign out this device?',
                                           ),
                                           content: Text(
-                                            'Bạn có chắc muốn kết thúc phiên đăng nhập trên "${s.deviceLabel}"?',
+                                            'Are you sure you want to end the session on "${s.deviceLabel}"?',
                                           ),
                                           actions: [
                                             TextButton(
                                               onPressed: () =>
                                                   Navigator.pop(ctx, false),
-                                              child: const Text('Hủy'),
+                                              child: const Text('Cancel'),
                                             ),
                                             TextButton(
                                               onPressed: () =>
                                                   Navigator.pop(ctx, true),
                                               child: const Text(
-                                                'Đăng xuất',
+                                                'Sign out',
                                                 style: TextStyle(
                                                   color: AppColors.error,
                                                 ),

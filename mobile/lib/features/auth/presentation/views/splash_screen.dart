@@ -62,7 +62,7 @@ class SplashScreen extends StatelessWidget {
               const SizedBox(height: 8),
 
               const Text(
-                'Nền tảng tuyển dụng IT hỗ trợ bởi AI',
+                'AI-powered IT recruitment platform',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
@@ -85,7 +85,7 @@ class SplashScreen extends StatelessWidget {
               const SizedBox(height: 16),
 
               const Text(
-                'Đang đồng bộ dữ liệu...',
+                'Syncing data...',
                 style: TextStyle(fontSize: 12, color: AppColors.textMuted),
               ),
 

@@ -67,14 +67,14 @@ class LoginRequiredView extends StatelessWidget {
                   ),
                 ),
                 child: const Text(
-                  'Đăng nhập',
+                  'Sign in',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
             TextButton(
               onPressed: () => context.push(RouteNames.register),
-              child: const Text('Chưa có tài khoản? Đăng ký ngay'),
+              child: const Text('Do not have an account? Sign up now'),
             ),
           ],
         ),

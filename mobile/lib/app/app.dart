@@ -21,14 +21,14 @@ class App extends StatelessWidget {
         listener: (context, state) {
           switch (state) {
             case AuthAuthenticated():
-              AppMessenger.success('Đăng nhập thành công');
+              AppMessenger.success('Signed in successfully');
             case AuthUnauthenticated(:final sessionExpired):
               if (sessionExpired) {
                 AppMessenger.error(
-                  'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại',
+                  'Your session has expired, please sign in again',
                 );
               } else {
-                AppMessenger.success('Đã đăng xuất');
+                AppMessenger.success('Signed out');
               }
             case AuthUnknown():
               break;

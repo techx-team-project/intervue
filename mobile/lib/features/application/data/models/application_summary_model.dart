@@ -64,25 +64,25 @@ class ApplicationSummaryModel extends Equatable {
   String get statusLabelVi {
     switch (status) {
       case 'DRAFT':
-        return 'Bản nháp';
+        return 'Draft';
       case 'APPLIED':
-        return 'Đã nộp đơn';
+        return 'Applied';
       case 'VIEWED':
-        return 'Đã xem hồ sơ';
+        return 'Viewed';
       case 'IN_REVIEW':
-        return 'Đang duyệt';
+        return 'In review';
       case 'INTERVIEW':
-        return 'Mời phỏng vấn';
+        return 'Interview invited';
       case 'OFFER':
-        return 'Đề nghị nhận việc';
+        return 'Offer';
       case 'HIRED':
-        return 'Đã trúng tuyển';
+        return 'Hired';
       case 'REJECTED':
-        return 'Chưa phù hợp';
+        return 'Not a match';
       case 'WITHDRAWN':
-        return 'Đã rút hồ sơ';
+        return 'Withdrawn';
       case 'JOB_CLOSED':
-        return 'Tin đã đóng';
+        return 'Job closed';
       default:
         return status;
     }

@@ -79,7 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Đăng ký thành công!',
+              'Registration successful!',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -88,7 +88,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Chào mừng ${_nameController.text.trim()} đến với hệ sinh thái tuyển dụng & luyện phỏng vấn AI InterVue.',
+              'Welcome ${_nameController.text.trim()} to the InterVue AI recruitment and interview practice ecosystem.',
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 13.5,
@@ -114,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 child: const Text(
-                  'Đăng nhập ngay',
+                  'Sign in now',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -160,7 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: const Text(
-              'Đã hiểu',
+              'Got it',
               style: TextStyle(
                 color: AppColors.primary,
                 fontWeight: FontWeight.bold,
@@ -255,7 +255,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     SizedBox(width: 6),
                     Text(
-                      'Đăng nhập',
+                      'Sign in',
                       style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w600,
@@ -271,7 +271,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           // InterVue Help badge
           InkWell(
             borderRadius: BorderRadius.circular(999),
-            onTap: () => _showNotice('Tổng đài hỗ trợ: 1900 068 889 (nhánh 2)'),
+            onTap: () => _showNotice('Support hotline: 1900 068 889 (ext. 2)'),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
@@ -289,7 +289,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   SizedBox(width: 6),
                   Text(
-                    'Hỗ trợ',
+                    'Support',
                     style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,
@@ -330,7 +330,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             // Title
             const Center(
               child: Text(
-                'Chào mừng bạn đến với InterVue',
+                'Welcome to InterVue',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -342,7 +342,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 4),
             const Center(
               child: Text(
-                'Tạo tài khoản để luyện phỏng vấn AI và tối ưu CV chuẩn ATS',
+                'Create an account to practice AI interviews and optimize your ATS-ready CV',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12.5, color: Color(0xFF64748B)),
               ),
@@ -353,11 +353,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             SocialAuthButtons(
               isRegister: true,
               onGooglePressed: () =>
-                  _showNotice('Đang kết nối tài khoản Google...'),
+                  _showNotice('Connecting your Google account...'),
               onFacebookPressed: () =>
-                  _showNotice('Đang kết nối tài khoản Facebook...'),
+                  _showNotice('Connecting your Facebook account...'),
               onLinkedInPressed: () =>
-                  _showNotice('Đang kết nối tài khoản LinkedIn...'),
+                  _showNotice('Connecting your LinkedIn account...'),
             ),
             const SizedBox(height: 20),
 
@@ -374,7 +374,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   color: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: const Text(
-                    'Hoặc đăng ký bằng email',
+                    'Or sign up with email',
                     style: TextStyle(
                       color: Color(0xFF94A3B8),
                       fontSize: 12,
@@ -388,7 +388,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
             // Full Name Field
             const Text(
-              'Họ và tên',
+              'Full name',
               style: TextStyle(
                 fontSize: 13.5,
                 fontWeight: FontWeight.w600,
@@ -402,13 +402,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               textInputAction: TextInputAction.next,
               style: const TextStyle(fontSize: 14, color: Color(0xFF1E293B)),
               decoration: _inputDecoration(
-                hintText: 'Nhập họ và tên của bạn',
+                hintText: 'Enter your full name',
                 prefixIcon: Icons.person_outline_rounded,
               ),
               validator: (value) {
                 final v = value?.trim() ?? '';
-                if (v.isEmpty) return 'Vui lòng nhập họ và tên';
-                if (v.length < 2) return 'Họ và tên tối thiểu 2 ký tự';
+                if (v.isEmpty) return 'Please enter your full name';
+                if (v.length < 2) {
+                  return 'Full name must be at least 2 characters';
+                }
                 return null;
               },
             ),
@@ -430,19 +432,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
               textInputAction: TextInputAction.next,
               style: const TextStyle(fontSize: 14, color: Color(0xFF1E293B)),
               decoration: _inputDecoration(
-                hintText: 'Nhập email của bạn',
+                hintText: 'Enter your email',
                 prefixIcon: Icons.mail_outline_rounded,
               ),
               validator: (value) =>
                   AppConstants.emailRegex.hasMatch(value?.trim() ?? '')
                   ? null
-                  : 'Email không hợp lệ',
+                  : 'Invalid email',
             ),
             const SizedBox(height: 14),
 
             // Password Field
             const Text(
-              'Mật khẩu',
+              'Password',
               style: TextStyle(
                 fontSize: 13.5,
                 fontWeight: FontWeight.w600,
@@ -456,7 +458,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               textInputAction: TextInputAction.next,
               style: const TextStyle(fontSize: 14, color: Color(0xFF1E293B)),
               decoration: _inputDecoration(
-                hintText: 'Tối thiểu 8 ký tự',
+                hintText: 'At least 8 characters',
                 prefixIcon: Icons.lock_outline_rounded,
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -476,13 +478,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               validator: (value) =>
                   (value?.length ?? 0) >= AppConstants.minPasswordLength
                   ? null
-                  : 'Mật khẩu tối thiểu ${AppConstants.minPasswordLength} ký tự',
+                  : 'Password must be at least ${AppConstants.minPasswordLength} characters',
             ),
             const SizedBox(height: 14),
 
             // Confirm Password Field
             const Text(
-              'Xác nhận mật khẩu',
+              'Confirm password',
               style: TextStyle(
                 fontSize: 13.5,
                 fontWeight: FontWeight.w600,
@@ -497,7 +499,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               onFieldSubmitted: (_) => _submit(),
               style: const TextStyle(fontSize: 14, color: Color(0xFF1E293B)),
               decoration: _inputDecoration(
-                hintText: 'Nhập lại mật khẩu của bạn',
+                hintText: 'Re-enter your password',
                 prefixIcon: Icons.lock_reset_rounded,
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -516,10 +518,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Vui lòng xác nhận mật khẩu';
+                  return 'Please confirm your password';
                 }
                 if (value != _passwordController.text) {
-                  return 'Mật khẩu xác nhận không trùng khớp';
+                  return 'Passwords do not match';
                 }
                 return null;
               },
@@ -570,17 +572,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           height: 1.4,
                         ),
                         children: [
-                          const TextSpan(text: 'Tôi đồng ý với '),
+                          const TextSpan(text: 'I agree to the '),
                           WidgetSpan(
                             alignment: PlaceholderAlignment.baseline,
                             baseline: TextBaseline.alphabetic,
                             child: GestureDetector(
                               onTap: () => _showTermsDialog(
-                                'Điều khoản dịch vụ',
-                                'Bằng việc đăng ký tài khoản trên hệ sinh thái InterVue, bạn đồng ý sử dụng nền tảng một cách hợp pháp, tôn trọng quyền sở hữu trí tuệ và tuân thủ các quy định bảo mật thông tin.',
+                                'Terms of Service',
+                                'By registering on InterVue, you agree to use the platform lawfully, respect intellectual property rights and comply with information security rules.',
                               ),
                               child: const Text(
-                                'Điều khoản dịch vụ',
+                                'Terms of Service',
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -590,17 +592,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                           ),
-                          const TextSpan(text: ' và '),
+                          const TextSpan(text: ' and '),
                           WidgetSpan(
                             alignment: PlaceholderAlignment.baseline,
                             baseline: TextBaseline.alphabetic,
                             child: GestureDetector(
                               onTap: () => _showTermsDialog(
-                                'Chính sách bảo mật',
-                                'InterVue cam kết bảo vệ dữ liệu cá nhân, thông tin CV và lịch sử phỏng vấn của ứng viên theo tiêu chuẩn an toàn cao nhất.',
+                                'Privacy Policy',
+                                'InterVue is committed to protecting candidates personal data, CV information and interview history to the highest safety standards.',
                               ),
                               child: const Text(
-                                'Chính sách bảo mật',
+                                'Privacy Policy',
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -610,7 +612,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                           ),
-                          const TextSpan(text: ' của InterVue.'),
+                          const TextSpan(text: ' of InterVue.'),
                         ],
                       ),
                     ),
@@ -622,7 +624,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const Padding(
                 padding: EdgeInsets.only(top: 6, left: 32),
                 child: Text(
-                  'Vui lòng đồng ý với Điều khoản & Chính sách',
+                  'Please agree to the Terms & Policy',
                   style: TextStyle(
                     fontSize: 11.5,
                     color: AppColors.error,
@@ -657,7 +659,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Đăng ký tài khoản',
+                            'Create account',
                             style: TextStyle(
                               fontSize: 14.5,
                               fontWeight: FontWeight.bold,
@@ -681,13 +683,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Đã có tài khoản? ',
+                  'Already have an account? ',
                   style: TextStyle(fontSize: 13.5, color: Color(0xFF475569)),
                 ),
                 GestureDetector(
                   onTap: () => context.go(RouteNames.login),
                   child: const Text(
-                    'Đăng nhập ngay',
+                    'Sign in now',
                     style: TextStyle(
                       fontSize: 13.5,
                       fontWeight: FontWeight.bold,
@@ -706,7 +708,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: TextButton(
                 onPressed: () => context.go(RouteNames.jobs),
                 child: const Text(
-                  'Bỏ qua & Khám phá việc làm ngay',
+                  'Skip & explore jobs now',
                   style: TextStyle(
                     fontSize: 13,
                     color: Color(0xFF64748B),
@@ -735,7 +737,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   children: [
                     TextSpan(
-                      text: 'Gặp khó khăn khi tạo tài khoản? Vui lòng gọi ',
+                      text: 'Having trouble creating an account? Please call ',
                     ),
                     TextSpan(
                       text: '1900 068 889',
@@ -752,7 +754,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextSpan(text: ' (giờ hành chính).'),
+                    TextSpan(text: ' (office hours).'),
                   ],
                 ),
               ),

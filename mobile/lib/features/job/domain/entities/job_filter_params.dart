@@ -12,7 +12,7 @@ class JobFilterParams extends Equatable {
   final String? keyword;
   final String? location;
 
-  /// Đơn vị: triệu đồng.
+  /// Unit: million VND.
   final double? minSalary;
   final String? level;
   final String? workingArrangement;

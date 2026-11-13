@@ -58,7 +58,7 @@ class _AddExperienceDialogState extends State<AddExperienceDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: const Text(
-        'Thêm kinh nghiệm làm việc',
+        'Add work experience',
         style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
       ),
       content: SingleChildScrollView(
@@ -70,29 +70,29 @@ class _AddExperienceDialogState extends State<AddExperienceDialog> {
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(
-                  labelText: 'Vị trí / Chức danh *',
+                  labelText: 'Position / Title *',
                   hintText: 'VD: Flutter Developer',
                 ),
                 validator: (v) => v == null || v.trim().isEmpty
-                    ? 'Vui lòng nhập vị trí'
+                    ? 'Please enter the position'
                     : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _companyController,
                 decoration: const InputDecoration(
-                  labelText: 'Công ty *',
+                  labelText: 'Company *',
                   hintText: 'VD: FPT Software',
                 ),
                 validator: (v) => v == null || v.trim().isEmpty
-                    ? 'Vui lòng nhập tên công ty'
+                    ? 'Please enter the company name'
                     : null,
               ),
               const SizedBox(height: 12),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
                 title: const Text(
-                  'Hiện đang làm việc tại đây',
+                  'I currently work here',
                   style: TextStyle(fontSize: 13),
                 ),
                 value: _isCurrent,
@@ -114,7 +114,7 @@ class _AddExperienceDialogState extends State<AddExperienceDialog> {
                         if (picked != null) setState(() => _startDate = picked);
                       },
                       child: Text(
-                        'Bắt đầu: ${dateFmt.format(_startDate)}',
+                        'Start: ${dateFmt.format(_startDate)}',
                         style: const TextStyle(fontSize: 12),
                       ),
                     ),
@@ -134,8 +134,8 @@ class _AddExperienceDialogState extends State<AddExperienceDialog> {
                         },
                         child: Text(
                           _endDate != null
-                              ? 'Đến: ${dateFmt.format(_endDate!)}'
-                              : 'Chọn ngày kết thúc',
+                              ? 'To: ${dateFmt.format(_endDate!)}'
+                              : 'Select end date',
                           style: const TextStyle(fontSize: 12),
                         ),
                       ),
@@ -148,8 +148,8 @@ class _AddExperienceDialogState extends State<AddExperienceDialog> {
                 controller: _descController,
                 maxLines: 3,
                 decoration: const InputDecoration(
-                  labelText: 'Mô tả công việc & Thành tích',
-                  hintText: 'Các dự án chính, công nghệ sử dụng...',
+                  labelText: 'Job description & Achievements',
+                  hintText: 'Main projects, technologies used...',
                 ),
               ),
             ],
@@ -159,7 +159,7 @@ class _AddExperienceDialogState extends State<AddExperienceDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _submit,
@@ -167,7 +167,7 @@ class _AddExperienceDialogState extends State<AddExperienceDialog> {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
           ),
-          child: const Text('Lưu'),
+          child: const Text('Save'),
         ),
       ],
     );

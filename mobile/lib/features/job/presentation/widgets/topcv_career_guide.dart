@@ -46,7 +46,7 @@ class TopCvCareerGuide extends StatelessWidget {
                       SizedBox(width: 6),
                       Flexible(
                         child: Text(
-                          'Cẩm nang nghề nghiệp & Bí kíp CV',
+                          'Career guide & CV tips',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -63,7 +63,7 @@ class TopCvCareerGuide extends StatelessWidget {
                 InkWell(
                   onTap: () => context.push(RouteNames.blog),
                   child: const Text(
-                    'Xem thêm',
+                    'See more',
                     style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,

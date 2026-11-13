@@ -100,7 +100,7 @@ void main() {
       cubit.state,
       const ApplicationListLoaded(
         applications: [sampleSummary],
-        actionMessage: 'Đã rút hồ sơ ứng tuyển.',
+        actionMessage: 'Application withdrawn.',
       ),
     );
   });

@@ -35,7 +35,7 @@ void main() {
         type: ScreeningQuestionType.choice,
         prompt: 'Kinh nghiệm?',
         required: true,
-        options: ['1 năm', '2 năm', '3+ năm'],
+        options: ['1 năm', '2 years', '3+ năm'],
       ),
     ],
   );
@@ -138,7 +138,7 @@ void main() {
               .having(
                 (s) => s.message,
                 'message',
-                'Nộp hồ sơ ứng tuyển thành công!',
+                'Application submitted successfully!',
               ),
         ]),
       );
@@ -162,7 +162,7 @@ void main() {
       isA<ApplyJobReady>().having(
         (s) => s.actionError,
         'actionError',
-        contains('Vui lòng trả lời câu hỏi bắt buộc'),
+        contains('Please answer the required question'),
       ),
     );
   });

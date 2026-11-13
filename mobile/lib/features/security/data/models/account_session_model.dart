@@ -14,8 +14,7 @@ class AccountSessionModel extends Equatable {
   factory AccountSessionModel.fromJson(Map<String, dynamic> json) =>
       AccountSessionModel(
         id: (json['id'] as num).toInt(),
-        deviceLabel:
-            json['deviceLabel'] as String? ?? 'Thiết bị không xác định',
+        deviceLabel: json['deviceLabel'] as String? ?? 'Unknown device',
         ipAddress: json['ipAddress'] as String?,
         location: json['location'] as String?,
         createdAt: json['createdAt'] != null

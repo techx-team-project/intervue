@@ -48,7 +48,8 @@ class SecurityCubit extends Cubit<SecurityState> {
         state.copyWith(
           status: newStatus,
           clearSetup: true,
-          actionMessage: 'Kích hoạt xác thực 2 bước (2FA) thành công!',
+          actionMessage:
+              'Two-factor authentication (2FA) enabled successfully!',
           isSubmittingAction: false,
         ),
       );
@@ -74,7 +75,7 @@ class SecurityCubit extends Cubit<SecurityState> {
         state.copyWith(
           status: newStatus,
           clearSetup: true,
-          actionMessage: 'Đã tắt xác thực 2 bước.',
+          actionMessage: 'Two-factor authentication turned off.',
           isSubmittingAction: false,
         ),
       );
@@ -105,7 +106,7 @@ class SecurityCubit extends Cubit<SecurityState> {
       );
       emit(
         state.copyWith(
-          actionMessage: 'Đổi mật khẩu tài khoản thành công!',
+          actionMessage: 'Password changed successfully!',
           isSubmittingAction: false,
         ),
       );
@@ -129,7 +130,7 @@ class SecurityCubit extends Cubit<SecurityState> {
       emit(
         state.copyWith(
           sessions: updatedSessions,
-          actionMessage: 'Đã ngắt phiên đăng nhập thiết bị.',
+          actionMessage: 'Device session signed out.',
         ),
       );
     } catch (e) {

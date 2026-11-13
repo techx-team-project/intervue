@@ -15,7 +15,7 @@ class CompanyRemoteDataSource {
     );
 
     if (response is! Map<String, dynamic>) {
-      throw const ServerException('Không thể tải thông tin doanh nghiệp');
+      throw const ServerException('Unable to load company information');
     }
 
     return PublicCompanyModel.fromJson(response);

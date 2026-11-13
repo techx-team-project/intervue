@@ -48,7 +48,7 @@ class _AddSkillDialogState extends State<AddSkillDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: const Text(
-        'Thêm kỹ năng chuyên môn',
+        'Add professional skill',
         style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
       ),
       content: SingleChildScrollView(
@@ -60,28 +60,25 @@ class _AddSkillDialogState extends State<AddSkillDialog> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Tên kỹ năng *',
+                  labelText: 'Skill name *',
                   hintText: 'VD: Flutter, React, SQL, Java',
                 ),
                 validator: (v) => v == null || v.trim().isEmpty
-                    ? 'Vui lòng nhập tên kỹ năng'
+                    ? 'Please enter the skill name'
                     : null,
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
                 initialValue: _level,
-                decoration: const InputDecoration(labelText: 'Trình độ'),
+                decoration: const InputDecoration(labelText: 'Proficiency'),
                 items: const [
-                  DropdownMenuItem(value: 'BEGINNER', child: Text('Cơ bản')),
+                  DropdownMenuItem(value: 'BEGINNER', child: Text('Basic')),
                   DropdownMenuItem(
                     value: 'INTERMEDIATE',
-                    child: Text('Trung cấp'),
+                    child: Text('Intermediate'),
                   ),
-                  DropdownMenuItem(
-                    value: 'ADVANCED',
-                    child: Text('Thành thạo'),
-                  ),
-                  DropdownMenuItem(value: 'EXPERT', child: Text('Chuyên gia')),
+                  DropdownMenuItem(value: 'ADVANCED', child: Text('Fluent')),
+                  DropdownMenuItem(value: 'EXPERT', child: Text('Expert')),
                 ],
                 onChanged: (val) {
                   if (val != null) setState(() => _level = val);
@@ -92,12 +89,11 @@ class _AddSkillDialogState extends State<AddSkillDialog> {
                 controller: _yearsController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'Số năm kinh nghiệm',
-                  suffixText: 'năm',
+                  labelText: 'Years of experience',
+                  suffixText: 'years',
                 ),
-                validator: (v) => v == null || int.tryParse(v) == null
-                    ? 'Không hợp lệ'
-                    : null,
+                validator: (v) =>
+                    v == null || int.tryParse(v) == null ? 'Invalid' : null,
               ),
             ],
           ),
@@ -106,7 +102,7 @@ class _AddSkillDialogState extends State<AddSkillDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _submit,
@@ -114,7 +110,7 @@ class _AddSkillDialogState extends State<AddSkillDialog> {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
           ),
-          child: const Text('Lưu'),
+          child: const Text('Save'),
         ),
       ],
     );

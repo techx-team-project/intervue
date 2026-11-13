@@ -13,7 +13,7 @@ class JobListCubit extends Cubit<JobListState> {
 
   final IJobRepository jobRepository;
 
-  /// [silent] giữ nguyên danh sách hiện tại trong lúc tải (dùng cho pull-to-refresh).
+  /// [silent] keeps the current list while loading (used for pull-to-refresh).
   Future<void> loadJobs({
     JobFilterParams filter = const JobFilterParams(),
     bool silent = false,

@@ -5,12 +5,12 @@ import 'package:intervue_flutter/core/network/request_flags.dart';
 import 'package:intervue_flutter/core/network/session_expired_notifier.dart';
 import 'package:intervue_flutter/core/storage/secure_storage.dart';
 
-/// Khi gặp `401`: gọi `/auth/refresh` (refresh token gửi qua cookie), lưu token mới rồi gọi lại request lỗi.
+/// On `401`: calls `/auth/refresh` (refresh token sent via cookie), stores the new token and retries the failed request.
 ///
-/// Dùng [QueuedInterceptor] nên các request 401 đồng thời được xử lý lần lượt:
-/// chỉ request đầu tiên refresh, các request sau thấy token đã đổi và retry luôn.
-/// [bareDio] là Dio không gắn interceptor — dùng cho refresh và retry để không
-/// bị khoá chờ chính hàng đợi của interceptor này.
+/// Uses [QueuedInterceptor], so concurrent 401 requests are handled one by one:
+/// only the first request refreshes; the rest see the rotated token and retry directly.
+/// [bareDio] is a Dio without interceptors, used for refresh and retry so it does not
+/// block on this interceptor's own queue.
 class RefreshTokenInterceptor extends QueuedInterceptor {
   RefreshTokenInterceptor({
     required this._bareDio,
@@ -83,7 +83,7 @@ class RefreshTokenInterceptor extends QueuedInterceptor {
     request.headers['Authorization'] = 'Bearer $token';
     request.extra[RequestFlags.retried] = true;
     final data = request.data;
-    // FormData chỉ được gửi một lần, phải clone trước khi gửi lại.
+    // FormData can only be sent once, so it must be cloned before retrying.
     if (data is FormData) request.data = data.clone();
     return _bareDio.fetch<dynamic>(request);
   }

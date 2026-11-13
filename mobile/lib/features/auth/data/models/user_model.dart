@@ -16,5 +16,5 @@ abstract class UserModel with _$UserModel {
       _$UserModelFromJson(json);
 }
 
-// Spring Boot thường trả id dạng số (Long); app dùng String thống nhất.
+// Spring Boot returns numeric (Long) ids; the app uses String consistently.
 String _idFromJson(Object? value) => value.toString();

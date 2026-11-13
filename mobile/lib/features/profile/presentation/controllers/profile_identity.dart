@@ -14,8 +14,8 @@ class ProfileIdentity {
   }) {
     if (!isAuthenticated) {
       return const ProfileIdentity(
-        name: 'Bạn chưa đăng nhập',
-        subtitle: 'Đăng nhập để đồng bộ hồ sơ',
+        name: 'You are not signed in',
+        subtitle: 'Sign in to sync your profile',
         initials: '?',
         isGuest: true,
       );
@@ -23,7 +23,7 @@ class ProfileIdentity {
     final user = profile is ProfileLoaded ? profile.user : null;
     if (user == null) {
       return const ProfileIdentity(
-        name: 'Đang tải tài khoản...',
+        name: 'Loading account...',
         subtitle: '',
         initials: '...',
         isGuest: false,

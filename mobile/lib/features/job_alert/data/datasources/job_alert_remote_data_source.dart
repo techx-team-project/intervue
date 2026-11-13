@@ -17,9 +17,7 @@ class JobAlertRemoteDataSource {
       List<dynamic>() => response,
       {'content': final List<dynamic> content} => content,
       {'items': final List<dynamic> items} => items,
-      _ => throw const ServerException(
-        'Dữ liệu thông báo việc làm không hợp lệ',
-      ),
+      _ => throw const ServerException('Invalid job alert data'),
     };
 
     return items
@@ -31,7 +29,7 @@ class JobAlertRemoteDataSource {
     final response = await _client.get(ApiEndpoints.candidateJobAlertSummary);
 
     if (response is! Map<String, dynamic>) {
-      throw const ServerException('Không thể tải thống kê thông báo việc làm');
+      throw const ServerException('Unable to load job alert statistics');
     }
 
     return JobAlertSummaryModel.fromJson(response);
@@ -44,7 +42,7 @@ class JobAlertRemoteDataSource {
     );
 
     if (response is! Map<String, dynamic>) {
-      throw const ServerException('Không thể tạo thông báo việc làm mới');
+      throw const ServerException('Unable to create the job alert');
     }
 
     return JobAlertModel.fromJson(response);
@@ -56,9 +54,7 @@ class JobAlertRemoteDataSource {
     );
 
     if (response is! Map<String, dynamic>) {
-      throw const ServerException(
-        'Không thể đổi trạng thái thông báo việc làm',
-      );
+      throw const ServerException('Unable to change the job alert status');
     }
 
     return JobAlertModel.fromJson(response);

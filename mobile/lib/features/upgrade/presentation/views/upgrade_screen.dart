@@ -16,7 +16,7 @@ class UpgradePlan {
     required this.features,
     this.badge,
     this.isHighlight = false,
-    this.buttonText = 'Nâng cấp ngay',
+    this.buttonText = 'Upgrade now',
   });
 
   final String id;
@@ -46,77 +46,77 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
   final List<UpgradePlan> _plans = const [
     UpgradePlan(
       id: 'free',
-      name: 'Gói Thường',
+      name: 'Free Plan',
       price: 0,
-      priceText: 'Miễn phí',
-      periodText: 'Vĩnh viễn',
-      buttonText: 'Gói hiện tại',
+      priceText: 'Free',
+      periodText: 'Forever',
+      buttonText: 'Current plan',
       features: [
-        'Tạo tối đa 6 CV & 6 Cover Letter',
-        'Thời gian chờ tải: 5 giây',
-        'Sử dụng các mẫu CV cơ bản',
-        'Huy hiệu xác minh: Không',
-        'Đẩy Top hiển thị: Không',
-        'Thông tin cạnh tranh: 3 việc làm',
+        'Create up to 6 CVs & 6 cover letters',
+        'Download wait time: 5 seconds',
+        'Use basic CV templates',
+        'Verified badge: No',
+        'Top placement boost: No',
+        'Competition insights: 3 jobs',
       ],
     ),
     UpgradePlan(
       id: 'pro',
-      name: 'Gói Pro VIP',
+      name: 'Pro VIP Plan',
       price: 50000,
-      priceText: '50.000 đ',
-      periodText: '1 tháng',
+      priceText: '50,000 VND',
+      periodText: '1 month',
       badge: 'PHỔ BIẾN',
-      buttonText: 'Nâng cấp Pro',
+      buttonText: 'Upgrade to Pro',
       features: [
-        'Tạo 12 CV & 12 Cover Letter cao cấp',
-        'Thời gian chờ tải siêu nhanh: 3 giây',
-        'Mở khóa trọn bộ Mẫu CV & CL Cao Cấp',
-        'Đẩy Top hồ sơ với NTD: 1 lần / ngày',
-        'Tích xanh xác minh tài khoản nổi bật',
-        'Ẩn watermark ©intervue.vn trên bản in',
-        'Tặng tài khoản Gitiho PRO trị giá 299K',
-        'Xem mức độ cạnh tranh không giới hạn',
+        'Create 12 premium CVs & 12 cover letters',
+        'Super fast download wait time: 3 seconds',
+        'Unlock all premium CV & cover letter templates',
+        'Boost your profile to recruiters: once a day',
+        'Highlighted verified badge',
+        'Hide the ©intervue.vn watermark on printouts',
+        'Free Gitiho PRO account worth 299K',
+        'Unlimited competition insights',
       ],
     ),
     UpgradePlan(
       id: 'premium',
-      name: 'Gói Premium VIP',
+      name: 'Premium VIP Plan',
       price: 500000,
-      priceText: '500.000 đ',
-      periodText: '1 năm (12 tháng)',
+      priceText: '500,000 VND',
+      periodText: '1 year (12 months)',
       badge: 'NỔI BẬT NHẤT',
       isHighlight: true,
-      buttonText: 'Nâng cấp Premium',
+      buttonText: 'Upgrade to Premium',
       features: [
-        'Tất cả quyền lợi của Gói Pro VIP',
-        'Tạo KHÔNG GIỚI HẠN CV & Cover Letter',
-        'Tải CV siêu tốc ngay lập tức (0s chờ)',
-        'Đẩy Top ưu tiên cao nhất với 320.000+ NTD',
-        'Mở khóa trọn bộ kịch bản Luyện Phỏng Vấn AI',
-        'Phân tích & Tối ưu từ khóa CV chuẩn ATS',
-        'Tặng trọn đời khóa học Tin học VP Gitiho',
-        'Hỗ trợ kỹ thuật & CV 1:1 ưu tiên 24/7',
+        'All benefits of the Pro VIP plan',
+        'UNLIMITED CVs & cover letters',
+        'Instant CV download (0s wait)',
+        'Highest-priority top placement with recruiters',
+        'Unlock all AI Mock Interview scenarios',
+        'ATS-ready CV keyword analysis & optimization',
+        'Lifetime Gitiho Office skills course',
+        'Priority 1:1 technical & CV support 24/7',
       ],
     ),
   ];
 
   final List<Map<String, String>> _faqs = const [
     {
-      'q': 'Tài khoản VIP được kích hoạt như thế nào sau khi thanh toán?',
-      'a': 'Hệ thống InterVue sẽ tự động kích hoạt tài khoản VIP ngay khi giao dịch chuyển khoản ngân hàng qua mã VietQR được xác nhận thành công (thông thường chỉ từ 10 - 30 giây).',
+      'q': 'How is the VIP account activated after payment?',
+      'a': 'InterVue activates your VIP account automatically as soon as the VietQR bank transfer is confirmed (usually within 10 - 30 seconds).',
     },
     {
-      'q': 'Tôi có thể thanh toán nâng cấp tài khoản bằng hình thức nào?',
-      'a': 'Bạn có thể thanh toán qua quét mã VietQR tự động từ mọi ứng dụng ngân hàng di động (Vietcombank, MB, Techcombank, VPBank,...) hoặc các ví điện tử như MoMo, ZaloPay.',
+      'q': 'Which payment methods can I use to upgrade?',
+      'a': 'You can pay by scanning the VietQR code from any mobile banking app (Vietcombank, MB, Techcombank, VPBank, ...) or e-wallets such as MoMo and ZaloPay.',
     },
     {
-      'q': 'Quyền lợi tài khoản VIP có áp dụng cho cả ứng dụng điện thoại không?',
-      'a': 'Có. Toàn bộ đặc quyền VIP được đồng bộ thời gian thực trên cả website máy tính, ứng dụng InterVue Android và iOS mà không phát sinh thêm chi phí.',
+      'q': 'Do VIP benefits apply to the mobile app too?',
+      'a': 'Yes. All VIP perks sync in real time across the website and the InterVue Android and iOS apps at no extra cost.',
     },
     {
-      'q': 'Khi hết hạn gói tài khoản VIP, hồ sơ CV của tôi có bị xóa không?',
-      'a': 'Không. Toàn bộ hồ sơ CV, thư xin việc và chứng chỉ của bạn vẫn được lưu giữ an toàn vĩnh viễn trên hệ thống. Tài khoản chỉ chuyển về trạng thái hạn mức gói Thường.',
+      'q': 'If my VIP plan expires, will my CVs be deleted?',
+      'a': 'No. All your CVs, cover letters and certificates stay safely stored. Your account simply returns to the Free plan limits.',
     },
   ];
 
@@ -132,15 +132,15 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
       if (code == 'TOPCV2026' || code == 'INTERVUEVIP') {
         _appliedVoucher = code;
         _discountPercent = 0.20; // 20% off
-        _voucherMessage = 'Áp dụng mã thành công! Bạn được giảm 20%.';
+        _voucherMessage = 'Code applied! You get 20% off.';
       } else if (code == 'PROVIP') {
         _appliedVoucher = code;
         _discountPercent = 0.10; // 10% off
-        _voucherMessage = 'Áp dụng mã thành công! Bạn được giảm 10%.';
+        _voucherMessage = 'Code applied! You get 10% off.';
       } else {
         _appliedVoucher = null;
         _discountPercent = 0.0;
-        _voucherMessage = 'Mã giảm giá không hợp lệ hoặc đã hết hạn.';
+        _voucherMessage = 'The discount code is invalid or has expired.';
       }
     });
   }
@@ -149,7 +149,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
     if (plan.price == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Bạn đang sử dụng gói tài khoản này.'),
+          content: Text('You are already on this plan.'),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -180,7 +180,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
         title: const Text(
-          'Nâng cấp tài khoản VIP',
+          'Upgrade to VIP',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -199,7 +199,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
         ),
         actions: [
           IconButton(
-            tooltip: 'Hỗ trợ nâng cấp',
+            tooltip: 'Upgrade support',
             icon: const Icon(
               Icons.support_agent_rounded,
               color: AppColors.primary,
@@ -207,9 +207,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text(
-                    'Hotline hỗ trợ tài khoản VIP: 1900 068 889 (nhánh 2)',
-                  ),
+                  content: Text('VIP support hotline: 1900 068 889 (ext. 2)'),
                   behavior: SnackBarBehavior.floating,
                 ),
               );
@@ -275,7 +273,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                 Icon(Icons.stars_rounded, color: AppColors.primary, size: 16),
                 SizedBox(width: 6),
                 Text(
-                  'NÂNG CẤP TÀI KHOẢN VIP',
+                  'UPGRADE TO VIP',
                   style: TextStyle(
                     fontSize: 11.5,
                     fontWeight: FontWeight.bold,
@@ -288,7 +286,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
           ),
           const SizedBox(height: 12),
           const Text(
-            'Mở khóa nhiều quyền lợi hơn',
+            'Unlock more benefits',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 24,
@@ -299,7 +297,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Nâng tầm hồ sơ ứng tuyển, loại bỏ mọi giới hạn tải CV và tiếp cận nhanh chóng với các Nhà tuyển dụng hàng đầu.',
+            'Elevate your application, remove all CV download limits and reach top recruiters faster.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,
@@ -340,7 +338,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
               ),
               SizedBox(width: 8),
               Text(
-                'Mã ưu đãi / Voucher giảm giá',
+                'Promo code / discount voucher',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -357,7 +355,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                   controller: _voucherController,
                   textCapitalization: TextCapitalization.characters,
                   decoration: InputDecoration(
-                    hintText: 'Nhập mã (VD: TOPCV2026, INTERVUEVIP)',
+                    hintText: 'Enter code (e.g. TOPCV2026, INTERVUEVIP)',
                     hintStyle: const TextStyle(
                       fontSize: 12.5,
                       color: Color(0xFF94A3B8),
@@ -395,7 +393,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                   ),
                 ),
                 child: const Text(
-                  'Áp dụng',
+                  'Apply',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -550,7 +548,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Thời hạn: ${plan.periodText}',
+                        'Duration: ${plan.periodText}',
                         style: const TextStyle(
                           fontSize: 12,
                           color: Color(0xFF64748B),
@@ -573,7 +571,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                         ),
                       ),
                       Text(
-                        '${discountedPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')} đ',
+                        '${discountedPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} VND',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
@@ -704,7 +702,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
               ),
               SizedBox(width: 8),
               Text(
-                'So sánh quyền lợi chi tiết',
+                'Detailed benefit comparison',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -714,28 +712,28 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
             ],
           ),
           const SizedBox(height: 14),
-          _comparisonRow('Số lượng CV tạo', '6 CV', '12 CV', 'Không giới hạn'),
-          _comparisonRow('Thời gian chờ tải', '5s', '3s', 'Tải ngay (0s)'),
+          _comparisonRow('CVs you can create', '6 CVs', '12 CVs', 'Unlimited'),
+          _comparisonRow('Download wait time', '5s', '3s', 'Instant (0s)'),
           _comparisonRow(
-            'Đẩy Top hồ sơ',
+            'Profile boost',
             '—',
-            '1 lần/ngày',
-            'Ưu tiên cao nhất',
+            'Once a day',
+            'Highest priority',
           ),
-          _comparisonRow('Tích xanh VIP', '—', '✓ Có', '✓ Có'),
-          _comparisonRow('Mẫu CV Cao Cấp', '—', '✓ Mở khóa', '✓ Trọn bộ'),
+          _comparisonRow('VIP verified badge', '—', '✓ Yes', '✓ Yes'),
           _comparisonRow(
-            'Luyện phỏng vấn AI',
-            'Cơ bản',
-            'Cơ bản',
-            'Mở khóa trọn bộ',
-          ),
-          _comparisonRow(
-            'Quà tặng Gitiho 299K',
+            'Premium CV templates',
             '—',
-            '✓ Tặng kèm',
-            '✓ Tặng kèm',
+            '✓ Unlocked',
+            '✓ Full set',
           ),
+          _comparisonRow(
+            'AI Mock Interview',
+            'Basic',
+            'Basic',
+            'Fully unlocked',
+          ),
+          _comparisonRow('Gitiho 299K gift', '—', '✓ Included', '✓ Included'),
         ],
       ),
     );
@@ -823,7 +821,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
               ),
               SizedBox(width: 8),
               Text(
-                'Câu hỏi thường gặp',
+                'Frequently asked questions',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -913,7 +911,7 @@ class _PaymentQrBottomSheetState extends State<_PaymentQrBottomSheet> {
     Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Đã sao chép $label'),
+        content: Text('Copied $label'),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
       ),
@@ -940,7 +938,7 @@ class _PaymentQrBottomSheetState extends State<_PaymentQrBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final formattedPrice =
-        '${widget.finalPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')} đ';
+        '${widget.finalPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} VND';
 
     return Container(
       constraints: BoxConstraints(
@@ -990,7 +988,7 @@ class _PaymentQrBottomSheetState extends State<_PaymentQrBottomSheet> {
               const SizedBox(height: 16),
               Center(
                 child: Text(
-                  'Kích hoạt ${widget.plan.name} thành công!',
+                  '${widget.plan.name} activated successfully!',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 18,
@@ -1001,7 +999,7 @@ class _PaymentQrBottomSheetState extends State<_PaymentQrBottomSheet> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Chúc mừng bạn! Toàn bộ đặc quyền VIP đã sẵn sàng. Bạn có thể tạo CV không giới hạn, tải siêu tốc và đẩy Top hồ sơ với nhà tuyển dụng ngay.',
+                'Congratulations! All VIP perks are ready. You can now create unlimited CVs, download instantly and boost your profile to recruiters.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 13,
@@ -1023,7 +1021,7 @@ class _PaymentQrBottomSheetState extends State<_PaymentQrBottomSheet> {
                     ),
                   ),
                   child: const Text(
-                    'Hoàn tất & Tiếp tục',
+                    'Done & Continue',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -1052,7 +1050,7 @@ class _PaymentQrBottomSheetState extends State<_PaymentQrBottomSheet> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Thời hạn: ${widget.plan.periodText}',
+                          'Duration: ${widget.plan.periodText}',
                           style: const TextStyle(
                             fontSize: 12,
                             color: Color(0xFF475569),
@@ -1072,7 +1070,7 @@ class _PaymentQrBottomSheetState extends State<_PaymentQrBottomSheet> {
                           ),
                         ),
                         Text(
-                          'Hết hạn: ${_formatCountdown(_countdown)}',
+                          'Expires in: ${_formatCountdown(_countdown)}',
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
@@ -1120,7 +1118,7 @@ class _PaymentQrBottomSheetState extends State<_PaymentQrBottomSheet> {
               const SizedBox(height: 8),
               const Center(
                 child: Text(
-                  'Mở app Ngân hàng hoặc Ví để quét mã VietQR',
+                  'Open your banking app or wallet to scan the VietQR code',
                   style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
                 ),
               ),
@@ -1136,17 +1134,17 @@ class _PaymentQrBottomSheetState extends State<_PaymentQrBottomSheet> {
                 ),
                 child: Column(
                   children: [
-                    _infoRow('Ngân hàng', 'MB Bank (Quân Đội)', null),
+                    _infoRow('Bank', 'MB Bank (Military Bank)', null),
                     _infoRow(
-                      'Số tài khoản',
+                      'Account number',
                       '0987654321',
-                      () => _copyToClipboard('0987654321', 'Số tài khoản'),
+                      () => _copyToClipboard('0987654321', 'Account number'),
                     ),
-                    _infoRow('Chủ tài khoản', 'CONG TY INTERVUE', null),
+                    _infoRow('Account holder', 'CONG TY INTERVUE', null),
                     _infoRow(
-                      'Nội dung CK',
+                      'Transfer note',
                       widget.orderCode,
-                      () => _copyToClipboard(widget.orderCode, 'Nội dung CK'),
+                      () => _copyToClipboard(widget.orderCode, 'Transfer note'),
                     ),
                   ],
                 ),
@@ -1180,7 +1178,7 @@ class _PaymentQrBottomSheetState extends State<_PaymentQrBottomSheet> {
                             Icon(Icons.check_circle_outline_rounded, size: 18),
                             SizedBox(width: 8),
                             Text(
-                              'Tôi đã chuyển khoản',
+                              'I have transferred',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,

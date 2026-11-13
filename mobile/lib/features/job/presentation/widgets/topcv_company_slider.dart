@@ -41,12 +41,12 @@ class TopCvCompanySlider extends StatelessWidget {
           : name.substring(0, name.length.clamp(1, 3)).toUpperCase();
       return TopCvCompany(
         name: name,
-        industry: places[name]!.isEmpty ? 'Đang tuyển dụng' : places[name]!,
+        industry: places[name]!.isEmpty ? 'Hiring' : places[name]!,
         jobCount: counts[name]!,
         avatarText: initials,
         logoBgColorHex: _logoColors[name.hashCode.abs() % _logoColors.length],
         verified: false,
-        badge: 'Đang tuyển',
+        badge: 'Hiring',
       );
     }).toList();
   }
@@ -79,7 +79,7 @@ class TopCvCompanySlider extends StatelessWidget {
                       SizedBox(width: 6),
                       Flexible(
                         child: Text(
-                          'Top Doanh nghiệp hàng đầu',
+                          'Top leading companies',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -96,7 +96,7 @@ class TopCvCompanySlider extends StatelessWidget {
                 InkWell(
                   onTap: () {},
                   child: const Text(
-                    'Xem tất cả',
+                    'View all',
                     style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,
@@ -223,7 +223,7 @@ class TopCvCompanySlider extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            '${company.jobCount} việc làm',
+                            '${company.jobCount} jobs',
                             style: const TextStyle(
                               fontSize: 10.5,
                               color: AppColors.primaryDarker,

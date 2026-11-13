@@ -22,11 +22,11 @@ class _AddLanguageDialogState extends State<AddLanguageDialog> {
   String _proficiency = 'INTERMEDIATE';
 
   static const _levels = [
-    {'value': 'BASIC', 'label': 'Sơ cấp (A1 - A2)'},
-    {'value': 'INTERMEDIATE', 'label': 'Trung cấp (B1 - B2)'},
-    {'value': 'ADVANCED', 'label': 'Nâng cao (C1)'},
-    {'value': 'FLUENT', 'label': 'Thành thạo (C2)'},
-    {'value': 'NATIVE', 'label': 'Bản ngữ'},
+    {'value': 'BASIC', 'label': 'Basic (A1 - A2)'},
+    {'value': 'INTERMEDIATE', 'label': 'Intermediate (B1 - B2)'},
+    {'value': 'ADVANCED', 'label': 'Advanced (C1)'},
+    {'value': 'FLUENT', 'label': 'Fluent (C2)'},
+    {'value': 'NATIVE', 'label': 'Native'},
   ];
 
   @override
@@ -54,7 +54,7 @@ class _AddLanguageDialogState extends State<AddLanguageDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: const Text(
-        'Thêm ngoại ngữ',
+        'Add language',
         style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
       ),
       content: SingleChildScrollView(
@@ -66,17 +66,17 @@ class _AddLanguageDialogState extends State<AddLanguageDialog> {
               TextFormField(
                 controller: _languageController,
                 decoration: const InputDecoration(
-                  labelText: 'Ngôn ngữ *',
-                  hintText: 'VD: Tiếng Anh, Tiếng Nhật, Tiếng Hàn',
+                  labelText: 'Language *',
+                  hintText: 'e.g. English, Japanese, Korean',
                 ),
                 validator: (v) => v == null || v.trim().isEmpty
-                    ? 'Vui lòng nhập tên ngôn ngữ'
+                    ? 'Please enter the language'
                     : null,
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
                 initialValue: _proficiency,
-                decoration: const InputDecoration(labelText: 'Trình độ *'),
+                decoration: const InputDecoration(labelText: 'Proficiency *'),
                 items: _levels
                     .map(
                       (item) => DropdownMenuItem(
@@ -93,7 +93,7 @@ class _AddLanguageDialogState extends State<AddLanguageDialog> {
               TextFormField(
                 controller: _certController,
                 decoration: const InputDecoration(
-                  labelText: 'Chứng chỉ đạt được (tùy chọn)',
+                  labelText: 'Certificate obtained (optional)',
                   hintText: 'VD: IELTS 7.5, JLPT N2, TOEIC 850',
                 ),
               ),
@@ -104,7 +104,7 @@ class _AddLanguageDialogState extends State<AddLanguageDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _submit,
@@ -112,7 +112,7 @@ class _AddLanguageDialogState extends State<AddLanguageDialog> {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
           ),
-          child: const Text('Lưu ngoại ngữ'),
+          child: const Text('Save language'),
         ),
       ],
     );

@@ -49,7 +49,7 @@ class CandidateCvCubit extends Cubit<CandidateCvState> {
       }
     } catch (_) {
       if (_authBloc.state is AuthAuthenticated) {
-        emit(const CandidateCvError('Không thể tải danh sách CV'));
+        emit(const CandidateCvError('Unable to load the CV list'));
       }
     }
   }
@@ -77,7 +77,7 @@ class CandidateCvCubit extends Cubit<CandidateCvState> {
       emit(
         CandidateCvLoaded(
           cvs: updated,
-          actionMessage: 'Tải lên CV thành công!',
+          actionMessage: 'CV uploaded successfully!',
         ),
       );
       return true;
@@ -90,7 +90,7 @@ class CandidateCvCubit extends Cubit<CandidateCvState> {
       return false;
     } catch (_) {
       const msg =
-          'Tải lên CV thất bại. Vui lòng kiểm tra dung lượng (tối đa 5MB) và định dạng PDF';
+          'CV upload failed. Please check the size (max 5MB) and the PDF format';
       if (current is CandidateCvLoaded) {
         emit(current.copyWith(isUploading: false, actionMessage: msg));
       } else {
@@ -107,7 +107,7 @@ class CandidateCvCubit extends Cubit<CandidateCvState> {
       emit(
         CandidateCvLoaded(
           cvs: updated,
-          actionMessage: 'Đổi tên CV thành công!',
+          actionMessage: 'CV renamed successfully!',
         ),
       );
       return true;
@@ -127,7 +127,10 @@ class CandidateCvCubit extends Cubit<CandidateCvState> {
       await _repository.deleteCandidateCv(id);
       final updated = await _repository.getCandidateCvs();
       emit(
-        CandidateCvLoaded(cvs: updated, actionMessage: 'Đã xóa CV thành công!'),
+        CandidateCvLoaded(
+          cvs: updated,
+          actionMessage: 'CV deleted successfully!',
+        ),
       );
       return true;
     } on AppException catch (e) {

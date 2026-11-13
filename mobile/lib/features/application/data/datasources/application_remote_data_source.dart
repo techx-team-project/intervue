@@ -33,7 +33,7 @@ class ApplicationRemoteDataSource {
       List<dynamic>() => response,
       {'content': final List<dynamic> content} => content,
       {'items': final List<dynamic> items} => items,
-      _ => throw const ServerException('Dữ liệu hồ sơ ứng tuyển không hợp lệ'),
+      _ => throw const ServerException('Invalid application data'),
     };
 
     return items
@@ -47,7 +47,7 @@ class ApplicationRemoteDataSource {
     );
 
     if (response is! Map<String, dynamic>) {
-      throw const ServerException('Không thể tải biểu mẫu ứng tuyển');
+      throw const ServerException('Unable to load the application form');
     }
 
     return ApplyFormModel.fromJson(response);
@@ -59,7 +59,7 @@ class ApplicationRemoteDataSource {
     );
 
     if (response is! Map<String, dynamic>) {
-      throw const ServerException('Không thể tải chi tiết hồ sơ');
+      throw const ServerException('Unable to load application details');
     }
 
     return ApplicationModel.fromJson(response);
@@ -72,7 +72,7 @@ class ApplicationRemoteDataSource {
     );
 
     if (response is! Map<String, dynamic>) {
-      throw const ServerException('Không thể lưu bản nháp');
+      throw const ServerException('Unable to save the draft');
     }
 
     return ApplicationModel.fromJson(response);
@@ -85,7 +85,7 @@ class ApplicationRemoteDataSource {
     );
 
     if (response is! Map<String, dynamic>) {
-      throw const ServerException('Không thể nộp hồ sơ');
+      throw const ServerException('Unable to submit the application');
     }
 
     return ApplicationModel.fromJson(response);
@@ -97,7 +97,7 @@ class ApplicationRemoteDataSource {
     );
 
     if (response is! Map<String, dynamic>) {
-      throw const ServerException('Không thể rút hồ sơ');
+      throw const ServerException('Unable to withdraw the application');
     }
 
     return ApplicationModel.fromJson(response);
@@ -110,7 +110,7 @@ class ApplicationRemoteDataSource {
     );
 
     if (response is! Map<String, dynamic>) {
-      throw const ServerException('Không thể nộp lại hồ sơ');
+      throw const ServerException('Unable to reapply');
     }
 
     return ApplicationModel.fromJson(response);

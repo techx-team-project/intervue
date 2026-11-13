@@ -9,7 +9,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = const AppBlocObserver();
   configureDependencies();
-  // Đọc token đã lưu; router đang ở splash sẽ chuyển trang khi có kết quả.
+  // Reads the stored token; the router on splash navigates once there is a result.
   getIt<AuthBloc>().add(const AuthStarted());
   runApp(const App());
 }

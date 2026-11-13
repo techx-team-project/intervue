@@ -6,7 +6,7 @@ abstract final class FileHelpers {
     return dot < 0 ? '' : path.substring(dot + 1).toLowerCase();
   }
 
-  /// CV hợp lệ: đúng định dạng cho phép và không vượt dung lượng tối đa.
+  /// Valid CV: allowed format and within the maximum size.
   static bool isValidCv({required String path, required int sizeBytes}) =>
       AppConstants.allowedCvExtensions.contains(extensionOf(path)) &&
       sizeBytes <= AppConstants.maxCvSizeBytes;

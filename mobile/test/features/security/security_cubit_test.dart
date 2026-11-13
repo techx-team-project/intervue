@@ -29,7 +29,7 @@ void main() {
       id: 1,
       deviceLabel: 'Pixel 7 (Android 15)',
       ipAddress: '10.0.2.2',
-      location: 'Hà Nội',
+      location: 'Hanoi',
       current: true,
       createdAt: DateTime(2026, 1, 1),
     ),
@@ -37,7 +37,7 @@ void main() {
       id: 2,
       deviceLabel: 'Chrome Windows',
       ipAddress: '192.168.1.5',
-      location: 'Hà Nội',
+      location: 'Hanoi',
       current: false,
       createdAt: DateTime(2026, 1, 2),
     ),
@@ -133,7 +133,7 @@ void main() {
       expect(loaded.status.enabled, true);
       expect(
         loaded.actionMessage,
-        'Kích hoạt xác thực 2 bước (2FA) thành công!',
+        'Two-factor authentication (2FA) enabled successfully!',
       );
     });
 
@@ -156,7 +156,7 @@ void main() {
       expect(cubit.state, isA<SecurityLoaded>());
       final loaded = cubit.state as SecurityLoaded;
       expect(loaded.status.enabled, false);
-      expect(loaded.actionMessage, 'Đã tắt xác thực 2 bước.');
+      expect(loaded.actionMessage, 'Two-factor authentication turned off.');
     });
 
     test('changePassword executes and emits actionMessage', () async {
@@ -180,7 +180,7 @@ void main() {
       );
 
       final loaded = cubit.state as SecurityLoaded;
-      expect(loaded.actionMessage, 'Đổi mật khẩu tài khoản thành công!');
+      expect(loaded.actionMessage, 'Password changed successfully!');
     });
 
     test('revokeSession terminates session and reloads', () async {
@@ -199,7 +199,7 @@ void main() {
 
       final loaded = cubit.state as SecurityLoaded;
       expect(loaded.sessions.length, 1);
-      expect(loaded.actionMessage, 'Đã ngắt phiên đăng nhập thiết bị.');
+      expect(loaded.actionMessage, 'Device session signed out.');
     });
   });
 }

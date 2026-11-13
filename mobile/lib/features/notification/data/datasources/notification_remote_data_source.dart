@@ -18,7 +18,7 @@ class NotificationRemoteDataSource {
     );
     final items = data is Map<String, dynamic> ? data['items'] : null;
     if (items is! List<dynamic>) {
-      throw const ServerException('Dữ liệu thông báo không hợp lệ');
+      throw const ServerException('Invalid notification data');
     }
     return items
         .map((e) => NotificationItem.fromJson(e as Map<String, dynamic>))
@@ -28,7 +28,7 @@ class NotificationRemoteDataSource {
   Future<int> getUnreadCount() async {
     final data = await _client.get(ApiEndpoints.notificationsUnreadCount);
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Dữ liệu thông báo không hợp lệ');
+      throw const ServerException('Invalid notification data');
     }
     return (data['total'] as num?)?.toInt() ?? 0;
   }

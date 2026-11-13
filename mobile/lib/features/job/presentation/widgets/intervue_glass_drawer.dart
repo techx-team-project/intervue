@@ -86,9 +86,8 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                                 icon: Icons.login_rounded,
                                 iconColor: AppColors.primary,
                                 iconBg: AppColors.primaryLight,
-                                title: 'Đăng nhập / Đăng ký',
-                                subtitle:
-                                    'Mở khóa chấm CV, lưu việc làm & thông báo',
+                                title: 'Sign in / Sign up',
+                                subtitle: 'Unlock CV scoring, saved jobs & notifications',
                                 onTap: () {
                                   Navigator.pop(context);
                                   context.push(RouteNames.login);
@@ -98,13 +97,13 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                             ],
                             if (isAuthenticated) ...[
                               // Section: AI Superpowers
-                              _buildSectionTitle('TRỢ LÝ AI INTERVUE'),
+                              _buildSectionTitle('INTERVUE AI ASSISTANT'),
                               _buildGlassTile(
                                 icon: Icons.smart_toy_rounded,
                                 iconColor: AppColors.accentPurple,
                                 iconBg: AppColors.accentPurpleLight,
-                                title: 'Luyện Phỏng Vấn AI',
-                                subtitle: 'Phỏng vấn 1:1 theo JD bằng AI',
+                                title: 'AI Mock Interview',
+                                subtitle: '1:1 AI interview based on the JD',
                                 badge: 'HOT',
                                 onTap: () {
                                   Navigator.pop(context);
@@ -115,8 +114,8 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                                 icon: Icons.document_scanner_rounded,
                                 iconColor: AppColors.primary,
                                 iconBg: AppColors.primaryLight,
-                                title: 'AI Chấm Điểm CV',
-                                subtitle: 'So khớp chuẩn ATS & đề xuất sửa',
+                                title: 'AI CV Scoring',
+                                subtitle: 'ATS matching & improvement tips',
                                 badge: 'AI',
                                 onTap: () {
                                   Navigator.pop(context);
@@ -128,14 +127,14 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                             ],
 
                             // Section: Career Management
-                            _buildSectionTitle('QUẢN LÝ VIỆC LÀM'),
+                            _buildSectionTitle('JOB MANAGEMENT'),
                             if (isAuthenticated)
                               _buildGlassTile(
                                 icon: Icons.bookmark_rounded,
                                 iconColor: AppColors.accentOrange,
                                 iconBg: AppColors.accentOrangeLight,
-                                title: 'Việc Làm Đã Lưu',
-                                subtitle: 'Theo dõi tin đã đánh dấu',
+                                title: 'Saved Jobs',
+                                subtitle: 'Track bookmarked posts',
                                 onTap: () {
                                   Navigator.pop(context);
                                   widget.onSavedJobsTap?.call();
@@ -145,8 +144,8 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                               icon: Icons.work_outline_rounded,
                               iconColor: AppColors.accentBlue,
                               iconBg: AppColors.accentBlueLight,
-                              title: 'Khám Phá Việc Làm',
-                              subtitle: 'Tìm kiếm hàng ngàn cơ hội mới',
+                              title: 'Explore Jobs',
+                              subtitle: 'Find thousands of new opportunities',
                               onTap: () {
                                 Navigator.pop(context);
                                 widget.onSelectTab?.call(1);
@@ -156,8 +155,8 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                               icon: Icons.description_outlined,
                               iconColor: AppColors.primaryDark,
                               iconBg: AppColors.primaryLight,
-                              title: 'Tạo CV Chuyên Nghiệp',
-                              subtitle: 'Kho mẫu CV chuẩn TopCV/ATS',
+                              title: 'Create a Professional CV',
+                              subtitle: 'ATS-ready CV templates',
                               onTap: () {
                                 Navigator.pop(context);
                                 widget.onSelectTab?.call(2);
@@ -167,13 +166,13 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                             const SizedBox(height: 14),
 
                             // Section: Utility & Settings
-                            _buildSectionTitle('TIỆN ÍCH & HỆ THỐNG'),
+                            _buildSectionTitle('TOOLS & SYSTEM'),
                             _buildGlassTile(
                               icon: Icons.smart_toy_rounded,
                               iconColor: AppColors.primary,
                               iconBg: const Color(0xFFE6F4EA),
-                              title: 'Trợ Lý InterVue Bot AI',
-                              subtitle: 'Tư vấn CV, phỏng vấn giả lập & lương',
+                              title: 'InterVue AI Assistant',
+                              subtitle: 'CV advice, mock interviews & salary',
                               badge: 'HOT AI',
                               onTap: () {
                                 Navigator.pop(context);
@@ -185,9 +184,8 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                                 icon: Icons.stars_rounded,
                                 iconColor: const Color(0xFFD97706),
                                 iconBg: const Color(0xFFFEF3C7),
-                                title: 'Nâng Cấp Tài Khoản VIP',
-                                subtitle:
-                                    'Gói Pro & Premium - Mở khóa đặc quyền',
+                                title: 'Upgrade to VIP',
+                                subtitle: 'Pro & Premium plans - unlock perks',
                                 badge: 'VIP',
                                 onTap: () {
                                   Navigator.pop(context);
@@ -198,8 +196,8 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                               icon: Icons.calculate_outlined,
                               iconColor: const Color(0xFF0F766E),
                               iconBg: const Color(0xFFCCFBF1),
-                              title: 'Tính Lương Gross - Net',
-                              subtitle: 'Chuẩn quy định bảo hiểm 2026',
+                              title: 'Gross - Net Salary',
+                              subtitle: 'Based on 2026 insurance rules',
                               onTap: () {
                                 Navigator.pop(context);
                               },
@@ -209,8 +207,8 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                                 icon: Icons.settings_outlined,
                                 iconColor: AppColors.textSecondary,
                                 iconBg: AppColors.borderSubtle,
-                                title: 'Cài Đặt Tài Khoản',
-                                subtitle: 'Bảo mật, thông báo & hồ sơ',
+                                title: 'Account Settings',
+                                subtitle: 'Security, notifications & profile',
                                 onTap: () {
                                   Navigator.pop(context);
                                   widget.onSelectTab?.call(4);
@@ -400,8 +398,8 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                       const SizedBox(width: 6),
                       Text(
                         _isJobSeeking
-                            ? 'Đang bật tìm việc'
-                            : 'Đang tắt tìm việc',
+                            ? 'Open to work: on'
+                            : 'Open to work: off',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -597,7 +595,7 @@ class _IntervueGlassDrawerState extends State<IntervueGlassDrawer> {
                     ),
                     SizedBox(width: 4),
                     Text(
-                      'Đăng xuất',
+                      'Sign out',
                       style: TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,

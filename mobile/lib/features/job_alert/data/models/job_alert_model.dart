@@ -68,35 +68,35 @@ class JobAlertModel extends Equatable {
   final DateTime? createdAt;
   final int deliveredCount;
 
-  String get frequencyLabelVi {
+  String get frequencyLabel {
     switch (frequency) {
       case 'INSTANT':
-        return 'Tức thì';
+        return 'Instant';
       case 'WEEKLY':
-        return 'Hàng tuần';
+        return 'Weekly';
       case 'DAILY':
       default:
-        return 'Hàng ngày';
+        return 'Daily';
     }
   }
 
   String get workModeLabelVi {
     switch (workMode) {
       case 'REMOTE':
-        return 'Làm từ xa (Remote)';
+        return 'Remote';
       case 'HYBRID':
-        return 'Linh hoạt (Hybrid)';
+        return 'Hybrid';
       case 'ONSITE':
-        return 'Tại văn phòng (Onsite)';
+        return 'Onsite';
       default:
-        return workMode ?? 'Tất cả hình thức';
+        return workMode ?? 'All work modes';
     }
   }
 
   String get careerLevelLabelVi {
     switch (careerLevel) {
       case 'INTERN':
-        return 'Thực tập sinh';
+        return 'Intern';
       case 'FRESHER':
         return 'Fresher';
       case 'JUNIOR':
@@ -106,26 +106,26 @@ class JobAlertModel extends Equatable {
       case 'SENIOR':
         return 'Senior';
       case 'LEAD':
-        return 'Trưởng nhóm (Lead)';
+        return 'Lead';
       case 'MANAGER':
-        return 'Quản lý (Manager)';
+        return 'Manager';
       default:
-        return careerLevel ?? 'Tất cả cấp bậc';
+        return careerLevel ?? 'All levels';
     }
   }
 
   String get salaryLabelVi {
     if (salaryMin == null || salaryMin! <= 0) {
-      return 'Thương lượng';
+      return 'Negotiable';
     }
     if (currency == 'VND') {
       final millions = salaryMin! / 1000000;
       final display = millions == millions.roundToDouble()
           ? millions.toInt().toString()
           : millions.toStringAsFixed(1);
-      return 'Từ $display triệu VND';
+      return 'From ${display}M VND';
     }
-    return 'Từ $salaryMin $currency';
+    return 'From $salaryMin $currency';
   }
 
   JobAlertModel copyWith({

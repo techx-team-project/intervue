@@ -38,7 +38,7 @@ class ApplicationListCubit extends Cubit<ApplicationListState> {
         ApplicationListLoaded(
           applications: refreshed,
           selectedFilter: state.selectedFilter,
-          actionMessage: 'Đã rút hồ sơ ứng tuyển.',
+          actionMessage: 'Application withdrawn.',
         ),
       );
     } catch (e) {
@@ -57,7 +57,7 @@ class ApplicationListCubit extends Cubit<ApplicationListState> {
         ApplicationListLoaded(
           applications: refreshed,
           selectedFilter: state.selectedFilter,
-          actionMessage: 'Nộp lại hồ sơ thành công!',
+          actionMessage: 'Reapplied successfully!',
         ),
       );
     } catch (e) {

@@ -93,7 +93,7 @@ class CompanyDetailSheet extends StatelessWidget {
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Thử lại'),
+              child: const Text('Try again'),
             ),
           ],
         ),
@@ -177,14 +177,14 @@ class CompanyDetailSheet extends StatelessWidget {
               if (company.size != null)
                 _buildInfoRow(
                   Icons.people_outline,
-                  'Quy mô nhân sự',
+                  'Company size',
                   company.size!,
                 ),
               if (company.address != null) ...[
                 const Divider(height: 16),
                 _buildInfoRow(
                   Icons.location_on_outlined,
-                  'Địa chỉ trụ sở',
+                  'Headquarters',
                   company.address!,
                 ),
               ],
@@ -200,7 +200,7 @@ class CompanyDetailSheet extends StatelessWidget {
                 const Divider(height: 16),
                 _buildInfoRow(
                   Icons.email_outlined,
-                  'Email liên hệ',
+                  'Contact email',
                   company.email!,
                 ),
               ],
@@ -213,7 +213,7 @@ class CompanyDetailSheet extends StatelessWidget {
         // Company Description
         if (company.description != null && company.description!.isNotEmpty) ...[
           const Text(
-            'Giới thiệu công ty',
+            'About the company',
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
@@ -235,7 +235,7 @@ class CompanyDetailSheet extends StatelessWidget {
         // Company Benefits
         if (company.benefits != null && company.benefits!.isNotEmpty) ...[
           const Text(
-            'Chế độ đãi ngộ & Văn hóa',
+            'Benefits & Culture',
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,

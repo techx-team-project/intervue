@@ -1,6 +1,6 @@
 import 'dart:async';
 
-/// Thông báo cho toàn app khi không thể refresh token (phải đăng nhập lại).
+/// Notifies the whole app when the token cannot be refreshed (sign-in required again).
 class SessionExpiredNotifier {
   final StreamController<void> _controller = StreamController<void>.broadcast();
 

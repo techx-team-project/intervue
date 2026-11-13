@@ -13,7 +13,7 @@ class BlogRemoteDataSource {
   Future<List<BlogPost>> getFeaturedPosts() async {
     final data = await _client.get(ApiEndpoints.featuredBlogs, skipAuth: true);
     if (data is! List<dynamic>) {
-      throw const ServerException('Dữ liệu bài viết không hợp lệ');
+      throw const ServerException('Invalid post data');
     }
     return data
         .map((e) => BlogPost.fromJson(e as Map<String, dynamic>))
@@ -36,7 +36,7 @@ class BlogRemoteDataSource {
     );
     final items = data is Map<String, dynamic> ? data['items'] : null;
     if (items is! List<dynamic>) {
-      throw const ServerException('Dữ liệu bài viết không hợp lệ');
+      throw const ServerException('Invalid post data');
     }
     return items
         .map((e) => BlogPost.fromJson(e as Map<String, dynamic>))
@@ -46,7 +46,7 @@ class BlogRemoteDataSource {
   Future<List<BlogCategory>> getCategories() async {
     final data = await _client.get(ApiEndpoints.blogCategories, skipAuth: true);
     if (data is! List<dynamic>) {
-      throw const ServerException('Dữ liệu danh mục không hợp lệ');
+      throw const ServerException('Invalid category data');
     }
     return data
         .map((e) => BlogCategory.fromJson(e as Map<String, dynamic>))
@@ -59,7 +59,7 @@ class BlogRemoteDataSource {
       skipAuth: true,
     );
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Dữ liệu bài viết không hợp lệ');
+      throw const ServerException('Invalid post data');
     }
     return BlogPostDetail.fromJson(data);
   }

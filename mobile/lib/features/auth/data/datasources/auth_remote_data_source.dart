@@ -48,7 +48,7 @@ class AuthRemoteDataSource {
 
   AuthSession _toSession(dynamic data, Headers headers) {
     if (data is! Map<String, dynamic>) {
-      throw const ServerException('Dữ liệu đăng nhập không hợp lệ');
+      throw const ServerException('Invalid sign-in data');
     }
     return (
       auth: AuthResponse.fromJson(data),

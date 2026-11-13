@@ -8,7 +8,7 @@ import 'package:intervue_flutter/features/auth/data/repositories/auth_repository
 part 'auth_event.dart';
 part 'auth_state.dart';
 
-/// Trạng thái phiên đăng nhập toàn app; router lắng nghe để chặn/mở route.
+/// App-wide session state; the router listens to it to guard routes.
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({
     required AuthRepositoryImpl authRepository,

@@ -1,9 +1,9 @@
-/// Cấu hình theo môi trường, nạp lúc build qua `--dart-define-from-file=env/<env>.json`.
+/// Per-environment configuration, loaded at build time via `--dart-define-from-file=env/<env>.json`.
 class AppConfig {
   const AppConfig({required this.environment, required this.baseUrl});
 
-  /// Mặc định `dev` trỏ tới Spring Boot chạy trên máy host
-  /// (10.0.2.2 là địa chỉ của máy host từ Android Emulator).
+  /// By default `dev` points to the Spring Boot server on the host machine
+  /// (10.0.2.2 is the host address seen from the Android Emulator).
   factory AppConfig.fromEnvironment() => const AppConfig(
     environment: String.fromEnvironment('ENV', defaultValue: 'dev'),
     baseUrl: String.fromEnvironment(

@@ -52,7 +52,7 @@ class JobDTO {
   static const Duration _urgentWindow = Duration(days: 7);
 
   static const Map<String, String> _levelLabels = {
-    'INTERN': 'Thực tập sinh',
+    'INTERN': 'Intern',
     'JUNIOR': 'Junior',
     'MID': 'Middle',
     'SENIOR': 'Senior',
@@ -84,8 +84,7 @@ class JobDTO {
       title: title,
       companyName: companyName,
       displaySalary: _displaySalary(),
-      location:
-          city ?? (workingArrangement == 'REMOTE' ? 'Làm việc từ xa' : null),
+      location: city ?? (workingArrangement == 'REMOTE' ? 'Remote' : null),
       deadline: closing,
       companyLogo: companyLogo,
       experience: levelLabel,
@@ -111,13 +110,13 @@ class JobDTO {
   String _displaySalary() {
     final min = salaryMin;
     final max = salaryMax;
-    if (salaryNegotiable || (min == null && max == null)) return 'Thỏa thuận';
+    if (salaryNegotiable || (min == null && max == null)) return 'Negotiable';
     if (salaryCurrency == 'USD') {
       if (min != null && max != null) {
         return '\$${min.round()} - \$${max.round()}';
       }
-      if (max != null) return 'Tới \$${max.round()}';
-      return 'Từ \$${min!.round()}';
+      if (max != null) return 'Up to \$${max.round()}';
+      return 'From \$${min!.round()}';
     }
     return _millionsRange(
       min == null ? null : min / _million,
@@ -129,9 +128,9 @@ class JobDTO {
 
   static String _millionsRange(double? min, double? max) {
     if (min != null && max != null) {
-      return '${Formatters.millions(min)} - ${Formatters.millions(max)} triệu';
+      return '${Formatters.millions(min)} - ${Formatters.millions(max)}M VND';
     }
-    if (max != null) return 'Tới ${Formatters.millions(max)} triệu';
-    return 'Từ ${Formatters.millions(min!)} triệu';
+    if (max != null) return 'Up to ${Formatters.millions(max)}M VND';
+    return 'From ${Formatters.millions(min!)}M VND';
   }
 }

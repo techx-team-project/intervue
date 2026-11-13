@@ -16,7 +16,7 @@ class JobAlertScreen extends StatefulWidget {
 }
 
 class _JobAlertScreenState extends State<JobAlertScreen> {
-  int _selectedFilterTab = 0; // 0: Tất cả, 1: Đang bật, 2: Tạm dừng
+  int _selectedFilterTab = 0; // 0: All, 1: Active, 2: Paused
 
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
         backgroundColor: AppColors.background,
         appBar: AppBar(
           title: const Text(
-            'Thông báo việc làm phù hợp',
+            'Job alerts',
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
@@ -78,7 +78,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
               onPressed: _openCreateModal,
               icon: const Icon(Icons.add, size: 18, color: AppColors.primary),
               label: const Text(
-                'Tạo mới',
+                'Create new',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
@@ -111,7 +111,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
                     ElevatedButton(
                       onPressed: () =>
                           context.read<JobAlertListCubit>().loadAlerts(),
-                      child: const Text('Thử lại'),
+                      child: const Text('Try again'),
                     ),
                   ],
                 ),
@@ -172,7 +172,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
       child: Row(
         children: [
           _buildKpiItem(
-            'Tổng thông báo',
+            'Total alerts',
             '${summary.totalAlerts}',
             Icons.notifications_outlined,
             AppColors.primary,
@@ -182,7 +182,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
             child: VerticalDivider(width: 24, color: AppColors.border),
           ),
           _buildKpiItem(
-            'Đang bật',
+            'Active',
             '${summary.activeAlerts}',
             Icons.bolt,
             const Color(0xFF10B981),
@@ -192,7 +192,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
             child: VerticalDivider(width: 24, color: AppColors.border),
           ),
           _buildKpiItem(
-            'Việc đã gửi',
+            'Jobs sent',
             '${summary.totalDeliveries}',
             Icons.mark_email_read_outlined,
             AppColors.accentBlue,
@@ -233,11 +233,11 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
   Widget _buildFilterTabs(JobAlertListLoaded state) {
     return Row(
       children: [
-        _buildTabItem(0, 'Tất cả (${state.alerts.length})'),
+        _buildTabItem(0, 'All (${state.alerts.length})'),
         const SizedBox(width: 8),
-        _buildTabItem(1, 'Đang bật (${state.activeAlerts.length})'),
+        _buildTabItem(1, 'Active (${state.activeAlerts.length})'),
         const SizedBox(width: 8),
-        _buildTabItem(2, 'Tạm dừng (${state.pausedAlerts.length})'),
+        _buildTabItem(2, 'Paused (${state.pausedAlerts.length})'),
       ],
     );
   }
@@ -324,7 +324,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        'Nhận ${alert.frequencyLabelVi.toLowerCase()}',
+                        'Receive ${alert.frequencyLabel.toLowerCase()}',
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
@@ -379,7 +379,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
               ),
               const SizedBox(width: 6),
               Text(
-                'Đã gửi: ${alert.deliveredCount} việc làm',
+                'Sent: ${alert.deliveredCount} jobs',
                 style: const TextStyle(
                   fontSize: 12,
                   color: AppColors.textSecondary,
@@ -388,7 +388,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
               const Spacer(),
               // Send Test Email Action
               IconButton(
-                tooltip: 'Gửi email thử nghiệm',
+                tooltip: 'Send a test email',
                 icon: const Icon(
                   Icons.send_outlined,
                   size: 18,
@@ -405,7 +405,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
               const SizedBox(width: 14),
               // Delete Action
               IconButton(
-                tooltip: 'Xóa thông báo',
+                tooltip: 'Delete alert',
                 icon: const Icon(
                   Icons.delete_outline,
                   size: 18,
@@ -417,19 +417,19 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
                   final confirm = await showDialog<bool>(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: const Text('Xác nhận xóa'),
+                      title: const Text('Confirm deletion'),
                       content: Text(
-                        'Bạn có chắc muốn xóa thông báo việc làm "${alert.title}"?',
+                        'Are you sure you want to delete the job alert "${alert.title}"?',
                       ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(ctx, false),
-                          child: const Text('Hủy'),
+                          child: const Text('Cancel'),
                         ),
                         TextButton(
                           onPressed: () => Navigator.pop(ctx, true),
                           child: const Text(
-                            'Xóa',
+                            'Delete',
                             style: TextStyle(color: AppColors.error),
                           ),
                         ),
@@ -500,7 +500,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
           ),
           const SizedBox(height: 14),
           const Text(
-            'Chưa có thông báo việc làm nào',
+            'No job alerts yet',
             style: TextStyle(
               fontSize: 15.5,
               fontWeight: FontWeight.bold,
@@ -509,7 +509,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
           ),
           const SizedBox(height: 6),
           const Text(
-            'Hãy tạo thông báo việc làm phù hợp để nhận cơ hội nghề nghiệp IT hấp dẫn nhất ngay khi nhà tuyển dụng đăng tin.',
+            'Create a job alert to get the best IT career opportunities as soon as recruiters post them.',
             style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
@@ -526,7 +526,7 @@ class _JobAlertScreenState extends State<JobAlertScreen> {
             ),
             icon: const Icon(Icons.add, size: 18),
             label: const Text(
-              'Tạo thông báo việc làm ngay',
+              'Create a job alert now',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),

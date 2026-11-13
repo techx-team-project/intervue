@@ -72,9 +72,9 @@ class CoverLetterCubit extends Cubit<CoverLetterState> {
     if (error is AppException) {
       switch (error.statusCode) {
         case 429:
-          return 'Bạn đã dùng hết lượt AI. Vui lòng thử lại sau hoặc đăng nhập để có thêm lượt.';
+          return 'You have used all your AI requests. Please try again later or sign in for more.';
         case 503:
-          return 'Dịch vụ AI đang bận, vui lòng thử lại sau ít phút.';
+          return 'The AI service is busy, please try again in a few minutes.';
       }
     }
     return Failure.fromException(error).message;
