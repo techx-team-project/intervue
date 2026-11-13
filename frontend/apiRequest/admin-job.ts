@@ -6,6 +6,7 @@ import type { JobStatus, RecruiterJobCounts, RecruiterJobResource } from '@/type
 export type AdminJobSearchParams = {
   q?: string;
   status?: JobStatus;
+  sort?: string;
   page?: number;
   size?: number;
 };
@@ -16,7 +17,7 @@ function toQuery(params: AdminJobSearchParams) {
   if (params.status) query.set('status', params.status);
   query.set('page', String(params.page ?? 0));
   query.set('size', String(params.size ?? 10));
-  query.set('sort', 'updatedAt,desc');
+  query.set('sort', params.sort ?? 'updatedAt,desc');
   return query.toString();
 }
 

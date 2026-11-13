@@ -89,6 +89,19 @@ export function formatRelativeDay(iso: string): string {
   return `In ${difference} days`;
 }
 
+const MINUTE_MS = 60 * 1000;
+const HOUR_MINUTES = 60;
+const DAY_HOURS = 24;
+
+export function formatWaitingTime(iso: string): string {
+  const minutes = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / MINUTE_MS));
+  if (minutes < HOUR_MINUTES) return minutes <= 1 ? 'Just now' : `${minutes} minutes`;
+  const hours = Math.floor(minutes / HOUR_MINUTES);
+  if (hours < DAY_HOURS) return hours === 1 ? '1 hour' : `${hours} hours`;
+  const days = Math.floor(hours / DAY_HOURS);
+  return days === 1 ? '1 day' : `${days} days`;
+}
+
 export function isoDateAfterDays(days: number): string {
   const date = new Date(`${todayIsoDate()}T00:00:00Z`);
   date.setUTCDate(date.getUTCDate() + days);
