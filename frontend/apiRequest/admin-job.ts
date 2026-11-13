@@ -1,6 +1,6 @@
 import { request } from '@/apiRequest/http';
 import type { Page } from '@/types/api';
-import type { AdminJobContentWarning, AdminJobInsights, AdminJobSummaryResource } from '@/types/admin-job';
+import type { AdminJobContentWarning, AdminJobSummaryResource } from '@/types/admin-job';
 import type { JobStatus, RecruiterJobCounts, RecruiterJobResource } from '@/types/recruiter-job';
 
 export type AdminJobSearchParams = {
@@ -25,8 +25,6 @@ export const adminJobApi = {
   search: (params: AdminJobSearchParams) => request<Page<AdminJobSummaryResource>>(`/admin/jobs?${toQuery(params)}`),
 
   counts: () => request<RecruiterJobCounts>('/admin/jobs/summary'),
-
-  insights: (days: number) => request<AdminJobInsights>(`/admin/jobs/insights?days=${days}`),
 
   get: (id: number) => request<RecruiterJobResource>(`/admin/jobs/${id}`),
 
